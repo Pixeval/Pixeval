@@ -8,7 +8,6 @@ using System.Net.NetworkInformation;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Web;
-using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -21,10 +20,11 @@ using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
 using Pixeval.Logging;
 using Pixeval.Util;
-using Pixeval.Util.UI;
-using WinUI3Utilities.Attributes;
 using Pixeval.Util.ComponentModels;
+using Pixeval.Util.UI;
+using Windows.System;
 using WinUI3Utilities;
+using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Pages.Login;
 

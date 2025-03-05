@@ -3,10 +3,9 @@
 
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Windows.Globalization;
-using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi;
@@ -14,6 +13,7 @@ using Pixeval.Logging;
 using Pixeval.Settings.Models;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using Windows.Globalization;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Login;

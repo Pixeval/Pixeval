@@ -16,7 +16,7 @@ namespace Pixeval.Attributes;
 public class SettingsEntryAttribute(Symbol symbol, string resourceKeyHeader, string? resourceKeyDescription) : Attribute
 {
     public SettingsEntryAttribute(int symbol, string resourceKeyHeader, string? resourceKeyDescription)
-        : this((Symbol)symbol, resourceKeyHeader, resourceKeyDescription)
+        : this((Symbol) symbol, resourceKeyHeader, resourceKeyDescription)
     {
     }
 

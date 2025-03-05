@@ -2,9 +2,9 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using Windows.System;
 using Microsoft.UI.Xaml;
 using Pixeval.Settings.Models;
+using Windows.System;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls.Settings;

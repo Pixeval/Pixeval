@@ -8,12 +8,6 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
-using Windows.Graphics;
-using Windows.Storage;
-using Windows.Storage.Pickers;
-using Windows.Storage.Streams;
 using CommunityToolkit.WinUI;
 using FluentIcons.Common;
 using Microsoft.UI.Text;
@@ -21,22 +15,28 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Pixeval.Controls.Windowing;
 using Pixeval.Util.Threading;
 using Pixeval.Utilities;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Processors.Quantization;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
+using Windows.Graphics;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
+using WinRT.Interop;
 using WinUI3Utilities;
 using Brush = Microsoft.UI.Xaml.Media.Brush;
 using Color = Windows.UI.Color;
 using Image = SixLabors.ImageSharp.Image;
 using Point = Windows.Foundation.Point;
-using Pixeval.Controls.Windowing;
 using Size = Windows.Foundation.Size;
 using Symbol = FluentIcons.Common.Symbol;
 using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
 using SymbolIconSource = FluentIcons.WinUI.SymbolIconSource;
-using WinRT.Interop;
 
 namespace Pixeval.Util.UI;
 
@@ -83,11 +83,11 @@ public static partial class UiHelper
             }
         }
 
-        return Color.FromArgb(color.A, (byte)red, (byte)green, (byte)blue);
+        return Color.FromArgb(color.A, (byte) red, (byte) green, (byte) blue);
     }
 
     [Pure]
-    public static SizeInt32 ToSizeInt32(this Size size) => new((int)size.Width, (int)size.Height);
+    public static SizeInt32 ToSizeInt32(this Size size) => new((int) size.Width, (int) size.Height);
 
     [Pure]
     public static Size ToSize(this SizeInt32 size) => new(size.Width, size.Height);
@@ -101,7 +101,7 @@ public static partial class UiHelper
     public static async Task<double> GetImageAspectRatioAsync(Stream stream, bool disposeOfStream = true)
     {
         using var image = await Image.LoadAsync(stream);
-        var result = image.Width / (double)image.Height;
+        var result = image.Width / (double) image.Height;
         if (disposeOfStream)
         {
             await stream.DisposeAsync();
@@ -235,11 +235,11 @@ public static partial class UiHelper
     {
         var fileOpenPicker = new FileOpenPicker
         {
-            SuggestedStartLocation = PickerLocationId.Desktop, 
+            SuggestedStartLocation = PickerLocationId.Desktop,
             FileTypeFilter = { ".json" }
         };
         fileOpenPicker.FileTypeFilter.Add(".json");
-        InitializeWithWindow.Initialize(fileOpenPicker, (nint)WindowFactory.GetWindowForElement(frameworkElement).HWnd);
+        InitializeWithWindow.Initialize(fileOpenPicker, (nint) WindowFactory.GetWindowForElement(frameworkElement).HWnd);
         return fileOpenPicker.PickMultipleFilesAsync();
     }
 
@@ -250,20 +250,20 @@ public static partial class UiHelper
             SuggestedStartLocation = PickerLocationId.Desktop,
             FileTypeFilter = { ".dll", ".zip" }
         };
-        InitializeWithWindow.Initialize(fileOpenPicker, (nint)WindowFactory.GetWindowForElement(frameworkElement).HWnd);
+        InitializeWithWindow.Initialize(fileOpenPicker, (nint) WindowFactory.GetWindowForElement(frameworkElement).HWnd);
         return fileOpenPicker.PickMultipleFilesAsync();
     }
 
     public static async Task<T> AwaitPageTransitionAsync<T>(this Frame root) where T : Page
     {
         await root.DispatcherQueue.SpinWaitAsync(() => root.Content is not T { IsLoaded: true });
-        return (T)root.Content;
+        return (T) root.Content;
     }
 
     public static async Task<Page> AwaitPageTransitionAsync(this Frame root, Type pageType)
     {
         await root.DispatcherQueue.SpinWaitAsync(() => root.Content is not Page { IsLoaded: true } || root.Content?.GetType() != pageType);
-        return (Page)root.Content;
+        return (Page) root.Content;
     }
 
     public static Color ParseHexColor(string hex)

@@ -1,8 +1,8 @@
 // Copyright (c) Pixeval.CoreApi.
 // Licensed under the GPL v3 License.
 
-using System.Text.Json;
 using System;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;

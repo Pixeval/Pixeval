@@ -1,8 +1,8 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Windows.UI;
 using Pixeval.Settings;
+using Windows.UI;
 
 namespace Pixeval.Controls.Settings;
 

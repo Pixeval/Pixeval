@@ -1,15 +1,15 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Windows.Foundation.Collections;
 using Microsoft.UI.Xaml;
 using Pixeval.Controls.Settings;
 using Pixeval.Extensions.Common.Settings;
 using Pixeval.Settings;
+using Windows.Foundation.Collections;
 
 namespace Pixeval.Extensions.Models;
 
-public partial class ExtensionDoubleSettingsEntry(IDoubleSettingsExtension extension, double value) 
+public partial class ExtensionDoubleSettingsEntry(IDoubleSettingsExtension extension, double value)
     : ExtensionSettingsEntry<double>(extension, value), IDoubleSettingsEntry
 {
     public override FrameworkElement Element => new DoubleSettingsCard { Entry = this };

@@ -6,10 +6,10 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
-using static Pixeval.SourceGen.SyntaxHelper;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static Pixeval.SourceGen.SyntaxHelper;
 
 namespace Pixeval.SourceGen;
 
@@ -44,12 +44,12 @@ public class MetaPathMacroGenerator : IIncrementalGenerator
             .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword))
             .WithOpenBraceToken(Token(SyntaxKind.OpenBraceToken))
             .AddMembers(dictionary.Select(t =>
-                    (MemberDeclarationSyntax)MethodDeclaration(
+                    (MemberDeclarationSyntax) MethodDeclaration(
                             ParseTypeName("global::System.Collections.Generic.IReadOnlyList<global::Pixeval.Download.MacroParser.IMacro>"),
                             string.Format(getAttachedTypeInstances, t.Key.Name))
                         .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
                         .WithExpressionBody(ArrowExpressionClause(CollectionExpression(SeparatedList(t.Value.Select(v =>
-                            (CollectionElementSyntax)ExpressionElement(ObjectCreationExpression(v.GetTypeSyntax(false))
+                            (CollectionElementSyntax) ExpressionElement(ObjectCreationExpression(v.GetTypeSyntax(false))
                                 .WithArgumentList(ArgumentList()))))
                         )))
                         .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))).ToArray()

@@ -30,7 +30,7 @@ public partial record LeafSequence(SequenceType Type, IList<TreeNodeBase> Childr
 
     IEnumerator<TreeNodeBase> IEnumerable<TreeNodeBase>.GetEnumerator() => Children.GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)Children).GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable) Children).GetEnumerator();
 }
 
 public abstract record QueryLeaf(bool IsNot) : TreeNodeBase(IsNot);

@@ -15,7 +15,7 @@ internal class FollowingEngine(MakoClient makoClient, long uid, PrivacyPolicy pr
     public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new()) =>
         new RecursivePixivAsyncEnumerators.User<FollowingEngine>(
             this,
-            "/v1/user/following" + 
-            $"?user_id={uid}" + 
+            "/v1/user/following" +
+            $"?user_id={uid}" +
             $"&restrict={privacyPolicy.GetDescription()}");
 }

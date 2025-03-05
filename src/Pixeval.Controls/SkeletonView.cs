@@ -27,10 +27,10 @@ public partial class SkeletonView : UniformGrid
         {
             Columns = double.IsInfinity(ActualWidth) || double.IsNaN(ActualWidth)
                 ? 1
-                : (int)Math.Ceiling(ActualWidth / MinItemWidth);
+                : (int) Math.Ceiling(ActualWidth / MinItemWidth);
             Rows = double.IsInfinity(ActualHeight) || double.IsNaN(ActualHeight)
                 ? 1
-                : (int)Math.Ceiling(ActualHeight / MinItemHeight);
+                : (int) Math.Ceiling(ActualHeight / MinItemHeight);
             var count = Rows * Columns;
             while (count != Children.Count)
             {

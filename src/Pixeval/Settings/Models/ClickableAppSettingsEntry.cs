@@ -2,10 +2,10 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using Windows.Foundation.Collections;
 using FluentIcons.Common;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Settings;
+using Windows.Foundation.Collections;
 
 namespace Pixeval.Settings.Models;
 

@@ -59,7 +59,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
         AfterAllDownloadAsync += AfterAllDownloadAsyncOverride;
     }
 
-    protected async Task AllTasksDownloadedAsync() 
+    protected async Task AllTasksDownloadedAsync()
     {
         if (IsAllCompleted && AfterAllDownloadAsync is not null)
         {
@@ -167,7 +167,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
     [NotifyPropertyChangedFor(nameof(CurrentState))]
     public partial bool IsPending { get; set; }
 
-    [ObservableProperty] 
+    [ObservableProperty]
     public partial bool IsProcessing { get; set; }
 
     public DownloadState CurrentState

@@ -1,11 +1,11 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Windows.Foundation.Collections;
 using Microsoft.UI.Xaml;
 using Pixeval.Controls.Settings;
 using Pixeval.Extensions.Common.Settings;
 using Pixeval.Settings;
+using Windows.Foundation.Collections;
 
 namespace Pixeval.Extensions.Models;
 
@@ -20,7 +20,7 @@ public partial class ExtensionIntSettingsEntry(IIntSettingsExtension extension, 
     double ISingleValueSettingsEntry<double>.Value
     {
         get => Value;
-        set => Value = (int)value;
+        set => Value = (int) value;
     }
 
     public override void ValueReset() => Value = extension.GetDefaultValue();

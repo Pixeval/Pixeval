@@ -15,7 +15,7 @@ namespace Pixeval.Pages.Capability;
 
 public sealed partial class RankingsPage : IScrollViewHost
 {
-    private static readonly IReadOnlyList<StringRepresentableItem> _IllustrationRankOption =  RankOptionExtension.GetItems();
+    private static readonly IReadOnlyList<StringRepresentableItem> _IllustrationRankOption = RankOptionExtension.GetItems();
 
     private static readonly IReadOnlyList<StringRepresentableItem> _NovelRankOption = NovelRankOptionExtension.GetItems();
 

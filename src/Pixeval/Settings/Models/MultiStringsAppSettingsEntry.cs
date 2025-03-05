@@ -4,15 +4,15 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
-using Windows.Foundation.Collections;
 using Microsoft.UI.Xaml;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Settings;
+using Windows.Foundation.Collections;
 
 namespace Pixeval.Settings.Models;
 
-public partial class MultiStringsAppSettingsEntry 
-    : SingleValueSettingsEntry<AppSettings,ObservableCollection<string>>, IMultiStringsAppSettingsEntry
+public partial class MultiStringsAppSettingsEntry
+    : SingleValueSettingsEntry<AppSettings, ObservableCollection<string>>, IMultiStringsAppSettingsEntry
 {
     private readonly Func<AppSettings, ObservableCollection<string>> _getter;
     private readonly Action<AppSettings, ObservableCollection<string>> _setter;

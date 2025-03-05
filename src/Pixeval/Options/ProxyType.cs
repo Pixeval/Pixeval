@@ -44,5 +44,5 @@ public static class ProxyTypeResources
     public const string ProxyOptionSocks4A = "socks4a";
     public const string ProxyOptionSocks5 = "socks5";
     public static string ProxyOptionNone => MiscResources.ProxyOptionNone;
-    public static string ProxyOptionSystem => MiscResources.ProxyOptionSystem; 
+    public static string ProxyOptionSystem => MiscResources.ProxyOptionSystem;
 }

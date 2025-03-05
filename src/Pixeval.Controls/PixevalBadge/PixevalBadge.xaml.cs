@@ -2,12 +2,12 @@
 // Licensed under the GPL v3 License.
 
 using System.Collections.Generic;
-using Windows.UI;
 using CommunityToolkit.WinUI;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Windows.UI;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls;

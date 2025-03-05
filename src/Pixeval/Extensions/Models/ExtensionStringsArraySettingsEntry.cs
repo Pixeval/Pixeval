@@ -3,11 +3,11 @@
 
 using System.Collections.ObjectModel;
 using System.Linq;
-using Windows.Foundation.Collections;
 using Microsoft.UI.Xaml;
 using Pixeval.Controls.Settings;
 using Pixeval.Extensions.Common.Settings;
 using Pixeval.Settings;
+using Windows.Foundation.Collections;
 
 namespace Pixeval.Extensions.Models;
 
@@ -16,7 +16,7 @@ public partial class ExtensionStringsArraySettingsEntry(IStringsArraySettingsExt
 {
     public override FrameworkElement Element => new TokenizingSettingsExpander { Entry = this };
 
-    public override void ValueReset() => Value = [..extension.GetDefaultValue()];
+    public override void ValueReset() => Value = [.. extension.GetDefaultValue()];
 
     public override void ValueSaving(IPropertySet values)
     {

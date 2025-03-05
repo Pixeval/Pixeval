@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 using FluentIcons.Common;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
+using Pixeval.CoreApi.Model;
 using Pixeval.Database;
 using Pixeval.Download;
 using Pixeval.Download.Models;
+using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using WinUI3Utilities;
-using Pixeval.CoreApi.Model;
-using Pixeval.Util;
 
 namespace Pixeval.Controls;
 
@@ -53,7 +53,7 @@ public sealed partial class DownloadItemViewModel(IDownloadTaskGroup downloadTas
     public string ProgressMessage(DownloadState state, double progressPercentage, IDownloadTaskGroup downloadTask) => state switch
     {
         DownloadState.Queued => DownloadItemResources.DownloadQueued,
-        DownloadState.Running => DownloadItemResources.DownloadRunningFormatted.Format((int)progressPercentage),
+        DownloadState.Running => DownloadItemResources.DownloadRunningFormatted.Format((int) progressPercentage),
         DownloadState.Error => DownloadItemResources.DownloadErrorMessageFormatted.Format(downloadTask.ErrorCause?.Message),
         DownloadState.Completed => DownloadItemResources.DownloadCompleted,
         DownloadState.Cancelled => DownloadItemResources.DownloadCancelled,

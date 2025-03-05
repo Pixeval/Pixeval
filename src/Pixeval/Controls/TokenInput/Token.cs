@@ -47,7 +47,7 @@ public sealed partial class Token : ObservableObject, IEquatable<Token>, IDeepCl
     /// <returns></returns>
     public Token DeepClone()
     {
-        return (Token)MemberwiseClone();
+        return (Token) MemberwiseClone();
     }
 
     public bool Equals(Token? other)

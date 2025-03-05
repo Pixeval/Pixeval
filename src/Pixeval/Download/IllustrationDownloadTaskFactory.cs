@@ -77,19 +77,19 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
         {
             case { IsUgoira: true }:
             {
-                var (streams, metadata) = ((IReadOnlyList<Stream>, UgoiraMetadataResponse))param;
+                var (streams, metadata) = ((IReadOnlyList<Stream>, UgoiraMetadataResponse)) param;
                 task = new UgoiraDownloadTaskGroup(context.Entry, metadata, path, streams);
                 break;
             }
             case { IsManga: true, MangaIndex: -1 }: // 下载一篇漫画（未使用的分支）
             {
-                var streams = (IReadOnlyList<Stream>)param;
+                var streams = (IReadOnlyList<Stream>) param;
                 task = new MangaDownloadTaskGroup(context.Entry, path, streams);
                 break;
             }
             default:
             {
-                var stream = (IReadOnlyList<Stream>)param;
+                var stream = (IReadOnlyList<Stream>) param;
                 task = new SingleImageDownloadTaskGroup(context.Entry, path, stream[0]);
                 break;
             }

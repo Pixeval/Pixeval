@@ -4,14 +4,14 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Microsoft.UI.Xaml.Controls;
 using System.Reflection;
-using Windows.Foundation.Collections;
-using Windows.System;
+using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
 using Pixeval.Controls.Settings;
 using Pixeval.Utilities;
+using Windows.Foundation.Collections;
+using Windows.System;
 using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Settings.Models;

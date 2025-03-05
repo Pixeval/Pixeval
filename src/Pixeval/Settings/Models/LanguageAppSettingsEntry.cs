@@ -3,11 +3,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Windows.Globalization;
+using Pixeval.AppManagement;
 using Pixeval.Controls.Settings;
 using Pixeval.Pages.Misc;
 using Windows.Foundation.Collections;
-using Pixeval.AppManagement;
+using Windows.Globalization;
 
 namespace Pixeval.Settings.Models;
 

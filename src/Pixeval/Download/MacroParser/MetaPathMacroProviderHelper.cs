@@ -11,7 +11,7 @@ public static class MetaPathMacroProviderHelper
     public static IMacro TryResolve(this IEnumerable<IMacro> availableMacros, string macro, bool isNot)
     {
         var m = availableMacros.FirstOrDefault(m => m.Name == macro) ?? new Unknown();
-        if (m is IPredicate p) 
+        if (m is IPredicate p)
             p.IsNot = isNot;
         return m;
     }

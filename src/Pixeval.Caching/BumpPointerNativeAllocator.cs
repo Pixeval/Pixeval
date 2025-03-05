@@ -39,7 +39,7 @@ public unsafe class BumpPointerNativeAllocator(ref byte ptrStart, nint heapSize)
             return AllocatorState.OutOfMemory;
         }
 
-        BumpingPointer = (nint)newAddress;
+        BumpingPointer = (nint) newAddress;
         span = new Span<byte>(Unsafe.AsPointer(ref ptr), (int) size);
         return AllocatorState.AllocationSuccess;
     }

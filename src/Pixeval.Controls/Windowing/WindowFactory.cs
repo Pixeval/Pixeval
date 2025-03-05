@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Foundation;
 using Windows.Graphics;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Gdi;
-using Microsoft.UI.Xaml.Media.Imaging;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls.Windowing;
@@ -64,7 +64,7 @@ public static class WindowFactory
 
     public static EnhancedWindow Create(EnhancedPage content)
     {
-        RootWindow =  new EnhancedWindow(content);
+        RootWindow = new EnhancedWindow(content);
         RootWindow.Closed += (sender, _) => _ForkedWindowsInternal.Remove(sender.To<EnhancedWindow>().HWnd);
         _ForkedWindowsInternal[RootWindow.HWnd] = RootWindow;
         return RootWindow;
@@ -154,7 +154,7 @@ public static class WindowFactory
 
     private static void FullDisplayOnScreen(this AppWindow appWindow, SizeInt32 desiredSize)
     {
-        var hWnd = (nint)appWindow.Id.Value;
+        var hWnd = (nint) appWindow.Id.Value;
         var hWndDesktop = PInvoke.MonitorFromWindow(new HWND(hWnd), MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
         var info = new MONITORINFO { cbSize = 40 };
         _ = PInvoke.GetMonitorInfo(hWndDesktop, ref info);

@@ -2,28 +2,28 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using System.IO;
 using System.Linq;
-using Windows.System;
+using System.Text.Json;
 using CommunityToolkit.Labs.WinUI.MarkdownTextBlock;
+using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
+using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
 using Pixeval.Settings;
+using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using WinUI3Utilities;
-using CommunityToolkit.WinUI.Controls;
-using CommunityToolkit.WinUI;
 using Windows.Foundation;
-using System.IO;
-using Pixeval.Controls;
-using System.Text.Json;
-using Pixeval.Util.IO;
+using Windows.System;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.Misc;
 
@@ -203,11 +203,11 @@ public sealed partial class SettingsPage : IDisposable
         if (_viewModel == null!)
             return;
         foreach (var localGroup in _viewModel.LocalGroups)
-        foreach (var settingsEntry in localGroup)
-            settingsEntry.ValueSaving(AppInfo.LocalConfig);
+            foreach (var settingsEntry in localGroup)
+                settingsEntry.ValueSaving(AppInfo.LocalConfig);
         foreach (var extensionGroup in _viewModel.ExtensionGroups)
-        foreach (var settingsEntry in extensionGroup)
-            settingsEntry.ValueSaving(extensionGroup.Model.Values);
+            foreach (var settingsEntry in extensionGroup)
+                settingsEntry.ValueSaving(extensionGroup.Model.Values);
     }
 
     private async void ExportSettingsPlainText_OnClicked(object sender, RoutedEventArgs e)
@@ -222,7 +222,7 @@ public sealed partial class SettingsPage : IDisposable
             await using var jsonSessionStream = IoHelper.OpenAsyncWrite(jsonSessionPath);
             await JsonSerializer.SerializeAsync(jsonSettingsStream, _viewModel.AppSettings, typeof(AppSettings), SettingsSerializeContext.Default);
             await JsonSerializer.SerializeAsync(jsonSessionStream, App.AppViewModel.LoginContext, typeof(LoginContext), SettingsSerializeContext.Default);
-            
+
             this.SuccessGrowl(SettingsPageResources.ExportSettingsSuccess);
         }
         catch (Exception exception)
@@ -257,8 +257,8 @@ public sealed partial class SettingsPage : IDisposable
                         if (await JsonSerializer.DeserializeAsync(stream, typeof(AppSettings), SettingsSerializeContext.Default) is AppSettings appSettings)
                         {
                             foreach (var localGroup in _viewModel.LocalGroups)
-                            foreach (var settingsEntry in localGroup)
-                                settingsEntry.ValueReset(appSettings);
+                                foreach (var settingsEntry in localGroup)
+                                    settingsEntry.ValueReset(appSettings);
                             this.SuccessGrowl(SettingsPageResources.ImportSettingsSuccess, file.Name);
                         }
                         break;

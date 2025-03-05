@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using FluentIcons.Common;
 using Microsoft.UI.Xaml.Input;
@@ -12,9 +11,10 @@ using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
+using Pixeval.Util.ComponentModels;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Pixeval.Util.ComponentModels;
+using Windows.System;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -178,7 +178,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     /// <summary>
     /// 插画列表
     /// </summary>
-    public IList<IllustrationItemViewModel> Illustrations => ViewModelSource?.DataProvider.View ?? (IList<IllustrationItemViewModel>)IllustrationsSource!;
+    public IList<IllustrationItemViewModel> Illustrations => ViewModelSource?.DataProvider.View ?? (IList<IllustrationItemViewModel>) IllustrationsSource!;
 
     /// <summary>
     /// 一个插画所有的页面

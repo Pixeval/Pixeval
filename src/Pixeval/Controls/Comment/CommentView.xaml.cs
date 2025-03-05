@@ -33,7 +33,7 @@ public sealed partial class CommentView : IStructuralDisposalCompleter
 
     public void CompleteDisposal()
     {
-       if (CommentsList.ItemsSource is IEnumerable<CommentItemViewModel> list)
+        if (CommentsList.ItemsSource is IEnumerable<CommentItemViewModel> list)
             foreach (var commentBlockViewModel in list)
                 commentBlockViewModel.Dispose();
     }

@@ -39,6 +39,6 @@ public partial class IntAppSettingsEntry(AppSettings settings, Expression<Func<A
     double ISingleValueSettingsEntry<double>.Value
     {
         get => Value;
-        set => Value = (int)value;
+        set => Value = (int) value;
     }
 }

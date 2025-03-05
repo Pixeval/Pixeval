@@ -4,10 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using Windows.Foundation;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Windows.Foundation;
 
 namespace Pixeval.Controls;
 
@@ -49,7 +49,7 @@ public sealed partial class RiverFlowLayout : VirtualizingLayout
     /// <inheritdoc />
     protected override void OnItemsChangedCore(VirtualizingLayoutContext context, object source, NotifyCollectionChangedEventArgs args)
     {
-        var state = (RiverFlowLayoutState)context.LayoutState;
+        var state = (RiverFlowLayoutState) context.LayoutState;
 
         switch (args.Action)
         {
@@ -82,7 +82,7 @@ public sealed partial class RiverFlowLayout : VirtualizingLayout
     {
         var spacingMeasure = new Size(MinItemSpacing, LineSpacing);
 
-        var state = (RiverFlowLayoutState)context.LayoutState;
+        var state = (RiverFlowLayoutState) context.LayoutState;
 
         // ReSharper disable once CompareOfFloatsByEqualityOperator
         if (state.AvailableWidth != parentMeasure.Width
@@ -267,7 +267,7 @@ public sealed partial class RiverFlowLayout : VirtualizingLayout
             //  var viewHeight = realizationBounds.Height /= 3;
             //  realizationBounds.Y += viewHeight;
 
-            var state = (RiverFlowLayoutState)context.LayoutState;
+            var state = (RiverFlowLayoutState) context.LayoutState;
             bool ArrangeItem(RiverFlowItem item)
             {
                 if (item is { Measure: null } or { Position: null })

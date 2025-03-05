@@ -93,7 +93,7 @@ public abstract class AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEn
         }
         catch (Exception e)
         {
-            return Result<TRawEntity>.AsFailure(new MakoNetworkException(url, MakoClient.Configuration.DomainFronting, e.Message, (int?)(e as HttpRequestException)?.StatusCode ?? -1));
+            return Result<TRawEntity>.AsFailure(new MakoNetworkException(url, MakoClient.Configuration.DomainFronting, e.Message, (int?) (e as HttpRequestException)?.StatusCode ?? -1));
         }
     }
 }

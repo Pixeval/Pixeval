@@ -27,7 +27,7 @@ internal class IllustrationBookmarkEngine(
     string? tag,
     PrivacyPolicy privacyPolicy,
     TargetFilter targetFilter,
-    EngineHandle? engineHandle = null) 
+    EngineHandle? engineHandle = null)
     : AbstractPixivFetchEngine<Illustration>(makoClient, engineHandle)
 {
     public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>

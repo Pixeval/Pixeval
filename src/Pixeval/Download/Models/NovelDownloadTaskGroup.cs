@@ -127,7 +127,7 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
                 DocumentViewModel.SetStream(i, IoHelper.OpenAsyncRead(imageDownloadTask.Destination));
                 ++i;
             }
-            
+
             var document = DocumentViewModel.LoadPdfContent();
             document.GeneratePdf(DocPath);
             i = 0;
@@ -143,7 +143,7 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
             return;
         }
 
-        ((INovelContext<Stream>)DocumentViewModel).InitImages();
+        ((INovelContext<Stream>) DocumentViewModel).InitImages();
 
         var content = NovelDownloadFormat switch
         {

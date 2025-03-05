@@ -32,10 +32,10 @@ public partial class NavigationViewTag(string header, Type navigateTo, object? p
                 : new ImageIconSource { ImageSource = new BitmapImage(ImageUri) }
             : new SymbolIconSource { Symbol = Symbol.Value };
 
-    public IconElement? Icon => 
+    public IconElement? Icon =>
         Symbol is null
-        ? ImageUri is null 
-            ? null 
+        ? ImageUri is null
+            ? null
             : new ImageIcon { Source = new BitmapImage(ImageUri) }
         : new SymbolIcon { Symbol = Symbol.Value };
 
@@ -60,11 +60,11 @@ public partial class NavigationViewTag(string header, Type navigateTo, object? p
 
 public sealed partial class NavigationViewTag<TPage>(string header, object? parameter = null) : NavigationViewTag(header, typeof(TPage), parameter);
 
-public sealed partial class NavigationViewTag<TPage, TParam>(string header, TParam parameter) : NavigationViewTag(header,typeof(TPage), parameter)
+public sealed partial class NavigationViewTag<TPage, TParam>(string header, TParam parameter) : NavigationViewTag(header, typeof(TPage), parameter)
 {
     public new TParam Parameter
     {
-        get => (TParam)base.Parameter!;
+        get => (TParam) base.Parameter!;
         set => base.Parameter = value;
     }
 }

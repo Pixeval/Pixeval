@@ -11,10 +11,10 @@ using System.Net.Http.Headers;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.Storage.Streams;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
+using Windows.Storage;
+using Windows.Storage.Streams;
 
 namespace Pixeval.Util.IO;
 
@@ -71,8 +71,8 @@ public static partial class IoHelper
 
     public static async Task<string> ToBase64StringAsync(this IRandomAccessStream randomAccessStream)
     {
-        var array = ArrayPool<byte>.Shared.Rent((int)randomAccessStream.Size);
-        var buffer = await randomAccessStream.ReadAsync(array.AsBuffer(), (uint)randomAccessStream.Size, InputStreamOptions.None);
+        var array = ArrayPool<byte>.Shared.Rent((int) randomAccessStream.Size);
+        var buffer = await randomAccessStream.ReadAsync(array.AsBuffer(), (uint) randomAccessStream.Size, InputStreamOptions.None);
         ArrayPool<byte>.Shared.Return(array);
         return Convert.ToBase64String(buffer.ToArray());
     }

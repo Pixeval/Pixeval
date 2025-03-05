@@ -1,4 +1,4 @@
-﻿// Copyright (c) Pixeval.
+// Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
 using System;
@@ -15,7 +15,7 @@ public static class ValueAnimations
     {
         await Task.Yield();
         var start = valueAnimation.From;
-        var sampleCount = (int)Math.Ceiling(valueAnimation.Duration.Divide(valueAnimation.SampleRate));
+        var sampleCount = (int) Math.Ceiling(valueAnimation.Duration.Divide(valueAnimation.SampleRate));
         var by = valueAnimation.To - valueAnimation.From;
         var delta = by / TV.Parse(sampleCount.ToString(), NumberStyles.Integer, null);
         yield return start;
@@ -25,7 +25,7 @@ public static class ValueAnimations
         {
             await Task.Delay(valueAnimation.SampleRate);
             start += valueAnimation.EasingFunction is { } ef
-                ? by * ef.GetValue(counter++ / (double)sampleCount)
+                ? by * ef.GetValue(counter++ / (double) sampleCount)
                 : delta;
             yield return start;
         }

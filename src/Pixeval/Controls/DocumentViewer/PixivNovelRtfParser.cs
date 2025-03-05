@@ -16,7 +16,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public sealed class PixivNovelRtfParser: PixivNovelParser<List<Paragraph>, ImageSource, DocumentViewerViewModel>
+public sealed class PixivNovelRtfParser : PixivNovelParser<List<Paragraph>, ImageSource, DocumentViewerViewModel>
 {
     protected override List<Paragraph> Vector => [new()];
 
@@ -58,7 +58,7 @@ public sealed class PixivNovelRtfParser: PixivNovelParser<List<Paragraph>, Image
         var currentParagraph = result[^1];
 
         var hyperlink = new Hyperlink { Inlines = { new Run { Text = MiscResources.GoToPageFormatted.Format(page) } } };
-        hyperlink.Click += (_, _) => viewModel.CurrentPage = (int)page - 1;
+        hyperlink.Click += (_, _) => viewModel.CurrentPage = (int) page - 1;
         currentParagraph.Inlines.Add(hyperlink);
     }
 

@@ -15,7 +15,7 @@ public partial record WebApiBookmarksWithTagResponse
 [Factory]
 public partial record WebApiBookmarksWithTagBody
 {
-    [JsonPropertyName("works")] 
+    [JsonPropertyName("works")]
     public required Work[] Works { get; set; } = [];
 }
 

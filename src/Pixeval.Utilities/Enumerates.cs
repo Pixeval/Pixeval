@@ -66,12 +66,12 @@ public static class Enumerates
     public static bool SequenceEquals<T, TKey>(this IEnumerable<T> @this,
         IEnumerable<T> another,
         Func<T, TKey> keySelector,
-        SequenceComparison comparison = SequenceComparison.Sequential) 
+        SequenceComparison comparison = SequenceComparison.Sequential)
     where TKey : IEquatable<TKey>
     {
         return comparison switch
         {
-            SequenceComparison.Sequential => @this.SequenceEqual(another, new KeyedEqualityComparer<T,TKey>(keySelector)),
+            SequenceComparison.Sequential => @this.SequenceEqual(another, new KeyedEqualityComparer<T, TKey>(keySelector)),
             SequenceComparison.Unordered => @this.Order().SequenceEqual(another.Order(), new KeyedEqualityComparer<T, TKey>(keySelector)), // not the fastest way, but still enough
             _ => ThrowUtils.ArgumentOutOfRange<SequenceComparison, bool>(comparison)
         };

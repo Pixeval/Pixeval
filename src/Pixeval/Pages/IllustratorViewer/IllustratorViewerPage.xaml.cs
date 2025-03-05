@@ -3,10 +3,10 @@
 
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using WinUI3Utilities;
-using Pixeval.Controls.Windowing;
 using Pixeval.Controls;
+using Pixeval.Controls.Windowing;
 using Pixeval.Util.UI;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustratorViewer;
 

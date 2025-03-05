@@ -3,12 +3,12 @@
 
 using System;
 using System.Reflection;
-using Windows.System;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
 using Pixeval.Controls.Settings;
 using Pixeval.Options;
+using Windows.System;
 using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Settings.Models;

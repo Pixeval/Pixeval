@@ -5,20 +5,20 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
+using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
+using Pixeval.CoreApi.Global.Enum;
 using Pixeval.CoreApi.Model;
 using Pixeval.Options;
-using Pixeval.Util.ComponentModels;
-using Pixeval.Util.UI;
-using Pixeval.AppManagement;
-using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Settings;
 using Pixeval.Settings.Models;
+using Pixeval.Util.ComponentModels;
+using Pixeval.Util.UI;
+using Windows.System;
 using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Pages.NovelViewer;
@@ -97,7 +97,7 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
     /// <summary>
     /// 小说列表
     /// </summary>
-    public IList<NovelItemViewModel> Novels => ViewModelSource?.DataProvider.View ?? (IList<NovelItemViewModel>)NovelsSource!;
+    public IList<NovelItemViewModel> Novels => ViewModelSource?.DataProvider.View ?? (IList<NovelItemViewModel>) NovelsSource!;
 
     /// <summary>
     /// 当前小说

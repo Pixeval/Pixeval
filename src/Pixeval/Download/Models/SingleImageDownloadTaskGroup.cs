@@ -99,7 +99,7 @@ public partial class SingleImageDownloadTaskGroup : ImageDownloadTask, IImageDow
 
     public int Count => 1;
 
-    public IEnumerator<ImageDownloadTask> GetEnumerator() => ((IReadOnlyList<ImageDownloadTask>)[this]).GetEnumerator();
+    public IEnumerator<ImageDownloadTask> GetEnumerator() => ((IReadOnlyList<ImageDownloadTask>) [this]).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
