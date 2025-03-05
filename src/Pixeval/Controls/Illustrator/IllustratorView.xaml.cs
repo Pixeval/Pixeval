@@ -35,7 +35,7 @@ public sealed partial class IllustratorView : IScrollViewHost, IStructuralDispos
         ViewModel.Dispose();
     }
 
-    public List<Action> ChildrenCompletes { get; } = [];
+    public List<Action<IStructuralDisposalCompleter?>> ChildrenCompletes { get; } = [];
 
     public bool CompleterRegistered { get; set; }
 

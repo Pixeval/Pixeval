@@ -38,7 +38,7 @@ public sealed partial class CommentView : IStructuralDisposalCompleter
                 commentBlockViewModel.Dispose();
     }
 
-    public List<Action> ChildrenCompletes { get; } = [];
+    public List<Action<IStructuralDisposalCompleter?>> ChildrenCompletes { get; } = [];
 
     public bool CompleterRegistered { get; set; }
 

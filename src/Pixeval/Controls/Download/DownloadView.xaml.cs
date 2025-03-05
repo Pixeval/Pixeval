@@ -46,7 +46,7 @@ public sealed partial class DownloadView : UserControl, IStructuralDisposalCompl
         ViewModel.Dispose();
     }
 
-    public List<Action> ChildrenCompletes { get; } = [];
+    public List<Action<IStructuralDisposalCompleter?>> ChildrenCompletes { get; } = [];
 
     public bool CompleterRegistered { get; set; }
 

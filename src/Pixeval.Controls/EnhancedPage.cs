@@ -14,7 +14,7 @@ namespace Pixeval.Controls;
 
 public partial class EnhancedPage : Page, IStructuralDisposalCompleter
 {
-    public List<Action> ChildrenCompletes { get; } = [];
+    public List<Action<IStructuralDisposalCompleter?>> ChildrenCompletes { get; } = [];
 
     public bool CompleterRegistered { get; set; }
 
