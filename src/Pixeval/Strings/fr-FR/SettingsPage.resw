@@ -514,10 +514,10 @@ Entrer une addresse IP et cliquer '+' pour ajouter</value>
     <value>Entrez une API Key</value>
   </data>
   <data name="ReverseSearchResultSimilarityThresholdEntry.Description" xml:space="preserve">
-    <value>Seuil de confiance de la recherche inversée, les résultats avec une plus faible confiance seront ignorés. Cette indication décide à quel niveau un résultat ressemble à votre image originale</value>
+    <value>以图搜图结果的阈值，如果搜索结果低于该阈值则会被忽略，值越高则说明搜索结果和原图越相似</value>
   </data>
   <data name="ReverseSearchResultSimilarityThresholdEntry.Header" xml:space="preserve">
-    <value>Seuil de recherche inversée</value>
+    <value>以图搜图阈值</value>
   </data>
   <data name="BrowseOriginalImageEntry.Description" xml:space="preserve">
     <value>Cette option nécessite plus de débit et de temps de chargement, mais vous aurez une meilleure expérience et une meilleure vitesse de téléchargement</value>
