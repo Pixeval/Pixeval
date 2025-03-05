@@ -45,6 +45,7 @@ public sealed partial class TabPage
             Window.SetTitleBar(CustomDragRegion);
             CustomDragRegion.MinWidth = 188;
         }
+
         ((IStructuralDisposalCompleter) this).Hook();
     }
 
@@ -90,7 +91,7 @@ public sealed partial class TabPage
     {
         await Task.Yield();
         RemoveTab(e.Tab);
-        if (e.Tab.Content is FrameworkElement element && element.FindDescendant<FrameworkElement>(ele => ele is IStructuralDisposalCompleter) is IStructuralDisposalCompleter completer)
+        if (e.Tab.Content is Frame { Content: IStructuralDisposalCompleter completer })
             completer.CompleteDisposalRecursively();
     }
 

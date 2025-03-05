@@ -2,7 +2,6 @@
 // Licensed under the GPL v3 License.
 
 using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.WinUI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -65,8 +64,6 @@ public sealed partial class EnhancedWindow : Window
         if (_owner is not null)
             _owner.AppWindow.Closing -= OnOwnerOnClosing;
         WeakReferenceMessenger.Default.UnregisterAll(this);
-        var completer = Content.FindDescendant<FrameworkElement>(element => element is IStructuralDisposalCompleter) as IStructuralDisposalCompleter;
-        completer?.CompleteDisposalRecursively();
     }
 
     private void OnOwnerOnClosing(AppWindow sender, AppWindowClosingEventArgs e) => Close();
