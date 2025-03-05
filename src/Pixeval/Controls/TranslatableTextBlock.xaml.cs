@@ -5,21 +5,21 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Foundation;
 using CommunityToolkit.Labs.WinUI.MarkdownTextBlock;
 using CommunityToolkit.WinUI;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Extensions;
 using Pixeval.Extensions.Common.Commands.Transformers;
 using Pixeval.Util.IO.Caching;
+using Windows.Foundation;
 
 namespace Pixeval.Controls;
 
 public sealed partial class TranslatableTextBlock : Grid
 {
-    public event TypedEventHandler<TranslatableTextBlock, EventArgs>? IsTranslatedChanged; 
+    public event TypedEventHandler<TranslatableTextBlock, EventArgs>? IsTranslatedChanged;
 
     /// <summary>
     /// 原文
@@ -187,7 +187,7 @@ public sealed partial class TranslatableTextBlock : Grid
         tb.Config = MarkdownConfig;
         return tb;
     }
-    
+
     private TextBlock GetNewTextBlock(TextBlock? textBlock, string text, Style? textBlockStyle)
     {
         var tb = textBlock ?? new TextBlock();

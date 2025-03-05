@@ -21,7 +21,7 @@ public static class ExifManager
         image.SetIdTags(illustration);
         await image.SaveAsync(imagePath, IoHelper.GetIllustrationEncoder(illustrationDownloadFormat), token);
     }
-    
+
     public static async Task SetTagsAsync(string imagePath, Illustration illustration, UgoiraDownloadFormat? ugoiraDownloadFormat = null, CancellationToken token = default)
     {
         using var image = await Image.LoadAsync(imagePath, token);
@@ -40,7 +40,7 @@ public static class ExifManager
         image.SetIdTags(id, tags);
         await image.SaveAsync(imagePath, IoHelper.GetIllustrationEncoder(illustrationDownloadFormat), token);
     }
-    
+
     public static async Task SetIdTagsAsync(string imagePath, long id, IEnumerable<string> tags, UgoiraDownloadFormat? ugoiraDownloadFormat = null, CancellationToken token = default)
     {
         using var image = await Image.LoadAsync(imagePath, token);
@@ -51,7 +51,7 @@ public static class ExifManager
     public static void SetIdTags(this Image image, long id, IEnumerable<string> tags)
     {
         var profile = image.Metadata.ExifProfile ??= new();
-        profile.SetValue(ExifTag.ImageNumber, (uint)id);
+        profile.SetValue(ExifTag.ImageNumber, (uint) id);
         profile.SetValue(ExifTag.UserComment, string.Join(';', tags));
     }
 

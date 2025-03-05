@@ -4,16 +4,17 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Runtime.InteropServices.Marshalling;
-using System.Runtime.InteropServices;
-using Pixeval.AppManagement;
-using Pixeval.Extensions.Common.Settings;
-using Pixeval.Extensions.Common;
 using System.Linq;
-using Windows.Win32;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Marshalling;
+using Pixeval.AppManagement;
+using Pixeval.Extensions.Common;
 using Pixeval.Extensions.Common.Commands.Transformers;
+using Pixeval.Extensions.Common.Downloaders;
+using Pixeval.Extensions.Common.Settings;
 using Pixeval.Extensions.Models;
 using Pixeval.Utilities;
+using Windows.Win32;
 using WinUI3Utilities;
 
 namespace Pixeval.Extensions;
@@ -36,6 +37,10 @@ public partial class ExtensionService : IDisposable
 
     public IEnumerable<ITextTransformerCommandExtension> ActiveTextTransformerCommands => ActiveExtensions.OfType<ITextTransformerCommandExtension>();
 
+    public IEnumerable<IImageDownloaderExtension> ActiveImageDownloader => ActiveExtensions.OfType<IImageDownloaderExtension>();
+
+    public IEnumerable<INovelFormatProviderExtension> ActiveNovelFormatProviders => ActiveExtensions.OfType<INovelFormatProviderExtension>();
+
     private readonly List<ExtensionSettingsGroup> _settingsGroups = [];
 
     public int OutDateExtensionHostsCount { get; private set; }
@@ -44,7 +49,7 @@ public partial class ExtensionService : IDisposable
     {
         foreach (var dll in AppKnownFolders.Extensions.GetFiles("*.dll"))
         {
-            _ = TryLoadHost(dll,out var isOutDate);
+            _ = TryLoadHost(dll, out var isOutDate);
             if (isOutDate)
                 ++OutDateExtensionHostsCount;
         }
@@ -57,9 +62,8 @@ public partial class ExtensionService : IDisposable
         {
             if (LoadHost(path, out isOutdated) is not { } model)
                 return false;
-            model.Host.Initialize(AppSettings.CurrentCulture.Name, AppKnownFolders.Temp.FullPath, AppKnownFolders.Extensions.FullPath);
-            HostModels.Add(model);
             LoadExtensions(model);
+            HostModels.Add(model);
             return true;
         }
         catch
@@ -90,22 +94,23 @@ public partial class ExtensionService : IDisposable
             {
                 var dllGetExtensionsHostPtr =
                     PInvoke.GetProcAddress(dllHandle, nameof(IExtensionsHost.DllGetExtensionsHost));
-                if ((nint)dllGetExtensionsHostPtr is 0)
+                if ((nint) dllGetExtensionsHostPtr is 0)
                     return null;
                 var dllGetExtensionsHost = Marshal.GetDelegateForFunctionPointer<IExtensionsHost.DllGetExtensionsHost>(dllGetExtensionsHostPtr);
                 var result = dllGetExtensionsHost(out var ppv);
                 if (result is not 0)
                     return null;
                 var wrappers = new StrategyBasedComWrappers();
-                var rcw = (IExtensionsHost)wrappers.GetOrCreateObjectForComInstance(ppv, CreateObjectFlags.UniqueInstance);
+                var rcw = (IExtensionsHost) wrappers.GetOrCreateObjectForComInstance(ppv, CreateObjectFlags.UniqueInstance);
                 _ = Marshal.Release(ppv);
-                
+
                 if (rcw.GetSdkVersion() != IExtensionsHost.SdkVersion.ToString())
                 {
                     dllHandle.Dispose();
                     isOutdated = true;
                     return null;
                 }
+                rcw.Initialize(AppSettings.CurrentCulture.Name, AppKnownFolders.Temp.FullPath, AppKnownFolders.Extensions.FullPath);
                 return new(rcw) { Handle = dllHandle };
             }
             catch
@@ -125,8 +130,14 @@ public partial class ExtensionService : IDisposable
         var extensions = model.Extensions;
         foreach (var extension in extensions)
             extension.OnExtensionLoaded();
+        LoadSubExtensions(extensions);
         LoadSettingsExtension(model, extensions);
-        LoadImageTransformerExtensions(model, extensions);
+    }
+
+    private void LoadSubExtensions(IEnumerable<IExtension> extensions)
+    {
+        foreach (var imageTransformer in extensions)
+            imageTransformer.OnExtensionLoaded();
     }
 
     private void LoadSettingsExtension(ExtensionsHostModel model, IEnumerable<IExtension> extensions)
@@ -138,7 +149,6 @@ public partial class ExtensionService : IDisposable
         var settingsExtensions = extensions.OfType<ISettingsExtension>();
         foreach (var settingsExtension in settingsExtensions)
         {
-            settingsExtension.OnExtensionLoaded();
             var token = settingsExtension.GetToken();
             switch (settingsExtension)
             {
@@ -147,7 +157,7 @@ public partial class ExtensionService : IDisposable
                     if (values.TryGetValue(token, out var value) && value is string v)
                         i.OnValueChanged(v);
                     else
-                       values[token] = v = i.GetDefaultValue();
+                        values[token] = v = i.GetDefaultValue();
                     extensionSettingsGroup.Add(new ExtensionStringSettingsEntry(i, v));
                     break;
                 }
@@ -155,7 +165,7 @@ public partial class ExtensionService : IDisposable
                 {
                     if (values.TryGetValue(token, out var value) && value is int v)
                         i.OnValueChanged(v);
-                    else 
+                    else
                         values[token] = v = i.GetDefaultValue();
                     switch (i)
                     {
@@ -172,7 +182,7 @@ public partial class ExtensionService : IDisposable
                 {
                     if (values.TryGetValue(token, out var value) && value is uint v)
                         i.OnValueChanged(v);
-                    else 
+                    else
                         values[token] = v = i.GetDefaultValue();
                     extensionSettingsGroup.Add(new ExtensionColorSettingsEntry(i, v));
                     break;
@@ -215,7 +225,7 @@ public partial class ExtensionService : IDisposable
                 {
                     if (values.TryGetValue(token, out var value) && value is double v)
                         i.OnValueChanged(v);
-                    else 
+                    else
                         values[token] = v = i.GetDefaultValue();
                     extensionSettingsGroup.Add(new ExtensionDoubleSettingsEntry(i, v));
                     break;
@@ -224,13 +234,6 @@ public partial class ExtensionService : IDisposable
                     break;
             }
         }
-    }
-
-    private void LoadImageTransformerExtensions(ExtensionsHostModel model, IEnumerable<IExtension> extensions)
-    {
-        var imageTransformers = extensions.OfType<IImageTransformerCommandExtension>();
-        foreach (var imageTransformer in imageTransformers)
-            imageTransformer.OnExtensionLoaded();
     }
 
     public bool Disposed { get; private set; }

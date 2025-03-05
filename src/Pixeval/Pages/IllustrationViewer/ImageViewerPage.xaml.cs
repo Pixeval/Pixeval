@@ -13,7 +13,7 @@ public sealed partial class ImageViewerPage
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        if (parameter is ImageViewerPageViewModel viewModel) 
+        if (parameter is ImageViewerPageViewModel viewModel)
             _viewModel = viewModel;
     }
 }

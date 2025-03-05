@@ -10,7 +10,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Settings;
 
-public abstract class SingleValueSettingsEntry<TSettings, TValue> 
+public abstract class SingleValueSettingsEntry<TSettings, TValue>
     : SingleValueSettingsEntryBase<TValue>, ISingleValueSettingsEntry<TValue>, IAppSettingEntry<TSettings>
 {
     protected SingleValueSettingsEntry(TSettings settings,

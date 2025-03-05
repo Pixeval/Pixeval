@@ -78,7 +78,7 @@ public partial class MakoClient
 
             var span = contentHtml[startIndex..endIndex];
 
-            return (NovelContent)JsonSerializer.Deserialize(span, typeof(NovelContent), AppJsonSerializerContext.Default)!;
+            return (NovelContent) JsonSerializer.Deserialize(span, typeof(NovelContent), AppJsonSerializerContext.Default)!;
         });
 
     /// <summary>

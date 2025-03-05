@@ -2,9 +2,9 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using Windows.Foundation;
 using Microsoft.Windows.AppNotifications;
 using Microsoft.Windows.AppNotifications.Builder;
+using Windows.Foundation;
 
 namespace Pixeval.Util.UI;
 

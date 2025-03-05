@@ -367,9 +367,9 @@ public class FileCache
                 ++HitCount;
                 return typeof(T) switch
                 {
-                    var type when type == typeof(FileInfo) => (T)(object)file,
-                    var type when type == typeof(Stream) || type.IsAssignableTo(typeof(Stream)) => (T)(object)await file.OpenAsyncRead().CopyToMemoryStreamAsync(true),
-                    var type when type == typeof(byte[]) => (T)(object)File.ReadAllBytesAsync(file.FullName),
+                    var type when type == typeof(FileInfo) => (T) (object) file,
+                    var type when type == typeof(Stream) || type.IsAssignableTo(typeof(Stream)) => (T) (object) await file.OpenAsyncRead().CopyToMemoryStreamAsync(true),
+                    var type when type == typeof(byte[]) => (T) (object) File.ReadAllBytesAsync(file.FullName),
                     _ => ThrowHelper.NotSupported<T>("AOT")
                 };
             }
@@ -534,7 +534,7 @@ public class FileCache
         if (_indexFile.Exists)
         {
             await using var openRead = _indexFile.OpenAsyncRead();
-            _index = (Dictionary<Guid, string>)(await JsonSerializer.DeserializeAsync(openRead, typeof(Dictionary<Guid, string>), IndexContext.Default))!;
+            _index = (Dictionary<Guid, string>) (await JsonSerializer.DeserializeAsync(openRead, typeof(Dictionary<Guid, string>), IndexContext.Default))!;
         }
     }
 
@@ -548,7 +548,7 @@ public class FileCache
         if (_expireIndexFile.Exists)
         {
             await using var openRead = _expireIndexFile.OpenAsyncRead();
-            _expireIndex = (Dictionary<Guid, DateTimeOffset>)(await JsonSerializer.DeserializeAsync(openRead, typeof(Dictionary<Guid, DateTimeOffset>), ExpireIndexContext.Default))!;
+            _expireIndex = (Dictionary<Guid, DateTimeOffset>) (await JsonSerializer.DeserializeAsync(openRead, typeof(Dictionary<Guid, DateTimeOffset>), ExpireIndexContext.Default))!;
         }
     }
 

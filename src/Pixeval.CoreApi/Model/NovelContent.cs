@@ -314,7 +314,7 @@ internal class SpecialDictionaryConverter<T> : JsonConverter<T[]>
                     return ThrowUtils.Json<T[]>();
                 case JsonTokenType.PropertyName:
                 {
-                    var propertyValue = (T)JsonSerializer.Deserialize(ref reader, typeof(T), AppJsonSerializerContext.Default)!;
+                    var propertyValue = (T) JsonSerializer.Deserialize(ref reader, typeof(T), AppJsonSerializerContext.Default)!;
                     list.Add(propertyValue);
                     break;
                 }

@@ -3,18 +3,18 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.UI.Xaml.Input;
-using Pixeval.Util.UI;
-using Pixeval.Util;
-using Microsoft.UI.Xaml.Controls;
-using Pixeval.Utilities;
-using System.Threading.Tasks;
 using System.IO;
 using System.Linq;
-using Pixeval.Download;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Pixeval.Download;
+using Pixeval.Util;
 using Pixeval.Util.IO;
+using Pixeval.Util.UI;
+using Pixeval.Utilities;
 using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Controls;

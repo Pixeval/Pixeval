@@ -1,8 +1,8 @@
 // Copyright (c) Pixeval.Controls.
 // Licensed under the GPL v3 License.
 
-using Windows.Foundation;
 using Microsoft.UI.Xaml;
+using Windows.Foundation;
 
 namespace Pixeval.Controls;
 

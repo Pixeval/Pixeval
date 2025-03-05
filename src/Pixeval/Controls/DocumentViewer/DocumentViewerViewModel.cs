@@ -208,7 +208,7 @@ public partial class DocumentViewerViewModel(FrameworkElement frameworkElement) 
             var currentPageCount = _markdownTexts.Count;
             if (currentPageCount > CurrentPage)
                 return _markdownTexts[CurrentPage];
-            
+
             var length = NovelContent.Text.Length;
             for (var i = currentPageCount; _lastIndex < length || CurrentPage >= i; ++i)
             {

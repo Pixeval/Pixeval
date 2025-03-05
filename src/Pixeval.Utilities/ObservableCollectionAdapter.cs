@@ -73,7 +73,7 @@ public class ObservableCollectionAdapter<TInput, TOutput> : ObservableCollection
                     return;
                 for (var i = 0; i < args.NewItems.Count; ++i)
                 {
-                    var input = (TInput)args.NewItems[i]!;
+                    var input = (TInput) args.NewItems[i]!;
                     if (_filter?.Invoke(input) is false)
                         continue;
                     var item = TOutput.CreateInstance(input);
@@ -92,7 +92,7 @@ public class ObservableCollectionAdapter<TInput, TOutput> : ObservableCollection
                 var removedCount = 0;
                 for (var i = 0; i < args.NewItems.Count; ++i)
                 {
-                    var input = (TInput)args.NewItems[i]!;
+                    var input = (TInput) args.NewItems[i]!;
                     if (_filter?.Invoke(input) is false)
                     {
                         RemoveAt(args.OldStartingIndex + i - removedCount);

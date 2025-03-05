@@ -8,30 +8,30 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using FluentIcons.Common;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Pixeval.AppManagement;
+using Pixeval.Attributes;
+using Pixeval.Controls;
+using Pixeval.CoreApi.Net.Response;
+using Pixeval.Database.Managers;
+using Pixeval.Download;
+using Pixeval.Extensions.Common;
+using Pixeval.Extensions.Common.Commands.Transformers;
+using Pixeval.Util.ComponentModels;
+using Pixeval.Util.IO;
+using Pixeval.Util.IO.Caching;
+using Pixeval.Util.UI;
+using Pixeval.Utilities;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.System;
 using Windows.System.UserProfile;
-using CommunityToolkit.Mvvm.ComponentModel;
-using FluentIcons.Common;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Pixeval.Attributes;
-using Pixeval.Controls;
-using Pixeval.Database.Managers;
-using Pixeval.Util.IO;
-using Pixeval.Util.UI;
-using Pixeval.Utilities;
-using Pixeval.AppManagement;
-using Pixeval.CoreApi.Net.Response;
-using Pixeval.Download;
-using Pixeval.Util.ComponentModels;
-using Pixeval.Extensions.Common;
-using Windows.ApplicationModel.DataTransfer;
-using Microsoft.UI.Xaml;
-using Pixeval.Extensions.Common.Commands.Transformers;
 using WinUI3Utilities;
-using Pixeval.Util.IO.Caching;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -226,7 +226,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                 // 显示图片
                 var last = DisplayStreamsSource;
                 DisplayStreamsSource = (IReadOnlyList<Stream>) [memoryStream];
-                if (last is IReadOnlyList<Stream> and [IDisposable disposable]&& !ReferenceEquals(disposable, stream))
+                if (last is IReadOnlyList<Stream> and [IDisposable disposable] && !ReferenceEquals(disposable, stream))
                     disposable.Dispose();
                 if (!token.IsCancellationRequested)
                     FrameworkElement.SuccessGrowl(ImageViewerPageResources.TransformerExtensionFinishedSuccessfully);
@@ -258,7 +258,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         LoadingProgress = progress;
         LoadingText = phase switch
         {
-            LoadingPhase.DownloadingImage => LoadingPhaseExtension.GetResource(LoadingPhase.DownloadingImage).Format((int)progress),
+            LoadingPhase.DownloadingImage => LoadingPhaseExtension.GetResource(LoadingPhase.DownloadingImage).Format((int) progress),
             _ => LoadingPhaseExtension.GetResource(phase)
         };
     }
@@ -317,7 +317,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                 if (ugoiraUrl is null)
                 {
                     ugoiraUrl = IllustrationViewModel.StaticUrl(_isOriginal);
-                    if (await DownloadUrlAsync(ugoiraUrl) is { } s) 
+                    if (await DownloadUrlAsync(ugoiraUrl) is { } s)
                         source = (IReadOnlyList<Stream>) [s];
                 }
                 // 非原图动图（压缩包）
@@ -391,7 +391,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void ShareCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        DataTransferManagerInterop.ShowShareUIForWindow((nint)Window.HWnd);
+        DataTransferManagerInterop.ShowShareUIForWindow((nint) Window.HWnd);
     }
 
     private void InitializeCommands()
@@ -451,7 +451,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     private void LoadingCompletedCanExecuteRequested(XamlUICommand _, CanExecuteRequestedEventArgs args) => args.CanExecute = LoadSuccessfully;
 
     private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully;
-    
+
     private void ExtensionCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully && ExtensionRunningLock;
 
     public (FrameworkElement, GetImageStreams) DownloadParameter => (FrameworkElement, GetImageStreamsAsync);
@@ -491,7 +491,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         IllustrationViewModel.UnloadThumbnail(this);
 
         OriginalStreamsSource = null;
-        
+
         LoadSuccessfully = false;
     }
 }

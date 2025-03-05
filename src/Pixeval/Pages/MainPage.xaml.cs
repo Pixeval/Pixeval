@@ -6,11 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage;
-using Windows.System;
-using Windows.UI;
-using Windows.UI.Core;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Graphics.Canvas.Geometry;
@@ -21,23 +16,26 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.Database.Managers;
-using Pixeval.Messages;
-using Pixeval.Util;
-using Pixeval.Util.UI;
-using Pixeval.Utilities;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
 using Pixeval.Controls.Windowing;
 using Pixeval.CoreApi.Global.Enum;
+using Pixeval.Database.Managers;
 using Pixeval.Logging;
+using Pixeval.Messages;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.IllustratorViewer;
-using Pixeval.Pages.NovelViewer;
-using WinUI3Utilities;
 using Pixeval.Pages.Misc;
-using CommunityToolkit.WinUI.Controls;
-using Windows.UI.ApplicationSettings;
+using Pixeval.Pages.NovelViewer;
+using Pixeval.Util;
+using Pixeval.Util.UI;
+using Pixeval.Utilities;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
+using Windows.System;
+using Windows.UI;
+using Windows.UI.Core;
+using WinUI3Utilities;
 
 namespace Pixeval.Pages;
 
@@ -82,7 +80,7 @@ public sealed partial class MainPage
             PerformSearchWork(message.Type, message.Tag);
         });
 
-        if (_viewModel.MenuItems[(int)App.AppViewModel.AppSettings.DefaultSelectedTabItem] is NavigationViewTag tag)
+        if (_viewModel.MenuItems[(int) App.AppViewModel.AppSettings.DefaultSelectedTabItem] is NavigationViewTag tag)
             MainPageRootTab.AddPage(tag);
 
         // LoadRestrictedModeSettings();
@@ -156,7 +154,7 @@ public sealed partial class MainPage
     {
         if (FocusManager.GetFocusedElement(XamlRoot) is not TextBox)
             return;
-        var suggestBox = (AutoSuggestBox)sender;
+        var suggestBox = (AutoSuggestBox) sender;
         suggestBox.IsSuggestionListOpen = true;
         await _viewModel.SuggestionProvider.UpdateAsync(suggestBox.Text);
     }
@@ -265,7 +263,7 @@ public sealed partial class MainPage
 
     private void NavigateToSettingEntry(SettingsEntryAttribute entry)
     {
-        if (MainPageRootTab.TabView.TabItems.FirstOrDefault(t => t is TabViewItem { Content: Frame { Content : SettingsPage } }) is
+        if (MainPageRootTab.TabView.TabItems.FirstOrDefault(t => t is TabViewItem { Content: Frame { Content: SettingsPage } }) is
             TabViewItem { Content: Frame { Content: SettingsPage page } } item)
         {
             if (Equals(MainPageRootTab.TabView.SelectedItem, item))
@@ -323,7 +321,7 @@ public sealed partial class MainPage
     private async Task ShowReverseSearchApiKeyNotPresentDialog()
     {
         var result = await this.CreateOkCancelAsync(MainPageResources.ReverseSearchApiKeyNotPresentTitle, ReverseSearchApiKeyNotPresentDialogResources.MessageTextBlockText, ReverseSearchApiKeyNotPresentDialogResources.SetApiKeyHyperlinkButtonContent);
-        if (result is ContentDialogResult.Primary) 
+        if (result is ContentDialogResult.Primary)
             NavigateToSettingEntry(ReverseSearchApiKeyAttribute.Value);
     }
 

@@ -2,10 +2,10 @@
 // Licensed under the GPL v3 License.
 
 using System.Collections.Generic;
-using Microsoft.UI.Xaml;
-using Pixeval.Utilities;
 using CommunityToolkit.WinUI;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Documents;
+using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
@@ -34,7 +34,7 @@ public sealed partial class DocumentViewer
     partial void OnParagraphsPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
         NovelRichTextBlock.Blocks.Clear();
-        if (Paragraphs is not null) 
+        if (Paragraphs is not null)
             NovelRichTextBlock.Blocks.AddRange(Paragraphs);
     }
 }

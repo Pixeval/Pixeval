@@ -12,7 +12,7 @@ public class NovelCommentRepliesEngine(string commentId, MakoClient makoClient, 
 {
     public override IAsyncEnumerator<Comment> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
         new RecursivePixivAsyncEnumerators.Comment<NovelCommentRepliesEngine>(
-            this, 
+            this,
             $"/v2/novel/comment/replies" +
             $"?comment_id={commentId}");
 }

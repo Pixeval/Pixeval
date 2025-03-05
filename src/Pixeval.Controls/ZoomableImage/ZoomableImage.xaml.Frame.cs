@@ -2,15 +2,15 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using Microsoft.Graphics.Canvas.Effects;
-using Microsoft.Graphics.Canvas.UI.Xaml;
-using Microsoft.Graphics.Canvas;
-using Microsoft.UI.Xaml;
-using Microsoft.UI;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using System.Threading;
+using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.Effects;
+using Microsoft.Graphics.Canvas.UI.Xaml;
+using Microsoft.UI;
+using Microsoft.UI.Xaml;
 using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
@@ -118,7 +118,7 @@ public partial class ZoomableImage
                     M22 = 1
                 };
                 // 平移回原来位置
-                transform *= Matrix3x2.CreateTranslation((float)OriginalImageWidth, 0);
+                transform *= Matrix3x2.CreateTranslation((float) OriginalImageWidth, 0);
             }
 
             transform *= Matrix3x2.CreateRotation(
@@ -126,9 +126,9 @@ public partial class ZoomableImage
 
             transform *= ImageRotationDegree switch
             {
-                90 => Matrix3x2.CreateTranslation((float)OriginalImageHeight, 0),
-                180 => Matrix3x2.CreateTranslation((float)OriginalImageWidth, (float)OriginalImageHeight),
-                270 => Matrix3x2.CreateTranslation(0, (float)OriginalImageWidth),
+                90 => Matrix3x2.CreateTranslation((float) OriginalImageHeight, 0),
+                180 => Matrix3x2.CreateTranslation((float) OriginalImageWidth, (float) OriginalImageHeight),
+                270 => Matrix3x2.CreateTranslation(0, (float) OriginalImageWidth),
                 _ => Matrix3x2.Identity
             };
 
@@ -143,7 +143,7 @@ public partial class ZoomableImage
                 InterpolationMode = CanvasImageInterpolation.MultiSampleLinear
             };
 
-            e.DrawingSession.DrawImage(image, new Vector2((float)x, (float)y));
+            e.DrawingSession.DrawImage(image, new Vector2((float) x, (float) y));
         }
     }
 }

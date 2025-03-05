@@ -12,6 +12,6 @@ public partial class SimpleSettingsGroup(SettingsEntryCategory tag) : List<IAppS
     public SettingsEntryCategory Tag { get; } = tag;
 
     public string Header { get; } = SettingsEntryCategoryExtension.GetResource(tag);
-    
-    IEnumerator<ISettingsEntry> IEnumerable<ISettingsEntry>.GetEnumerator() => ((IEnumerable<IAppSettingEntry<AppSettings>>)this).GetEnumerator();
+
+    IEnumerator<ISettingsEntry> IEnumerable<ISettingsEntry>.GetEnumerator() => ((IEnumerable<IAppSettingEntry<AppSettings>>) this).GetEnumerator();
 }

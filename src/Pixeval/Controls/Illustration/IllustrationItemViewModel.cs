@@ -44,7 +44,7 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<Illustration
 
     public int Height => Entry.Height;
 
-    public double AspectRatio => (double)Width / Height;
+    public double AspectRatio => (double) Width / Height;
 
     public Task<UgoiraMetadataResponse> UgoiraMetadata { get; }
 

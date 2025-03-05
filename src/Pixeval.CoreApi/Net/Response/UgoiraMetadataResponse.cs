@@ -15,7 +15,7 @@ public partial record UgoiraMetadataResponse
 
     public int FrameCount => UgoiraMetadataInfo.Frames.Length;
 
-    public IEnumerable<int> Delays => UgoiraMetadataInfo.Frames.Select(t => (int)t.Delay);
+    public IEnumerable<int> Delays => UgoiraMetadataInfo.Frames.Select(t => (int) t.Delay);
 
     public string MediumUrl => UgoiraMetadataInfo.ZipUrls.Medium;
 

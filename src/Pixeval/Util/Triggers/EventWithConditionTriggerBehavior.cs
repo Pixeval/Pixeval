@@ -129,7 +129,7 @@ public partial class EventWithConditionTriggerBehavior : Trigger
         else if (_isLoadedEventRegistered)
         {
             _isLoadedEventRegistered = false;
-            var element = (FrameworkElement)_resolvedSource!;
+            var element = (FrameworkElement) _resolvedSource!;
             element.Loaded -= OnEvent;
         }
     }
@@ -152,8 +152,8 @@ public partial class EventWithConditionTriggerBehavior : Trigger
             return;
         }
 
-        var oldEventName = (string)e.OldValue;
-        var newEventName = (string)e.NewValue;
+        var oldEventName = (string) e.OldValue;
+        var newEventName = (string) e.NewValue;
 
         UnregisterEvent(oldEventName);
         RegisterEvent(newEventName);
@@ -166,7 +166,7 @@ public partial class EventWithConditionTriggerBehavior : Trigger
             return false;
         }
 
-        var rootVisual = (UIElement?)null;
+        var rootVisual = (UIElement?) null;
         if (element.XamlRoot is not null)
         {
             rootVisual = element.XamlRoot.Content;

@@ -2,14 +2,14 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using Windows.System;
-using Microsoft.UI.Xaml.Input;
-using Pixeval.Util.UI;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentIcons.Common;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Input;
 using Pixeval.CoreApi.Model;
+using Pixeval.Util.UI;
+using Windows.System;
 
 namespace Pixeval.Controls;
 

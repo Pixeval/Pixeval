@@ -3,21 +3,19 @@
 
 using System.ComponentModel;
 using System.Linq;
-using System.Numerics;
-using System.Threading.Tasks;
-using Windows.System;
-using WinUI3Utilities;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
-using WinRT;
-using Microsoft.Extensions.DependencyInjection;
 using Pixeval.CoreApi.Model;
 using Pixeval.Extensions;
-using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
 using Pixeval.Extensions.Common.Commands.Transformers;
+using Windows.System;
+using WinRT;
+using WinUI3Utilities;
+using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
 
 namespace Pixeval.Pages.NovelViewer;
 

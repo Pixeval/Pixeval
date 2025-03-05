@@ -8,8 +8,8 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using static Pixeval.SourceGen.SyntaxHelper;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static Pixeval.SourceGen.SyntaxHelper;
 
 namespace Pixeval.SourceGen;
 

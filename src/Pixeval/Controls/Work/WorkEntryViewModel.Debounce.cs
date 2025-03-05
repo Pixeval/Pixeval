@@ -1,9 +1,9 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Pixeval.Utilities;
-using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 

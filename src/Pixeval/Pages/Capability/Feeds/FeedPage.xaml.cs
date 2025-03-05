@@ -4,12 +4,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
-using Windows.UI.Text;
-using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Documents;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Pixeval.Controls;
 using Pixeval.CoreApi.Model;
@@ -17,6 +16,7 @@ using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Pages.NovelViewer;
 using Pixeval.Utilities;
+using Windows.UI.Text;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Capability.Feeds;
@@ -54,14 +54,14 @@ public sealed partial class FeedPage
         var isSparse = vm is FeedItemSparseViewModel;
 
         var entry = vm.GetMostSignificantEntry()!;
-        var feedNameString = vm is FeedItemCondensedViewModel { Entry: IFeedEntry.CondensedFeedEntry(var entries) } 
+        var feedNameString = vm is FeedItemCondensedViewModel { Entry: IFeedEntry.CondensedFeedEntry(var entries) }
             ? GetVmEmphasizedRun(string.Join(", ", entries.Take(2).Select(e => e?.FeedName)))
             : GetVmEmphasizedRun(entry.FeedName ?? string.Empty);
         var entriesLengthIfCondensed = vm is FeedItemCondensedViewModel { Entry: IFeedEntry.CondensedFeedEntry({ Count: var count }) }
             ? count
             : 0;
 
-        contentTextBlock ?.Inlines.Clear();
+        contentTextBlock?.Inlines.Clear();
         switch (entry.Type)
         {
             case FeedType.AddBookmark or FeedType.AddNovelBookmark:
@@ -133,7 +133,7 @@ public sealed partial class FeedPage
                 switch (vm.GetMostSignificantEntry()!.Type)
                 {
                     case FeedType.AddBookmark or FeedType.PostIllust:
-                        IEnumerable<IWorkEntry> illustrations = await _viewModel.PerformLoadAsync(() => 
+                        IEnumerable<IWorkEntry> illustrations = await _viewModel.PerformLoadAsync(() =>
                             Task.WhenAll(entries.Select(entry => App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(entry!.Id))));
                         _ = FeedPageFrame.Navigate(typeof(CondensedFeedPage), illustrations, new CommonNavigationTransitionInfo());
                         break;

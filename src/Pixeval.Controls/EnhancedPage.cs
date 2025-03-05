@@ -35,7 +35,6 @@ public partial class EnhancedPage : Page, IStructuralDisposalCompleter
         {
             if (this is IStructuralDisposalCompleter completer)
             {
-
                 // Hook the disposal event of current page to its parent
                 completer.Hook();
             }
@@ -105,7 +104,5 @@ public partial class EnhancedPage : Page, IStructuralDisposalCompleter
     public virtual void CompleteDisposal()
     {
         Content = null;
-        GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
-        GC.Collect();
     }
 }

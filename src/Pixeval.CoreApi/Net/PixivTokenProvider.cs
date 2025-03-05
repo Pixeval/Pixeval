@@ -26,7 +26,7 @@ public class PixivTokenProvider(IServiceProvider serviceProvider, TokenResponse 
         await _asyncRoot.WaitAsync().ConfigureAwait(false);
         try
         {
-            if (string.IsNullOrWhiteSpace(_tokenResponse.AccessToken) 
+            if (string.IsNullOrWhiteSpace(_tokenResponse.AccessToken)
                 || DateTime.Now > _lastRefreshTime + TimeSpan.FromSeconds(_tokenResponse.ExpiresIn))
             {
                 var token = await serviceProvider.GetRequiredService<IAuthEndPoint>()

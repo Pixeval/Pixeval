@@ -12,7 +12,7 @@ internal class MyPixivUserEngine(MakoClient makoClient, long userId, EngineHandl
 {
     public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
         new RecursivePixivAsyncEnumerators.User<MyPixivUserEngine>(
-            this, 
-            "/v1/user/mypixiv" + 
+            this,
+            "/v1/user/mypixiv" +
             $"?user_id={userId}");
 }

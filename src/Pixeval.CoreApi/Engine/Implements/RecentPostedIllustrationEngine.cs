@@ -14,7 +14,7 @@ public class RecentPostedIllustrationEngine(MakoClient makoClient, PrivacyPolicy
 {
     public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
         new RecursivePixivAsyncEnumerators.Illustration<RecentPostedIllustrationEngine>(
-            this, 
-            "/v2/illust/follow" + 
+            this,
+            "/v2/illust/follow" +
             $"?restrict={privacyPolicy.GetDescription()}");
 }

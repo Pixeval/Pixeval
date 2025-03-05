@@ -13,5 +13,5 @@ public partial class ExtensionSettingsGroup(ExtensionsHostModel model) : List<IE
 
     public string Header { get; } = model.Name;
 
-    IEnumerator<ISettingsEntry> IEnumerable<ISettingsEntry>.GetEnumerator() => ((IEnumerable<IExtensionSettingEntry>)this).GetEnumerator();
+    IEnumerator<ISettingsEntry> IEnumerable<ISettingsEntry>.GetEnumerator() => ((IEnumerable<IExtensionSettingEntry>) this).GetEnumerator();
 }

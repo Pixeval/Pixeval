@@ -152,7 +152,7 @@ public class CacheTable<TKey, THeader, TProtocol>(
         {
             unsafe
             {
-                var pointer =(byte*) Unsafe.AsPointer(ref MemoryMarshal.GetReference(span));
+                var pointer = (byte*) Unsafe.AsPointer(ref MemoryMarshal.GetReference(span));
                 var newStream = new UnmanagedMemoryStream(pointer, span.Length);
                 _ = newStream.Seek(0, SeekOrigin.Begin);
                 readonlyStream = newStream;

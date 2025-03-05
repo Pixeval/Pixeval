@@ -1,12 +1,12 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Windows.System;
-using Microsoft.UI.Xaml.Controls;
-using WinUI3Utilities;
 using System;
 using System.Collections.Generic;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Windows.System;
+using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 

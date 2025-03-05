@@ -33,7 +33,7 @@ public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessed
     IReadOnlyCollection<IWorkViewModel> ISortableEntryViewViewModel.SelectedEntries
     {
         get => SelectedEntries;
-        set => SelectedEntries = (TViewModel[])value;
+        set => SelectedEntries = (TViewModel[]) value;
     }
 
     public bool IsAnyEntrySelected => SelectedEntries.Length > 0;
@@ -80,7 +80,7 @@ public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessed
 
     public void ResetEngine(IFetchEngine<IWorkEntry>? newEngine, int itemsPerPage = 20, int itemLimit = -1)
     {
-        DataProvider.ResetEngine((IFetchEngine<T>?)newEngine, itemsPerPage, itemLimit);
+        DataProvider.ResetEngine((IFetchEngine<T>?) newEngine, itemsPerPage, itemLimit);
     }
 
     public void ResetSource(ObservableCollection<IWorkEntry>? source) => ThrowHelper.NotSupported();

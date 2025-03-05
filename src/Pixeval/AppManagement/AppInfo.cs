@@ -5,19 +5,19 @@ using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Microsoft.Windows.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Windowing;
+using Microsoft.Windows.Storage;
 using Pixeval.Controls.Windowing;
+using Pixeval.CoreApi.Net;
 using Pixeval.Database.Managers;
 using Pixeval.Util.IO;
+using Pixeval.Util.IO.Caching;
+using Pixeval.Util.UI;
+using Windows.ApplicationModel;
+using Windows.Foundation.Collections;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
-using Windows.ApplicationModel;
-using Microsoft.UI.Windowing;
-using Pixeval.CoreApi.Net;
-using Pixeval.Util.UI;
-using Windows.Foundation.Collections;
-using Pixeval.Util.IO.Caching;
 
 namespace Pixeval.AppManagement;
 

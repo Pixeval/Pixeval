@@ -3,10 +3,7 @@
 
 using System;
 using System.Linq;
-using System.Numerics;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -14,13 +11,14 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
-using Pixeval.Utilities;
-using WinRT;
-using WinUI3Utilities;
-using Windows.System;
-using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Extensions;
 using Pixeval.Extensions.Common.Commands.Transformers;
+using Pixeval.Utilities;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
+using Windows.System;
+using WinRT;
+using WinUI3Utilities;
 using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -192,7 +190,7 @@ public sealed partial class IllustrationViewerPage
 
     private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        var dataTransferManager = DataTransferManagerInterop.GetForWindow((nint)Window.HWnd);
+        var dataTransferManager = DataTransferManagerInterop.GetForWindow((nint) Window.HWnd);
         dataTransferManager.DataRequested += OnDataTransferManagerOnDataRequested;
         return;
         async void OnDataTransferManagerOnDataRequested(DataTransferManager s, DataRequestedEventArgs args)

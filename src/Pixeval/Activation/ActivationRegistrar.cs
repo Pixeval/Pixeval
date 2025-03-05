@@ -3,14 +3,14 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Windows.ApplicationModel.Activation;
-using Microsoft.Windows.AppLifecycle;
 using System.Web;
-using Pixeval.Pages.Login;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Windows.AppLifecycle;
 using Pixeval.CoreApi;
 using Pixeval.Logging;
+using Pixeval.Pages.Login;
 using Pixeval.Util.Threading;
+using Windows.ApplicationModel.Activation;
 
 namespace Pixeval.Activation;
 
@@ -50,7 +50,7 @@ public static class ActivationRegistrar
                     if (tokenResponse is null)
                         return;
                     var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
-                    App.AppViewModel.MakoClient = new MakoClient(tokenResponse, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger); 
+                    App.AppViewModel.MakoClient = new MakoClient(tokenResponse, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
                     _ = ThreadingHelper.DispatchAsync(LoginPage.SuccessNavigating);
                     break;
                 }

@@ -14,7 +14,7 @@ internal class RecommendIllustratorEngine(MakoClient makoClient, TargetFilter ta
 {
     public override IAsyncEnumerator<User> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
         new RecursivePixivAsyncEnumerators.User<RecommendIllustratorEngine>(
-            this, 
+            this,
             "/v1/user/recommended" +
             $"?filter={targetFilter.GetDescription()}");
 }

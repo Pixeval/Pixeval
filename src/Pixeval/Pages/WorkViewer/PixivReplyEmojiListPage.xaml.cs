@@ -31,7 +31,7 @@ public sealed partial class PixivReplyEmojiListPage
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        _replyBar = (PixivReplyBar)e.Parameter;
+        _replyBar = (PixivReplyBar) e.Parameter;
     }
 
     private static async void LoadEmojis()
@@ -42,8 +42,8 @@ public sealed partial class PixivReplyEmojiListPage
         {
             var tasks = await Task.WhenAll(Enum.GetValues<PixivReplyEmoji>()
                 .Select(async emoji => new PixivReplyEmojiViewModel(
-                    emoji, 
-                    await CacheHelper.GetStreamFromCacheAsync(emoji.GetReplyEmojiDownloadUrl()), 
+                    emoji,
+                    await CacheHelper.GetStreamFromCacheAsync(emoji.GetReplyEmojiDownloadUrl()),
                     await CacheHelper.GetSourceFromCacheAsync(emoji.GetReplyEmojiDownloadUrl()))));
             EmojiList.AddRange(tasks);
         }

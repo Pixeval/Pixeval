@@ -20,8 +20,9 @@ internal class PixivImageHttpMessageHandler(MakoClient makoClient) : MakoClientS
 
         request.Headers.UserAgent.AddRange(MakoClient.Configuration.UserAgent);
 
-        var requestUri = request.RequestUri!;
-        if (requestUri.Host is MakoHttpOptions.ImageHost && MakoClient.Configuration.MirrorHost is { } mirror && mirror.IsNotNullOrBlank())
+        if (request.RequestUri is { Host: MakoHttpOptions.ImageHost } requestUri
+            && MakoClient.Configuration.MirrorHost is { } mirror
+            && !string.IsNullOrWhiteSpace(mirror))
         {
             request.RequestUri = mirror switch
             {
@@ -30,7 +31,7 @@ internal class PixivImageHttpMessageHandler(MakoClient makoClient) : MakoClientS
                 _ => ThrowUtils.UriFormat<Uri>("Expecting a valid Host or URI")
             };
         }
-        
+
         return GetHttpMessageInvoker(MakoClient.Configuration.DomainFronting)
             .SendAsync(request, cancellationToken);
     }

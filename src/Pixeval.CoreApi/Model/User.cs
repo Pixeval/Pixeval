@@ -15,10 +15,10 @@ public partial record User : IIdEntry
     [JsonPropertyName("user")]
     public required UserInfo UserInfo { get; set; }
 
-    [JsonPropertyName("illusts")] 
+    [JsonPropertyName("illusts")]
     public required Illustration[] Illustrations { get; set; } = [];
 
-    [JsonPropertyName("novels")] 
+    [JsonPropertyName("novels")]
     public required Novel[] Novels { get; set; } = [];
 
     [JsonPropertyName("is_muted")]

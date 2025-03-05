@@ -11,7 +11,7 @@ namespace Pixeval.Controls;
 
 public class PixivNovelMdParser<T>(StringBuilder sb, int pageIndex) : PixivNovelParser<StringBuilder, T, INovelContext<T>> where T : class
 {
-    protected override StringBuilder Vector => sb.AppendLine($"<div id=\"page{pageIndex}\" />"+ Environment.NewLine);
+    protected override StringBuilder Vector => sb.AppendLine($"<div id=\"page{pageIndex}\" />" + Environment.NewLine);
 
     protected override void AddLastSpan(StringBuilder currentText, string lastSpan)
     {
@@ -74,7 +74,7 @@ public class PixivNovelMdDisplayParser(StringBuilder sb, int pageIndex) : PixivN
     {
         _ = currentText
             .AppendLine()
-            .Append($"![{imageId}]({Array.Find(viewModel.NovelContent.Images, t=>t.NovelImageId == imageId)?.ThumbnailUrl})")
+            .Append($"![{imageId}]({Array.Find(viewModel.NovelContent.Images, t => t.NovelImageId == imageId)?.ThumbnailUrl})")
             .AppendLine();
     }
 

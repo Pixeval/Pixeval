@@ -37,13 +37,12 @@ public interface IStructuralDisposalCompleter : IPageDisposalCompleter
 
     void CompleteDisposalRecursively()
     {
-        if (CompleterDisposed) return;
+        if (CompleterDisposed)
+            return;
         CompleterDisposed = true;
         CompleteDisposal();
-        foreach (var childrenComplete in ChildrenCompletes)
-        {
+        foreach (var childrenComplete in ChildrenCompletes) 
             childrenComplete();
-        }
     }
 
     /// <summary>

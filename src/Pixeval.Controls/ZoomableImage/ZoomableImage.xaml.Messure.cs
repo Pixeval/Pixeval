@@ -2,10 +2,10 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using Windows.Foundation;
-using Microsoft.UI.Xaml.Input;
-using WinUI3Utilities;
 using Microsoft.Graphics.Canvas.UI.Xaml;
+using Microsoft.UI.Xaml.Input;
+using Windows.Foundation;
+using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 

@@ -234,7 +234,7 @@ public partial class MakoClient
 
     public IFetchEngine<IWorkEntry> NewWorks(WorkType type,
         TargetFilter targetFilter = TargetFilter.ForAndroid,
-        uint ? maxId = null)
+        uint? maxId = null)
     {
         return type switch
         {

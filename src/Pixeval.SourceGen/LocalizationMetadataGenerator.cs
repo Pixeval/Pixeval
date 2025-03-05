@@ -1,15 +1,15 @@
 // Copyright (c) Pixeval.SourceGen.
 // Licensed under the GPL v3 License.
 
-using Microsoft.CodeAnalysis;
-using static Pixeval.SourceGen.SyntaxHelper;
-using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.CSharp;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
-using System.Collections.Generic;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static Pixeval.SourceGen.SyntaxHelper;
 
 namespace Pixeval.SourceGen;
 

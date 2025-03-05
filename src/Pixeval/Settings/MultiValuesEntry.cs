@@ -1,15 +1,15 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using System;
 using System.Collections.Generic;
-using Windows.Foundation.Collections;
+using System.Linq.Expressions;
+using System.Reflection;
 using FluentIcons.Common;
 using Pixeval.AppManagement;
-using Pixeval.Controls.Settings;
-using System.Linq.Expressions;
-using System;
-using System.Reflection;
 using Pixeval.Attributes;
+using Pixeval.Controls.Settings;
+using Windows.Foundation.Collections;
 using WinUI3Utilities;
 
 namespace Pixeval.Settings;
@@ -18,7 +18,7 @@ public class MultiValuesEntry(
     string header,
     string description,
     Symbol headerIcon,
-    IReadOnlyList<IAppSettingEntry<AppSettings>> entries) 
+    IReadOnlyList<IAppSettingEntry<AppSettings>> entries)
     : SettingsEntryBase(header, description, headerIcon), IAppSettingEntry<AppSettings>
 {
     /// <summary>

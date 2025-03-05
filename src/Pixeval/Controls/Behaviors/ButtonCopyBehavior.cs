@@ -12,7 +12,7 @@ namespace Pixeval.Controls;
 public partial class ButtonCopyBehavior : Behavior<Button>
 {
     [GeneratedDependencyProperty]
-    public partial string? TargetText { get; set; } 
+    public partial string? TargetText { get; set; }
 
     protected override void OnAttached()
     {

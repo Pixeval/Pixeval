@@ -37,7 +37,7 @@ public partial record Novel : IWorkEntry
     [JsonPropertyName("create_date")]
     public required DateTimeOffset CreateDate { get; set; }
 
-    [JsonPropertyName("tags")] 
+    [JsonPropertyName("tags")]
     public required Tag[] Tags { get; set; } = [];
 
     [JsonPropertyName("page_count")]

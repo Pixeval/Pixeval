@@ -15,6 +15,6 @@ public class RelatedWorksFetchEngine(long illustId, MakoClient makoClient, Targe
 {
     public override IAsyncEnumerator<Illustration> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
         new RecursivePixivAsyncEnumerators.Illustration<RelatedWorksFetchEngine>(
-            this, 
+            this,
             $"/v2/illust/related?filter={targetFilter.GetDescription()}&illust_id={illustId}");
 }

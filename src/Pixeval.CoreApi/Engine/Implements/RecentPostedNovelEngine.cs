@@ -16,7 +16,7 @@ public class RecentPostedNovelEngine(MakoClient makoClient, PrivacyPolicy privac
 
     public override IAsyncEnumerator<Novel> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken()) =>
         new RecursivePixivAsyncEnumerators.Novel<RecentPostedNovelEngine>(
-            this, 
+            this,
             "/v1/novel/follow"
             + $"?restrict={privacyPolicy.GetDescription()}");
 }

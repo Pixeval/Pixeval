@@ -3,11 +3,11 @@
 
 using System;
 using System.Text;
-using Windows.System;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
+using Windows.System;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Misc;
@@ -23,7 +23,7 @@ public sealed partial class AboutPage
     public AboutPage()
     {
         InitializeComponent();
-        UniformGrid.SizeChanged += (sender, args) => sender.To<UniformGrid>().Columns = (int)(args.NewSize.Width / 140);
+        UniformGrid.SizeChanged += (sender, args) => sender.To<UniformGrid>().Columns = (int) (args.NewSize.Width / 140);
         LoadData();
     }
 

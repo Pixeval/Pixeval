@@ -28,13 +28,13 @@ public class Versioning
         if (newVersion is not { } version)
             return UpdateState.Unknown;
 
-        var currentLong = ((ulong)currentVersion.Major << 0x30) +
-                          ((ulong)currentVersion.Minor << 0x20) + 
-                          ((ulong)currentVersion.Build << 0x10) + 
+        var currentLong = ((ulong) currentVersion.Major << 0x30) +
+                          ((ulong) currentVersion.Minor << 0x20) +
+                          ((ulong) currentVersion.Build << 0x10) +
                           currentVersion.Revision;
-        var newLong = ((ulong)version.Major << 0x30) + 
-                      ((ulong)version.Minor << 0x20) + 
-                      ((ulong)version.Build << 0x10) + 
+        var newLong = ((ulong) version.Major << 0x30) +
+                      ((ulong) version.Minor << 0x20) +
+                      ((ulong) version.Build << 0x10) +
                       version.Revision;
 
         if (currentLong > newLong)
@@ -68,8 +68,8 @@ public class Versioning
                 foreach (var release in gitHubReleases)
                 {
                     var tags = release.TagName.Split('.')
-                        .Select(t => ushort.TryParse(t, out var result) ? result : (ushort)0u)
-                        .Concat(Enumerable.Repeat((ushort)0u, 4)).ToArray();
+                        .Select(t => ushort.TryParse(t, out var result) ? result : (ushort) 0u)
+                        .Concat(Enumerable.Repeat((ushort) 0u, 4)).ToArray();
                     var version = new PackageVersion(tags[0], tags[1], tags[2], tags[3]);
                     var str = release.Assets.FirstOrDefault(t =>
                         t.BrowserDownloadUrl.EndsWith(RuntimeInformation.ProcessArchitecture + ".exe",
@@ -109,13 +109,13 @@ public record AppReleaseModel(
             return 0;
         if (other is null)
             return 1;
-        var currentLong = ((ulong)Version.Major << 0x30) + 
-                          ((ulong)Version.Minor << 0x20) +
-                          ((ulong)Version.Build << 0x10) + 
+        var currentLong = ((ulong) Version.Major << 0x30) +
+                          ((ulong) Version.Minor << 0x20) +
+                          ((ulong) Version.Build << 0x10) +
                           Version.Revision;
-        var newLong = ((ulong)other.Version.Major << 0x30) + 
-                      ((ulong)other.Version.Minor << 0x20) +
-                      ((ulong)other.Version.Build << 0x10) + 
+        var newLong = ((ulong) other.Version.Major << 0x30) +
+                      ((ulong) other.Version.Minor << 0x20) +
+                      ((ulong) other.Version.Build << 0x10) +
                       other.Version.Revision;
         if (currentLong > newLong)
             return 1;

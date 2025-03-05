@@ -10,7 +10,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Pages;
 
-public sealed partial class CommentsPage 
+public sealed partial class CommentsPage
 {
     private CommentsPageViewModel _viewModel = null!;
 
@@ -18,7 +18,7 @@ public sealed partial class CommentsPage
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        var (entryType, id) = ((SimpleWorkType, long))e.Parameter;
+        var (entryType, id) = ((SimpleWorkType, long)) e.Parameter;
         var engine = entryType switch
         {
             SimpleWorkType.IllustAndManga => App.AppViewModel.MakoClient.IllustrationComments(id),
@@ -50,7 +50,7 @@ public sealed partial class CommentsPage
     }
 
     private async void ReplyBar_OnStickerClick(object? sender, StickerClickEventArgs e)
-    { 
+    {
         _ = _viewModel.EntryType switch
         {
             SimpleWorkType.IllustAndManga => await App.AppViewModel.MakoClient.AddIllustCommentAsync(

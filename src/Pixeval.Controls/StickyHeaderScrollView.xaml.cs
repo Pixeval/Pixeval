@@ -13,13 +13,13 @@ public sealed partial class StickyHeaderScrollView
 {
     [GeneratedDependencyProperty]
     public partial FrameworkElement? Header { get; set; }
-    
+
     [GeneratedDependencyProperty]
     public partial Brush? HeaderBackGround { get; set; }
-    
+
     [GeneratedDependencyProperty]
     public partial FrameworkElement? StickyContent { get; set; }
-    
+
     [GeneratedDependencyProperty]
     public partial double ScrollRatio { get; set; }
 

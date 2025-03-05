@@ -3,9 +3,9 @@
 
 using System;
 using System.Linq.Expressions;
-using Windows.Foundation.Collections;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Settings;
+using Windows.Foundation.Collections;
 
 namespace Pixeval.Settings.Models;
 

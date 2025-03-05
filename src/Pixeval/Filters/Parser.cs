@@ -50,7 +50,7 @@ public class Parser
         return Peek is null ? _queryTokenTree : ThrowUtils.MacroParse<LeafSequence>(MacroParserResources.UnbalancedParFormatted.Format(Peek));
     }
 
-    public static LeafSequence Parse(string str, out NumericRangeLeaf? index) => Parse((IReadOnlyList<IQueryToken>)Tokenizer.Tokenize(str), out index);
+    public static LeafSequence Parse(string str, out NumericRangeLeaf? index) => Parse((IReadOnlyList<IQueryToken>) Tokenizer.Tokenize(str), out index);
 
     public static LeafSequence Parse(IReadOnlyList<IQueryToken> filterTokens, out NumericRangeLeaf? index) => new Parser(filterTokens).Parse(out index);
 
@@ -229,7 +229,7 @@ public class Parser
             _currentTopLevel.Insert(nextAndNode);
             _currentTopLevel = nextAndNode;
 
-            _ = type is SequenceType.And ? Eat<IQueryToken.And>() : (IQueryToken)Eat<IQueryToken.Or>();
+            _ = type is SequenceType.And ? Eat<IQueryToken.And>() : (IQueryToken) Eat<IQueryToken.Or>();
             ParseArgumentList();
             _ = Eat<IQueryToken.RightParen>();
 
@@ -261,7 +261,7 @@ public class Parser
             _currentTopLevel.Insert(rangeToken);
             return rangeToken;
         }
-        
+
         FloatRangeLeaf EatFloatRange(FloatRangeType type)
         {
             _ = Eat<IQueryToken.Colon>();
@@ -394,7 +394,7 @@ public class Parser
             }
         }
     }
-    
+
     private Range<double> ParseFloatRangeDesc()
     {
         (double, double?) range;
@@ -433,7 +433,7 @@ public class Parser
 
     private long ParseIntegerNumber()
         => Eat<IQueryToken.Numeric>().Value;
-    
+
     /// <summary>
     /// 读取一个小数，可以是分号形式，例如1/3，或者小数点形式，例如1.23。
     /// <br/>
@@ -505,6 +505,6 @@ public class Parser
     {
         if (value > int.MaxValue)
             ThrowUtils.MacroParse(MacroParserResources.NumericTooLargeFormatted.Format(value));
-        return (int)value;
+        return (int) value;
     }
 }

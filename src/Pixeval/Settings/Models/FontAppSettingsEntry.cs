@@ -15,6 +15,6 @@ public partial class FontAppSettingsEntry(
     : StringAppSettingsEntry(settings, property)
 {
     public override FontSettingsCard Element => new() { Entry = this };
-    
+
     public static string[] AvailableFonts { get; } = CanvasTextFormat.GetSystemFontFamilies();
 }

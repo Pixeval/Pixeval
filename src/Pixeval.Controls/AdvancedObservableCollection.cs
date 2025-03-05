@@ -1,23 +1,23 @@
 // Copyright (c) Pixeval.Controls.
 // Licensed under the GPL v3 License.
 
-using Microsoft.UI.Xaml.Data;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System;
 using System.Collections;
 using System.Collections.Frozen;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq;
-using Windows.Foundation;
-using CommunityToolkit.WinUI.Collections;
-using CommunityToolkit.WinUI.Helpers;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using CommunityToolkit.WinUI.Collections;
+using CommunityToolkit.WinUI.Helpers;
+using Microsoft.UI.Xaml.Data;
+using Windows.Foundation;
 
 namespace Pixeval.Collections;
 

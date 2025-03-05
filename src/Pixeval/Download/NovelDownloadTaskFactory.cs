@@ -36,7 +36,7 @@ public class NovelDownloadTaskFactory : IDownloadTaskFactory<NovelItemViewModel,
         // xxx\novel.md\<ext>
         path += "\\" + IoHelper.GetIllustrationExtension();
         _ = manager.Delete(entry => entry.Destination == path);
-        var content = (NovelContent)param;
+        var content = (NovelContent) param;
         var task = new NovelDownloadTaskGroup(context.Entry, content, path);
         manager.Insert(task.DatabaseEntry);
         return task;
