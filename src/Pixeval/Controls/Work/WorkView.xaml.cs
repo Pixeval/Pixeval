@@ -193,7 +193,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>, 
         viewModel.Dispose();
     }
 
-    public List<Action> ChildrenCompletes { get; } = [];
+    public List<Action<IStructuralDisposalCompleter?>> ChildrenCompletes { get; } = [];
 
     public bool CompleterRegistered { get; set; }
 

@@ -38,7 +38,7 @@ public sealed partial class SpotlightView : IScrollViewHost, IStructuralDisposal
         ViewModel.Dispose();
     }
 
-    public List<Action> ChildrenCompletes { get; } = [];
+    public List<Action<IStructuralDisposalCompleter?>> ChildrenCompletes { get; } = [];
 
     public bool CompleterRegistered { get; set; }
 

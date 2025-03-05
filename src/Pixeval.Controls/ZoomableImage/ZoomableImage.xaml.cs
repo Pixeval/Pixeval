@@ -87,7 +87,7 @@ public sealed partial class ZoomableImage : UserControl, IStructuralDisposalComp
         }
     }
 
-    public List<Action> ChildrenCompletes { get; } = [];
+    public List<Action<IStructuralDisposalCompleter?>> ChildrenCompletes { get; } = [];
 
     public bool CompleterRegistered { get; set; }
 
