@@ -38,6 +38,9 @@ public sealed partial class ExtensionsPage
             _firstTime = false;
             this.WarningGrowl(ExtensionsPageResources.SomeExtensionsOutdatedFormatted.Format(count));
         }
+
+        if (App.AppViewModel.VersionContext.NeverUsedExtensions) 
+            AppInfo.SaveVersionContext();
     }
 
     private async void AddExtensionsOnClick(object sender, RoutedEventArgs e)
@@ -143,4 +146,6 @@ public sealed partial class ExtensionsPage
         for (var i = 0; i < Models.Count; ++i)
             Models[i].Priority = i;
     }
+
+    private async void ExtensionCard_OnClick(object sender, RoutedEventArgs e) => await Launcher.LaunchUriAsync(new Uri(@"https://github.com/Pixeval/Pixeval/releases"));
 }

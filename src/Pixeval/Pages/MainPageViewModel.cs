@@ -49,10 +49,11 @@ public partial class MainPageViewModel : UiObservableObject
 
     public Uri Url => MakoHelper.GenerateUserWebUri(Id);
 
-    public readonly NavigationViewTag<FeedPage> FeedTag =
-        new(MainPageResources.FeedTabContent) { ImageUri = GetIconUri("feed") };
+    public NavigationViewTag<FeedPage> FeedTag { get; } = new(MainPageResources.FeedTabContent) { ImageUri = GetIconUri("feed") };
 
-    public readonly NavigationViewTag<SettingsPage> SettingsTag = GetSettingsTag();
+    public NavigationViewTag<ExtensionsPage> ExtensionsTag { get; } = new(MainPageResources.ExtensionsTabContent) { ImageUri = GetIconUri("extensions"), ShowIconBadge = App.AppViewModel.VersionContext.NeverUsedExtensions };
+
+    public NavigationViewTag<SettingsPage> SettingsTag { get; } = GetSettingsTag();
 
     public static NavigationViewTag<SettingsPage> GetSettingsTag(object? parameter = null) =>
         new(MainPageResources.SettingsTabContent, parameter) { ImageUri = GetIconUri("settings") };
@@ -80,7 +81,7 @@ public partial class MainPageViewModel : UiObservableObject
     public IReadOnlyList<INavigationViewItem> FooterMenuItems =>
     [
         new NavigationViewTag<TagsPage>(MainPageResources.TagsTabContent) { ImageUri = GetIconUri("tag") },
-        new NavigationViewTag<ExtensionsPage>(MainPageResources.ExtensionsTabContent) { ImageUri = GetIconUri("extensions") },
+        ExtensionsTag,
         new NavigationViewTag<HelpPage>(MainPageResources.HelpTabContent) { ImageUri = GetIconUri("help") },
         new NavigationViewTag<AboutPage>(MainPageResources.AboutTabContent) { ImageUri = GetIconUri("about") },
         new NavigationViewSeparator(),
