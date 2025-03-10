@@ -35,9 +35,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
                 var metadata = context.UgoiraMetadata.Result;
                 var streams = null as IReadOnlyList<Stream?>;
                 if (App.AppViewModel.AppSettings.UseFileCache)
-                    streams = context.UgoiraOriginalUrls
-                        .Select(url => CacheHelper.TryGetStreamFromCache(MakoHelper.GetOriginalCacheKey(url)))
-                        .ToArray();
+                    streams = [.. context.UgoiraOriginalUrls.Select(url => CacheHelper.TryGetStreamFromCache(MakoHelper.GetOriginalCacheKey(url)))];
                 task = new UgoiraDownloadTaskGroup(context.Entry, metadata, path, streams);
                 break;
             }
@@ -45,9 +43,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
             {
                 var streams = null as IReadOnlyList<Stream?>;
                 if (App.AppViewModel.AppSettings.UseFileCache)
-                    streams = context.MangaOriginalUrls
-                        .Select(url => CacheHelper.TryGetStreamFromCache(MakoHelper.GetOriginalCacheKey(url)))
-                        .ToArray();
+                    streams = [.. context.MangaOriginalUrls.Select(url => CacheHelper.TryGetStreamFromCache(MakoHelper.GetOriginalCacheKey(url)))];
                 task = new MangaDownloadTaskGroup(context.Entry, path, streams);
                 break;
             }

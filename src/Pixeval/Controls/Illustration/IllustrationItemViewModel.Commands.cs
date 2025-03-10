@@ -94,11 +94,7 @@ public partial class IllustrationItemViewModel
         if (ib is not null)
             ib.Title = EntryItemResources.ImageProcessing;
 
-        IReadOnlyList<Stream>? source;
-        if (getImageStream is null)
-            source = null;
-        else
-            source = await getImageStream(true);
+        var source = getImageStream is null ? null : await getImageStream(true);
 
         var factory = App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationDownloadTaskFactory>();
         if (source is null)
@@ -109,7 +105,7 @@ public partial class IllustrationItemViewModel
         }
         else
         {
-            var task = factory.CreateIntrinsic(this, path, IsUgoira ? (source, UgoiraMetadata) : source);
+            var task = factory.CreateIntrinsic(this, path, IsUgoira ? (source, await UgoiraMetadata) : source);
             App.AppViewModel.DownloadManager.QueueTask(task);
             frameworkElement?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.Saved);
         }
