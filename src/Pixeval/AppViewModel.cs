@@ -34,6 +34,8 @@ public partial class AppViewModel(App app) : IDisposable
 
     public AppDebugTrace AppDebugTrace { get; } = AppInfo.LoadDebugTrace() ?? new AppDebugTrace();
 
+    public VersionContext VersionContext { get; } = AppInfo.LoadVersionContext() ?? new VersionContext();
+
     public long PixivUid => MakoClient.Me.Id;
 
     public void AppLoggedIn()

@@ -146,7 +146,13 @@ public sealed partial class MainPage
             if (Equals(tag, _viewModel.FeedTag) && App.AppViewModel.AppSettings.WebCookie is "")
                 _ = this.CreateAcknowledgementAsync(MainPageResources.FeedTabCannotBeOpenedTitle, MainPageResources.FeedTabCannotBeOpenedContent);
             else
+            {
+                if (Equals(tag, _viewModel.ExtensionsTag) && App.AppViewModel.VersionContext.NeverUsedExtensions)
+                    // AppInfo.SaveVersionContext(); 在ExtensionsPage中调用
+                    _viewModel.ExtensionsTag.ShowIconBadge = false;
+
                 MainPageRootTab.AddPage(tag);
+            }
         }
     }
 

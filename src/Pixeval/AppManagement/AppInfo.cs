@@ -27,6 +27,7 @@ namespace Pixeval.AppManagement;
 [AppContext<AppSettings>(ConfigKey = "Config", MethodName = "Config")]
 [AppContext<LoginContext>(ConfigKey = "LoginContext", MethodName = "LoginContext")]
 [AppContext<AppDebugTrace>(ConfigKey = "DebugTrace", MethodName = "DebugTrace")]
+[AppContext<VersionContext>(ConfigKey = "VersionContext", MethodName = "VersionContext")]
 public static partial class AppInfo
 {
     public const string AppIdentifier = nameof(Pixeval);
@@ -54,6 +55,7 @@ public static partial class AppInfo
         InitializeConfig();
         InitializeLoginContext();
         InitializeDebugTrace();
+        InitializeVersionContext();
     }
 
     public static void SetNameResolvers(AppSettings appSetting)
@@ -175,5 +177,11 @@ public static partial class AppInfo
     {
         App.AppViewModel.AppDebugTrace.ExitedSuccessfully = true;
         SaveDebugTrace(App.AppViewModel.AppDebugTrace);
+    }
+
+    public static void SaveVersionContext()
+    {
+        App.AppViewModel.VersionContext.NeverUsedExtensions = false;
+        SaveVersionContext(App.AppViewModel.VersionContext);
     }
 }
