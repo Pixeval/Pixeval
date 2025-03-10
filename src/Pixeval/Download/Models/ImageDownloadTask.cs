@@ -3,11 +3,16 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
+using System.Runtime.InteropServices.Marshalling;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
+using Pixeval.Extensions;
+using Pixeval.Extensions.Common;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 
@@ -112,6 +117,9 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
         await Task.Run(async () => await AfterDownloadAsync.Invoke(this, CancellationTokenSource.Token), CancellationTokenSource.Token);
     }
 
+    private readonly ExtensionService _extensionService =
+        App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
+
     private async Task SetErrorAsync(Exception ex)
     {
         ErrorCause = ex;
@@ -142,17 +150,35 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
                 return;
             }
 
-            Exception? ex;
-            await using (var fileStream = OpenCreate(DownloadTempDestination))
-                ex = await httpClient.DownloadStreamAsync(fileStream, Uri, this, fileStream.Length, cancellationToken: CancellationTokenSource.Token);
-            switch (ex)
+            if (_extensionService.ActiveDownloaders.FirstOrDefault() is { } downloader)
             {
-                case null:
-                    File.Move(DownloadTempDestination, Destination);
+                var notifier = new ProgressNotifier(this);
+                downloader.Download(notifier, Uri.OriginalString, Destination);
+                while (!notifier.Finished) 
+                    await Task.Delay(1000);
+                if (notifier.Exception is null)
                     await PendingCompleteAsync();
-                    break;
-                case TaskCanceledException: break;
-                default: await SetErrorAsync(ex); break;
+                else
+                    await SetErrorAsync(notifier.Exception);
+            }
+            else
+            {
+                Exception? ex;
+                await using (var fileStream = OpenCreate(DownloadTempDestination))
+                {
+                    ex = await httpClient.DownloadStreamAsync(fileStream, Uri, this, fileStream.Length,
+                        cancellationToken: CancellationTokenSource.Token);
+                }
+
+                switch (ex)
+                {
+                    case null:
+                        File.Move(DownloadTempDestination, Destination);
+                        await PendingCompleteAsync();
+                        break;
+                    case TaskCanceledException: break;
+                    default: await SetErrorAsync(ex); break;
+                }
             }
         }
         catch (TaskCanceledException)
@@ -277,5 +303,29 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
     {
         GC.SuppressFinalize(this);
         CancellationTokenSource.Dispose();
+    }
+
+    [GeneratedComClass]
+    private partial class ProgressNotifier(IProgress<double> progress)
+        : IProgressNotifier
+    {
+        public bool Finished { get; private set; }
+        
+        public Exception? Exception { get; private set; }
+
+        public void ProgressChanged(double value) => progress.Report(value);
+
+        public void Completed() => Finished = true;
+
+        public void Aborted(string exceptionMessage, string? stackTrace)
+        {
+            Finished = false;
+            Exception = new ConstructableException(exceptionMessage, stackTrace);
+        }
+
+        private class ConstructableException(string exceptionMessage, string? stackTrace) : Exception(exceptionMessage)
+        {
+            public override string? StackTrace => stackTrace;
+        }
     }
 }

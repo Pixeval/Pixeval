@@ -15,6 +15,7 @@ using Pixeval.Extensions.Common.Settings;
 using Pixeval.Extensions.Models;
 using Pixeval.Utilities;
 using Windows.Win32;
+using Pixeval.Extensions.Common.FormatProviders;
 using WinUI3Utilities;
 
 namespace Pixeval.Extensions;
@@ -37,7 +38,9 @@ public partial class ExtensionService : IDisposable
 
     public IEnumerable<ITextTransformerCommandExtension> ActiveTextTransformerCommands => ActiveExtensions.OfType<ITextTransformerCommandExtension>();
 
-    public IEnumerable<IImageDownloaderExtension> ActiveImageDownloader => ActiveExtensions.OfType<IImageDownloaderExtension>();
+    public IEnumerable<IDownloaderExtension> ActiveDownloaders => ActiveExtensions.OfType<IDownloaderExtension>();
+
+    public IEnumerable<IImageFormatProviderExtension> ActiveImageFormatProviders => ActiveExtensions.OfType<IImageFormatProviderExtension>();
 
     public IEnumerable<INovelFormatProviderExtension> ActiveNovelFormatProviders => ActiveExtensions.OfType<INovelFormatProviderExtension>();
 

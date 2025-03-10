@@ -20,6 +20,8 @@ public partial record UgoiraMetadataResponse
     public string MediumUrl => UgoiraMetadataInfo.ZipUrls.Medium;
 
     public string LargeUrl => UgoiraMetadataInfo.ZipUrls.Large;
+
+    public string OrignalUrl => UgoiraMetadataInfo.ZipUrls.Large.Replace("1920x1080", "");
 }
 
 [Factory]
