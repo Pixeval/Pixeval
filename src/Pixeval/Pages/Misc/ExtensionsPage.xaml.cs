@@ -98,7 +98,6 @@ public sealed partial class ExtensionsPage
                                 ZipFile.ExtractToDirectory(fileInfo.FullName, AppKnownFolders.Extensions.FullPath));
 
                             foreach (var dllName in dllNames)
-                            {
                                 try
                                 {
                                     var newDllPath = AppKnownFolders.Extensions.CombinePath(dllName);
@@ -117,7 +116,6 @@ public sealed partial class ExtensionsPage
                                 {
                                     this.ErrorGrowl(ExtensionsPageResources.DllLoadFailed, $"{fileName}: {ex.Message}");
                                 }
-                            }
                         }
                         else
                             this.WarningGrowl(ExtensionsPageResources.ZipContainsNoDll, fileName);
