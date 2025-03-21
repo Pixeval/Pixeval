@@ -70,19 +70,17 @@
     </controls:EnhancedPage.Resources>
     <Grid>
         <controls1:DockPanel>
-            <controls1:TitleBar
+            <TitleBar
                 x:Name="TitleBar"
                 Title="{x:Bind management:AppInfo.AppIdentifier}"
                 VerticalAlignment="Top"
                 controls1:DockPanel.Dock="Top"
-                DisplayMode="Tall"
-                IsPaneButtonVisible="True"
-                PaneButtonClick="TitleBar_OnPaneButtonClicked"
-                Window="{x:Bind Window}">
-                <controls1:TitleBar.Icon>
-                    <ImageIcon Source="ms-appx:///Assets/Images/logo.svg" />
-                </controls1:TitleBar.Icon>
-                <controls1:TitleBar.Footer>
+                IsPaneToggleButtonVisible="True"
+                PaneToggleRequested="TitleBar_OnPaneButtonClicked">
+                <TitleBar.IconSource>
+                    <ImageIconSource ImageSource="ms-appx:///Assets/Images/logo.svg" />
+                </TitleBar.IconSource>
+                <TitleBar.RightHeader>
                     <Button
                         Padding="1"
                         Background="{x:Bind controls:C.IsPremiumBorderBrush(_viewModel.IsPremium), Mode=OneWay}"
@@ -125,50 +123,47 @@
                             </MenuFlyout>
                         </Button.Flyout>
                         <PersonPicture
-                            MaxHeight="33"
+                            MaxHeight="38"
                             ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}"
                             ToolTipService.ToolTip="{x:Bind _viewModel.UserName, Mode=OneWay}" />
                     </Button>
-                </controls1:TitleBar.Footer>
-                <controls1:TitleBar.Content>
-                    <controls1:DockPanel>
-                        <CommandBar
-                            Margin="0,-4"
-                            controls1:DockPanel.Dock="Right"
-                            DefaultLabelPosition="Collapsed"
-                            OverflowButtonVisibility="Collapsed">
-                            <AppBarButton
-                                x:Uid="/MainPage/ReverseSearchButton"
-                                Click="ReverseSearchButton_OnClicked"
-                                Content="{fluent:SymbolIcon Symbol=ImageSearch}" />
-                            <AppBarButton
-                                x:Uid="/MainPage/OpenSearchSettingButton"
-                                Click="OpenSearchSettingButton_OnClicked"
-                                Content="{fluent:SymbolIcon Symbol=Settings}" />
-                        </CommandBar>
-                        <AutoSuggestBox
-                            x:Name="MainPageAutoSuggestionBox"
-                            x:Uid="/MainPage/MainPageAutoSuggestionBox"
-                            VerticalAlignment="Center"
-                            GotFocus="KeywordAutoSuggestBox_GotFocus"
-                            IsFocusEngaged="False"
-                            ItemTemplateSelector="{StaticResource SuggestionModelDataTemplateSelector}"
-                            ItemsSource="{x:Bind _viewModel.SuggestionProvider.Suggestions, Mode=OneWay}"
-                            KeyDown="KeywordAutoSuggestionBox_OnKeyDown"
-                            QueryIcon="{fluent:SymbolIcon Symbol=Search,
-                                                          FontSize={StaticResource SmallIconFontSize}}"
-                            QuerySubmitted="KeywordAutoSuggestBox_QuerySubmitted"
-                            SuggestionChosen="KeywordAutoSuggestBox_OnSuggestionChosen"
-                            TextChanged="KeywordAutoSuggestBox_OnTextChanged">
-                            <AutoSuggestBox.ItemContainerTransitions>
-                                <TransitionCollection>
-                                    <AddDeleteThemeTransition />
-                                </TransitionCollection>
-                            </AutoSuggestBox.ItemContainerTransitions>
-                        </AutoSuggestBox>
-                    </controls1:DockPanel>
-                </controls1:TitleBar.Content>
-            </controls1:TitleBar>
+                </TitleBar.RightHeader>
+                <controls1:DockPanel>
+                    <CommandBar
+                        controls1:DockPanel.Dock="Right"
+                        DefaultLabelPosition="Collapsed"
+                        OverflowButtonVisibility="Collapsed">
+                        <AppBarButton
+                            x:Uid="/MainPage/ReverseSearchButton"
+                            Click="ReverseSearchButton_OnClicked"
+                            Content="{fluent:SymbolIcon Symbol=ImageSearch}" />
+                        <AppBarButton
+                            x:Uid="/MainPage/OpenSearchSettingButton"
+                            Click="OpenSearchSettingButton_OnClicked"
+                            Content="{fluent:SymbolIcon Symbol=Settings}" />
+                    </CommandBar>
+                    <AutoSuggestBox
+                        x:Name="MainPageAutoSuggestionBox"
+                        x:Uid="/MainPage/MainPageAutoSuggestionBox"
+                        VerticalAlignment="Center"
+                        GotFocus="KeywordAutoSuggestBox_GotFocus"
+                        IsFocusEngaged="False"
+                        ItemTemplateSelector="{StaticResource SuggestionModelDataTemplateSelector}"
+                        ItemsSource="{x:Bind _viewModel.SuggestionProvider.Suggestions, Mode=OneWay}"
+                        KeyDown="KeywordAutoSuggestionBox_OnKeyDown"
+                        QueryIcon="{fluent:SymbolIcon Symbol=Search,
+                                                      FontSize={StaticResource SmallIconFontSize}}"
+                        QuerySubmitted="KeywordAutoSuggestBox_QuerySubmitted"
+                        SuggestionChosen="KeywordAutoSuggestBox_OnSuggestionChosen"
+                        TextChanged="KeywordAutoSuggestBox_OnTextChanged">
+                        <AutoSuggestBox.ItemContainerTransitions>
+                            <TransitionCollection>
+                                <AddDeleteThemeTransition />
+                            </TransitionCollection>
+                        </AutoSuggestBox.ItemContainerTransitions>
+                    </AutoSuggestBox>
+                </controls1:DockPanel>
+            </TitleBar>
             <NavigationView
                 x:Name="NavigationView"
                 FooterMenuItemsSource="{x:Bind _viewModel.FooterMenuItems}"

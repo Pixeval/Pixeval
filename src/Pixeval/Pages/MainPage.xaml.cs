@@ -331,7 +331,7 @@ public sealed partial class MainPage
             NavigateToSettingEntry(ReverseSearchApiKeyAttribute.Value);
     }
 
-    private void TitleBar_OnPaneButtonClicked(object? sender, RoutedEventArgs e)
+    private void TitleBar_OnPaneButtonClicked(TitleBar sender, object e)
     {
         NavigationView.IsPaneOpen = !NavigationView.IsPaneOpen;
     }
