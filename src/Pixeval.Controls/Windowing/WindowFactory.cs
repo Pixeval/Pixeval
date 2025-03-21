@@ -82,13 +82,13 @@ public static class WindowFactory
     public static EnhancedWindow WithSizeLimit(this EnhancedWindow window, int minWidth = 0, int minHeight = 0, int maxWidth = 0, int maxHeight = 0)
     {
         if (minWidth is not 0)
-            window.MinWidth = minWidth;
+            window.Presenter.PreferredMinimumWidth = minWidth;
         if (minHeight is not 0)
-            window.MinHeight = minHeight;
+            window.Presenter.PreferredMinimumHeight = minHeight;
         if (maxWidth is not 0)
-            window.MaxWidth = maxWidth;
+            window.Presenter.PreferredMaximumWidth = maxWidth;
         if (maxHeight is not 0)
-            window.MaxHeight = maxHeight;
+            window.Presenter.PreferredMaximumHeight = maxHeight;
         return window;
     }
 

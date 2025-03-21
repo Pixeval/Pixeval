@@ -6,12 +6,10 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using WinUI3Utilities;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls.Windowing;
 
-[WindowSizeHelper]
-public sealed partial class EnhancedWindow : Window
+public sealed class EnhancedWindow : Window
 {
     public ulong HWnd => AppWindow.Id.Value;
 
@@ -22,6 +20,8 @@ public sealed partial class EnhancedWindow : Window
         get => Content.To<Grid>().Children[0].To<EnhancedPage>();
         set => Content.To<Grid>().Children[0] = value;
     }
+
+    public OverlappedPresenter Presenter => AppWindow.Presenter.To<OverlappedPresenter>();
 
     public bool IsMaximize => AppWindow.Presenter is OverlappedPresenter { State: OverlappedPresenterState.Maximized };
 

@@ -17,7 +17,6 @@ public record DependencyViewModel(string Name, string Author, string Url, string
         ("codebude/QRCoder", LicenseTexts.MIT("2013-2018", "Raffael Herrmann")),
         ("Sergio0694/PolySharp", LicenseTexts.MIT("2022", "Sergio Pedri")),
         ("SixLabors/ImageSharp", LicenseTexts.ImageSharp),
-        ("xinntao/Real-ESRGAN", LicenseTexts.BSD3("2021", "Xintao Wang")),
         ("mbdavid/LiteDB", LicenseTexts.MIT("2014-2022", "Mauricio David")),
         ("davidxuang/FluentIcons", LicenseTexts.MIT("2022", "davidxuang")),
         ("LasmGratel/PininSharp", LicenseTexts.MIT("2021", "Lasm Gratel")),

@@ -2,11 +2,10 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using System.Collections.ObjectModel;
 using System.Text;
-using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
 using Pixeval.AppManagement;
-using Pixeval.Controls;
 using Windows.System;
 using WinUI3Utilities;
 
@@ -23,27 +22,18 @@ public sealed partial class AboutPage
     public AboutPage()
     {
         InitializeComponent();
-        UniformGrid.SizeChanged += (sender, args) => sender.To<UniformGrid>().Columns = (int) (args.NewSize.Width / 140);
         LoadData();
     }
 
-    // private readonly ObservableCollection<Supporter> _supporters = [];
+    private ObservableCollection<Supporter> Supporters { get; } = [];
 
     private async void LoadData()
     {
         LicenseTextBlock.Text = Encoding.UTF8.GetString(await AppInfo.GetAssetBytesAsync("GPLv3.md"));
         await foreach (var supporter in Supporter.GetSupportersAsync())
         {
-            UniformGrid.Children.Add(new PersonView
-            {
-                PersonName = supporter.AtName,
-                PersonNickname = supporter.Nickname,
-                PersonPicture = supporter.ProfileImage,
-                PersonProfileNavigateUri = supporter.ProfileUri,
-                Height = 160
-            });
+            Supporters.Add(supporter);
         }
-        //     _supporters.Add(supporter);
     }
 
     private async void LaunchUri(object sender, RoutedEventArgs e)

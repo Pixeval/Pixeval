@@ -37,7 +37,6 @@ public partial class App
 
     public App()
     {
-        _ = this.UseSegoeMetrics();
         SettingsValueConverter.Context = SettingsSerializeContext.Default;
         AppViewModel = new AppViewModel(this);
         BookmarkTag.AllCountedTagString = MiscResources.AllCountedTagName;

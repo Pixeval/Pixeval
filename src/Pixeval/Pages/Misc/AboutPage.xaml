@@ -24,12 +24,7 @@
                         x:Uid="/AboutPage/SpecialThanksContentTextBlock"
                         Style="{StaticResource CaptionTextBlockStyle}"
                         TextWrapping="Wrap" />
-                    <controls:UniformGrid
-                        x:Name="UniformGrid"
-                        ColumnSpacing="10"
-                        RowSpacing="10" />
-                    <!-- 由于UniformGridLayout有崩溃Bug，暂时使用 UniformGrid 代替
-                    <ItemsRepeater ItemsSource="{x:Bind _supporters}">
+                    <ItemsRepeater ItemsSource="{x:Bind Supporters}">
                         <ItemsRepeater.Layout>
                             <UniformGridLayout
                                 ItemsStretch="Fill"
@@ -47,7 +42,7 @@
                                     PersonProfileNavigateUri="{x:Bind ProfileUri}" />
                             </DataTemplate>
                         </ItemsRepeater.ItemTemplate>
-                    </ItemsRepeater>-->
+                    </ItemsRepeater>
                 </StackPanel>
                 <StackPanel>
                     <TextBlock x:Uid="/AboutPage/DependenciesSubtitleTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />
