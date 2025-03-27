@@ -1,4 +1,4 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System;
@@ -8,17 +8,17 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Pixeval.CoreApi.Engine;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Global.Exception;
-using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
-using Pixeval.CoreApi.Net.EndPoints;
-using Pixeval.CoreApi.Preference;
+using Mako.Engine;
+using Mako.Global.Enum;
+using Mako.Global.Exception;
+using Mako.Model;
+using Mako.Net;
+using Mako.Net.EndPoints;
+using Mako.Preference;
 using Pixeval.Logging;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi;
+namespace Mako;
 
 public partial class MakoClient : ICancellable, IDisposable, IAsyncDisposable
 {

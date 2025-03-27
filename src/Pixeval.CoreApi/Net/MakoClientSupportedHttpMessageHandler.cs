@@ -1,10 +1,10 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System.Net.Http;
-using Pixeval.CoreApi.Global;
+using Mako.Global;
 
-namespace Pixeval.CoreApi.Net;
+namespace Mako.Net;
 
 public abstract class MakoClientSupportedHttpMessageHandler(MakoClient makoClient) : HttpMessageHandler, IMakoClientSupport
 {

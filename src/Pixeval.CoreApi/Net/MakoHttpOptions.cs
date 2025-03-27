@@ -1,4 +1,4 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System;
@@ -13,7 +13,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Pixeval.CoreApi.Net;
+namespace Mako.Net;
 
 public static partial class MakoHttpOptions
 {

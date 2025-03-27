@@ -1,9 +1,9 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
-using Pixeval.CoreApi.Global.Enum;
+using Mako.Global.Enum;
 
-namespace Pixeval.CoreApi.Global.Exception;
+namespace Mako.Global.Exception;
 
 /// <summary>
 /// When a <see cref="PrivacyPolicy" /> is set to <see cref="PrivacyPolicy.Private" /> while the uid is not equivalent

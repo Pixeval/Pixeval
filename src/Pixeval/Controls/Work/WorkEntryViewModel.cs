@@ -3,7 +3,7 @@
 
 using System;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Util;
 
 namespace Pixeval.Controls;
@@ -48,7 +48,7 @@ public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>
 
     public DateTimeOffset PublishDate => Entry.CreateDate;
 
-    public bool IsAiGenerated => Entry.AiType is 2;
+    public bool IsAiGenerated => Entry.AiType is AiType.AiGenerated;
 
     public bool IsXRestricted => Entry.XRestrict is not XRestrict.Ordinary;
 

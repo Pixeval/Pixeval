@@ -1,10 +1,10 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System.Diagnostics;
 using System.Text.Json.Serialization;
 
-namespace Pixeval.CoreApi.Model;
+namespace Mako.Model;
 
 [DebuggerDisplay("{UserInfo}")]
 [Factory]
@@ -37,6 +37,8 @@ public partial record UserInfo
 
     [JsonPropertyName("account")]
     public required string Account { get; set; } = "";
+
+    public virtual string Description { get; set; } = "";
 
     [JsonPropertyName("profile_image_urls")]
     public required ProfileImageUrls ProfileImageUrls { get; set; }

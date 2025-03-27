@@ -1,7 +1,7 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
-namespace Pixeval.CoreApi.Global.Exception;
+namespace Mako.Global.Exception;
 
 /// <summary>
 /// 搜索榜单时设定的日期大于等于当前日期-2天

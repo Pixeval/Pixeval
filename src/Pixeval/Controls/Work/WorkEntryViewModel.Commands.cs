@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using FluentIcons.Common;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Util.UI;
 using Windows.System;
 

@@ -1,10 +1,10 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 
-namespace Pixeval.CoreApi;
+namespace Mako;
 
 public partial class MakoClient
 {

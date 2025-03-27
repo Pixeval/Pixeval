@@ -1,7 +1,7 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
-namespace Pixeval.CoreApi.Global.Exception;
+namespace Mako.Global.Exception;
 
 public class MakoException : System.Exception
 {

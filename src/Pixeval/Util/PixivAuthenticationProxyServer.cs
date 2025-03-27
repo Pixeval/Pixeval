@@ -11,7 +11,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Pixeval.CoreApi.Net;
+using Mako.Net;
 using Pixeval.Utilities;
 
 namespace Pixeval.Util;

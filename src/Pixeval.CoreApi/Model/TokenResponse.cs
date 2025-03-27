@@ -1,9 +1,9 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System.Text.Json.Serialization;
 
-namespace Pixeval.CoreApi.Model;
+namespace Mako.Model;
 
 /// <summary>
 /// 这个类型比较特殊，并非网络请求的响应类型，因此放到Model而非Response目录中

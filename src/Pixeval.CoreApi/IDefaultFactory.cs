@@ -1,7 +1,7 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
-namespace Pixeval.CoreApi;
+namespace Mako;
 
 internal interface IDefaultFactory<out TSelf> where TSelf : IDefaultFactory<TSelf>
 {

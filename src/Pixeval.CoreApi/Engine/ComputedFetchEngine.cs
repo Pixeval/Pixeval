@@ -1,10 +1,10 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Pixeval.CoreApi.Engine;
+namespace Mako.Engine;
 
 public class ComputedFetchEngine<T>(IAsyncEnumerable<T> result, MakoClient makoClient, EngineHandle engineHandle)
     : IFetchEngine<T>

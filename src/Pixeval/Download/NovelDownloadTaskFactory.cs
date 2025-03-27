@@ -3,7 +3,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Controls;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.Models;

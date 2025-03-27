@@ -1,14 +1,14 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
-using Pixeval.CoreApi.Net.Response;
+using Mako.Model;
+using Mako.Net;
+using Mako.Net.Response;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi.Engine;
+namespace Mako.Engine;
 
 internal abstract class RecursivePixivAsyncEnumerator<TEntity, TRawEntity, TFetchEngine>(TFetchEngine pixivFetchEngine, MakoApiKind makoApiKind)
     : AbstractPixivAsyncEnumerator<TEntity, TRawEntity, TFetchEngine>(pixivFetchEngine, makoApiKind)

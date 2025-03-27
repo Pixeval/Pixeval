@@ -1,9 +1,9 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System;
 
-namespace Pixeval.CoreApi.Engine;
+namespace Mako.Engine;
 
 #pragma warning disable 660,661 // Object.Equals() and Object.GetHashCode() are not overwritten
 public class EngineHandle : ICancellable, INotifyCompletion, ICompletionCallback<EngineHandle>

@@ -1,7 +1,7 @@
-﻿// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
-namespace Pixeval.CoreApi.Global;
+namespace Mako.Global;
 
 /// <summary>
 /// Indicates that the each of its implementation contains a <see cref="MakoClient" />

@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
-using Pixeval.CoreApi.Global.Enum;
+using Mako.Global.Enum;
 using Pixeval.Extensions;
 using Pixeval.Options;
 using Pixeval.Settings;

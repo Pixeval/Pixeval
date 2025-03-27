@@ -1,15 +1,15 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net.EndPoints;
-using Pixeval.CoreApi.Net.Request;
+using Mako.Model;
+using Mako.Net.EndPoints;
+using Mako.Net.Request;
 
-namespace Pixeval.CoreApi.Net;
+namespace Mako.Net;
 
 public class PixivTokenProvider(IServiceProvider serviceProvider, TokenResponse firstTokenResponse)
 {

@@ -1,4 +1,4 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System;
@@ -6,12 +6,12 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Pixeval.CoreApi.Global.Exception;
-using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
+using Mako.Global.Exception;
+using Mako.Model;
+using Mako.Net;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi.Engine;
+namespace Mako.Engine;
 
 /// <summary>
 /// An abstract enumerator that encapsulates the required properties for Pixiv, it is intended to be

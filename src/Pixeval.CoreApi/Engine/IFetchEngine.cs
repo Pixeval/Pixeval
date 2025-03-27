@@ -1,10 +1,10 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System.Collections.Generic;
-using Pixeval.CoreApi.Global;
+using Mako.Global;
 
-namespace Pixeval.CoreApi.Engine;
+namespace Mako.Engine;
 
 /// <summary>
 /// A highly abstracted fetch engine that fetches pages and yields results asynchronously

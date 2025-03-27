@@ -1,15 +1,15 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net.Request;
-using Pixeval.CoreApi.Net.Response;
+using Mako.Global.Enum;
+using Mako.Model;
+using Mako.Net.Request;
+using Mako.Net.Response;
 
-namespace Pixeval.CoreApi;
+namespace Mako;
 
 [JsonSerializable(typeof(AutoCompletionResponse))]
 [JsonSerializable(typeof(PixivBookmarkTagResponse))]
@@ -58,17 +58,11 @@ namespace Pixeval.CoreApi;
 
 [JsonSerializable(typeof(BookmarkTag))]
 [JsonSerializable(typeof(Feed))]
-[JsonSerializable(typeof(FeedType))]
-[JsonSerializable(typeof(IEntry))]
-[JsonSerializable(typeof(IIdEntry))]
-[JsonSerializable(typeof(IWorkEntry))]
 [JsonSerializable(typeof(Illustration))]
 [JsonSerializable(typeof(MetaSinglePage))]
 [JsonSerializable(typeof(ImageUrls))]
 [JsonSerializable(typeof(MangaImageUrls))]
 [JsonSerializable(typeof(MetaPage))]
-[JsonSerializable(typeof(XRestrict))]
-[JsonSerializable(typeof(IllustrationType))]
 [JsonSerializable(typeof(Novel))]
 [JsonSerializable(typeof(Series))]
 [JsonSerializable(typeof(NovelContent))]
@@ -85,7 +79,6 @@ namespace Pixeval.CoreApi;
 [JsonSerializable(typeof(NovelReplaceableGlossary))]
 [JsonSerializable(typeof(ProfileImageUrls))]
 [JsonSerializable(typeof(Spotlight))]
-[JsonSerializable(typeof(SpotlightCategory))]
 [JsonSerializable(typeof(SpotlightDetail))]
 [JsonSerializable(typeof(Tag))]
 [JsonSerializable(typeof(TrendingTag))]
@@ -113,15 +106,6 @@ namespace Pixeval.CoreApi;
 [JsonSerializable(typeof(ShowAiSettingsRequest))]
 [JsonSerializable(typeof(RestrictedModeSettingsRequest))]
 [JsonSerializable(typeof(ReverseSearchRequest))]
-
-[JsonSerializable(typeof(PrivacyPolicy))]
-[JsonSerializable(typeof(RankOption))]
-[JsonSerializable(typeof(SearchIllustrationTagMatchOption))]
-[JsonSerializable(typeof(SearchNovelTagMatchOption))]
-[JsonSerializable(typeof(TargetFilter))]
-[JsonSerializable(typeof(WorkSortOption))]
-[JsonSerializable(typeof(WorkType))]
-[JsonSerializable(typeof(SimpleWorkType))]
 
 [JsonSerializable(typeof(string[]))]
 [JsonSerializable(typeof(Tag[]))]

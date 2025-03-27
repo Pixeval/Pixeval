@@ -1,9 +1,9 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System.Text.Json.Serialization;
 
-namespace Pixeval.CoreApi.Net.Request;
+namespace Mako.Net.Request;
 
 public class ReverseSearchRequest(string apiKey)
 {

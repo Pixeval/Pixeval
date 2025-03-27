@@ -11,7 +11,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
-using Pixeval.CoreApi.Net.Response;
+using Mako.Net.Response;
 using Pixeval.Pages.Capability;
 using Pixeval.Util;
 using Pixeval.Util.ComponentModels;
@@ -86,7 +86,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
 
     public bool IsPremium => UserDetail.UserProfile.IsPremium;
 
-    public string Comment => UserDetail.UserEntity.Comment;
+    public string Comment => UserDetail.UserEntity.Description;
 
     public async Task SetAvatarAndBackgroundAsync()
     {

@@ -1,11 +1,11 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
-namespace Pixeval.CoreApi.Global.Enum;
+namespace Mako.Global.Enum;
 
 [JsonConverter(typeof(SnakeCaseLowerEnumConverter<TargetFilter>))]
 public enum TargetFilter

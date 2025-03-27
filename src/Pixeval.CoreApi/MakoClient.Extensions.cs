@@ -1,4 +1,4 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System.Collections.Generic;
@@ -7,15 +7,15 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net.EndPoints;
-using Pixeval.CoreApi.Net.Request;
-using Pixeval.CoreApi.Net.Response;
+using Mako.Global.Enum;
+using Mako.Model;
+using Mako.Net.EndPoints;
+using Mako.Net.Request;
+using Mako.Net.Response;
 using Pixeval.Utilities;
 using WebApiClientCore.Parameters;
 
-namespace Pixeval.CoreApi;
+namespace Mako;
 
 public partial class MakoClient
 {

@@ -2,9 +2,9 @@
 // Licensed under the GPL v3 License.
 
 using System.Collections.Generic;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using NovelViewDataProvider = Pixeval.Controls.SharableViewDataProvider<
-    Pixeval.CoreApi.Model.Novel,
+    Mako.Model.Novel,
     Pixeval.Controls.NovelItemViewModel>;
 
 namespace Pixeval.Controls;

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Windows.AppLifecycle;
-using Pixeval.CoreApi;
+using Mako;
 using Pixeval.Logging;
 using Pixeval.Pages.Login;
 using Pixeval.Util.Threading;

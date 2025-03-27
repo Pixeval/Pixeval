@@ -1,7 +1,7 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
-namespace Pixeval.CoreApi.Net;
+namespace Mako.Net;
 
 /// <summary>
 /// The several kinds of APIs that Mako will use

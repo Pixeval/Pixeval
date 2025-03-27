@@ -1,11 +1,11 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System.Diagnostics;
 using System.Text.Json.Serialization;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 
-namespace Pixeval.CoreApi.Net.Response;
+namespace Mako.Net.Response;
 
 [DebuggerDisplay("{UserEntity}")]
 [Factory]
@@ -28,10 +28,10 @@ public partial record PixivSingleUserResponse
 public partial record UserEntity : UserInfo
 {
     /// <summary>
-    /// 比<see cref="UserInfo"/>多了个<see cref="Comment"/>
+    /// 比<see cref="UserInfo"/>多了个<see cref="Description"/>
     /// </summary>
     [JsonPropertyName("comment")]
-    public required string Comment { get; set; } = "";
+    public override required string Description { get; set; } = "";
 }
 
 [Factory]

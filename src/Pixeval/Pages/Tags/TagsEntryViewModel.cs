@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using SixLabors.ImageSharp;

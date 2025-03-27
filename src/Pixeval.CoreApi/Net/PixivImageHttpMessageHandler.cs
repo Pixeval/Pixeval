@@ -1,4 +1,4 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System;
@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi.Net;
+namespace Mako.Net;
 
 internal class PixivImageHttpMessageHandler(MakoClient makoClient) : MakoClientSupportedHttpMessageHandler(makoClient)
 {

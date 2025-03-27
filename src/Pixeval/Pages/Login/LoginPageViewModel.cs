@@ -17,7 +17,7 @@ using Pixeval.AppManagement;
 using Pixeval.Attributes;
 using Pixeval.Controls.DialogContent;
 using Pixeval.Controls.Windowing;
-using Pixeval.CoreApi;
+using Mako;
 using Pixeval.Logging;
 using Pixeval.Util;
 using Pixeval.Util.ComponentModels;

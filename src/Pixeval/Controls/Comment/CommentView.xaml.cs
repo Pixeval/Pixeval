@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
-using Pixeval.CoreApi.Global.Enum;
+using Mako.Global.Enum;
 
 namespace Pixeval.Controls;
 

@@ -31,9 +31,7 @@ public sealed partial class AboutPage
     {
         LicenseTextBlock.Text = Encoding.UTF8.GetString(await AppInfo.GetAssetBytesAsync("GPLv3.md"));
         await foreach (var supporter in Supporter.GetSupportersAsync())
-        {
             Supporters.Add(supporter);
-        }
     }
 
     private async void LaunchUri(object sender, RoutedEventArgs e)

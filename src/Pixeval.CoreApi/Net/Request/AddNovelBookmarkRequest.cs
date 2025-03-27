@@ -1,10 +1,10 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System.Text.Json.Serialization;
-using Pixeval.CoreApi.Global.Enum;
+using Mako.Global.Enum;
 
-namespace Pixeval.CoreApi.Net.Request;
+namespace Mako.Net.Request;
 
 public record AddNovelBookmarkRequest(
     [property: JsonPropertyName("restrict")] PrivacyPolicy Restrict,

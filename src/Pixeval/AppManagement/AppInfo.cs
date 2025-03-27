@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Windowing;
 using Microsoft.Windows.Storage;
 using Pixeval.Controls.Windowing;
-using Pixeval.CoreApi.Net;
+using Mako.Net;
 using Pixeval.Database.Managers;
 using Pixeval.Util.IO;
 using Pixeval.Util.IO.Caching;

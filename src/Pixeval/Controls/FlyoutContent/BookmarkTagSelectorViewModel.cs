@@ -3,7 +3,7 @@
 
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 
 namespace Pixeval.Controls.FlyoutContent;
 

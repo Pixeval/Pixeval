@@ -1,11 +1,11 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System.Globalization;
 using System.Net.Http.Headers;
 using System.Text.Json.Serialization;
 
-namespace Pixeval.CoreApi.Preference;
+namespace Mako.Preference;
 
 /// <summary>
 /// Contains all the user-configurable keys

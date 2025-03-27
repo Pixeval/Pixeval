@@ -7,8 +7,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.AppManagement;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Model;
+using Mako.Global.Enum;
+using Mako.Model;
 using Pixeval.Options;
 using WinUI3Utilities;
 

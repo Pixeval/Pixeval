@@ -5,7 +5,7 @@ using Microsoft.UI.Xaml;
 using Pixeval.Attributes;
 using WinUI3Utilities;
 
-namespace Pixeval.CoreApi.Global.Enum;
+namespace Mako.Global.Enum;
 
 [AttachedLocalizationMetadata<RankOption>(typeof(RankingsPageResources))]
 [AttachedLocalizedResource(nameof(RankOption.Day), nameof(RankingsPageResources.RankOptionDay))]

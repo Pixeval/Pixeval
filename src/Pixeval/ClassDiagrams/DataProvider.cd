@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Pixeval.Pages.Tags.TagsEntryIncrementalSource" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="13.5" Y="0.5" Width="1.5" />
@@ -44,7 +44,7 @@
     <Position X="5" Y="0.5" Width="1.5" />
     <TypeIdentifier />
   </Class>
-  <Interface Name="Pixeval.CoreApi.Engine.IFetchEngine&lt;TResult&gt;" Collapsed="true">
+  <Interface Name="Mako.Engine.IFetchEngine&lt;TResult&gt;" Collapsed="true">
     <Position X="13.5" Y="1.75" Width="1.5" />
     <TypeIdentifier />
   </Interface>

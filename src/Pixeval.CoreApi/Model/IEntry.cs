@@ -1,9 +1,9 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System;
 
-namespace Pixeval.CoreApi.Model;
+namespace Mako.Model;
 
 public interface IEntry;
 
@@ -39,7 +39,7 @@ public interface IWorkEntry : IIdEntry
     /// <summary>
     /// 值为2是AI生成
     /// </summary>
-    int AiType { get; }
+    AiType AiType { get; }
 
     XRestrict XRestrict { get; }
 }

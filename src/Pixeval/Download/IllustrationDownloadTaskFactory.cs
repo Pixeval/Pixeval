@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Controls;
-using Pixeval.CoreApi.Net.Response;
+using Mako.Net.Response;
 using Pixeval.Database.Managers;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.Models;

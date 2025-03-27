@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using Pixeval.AppManagement;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Utilities;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;

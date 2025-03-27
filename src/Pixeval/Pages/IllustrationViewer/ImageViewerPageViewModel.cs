@@ -16,7 +16,7 @@ using Microsoft.UI.Xaml.Media;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
 using Pixeval.Controls;
-using Pixeval.CoreApi.Net.Response;
+using Mako.Net.Response;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Extensions.Common;

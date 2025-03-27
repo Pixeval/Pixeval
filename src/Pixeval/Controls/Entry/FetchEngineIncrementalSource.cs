@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Collections;
-using Pixeval.CoreApi.Engine;
-using Pixeval.CoreApi.Model;
+using Mako.Engine;
+using Mako.Model;
 
 namespace Pixeval.Controls;
 

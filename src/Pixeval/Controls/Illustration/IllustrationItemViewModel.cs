@@ -6,8 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net.Response;
+using Mako.Model;
+using Mako.Net.Response;
 using Pixeval.Utilities;
 
 namespace Pixeval.Controls;

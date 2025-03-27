@@ -8,7 +8,7 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Util.UI;
 using Windows.UI.ViewManagement;
 using WinUI3Utilities;

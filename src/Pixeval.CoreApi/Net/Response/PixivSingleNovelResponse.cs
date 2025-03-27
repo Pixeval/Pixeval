@@ -1,11 +1,11 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System.Diagnostics;
 using System.Text.Json.Serialization;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 
-namespace Pixeval.CoreApi.Net.Response;
+namespace Mako.Net.Response;
 
 [DebuggerDisplay("{Novel}")]
 [Factory]

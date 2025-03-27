@@ -1,11 +1,11 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Pixeval.CoreApi.Engine;
+namespace Mako.Engine;
 
 /// <summary>
 /// A <see cref="IFetchEngine{E}" /> that specialized for Pixiv, it holds an <see cref="MakoClient" />

@@ -1,10 +1,10 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System.Text.Json.Serialization;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 
-namespace Pixeval.CoreApi.Net.Response;
+namespace Mako.Net.Response;
 
 [Factory]
 public partial record PixivRelatedUsersResponse

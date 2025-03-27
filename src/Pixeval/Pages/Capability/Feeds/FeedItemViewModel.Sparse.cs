@@ -8,7 +8,7 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls;
 using Pixeval.Controls.Timeline;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Util;
 using Pixeval.Util.IO.Caching;
 using WinUI3Utilities;

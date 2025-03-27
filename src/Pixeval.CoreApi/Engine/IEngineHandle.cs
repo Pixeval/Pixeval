@@ -1,7 +1,7 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
-namespace Pixeval.CoreApi.Engine;
+namespace Mako.Engine;
 
 /// <summary>
 /// Represents a class that is capable of tracking its own lifetime, any class that

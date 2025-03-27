@@ -1,7 +1,7 @@
-﻿// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
-namespace Pixeval.CoreApi.Engine;
+namespace Mako.Engine;
 
 public interface INotifyCompletion
 {

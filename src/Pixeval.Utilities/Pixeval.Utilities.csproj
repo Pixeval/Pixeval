@@ -11,5 +11,6 @@
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.HighPerformance" />
         <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" />
+        <PackageReference Include="Microsoft.Extensions.Logging" />
     </ItemGroup>
 </Project>

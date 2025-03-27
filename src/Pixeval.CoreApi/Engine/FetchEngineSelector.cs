@@ -1,4 +1,4 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Pixeval.CoreApi.Engine;
+namespace Mako.Engine;
 
 internal class FetchEngineSelector<T, R>(IFetchEngine<T> delegateEngine, Func<T, Task<R>> selector) : IFetchEngine<R>
 {

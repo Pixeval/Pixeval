@@ -1,4 +1,4 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System;
@@ -10,12 +10,12 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Pixeval.CoreApi.Global.Exception;
-using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
+using Mako.Global.Exception;
+using Mako.Model;
+using Mako.Net;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi.Engine.Implements;
+namespace Mako.Engine.Implements;
 
 internal partial class FeedEngine(MakoClient makoClient, EngineHandle? engineHandle) : AbstractPixivFetchEngine<Feed>(makoClient, engineHandle)
 {

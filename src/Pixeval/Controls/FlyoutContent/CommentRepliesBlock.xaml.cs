@@ -4,8 +4,8 @@
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Model;
+using Mako.Global.Enum;
+using Mako.Model;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls.FlyoutContent;

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.AppManagement;
-using Pixeval.CoreApi.Net;
+using Mako.Net;
 using Pixeval.Logging;
 using Pixeval.Utilities;
 using IllustrationCacheTable = Pixeval.Caching.CacheTable<

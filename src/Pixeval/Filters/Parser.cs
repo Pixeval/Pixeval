@@ -70,7 +70,7 @@ public class Parser
      *      tag                ::= HASH DATA
      *      author             ::= AT DATA
      *      like_bool          ::= (ADD | DASH) enum
-     *          enum           ::= R18 | R18G | GIF
+     *          enum           ::= R18 | R18G | GIF | AI
      *      like_range         ::= L COLON range_desc
      *      sequence_range     ::= I COLON range_desc
      *      starting_date      ::= S COLON date_desc

@@ -1,13 +1,13 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Pixeval.CoreApi.Global;
+using Mako.Global;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi.Net;
+namespace Mako.Net;
 
 internal class RetryHttpClientHandler(HttpMessageHandler delegatedHandler, int timeout) : HttpMessageHandler
 {

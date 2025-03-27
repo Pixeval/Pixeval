@@ -8,8 +8,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
-using Pixeval.CoreApi.Engine;
-using Pixeval.CoreApi.Model;
+using Mako.Engine;
+using Mako.Model;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 

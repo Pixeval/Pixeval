@@ -8,8 +8,8 @@ using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Model;
+using Mako.Global.Enum;
+using Mako.Model;
 using Pixeval.Util;
 using WinUI3Utilities;
 

@@ -1,10 +1,10 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Pixeval.CoreApi.Global.Exception;
+namespace Mako.Global.Exception;
 
 public class MakoNetworkException(string url, bool domainFronting, string? extraMsg, int statusCode)
     : MakoException($"Network error while requesting URL: {url} (Domain fronting: {domainFronting}, Status code: {statusCode}) {extraMsg}")

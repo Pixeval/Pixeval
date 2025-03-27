@@ -1,11 +1,11 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-namespace Pixeval.CoreApi.Net.Response;
+namespace Mako.Net.Response;
 
 [Factory]
 public partial record UgoiraMetadataResponse

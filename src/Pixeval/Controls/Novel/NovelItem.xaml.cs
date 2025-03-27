@@ -9,7 +9,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.CoreApi.Global.Enum;
+using Mako.Global.Enum;
 using Pixeval.Messages;
 using Pixeval.Util.UI;
 using Windows.Foundation;

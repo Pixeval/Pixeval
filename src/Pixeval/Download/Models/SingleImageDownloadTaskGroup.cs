@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Options;

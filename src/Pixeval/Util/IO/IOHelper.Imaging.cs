@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.CoreApi.Net.Response;
+using Mako.Net.Response;
 using Pixeval.Download.Macros;
 using Pixeval.Options;
 using Pixeval.Util.IO.Caching;

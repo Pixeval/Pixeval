@@ -2,7 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using System.Threading.Tasks;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 
 namespace Pixeval.Controls;
 

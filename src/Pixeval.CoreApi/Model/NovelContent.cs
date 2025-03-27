@@ -1,4 +1,4 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System;
@@ -7,7 +7,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi.Model;
+namespace Mako.Model;
 
 [Factory]
 public partial record NovelContent

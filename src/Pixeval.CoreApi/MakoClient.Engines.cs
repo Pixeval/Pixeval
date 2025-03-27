@@ -1,18 +1,18 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Pixeval.CoreApi.Engine;
-using Pixeval.CoreApi.Engine.Implements;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Global.Exception;
-using Pixeval.CoreApi.Model;
+using Mako.Engine;
+using Mako.Engine.Implements;
+using Mako.Global.Enum;
+using Mako.Global.Exception;
+using Mako.Model;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi;
+namespace Mako;
 
 public partial class MakoClient
 {

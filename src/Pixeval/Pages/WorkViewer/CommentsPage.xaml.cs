@@ -3,9 +3,9 @@
 
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
-using Pixeval.CoreApi.Engine;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Model;
+using Mako.Engine;
+using Mako.Global.Enum;
+using Mako.Model;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages;

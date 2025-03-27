@@ -1,4 +1,4 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System;
@@ -9,12 +9,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-namespace Pixeval.CoreApi.Model;
-
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-[DebuggerDisplay("{Id}: {Title} [{User}]")]
+namespace Mako.Model;
 [Factory]
-public partial record Illustration : IWorkEntry
+[DebuggerDisplay("{Id}: {Title} [{User}]")]
+public partial record WorkBase
 {
     [JsonPropertyName("id")]
     public required long Id { get; set; }
@@ -22,31 +20,68 @@ public partial record Illustration : IWorkEntry
     [JsonPropertyName("title")]
     public required string Title { get; set; } = "";
 
-    [JsonPropertyName("type")]
-    [JsonConverter(typeof(JsonStringEnumConverter<IllustrationType>))]
-    public required IllustrationType Type { get; set; }
+    [JsonPropertyName("caption")]
+    public required string Caption { get; set; } = "";
+
+    [JsonPropertyName("tags")]
+    public required Tag[] Tags { get; set; } = [];
+
+    [JsonPropertyName("x_restrict")]
+    public required XRestrict XRestrict { get; set; }
+
+    [JsonPropertyName("user")]
+    public required UserInfo User { get; set; }
+
+    [JsonPropertyName("create_date")]
+    public required DateTimeOffset CreateDate { get; set; }
 
     [JsonPropertyName("image_urls")]
     public required ImageUrls ThumbnailUrls { get; set; }
 
-    [JsonPropertyName("caption")]
-    public required string Caption { get; set; } = "";
+    [JsonPropertyName("is_bookmarked")]
+    public required bool IsBookmarked { get; set; }
+
+    [JsonPropertyName("total_bookmarks")]
+    public required int TotalBookmarks { get; set; }
+
+    [JsonPropertyName("total_view")]
+    public required int TotalView { get; set; }
+
+    [JsonPropertyName("visible")]
+    public required bool Visible { get; set; }
+
+    [JsonPropertyName("is_muted")]
+    public required bool IsMuted { get; set; }
+
+    [JsonPropertyName("series")]
+    public required Series? Series
+    {
+        get;
+        set
+        {
+            if (value != _defaultSeries)
+                field = value;
+        }
+    }
+
+    private readonly Series _defaultSeries = new();
+}
+
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+[DebuggerDisplay("{Id}: {Title} [{User}]")]
+[Factory]
+public partial record Illustration : WorkBase, IWorkEntry
+{
+    [JsonPropertyName("type")]
+    [JsonConverter(typeof(JsonStringEnumConverter<IllustrationType>))]
+    public required IllustrationType Type { get; set; }
 
     [JsonPropertyName("restrict")]
     [JsonConverter(typeof(BoolToNumberJsonConverter))]
     public required bool IsPrivate { get; set; }
 
-    [JsonPropertyName("user")]
-    public required UserInfo User { get; set; }
-
-    [JsonPropertyName("tags")]
-    public required Tag[] Tags { get; set; } = [];
-
     [JsonPropertyName("tools")]
     public required string[] Tools { get; set; } = [];
-
-    [JsonPropertyName("create_date")]
-    public required DateTimeOffset CreateDate { get; set; }
 
     [JsonPropertyName("page_count")]
     public required long PageCount { get; set; }
@@ -58,10 +93,7 @@ public partial record Illustration : IWorkEntry
     public required int Height { get; set; }
 
     [JsonPropertyName("sanity_level")]
-    public required long SanityLevel { get; set; }
-
-    [JsonPropertyName("x_restrict")]
-    public required XRestrict XRestrict { get; set; }
+    public required int SanityLevel { get; set; }
 
     [JsonPropertyName("meta_single_page")]
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -72,23 +104,8 @@ public partial record Illustration : IWorkEntry
     [JsonPropertyName("meta_pages")]
     public required MetaPage[] MetaPages { get; set; } = [];
 
-    [JsonPropertyName("total_view")]
-    public required int TotalView { get; set; }
-
-    [JsonPropertyName("total_bookmarks")]
-    public required int TotalBookmarks { get; set; }
-
-    [JsonPropertyName("is_bookmarked")]
-    public required bool IsBookmarked { get; set; }
-
-    [JsonPropertyName("visible")]
-    public required bool Visible { get; set; }
-
-    [JsonPropertyName("is_muted")]
-    public required bool IsMuted { get; set; }
-
     [JsonPropertyName("illust_ai_type")]
-    public required int AiType { get; set; }
+    public required AiType AiType { get; set; }
 
     [JsonPropertyName("illust_book_style")]
     public required int IllustBookStyle { get; set; }
@@ -176,6 +193,13 @@ public enum XRestrict
     Ordinary = 0,
     R18 = 1,
     R18G = 2
+}
+
+public enum AiType
+{
+    NotSpecified = 0,
+    NotAiGenerated = 1,
+    AiGenerated = 2
 }
 
 public enum IllustrationType

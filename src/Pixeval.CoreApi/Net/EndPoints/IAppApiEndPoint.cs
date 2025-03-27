@@ -1,14 +1,14 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System.Net.Http;
 using System.Threading.Tasks;
-using Pixeval.CoreApi.Net.Request;
-using Pixeval.CoreApi.Net.Response;
+using Mako.Net.Request;
+using Mako.Net.Response;
 using WebApiClientCore;
 using WebApiClientCore.Attributes;
 
-namespace Pixeval.CoreApi.Net.EndPoints;
+namespace Mako.Net.EndPoints;
 
 /// <summary>
 /// 方法上 [LoggingFilter] 输出日志

@@ -1,11 +1,11 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System.Collections.Generic;
 using System.Threading;
 using Pixeval.Utilities;
 
-namespace Pixeval.CoreApi.Engine.Implements;
+namespace Mako.Engine.Implements;
 
 /// <summary>
 /// This class aims to hold an already computed <see cref="IFetchEngine{E}" />, it delegates

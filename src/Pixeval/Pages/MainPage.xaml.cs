@@ -19,7 +19,7 @@ using Microsoft.UI.Xaml.Media;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
 using Pixeval.Controls.Windowing;
-using Pixeval.CoreApi.Global.Enum;
+using Mako.Global.Enum;
 using Pixeval.Database.Managers;
 using Pixeval.Logging;
 using Pixeval.Messages;

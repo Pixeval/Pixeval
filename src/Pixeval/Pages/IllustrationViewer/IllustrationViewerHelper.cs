@@ -9,7 +9,7 @@ using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;

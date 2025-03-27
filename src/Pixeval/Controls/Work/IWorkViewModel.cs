@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Filters;
 using WinUI3Utilities;
 

@@ -1,13 +1,13 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System.Threading.Tasks;
-using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net.Request;
+using Mako.Model;
+using Mako.Net.Request;
 using WebApiClientCore;
 using WebApiClientCore.Attributes;
 
-namespace Pixeval.CoreApi.Net.EndPoints;
+namespace Mako.Net.EndPoints;
 
 [Header(HttpRequestHeader.UserAgent, "PixivAndroidApp/5.0.64 (Android 6.0)")]
 [Header(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded")]

@@ -2,7 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using Pixeval.Attributes;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Database;
 using Pixeval.Util.UI;
 using Symbol = FluentIcons.Common.Symbol;

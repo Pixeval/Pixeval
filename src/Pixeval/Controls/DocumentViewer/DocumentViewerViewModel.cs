@@ -10,7 +10,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Database.Managers;
 using Pixeval.Extensions.Common.Commands.Transformers;
 using Pixeval.Util.ComponentModels;

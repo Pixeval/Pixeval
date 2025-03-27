@@ -7,7 +7,7 @@ using System.Linq;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
-using Pixeval.CoreApi.Global.Enum;
+using Mako.Global.Enum;
 using WinRT;
 using WinUI3Utilities;
 

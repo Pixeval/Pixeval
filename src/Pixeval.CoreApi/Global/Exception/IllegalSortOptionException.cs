@@ -1,7 +1,7 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
-namespace Pixeval.CoreApi.Global.Exception;
+namespace Mako.Global.Exception;
 
 /// <summary>
 /// Raised if you're trying to set the sort option to popular_desc without a premium access

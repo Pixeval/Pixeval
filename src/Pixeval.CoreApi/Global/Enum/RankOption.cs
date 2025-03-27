@@ -1,9 +1,9 @@
-// Copyright (c) Pixeval.CoreApi.
+// Copyright (c) Mako.
 // Licensed under the GPL v3 License.
 
 using System.ComponentModel;
 
-namespace Pixeval.CoreApi.Global.Enum;
+namespace Mako.Global.Enum;
 
 public enum RankOption
 {

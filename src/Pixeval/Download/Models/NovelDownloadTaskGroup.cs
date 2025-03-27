@@ -6,7 +6,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Pixeval.Controls;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Database;
 using Pixeval.Options;
 using Pixeval.Util;

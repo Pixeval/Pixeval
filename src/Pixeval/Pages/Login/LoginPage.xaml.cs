@@ -8,7 +8,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Windowing;
-using Pixeval.CoreApi;
+using Mako;
 using Pixeval.Logging;
 using Pixeval.Settings.Models;
 using Pixeval.Util.UI;
