@@ -1,0 +1,3 @@
+[submodule "src/Mako"]
+	path = src/Mako
+	url = https://github.com/Pixeval/Mako.git
