@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls;
 using Mako.Model;
+using Misaki;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 using SixLabors.ImageSharp;
@@ -19,7 +20,7 @@ namespace Pixeval.Pages.Tags;
 /// <summary>
 /// 由于<see cref="Illustration"/>不一定存在，所以这个类不直接继承 <see cref="IllustrationItemViewModel"/>
 /// </summary>
-public partial class TagsEntryViewModel : ObservableObject, IEntry
+public partial class TagsEntryViewModel : ObservableObject, IMisakiModel
 {
     private TagsEntryViewModel(string path)
     {

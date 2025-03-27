@@ -12,13 +12,14 @@ using Mako.Model;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Windows.System;
+using Misaki;
 using WinUI3Utilities;
 using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Controls;
 
 [DebuggerDisplay("{Entry}")]
-public abstract class EntryViewModel<T>(T entry) : ObservableObject, IDisposable where T : IEntry
+public abstract class EntryViewModel<T>(T entry) : ObservableObject, IDisposable where T : IMisakiModel
 {
     public T Entry { get; } = entry;
 

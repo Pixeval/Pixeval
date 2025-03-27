@@ -2,6 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using Microsoft.UI.Xaml;
+using Pixeval;
 using Pixeval.Attributes;
 using WinUI3Utilities;
 
