@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <Configurations>Debug;Release</Configurations>
@@ -9,8 +9,8 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.HighPerformance" />
-        <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" />
-        <PackageReference Include="Microsoft.Extensions.Logging" />
+        <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.4.0" />
+        <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.3" />
     </ItemGroup>
 </Project>
