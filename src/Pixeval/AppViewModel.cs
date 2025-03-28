@@ -74,6 +74,9 @@ public partial class AppViewModel(App app) : IDisposable
 
     public void Dispose()
     {
+        if (_disposed)
+            return;
+        _disposed = true;
         AppServiceProvider?.GetService<LiteDatabase>()?.Dispose();
         AppServiceProvider?.GetService<ExtensionService>()?.Dispose();
         AppServiceProvider?.Dispose();
@@ -81,4 +84,6 @@ public partial class AppViewModel(App app) : IDisposable
         MakoClient?.Dispose();
         GC.SuppressFinalize(this);
     }
+
+    private bool _disposed = false;
 }
