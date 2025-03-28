@@ -7,8 +7,8 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Model;
+using Mako.Global.Enum;
+using Mako.Model;
 using Pixeval.Messages;
 using Pixeval.Pages.IllustratorViewer;
 using ReverseMarkdown;
@@ -42,7 +42,7 @@ public sealed partial class WorkInfoPage
     private async Task SetWorkCaptionTextAsync()
     {
         await Task.Yield();
-        var caption = _viewModel.Entry.Caption;
+        var caption = _viewModel.Entry.Description;
         string? md;
         if (string.IsNullOrEmpty(caption))
             md = WorkInfoPageResources.WorkCaptionEmpty;

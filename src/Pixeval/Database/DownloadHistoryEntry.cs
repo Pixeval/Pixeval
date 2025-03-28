@@ -2,7 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using LiteDB;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Download;
 
 namespace Pixeval.Database;

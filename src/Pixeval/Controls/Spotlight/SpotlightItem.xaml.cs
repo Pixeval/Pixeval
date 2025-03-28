@@ -5,7 +5,7 @@ using System;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Windows.UI;
 
 namespace Pixeval.Controls;

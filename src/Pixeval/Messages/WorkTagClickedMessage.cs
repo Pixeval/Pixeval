@@ -1,7 +1,7 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Pixeval.CoreApi.Global.Enum;
+using Mako.Global.Enum;
 
 namespace Pixeval.Messages;
 

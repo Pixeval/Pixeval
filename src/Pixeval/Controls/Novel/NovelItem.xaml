@@ -8,7 +8,7 @@
     xmlns:labs="using:CommunityToolkit.Labs.WinUI.MarkdownTextBlock"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:model="using:Pixeval.CoreApi.Model"
+    xmlns:model="using:Mako.Model"
     xmlns:pixeval="using:Pixeval.AppManagement"
     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
     PointerEntered="NovelItem_OnPointerEntered"

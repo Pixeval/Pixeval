@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Options;
 using Pixeval.Util.IO;
 using SixLabors.ImageSharp;

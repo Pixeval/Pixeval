@@ -1,9 +1,9 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using IllustratorViewDataProvider = Pixeval.Controls.SimpleViewDataProvider<
-    Pixeval.CoreApi.Model.User,
+    Mako.Model.User,
     Pixeval.Controls.IllustratorItemViewModel>;
 
 namespace Pixeval.Controls;

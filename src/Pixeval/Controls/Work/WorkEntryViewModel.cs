@@ -3,7 +3,7 @@
 
 using System;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Util;
 
 namespace Pixeval.Controls;
@@ -12,20 +12,20 @@ public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>
 {
     protected WorkEntryViewModel(T entry) : base(entry)
     {
-        IsBookmarkedDisplay = Entry.IsBookmarked ? HeartButtonState.Checked : HeartButtonState.Unchecked;
+        IsBookmarkedDisplay = Entry.IsFavorite ? HeartButtonState.Checked : HeartButtonState.Unchecked;
         InitializeCommands();
     }
 
     IWorkEntry IWorkViewModel.Entry => Entry;
 
-    public int TotalBookmarks => Entry.TotalBookmarks;
+    public int TotalBookmarks => Entry.TotalFavorite;
 
     public int TotalView => Entry.TotalView;
 
     public bool IsBookmarked
     {
-        get => Entry.IsBookmarked;
-        set => Entry.IsBookmarked = value;
+        get => Entry.IsFavorite;
+        set => Entry.IsFavorite = value;
     }
 
     [ObservableProperty]
@@ -42,13 +42,13 @@ public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>
 
     public string Title => Entry.Title;
 
-    public string Caption => Entry.Caption;
+    public string Caption => Entry.Description;
 
     public UserInfo User => Entry.User;
 
     public DateTimeOffset PublishDate => Entry.CreateDate;
 
-    public bool IsAiGenerated => Entry.AiType is 2;
+    public bool IsAiGenerated => Entry.AiType is AiType.AiGenerated;
 
     public bool IsXRestricted => Entry.XRestrict is not XRestrict.Ordinary;
 

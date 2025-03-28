@@ -28,7 +28,7 @@ public class FactoryGenerator : IIncrementalGenerator
         const string createDefault = "CreateDefault";
         var defaultFactory = $"{AttributeNamespace}.IDefaultFactory<{name}>";
         var list = typeSymbol.GetProperties(attributeList[0].AttributeClass!)
-            .Where(symbol => !symbol.IsReadOnly && !symbol.IsStatic)
+            .Where(symbol => symbol is { IsStatic: false, IsReadOnly: false, IsOverride: false })
             .Select(symbol =>
             {
                 var syntax = (PropertyDeclarationSyntax) symbol.DeclaringSyntaxReferences[0].GetSyntax();

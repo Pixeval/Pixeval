@@ -9,7 +9,7 @@
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Pixeval.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:model="using:Pixeval.CoreApi.Model"
+    xmlns:model="using:Mako.Model"
     xmlns:pixeval="using:Pixeval.AppManagement"
     xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
@@ -54,7 +54,7 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal" Spacing="20">
                 <controls2:IconText Symbol="Eye" Text="{x:Bind _viewModel.Entry.TotalView}" />
-                <controls2:IconText Symbol="Heart" Text="{x:Bind _viewModel.Entry.TotalBookmarks}" />
+                <controls2:IconText Symbol="Heart" Text="{x:Bind _viewModel.Entry.TotalFavorite}" />
             </StackPanel>
             <controls2:IconText Symbol="Clock" Text="{x:Bind controls2:C.CultureDateTimeOffsetFormatter(_viewModel.Entry.CreateDate, pixeval:AppSettings.CurrentCulture)}" />
             <!--#region Illustrator Info-->

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Pixeval.Controls.Windowing;
-using Pixeval.CoreApi.Net.Response;
+using Mako.Net.Response;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustratorViewer;

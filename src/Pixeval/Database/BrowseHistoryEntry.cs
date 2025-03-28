@@ -3,8 +3,8 @@
 
 using System;
 using LiteDB;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Model;
+using Mako.Global.Enum;
+using Mako.Model;
 using WinUI3Utilities;
 
 namespace Pixeval.Database;

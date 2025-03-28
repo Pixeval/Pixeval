@@ -6,13 +6,13 @@ using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
 using Pixeval.Caching;
-using Pixeval.CoreApi;
-using Pixeval.CoreApi.Net;
+using Mako;
+using Mako.Net;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Extensions;
-using Pixeval.Logging;
 using Pixeval.Util.IO.Caching;
+using Pixeval.Utilities;
 
 namespace Pixeval;
 
@@ -74,6 +74,9 @@ public partial class AppViewModel(App app) : IDisposable
 
     public void Dispose()
     {
+        if (_disposed)
+            return;
+        _disposed = true;
         AppServiceProvider?.GetService<LiteDatabase>()?.Dispose();
         AppServiceProvider?.GetService<ExtensionService>()?.Dispose();
         AppServiceProvider?.Dispose();
@@ -81,4 +84,6 @@ public partial class AppViewModel(App app) : IDisposable
         MakoClient?.Dispose();
         GC.SuppressFinalize(this);
     }
+
+    private bool _disposed = false;
 }

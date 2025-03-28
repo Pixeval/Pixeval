@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using Pixeval.CoreApi.Net;
+using Mako.Net;
 using Pixeval.Download.Models;
 using Pixeval.Utilities.Threading;
 

@@ -7,7 +7,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Database;
 
 namespace Pixeval.Download.Models;

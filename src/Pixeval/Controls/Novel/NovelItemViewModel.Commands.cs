@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Download;
 using Pixeval.Util;
 using Pixeval.Util.UI;

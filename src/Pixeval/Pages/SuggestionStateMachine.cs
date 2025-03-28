@@ -9,8 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using PininSharp;
 using PininSharp.Searchers;
 using Pixeval.Attributes;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Model;
+using Mako.Global.Enum;
+using Mako.Model;
 using Pixeval.Database.Managers;
 using Pixeval.Utilities;
 

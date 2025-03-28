@@ -7,9 +7,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Pixeval.CoreApi;
-using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net;
+using Mako;
+using Mako.Model;
+using Mako.Net;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 

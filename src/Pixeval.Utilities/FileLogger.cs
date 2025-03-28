@@ -6,10 +6,11 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
-namespace Pixeval.Logging;
+namespace Pixeval.Utilities;
 
-public class FileLogger
+public class FileLogger : ILogger
 {
     private readonly string _basePath;
 
@@ -87,6 +88,18 @@ public class FileLogger
         [CallerFilePath] string filePath = "",
         [CallerLineNumber] int lineNumber = 0) =>
         LogPrivate(LogLevel.Critical, message, exception, memberName, filePath, lineNumber);
+
+    public void Log<TState>(
+        LogLevel logLevel,
+        EventId eventId,
+        TState state,
+        Exception? exception,
+        Func<TState, Exception?, string> formatter) =>
+        LogPrivate(logLevel, formatter(state, exception), exception, "", "", 0);
+
+    public bool IsEnabled(LogLevel logLevel) => true;
+
+    public IDisposable? BeginScope<TState>(TState state) where TState : notnull => throw new NotSupportedException();
 }
 
 public class LogModel

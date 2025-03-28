@@ -5,7 +5,7 @@ using System;
 using System.Net.Http;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
-using Pixeval.CoreApi.Global.Enum;
+using Mako.Global.Enum;
 using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Util.IO.Caching;
 using Pixeval.Util.UI;

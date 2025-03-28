@@ -2,7 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using CommunityToolkit.Mvvm.ComponentModel;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Util.UI;
 
 namespace Pixeval.Controls;

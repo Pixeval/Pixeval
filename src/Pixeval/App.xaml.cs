@@ -15,14 +15,12 @@ using Pixeval.AppManagement;
 using Pixeval.Controls.Windowing;
 using Pixeval.Pages.Login;
 using System.Threading.Tasks;
-using FluentIcons.WinUI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Logging;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using WinUI3Utilities;
 
 #if DEBUG

@@ -55,9 +55,8 @@ public class ObservableCollectionAdapter<TInput, TOutput> : ObservableCollection
             SourceCollection.CollectionChanged += SourceCollectionChanged;
 
             Clear();
-            for (var index = 0; index < _sourceCollection.Count; index++)
+            foreach (var element in _sourceCollection)
             {
-                var element = _sourceCollection[index];
                 var item = TOutput.CreateInstance(element);
                 Add(item);
             }
@@ -113,9 +112,8 @@ public class ObservableCollectionAdapter<TInput, TOutput> : ObservableCollection
                 break;
             case NotifyCollectionChangedAction.Reset:
                 Clear();
-                for (var index = 0; index < SourceCollection.Count; index++)
+                foreach (var element in SourceCollection)
                 {
-                    var element = SourceCollection[index];
                     if (_filter?.Invoke(element) is false)
                         continue;
                     var item = TOutput.CreateInstance(element);

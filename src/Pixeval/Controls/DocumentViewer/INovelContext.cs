@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 
 namespace Pixeval.Controls;
 
