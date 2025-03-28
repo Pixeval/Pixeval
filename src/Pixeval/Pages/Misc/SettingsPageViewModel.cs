@@ -13,7 +13,6 @@ using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
-using Mako.Global.Enum;
 using Pixeval.Extensions;
 using Pixeval.Options;
 using Pixeval.Settings;
@@ -23,6 +22,15 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
+using BackdropTypeExtension = Pixeval.Util.BackdropTypeExtension;
+using ElementThemeExtension = Pixeval.Util.ElementThemeExtension;
+using NovelRankOptionExtension = Pixeval.Util.NovelRankOptionExtension;
+using RankOptionExtension = Pixeval.Util.RankOptionExtension;
+using SearchIllustrationTagMatchOptionExtension = Pixeval.Util.SearchIllustrationTagMatchOptionExtension;
+using SearchNovelTagMatchOptionExtension = Pixeval.Util.SearchNovelTagMatchOptionExtension;
+using SimpleWorkTypeExtension = Pixeval.Util.SimpleWorkTypeExtension;
+using TargetFilterExtension = Pixeval.Util.TargetFilterExtension;
+using WorkSortOptionExtension = Pixeval.Util.WorkSortOptionExtension;
 
 namespace Pixeval.Pages.Misc;
 

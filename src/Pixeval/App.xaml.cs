@@ -18,7 +18,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Logging;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Mako.Model;

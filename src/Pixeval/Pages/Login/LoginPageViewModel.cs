@@ -18,11 +18,11 @@ using Pixeval.Attributes;
 using Pixeval.Controls.DialogContent;
 using Pixeval.Controls.Windowing;
 using Mako;
-using Pixeval.Logging;
 using Pixeval.Util;
 using Pixeval.Util.ComponentModels;
 using Pixeval.Util.UI;
 using Windows.System;
+using Pixeval.Utilities;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 

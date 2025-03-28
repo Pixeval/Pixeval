@@ -11,8 +11,8 @@ using Mako.Net;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Extensions;
-using Pixeval.Logging;
 using Pixeval.Util.IO.Caching;
+using Pixeval.Utilities;
 
 namespace Pixeval;
 

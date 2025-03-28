@@ -1,12 +1,12 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using Mako.Global.Enum;
 using Microsoft.UI.Xaml;
-using Pixeval;
 using Pixeval.Attributes;
 using WinUI3Utilities;
 
-namespace Mako.Global.Enum;
+namespace Pixeval.Util;
 
 [AttachedLocalizationMetadata<RankOption>(typeof(RankingsPageResources))]
 [AttachedLocalizedResource(nameof(RankOption.Day), nameof(RankingsPageResources.RankOptionDay))]

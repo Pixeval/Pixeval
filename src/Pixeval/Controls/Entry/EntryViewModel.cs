@@ -8,7 +8,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Mako.Model;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Windows.System;

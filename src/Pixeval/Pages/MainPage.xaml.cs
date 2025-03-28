@@ -21,7 +21,6 @@ using Pixeval.Attributes;
 using Pixeval.Controls.Windowing;
 using Mako.Global.Enum;
 using Pixeval.Database.Managers;
-using Pixeval.Logging;
 using Pixeval.Messages;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.IllustratorViewer;

@@ -8,8 +8,11 @@ using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
-using Mako.Global.Enum;
 using WinUI3Utilities;
+using PrivacyPolicyExtension = Pixeval.Util.PrivacyPolicyExtension;
+using SimpleWorkTypeExtension = Pixeval.Util.SimpleWorkTypeExtension;
+using WorkSortOptionExtension = Pixeval.Util.WorkSortOptionExtension;
+using WorkTypeExtension = Pixeval.Util.WorkTypeExtension;
 
 namespace Pixeval.Controls;
 

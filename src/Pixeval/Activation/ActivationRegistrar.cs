@@ -7,10 +7,10 @@ using System.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Windows.AppLifecycle;
 using Mako;
-using Pixeval.Logging;
 using Pixeval.Pages.Login;
 using Pixeval.Util.Threading;
 using Windows.ApplicationModel.Activation;
+using Pixeval.Utilities;
 
 namespace Pixeval.Activation;
 
