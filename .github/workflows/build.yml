@@ -49,10 +49,10 @@ jobs:
         with:
           global-json-file: global.json
 
-      - uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/Directory.Packages.props') }}
+      # - uses: actions/cache@v4
+      #   with:
+      #     path: ~/.nuget/packages
+      #     key: ${{ runner.os }}-nuget-${{ hashFiles('**/Directory.Packages.props') }}
 
       - name: Restore Files
         shell: pwsh
@@ -61,12 +61,12 @@ jobs:
           -p:Platform=$env:PROJECT_RESTORE_PLATFORM `
           -p:Configuration=$env:CONFIGURATION
 
-      - uses: actions/cache@v4
-        with:
-          path: |
-            ./**/obj\${{ matrix.platform }}
-            ./**/bin\${{ matrix.platform }}
-          key: ${{ matrix.platform }}-obj-${{ hashFiles('**/project.assets.json') }}
+      # - uses: actions/cache@v4
+      #   with:
+      #     path: |
+      #       ./**/obj\${{ matrix.platform }}
+      #       ./**/bin\${{ matrix.platform }}
+      #     key: ${{ matrix.platform }}-obj-${{ hashFiles('**/project.assets.json') }}
 
       - name: Publish
         id: publish
