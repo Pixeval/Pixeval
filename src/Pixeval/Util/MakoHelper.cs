@@ -109,9 +109,9 @@ public static class MakoHelper
     {
         return sortOption switch
         {
-            WorkSortOption.PopularityDescending => new(SortDirection.Descending, WorkEntryBookmarkComparer.Instance),
-            WorkSortOption.PublishDateAscending => new(SortDirection.Ascending, WorkEntryPublishDateComparer.Instance),
-            WorkSortOption.PublishDateDescending => new(SortDirection.Descending, WorkEntryPublishDateComparer.Instance),
+            WorkSortOption.PopularityDescending => new(WorkEntryBookmarkComparer.Instance, SortDirection.Descending),
+            WorkSortOption.PublishDateAscending => new(WorkEntryPublishDateComparer.Instance, SortDirection.Ascending),
+            WorkSortOption.PublishDateDescending => new(WorkEntryPublishDateComparer.Instance, SortDirection.Descending),
             WorkSortOption.DoNotSort => null,
             _ => ThrowHelper.ArgumentOutOfRange<WorkSortOption, SortDescription<IWorkEntry>?>(sortOption)
         };

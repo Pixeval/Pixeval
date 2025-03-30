@@ -77,7 +77,7 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
 
             _sourceWeakEventListener?.Detach();
 
-            _sourceWeakEventListener = new WeakEventListener<AdvancedObservableCollection<T>, object?, NotifyCollectionChangedEventArgs>(this)
+            _sourceWeakEventListener = new(this)
             {
                 OnEventAction = (source, changed, arg) => SourceNcc_CollectionChanged(source, arg),
                 OnDetachAction = listener => field.CollectionChanged -= listener.OnEvent
@@ -188,7 +188,7 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
                 return;
 
             field = value;
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            OnCollectionChanged(new(NotifyCollectionChangedAction.Reset));
         }
     } = Range.All;
 
@@ -209,15 +209,15 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
         {
             int cmp;
 
-            if (string.IsNullOrEmpty(sd.PropertyName))
-            {
-                cmp = sd.Comparer.Compare(x, y);
-            }
-            else
+            if (sd.PropertyMode)
             {
                 var pi = _sortProperties[sd.PropertyName];
 
-                cmp = sd.Comparer.Compare(pi.GetValue(x) as T, pi.GetValue(y) as T);
+                cmp = Comparer.Default.Compare(pi.GetValue(x), pi.GetValue(y));
+            }
+            else
+            {
+                cmp = sd.Comparer.Compare(x, y);
             }
 
             if (cmp is not 0)
@@ -246,7 +246,7 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
     /// Property changed event invoker
     /// </summary>
     /// <param name="propertyName">name of the property that changed</param>
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null!) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null!) => PropertyChanged?.Invoke(this, new(propertyName));
 
     /// <summary>
     /// Raise CollectionChanged event to any listeners.
@@ -315,7 +315,7 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
 
             // Only trigger expensive UI updates if the index really changed:
             if (targetIndex != oldIndex)
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, item, targetIndex, oldIndex));
+                OnCollectionChanged(new(NotifyCollectionChangedAction.Move, item, targetIndex, oldIndex));
         }
         else if (string.IsNullOrEmpty(e.PropertyName))
             HandleSourceChanged();
@@ -364,7 +364,7 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
                     }
             }
         }
-        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        OnCollectionChanged(new(NotifyCollectionChangedAction.Reset));
     }
 
     public void RaiseFilterChanged()
@@ -424,7 +424,7 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
         }
 
         _sortProperties.Clear();
-        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        OnCollectionChanged(new(NotifyCollectionChangedAction.Reset));
     }
 
     private void SourceNcc_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -557,78 +557,64 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
 /// <summary>
 /// Sort description
 /// </summary>
-/// <remarks>
-/// Initializes a new instance of the <see cref="SortDescription"/> class.
-/// </remarks>
-/// <param name="propertyName">Name of property to sort on</param>
-/// <param name="direction">Direction of sort</param>
-/// <param name="comparer">Comparer to use. If null, will use default comparer</param>
-public class SortDescription<T>(string propertyName, SortDirection direction, IComparer<T>? comparer = null) : ISortDescription<T>
+public class SortDescription<T> : ISortDescription<T>
 {
-    /// <summary>
-    /// Gets the name of property to sort on
-    /// </summary>
-    public string PropertyName { get; } = propertyName;
+    /// <inheritdoc />
+    public bool PropertyMode { get; }
 
-    /// <summary>
-    /// Gets the direction of sort
-    /// </summary>
-    public SortDirection Direction { get; } = direction;
+    /// <inheritdoc />
+    public string? PropertyName { get; }
 
-    /// <summary>
-    /// Gets the comparer
-    /// </summary>
-    public IComparer<T> Comparer { get; } = comparer ?? ObjectComparer<T>.Instance;
+    /// <inheritdoc />
+    public SortDirection Direction { get; }
+
+    /// <inheritdoc />
+    public IComparer<T>? Comparer { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SortDescription"/> class that describes
     /// a sort on the object itself
     /// </summary>
-    /// <param name="direction">Direction of sort</param>
     /// <param name="comparer">Comparer to use. If null, will use default comparer</param>
-    public SortDescription(SortDirection direction, IComparer<T>? comparer = null)
-        : this("", direction, comparer)
+    /// <param name="direction">Direction of sort</param>
+    public SortDescription(IComparer<T>? comparer, SortDirection direction)
     {
+        Direction = direction;
+        Comparer = comparer;
+        PropertyMode = false;
     }
 
-    private class ObjectComparer<T2> : IComparer<T2>
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SortDescription"/> class.
+    /// </summary>
+    /// <param name="propertyName">Name of property to sort on</param>
+    /// <param name="direction">Direction of sort</param>
+    public SortDescription(string propertyName, SortDirection direction)
     {
-        public static readonly IComparer<T2> Instance = new ObjectComparer<T2>();
-
-        private ObjectComparer()
-        {
-        }
-
-        public int Compare(T2? x, T2? y)
-        {
-            var cx = x as IComparable<T2>;
-            var cy = y as IComparable<T2>;
-
-            return ReferenceEquals(cx, cy)
-                ? 0
-                : cx is null
-                    ? -1
-                    : cy is null
-                        ? +1
-                        : cx.CompareTo(y);
-        }
+        PropertyName = propertyName;
+        Direction = direction;
+        PropertyMode = true;
     }
 }
 
 public interface ISortDescription<in T>
 {
+    [MemberNotNullWhen(true, nameof(PropertyName))]
+    [MemberNotNullWhen(false, nameof(Comparer))]
+    bool PropertyMode { get; }
+
     /// <summary>
     /// Gets the name of property to sort on
     /// </summary>
-    public string PropertyName { get; }
+    string? PropertyName { get; }
 
     /// <summary>
     /// Gets the direction of sort
     /// </summary>
-    public SortDirection Direction { get; }
+    SortDirection Direction { get; }
 
     /// <summary>
     /// Gets the comparer
     /// </summary>
-    public IComparer<T> Comparer { get; }
+    IComparer<T>? Comparer { get; }
 }
