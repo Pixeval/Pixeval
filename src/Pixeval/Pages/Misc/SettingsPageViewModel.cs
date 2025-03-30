@@ -247,7 +247,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
 
     public SimpleSettingsGroup[] LocalGroups { get; }
 
-    public IReadOnlyList<ExtensionSettingsGroup> ExtensionGroups =>
+    public IReadOnlyList<ExtensionSettingsGroup> ExtensionGroups { get; } =
         App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>().SettingsGroups;
 
     public string UpdateInfo => AppInfo.AppVersion.UpdateState switch

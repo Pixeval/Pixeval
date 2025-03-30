@@ -164,6 +164,23 @@ public sealed partial class NovelViewerPage
 
     private (FrameworkElement, NovelContent?) DownloadParameter(NovelContent? content) => (this, content);
 
+    public void SetPosition()
+    {
+        if (InnerTopBarPresenter.ActualWidth > TopBar.ActualWidth + 5)
+        {
+            if (InnerTopBarPresenter.Content is null)
+            {
+                OuterTopBarPresenter.Content = null;
+                InnerTopBarPresenter.Content = TopBar;
+            }
+        }
+        else if (OuterTopBarPresenter.Content is null)
+        {
+            InnerTopBarPresenter.Content = null;
+            OuterTopBarPresenter.Content = TopBar;
+        }
+    }
+
     private double NullOr200(string? text)
     {
         if (string.IsNullOrEmpty(text))

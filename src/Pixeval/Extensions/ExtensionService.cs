@@ -66,7 +66,18 @@ public partial class ExtensionService : IDisposable
             if (LoadHost(path, out isOutdated) is not { } model)
                 return false;
             LoadExtensions(model);
-            HostModels.Add(model);
+            var inserted = false;
+            for (var i = HostModels.Count; i > 0; --i)
+                if (HostModels[i - 1].Priority < model.Priority)
+                {
+                    HostModels.Insert(i, model);
+                    inserted = true;
+                    break;
+                }
+
+            if (!inserted)
+                HostModels.Insert(0, model);
+
             return true;
         }
         catch
@@ -131,16 +142,14 @@ public partial class ExtensionService : IDisposable
     private void LoadExtensions(ExtensionsHostModel model)
     {
         var extensions = model.Extensions;
-        foreach (var extension in extensions)
-            extension.OnExtensionLoaded();
         LoadSubExtensions(extensions);
         LoadSettingsExtension(model, extensions);
     }
 
     private void LoadSubExtensions(IEnumerable<IExtension> extensions)
     {
-        foreach (var imageTransformer in extensions)
-            imageTransformer.OnExtensionLoaded();
+        foreach (var extension in extensions)
+            extension.OnExtensionLoaded();
     }
 
     private void LoadSettingsExtension(ExtensionsHostModel model, IEnumerable<IExtension> extensions)

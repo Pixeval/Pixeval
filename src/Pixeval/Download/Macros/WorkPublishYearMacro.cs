@@ -13,6 +13,6 @@ public class WorkPublishYearMacro : ITransducer<IWorkViewModel>
 
     public string Substitute(IWorkViewModel context)
     {
-        return context.PublishDate.Year.ToString();
+        return context.CreateDate.Year.ToString();
     }
 }

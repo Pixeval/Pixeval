@@ -1,4 +1,4 @@
-﻿// Copyright (c) Pixeval.
+// Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
 using Pixeval.Controls;
@@ -13,6 +13,6 @@ public class WorkPublishMonthMacro : ITransducer<IWorkViewModel>
 
     public string Substitute(IWorkViewModel context)
     {
-        return context.PublishDate.Month.ToString();
+        return context.CreateDate.Month.ToString();
     }
 }

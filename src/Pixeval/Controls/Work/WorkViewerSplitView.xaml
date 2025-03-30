@@ -14,29 +14,27 @@
         OpenPaneLength="{x:Bind local:WorkViewerSplitView.OpenPaneLength}"
         PaneBackground="Transparent">
         <SplitView.Pane>
-            <Grid
-                BorderBrush="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                CornerRadius="4"
-                Translation="0,0,40">
-                <NavigationView
-                    x:Name="NavigationView"
-                    IsBackButtonVisible="Collapsed"
-                    IsSettingsVisible="False"
-                    MenuItemsSource="{x:Bind MenuItemsSource}"
-                    PaneDisplayMode="Top"
-                    SelectedItem="{x:Bind local:C.FirstOrDefault(MenuItemsSource)}"
-                    SelectionChanged="NavigationViewOnSelectionChanged">
-                    <NavigationView.MenuItemTemplate>
-                        <DataTemplate x:DataType="windowing:NavigationViewTag">
-                            <NavigationViewItem
-                                Content="{x:Bind}"
-                                Icon="{x:Bind Icon}"
-                                Tag="{x:Bind}" />
-                        </DataTemplate>
-                    </NavigationView.MenuItemTemplate>
-                    <Frame x:Name="PaneFrame" x:FieldModifier="public" />
-                </NavigationView>
-            </Grid>
+            <NavigationView
+                x:Name="NavigationView"
+                IsBackButtonVisible="Collapsed"
+                IsSettingsVisible="False"
+                MenuItemsSource="{x:Bind MenuItemsSource}"
+                PaneDisplayMode="Top"
+                SelectedItem="{x:Bind local:C.FirstOrDefault(MenuItemsSource)}"
+                SelectionChanged="NavigationViewOnSelectionChanged">
+                <NavigationView.MenuItemTemplate>
+                    <DataTemplate x:DataType="windowing:NavigationViewTag">
+                        <NavigationViewItem
+                            Content="{x:Bind}"
+                            Icon="{x:Bind Icon}"
+                            Tag="{x:Bind}" />
+                    </DataTemplate>
+                </NavigationView.MenuItemTemplate>
+                <Frame
+                    x:Name="PaneFrame"
+                    x:FieldModifier="public"
+                    Background="{ThemeResource LayerOnMicaBaseAltFillColorSecondaryBrush}" />
+            </NavigationView>
         </SplitView.Pane>
         <ContentPresenter Content="{x:Bind PaneContent}" />
     </SplitView>
