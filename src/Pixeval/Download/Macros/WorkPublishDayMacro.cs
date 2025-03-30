@@ -13,6 +13,6 @@ public class WorkPublishDayMacro : ITransducer<IWorkViewModel>
 
     public string Substitute(IWorkViewModel context)
     {
-        return context.PublishDate.Day.ToString();
+        return context.CreateDate.Day.ToString();
     }
 }

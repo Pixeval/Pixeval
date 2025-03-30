@@ -9,6 +9,7 @@ using CommunityToolkit.WinUI.Collections;
 using Pixeval.AppManagement;
 using Mako.Global.Enum;
 using Mako.Model;
+using Pixeval.Collections;
 using Pixeval.Options;
 using WinUI3Utilities;
 
@@ -104,15 +105,15 @@ public static class MakoHelper
 
     public static string GetOriginalCacheKey(string url) => $"original-{url}";
 
-    public static SortDescription? GetSortDescriptionForIllustration(WorkSortOption sortOption)
+    public static SortDescription<IWorkEntry>? GetSortDescription(WorkSortOption sortOption)
     {
         return sortOption switch
         {
-            WorkSortOption.PopularityDescending => new(SortDirection.Descending, WorkViewModelBookmarkComparer.Instance),
-            WorkSortOption.PublishDateAscending => new(SortDirection.Ascending, WorkViewModelPublishDateComparer.Instance),
-            WorkSortOption.PublishDateDescending => new(SortDirection.Descending, WorkViewModelPublishDateComparer.Instance),
+            WorkSortOption.PopularityDescending => new(SortDirection.Descending, WorkEntryBookmarkComparer.Instance),
+            WorkSortOption.PublishDateAscending => new(SortDirection.Ascending, WorkEntryPublishDateComparer.Instance),
+            WorkSortOption.PublishDateDescending => new(SortDirection.Descending, WorkEntryPublishDateComparer.Instance),
             WorkSortOption.DoNotSort => null,
-            _ => ThrowHelper.ArgumentOutOfRange<WorkSortOption, SortDescription?>(sortOption)
+            _ => ThrowHelper.ArgumentOutOfRange<WorkSortOption, SortDescription<IWorkEntry>?>(sortOption)
         };
     }
 

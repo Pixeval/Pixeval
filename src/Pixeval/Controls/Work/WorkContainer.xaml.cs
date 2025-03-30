@@ -79,7 +79,7 @@ public partial class WorkContainer : IScrollViewHost
     {
         if (WorkView is { ViewModel: { } vm } && SortOptionComboBox.ItemSelected)
         {
-            switch (MakoHelper.GetSortDescriptionForIllustration(SortOptionComboBox.GetSelectedItem<WorkSortOption>()))
+            switch (MakoHelper.GetSortDescription(SortOptionComboBox.GetSelectedItem<WorkSortOption>()))
             {
                 case { } desc:
                     vm.SetSortDescription(desc);

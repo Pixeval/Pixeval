@@ -18,11 +18,11 @@ public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>
 
     IWorkEntry IWorkViewModel.Entry => Entry;
 
-    public int TotalBookmarks => Entry.TotalFavorite;
+    public int TotalFavorite => Entry.TotalFavorite;
 
     public int TotalView => Entry.TotalView;
 
-    public bool IsBookmarked
+    public bool IsFavorite
     {
         get => Entry.IsFavorite;
         set => Entry.IsFavorite = value;
@@ -35,18 +35,24 @@ public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>
     {
         if (value is HeartButtonState.Pending)
             return;
-        IsBookmarked = value is HeartButtonState.Checked;
+        IsFavorite = value is HeartButtonState.Checked;
     }
 
     public Tag[] Tags => Entry.Tags;
 
     public string Title => Entry.Title;
 
-    public string Caption => Entry.Description;
+    public string Description => Entry.Description;
 
     public UserInfo User => Entry.User;
 
-    public DateTimeOffset PublishDate => Entry.CreateDate;
+    public DateTimeOffset CreateDate => Entry.CreateDate;
+
+    public ImageUrls ThumbnailUrls => Entry.ThumbnailUrls;
+
+    public AiType AiType => Entry.AiType;
+
+    public XRestrict XRestrict => Entry.XRestrict;
 
     public bool IsAiGenerated => Entry.AiType is AiType.AiGenerated;
 

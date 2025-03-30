@@ -95,6 +95,8 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
     {
         get
         {
+            if (Equals(Range, Range.All))
+                return _view;
             var viewCount = _view.Count;
             var start = Range.Start.GetOffset(viewCount);
             if (start > viewCount)
@@ -193,7 +195,7 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
     /// <summary>
     /// Gets SortDescriptions to sort the visible items
     /// </summary>
-    public ObservableCollection<SortDescription> SortDescriptions { get; } = [];
+    public ObservableCollection<ISortDescription<T>> SortDescriptions { get; } = [];
 
     /// <inheritdoc cref="IComparer{T}.Compare"/>
     int IComparer<T>.Compare(T? x, T? y)
@@ -215,7 +217,7 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
             {
                 var pi = _sortProperties[sd.PropertyName];
 
-                cmp = sd.Comparer.Compare(pi.GetValue(x), pi.GetValue(y));
+                cmp = sd.Comparer.Compare(pi.GetValue(x) as T, pi.GetValue(y) as T);
             }
 
             if (cmp is not 0)
@@ -550,4 +552,83 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
     bool IList.IsFixedSize => false;
 
     #endregion
+}
+
+/// <summary>
+/// Sort description
+/// </summary>
+/// <remarks>
+/// Initializes a new instance of the <see cref="SortDescription"/> class.
+/// </remarks>
+/// <param name="propertyName">Name of property to sort on</param>
+/// <param name="direction">Direction of sort</param>
+/// <param name="comparer">Comparer to use. If null, will use default comparer</param>
+public class SortDescription<T>(string propertyName, SortDirection direction, IComparer<T>? comparer = null) : ISortDescription<T>
+{
+    /// <summary>
+    /// Gets the name of property to sort on
+    /// </summary>
+    public string PropertyName { get; } = propertyName;
+
+    /// <summary>
+    /// Gets the direction of sort
+    /// </summary>
+    public SortDirection Direction { get; } = direction;
+
+    /// <summary>
+    /// Gets the comparer
+    /// </summary>
+    public IComparer<T> Comparer { get; } = comparer ?? ObjectComparer<T>.Instance;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SortDescription"/> class that describes
+    /// a sort on the object itself
+    /// </summary>
+    /// <param name="direction">Direction of sort</param>
+    /// <param name="comparer">Comparer to use. If null, will use default comparer</param>
+    public SortDescription(SortDirection direction, IComparer<T>? comparer = null)
+        : this("", direction, comparer)
+    {
+    }
+
+    private class ObjectComparer<T2> : IComparer<T2>
+    {
+        public static readonly IComparer<T2> Instance = new ObjectComparer<T2>();
+
+        private ObjectComparer()
+        {
+        }
+
+        public int Compare(T2? x, T2? y)
+        {
+            var cx = x as IComparable<T2>;
+            var cy = y as IComparable<T2>;
+
+            return ReferenceEquals(cx, cy)
+                ? 0
+                : cx is null
+                    ? -1
+                    : cy is null
+                        ? +1
+                        : cx.CompareTo(y);
+        }
+    }
+}
+
+public interface ISortDescription<in T>
+{
+    /// <summary>
+    /// Gets the name of property to sort on
+    /// </summary>
+    public string PropertyName { get; }
+
+    /// <summary>
+    /// Gets the direction of sort
+    /// </summary>
+    public SortDirection Direction { get; }
+
+    /// <summary>
+    /// Gets the comparer
+    /// </summary>
+    public IComparer<T> Comparer { get; }
 }
