@@ -73,7 +73,7 @@ public partial class WorkEntryViewModel<T>
     /// 
     /// Parameter2: <see cref="NovelContent"/>
     /// </summary>
-    public XamlUICommand CopyCommand { get; } = EntryItemResources.Copy.GetCommand(Symbol.Copy, VirtualKeyModifiers.Control, VirtualKey.C);
+    public XamlUICommand CopyCommand { get; } = EntryItemResources.Copy.GetCommand(Symbol.Copy);
 
     public XamlUICommand OpenUserInfoPage { get; } = EntryItemResources.OpenUserInfoPage.GetCommand(Symbol.Person);
 

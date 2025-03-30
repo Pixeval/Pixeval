@@ -85,5 +85,5 @@ public partial class AppViewModel(App app) : IDisposable
         GC.SuppressFinalize(this);
     }
 
-    private bool _disposed = false;
+    private bool _disposed;
 }

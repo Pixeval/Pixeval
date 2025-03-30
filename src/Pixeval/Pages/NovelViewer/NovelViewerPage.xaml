@@ -13,7 +13,6 @@
     KeyboardAcceleratorPlacementMode="Hidden"
     mc:Ignorable="d">
     <controls:EnhancedPage.Resources>
-        <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
         <AcrylicBrush
             x:Key="BottomCommandSectionBackground"
             FallbackColor="{StaticResource SecondaryAccentColor}"

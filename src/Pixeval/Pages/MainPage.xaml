@@ -145,6 +145,7 @@
                     <AutoSuggestBox
                         x:Name="MainPageAutoSuggestionBox"
                         x:Uid="/MainPage/MainPageAutoSuggestionBox"
+                        MinWidth="300"
                         VerticalAlignment="Center"
                         GotFocus="KeywordAutoSuggestBox_GotFocus"
                         IsFocusEngaged="False"
