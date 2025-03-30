@@ -30,6 +30,7 @@
         Background="Transparent"
         BorderBrush="Transparent"
         Click="GetTranslationClicked"
+        Foreground="{ThemeResource TextFillColorTertiaryBrush}"
         IsEnabled="{x:Bind local:C.Negation(IsTranslating), Mode=OneWay}"
         Visibility="{x:Bind local:C.ToVisibility(CanTranslate), Mode=OneWay}">
         <Button.Content>
@@ -55,5 +56,6 @@
     <ContentPresenter
         x:Name="TranslationBoxPresenter"
         Grid.Row="0"
-        Grid.Column="0" />
+        Grid.Column="0"
+        Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
 </Grid>

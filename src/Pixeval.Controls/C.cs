@@ -88,7 +88,7 @@ public static class C
 
     public static FontFamily ToFontFamily(string value) => new(value);
 
-    public static object? FirstOrDefault(object value) => value is IEnumerable e ? e.OfType<object>().FirstOrDefault() : null;
+    public static object? FirstOrDefault(object? value) => value is IEnumerable e ? e.OfType<object>().FirstOrDefault() : null;
 
     public static string ToPercentageString(object value, int precision)
     {
