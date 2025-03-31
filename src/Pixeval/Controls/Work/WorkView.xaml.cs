@@ -86,12 +86,6 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>, 
         }
     }
 
-    private void NovelItem_OnOpenNovelRequested(NovelItem sender, NovelItemViewModel viewModel)
-    {
-        if (ViewModel is NovelViewViewModel viewViewModel)
-            this.CreateNovelPage(viewModel, viewViewModel);
-    }
-
     private void WorkView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
     {
         if (ViewModel == null!)

@@ -12,7 +12,6 @@
         <DataTemplate x:Key="NovelItemDataTemplate" x:DataType="local:NovelItemViewModel">
             <ItemContainer>
                 <local:NovelItem
-                    OpenNovelRequested="NovelItem_OnOpenNovelRequested"
                     RequestAddToBookmark="WorkItem_OnRequestAddToBookmark"
                     RequestOpenUserInfoPage="WorkItem_OnRequestOpenUserInfoPage"
                     RequestTeachingTip="WorkItem_OnRequestTeachingTip"
