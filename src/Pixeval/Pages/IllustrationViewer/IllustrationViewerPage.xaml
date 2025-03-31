@@ -80,7 +80,6 @@
                                         </MenuFlyout>
                                     </AppBarButton.Flyout>
                                 </AppBarButton>-->
-                                <AppBarSeparator />
                                 <AppBarButton
                                     x:Name="AddToBookmarkButton"
                                     Click="AddToBookmarkButton_OnClicked"
@@ -156,7 +155,7 @@
                                         <ScalarTransition />
                                     </Border.OpacityTransition>
                                     <interactivity:Interaction.Behaviors>
-                                        <interactivity:EventTriggerBehavior EventName="PointerEntered">
+                                        <interactivity:EventTriggerBehavior EventName="PointerMoved">
                                             <interactivity:ChangePropertyAction PropertyName="Opacity" Value="1" />
                                         </interactivity:EventTriggerBehavior>
                                         <interactivity:EventTriggerBehavior EventName="PointerExited">
