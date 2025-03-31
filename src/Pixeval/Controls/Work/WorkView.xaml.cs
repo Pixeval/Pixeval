@@ -25,7 +25,7 @@ namespace Pixeval.Controls;
 public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>, IStructuralDisposalCompleter
 {
     public const double LandscapeHeight = 180;
-    public const double PortraitHeight = 250;
+    public const double PortraitHeight = 240;
 
     public double DesiredHeight => ThumbnailDirection switch
     {
