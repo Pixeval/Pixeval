@@ -49,11 +49,19 @@
                                                   FontSize={StaticResource SmallIconFontSize}}"
                     QuerySubmitted="FilterAutoSuggestBox_QuerySubmitted" />
             </StackPanel>
-            <CommandBar controls1:DockPanel.Dock="Right" DefaultLabelPosition="Right">
+            <CommandBar controls1:DockPanel.Dock="Right" DefaultLabelPosition="Collapsed">
                 <AppBarToggleButton
                     x:Uid="/WorkContainer/SelectionButton"
                     Icon="{fluent:SymbolIcon Symbol=Multiselect}"
                     IsChecked="{x:Bind WorkView.ViewModel.IsSelecting, Mode=TwoWay}" />
+                <AppBarButton
+                    x:Uid="/WorkContainer/RefreshButton"
+                    Click="RefreshButton_OnClick"
+                    Icon="{fluent:SymbolIcon Symbol=ArrowClockwise}">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="F5" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
             </CommandBar>
             <CommandBar
                 x:Name="CommandBar"

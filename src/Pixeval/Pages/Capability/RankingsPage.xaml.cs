@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Mako.Global.Enum;
+using Microsoft.UI.Xaml;
 using WinRT;
 using WinUI3Utilities;
 using NovelRankOptionExtension = Pixeval.Util.NovelRankOptionExtension;
@@ -68,4 +69,6 @@ public sealed partial class RankingsPage : IScrollViewHost
     }
 
     public ScrollView ScrollView => WorkContainer.ScrollView;
+
+    private void WorkContainer_OnRefreshRequested(object sender, RoutedEventArgs e) => ChangeSource();
 }

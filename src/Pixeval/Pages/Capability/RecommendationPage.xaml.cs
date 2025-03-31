@@ -4,6 +4,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Mako.Global.Enum;
+using Microsoft.UI.Xaml;
 
 namespace Pixeval.Pages.Capability;
 
@@ -23,4 +24,6 @@ public sealed partial class RecommendationPage
     {
         WorkContainer.WorkView.ResetEngine(App.AppViewModel.MakoClient.RecommendationWorks(WorkTypeComboBox.GetSelectedItem<WorkType>(), App.AppViewModel.AppSettings.TargetFilter));
     }
+
+    private void WorkContainer_OnRefreshRequested(object sender, RoutedEventArgs e) => ChangeSource();
 }
