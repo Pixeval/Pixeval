@@ -95,9 +95,11 @@ public partial class WorkEntryViewModel<T>
 
     private async void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
+        if (IsBookmarkedDisplay is HeartButtonState.Pending)
+            return;
         IsBookmarkedDisplay = HeartButtonState.Pending; // pre-update
         BookmarkCommand.RefreshBookmarkCommand(IsFavorite, true);
-        var result = await _bookmarkDebounce.ExecuteAsync(!IsFavorite ? new BookmarkDebounceTask(this, false, null) : new RemoveBookmarkDebounceTask(this, false, null));
+        var result = await SetBookmarkAsync(Id, !IsFavorite);
         IsBookmarkedDisplay = result ? HeartButtonState.Checked : HeartButtonState.Unchecked;
         BookmarkCommand.RefreshBookmarkCommand(result, false);
         if (App.AppViewModel.AppSettings.DownloadWhenBookmarked && result)
@@ -106,11 +108,11 @@ public partial class WorkEntryViewModel<T>
 
     private async void AddToBookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        if (args.Parameter is not (IEnumerable<string> userTags, bool isPrivate, var parameter))
+        if (args.Parameter is not (IEnumerable<string> userTags, bool isPrivate, var parameter) || IsBookmarkedDisplay is HeartButtonState.Pending)
             return;
         IsBookmarkedDisplay = HeartButtonState.Pending; // pre-update
         BookmarkCommand.RefreshBookmarkCommand(IsFavorite, true);
-        var result = await _bookmarkDebounce.ExecuteAsync(!IsFavorite ? new BookmarkDebounceTask(this, isPrivate, userTags) : new RemoveBookmarkDebounceTask(this, isPrivate, userTags));
+        var result = await SetBookmarkAsync(Id, !IsFavorite, isPrivate, userTags);
         IsBookmarkedDisplay = result ? HeartButtonState.Checked : HeartButtonState.Unchecked;
         BookmarkCommand.RefreshBookmarkCommand(result, false);
         if (App.AppViewModel.AppSettings.DownloadWhenBookmarked)

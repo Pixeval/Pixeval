@@ -109,8 +109,8 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>, 
 
         ViewModel.SelectedEntries = ViewModel switch
         {
-            NovelViewViewModel => sender.SelectedItems.Cast<NovelItemViewModel>().ToArray(),
-            IllustrationViewViewModel => sender.SelectedItems.Cast<IllustrationItemViewModel>().ToArray(),
+            NovelViewViewModel => [.. sender.SelectedItems.Cast<NovelItemViewModel>()],
+            IllustrationViewViewModel => [.. sender.SelectedItems.Cast<IllustrationItemViewModel>()],
             _ => ViewModel.SelectedEntries
         };
     }

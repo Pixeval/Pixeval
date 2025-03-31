@@ -2,7 +2,6 @@
 // Licensed under the GPL v3 License.
 
 using System.Collections.ObjectModel;
-using System.Linq;
 using Microsoft.UI.Xaml;
 using Pixeval.Controls.Settings;
 using Pixeval.Extensions.Common.Settings;

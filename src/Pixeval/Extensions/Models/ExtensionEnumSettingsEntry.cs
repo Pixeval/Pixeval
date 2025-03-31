@@ -25,6 +25,5 @@ public partial class ExtensionEnumSettingsEntry(IEnumSettingsExtension extension
         base.ValueSaving(values);
     }
 
-    public IReadOnlyList<StringRepresentableItem> EnumItems => extension.GetEnumKeyValues()
-        .Select(t => new StringRepresentableItem(t.Value, t.Key)).ToArray();
+    public IReadOnlyList<StringRepresentableItem> EnumItems => [.. extension.GetEnumKeyValues().Select(t => new StringRepresentableItem(t.Value, t.Key))];
 }

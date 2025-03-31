@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -27,7 +26,6 @@ using Windows.Graphics;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
-using Pixeval.Controls;
 using WinRT.Interop;
 using WinUI3Utilities;
 using Brush = Microsoft.UI.Xaml.Media.Brush;
