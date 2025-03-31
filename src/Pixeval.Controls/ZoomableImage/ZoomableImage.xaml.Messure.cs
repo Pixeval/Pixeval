@@ -5,6 +5,7 @@ using System;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Windows.Foundation;
+using Microsoft.UI.Xaml;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls;
@@ -221,5 +222,15 @@ public partial class ZoomableImage
         }
 
         _lastPoint = currentPoint.Position;
+    }
+
+    private void CanvasControl_OnPointerPressed(object sender, PointerRoutedEventArgs e)
+    {
+        sender.To<FrameworkElement>().CapturePointer(e.Pointer);
+    }
+
+    private void CanvasControl_OnPointerReleased(object sender, PointerRoutedEventArgs e)
+    {
+        sender.To<FrameworkElement>().ReleasePointerCapture(e.Pointer);
     }
 }

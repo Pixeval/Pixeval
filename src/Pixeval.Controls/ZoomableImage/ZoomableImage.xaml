@@ -10,7 +10,10 @@
     <win2d:CanvasControl
         x:Name="CanvasControl"
         Draw="CanvasControlOnDraw"
+        PointerCaptureLost="CanvasControl_OnPointerReleased"
         PointerMoved="CanvasOnPointerMoved"
+        PointerPressed="CanvasControl_OnPointerPressed"
+        PointerReleased="CanvasControl_OnPointerReleased"
         PointerWheelChanged="CanvasOnPointerWheelChanged"
         SizeChanged="CanvasOnSizeChanged" />
     <!--  由于需要随时重新加载新图片，故创建资源的逻辑放在CanvasControlOnDraw的else分支中  -->

@@ -13,7 +13,7 @@ public partial class WorkInfoPageViewModel<T>(T entry) : ObservableObject where 
 {
     public T Entry { get; } = entry;
 
-    public UserInfo Illustrator { get; } = entry.User;
+    public UserEntity Illustrator { get; } = entry.User;
 
     public string? IllustrationDimensionText => Entry is Illustration illustration ? $"{illustration.Width} x {illustration.Height}" : null;
 

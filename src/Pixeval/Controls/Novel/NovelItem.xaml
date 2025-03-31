@@ -11,8 +11,6 @@
     xmlns:model="using:Mako.Model"
     xmlns:pixeval="using:Pixeval.AppManagement"
     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-    PointerEntered="NovelItem_OnPointerEntered"
-    PointerExited="NovelItem_OnPointerExited"
     mc:Ignorable="d">
     <Grid.Resources>
         <ExponentialEase
@@ -23,7 +21,7 @@
         <Storyboard x:Key="ThumbnailStoryboard">
             <DoubleAnimation
                 EasingFunction="{StaticResource EasingFunction}"
-                Storyboard.TargetName="Image"
+                Storyboard.TargetName="CoverImage"
                 Storyboard.TargetProperty="Opacity"
                 From="0"
                 To="1"
@@ -34,14 +32,71 @@
         <ColumnDefinition Width="Auto" />
         <ColumnDefinition Width="*" />
     </Grid.ColumnDefinitions>
+    <Grid.ContextFlyout>
+        <MenuFlyout>
+            <MenuFlyoutItem Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+            <MenuFlyoutItem Click="AddToBookmark_OnClicked" Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" />
+            <MenuFlyoutItem Click="OpenUserInfoPage_OnClicked" Command="{x:Bind ViewModel.OpenUserInfoPage, Mode=OneWay}" />
+            <MenuFlyoutSeparator />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.SaveCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+            <MenuFlyoutSeparator />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.OpenInWebBrowserCommand, Mode=OneWay}" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+            <MenuFlyoutSeparator />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.ShowQrCodeCommand, Mode=OneWay}" CommandParameter="{x:Bind QrCodeTeachingTip}" />
+            <MenuFlyoutItem Command="{x:Bind ViewModel.ShowPixEzQrCodeCommand, Mode=OneWay}" CommandParameter="{x:Bind QrCodeTeachingTip}" />
+        </MenuFlyout>
+    </Grid.ContextFlyout>
     <controls:ConstrainedBox Grid.Column="0" AspectRatio="427:600">
-        <local:LazyImage
-            x:Name="Image"
-            CornerRadius="{StaticResource ControlLeftCornerRadius}"
-            Source="{x:Bind ViewModel.ThumbnailSource, Mode=OneWay}" />
+        <interactivity:Interaction.Behaviors>
+            <interactivity:EventTriggerBehavior EventName="PointerEntered">
+                <interactivity:ChangePropertyAction
+                    PropertyName="Opacity"
+                    TargetObject="{x:Bind CoverImage}"
+                    Value="0" />
+                <interactivity:ChangePropertyAction
+                    PropertyName="Opacity"
+                    TargetObject="{x:Bind DescriptionBlock}"
+                    Value="1" />
+            </interactivity:EventTriggerBehavior>
+            <interactivity:EventTriggerBehavior EventName="PointerExited">
+                <interactivity:ChangePropertyAction
+                    PropertyName="Opacity"
+                    TargetObject="{x:Bind CoverImage}"
+                    Value="1" />
+                <interactivity:ChangePropertyAction
+                    PropertyName="Opacity"
+                    TargetObject="{x:Bind DescriptionBlock}"
+                    Value="0" />
+            </interactivity:EventTriggerBehavior>
+        </interactivity:Interaction.Behaviors>
+        <Grid>
+            <local:LazyImage
+                x:Name="CoverImage"
+                CornerRadius="{StaticResource ControlLeftCornerRadius}"
+                Source="{x:Bind ViewModel.ThumbnailSource, Mode=OneWay}">
+                <local:LazyImage.OpacityTransition>
+                    <ScalarTransition Duration="0:0:0.5" />
+                </local:LazyImage.OpacityTransition>
+            </local:LazyImage>
+            <ScrollView
+                x:Name="DescriptionBlock"
+                Padding="10,30,10,10"
+                Opacity="0">
+                <ScrollView.OpacityTransition>
+                    <ScalarTransition Duration="0:0:0.5" />
+                </ScrollView.OpacityTransition>
+                <labs:MarkdownTextBlock Text="{x:Bind ViewModel.Description}">
+                    <labs:MarkdownTextBlock.Config>
+                        <labs:MarkdownConfig />
+                    </labs:MarkdownTextBlock.Config>
+                </labs:MarkdownTextBlock>
+            </ScrollView>
+        </Grid>
     </controls:ConstrainedBox>
+
     <local:HeartButton
-        x:Name="HeartButton"
         Grid.Column="0"
         HorizontalAlignment="Left"
         VerticalAlignment="Top"
@@ -55,7 +110,6 @@
         HorizontalSpacing="10"
         VerticalSpacing="10">
         <TextBlock
-            x:Name="TitleTextBlock"
             controls:DockPanel.Dock="Top"
             MaxLines="3"
             Style="{StaticResource CaptionStrongTextBlockStyle}"
@@ -121,119 +175,15 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="model:Tag">
-                    <Border
+                    <Button
                         Padding="2"
                         Background="#7F7F7F7F"
+                        Click="TagButton_OnClicked"
                         CornerRadius="{StaticResource ControlCornerRadius}">
                         <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{x:Bind Name}" />
-                    </Border>
+                    </Button>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
     </controls:DockPanel>
-    <Popup
-        x:Name="NovelItemPopup"
-        Grid.Column="0"
-        HorizontalOffset="-5"
-        VerticalOffset="-5">
-        <!--  310 是实际试出的高度  -->
-        <Grid
-            Height="310"
-            Padding="10"
-            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-            ColumnSpacing="10"
-            CornerRadius="{StaticResource ControlCornerRadius}"
-            PointerEntered="NovelItemPopup_OnPointerEntered"
-            PointerExited="NovelItem_OnPointerExited">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <controls:DockPanel Grid.Column="0" VerticalSpacing="5">
-                <CommandBar
-                    Margin="-5"
-                    HorizontalAlignment="Left"
-                    controls:DockPanel.Dock="Bottom"
-                    DefaultLabelPosition="Collapsed"
-                    OverflowButtonVisibility="Collapsed">
-                    <AppBarButton Click="OpenNovel_OnClicked" Command="{x:Bind OpenNovelCommand}" />
-                    <AppBarButton Click="AddToBookmark_OnClicked" Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" />
-                    <AppBarButton Command="{x:Bind ViewModel.SaveCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
-                    <AppBarButton Command="{x:Bind ViewModel.OpenInWebBrowserCommand, Mode=OneWay}" />
-                </CommandBar>
-                <Grid>
-                    <controls:ConstrainedBox Grid.Row="0" AspectRatio="427:600">
-                        <local:LazyImage x:Name="PopupImage" Source="{x:Bind ViewModel.ThumbnailSource, Mode=OneWay}" />
-                    </controls:ConstrainedBox>
-                    <local:HeartButton
-                        x:Name="PopupHeartButton"
-                        Grid.Row="0"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top"
-                        Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}"
-                        CommandParameter="{x:Bind}"
-                        State="{x:Bind ViewModel.IsBookmarkedDisplay, Mode=OneWay}" />
-                </Grid>
-            </controls:DockPanel>
-            <controls:DockPanel
-                Grid.Column="1"
-                HorizontalSpacing="10"
-                VerticalSpacing="10">
-                <TextBlock
-                    x:Name="PopupTitleTextBlock"
-                    controls:DockPanel.Dock="Top"
-                    MaxLines="1"
-                    Style="{StaticResource CaptionStrongTextBlockStyle}"
-                    Text="{x:Bind ViewModel.Title, Mode=OneWay}"
-                    TextTrimming="CharacterEllipsis"
-                    TextWrapping="WrapWholeWords" />
-                <Button
-                    x:Name="PopupAuthorButton"
-                    Padding="2"
-                    controls:DockPanel.Dock="Top"
-                    Background="Transparent"
-                    BorderBrush="Transparent"
-                    Click="OpenUserInfoPage_OnClicked"
-                    CornerRadius="{StaticResource ControlCornerRadius}">
-                    <TextBlock
-                        Foreground="DarkGray"
-                        MaxLines="1"
-                        Style="{StaticResource BodyTextBlockStyle}"
-                        Text="{x:Bind ViewModel.User.Name, Mode=OneWay}"
-                        TextTrimming="CharacterEllipsis"
-                        TextWrapping="WrapWholeWords" />
-                </Button>
-                <ScrollView>
-                    <StackPanel Spacing="10">
-                        <ItemsControl
-                            x:Name="PopupTagsList"
-                            controls:DockPanel.Dock="Top"
-                            ItemsSource="{x:Bind ViewModel.Tags, Mode=OneWay}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <controls:WrapPanel HorizontalSpacing="5" VerticalSpacing="5" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate x:DataType="model:Tag">
-                                    <Button
-                                        Padding="2"
-                                        Background="#7F7F7F7F"
-                                        Click="TagButton_OnClicked"
-                                        CornerRadius="{StaticResource ControlCornerRadius}">
-                                        <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{x:Bind Name}" />
-                                    </Button>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                        <labs:MarkdownTextBlock Text="{x:Bind ViewModel.Description}">
-                            <labs:MarkdownTextBlock.Config>
-                                <labs:MarkdownConfig />
-                            </labs:MarkdownTextBlock.Config>
-                        </labs:MarkdownTextBlock>
-                    </StackPanel>
-                </ScrollView>
-            </controls:DockPanel>
-        </Grid>
-    </Popup>
 </Grid>

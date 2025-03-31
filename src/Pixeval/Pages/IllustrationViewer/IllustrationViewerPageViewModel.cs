@@ -58,7 +58,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     public long IllustrationId => CurrentIllustration.Entry.Id;
 
-    public UserInfo Illustrator => CurrentIllustration.Entry.User;
+    public UserEntity Illustrator => CurrentIllustration.Entry.User;
 
     public void Dispose()
     {

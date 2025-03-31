@@ -44,7 +44,7 @@ public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>
 
     public string Description => Entry.Description;
 
-    public UserInfo User => Entry.User;
+    public UserEntity User => Entry.User;
 
     public DateTimeOffset CreateDate => Entry.CreateDate;
 
