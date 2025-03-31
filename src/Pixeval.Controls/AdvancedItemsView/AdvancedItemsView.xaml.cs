@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.System;
 using CommunityToolkit.WinUI.Controls;
 using CommunityToolkit.WinUI.Helpers;
 using Microsoft.UI.Xaml;
@@ -247,9 +248,23 @@ public sealed partial class AdvancedItemsView : ItemsView
         _itemsRepeater.SizeChanged += AdvancedItemsViewOnSizeChanged;
     }
 
-    private static void ScrollView_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
+    private void ScrollView_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
     {
-        if (sender is ScrollView { ComputedVerticalScrollMode: ScrollingScrollMode.Disabled, ComputedHorizontalScrollMode: ScrollingScrollMode.Enabled } scrollView)
+        var scrollView = (ScrollView)sender;
+        if (e.KeyModifiers is VirtualKeyModifiers.Control)
+        {
+            var offset = e.GetCurrentPoint(scrollView).Properties.MouseWheelDelta > 0 ? 20 : -20;
+
+            if (scrollView.ComputedVerticalScrollMode is ScrollingScrollMode.Enabled && MinItemHeight + offset is var i and > 100 and < 500)
+                MinItemHeight = i;
+            if (scrollView.ComputedHorizontalScrollMode is ScrollingScrollMode.Enabled && MinItemWidth + offset is var j and > 100 and < 500)
+                MinItemWidth = j;
+        }
+        else if (scrollView is
+                 {
+                     ComputedVerticalScrollMode: ScrollingScrollMode.Disabled,
+                     ComputedHorizontalScrollMode: ScrollingScrollMode.Enabled
+                 })
             _ = scrollView.AddScrollVelocity(new(-e.GetCurrentPoint(scrollView).Properties.MouseWheelDelta, 0), null);
     }
 
