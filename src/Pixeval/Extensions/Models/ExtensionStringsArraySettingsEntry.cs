@@ -20,7 +20,7 @@ public partial class ExtensionStringsArraySettingsEntry(IStringsArraySettingsExt
 
     public override void ValueSaving(IPropertySet values)
     {
-        extension.OnValueChanged(Value.ToArray());
+        extension.OnValueChanged([.. Value]);
         base.ValueSaving(values);
     }
 

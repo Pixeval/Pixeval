@@ -183,7 +183,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     public async Task<StorageFile> SaveToFolderAsync(AppKnownFolders appKnownFolder)
     {
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadPathMacro);
-        var normalizedName = IoHelper.NormalizePathSegment(new IllustrationMetaPathParser().Reduce(name, IllustrationViewModel));
+        var normalizedName = IoHelper.NormalizePathSegment(IllustrationMetaPathParser.Instance.Reduce(name, IllustrationViewModel));
         normalizedName = IoHelper.ReplaceTokenExtensionFromUrl(normalizedName, IllustrationViewModel.IllustrationOriginalUrl);
         await using var stream = appKnownFolder.OpenAsyncWrite(normalizedName);
         await GetDisplayStreamsSourceAsync(stream);
@@ -192,8 +192,9 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     public async Task SaveAsync(string destination)
     {
-        destination = IoHelper.NormalizePath(new IllustrationMetaPathParser().Reduce(destination, IllustrationViewModel));
+        destination = IoHelper.NormalizePath(IllustrationMetaPathParser.Instance.Reduce(destination, IllustrationViewModel));
         destination = IoHelper.ReplaceTokenExtensionFromUrl(destination, IllustrationViewModel.IllustrationOriginalUrl);
+        IoHelper.CreateParentDirectories(destination);
         await using var stream = IoHelper.OpenAsyncWrite(destination);
         await GetDisplayStreamsSourceAsync(stream);
         FrameworkElement?.SuccessGrowl(EntryItemResources.Saved);
@@ -364,12 +365,11 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        if (DisplayStreamsSource is IReadOnlyList<Stream> and [{ } stream])
-        {
-            stream.Position = 0;
-            await UiHelper.ClipboardSetBitmapAsync(stream);
-            FrameworkElement?.SuccessGrowl(EntryItemResources.ImageSetToClipBoard);
-        }
+        if (DisplayStreamsSource is not (IReadOnlyList<Stream> and [{ } stream]))
+            return;
+        stream.Position = 0;
+        await UiHelper.ClipboardSetBitmapAsync(stream);
+        FrameworkElement?.SuccessGrowl(EntryItemResources.ImageSetToClipBoard);
     }
 
     private async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) =>

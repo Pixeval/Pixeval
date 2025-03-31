@@ -36,7 +36,7 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
     /// <param name="page"></param>
     public NovelViewerPageViewModel(IEnumerable<NovelItemViewModel> novelViewModels, int currentNovelIndex, NovelViewerPage page) : base(page)
     {
-        NovelsSource = novelViewModels.ToArray();
+        NovelsSource = [.. novelViewModels];
         CurrentNovelIndex = currentNovelIndex;
     }
 

@@ -11,6 +11,8 @@ namespace Pixeval.Download;
 
 public class IllustrationMetaPathParser : IMetaPathParser<IllustrationItemViewModel>
 {
+    public static IllustrationMetaPathParser Instance { get; } = new();
+
     private readonly MacroParser<IllustrationItemViewModel> _parser = new();
 
     private static readonly IReadOnlyList<IMacro> _MacroProviderStatic = MetaPathMacroAttributeHelper.GetIWorkViewModelInstances();

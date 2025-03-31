@@ -31,7 +31,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     /// <param name="page"></param>
     public IllustrationViewerPageViewModel(IEnumerable<IllustrationItemViewModel> illustrationViewModels, int currentIllustrationIndex, IllustrationViewerPage page) : base(page)
     {
-        IllustrationsSource = illustrationViewModels.ToArray();
+        IllustrationsSource = [.. illustrationViewModels];
         CurrentIllustrationIndex = currentIllustrationIndex;
     }
 
@@ -122,9 +122,9 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
             field = value;
             // 这里可以触发总页数的更新
-            Pages = CurrentIllustration.GetMangaIllustrationViewModels().ToArray();
+            Pages = [.. CurrentIllustration.GetMangaIllustrationViewModels()];
             // 保证_pages里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
-            Images = Pages.Select(p => new ImageViewerPageViewModel(p, CurrentIllustration, FrameworkElement)).ToArray();
+            Images = [.. Pages.Select(p => new ImageViewerPageViewModel(p, CurrentIllustration, FrameworkElement))];
 
             IllustrationInfoTag.Parameter = CurrentIllustration.Entry;
             CommentsTag.Parameter = (SimpleWorkType.IllustAndManga, IllustrationId);
