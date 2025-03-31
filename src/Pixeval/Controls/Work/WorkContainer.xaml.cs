@@ -22,6 +22,8 @@ namespace Pixeval.Controls;
 /// </summary>
 public partial class WorkContainer : IScrollViewHost
 {
+    public event RoutedEventHandler? RefreshRequested;
+
     /// <summary>
     /// The command elements that will appear at the left of the TopCommandBar
     /// </summary>
@@ -124,6 +126,8 @@ public partial class WorkContainer : IScrollViewHost
             _ = await Launcher.LaunchUriAsync(selectedEntry.WebUri);
         }
     }
+
+    private void RefreshButton_OnClick(object sender, RoutedEventArgs e) => RefreshRequested?.Invoke(sender, e);
 
     private async void AddToBookmarkTeachingTip_OnCloseButtonClick(TeachingTip sender, object args)
     {

@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Mako.Global.Enum;
 using Mako.Model;
+using Microsoft.UI.Xaml;
 using Pixeval.Database.Managers;
 using Pixeval.Utilities;
 
@@ -44,4 +45,6 @@ public sealed partial class BrowsingHistoryPage : IScrollViewHost
     }
 
     public ScrollView ScrollView => WorkContainer.ScrollView;
+
+    private void WorkContainer_OnRefreshRequested(object sender, RoutedEventArgs e) => ChangeSource();
 }
