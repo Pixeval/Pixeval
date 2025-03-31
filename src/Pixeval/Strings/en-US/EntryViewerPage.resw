@@ -244,4 +244,13 @@ R: Next Novel</value>
   <data name="NovelSettingsHeaderTextBlock.Text" xml:space="preserve">
     <value>Novel Settings</value>
   </data>
+  <data name="Copy" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="SaveAs" xml:space="preserve">
+    <value></value>
+  </data>
 </root>

@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -155,6 +154,7 @@ public static partial class UiHelper
     public static async Task ClipboardSetBitmapAsync(Stream stream)
     {
         using var randomAccessStream = new InMemoryRandomAccessStream();
+        randomAccessStream.Size = (ulong)stream.Length;
         await stream.CopyToAsync(randomAccessStream.AsStreamForWrite());
         randomAccessStream.Seek(0);
         // 此处必须是原生的IRandomAccessStream，而非Stream.AsRandomAccessStream()，否则会导致不显示剪切板缩略图
@@ -168,6 +168,17 @@ public static partial class UiHelper
         }
         catch (COMException)
         {
+            // 第一次会失败，再试一次
+            var content2 = new DataPackage { RequestedOperation = DataPackageOperation.Copy };
+            content2.SetBitmap(reference);
+            Clipboard.SetContent(content2);
+            try
+            {
+                Clipboard.Flush();
+            }
+            catch (COMException)
+            {
+            }
         }
     }
 
@@ -222,10 +233,7 @@ public static partial class UiHelper
         return ownerRectangle.IntersectsWith(childRectangle);
     }
 
-    public static void ClearContent(this RichEditBox box)
-    {
-        box.Document.SetText(TextSetOptions.None, "");
-    }
+    public static void ClearContent(this RichEditBox box) => box.Document.SetText(TextSetOptions.None, "");
 
     public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(this FrameworkElement frameworkElement, PickerLocationId location = PickerLocationId.PicturesLibrary) => WindowFactory.GetWindowForElement(frameworkElement).PickSingleFolderAsync(location);
 
@@ -264,12 +272,5 @@ public static partial class UiHelper
     {
         await root.DispatcherQueue.SpinWaitAsync(() => root.Content is not Page { IsLoaded: true } || root.Content?.GetType() != pageType);
         return (Page) root.Content;
-    }
-
-    public static Color ParseHexColor(string hex)
-    {
-        var trimmed = !hex.StartsWith('#') ? $"#{hex}" : hex;
-        var color = ColorTranslator.FromHtml(trimmed);
-        return Color.FromArgb(color.A, color.R, color.G, color.B);
     }
 }

@@ -43,7 +43,7 @@ public class MetaPathMacroGenerator : IIncrementalGenerator
         var generatedType = ClassDeclaration("MetaPathMacroAttributeHelper")
             .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword))
             .WithOpenBraceToken(Token(SyntaxKind.OpenBraceToken))
-            .AddMembers(dictionary.Select(t =>
+            .AddMembers([.. dictionary.Select(t =>
                     (MemberDeclarationSyntax) MethodDeclaration(
                             ParseTypeName("global::System.Collections.Generic.IReadOnlyList<global::Pixeval.Download.MacroParser.IMacro>"),
                             string.Format(getAttachedTypeInstances, t.Key.Name))
@@ -52,7 +52,7 @@ public class MetaPathMacroGenerator : IIncrementalGenerator
                             (CollectionElementSyntax) ExpressionElement(ObjectCreationExpression(v.GetTypeSyntax(false))
                                 .WithArgumentList(ArgumentList()))))
                         )))
-                        .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))).ToArray()
+                        .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)))]
             )
             .WithCloseBraceToken(Token(SyntaxKind.CloseBraceToken));
         var generatedNamespace = GetFileScopedNamespaceDeclaration(AttributeNamespace, generatedType, true);

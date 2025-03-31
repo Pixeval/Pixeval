@@ -30,14 +30,9 @@
                     <AppBarButton Command="{x:Bind _viewModel.ZoomOutCommand}" />
                     <AppBarButton Command="{x:Bind _viewModel.ShareCommand}" />
                     <CommandBarFlyout.SecondaryCommands>
-                        <AppBarButton
-                            Command="{x:Bind _viewModel.IllustrationViewModel.CopyCommand}"
-                            CommandParameter="{x:Bind _viewModel.DownloadParameter}"
-                            IsEnabled="{x:Bind _viewModel.LoadSuccessfully, Mode=OneWay}" />
-                        <AppBarButton
-                            Command="{x:Bind _viewModel.IllustrationViewModel.SaveCommand}"
-                            CommandParameter="{x:Bind _viewModel.DownloadParameter}"
-                            IsEnabled="{x:Bind _viewModel.LoadSuccessfully, Mode=OneWay}" />
+                        <AppBarButton Command="{x:Bind _viewModel.CopyCommand}" Visibility="{x:Bind controls:C.ToVisibilityNegation(_viewModel.IllustrationViewModel.IsUgoira)}" />
+                        <AppBarButton Command="{x:Bind _viewModel.SaveCommand}" />
+                        <AppBarButton Command="{x:Bind _viewModel.SaveAsCommand}" />
                         <AppBarButton Command="{x:Bind _viewModel.SetAsCommand}">
                             <AppBarButton.Flyout>
                                 <MenuFlyout>

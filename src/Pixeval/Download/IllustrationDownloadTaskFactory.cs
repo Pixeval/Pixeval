@@ -18,7 +18,7 @@ namespace Pixeval.Download;
 
 public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IllustrationItemViewModel, IImageDownloadTaskGroup>
 {
-    public IMetaPathParser<IllustrationItemViewModel> PathParser { get; } = new IllustrationMetaPathParser();
+    public IMetaPathParser<IllustrationItemViewModel> PathParser => IllustrationMetaPathParser.Instance;
 
     public IImageDownloadTaskGroup Create(IllustrationItemViewModel context, string rawPath)
     {

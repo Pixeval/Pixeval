@@ -34,7 +34,7 @@ public partial class IllustratorItemViewModel
     /// <summary>
     /// Dominant color of the "No Image" image
     /// </summary>
-    private static readonly SolidColorBrush _DefaultAvatarBorderColorBrush = new(UiHelper.ParseHexColor("#D6DEE5"));
+    private static readonly SolidColorBrush _DefaultAvatarBorderColorBrush = new(C.ToAlphaColor(0xD6DEE5));
 
     public async Task LoadAvatarAsync()
     {

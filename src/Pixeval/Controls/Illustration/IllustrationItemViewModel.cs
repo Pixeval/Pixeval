@@ -115,7 +115,6 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<Illustration
         // The API result of manga (a work with multiple illustrations) is a single Illustration object
         // that only differs from the illustrations of a single work on the MetaPages property, this property
         // contains the download urls of the manga
-
         return Entry.MetaPages.Select(m => Entry with
         {
             MetaSinglePage = new() { OriginalImageUrl = m.ImageUrls.Original },

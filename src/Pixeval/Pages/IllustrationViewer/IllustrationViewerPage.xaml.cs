@@ -212,6 +212,9 @@ public sealed partial class IllustrationViewerPage
         }
     }
 
+    /// <summary>
+    /// ReSharper disable once UnusedMember.Global
+    /// </summary>
     public void SetPosition()
     {
         if (InnerTopBarPresenter.ActualWidth > TopBar.ActualWidth + 5)

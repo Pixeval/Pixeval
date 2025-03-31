@@ -92,7 +92,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
 
     public int Count => TasksSet.Count;
 
-    public IReadOnlyList<string> Destinations => TasksSet.Select(t => t.Destination).ToArray();
+    public IReadOnlyList<string> Destinations => [.. TasksSet.Select(t => t.Destination)];
 
     protected IReadOnlyList<ImageDownloadTask> TasksSet => _tasksSet;
 

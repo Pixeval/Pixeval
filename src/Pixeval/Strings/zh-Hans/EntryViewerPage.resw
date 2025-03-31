@@ -187,7 +187,7 @@
     <value>镜像翻转</value>
   </data>
   <data name="SetAs" xml:space="preserve">
-    <value>设置为</value>
+    <value>设置显示的图片为</value>
   </data>
   <data name="SetAsBackgroundSucceededTitle" xml:space="preserve">
     <value>已设置背景</value>
@@ -243,5 +243,14 @@ R：下一篇小说</value>
   </data>
   <data name="NovelSettingsHeaderTextBlock.Text" xml:space="preserve">
     <value>小说设置</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>复制显示的图片</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>保存显示的图片</value>
+  </data>
+  <data name="SaveAs" xml:space="preserve">
+    <value>另存为显示的图片</value>
   </data>
 </root>

@@ -20,7 +20,7 @@ public sealed partial class DownloadView : UserControl, IStructuralDisposalCompl
 
     private void ItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
     {
-        ViewModel.SelectedEntries = sender.SelectedItems.Cast<DownloadItemViewModel>().ToArray();
+        ViewModel.SelectedEntries = [.. sender.SelectedItems.Cast<DownloadItemViewModel>()];
     }
 
     private async void DownloadItem_OnOpenIllustrationRequested(DownloadItem sender, DownloadItemViewModel viewModel)

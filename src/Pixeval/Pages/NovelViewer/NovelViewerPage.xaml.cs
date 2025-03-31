@@ -164,6 +164,9 @@ public sealed partial class NovelViewerPage
 
     private (FrameworkElement, NovelContent?) DownloadParameter(NovelContent? content) => (this, content);
 
+    /// <summary>
+    /// ReSharper disable once UnusedMember.Global
+    /// </summary>
     public void SetPosition()
     {
         if (InnerTopBarPresenter.ActualWidth > TopBar.ActualWidth + 5)

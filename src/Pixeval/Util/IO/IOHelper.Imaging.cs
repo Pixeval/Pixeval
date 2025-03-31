@@ -330,7 +330,7 @@ public static partial class IoHelper
     public static async Task<Image> GetImageFromZipStreamAsync(Stream zipStream, UgoiraMetadataResponse ugoiraMetadataResponse)
     {
         var entryStreams = await Streams.ReadZipAsync(zipStream, true);
-        return await entryStreams.UgoiraSaveToImageAsync(ugoiraMetadataResponse.Delays.ToArray());
+        return await entryStreams.UgoiraSaveToImageAsync([.. ugoiraMetadataResponse.Delays]);
     }
 
     public static async Task<ImageSource> GenerateQrCodeForUrlAsync(string url)

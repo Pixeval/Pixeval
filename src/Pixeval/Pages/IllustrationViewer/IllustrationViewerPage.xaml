@@ -12,7 +12,6 @@
     Loaded="IllustrationViewerPage_OnLoaded"
     mc:Ignorable="d">
     <controls:EnhancedPage.Resources>
-        <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
         <AcrylicBrush
             x:Key="BottomCommandSectionBackground"
             FallbackColor="{StaticResource SecondaryAccentColor}"
@@ -73,14 +72,14 @@
                                     CommandParameter="{x:Bind}"
                                     Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
                                 <AppBarSeparator />
-                                <AppBarButton Command="{x:Bind _viewModel.CurrentImage.SetAsCommand, Mode=OneWay}">
+                                <!--<AppBarButton Command="{x:Bind _viewModel.CurrentImage.SetAsCommand, Mode=OneWay}">
                                     <AppBarButton.Flyout>
                                         <MenuFlyout>
                                             <MenuFlyoutItem Command="{x:Bind _viewModel.CurrentImage.SetAsBackgroundCommand, Mode=OneWay}" />
                                             <MenuFlyoutItem Command="{x:Bind _viewModel.CurrentImage.SetAsLockScreenCommand, Mode=OneWay}" />
                                         </MenuFlyout>
                                     </AppBarButton.Flyout>
-                                </AppBarButton>
+                                </AppBarButton>-->
                                 <AppBarSeparator />
                                 <AppBarButton
                                     x:Name="AddToBookmarkButton"

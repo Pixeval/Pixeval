@@ -70,7 +70,7 @@ public record Supporter(string Nickname, string Name, Uri ProfilePicture, Uri Pr
                 if (await JsonSerializer.DeserializeAsync(fileStream, typeof(Supporter[]), SupporterSerializeContext.Default) is Supporter[] supporters
                     && supporters.Length == _Supporters.Count())
                 {
-                    Supporters = supporters.OrderBy(_ => Random.Shared.Next()).ToList();
+                    Supporters = [.. supporters.OrderBy(_ => Random.Shared.Next())];
                     foreach (var supporter in Supporters)
                     {
                         await LoadAvatarAsync(supporter, BasePath, httpClient);

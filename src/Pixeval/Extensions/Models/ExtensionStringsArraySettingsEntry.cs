@@ -2,7 +2,6 @@
 // Licensed under the GPL v3 License.
 
 using System.Collections.ObjectModel;
-using System.Linq;
 using Microsoft.UI.Xaml;
 using Pixeval.Controls.Settings;
 using Pixeval.Extensions.Common.Settings;
@@ -20,7 +19,7 @@ public partial class ExtensionStringsArraySettingsEntry(IStringsArraySettingsExt
 
     public override void ValueSaving(IPropertySet values)
     {
-        extension.OnValueChanged(Value.ToArray());
+        extension.OnValueChanged([.. Value]);
         base.ValueSaving(values);
     }
 
