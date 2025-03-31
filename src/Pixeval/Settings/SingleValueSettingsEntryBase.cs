@@ -1,8 +1,8 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Windows.Foundation.Collections;
 using FluentIcons.Common;
+using Windows.Foundation.Collections;
 using WinUI3Utilities;
 
 namespace Pixeval.Settings;

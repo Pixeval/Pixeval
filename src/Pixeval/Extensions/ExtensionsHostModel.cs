@@ -4,13 +4,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Windows.Foundation.Collections;
-using Windows.Storage.Streams;
-using Windows.Win32;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.Windows.Storage;
 using Pixeval.Extensions.Common;
+using Windows.Foundation.Collections;
+using Windows.Storage.Streams;
+using Windows.Win32;
 using Symbol = FluentIcons.Common.Symbol;
 using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
 

@@ -3,17 +3,16 @@
 
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Windows.Globalization;
-using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Windowing;
-using Pixeval.CoreApi;
-using Pixeval.Logging;
+using Mako;
 using Pixeval.Settings.Models;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using Windows.Globalization;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Login;
@@ -21,7 +20,10 @@ namespace Pixeval.Pages.Login;
 public sealed partial class LoginPage
 {
     private readonly LoginPageViewModel _viewModel;
+
     public static LoginPage? Current { get; private set; }
+
+    public static string? CurrentVerifier { get; private set; }
 
     private const string RefreshToken = nameof(RefreshToken);
     private const string Browser = nameof(Browser);
@@ -122,7 +124,7 @@ public sealed partial class LoginPage
 
     #region Browser
 
-    private void BrowserLogin_OnClicked(object sender, RoutedEventArgs e) => _viewModel.BrowserLogin();
+    private void BrowserLogin_OnClicked(object sender, RoutedEventArgs e) => CurrentVerifier = _viewModel.BrowserLogin();
 
     #endregion
 

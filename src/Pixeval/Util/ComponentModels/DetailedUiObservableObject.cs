@@ -1,8 +1,8 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using CommunityToolkit.Mvvm.ComponentModel;
 using System.Runtime.CompilerServices;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 
 namespace Pixeval.Util.ComponentModels;

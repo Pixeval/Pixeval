@@ -3,18 +3,17 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.UI.Xaml.Input;
-using Pixeval.Util.UI;
-using Pixeval.Util;
-using Microsoft.UI.Xaml.Controls;
-using Pixeval.Utilities;
-using System.Threading.Tasks;
 using System.IO;
-using System.Linq;
-using Pixeval.Download;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Pixeval.Download;
+using Pixeval.Util;
 using Pixeval.Util.IO;
+using Pixeval.Util.UI;
+using Pixeval.Utilities;
 using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Controls;
@@ -94,11 +93,7 @@ public partial class IllustrationItemViewModel
         if (ib is not null)
             ib.Title = EntryItemResources.ImageProcessing;
 
-        IReadOnlyList<Stream>? source;
-        if (getImageStream is null)
-            source = null;
-        else
-            source = await getImageStream(true);
+        var source = getImageStream is null ? null : await getImageStream(true);
 
         var factory = App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationDownloadTaskFactory>();
         if (source is null)
@@ -109,7 +104,7 @@ public partial class IllustrationItemViewModel
         }
         else
         {
-            var task = factory.CreateIntrinsic(this, path, IsUgoira ? (source, UgoiraMetadata) : source);
+            var task = factory.CreateIntrinsic(this, path, IsUgoira ? (source, await UgoiraMetadata) : source);
             App.AppViewModel.DownloadManager.QueueTask(task);
             frameworkElement?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.Saved);
         }
@@ -148,7 +143,7 @@ public partial class IllustrationItemViewModel
                 hWnd?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.ImageSetToClipBoard);
                 return;
             }
-            var source = await sources.UgoiraSaveToStreamAsync((await UgoiraMetadata).Delays.ToArray(), null, progress);
+            var source = await sources.UgoiraSaveToStreamAsync([.. (await UgoiraMetadata).Delays], null, progress);
             await UiHelper.ClipboardSetBitmapAsync(source);
             hWnd?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.ImageSetToClipBoard);
         }

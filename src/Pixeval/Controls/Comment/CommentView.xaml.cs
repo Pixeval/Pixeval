@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
-using Pixeval.CoreApi.Global.Enum;
+using Mako.Global.Enum;
 
 namespace Pixeval.Controls;
 
@@ -33,12 +33,12 @@ public sealed partial class CommentView : IStructuralDisposalCompleter
 
     public void CompleteDisposal()
     {
-       if (CommentsList.ItemsSource is IEnumerable<CommentItemViewModel> list)
+        if (CommentsList.ItemsSource is IEnumerable<CommentItemViewModel> list)
             foreach (var commentBlockViewModel in list)
                 commentBlockViewModel.Dispose();
     }
 
-    public List<Action> ChildrenCompletes { get; } = [];
+    public List<Action<IStructuralDisposalCompleter?>> ChildrenCompletes { get; } = [];
 
     public bool CompleterRegistered { get; set; }
 

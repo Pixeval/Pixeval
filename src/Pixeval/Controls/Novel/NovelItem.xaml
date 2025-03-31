@@ -8,7 +8,7 @@
     xmlns:labs="using:CommunityToolkit.Labs.WinUI.MarkdownTextBlock"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:model="using:Pixeval.CoreApi.Model"
+    xmlns:model="using:Mako.Model"
     xmlns:pixeval="using:Pixeval.AppManagement"
     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
     PointerEntered="NovelItem_OnPointerEntered"
@@ -68,7 +68,7 @@
                 Foreground="DarkGray"
                 MaxLines="1"
                 Style="{StaticResource BodyTextBlockStyle}"
-                Text="{x:Bind local:C.CultureDateTimeOffsetDateFormatter(ViewModel.PublishDate, pixeval:AppSettings.CurrentCulture), Mode=OneWay}"
+                Text="{x:Bind local:C.CultureDateTimeOffsetDateFormatter(ViewModel.CreateDate, pixeval:AppSettings.CurrentCulture), Mode=OneWay}"
                 TextTrimming="CharacterEllipsis"
                 TextWrapping="WrapWholeWords" />
             <TextBlock
@@ -91,7 +91,7 @@
             <local:IconText
                 controls:DockPanel.Dock="Right"
                 Symbol="Heart"
-                Text="{x:Bind local:C.IntEllipsis(ViewModel.TotalBookmarks), Mode=OneWay}" />
+                Text="{x:Bind local:C.IntEllipsis(ViewModel.TotalFavorite), Mode=OneWay}" />
             <local:IconText
                 controls:DockPanel.Dock="Right"
                 Symbol="Eye"
@@ -226,7 +226,7 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                        <labs:MarkdownTextBlock Text="{x:Bind ViewModel.Caption}">
+                        <labs:MarkdownTextBlock Text="{x:Bind ViewModel.Description}">
                             <labs:MarkdownTextBlock.Config>
                                 <labs:MarkdownConfig />
                             </labs:MarkdownTextBlock.Config>

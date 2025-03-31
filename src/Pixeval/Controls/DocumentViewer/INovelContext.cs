@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Threading;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 
 namespace Pixeval.Controls;
 
 public interface INovelContext<TImage> where TImage : class
 {
-    NovelContent NovelContent { get; } 
+    NovelContent NovelContent { get; }
 
     Dictionary<(long, int), NovelIllustInfo> IllustrationLookup { get; }
 

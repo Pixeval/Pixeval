@@ -3,16 +3,16 @@
 
 using System;
 using System.Threading.Tasks;
-using Windows.Foundation;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.CoreApi.Global.Enum;
+using Mako.Global.Enum;
 using Pixeval.Messages;
 using Pixeval.Util.UI;
+using Windows.Foundation;
 using WinUI3Utilities;
 using Symbol = FluentIcons.Common.Symbol;
 
@@ -107,7 +107,7 @@ public sealed partial class NovelItem
 
     private void TagButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        _ = WeakReferenceMessenger.Default.Send(new WorkTagClickedMessage(SimpleWorkType.Novel, ((TextBlock)((Button)sender).Content).Text));
+        _ = WeakReferenceMessenger.Default.Send(new WorkTagClickedMessage(SimpleWorkType.Novel, ((TextBlock) ((Button) sender).Content).Text));
     }
 
     private async void NovelItem_OnPointerEntered(object sender, PointerRoutedEventArgs e)

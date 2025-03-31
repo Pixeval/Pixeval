@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -14,7 +13,7 @@ namespace Pixeval.Controls;
 
 public partial class EnhancedPage : Page, IStructuralDisposalCompleter
 {
-    public List<Action> ChildrenCompletes { get; } = [];
+    public List<Action<IStructuralDisposalCompleter?>> ChildrenCompletes { get; } = [];
 
     public bool CompleterRegistered { get; set; }
 
@@ -35,7 +34,6 @@ public partial class EnhancedPage : Page, IStructuralDisposalCompleter
         {
             if (this is IStructuralDisposalCompleter completer)
             {
-
                 // Hook the disposal event of current page to its parent
                 completer.Hook();
             }
@@ -105,7 +103,5 @@ public partial class EnhancedPage : Page, IStructuralDisposalCompleter
     public virtual void CompleteDisposal()
     {
         Content = null;
-        GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
-        GC.Collect();
     }
 }

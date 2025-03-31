@@ -7,22 +7,30 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
+using Pixeval.Controls.Windowing;
+using Pixeval.Extensions;
 using Pixeval.Options;
+using Pixeval.Settings;
+using Pixeval.Settings.Models;
 using Pixeval.Util.ComponentModels;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Pixeval.Settings;
-using Microsoft.UI.Xaml;
-using Pixeval.Controls.Windowing;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Settings.Models;
 using WinUI3Utilities;
-using Microsoft.Extensions.DependencyInjection;
-using Pixeval.Extensions;
+using BackdropTypeExtension = Pixeval.Util.BackdropTypeExtension;
+using ElementThemeExtension = Pixeval.Util.ElementThemeExtension;
+using NovelRankOptionExtension = Pixeval.Util.NovelRankOptionExtension;
+using RankOptionExtension = Pixeval.Util.RankOptionExtension;
+using SearchIllustrationTagMatchOptionExtension = Pixeval.Util.SearchIllustrationTagMatchOptionExtension;
+using SearchNovelTagMatchOptionExtension = Pixeval.Util.SearchNovelTagMatchOptionExtension;
+using SimpleWorkTypeExtension = Pixeval.Util.SimpleWorkTypeExtension;
+using TargetFilterExtension = Pixeval.Util.TargetFilterExtension;
+using WorkSortOptionExtension = Pixeval.Util.WorkSortOptionExtension;
 
 namespace Pixeval.Pages.Misc;
 
@@ -239,7 +247,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
 
     public SimpleSettingsGroup[] LocalGroups { get; }
 
-    public IReadOnlyList<ExtensionSettingsGroup> ExtensionGroups =>
+    public IReadOnlyList<ExtensionSettingsGroup> ExtensionGroups { get; } =
         App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>().SettingsGroups;
 
     public string UpdateInfo => AppInfo.AppVersion.UpdateState switch

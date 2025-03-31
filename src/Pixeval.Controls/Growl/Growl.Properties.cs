@@ -10,7 +10,7 @@ public static partial class Growl
 {
     public static ulong GetToken(DependencyObject obj)
     {
-        return (ulong)obj.GetValue(TokenProperty);
+        return (ulong) obj.GetValue(TokenProperty);
     }
 
     public static void SetToken(DependencyObject obj, ulong value)
@@ -32,12 +32,12 @@ public static partial class Growl
 
     public static void SetGrowlParent(DependencyObject element, bool value) => element.SetValue(GrowlParentProperty, value);
 
-    public static bool GetGrowlParent(DependencyObject element) => (bool)element.GetValue(GrowlParentProperty);
+    public static bool GetGrowlParent(DependencyObject element) => (bool) element.GetValue(GrowlParentProperty);
 
     public static readonly DependencyProperty GrowlParentProperty = DependencyProperty.RegisterAttached(
         "GrowlParent", typeof(bool), typeof(Growl), new PropertyMetadata(false, (o, args) =>
         {
-            if ((bool)args.NewValue && o is Panel panel)
+            if ((bool) args.NewValue && o is Panel panel)
             {
                 panel.Loaded += Panel_Loaded;
             }
@@ -71,7 +71,7 @@ public static partial class Growl
 
     public static void SetGrowlEnterTransition(DependencyObject element, GrowlTransition value) => element.SetValue(GrowlEnterTransitionProperty, value);
 
-    public static GrowlTransition GetGrowlEnterTransition(DependencyObject element) => (GrowlTransition)element.GetValue(GrowlEnterTransitionProperty);
+    public static GrowlTransition GetGrowlEnterTransition(DependencyObject element) => (GrowlTransition) element.GetValue(GrowlEnterTransitionProperty);
 
     public static readonly DependencyProperty GrowlEnterTransitionProperty = DependencyProperty.RegisterAttached(
         "GrowlEnterTransition", typeof(GrowlTransition), typeof(Growl), new PropertyMetadata(GrowlTransition.AddDeleteThemeTransition, (o, args) =>
@@ -84,7 +84,7 @@ public static partial class Growl
 
     public static void SetGrowlExitTransition(DependencyObject element, GrowlTransition value) => element.SetValue(GrowlExitTransitionProperty, value);
 
-    public static GrowlTransition GetGrowlExitTransition(DependencyObject element) => (GrowlTransition)element.GetValue(GrowlExitTransitionProperty);
+    public static GrowlTransition GetGrowlExitTransition(DependencyObject element) => (GrowlTransition) element.GetValue(GrowlExitTransitionProperty);
 
     public static readonly DependencyProperty GrowlExitTransitionProperty = DependencyProperty.RegisterAttached(
         "GrowlExitTransition", typeof(GrowlTransition), typeof(Growl), new PropertyMetadata(GrowlTransition.AddDeleteThemeTransition));

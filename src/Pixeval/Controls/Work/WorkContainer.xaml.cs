@@ -5,15 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Mako.Global.Enum;
+using Pixeval.Filters;
 using Pixeval.Util;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using Windows.System;
 using WinUI3Utilities;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Filters;
 
 namespace Pixeval.Controls;
 
@@ -79,7 +79,7 @@ public partial class WorkContainer : IScrollViewHost
     {
         if (WorkView is { ViewModel: { } vm } && SortOptionComboBox.ItemSelected)
         {
-            switch (MakoHelper.GetSortDescriptionForIllustration(SortOptionComboBox.GetSelectedItem<WorkSortOption>()))
+            switch (MakoHelper.GetSortDescription(SortOptionComboBox.GetSelectedItem<WorkSortOption>()))
             {
                 case { } desc:
                     vm.SetSortDescription(desc);

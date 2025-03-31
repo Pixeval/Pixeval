@@ -9,7 +9,12 @@
     xmlns:local="using:Pixeval.Pages"
     xmlns:management="using:Pixeval.AppManagement"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:win2d="using:Microsoft.Graphics.Canvas.UI.Xaml"
     xmlns:windowing="using:Pixeval.Controls.Windowing"
+    AllowDrop="True"
+    DragEnter="MainPage_OnDragEnter"
+    DragLeave="MainPage_OnDragLeave"
+    Drop="MainPage_OnDrop"
     Loaded="MainPage_OnLoaded"
     mc:Ignorable="d">
     <controls:EnhancedPage.Resources>
@@ -19,7 +24,7 @@
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     controls1:DockPanel.Dock="Left"
-                    Content="{x:Bind FontIcon}" />
+                    Content="{x:Bind SymbolIcon}" />
                 <StackPanel VerticalAlignment="Center" Spacing="1">
                     <TextBlock
                         MaxHeight="35"
@@ -63,71 +68,68 @@
             NavigationViewSeparatorDataTemplate="{StaticResource NavigationViewSeparatorDataTemplate}"
             NavigationViewTagDataTemplate="{StaticResource NavigationViewTagDataTemplate}" />
     </controls:EnhancedPage.Resources>
-    <controls1:DockPanel>
-        <controls1:TitleBar
-            x:Name="TitleBar"
-            Title="{x:Bind management:AppInfo.AppIdentifier}"
-            VerticalAlignment="Top"
-            controls1:DockPanel.Dock="Top"
-            DisplayMode="Tall"
-            IsPaneButtonVisible="True"
-            PaneButtonClick="TitleBar_OnPaneButtonClicked"
-            Window="{x:Bind Window}">
-            <controls1:TitleBar.Icon>
-                <ImageIcon Source="ms-appx:///Assets/Images/logo.svg" />
-            </controls1:TitleBar.Icon>
-            <controls1:TitleBar.Footer>
-                <Button
-                    Padding="1"
-                    Background="{x:Bind controls:C.IsPremiumBorderBrush(_viewModel.IsPremium), Mode=OneWay}"
-                    CornerRadius="18">
-                    <Button.Flyout>
-                        <MenuFlyout Placement="Bottom">
-                            <MenuFlyoutItem
-                                x:Uid="/MainPage/OpenMyPageItem"
-                                Click="OpenMyPage_OnClick"
-                                Icon="{fluent:SymbolIcon Symbol=Open}" />
-                            <MenuFlyoutItem
-                                x:Uid="/MainPage/OpenMyPageInBrowserItem"
-                                Click="OpenLinkViaTagUri_OnClicked"
-                                Icon="{fluent:SymbolIcon Symbol=GlobeArrowUp}"
-                                Tag="{x:Bind _viewModel.Url, Mode=OneWay}" />
-                            <MenuFlyoutSeparator />
-                            <ToggleMenuFlyoutItem
-                                x:Name="RestrictedModeItem"
-                                x:Uid="/MainPage/RestrictedModeItem"
-                                Click="RestrictedModeItem_OnClick"
-                                Icon="{fluent:SymbolIcon Symbol=PersonProhibited}"
-                                IsEnabled="{x:Bind controls:C.Negation(_viewModel.RestrictedModeProcessing), Mode=OneWay}"
-                                Visibility="Collapsed" />
-                            <ToggleMenuFlyoutItem
-                                x:Name="AiShowItem"
-                                x:Uid="/MainPage/AiShowItem"
-                                Click="AiShowButtonItem_OnClick"
-                                Icon="{fluent:SymbolIcon Symbol=Bot}"
-                                IsEnabled="{x:Bind controls:C.Negation(_viewModel.AiShowProcessing), Mode=OneWay}" />
-                            <MenuFlyoutItem
-                                x:Uid="/MainPage/MoreViewingSettingsItem"
-                                Click="OpenLinkViaTag_OnClicked"
-                                Icon="{fluent:SymbolIcon Symbol=MoreHorizontal}"
-                                Tag="https://www.pixiv.net/settings/viewing" />
-                            <MenuFlyoutSeparator />
-                            <MenuFlyoutItem
-                                x:Uid="/MainPage/LogoutItem"
-                                Click="Logout_OnClicked"
-                                Icon="{fluent:SymbolIcon Symbol=SignOut}" />
-                        </MenuFlyout>
-                    </Button.Flyout>
-                    <PersonPicture
-                        MaxHeight="33"
-                        ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}"
-                        ToolTipService.ToolTip="{x:Bind _viewModel.UserName, Mode=OneWay}" />
-                </Button>
-            </controls1:TitleBar.Footer>
-            <controls1:TitleBar.Content>
+    <Grid>
+        <controls1:DockPanel>
+            <TitleBar
+                x:Name="TitleBar"
+                Title="{x:Bind management:AppInfo.AppIdentifier}"
+                VerticalAlignment="Top"
+                controls1:DockPanel.Dock="Top"
+                IsPaneToggleButtonVisible="True"
+                PaneToggleRequested="TitleBar_OnPaneButtonClicked">
+                <TitleBar.IconSource>
+                    <ImageIconSource ImageSource="ms-appx:///Assets/Images/logo.svg" />
+                </TitleBar.IconSource>
+                <TitleBar.RightHeader>
+                    <Button
+                        Padding="1"
+                        Background="{x:Bind controls:C.IsPremiumBorderBrush(_viewModel.IsPremium), Mode=OneWay}"
+                        CornerRadius="18">
+                        <Button.Flyout>
+                            <MenuFlyout Placement="Bottom">
+                                <MenuFlyoutItem
+                                    x:Uid="/MainPage/OpenMyPageItem"
+                                    Click="OpenMyPage_OnClick"
+                                    Icon="{fluent:SymbolIcon Symbol=Open}" />
+                                <MenuFlyoutItem
+                                    x:Uid="/MainPage/OpenMyPageInBrowserItem"
+                                    Click="OpenLinkViaTagUri_OnClicked"
+                                    Icon="{fluent:SymbolIcon Symbol=GlobeArrowUp}"
+                                    Tag="{x:Bind _viewModel.Url, Mode=OneWay}" />
+                                <MenuFlyoutSeparator />
+                                <ToggleMenuFlyoutItem
+                                    x:Name="RestrictedModeItem"
+                                    x:Uid="/MainPage/RestrictedModeItem"
+                                    Click="RestrictedModeItem_OnClick"
+                                    Icon="{fluent:SymbolIcon Symbol=PersonProhibited}"
+                                    IsEnabled="{x:Bind controls:C.Negation(_viewModel.RestrictedModeProcessing), Mode=OneWay}"
+                                    Visibility="Collapsed" />
+                                <ToggleMenuFlyoutItem
+                                    x:Name="AiShowItem"
+                                    x:Uid="/MainPage/AiShowItem"
+                                    Click="AiShowButtonItem_OnClick"
+                                    Icon="{fluent:SymbolIcon Symbol=Bot}"
+                                    IsEnabled="{x:Bind controls:C.Negation(_viewModel.AiShowProcessing), Mode=OneWay}" />
+                                <MenuFlyoutItem
+                                    x:Uid="/MainPage/MoreViewingSettingsItem"
+                                    Click="OpenLinkViaTag_OnClicked"
+                                    Icon="{fluent:SymbolIcon Symbol=MoreHorizontal}"
+                                    Tag="https://www.pixiv.net/settings/viewing" />
+                                <MenuFlyoutSeparator />
+                                <MenuFlyoutItem
+                                    x:Uid="/MainPage/LogoutItem"
+                                    Click="Logout_OnClicked"
+                                    Icon="{fluent:SymbolIcon Symbol=SignOut}" />
+                            </MenuFlyout>
+                        </Button.Flyout>
+                        <PersonPicture
+                            MaxHeight="38"
+                            ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}"
+                            ToolTipService.ToolTip="{x:Bind _viewModel.UserName, Mode=OneWay}" />
+                    </Button>
+                </TitleBar.RightHeader>
                 <controls1:DockPanel>
                     <CommandBar
-                        Margin="0,-4"
                         controls1:DockPanel.Dock="Right"
                         DefaultLabelPosition="Collapsed"
                         OverflowButtonVisibility="Collapsed">
@@ -143,10 +145,8 @@
                     <AutoSuggestBox
                         x:Name="MainPageAutoSuggestionBox"
                         x:Uid="/MainPage/MainPageAutoSuggestionBox"
+                        MinWidth="300"
                         VerticalAlignment="Center"
-                        AllowDrop="True"
-                        DragOver="KeywordAutoSuggestBox_OnDragOver"
-                        Drop="KeywordAutoSuggestBox_OnDrop"
                         GotFocus="KeywordAutoSuggestBox_GotFocus"
                         IsFocusEngaged="False"
                         ItemTemplateSelector="{StaticResource SuggestionModelDataTemplateSelector}"
@@ -164,22 +164,41 @@
                         </AutoSuggestBox.ItemContainerTransitions>
                     </AutoSuggestBox>
                 </controls1:DockPanel>
-            </controls1:TitleBar.Content>
-        </controls1:TitleBar>
-        <NavigationView
-            x:Name="NavigationView"
-            FooterMenuItemsSource="{x:Bind _viewModel.FooterMenuItems}"
-            IsBackButtonVisible="Collapsed"
-            IsPaneToggleButtonVisible="False"
-            IsSettingsVisible="False"
-            ItemInvoked="NavigationView_OnItemInvoked"
-            MenuItemTemplateSelector="{StaticResource NavigationViewItemDataTemplateSelector}"
-            MenuItemsSource="{x:Bind _viewModel.MenuItems}"
-            OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}">
-            <NavigationView.Resources>
-                <StaticResource x:Key="NavigationViewContentBackground" ResourceKey="SystemControlTransparentBrush" />
-            </NavigationView.Resources>
-            <windowing:TabPage x:Name="MainPageRootTab" />
-        </NavigationView>
-    </controls1:DockPanel>
+            </TitleBar>
+            <NavigationView
+                x:Name="NavigationView"
+                FooterMenuItemsSource="{x:Bind _viewModel.FooterMenuItems}"
+                IsBackButtonVisible="Collapsed"
+                IsPaneToggleButtonVisible="False"
+                IsSettingsVisible="False"
+                ItemInvoked="NavigationView_OnItemInvoked"
+                MenuItemTemplateSelector="{StaticResource NavigationViewItemDataTemplateSelector}"
+                MenuItemsSource="{x:Bind _viewModel.MenuItems}"
+                OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}">
+                <NavigationView.Resources>
+                    <StaticResource x:Key="NavigationViewContentBackground" ResourceKey="SystemControlTransparentBrush" />
+                </NavigationView.Resources>
+                <windowing:TabPage x:Name="MainPageRootTab" />
+            </NavigationView>
+        </controls1:DockPanel>
+        <Grid
+            x:Name="ImageSearchGrid"
+            Background="{StaticResource PixevalAppAcrylicBrush}"
+            Opacity="0"
+            Visibility="{x:Bind controls:C.IsNotZeroDToVisibility(ImageSearchGrid.Opacity), Mode=OneWay}">
+            <Grid.OpacityTransition>
+                <ScalarTransition Duration="0:0:0.5" />
+            </Grid.OpacityTransition>
+            <win2d:CanvasControl
+                x:Name="CanvasControl"
+                Margin="20"
+                Draw="CanvasControl_OnDraw" />
+            <TextBlock
+                x:Uid="/MainPage/ReverseSearchDropHintTextBlock"
+                Margin="40"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Style="{StaticResource TitleTextBlockStyle}" />
+        </Grid>
+    </Grid>
 </controls:EnhancedPage>

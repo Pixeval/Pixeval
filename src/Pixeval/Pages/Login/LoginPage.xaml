@@ -14,16 +14,14 @@
     Unloaded="LoginPage_OnUnloaded"
     mc:Ignorable="d">
     <controls2:DockPanel>
-        <controls2:TitleBar
+        <TitleBar
             Title="{x:Bind app:AppInfo.AppIdentifier}"
             VerticalAlignment="Top"
-            controls2:DockPanel.Dock="Top"
-            DisplayMode="Tall"
-            Window="{x:Bind Window}">
-            <controls2:TitleBar.Icon>
-                <ImageIcon Source="ms-appx:///Assets/Images/logo.svg" />
-            </controls2:TitleBar.Icon>
-        </controls2:TitleBar>
+            controls2:DockPanel.Dock="Top">
+            <TitleBar.IconSource>
+                <ImageIconSource ImageSource="ms-appx:///Assets/Images/logo.svg" />
+            </TitleBar.IconSource>
+        </TitleBar>
         <controls2:DockPanel
             Padding="50"
             HorizontalSpacing="20"

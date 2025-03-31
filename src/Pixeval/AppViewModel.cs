@@ -2,29 +2,22 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using System.Threading.Tasks;
 using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
 using Pixeval.AppManagement;
 using Pixeval.Caching;
-using Pixeval.Controls.Windowing;
-using Pixeval.CoreApi;
-using Pixeval.CoreApi.Net;
+using Mako;
+using Mako.Net;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Extensions;
-using Pixeval.Logging;
 using Pixeval.Util.IO.Caching;
-using Pixeval.Util.UI;
-using WinUI3Utilities;
+using Pixeval.Utilities;
 
 namespace Pixeval;
 
 public partial class AppViewModel(App app) : IDisposable
 {
-    private bool _activatedByProtocol;
-
     public ServiceProvider AppServiceProvider { get; private set; } = null!;
 
     public IServiceScope AppServicesScope => AppServiceProvider.CreateScope();
@@ -40,6 +33,8 @@ public partial class AppViewModel(App app) : IDisposable
     public LoginContext LoginContext { get; } = AppInfo.LoadLoginContext() ?? new LoginContext();
 
     public AppDebugTrace AppDebugTrace { get; } = AppInfo.LoadDebugTrace() ?? new AppDebugTrace();
+
+    public VersionContext VersionContext { get; } = AppInfo.LoadVersionContext() ?? new VersionContext();
 
     public long PixivUid => MakoClient.Me.Id;
 
@@ -71,36 +66,24 @@ public partial class AppViewModel(App app) : IDisposable
             .BuildServiceProvider();
     }
 
-    public async Task ShowExceptionDialogAsync(Exception e)
+    public void Initialize()
     {
-        _ = await WindowFactory.RootWindow.Content.To<FrameworkElement>().CreateAcknowledgementAsync(MiscResources.ExceptionEncountered, e.ToString());
-    }
-
-    public void Initialize(bool activatedByProtocol)
-    {
-        _activatedByProtocol = activatedByProtocol;
         AppKnownFolders.Temp.Clear();
         AppServiceProvider = CreateServiceProvider();
     }
 
-    /// <summary>
-    /// Gets and resets the <see cref="_activatedByProtocol" /> field, used for one-time activation process
-    /// during the app start
-    /// </summary>
-    public bool ConsumeProtocolActivation()
-    {
-        var original = _activatedByProtocol;
-        _activatedByProtocol = false;
-        return original;
-    }
-
     public void Dispose()
     {
-        AppServiceProvider?.GetRequiredService<LiteDatabase>().Dispose();
-        AppServiceProvider?.GetRequiredService<ExtensionService>().Dispose();
+        if (_disposed)
+            return;
+        _disposed = true;
+        AppServiceProvider?.GetService<LiteDatabase>()?.Dispose();
+        AppServiceProvider?.GetService<ExtensionService>()?.Dispose();
         AppServiceProvider?.Dispose();
         DownloadManager?.Dispose();
         MakoClient?.Dispose();
         GC.SuppressFinalize(this);
     }
+
+    private bool _disposed;
 }

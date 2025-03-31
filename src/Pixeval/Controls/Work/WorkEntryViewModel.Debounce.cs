@@ -1,9 +1,12 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Pixeval.Utilities;
-using System.Threading.Tasks;
+#if false
+
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Pixeval.Util;
+using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
@@ -25,7 +28,7 @@ public partial class WorkEntryViewModel<T>
 
         public Task<bool> ExecuteAsync()
         {
-            return vm.SetBookmarkAsync(vm.Id, true, isPrivate, userTags);
+            return MakoHelper.SetIllustrationBookmarkAsync(vm.Id, true, isPrivate, userTags);
         }
 
         public bool IsFinalizer => false;
@@ -41,7 +44,7 @@ public partial class WorkEntryViewModel<T>
 
         public Task<bool> ExecuteAsync()
         {
-            return vm.SetBookmarkAsync(vm.Id, false, isPrivate, userTags);
+            return MakoHelper.SetIllustrationBookmarkAsync(vm.Id, false, isPrivate, userTags);
         }
 
         public bool IsFinalizer => true;
@@ -54,3 +57,5 @@ public partial class WorkEntryViewModel<T>
         _bookmarkDebounce.Dispose();
     }
 }
+
+#endif

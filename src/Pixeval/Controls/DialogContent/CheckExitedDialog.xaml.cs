@@ -2,10 +2,10 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
 using Windows.System;
-using Microsoft.UI.Xaml;
 
 namespace Pixeval.Controls.DialogContent;
 

@@ -6,3 +6,5 @@ files:
     translation: /src/Pixeval/Strings/%locale%/%original_file_name%
   - source: /src/Pixeval.Controls/Strings/zh-Hans/*
     translation: /src/Pixeval.Controls/Strings/%locale%/%original_file_name%
+  - source: /.github/README.md
+    translation: /.github/README.%two_letters_code%.md

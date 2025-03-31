@@ -5,9 +5,9 @@ using System;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
-using Pixeval.CoreApi.Engine;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Model;
+using Mako.Engine;
+using Mako.Global.Enum;
+using Mako.Model;
 
 namespace Pixeval.Pages.Capability;
 

@@ -105,7 +105,7 @@ public interface IQueryToken
 
         public static string Name => "@";
     }
-    
+
     public readonly record struct Slash : IQueryToken
     {
         public override string ToString() => Name;

@@ -43,7 +43,7 @@ public static class Enumerates
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IList<T> AsList<T>(this IEnumerable<T> enumerable)
     {
-        return enumerable as IList<T> ?? enumerable.ToList();
+        return enumerable as IList<T> ?? [.. enumerable];
     }
 
     private class KeyedEqualityComparer<T, TKey>(Func<T, TKey> selector) : IEqualityComparer<T> where TKey : IEquatable<TKey>
@@ -66,12 +66,12 @@ public static class Enumerates
     public static bool SequenceEquals<T, TKey>(this IEnumerable<T> @this,
         IEnumerable<T> another,
         Func<T, TKey> keySelector,
-        SequenceComparison comparison = SequenceComparison.Sequential) 
+        SequenceComparison comparison = SequenceComparison.Sequential)
     where TKey : IEquatable<TKey>
     {
         return comparison switch
         {
-            SequenceComparison.Sequential => @this.SequenceEqual(another, new KeyedEqualityComparer<T,TKey>(keySelector)),
+            SequenceComparison.Sequential => @this.SequenceEqual(another, new KeyedEqualityComparer<T, TKey>(keySelector)),
             SequenceComparison.Unordered => @this.Order().SequenceEqual(another.Order(), new KeyedEqualityComparer<T, TKey>(keySelector)), // not the fastest way, but still enough
             _ => ThrowUtils.ArgumentOutOfRange<SequenceComparison, bool>(comparison)
         };
@@ -175,7 +175,7 @@ public static class Enumerates
 
     public static IEnumerable<T> Traverse<T>(this IEnumerable<T> src, Action<T> action)
     {
-        var enumerable = src as T[] ?? src.ToArray();
+        var enumerable = src as T[] ?? [.. src];
         enumerable.ForEach(action);
         return enumerable;
     }
@@ -188,7 +188,7 @@ public static class Enumerates
     /// <param name="source"></param>
     public static void ReplaceByUpdate<T>(this IList<T> dest, IEnumerable<T> source)
     {
-        var enumerable = source as T[] ?? source.ToArray();
+        var enumerable = source as T[] ?? [.. source];
         if (enumerable.Length != 0)
         {
             _ = dest.RemoveAll(x => !enumerable.Contains(x));
@@ -202,7 +202,7 @@ public static class Enumerates
 
     public static void ReplaceByUpdate<T>(this ISet<T> dest, IEnumerable<T> source)
     {
-        var enumerable = source as T[] ?? source.ToArray();
+        var enumerable = source as T[] ?? [.. source];
         if (enumerable.Length != 0)
         {
             dest.ToArray().Where(x => !enumerable.Contains(x)).ForEach(x => dest.Remove(x));

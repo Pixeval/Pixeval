@@ -3,12 +3,12 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Windows.Foundation.Collections;
 using Microsoft.UI.Xaml;
 using Pixeval.Controls;
 using Pixeval.Controls.Settings;
 using Pixeval.Extensions.Common.Settings;
 using Pixeval.Settings;
+using Windows.Foundation.Collections;
 
 namespace Pixeval.Extensions.Models;
 
@@ -21,10 +21,9 @@ public partial class ExtensionEnumSettingsEntry(IEnumSettingsExtension extension
 
     public override void ValueSaving(IPropertySet values)
     {
-        extension.OnValueChanged((int)Value);
+        extension.OnValueChanged((int) Value);
         base.ValueSaving(values);
     }
 
-    public IReadOnlyList<StringRepresentableItem> EnumItems => extension.GetEnumKeyValues()
-        .Select(t => new StringRepresentableItem(t.Value, t.Key)).ToArray();
+    public IReadOnlyList<StringRepresentableItem> EnumItems => [.. extension.GetEnumKeyValues().Select(t => new StringRepresentableItem(t.Value, t.Key))];
 }

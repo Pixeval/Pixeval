@@ -10,6 +10,7 @@
     xmlns:misc="using:Pixeval.Attributes"
     xmlns:misc1="using:Pixeval.Pages.Misc"
     xmlns:pixeval="using:Pixeval"
+    Loaded="SettingsPage_OnLoaded"
     Unloaded="SettingsPage_OnUnloaded"
     mc:Ignorable="d">
     <controls1:EnhancedPage.Resources>

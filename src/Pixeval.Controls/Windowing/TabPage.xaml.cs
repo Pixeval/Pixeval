@@ -1,18 +1,18 @@
 // Copyright (c) Pixeval.Controls.
 // Licensed under the GPL v3 License.
 
-using Microsoft.UI.Xaml.Controls;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Navigation;
-using WinUI3Utilities;
-using Windows.Graphics;
 using CommunityToolkit.WinUI;
-using Pixeval.Utilities;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Utilities;
 using Windows.Foundation;
+using Windows.Graphics;
+using WinUI3Utilities;
 
 namespace Pixeval.Controls.Windowing;
 
@@ -45,6 +45,7 @@ public sealed partial class TabPage
             Window.SetTitleBar(CustomDragRegion);
             CustomDragRegion.MinWidth = 188;
         }
+
         ((IStructuralDisposalCompleter) this).Hook();
     }
 
@@ -90,7 +91,7 @@ public sealed partial class TabPage
     {
         await Task.Yield();
         RemoveTab(e.Tab);
-        if (e.Tab.Content is FrameworkElement element && element.FindDescendant<FrameworkElement>(ele => ele is IStructuralDisposalCompleter) is IStructuralDisposalCompleter completer)
+        if (e.Tab.Content is Frame { Content: IStructuralDisposalCompleter completer })
             completer.CompleteDisposalRecursively();
     }
 

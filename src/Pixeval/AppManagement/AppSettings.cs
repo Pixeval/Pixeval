@@ -7,21 +7,21 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Text.Json.Serialization;
-using Windows.Foundation;
+using FluentIcons.Common;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Pixeval.Attributes;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Preference;
+using Mako.Global.Enum;
+using Mako.Preference;
 using Pixeval.Options;
 using Pixeval.Util.UI;
+using Pixeval.Utilities;
+using Windows.Foundation;
+using Windows.Globalization;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
-using FluentIcons.Common;
-using Windows.Globalization;
-using Pixeval.Utilities;
 using static Pixeval.SettingsPageResources;
 
 namespace Pixeval.AppManagement;
@@ -118,7 +118,7 @@ public partial record AppSettings() : IWindowSettings
 
     [SettingsEntry(Symbol.History, nameof(MaximumSuggestionBoxSearchHistoryEntryHeader), nameof(MaximumSuggestionBoxSearchHistoryEntryDescription))]
     public int MaximumSuggestionBoxSearchHistory { get; set; } = 10;
-    
+
     /// <summary>
     /// The target filter that indicates the type of the client
     /// </summary>

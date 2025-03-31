@@ -18,7 +18,7 @@ namespace Pixeval.Controls;
 
 public partial class DownloadViewViewModel : ObservableObject, IDisposable
 {
-    [ObservableProperty] 
+    [ObservableProperty]
     public partial DownloadListOption CurrentOption { get; set; }
 
     [ObservableProperty]

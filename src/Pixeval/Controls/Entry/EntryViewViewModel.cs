@@ -5,8 +5,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Collections;
-using Pixeval.CoreApi.Engine;
-using Pixeval.CoreApi.Model;
+using Mako.Engine;
+using Mako.Model;
 
 namespace Pixeval.Controls;
 

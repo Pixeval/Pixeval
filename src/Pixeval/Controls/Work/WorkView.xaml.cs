@@ -5,20 +5,20 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Windows.Foundation;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Pages.NovelViewer;
-using Pixeval.Pages.IllustrationViewer;
-using WinUI3Utilities;
-using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Engine;
-using Pixeval.Options;
 using Microsoft.UI.Xaml.Media.Animation;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Util.UI;
+using Mako.Engine;
+using Mako.Global.Enum;
+using Mako.Model;
+using Pixeval.Options;
+using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.IllustratorViewer;
+using Pixeval.Pages.NovelViewer;
+using Pixeval.Util.UI;
+using Windows.Foundation;
+using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
@@ -100,8 +100,8 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>, 
         {
             ViewModel.SelectedEntries = ViewModel switch
             {
-                NovelViewViewModel => (NovelItemViewModel[])[],
-                IllustrationViewViewModel => (IllustrationItemViewModel[])[],
+                NovelViewViewModel => (NovelItemViewModel[]) [],
+                IllustrationViewViewModel => (IllustrationItemViewModel[]) [],
                 _ => ViewModel.SelectedEntries
             };
             return;
@@ -109,8 +109,8 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>, 
 
         ViewModel.SelectedEntries = ViewModel switch
         {
-            NovelViewViewModel => sender.SelectedItems.Cast<NovelItemViewModel>().ToArray(),
-            IllustrationViewViewModel => sender.SelectedItems.Cast<IllustrationItemViewModel>().ToArray(),
+            NovelViewViewModel => [.. sender.SelectedItems.Cast<NovelItemViewModel>()],
+            IllustrationViewViewModel => [.. sender.SelectedItems.Cast<IllustrationItemViewModel>()],
             _ => ViewModel.SelectedEntries
         };
     }
@@ -193,7 +193,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>, 
         viewModel.Dispose();
     }
 
-    public List<Action> ChildrenCompletes { get; } = [];
+    public List<Action<IStructuralDisposalCompleter?>> ChildrenCompletes { get; } = [];
 
     public bool CompleterRegistered { get; set; }
 

@@ -7,9 +7,9 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.WinUI.Collections;
-using Pixeval.CoreApi.Engine;
-using Pixeval.CoreApi.Model;
+using Mako.Engine;
+using Mako.Model;
+using Pixeval.Collections;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 
@@ -28,21 +28,15 @@ public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessed
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsAnyEntrySelected))]
     [NotifyPropertyChangedFor(nameof(SelectionLabel))]
-    public partial TViewModel[] SelectedEntries { get; set; } = [];
+    public partial IReadOnlyCollection<IWorkViewModel> SelectedEntries { get; set; } = [];
 
-    IReadOnlyCollection<IWorkViewModel> ISortableEntryViewViewModel.SelectedEntries
-    {
-        get => SelectedEntries;
-        set => SelectedEntries = (TViewModel[])value;
-    }
-
-    public bool IsAnyEntrySelected => SelectedEntries.Length > 0;
+    public bool IsAnyEntrySelected => SelectedEntries.Count > 0;
 
     public string SelectionLabel => IsAnyEntrySelected
-        ? WorkContainerResources.CancelSelectionButtonFormatted.Format(SelectedEntries.Length)
+        ? WorkContainerResources.CancelSelectionButtonFormatted.Format(SelectedEntries.Count)
         : WorkContainerResources.CancelSelectionButtonDefaultLabel;
 
-    public void SetSortDescription(SortDescription description)
+    public void SetSortDescription(ISortDescription<IWorkViewModel> description)
     {
         if (DataProvider.View.SortDescriptions.Count is 0)
             DataProvider.View.SortDescriptions.Add(description);
@@ -80,7 +74,7 @@ public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessed
 
     public void ResetEngine(IFetchEngine<IWorkEntry>? newEngine, int itemsPerPage = 20, int itemLimit = -1)
     {
-        DataProvider.ResetEngine((IFetchEngine<T>?)newEngine, itemsPerPage, itemLimit);
+        DataProvider.ResetEngine((IFetchEngine<T>?) newEngine, itemsPerPage, itemLimit);
     }
 
     public void ResetSource(ObservableCollection<IWorkEntry>? source) => ThrowHelper.NotSupported();

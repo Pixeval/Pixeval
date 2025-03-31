@@ -5,31 +5,15 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Input;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Filters;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public interface IWorkViewModel
+public interface IWorkViewModel : IWorkEntry
 {
     IWorkEntry Entry { get; }
-
-    long Id { get; }
-
-    int TotalBookmarks { get; }
-
-    bool IsBookmarked { get; set; }
-
-    Tag[] Tags { get; }
-
-    string Title { get; }
-
-    string Caption { get; }
-
-    UserInfo User { get; }
-
-    DateTimeOffset PublishDate { get; }
 
     bool IsAiGenerated { get; }
 
@@ -106,7 +90,7 @@ public interface IWorkViewModel
             NumericLeaf numericLeaf => User.Id == numericLeaf.Value,
             NumericRangeLeaf numericRangeLeaf => numericRangeLeaf.Type switch
             {
-                NumericRangeType.Bookmark => numericRangeLeaf.IsInRange(TotalBookmarks),
+                NumericRangeType.Bookmark => numericRangeLeaf.IsInRange(TotalFavorite),
                 NumericRangeType.Index => true,
                 _ => ThrowHelper.ArgumentOutOfRange<NumericRangeType, bool>(numericRangeLeaf.Type),
             },
@@ -117,8 +101,8 @@ public interface IWorkViewModel
             },
             DateLeaf dateLeaf => dateLeaf.Edge switch
             {
-                DateRangeEdge.Starting => PublishDate >= dateLeaf.Date,
-                DateRangeEdge.Ending => PublishDate < dateLeaf.Date,
+                DateRangeEdge.Starting => CreateDate >= dateLeaf.Date,
+                DateRangeEdge.Ending => CreateDate < dateLeaf.Date,
                 _ => ThrowHelper.ArgumentOutOfRange<DateRangeEdge, bool>(dateLeaf.Edge),
             },
             _ => ThrowHelper.ArgumentOutOfRange<QueryLeaf, bool>(queryToken),

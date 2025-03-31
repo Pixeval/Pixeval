@@ -2,10 +2,10 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using Windows.Foundation.Collections;
 using Microsoft.UI.Xaml;
 using Pixeval.Controls.Settings;
 using Pixeval.Extensions.Common.Settings;
+using Windows.Foundation.Collections;
 
 namespace Pixeval.Extensions.Models;
 

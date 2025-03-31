@@ -10,7 +10,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Database.Managers;
 using Pixeval.Extensions.Common.Commands.Transformers;
 using Pixeval.Util.ComponentModels;
@@ -95,8 +95,13 @@ public partial class DocumentViewerViewModel(FrameworkElement frameworkElement) 
             NovelContent = await novelItem.GetNovelContentAsync();
             ((INovelContext<ImageSource>) this).InitImages();
             LoadRtfContent();
-            // 此时没有任何PropertyChanged订阅，所以此时直接赋值
-            CurrentPage = 0;
+            if (CurrentPage is 0)
+            {
+                OnPropertyChanged(nameof(CurrentPage));
+                OnPropertyChanged(nameof(CurrentParagraphs));
+            }
+            else
+                CurrentPage = 0;
             _ = LoadImagesAsync();
             BrowseHistoryPersistentManager.AddHistory(novelItem.Entry);
             LoadSuccessfully = true;
@@ -203,7 +208,7 @@ public partial class DocumentViewerViewModel(FrameworkElement frameworkElement) 
             var currentPageCount = _markdownTexts.Count;
             if (currentPageCount > CurrentPage)
                 return _markdownTexts[CurrentPage];
-            
+
             var length = NovelContent.Text.Length;
             for (var i = currentPageCount; _lastIndex < length || CurrentPage >= i; ++i)
             {

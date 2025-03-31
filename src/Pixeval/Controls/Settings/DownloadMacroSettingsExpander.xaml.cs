@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Windows.UI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
@@ -20,6 +19,7 @@ using Pixeval.Download.Models;
 using Pixeval.Settings.Models;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
+using Windows.UI;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls.Settings;

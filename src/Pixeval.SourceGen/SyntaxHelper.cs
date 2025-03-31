@@ -1,13 +1,13 @@
 // Copyright (c) Pixeval.SourceGen.
 // Licensed under the GPL v3 License.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
-using System;
 
 namespace Pixeval.SourceGen;
 
@@ -65,7 +65,7 @@ public static class SyntaxHelper
         {
             foreach (var member in symbol.GetMembers())
             {
-                if (member is not IPropertySymbol { Name: not "EqualityContract", IsAbstract: false } property)
+                if (member is not IPropertySymbol { Name: not "EqualityContract" } property)
                     continue;
 
                 if (IgnoreAttribute(property, attribute))

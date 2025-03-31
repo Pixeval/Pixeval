@@ -9,26 +9,16 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:md="using:CommunityToolkit.Labs.WinUI.MarkdownTextBlock"
+    xmlns:triggers="using:CommunityToolkit.WinUI"
     KeyboardAcceleratorPlacementMode="Hidden"
     mc:Ignorable="d">
     <controls:EnhancedPage.Resources>
-        <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
         <AcrylicBrush
             x:Key="BottomCommandSectionBackground"
             FallbackColor="{StaticResource SecondaryAccentColor}"
             TintColor="{StaticResource SecondaryAccentColor}"
             TintLuminosityOpacity="0.8"
             TintOpacity="0.8" />
-        <Style
-            x:Key="TextBlockStyle"
-            BasedOn="{StaticResource CaptionTextBlockStyle}"
-            TargetType="TextBlock">
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="HorizontalTextAlignment" Value="Center" />
-            <Setter Property="TextAlignment" Value="Center" />
-            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-        </Style>
     </controls:EnhancedPage.Resources>
     <controls:EnhancedPage.KeyboardAccelerators>
         <KeyboardAccelerator Key="Left" Invoked="PrevButton_OnClicked" />
@@ -38,8 +28,10 @@
     </controls:EnhancedPage.KeyboardAccelerators>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="48" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="48" />
         </Grid.RowDefinitions>
         <controls:WorkViewerSplitView
             x:Name="EntryViewerSplitView"
@@ -48,8 +40,8 @@
             <controls:WorkViewerSplitView.PaneContent>
                 <SplitView
                     x:Name="NovelSettingsPane"
-                    DisplayMode="Overlay"
-                    PaneBackground="{ThemeResource PixevalControlBackgroundChromeMediumLowBrush}"
+                    DisplayMode="Inline"
+                    PaneBackground="{ThemeResource LayerOnMicaBaseAltFillColorSecondaryBrush}"
                     PanePlacement="Right">
                     <SplitView.Pane>
                         <controls1:DockPanel>
@@ -65,101 +57,131 @@
                             </ScrollView>
                         </controls1:DockPanel>
                     </SplitView.Pane>
-                    <Grid Background="{x:Bind controls:C.ToSolidColorBrush(_viewModel.NovelBackgroundEntry.Value), Mode=OneWay}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" MinWidth="200" />
-                                <ColumnDefinition
-                                    x:Name="TranslationColumn"
-                                    Width="Auto"
-                                    MinWidth="{x:Bind NullOr200(_viewModel.CurrentDocument.TranslatedText), Mode=OneWay}" />
-                            </Grid.ColumnDefinitions>
-                            <controls:DocumentViewer
-                                x:Name="DocumentViewer"
-                                Grid.Column="0"
-                                ActualThemeChanged="{x:Bind _viewModel.OnFrameworkElementOnActualThemeChanged}"
-                                FontFamily="{x:Bind controls:C.ToFontFamily(_viewModel.NovelFontFamilyEntry.Value), Mode=OneWay}"
-                                FontSize="{x:Bind _viewModel.NovelFontSizeEntry.Value, Mode=OneWay}"
-                                FontWeight="{x:Bind controls:C.ToFontWeight(_viewModel.NovelFontWeightEntry.Value), Mode=OneWay}"
-                                Foreground="{x:Bind controls:C.ToSolidColorBrush(_viewModel.NovelFontColorEntry.Value), Mode=OneWay}"
-                                LineHeight="{x:Bind _viewModel.NovelLineHeightEntry.Value, Mode=OneWay}"
-                                NovelMaxWidth="{x:Bind _viewModel.NovelMaxWidthEntry.Value, Mode=OneWay}"
-                                Paragraphs="{x:Bind _viewModel.CurrentDocument.CurrentParagraphs, Mode=OneWay}"
-                                Tapped="DocumentViewer_OnTapped" />
-                            <ScrollView
-                                Grid.Column="1"
-                                Padding="50,0"
-                                Tapped="DocumentViewer_OnTapped"
-                                Visibility="{x:Bind controls:C.IsNullOrEmptyToVisibility(_viewModel.CurrentDocument.TranslatedText), Mode=OneWay}">
-                                <md:MarkdownTextBlock
-                                    MaxWidth="{x:Bind _viewModel.NovelMaxWidthEntry.Value, Mode=OneWay}"
-                                    Margin="50"
-                                    Config="{x:Bind controls:TranslatableTextBlock.StaticMarkdownConfig}"
+                    <controls1:DockPanel>
+                        <ContentPresenter x:Name="InnerTopBarPresenter" controls1:DockPanel.Dock="Top">
+                            <interactivity:Interaction.Behaviors>
+                                <interactivity:EventTriggerBehavior EventName="SizeChanged">
+                                    <interactivity:CallMethodAction MethodName="SetPosition" TargetObject="{x:Bind}" />
+                                </interactivity:EventTriggerBehavior>
+                            </interactivity:Interaction.Behaviors>
+                            <CommandBar
+                                x:Name="TopBar"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                DefaultLabelPosition="Collapsed">
+                                <AppBarToggleButton Command="{x:Bind _viewModel.InfoAndCommentsCommand}" IsChecked="{x:Bind EntryViewerSplitView.IsPaneOpen, Mode=TwoWay}" />
+                                <AppBarSeparator />
+                                <AppBarButton
+                                    Command="{x:Bind _viewModel.CurrentNovel.CopyCommand, Mode=OneWay}"
+                                    CommandParameter="{x:Bind DownloadParameter(_viewModel.CurrentDocument.NovelContent), Mode=OneWay}"
+                                    IsEnabled="{x:Bind _viewModel.CurrentDocument.LoadSuccessfully, Mode=OneWay}" />
+                                <AppBarButton
+                                    Command="{x:Bind _viewModel.CurrentNovel.SaveCommand, Mode=OneWay}"
+                                    CommandParameter="{x:Bind DownloadParameter(_viewModel.CurrentDocument.NovelContent), Mode=OneWay}"
+                                    IsEnabled="{x:Bind _viewModel.CurrentDocument.LoadSuccessfully, Mode=OneWay}" />
+                                <AppBarButton
+                                    Command="{x:Bind _viewModel.CurrentNovel.SaveAsCommand, Mode=OneWay}"
+                                    CommandParameter="{x:Bind DownloadParameter(_viewModel.CurrentDocument.NovelContent), Mode=OneWay}"
+                                    IsEnabled="{x:Bind _viewModel.CurrentDocument.LoadSuccessfully, Mode=OneWay}" />
+                                <AppBarSeparator />
+                                <AppBarButton
+                                    x:Name="AddToBookmarkButton"
+                                    Click="AddToBookmarkButton_OnClicked"
+                                    Command="{x:Bind _viewModel.AddToBookmarkCommand}" />
+                                <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+                                <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+                                <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.OpenInWebBrowserCommand, Mode=OneWay}" />
+                                <AppBarButton
+                                    x:Name="ShowQrCodeButton"
+                                    Command="{x:Bind _viewModel.CurrentNovel.ShowQrCodeCommand, Mode=OneWay}"
+                                    CommandParameter="{x:Bind ShowQrCodeTeachingTip}" />
+                            </CommandBar>
+                        </ContentPresenter>
+                        <Grid Background="{x:Bind controls:C.ToSolidColorBrush(_viewModel.NovelBackgroundEntry.Value), Mode=OneWay}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" MinWidth="200" />
+                                    <ColumnDefinition
+                                        x:Name="TranslationColumn"
+                                        Width="Auto"
+                                        MinWidth="{x:Bind NullOr200(_viewModel.CurrentDocument.TranslatedText), Mode=OneWay}" />
+                                </Grid.ColumnDefinitions>
+                                <controls:DocumentViewer
+                                    x:Name="DocumentViewer"
+                                    Grid.Column="0"
+                                    ActualThemeChanged="{x:Bind _viewModel.OnFrameworkElementOnActualThemeChanged}"
+                                    FontFamily="{x:Bind controls:C.ToFontFamily(_viewModel.NovelFontFamilyEntry.Value), Mode=OneWay}"
                                     FontSize="{x:Bind _viewModel.NovelFontSizeEntry.Value, Mode=OneWay}"
                                     FontWeight="{x:Bind controls:C.ToFontWeight(_viewModel.NovelFontWeightEntry.Value), Mode=OneWay}"
                                     Foreground="{x:Bind controls:C.ToSolidColorBrush(_viewModel.NovelFontColorEntry.Value), Mode=OneWay}"
-                                    Text="{x:Bind _viewModel.CurrentDocument.TranslatedText, Mode=OneWay}"
-                                    Visibility="{x:Bind controls:C.IsNullOrEmptyToVisibility(_viewModel.CurrentDocument.TranslatedText), Mode=OneWay}" />
-                            </ScrollView>
-                            <controls1:GridSplitter
-                                Grid.Column="1"
-                                Width="16"
-                                HorizontalAlignment="Left"
-                                Visibility="{x:Bind controls:C.IsNullOrEmptyToVisibility(_viewModel.CurrentDocument.TranslatedText), Mode=OneWay}">
-                                <controls1:GridSplitter.RenderTransform>
-                                    <TranslateTransform X="-7" />
-                                </controls1:GridSplitter.RenderTransform>
-                            </controls1:GridSplitter>
-                        </Grid>
+                                    LineHeight="{x:Bind _viewModel.NovelLineHeightEntry.Value, Mode=OneWay}"
+                                    NovelMaxWidth="{x:Bind _viewModel.NovelMaxWidthEntry.Value, Mode=OneWay}"
+                                    Paragraphs="{x:Bind _viewModel.CurrentDocument.CurrentParagraphs, Mode=OneWay}" />
+                                <ScrollView
+                                    Grid.Column="1"
+                                    Padding="50,0"
+                                    Visibility="{x:Bind controls:C.IsNullOrEmptyToVisibility(_viewModel.CurrentDocument.TranslatedText), Mode=OneWay}">
+                                    <md:MarkdownTextBlock
+                                        MaxWidth="{x:Bind _viewModel.NovelMaxWidthEntry.Value, Mode=OneWay}"
+                                        Margin="50"
+                                        Config="{x:Bind controls:TranslatableTextBlock.StaticMarkdownConfig}"
+                                        FontSize="{x:Bind _viewModel.NovelFontSizeEntry.Value, Mode=OneWay}"
+                                        FontWeight="{x:Bind controls:C.ToFontWeight(_viewModel.NovelFontWeightEntry.Value), Mode=OneWay}"
+                                        Foreground="{x:Bind controls:C.ToSolidColorBrush(_viewModel.NovelFontColorEntry.Value), Mode=OneWay}"
+                                        Text="{x:Bind _viewModel.CurrentDocument.TranslatedText, Mode=OneWay}"
+                                        Visibility="{x:Bind controls:C.IsNullOrEmptyToVisibility(_viewModel.CurrentDocument.TranslatedText), Mode=OneWay}" />
+                                </ScrollView>
+                                <controls1:GridSplitter
+                                    Grid.Column="1"
+                                    Width="16"
+                                    HorizontalAlignment="Left"
+                                    Visibility="{x:Bind controls:C.IsNullOrEmptyToVisibility(_viewModel.CurrentDocument.TranslatedText), Mode=OneWay}">
+                                    <controls1:GridSplitter.RenderTransform>
+                                        <TranslateTransform X="-7" />
+                                    </controls1:GridSplitter.RenderTransform>
+                                </controls1:GridSplitter>
+                            </Grid>
 
-                        <Grid Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentDocument.IsLoading), Mode=OneWay}">
-                            <Rectangle Fill="{ThemeResource PixevalAppAcrylicBrush}" />
-                            <StackPanel
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Spacing="10">
-                                <ProgressRing
-                                    Width="50"
-                                    Height="50"
-                                    IsIndeterminate="True" />
-                                <TextBlock x:Uid="/EntryViewerPage/LoadingNovelTextBlock" Style="{StaticResource CaptionTextBlockStyle}" />
-                            </StackPanel>
-                        </Grid>
+                            <Grid Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentDocument.IsLoading), Mode=OneWay}">
+                                <Rectangle Fill="{ThemeResource PixevalAppAcrylicBrush}" />
+                                <StackPanel
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Spacing="10">
+                                    <ProgressRing
+                                        Width="50"
+                                        Height="50"
+                                        IsIndeterminate="True" />
+                                    <TextBlock x:Uid="/EntryViewerPage/LoadingNovelTextBlock" Style="{StaticResource CaptionTextBlockStyle}" />
+                                </StackPanel>
+                            </Grid>
 
-                        <!--  滚动条的宽度  -->
-                        <controls1:DockPanel Margin="0,0,15,0" LastChildFill="False">
-                            <controls:PageButton
-                                Width="150"
-                                controls1:DockPanel.Dock="Left"
-                                ButtonClick="PrevButton_OnClicked"
-                                ButtonRightTapped="PrevButton_OnRightTapped"
-                                ButtonVisibility="{x:Bind controls:C.IsNotNullToVisibility(_viewModel.PrevButtonText), Mode=OneWay}"
-                                IsPrev="True"
-                                ToolTip="{x:Bind _viewModel.PrevButtonText, Mode=OneWay}" />
-                            <controls:PageButton
-                                Width="150"
-                                controls1:DockPanel.Dock="Right"
-                                ButtonClick="NextButton_OnClicked"
-                                ButtonRightTapped="NextButton_OnRightTapped"
-                                ButtonVisibility="{x:Bind controls:C.IsNotNullToVisibility(_viewModel.NextButtonText), Mode=OneWay}"
-                                IsPrev="False"
-                                ToolTip="{x:Bind _viewModel.NextButtonText, Mode=OneWay}" />
-                        </controls1:DockPanel>
+                            <!--  滚动条的宽度  -->
+                            <controls1:DockPanel Margin="0,0,15,0" LastChildFill="False">
+                                <controls:PageButton
+                                    Width="150"
+                                    controls1:DockPanel.Dock="Left"
+                                    ButtonClick="PrevButton_OnClicked"
+                                    ButtonRightTapped="PrevButton_OnRightTapped"
+                                    ButtonVisibility="{x:Bind controls:C.IsNotNullToVisibility(_viewModel.PrevButtonText), Mode=OneWay}"
+                                    IsPrev="True"
+                                    ToolTip="{x:Bind _viewModel.PrevButtonText, Mode=OneWay}" />
+                                <controls:PageButton
+                                    Width="150"
+                                    controls1:DockPanel.Dock="Right"
+                                    ButtonClick="NextButton_OnClicked"
+                                    ButtonRightTapped="NextButton_OnRightTapped"
+                                    ButtonVisibility="{x:Bind controls:C.IsNotNullToVisibility(_viewModel.NextButtonText), Mode=OneWay}"
+                                    IsPrev="False"
+                                    ToolTip="{x:Bind _viewModel.NextButtonText, Mode=OneWay}" />
+                            </controls1:DockPanel>
 
-                        <!--  工具栏的识别区  -->
-                        <StackPanel
-                            x:Name="BottomCommandSection"
-                            Margin="0,0,0,20"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Bottom"
-                            Spacing="20">
-                            <StackPanel.TranslationTransition>
-                                <Vector3Transition Duration="0:0:0.300" />
-                            </StackPanel.TranslationTransition>
+                            <!--  工具栏的识别区  -->
                             <Grid
                                 Width="600"
                                 Height="200"
                                 Padding="50"
+                                VerticalAlignment="Bottom"
                                 Background="Transparent"
                                 Opacity="0">
                                 <Grid.OpacityTransition>
@@ -173,9 +195,7 @@
                                         <interactivity:ChangePropertyAction PropertyName="Opacity" Value="0" />
                                     </interactivity:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
-                                <!--  ReSharper disable once UnusedMember.Local  -->
                                 <Border
-                                    x:Name="CommandBorder"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Bottom"
                                     Background="{StaticResource BottomCommandSectionBackground}"
@@ -212,7 +232,6 @@
                                             SelectedPageIndex="{x:Bind _viewModel.CurrentDocument.CurrentPage, Mode=TwoWay}"
                                             Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentDocument.IsMultiPage), Mode=OneWay}" />
                                         <CommandBar
-                                            x:Name="ToolsCommandBar"
                                             HorizontalAlignment="Center"
                                             DefaultLabelPosition="Collapsed"
                                             OverflowButtonVisibility="Collapsed">
@@ -228,105 +247,86 @@
                                     </controls1:DockPanel>
                                 </Border>
                             </Grid>
-                            <Grid
-                                Margin="150,0"
-                                HorizontalAlignment="Center"
-                                Background="{StaticResource BottomCommandSectionBackground}"
-                                BorderBrush="{ThemeResource SecondaryAccentBorderBrush}"
-                                BorderThickness="0.5"
-                                CornerRadius="{ThemeResource ControlCornerRadius}"
-                                Translation="0,0,30">
-                                <Grid.Shadow>
-                                    <ThemeShadow x:Name="ThumbnailListDropShadow" />
-                                </Grid.Shadow>
-                                <interactivity:Interaction.Behaviors>
-                                    <interactivity:EventTriggerBehavior EventName="PointerEntered">
-                                        <interactivity:ChangePropertyAction
-                                            PropertyName="PointerNotInArea"
-                                            TargetObject="{x:Bind}"
-                                            Value="false" />
-                                    </interactivity:EventTriggerBehavior>
-                                    <interactivity:EventTriggerBehavior EventName="PointerExited">
-                                        <interactivity:ChangePropertyAction
-                                            PropertyName="PointerNotInArea"
-                                            TargetObject="{x:Bind}"
-                                            Value="true" />
-                                    </interactivity:EventTriggerBehavior>
-                                </interactivity:Interaction.Behaviors>
-                                <controls:AdvancedItemsView
-                                    x:Name="ThumbnailItemsView"
-                                    Margin="5"
-                                    Padding="0"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch"
-                                    ItemsSource="{x:Bind _viewModel.Novels}"
-                                    LayoutType="HorizontalStack"
-                                    MinItemHeight="80"
-                                    MinItemWidth="80"
-                                    PreviewKeyDown="ThumbnailItemsView_OnPreviewKeyDown"
-                                    SelectedIndex="{x:Bind _viewModel.CurrentNovelIndex, Mode=TwoWay}"
-                                    SelectionMode="Single">
-                                    <controls:AdvancedItemsView.ItemTemplate>
-                                        <DataTemplate x:DataType="controls:NovelItemViewModel">
-                                            <ItemContainer Width="80" Height="80">
-                                                <controls:LazyImage
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    DataContext="{x:Bind}"
-                                                    DataContextChanged="FrameworkElement_OnDataContextChanged"
-                                                    Source="{x:Bind ThumbnailSource, Mode=OneWay}" />
-                                            </ItemContainer>
-                                        </DataTemplate>
-                                    </controls:AdvancedItemsView.ItemTemplate>
-                                    <controls:AdvancedItemsView.ItemTransitionProvider>
-                                        <LinedFlowLayoutItemCollectionTransitionProvider />
-                                    </controls:AdvancedItemsView.ItemTransitionProvider>
-                                </controls:AdvancedItemsView>
-                            </Grid>
-                        </StackPanel>
-                    </Grid>
+                        </Grid>
+                    </controls1:DockPanel>
                 </SplitView>
             </controls:WorkViewerSplitView.PaneContent>
         </controls:WorkViewerSplitView>
-        <Grid Grid.Row="0" VerticalAlignment="Top">
-            <CommandBar HorizontalAlignment="Center" DefaultLabelPosition="Collapsed">
+        <ContentPresenter x:Name="OuterTopBarPresenter" Grid.Row="0" />
+        <controls:AdvancedItemsView
+            x:Name="ThumbnailItemsView"
+            Grid.Row="2"
+            Margin="5"
+            Padding="0,0,0,15"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            ItemsSource="{x:Bind _viewModel.Novels}"
+            LayoutType="HorizontalStack"
+            MinItemHeight="80"
+            MinItemWidth="80"
+            PreviewKeyDown="ThumbnailItemsView_OnPreviewKeyDown"
+            SelectedIndex="{x:Bind _viewModel.CurrentNovelIndex, Mode=TwoWay}"
+            SelectionMode="Single"
+            Visibility="{x:Bind controls:C.ToVisibility(_viewModel.IsBottomListOpen), Mode=OneWay}">
+            <controls:AdvancedItemsView.ItemTemplate>
+                <DataTemplate x:DataType="controls:NovelItemViewModel">
+                    <ItemContainer Width="80" Height="80">
+                        <controls:LazyImage
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            DataContext="{x:Bind}"
+                            DataContextChanged="FrameworkElement_OnDataContextChanged"
+                            Source="{x:Bind ThumbnailSource, Mode=OneWay}" />
+                    </ItemContainer>
+                </DataTemplate>
+            </controls:AdvancedItemsView.ItemTemplate>
+            <controls:AdvancedItemsView.ItemTransitionProvider>
+                <LinedFlowLayoutItemCollectionTransitionProvider />
+            </controls:AdvancedItemsView.ItemTransitionProvider>
+        </controls:AdvancedItemsView>
+        <Grid
+            Grid.Row="3"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Background="{ThemeResource LayerOnMicaBaseAltFillColorDefaultBrush}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" MaxWidth="310" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <CommandBar
+                Grid.Column="0"
+                HorizontalAlignment="Stretch"
+                DefaultLabelPosition="Collapsed">
                 <AppBarToggleButton Command="{x:Bind _viewModel.InfoAndCommentsCommand}" IsChecked="{x:Bind EntryViewerSplitView.IsPaneOpen, Mode=TwoWay}" />
+                <AppBarToggleButton Command="{x:Bind _viewModel.BottomListCommand}" IsChecked="{x:Bind _viewModel.IsBottomListOpen, Mode=TwoWay}" />
                 <AppBarSeparator />
-                <AppBarButton
-                    Command="{x:Bind _viewModel.CurrentNovel.CopyCommand, Mode=OneWay}"
-                    CommandParameter="{x:Bind DownloadParameter(_viewModel.CurrentDocument.NovelContent), Mode=OneWay}"
-                    IsEnabled="{x:Bind _viewModel.CurrentDocument.LoadSuccessfully, Mode=OneWay}" />
-                <AppBarButton
-                    Command="{x:Bind _viewModel.CurrentNovel.SaveCommand, Mode=OneWay}"
-                    CommandParameter="{x:Bind DownloadParameter(_viewModel.CurrentDocument.NovelContent), Mode=OneWay}"
-                    IsEnabled="{x:Bind _viewModel.CurrentDocument.LoadSuccessfully, Mode=OneWay}" />
-                <AppBarButton
-                    Command="{x:Bind _viewModel.CurrentNovel.SaveAsCommand, Mode=OneWay}"
-                    CommandParameter="{x:Bind DownloadParameter(_viewModel.CurrentDocument.NovelContent), Mode=OneWay}"
-                    IsEnabled="{x:Bind _viewModel.CurrentDocument.LoadSuccessfully, Mode=OneWay}" />
-                <AppBarSeparator />
-                <AppBarButton
-                    x:Name="AddToBookmarkButton"
-                    Click="AddToBookmarkButton_OnClicked"
-                    Command="{x:Bind _viewModel.AddToBookmarkCommand}" />
-                <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
-                <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
-                <AppBarButton Command="{x:Bind _viewModel.CurrentNovel.OpenInWebBrowserCommand, Mode=OneWay}" />
-                <AppBarButton
-                    x:Name="ShowQrCodeButton"
-                    Command="{x:Bind _viewModel.CurrentNovel.ShowQrCodeCommand, Mode=OneWay}"
-                    CommandParameter="{x:Bind ShowQrCodeTeachingTip}" />
+                <controls:AppBarTextItem
+                    Padding="15,0"
+                    Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                    Symbol="AppTitle"
+                    Text="{x:Bind _viewModel.CurrentNovel.Title, Mode=OneWay}" />
+            </CommandBar>
+            <CommandBar
+                x:Name="ExtensionsCommandBar"
+                Grid.Column="2"
+                HorizontalAlignment="Stretch"
+                DefaultLabelPosition="Collapsed" />
+            <CommandBar
+                Grid.Column="3"
+                HorizontalAlignment="Stretch"
+                DefaultLabelPosition="Collapsed">
+                <AppBarElementContainer VerticalContentAlignment="Center">
+                    <TextBlock Style="{StaticResource ViewerTextBlockStyle}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentDocument.IsMultiPage), Mode=OneWay}">
+                        <Run Text="{x:Bind controls:C.PlusOneToString(_viewModel.CurrentDocument.CurrentPage), Mode=OneWay}" />
+                        <Run Text="/" />
+                        <Run Text="{x:Bind _viewModel.CurrentDocument.PageCount, Mode=OneWay}" />
+                    </TextBlock>
+                </AppBarElementContainer>
+                <AppBarSeparator Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentDocument.IsMultiPage), Mode=OneWay}" />
                 <AppBarToggleButton Command="{x:Bind _viewModel.NovelSettingsCommand}" IsChecked="{x:Bind NovelSettingsPane.IsPaneOpen, Mode=TwoWay}" />
             </CommandBar>
-            <TextBlock
-                Margin="20,0"
-                HorizontalAlignment="Right"
-                Style="{StaticResource TextBlockStyle}"
-                Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentDocument.IsMultiPage), Mode=OneWay}">
-                <Run Text="{x:Bind controls:C.PlusOneToString(_viewModel.CurrentDocument.CurrentPage), Mode=OneWay}" />
-                <Run Text="/" />
-                <Run Text="{x:Bind _viewModel.CurrentDocument.PageCount, Mode=OneWay}" />
-            </TextBlock>
         </Grid>
         <TeachingTip
             x:Name="ShowQrCodeTeachingTip"

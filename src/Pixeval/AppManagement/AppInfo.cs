@@ -5,20 +5,19 @@ using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Microsoft.Windows.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Windowing;
+using Microsoft.Windows.Storage;
 using Pixeval.Controls.Windowing;
+using Mako.Net;
 using Pixeval.Database.Managers;
 using Pixeval.Util.IO;
-using Pixeval.Utilities;
+using Pixeval.Util.IO.Caching;
+using Pixeval.Util.UI;
+using Windows.ApplicationModel;
+using Windows.Foundation.Collections;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
-using Windows.ApplicationModel;
-using Microsoft.UI.Windowing;
-using Pixeval.CoreApi.Net;
-using Pixeval.Util.UI;
-using Windows.Foundation.Collections;
-using Pixeval.Util.IO.Caching;
 
 namespace Pixeval.AppManagement;
 
@@ -28,6 +27,7 @@ namespace Pixeval.AppManagement;
 [AppContext<AppSettings>(ConfigKey = "Config", MethodName = "Config")]
 [AppContext<LoginContext>(ConfigKey = "LoginContext", MethodName = "LoginContext")]
 [AppContext<AppDebugTrace>(ConfigKey = "DebugTrace", MethodName = "DebugTrace")]
+[AppContext<VersionContext>(ConfigKey = "VersionContext", MethodName = "VersionContext")]
 public static partial class AppInfo
 {
     public const string AppIdentifier = nameof(Pixeval);
@@ -55,6 +55,7 @@ public static partial class AppInfo
         InitializeConfig();
         InitializeLoginContext();
         InitializeDebugTrace();
+        InitializeVersionContext();
     }
 
     public static void SetNameResolvers(AppSettings appSetting)
@@ -66,8 +67,6 @@ public static partial class AppInfo
         MakoHttpOptions.SetNameResolver(MakoHttpOptions.AccountHost, appSetting.PixivAccountNameResolver);
         MakoHttpOptions.SetNameResolver(MakoHttpOptions.WebApiHost, appSetting.PixivWebApiNameResolver);
     }
-
-    public static Uri NavigationIconUri(string name) => new Uri($"ms-appx:///Assets/Images/Icons/{name}.png");
 
     public static string ApplicationUriToPath(Uri uri)
     {
@@ -122,12 +121,26 @@ public static partial class AppInfo
 
     public static void ClearConfig()
     {
-        Functions.IgnoreException(() => AppData.LocalSettings.DeleteContainer(ConfigContainerKey));
+        try
+        {
+            AppData.LocalSettings.DeleteContainer(ConfigContainerKey);
+        }
+        catch
+        {
+            // ignored
+        }
     }
 
     public static void ClearLoginContext()
     {
-        Functions.IgnoreException(() => AppData.LocalSettings.DeleteContainer(LoginContextContainerKey));
+        try
+        {
+            AppData.LocalSettings.DeleteContainer(LoginContextContainerKey);
+        }
+        catch
+        {
+            // ignored
+        }
     }
 
     public static void SaveContext()
@@ -146,15 +159,29 @@ public static partial class AppInfo
 
     public static void SaveContextWhenExit()
     {
-        CacheHelper.PurgeCache();
-        SaveDebugTrace();
-        SaveContext();
-        App.AppViewModel.Dispose();
+        try
+        {
+            CacheHelper.PurgeCache();
+            SaveDebugTrace();
+            SaveContext();
+            App.AppViewModel.Dispose();
+        }
+        catch
+        {
+            // ignored
+            // 保证退出时不出幺蛾子
+        }
     }
 
     public static void SaveDebugTrace()
     {
         App.AppViewModel.AppDebugTrace.ExitedSuccessfully = true;
         SaveDebugTrace(App.AppViewModel.AppDebugTrace);
+    }
+
+    public static void SaveVersionContext()
+    {
+        App.AppViewModel.VersionContext.NeverUsedExtensions = false;
+        SaveVersionContext(App.AppViewModel.VersionContext);
     }
 }

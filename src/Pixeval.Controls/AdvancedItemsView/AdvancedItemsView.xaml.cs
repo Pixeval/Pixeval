@@ -82,7 +82,7 @@ public sealed partial class AdvancedItemsView : ItemsView
         {
             if (sender is { ItemsSource: ISupportIncrementalLoading sil })
             {
-                _ = await sil.LoadMoreItemsAsync((uint)sender.LoadCount);
+                _ = await sil.LoadMoreItemsAsync((uint) sender.LoadCount);
                 return sil.HasMoreItems;
             }
 

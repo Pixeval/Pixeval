@@ -4,11 +4,12 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - "**"
+      - main
     paths-ignore:
-      - "**.md"
-    tags-ignore:
-      - "**"
+      - '.github/*.md'
+  pull_request:
+    branches-ignore:
+      - l10n_main
 
 defaults:
   run:
@@ -38,6 +39,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          submodules: recursive
           filter: tree:0
 
       - name: Setup MSBuild
@@ -48,10 +50,10 @@ jobs:
         with:
           global-json-file: global.json
 
-      - uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/Directory.Packages.props') }}
+      # - uses: actions/cache@v4
+      #   with:
+      #     path: ~/.nuget/packages
+      #     key: ${{ runner.os }}-nuget-${{ hashFiles('**/Directory.Packages.props') }}
 
       - name: Restore Files
         shell: pwsh
@@ -60,12 +62,12 @@ jobs:
           -p:Platform=$env:PROJECT_RESTORE_PLATFORM `
           -p:Configuration=$env:CONFIGURATION
 
-      - uses: actions/cache@v4
-        with:
-          path: |
-            ./**/obj\${{ matrix.platform }}
-            ./**/bin\${{ matrix.platform }}
-          key: ${{ matrix.platform }}-obj-${{ hashFiles('**/project.assets.json') }}
+      # - uses: actions/cache@v4
+      #   with:
+      #     path: |
+      #       ./**/obj\${{ matrix.platform }}
+      #       ./**/bin\${{ matrix.platform }}
+      #     key: ${{ matrix.platform }}-obj-${{ hashFiles('**/project.assets.json') }}
 
       - name: Publish
         id: publish

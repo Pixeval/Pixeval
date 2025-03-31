@@ -3,22 +3,22 @@
 
 using System;
 using System.Diagnostics;
-using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.CoreApi.Model;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
+using Windows.System;
+using Misaki;
 using WinUI3Utilities;
 using Symbol = FluentIcons.Common.Symbol;
-using Microsoft.UI.Xaml;
 
 namespace Pixeval.Controls;
 
 [DebuggerDisplay("{Entry}")]
-public abstract class EntryViewModel<T>(T entry) : ObservableObject, IDisposable where T : IEntry
+public abstract class EntryViewModel<T>(T entry) : ObservableObject, IDisposable where T : IMisakiModel
 {
     public T Entry { get; } = entry;
 

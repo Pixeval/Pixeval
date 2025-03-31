@@ -1,12 +1,12 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Windows.System;
-using Microsoft.UI.Xaml.Controls;
-using WinUI3Utilities;
 using System;
 using System.Collections.Generic;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Windows.System;
+using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
@@ -38,7 +38,7 @@ public sealed partial class SpotlightView : IScrollViewHost, IStructuralDisposal
         ViewModel.Dispose();
     }
 
-    public List<Action> ChildrenCompletes { get; } = [];
+    public List<Action<IStructuralDisposalCompleter?>> ChildrenCompletes { get; } = [];
 
     public bool CompleterRegistered { get; set; }
 

@@ -7,15 +7,17 @@ using System.Linq;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
-using Pixeval.CoreApi.Global.Enum;
+using Mako.Global.Enum;
 using WinRT;
 using WinUI3Utilities;
+using NovelRankOptionExtension = Pixeval.Util.NovelRankOptionExtension;
+using RankOptionExtension = Pixeval.Util.RankOptionExtension;
 
 namespace Pixeval.Pages.Capability;
 
 public sealed partial class RankingsPage : IScrollViewHost
 {
-    private static readonly IReadOnlyList<StringRepresentableItem> _IllustrationRankOption =  RankOptionExtension.GetItems();
+    private static readonly IReadOnlyList<StringRepresentableItem> _IllustrationRankOption = RankOptionExtension.GetItems();
 
     private static readonly IReadOnlyList<StringRepresentableItem> _NovelRankOption = NovelRankOptionExtension.GetItems();
 

@@ -12,24 +12,12 @@
     Loaded="IllustrationViewerPage_OnLoaded"
     mc:Ignorable="d">
     <controls:EnhancedPage.Resources>
-        <Thickness x:Key="NormalMargin">0,48,0,0</Thickness>
         <AcrylicBrush
             x:Key="BottomCommandSectionBackground"
             FallbackColor="{StaticResource SecondaryAccentColor}"
             TintColor="{StaticResource SecondaryAccentColor}"
             TintLuminosityOpacity="0.8"
             TintOpacity="0.8" />
-        <Style
-            x:Key="TextBlockStyle"
-            BasedOn="{StaticResource CaptionStrongTextBlockStyle}"
-            TargetType="TextBlock">
-            <Setter Property="FontSize" Value="15" />
-            <Setter Property="Margin" Value="10,0" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="HorizontalTextAlignment" Value="Center" />
-            <Setter Property="TextAlignment" Value="Center" />
-            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-        </Style>
     </controls:EnhancedPage.Resources>
     <controls:EnhancedPage.KeyboardAccelerators>
         <KeyboardAccelerator Key="Left" Invoked="PrevButton_OnClicked" />
@@ -40,8 +28,9 @@
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="48" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="48" />
             </Grid.RowDefinitions>
             <controls:WorkViewerSplitView
@@ -49,46 +38,95 @@
                 Grid.Row="1"
                 MenuItemsSource="{x:Bind _viewModel.Tags}">
                 <controls:WorkViewerSplitView.PaneContent>
-                    <Grid Background="Transparent">
-                        <Frame
-                            x:Name="IllustrationImageShowcaseFrame"
-                            Grid.Row="0"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            Tapped="IllustrationImageShowcaseFrame_OnTapped" />
-                        <controls1:DockPanel LastChildFill="False">
-                            <controls:PageButton
-                                Width="150"
-                                controls1:DockPanel.Dock="Left"
-                                ButtonClick="PrevButton_OnClicked"
-                                ButtonRightTapped="PrevButton_OnRightTapped"
-                                ButtonVisibility="{x:Bind controls:C.IsNotNullToVisibility(_viewModel.PrevButtonText), Mode=OneWay}"
-                                IsPrev="True"
-                                ToolTip="{x:Bind _viewModel.PrevButtonText, Mode=OneWay}" />
-                            <controls:PageButton
-                                Width="150"
-                                controls1:DockPanel.Dock="Right"
-                                ButtonClick="NextButton_OnClicked"
-                                ButtonRightTapped="NextButton_OnRightTapped"
-                                ButtonVisibility="{x:Bind controls:C.IsNotNullToVisibility(_viewModel.NextButtonText), Mode=OneWay}"
-                                IsPrev="False"
-                                ToolTip="{x:Bind _viewModel.NextButtonText, Mode=OneWay}" />
-                        </controls1:DockPanel>
+                    <controls1:DockPanel>
+                        <ContentPresenter x:Name="InnerTopBarPresenter" controls1:DockPanel.Dock="Top">
+                            <interactivity:Interaction.Behaviors>
+                                <interactivity:EventTriggerBehavior EventName="SizeChanged">
+                                    <interactivity:CallMethodAction MethodName="SetPosition" TargetObject="{x:Bind}" />
+                                </interactivity:EventTriggerBehavior>
+                            </interactivity:Interaction.Behaviors>
+                            <CommandBar
+                                x:Name="TopBar"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                DefaultLabelPosition="Collapsed">
+                                <AppBarButton Command="{x:Bind _viewModel.CurrentImage.PlayGifCommand, Mode=OneWay}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsUgoira), Mode=OneWay}" />
+                                <AppBarButton
+                                    Command="{x:Bind _viewModel.CurrentPage.CopyCommand, Mode=OneWay}"
+                                    CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
+                                    IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
+                                <AppBarButton
+                                    Command="{x:Bind _viewModel.CurrentPage.SaveCommand, Mode=OneWay}"
+                                    CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
+                                    IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
+                                <AppBarButton
+                                    Command="{x:Bind _viewModel.CurrentPage.SaveAsCommand, Mode=OneWay}"
+                                    CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
+                                    IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
+                                <AppBarButton
+                                    Command="{x:Bind _viewModel.CurrentIllustration.MangaSaveCommand, Mode=OneWay}"
+                                    CommandParameter="{x:Bind}"
+                                    Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
+                                <AppBarButton
+                                    Command="{x:Bind _viewModel.CurrentIllustration.MangaSaveAsCommand, Mode=OneWay}"
+                                    CommandParameter="{x:Bind}"
+                                    Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
+                                <AppBarSeparator />
+                                <!--<AppBarButton Command="{x:Bind _viewModel.CurrentImage.SetAsCommand, Mode=OneWay}">
+                                    <AppBarButton.Flyout>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem Command="{x:Bind _viewModel.CurrentImage.SetAsBackgroundCommand, Mode=OneWay}" />
+                                            <MenuFlyoutItem Command="{x:Bind _viewModel.CurrentImage.SetAsLockScreenCommand, Mode=OneWay}" />
+                                        </MenuFlyout>
+                                    </AppBarButton.Flyout>
+                                </AppBarButton>-->
+                                <AppBarSeparator />
+                                <AppBarButton
+                                    x:Name="AddToBookmarkButton"
+                                    Click="AddToBookmarkButton_OnClicked"
+                                    Command="{x:Bind _viewModel.AddToBookmarkCommand}"
+                                    CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}" />
+                                <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+                                <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+                                <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.OpenInWebBrowserCommand, Mode=OneWay}" />
+                                <AppBarButton
+                                    x:Name="ShowQrCodeButton"
+                                    Command="{x:Bind _viewModel.CurrentIllustration.ShowQrCodeCommand, Mode=OneWay}"
+                                    CommandParameter="{x:Bind ShowQrCodeTeachingTip}" />
+                                <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ShareCommand, Mode=OneWay}" />
+                            </CommandBar>
+                        </ContentPresenter>
+                        <Grid Background="Transparent">
+                            <Frame
+                                x:Name="IllustrationImageShowcaseFrame"
+                                Grid.Row="0"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch" />
+                            <controls1:DockPanel LastChildFill="False">
+                                <controls:PageButton
+                                    Width="150"
+                                    controls1:DockPanel.Dock="Left"
+                                    ButtonClick="PrevButton_OnClicked"
+                                    ButtonRightTapped="PrevButton_OnRightTapped"
+                                    ButtonVisibility="{x:Bind controls:C.IsNotNullToVisibility(_viewModel.PrevButtonText), Mode=OneWay}"
+                                    IsPrev="True"
+                                    ToolTip="{x:Bind _viewModel.PrevButtonText, Mode=OneWay}" />
+                                <controls:PageButton
+                                    Width="150"
+                                    controls1:DockPanel.Dock="Right"
+                                    ButtonClick="NextButton_OnClicked"
+                                    ButtonRightTapped="NextButton_OnRightTapped"
+                                    ButtonVisibility="{x:Bind controls:C.IsNotNullToVisibility(_viewModel.NextButtonText), Mode=OneWay}"
+                                    IsPrev="False"
+                                    ToolTip="{x:Bind _viewModel.NextButtonText, Mode=OneWay}" />
+                            </controls1:DockPanel>
 
-                        <!--  工具栏的识别区  -->
-                        <StackPanel
-                            x:Name="BottomCommandSection"
-                            Margin="0,0,0,20"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Bottom"
-                            Spacing="20">
-                            <StackPanel.TranslationTransition>
-                                <Vector3Transition Duration="0:0:0.300" />
-                            </StackPanel.TranslationTransition>
+                            <!--  工具栏的识别区  -->
                             <Grid
                                 Width="600"
                                 Height="200"
                                 Padding="50"
+                                VerticalAlignment="Bottom"
                                 Background="Transparent"
                                 Opacity="0">
                                 <Grid.OpacityTransition>
@@ -102,9 +140,7 @@
                                         <interactivity:ChangePropertyAction PropertyName="Opacity" Value="0" />
                                     </interactivity:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
-                                <!--  ReSharper disable once UnusedMember.Local  -->
                                 <Border
-                                    x:Name="CommandBorder"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Bottom"
                                     Background="{StaticResource BottomCommandSectionBackground}"
@@ -160,118 +196,47 @@
                                     </controls1:DockPanel>
                                 </Border>
                             </Grid>
-                            <Grid
-                                Margin="150,0"
-                                HorizontalAlignment="Center"
-                                Background="{StaticResource BottomCommandSectionBackground}"
-                                BorderBrush="{ThemeResource SecondaryAccentBorderBrush}"
-                                BorderThickness="0.5"
-                                CornerRadius="{ThemeResource ControlCornerRadius}"
-                                Translation="0,0,30">
-                                <Grid.Shadow>
-                                    <ThemeShadow x:Name="ThumbnailListDropShadow" />
-                                </Grid.Shadow>
-                                <interactivity:Interaction.Behaviors>
-                                    <interactivity:EventTriggerBehavior EventName="PointerEntered">
-                                        <interactivity:ChangePropertyAction
-                                            PropertyName="PointerNotInArea"
-                                            TargetObject="{x:Bind}"
-                                            Value="false" />
-                                    </interactivity:EventTriggerBehavior>
-                                    <interactivity:EventTriggerBehavior EventName="PointerExited">
-                                        <interactivity:ChangePropertyAction
-                                            PropertyName="PointerNotInArea"
-                                            TargetObject="{x:Bind}"
-                                            Value="true" />
-                                    </interactivity:EventTriggerBehavior>
-                                </interactivity:Interaction.Behaviors>
-                                <controls:AdvancedItemsView
-                                    x:Name="ThumbnailItemsView"
-                                    Margin="5"
-                                    Padding="0"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch"
-                                    ItemsSource="{x:Bind _viewModel.Illustrations}"
-                                    LayoutType="HorizontalStack"
-                                    MinItemHeight="80"
-                                    MinItemWidth="80"
-                                    PreviewKeyDown="ThumbnailItemsView_OnPreviewKeyDown"
-                                    SelectedIndex="{x:Bind _viewModel.CurrentIllustrationIndex, Mode=TwoWay}"
-                                    SelectionMode="Single">
-                                    <controls:AdvancedItemsView.ItemTemplate>
-                                        <DataTemplate x:DataType="controls:IllustrationItemViewModel">
-                                            <ItemContainer Width="80" Height="80">
-                                                <controls:LazyImage
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    DataContext="{x:Bind}"
-                                                    DataContextChanged="FrameworkElement_OnDataContextChanged"
-                                                    Source="{x:Bind ThumbnailSource, Mode=OneWay}" />
-                                            </ItemContainer>
-                                        </DataTemplate>
-                                    </controls:AdvancedItemsView.ItemTemplate>
-                                    <controls:AdvancedItemsView.ItemTransitionProvider>
-                                        <LinedFlowLayoutItemCollectionTransitionProvider />
-                                    </controls:AdvancedItemsView.ItemTransitionProvider>
-                                </controls:AdvancedItemsView>
-                            </Grid>
-                        </StackPanel>
-                    </Grid>
+                        </Grid>
+                    </controls1:DockPanel>
                 </controls:WorkViewerSplitView.PaneContent>
             </controls:WorkViewerSplitView>
-            <Grid Grid.Row="0" VerticalAlignment="Top">
-                <CommandBar HorizontalAlignment="Center" DefaultLabelPosition="Collapsed">
-                    <AppBarButton Command="{x:Bind _viewModel.CurrentImage.PlayGifCommand, Mode=OneWay}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsUgoira), Mode=OneWay}" />
-                    <AppBarButton
-                        Command="{x:Bind _viewModel.CurrentPage.CopyCommand, Mode=OneWay}"
-                        CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
-                        IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
-                    <AppBarButton
-                        Command="{x:Bind _viewModel.CurrentPage.SaveCommand, Mode=OneWay}"
-                        CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
-                        IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
-                    <AppBarButton
-                        Command="{x:Bind _viewModel.CurrentPage.SaveAsCommand, Mode=OneWay}"
-                        CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
-                        IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
-                    <AppBarButton
-                        Command="{x:Bind _viewModel.CurrentIllustration.MangaSaveCommand, Mode=OneWay}"
-                        CommandParameter="{x:Bind}"
-                        Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
-                    <AppBarButton
-                        Command="{x:Bind _viewModel.CurrentIllustration.MangaSaveAsCommand, Mode=OneWay}"
-                        CommandParameter="{x:Bind}"
-                        Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
-                    <AppBarSeparator />
-                    <AppBarButton Command="{x:Bind _viewModel.CurrentImage.SetAsCommand, Mode=OneWay}">
-                        <AppBarButton.Flyout>
-                            <MenuFlyout>
-                                <MenuFlyoutItem Command="{x:Bind _viewModel.CurrentImage.SetAsBackgroundCommand, Mode=OneWay}" />
-                                <MenuFlyoutItem Command="{x:Bind _viewModel.CurrentImage.SetAsLockScreenCommand, Mode=OneWay}" />
-                            </MenuFlyout>
-                        </AppBarButton.Flyout>
-                    </AppBarButton>
-                    <AppBarSeparator />
-                    <AppBarButton
-                        x:Name="AddToBookmarkButton"
-                        Click="AddToBookmarkButton_OnClicked"
-                        Command="{x:Bind _viewModel.AddToBookmarkCommand}"
-                        CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}" />
-                    <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
-                    <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
-                    <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.OpenInWebBrowserCommand, Mode=OneWay}" />
-                    <AppBarButton
-                        x:Name="ShowQrCodeButton"
-                        Command="{x:Bind _viewModel.CurrentIllustration.ShowQrCodeCommand, Mode=OneWay}"
-                        CommandParameter="{x:Bind ShowQrCodeTeachingTip}" />
-                    <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ShareCommand, Mode=OneWay}" />
-                </CommandBar>
-            </Grid>
-            <Grid
+            <ContentPresenter x:Name="OuterTopBarPresenter" Grid.Row="0" />
+            <controls:AdvancedItemsView
+                x:Name="ThumbnailItemsView"
                 Grid.Row="2"
+                Margin="5"
+                Padding="0,0,0,15"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                Background="{ThemeResource SolidBackgroundFillColorTertiaryBrush}">
+                ItemsSource="{x:Bind _viewModel.Illustrations}"
+                LayoutType="HorizontalStack"
+                MinItemHeight="80"
+                MinItemWidth="80"
+                PreviewKeyDown="ThumbnailItemsView_OnPreviewKeyDown"
+                SelectedIndex="{x:Bind _viewModel.CurrentIllustrationIndex, Mode=TwoWay}"
+                SelectionMode="Single"
+                Visibility="{x:Bind controls:C.ToVisibility(_viewModel.IsBottomListOpen), Mode=OneWay}">
+                <controls:AdvancedItemsView.ItemTemplate>
+                    <DataTemplate x:DataType="controls:IllustrationItemViewModel">
+                        <ItemContainer Width="80" Height="80">
+                            <controls:LazyImage
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                DataContext="{x:Bind}"
+                                DataContextChanged="FrameworkElement_OnDataContextChanged"
+                                Source="{x:Bind ThumbnailSource, Mode=OneWay}" />
+                        </ItemContainer>
+                    </DataTemplate>
+                </controls:AdvancedItemsView.ItemTemplate>
+                <controls:AdvancedItemsView.ItemTransitionProvider>
+                    <LinedFlowLayoutItemCollectionTransitionProvider />
+                </controls:AdvancedItemsView.ItemTransitionProvider>
+            </controls:AdvancedItemsView>
+            <Grid
+                Grid.Row="3"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Background="{ThemeResource LayerOnMicaBaseAltFillColorDefaultBrush}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" MaxWidth="310" />
                     <ColumnDefinition Width="*" />
@@ -283,6 +248,7 @@
                     HorizontalAlignment="Stretch"
                     DefaultLabelPosition="Collapsed">
                     <AppBarToggleButton Command="{x:Bind _viewModel.InfoAndCommentsCommand}" IsChecked="{x:Bind EntryViewerSplitView.IsPaneOpen, Mode=TwoWay}" />
+                    <AppBarToggleButton Command="{x:Bind _viewModel.BottomListCommand}" IsChecked="{x:Bind _viewModel.IsBottomListOpen, Mode=TwoWay}" />
                     <AppBarSeparator />
                     <controls:AppBarTextItem
                         Padding="15,0"
@@ -307,7 +273,7 @@
                     HorizontalAlignment="Stretch"
                     DefaultLabelPosition="Collapsed">
                     <AppBarElementContainer VerticalContentAlignment="Center">
-                        <TextBlock Style="{StaticResource TextBlockStyle}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}">
+                        <TextBlock Style="{StaticResource ViewerTextBlockStyle}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}">
                             <Run Text="{x:Bind controls:C.PlusOneToString(_viewModel.CurrentPageIndex), Mode=OneWay}" />
                             <Run Text="/" />
                             <Run Text="{x:Bind _viewModel.PageCount, Mode=OneWay}" />
@@ -321,7 +287,7 @@
                     <AppBarElementContainer VerticalContentAlignment="Center">
                         <TextBlock
                             MinWidth="60"
-                            Style="{StaticResource TextBlockStyle}"
+                            Style="{StaticResource ViewerTextBlockStyle}"
                             Text="{x:Bind controls:C.ToPercentageString(_viewModel.CurrentImage.Scale, 2), Mode=OneWay}" />
                     </AppBarElementContainer>
                 </CommandBar>

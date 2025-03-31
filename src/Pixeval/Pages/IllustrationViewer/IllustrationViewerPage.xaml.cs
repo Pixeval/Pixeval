@@ -3,10 +3,7 @@
 
 using System;
 using System.Linq;
-using System.Numerics;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -14,13 +11,14 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
-using Pixeval.Utilities;
-using WinRT;
-using WinUI3Utilities;
-using Windows.System;
-using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Extensions;
 using Pixeval.Extensions.Common.Commands.Transformers;
+using Pixeval.Utilities;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
+using Windows.System;
+using WinRT;
+using WinUI3Utilities;
 using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -30,28 +28,6 @@ public sealed partial class IllustrationViewerPage
     private IllustrationViewerPageViewModel _viewModel = null!;
 
     public IllustrationViewerPage() => InitializeComponent();
-
-    public bool PointerNotInArea
-    {
-        get;
-        set
-        {
-            field = value;
-            if (IsLoaded && field && TimeUp)
-                BottomCommandSection.Translation = new Vector3(0, 120, 0);
-        }
-    } = true;
-
-    public bool TimeUp
-    {
-        get;
-        set
-        {
-            field = value;
-            if (IsLoaded && field && PointerNotInArea)
-                BottomCommandSection.Translation = new Vector3(0, 120, 0);
-        }
-    }
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter) => SetViewModel(parameter);
 
@@ -110,17 +86,10 @@ public sealed partial class IllustrationViewerPage
         // 第一次_viewModel.CurrentIllustrationIndex变化时，还没有订阅事件，所以不会触发DetailedPropertyChanged，需要手动触发
         Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.CurrentImage);
 
-        if (!App.AppViewModel.AppSettings.BrowseOriginalImage)
-        {
-            _viewModel.AdditionalText = EntryViewerPageResources.BrowsingCompressedImage;
-        }
-
         CommandBorderDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
-        ThumbnailListDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
 
         // TODO: https://github.com/microsoft/microsoft-ui-xaml/issues/9952
         // ThumbnailItemsView.StartBringItemIntoView(_viewModel.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
-        IllustrationImageShowcaseFrame_OnTapped(null!, null!);
 
         var extensionService = App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
         if (!extensionService.ActiveImageTransformerCommands.Any())
@@ -206,14 +175,6 @@ public sealed partial class IllustrationViewerPage
         }
     }
 
-    private async void IllustrationImageShowcaseFrame_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        BottomCommandSection.Translation = new Vector3();
-        TimeUp = false;
-        await Task.Delay(3000);
-        TimeUp = true;
-    }
-
     private void Content_OnLoading(FrameworkElement sender, object args)
     {
         var teachingTip = sender.GetTag<TeachingTip>();
@@ -221,15 +182,9 @@ public sealed partial class IllustrationViewerPage
         teachingTip.Target = appBarButton.IsInOverflow ? null : appBarButton;
     }
 
-    public override void CompleteDisposal()
-    {
-        base.CompleteDisposal();
-        _viewModel.Dispose();
-    }
-
     private void IllustrationViewerPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        var dataTransferManager = DataTransferManagerInterop.GetForWindow((nint)Window.HWnd);
+        var dataTransferManager = DataTransferManagerInterop.GetForWindow((nint) Window.HWnd);
         dataTransferManager.DataRequested += OnDataTransferManagerOnDataRequested;
         return;
         async void OnDataTransferManagerOnDataRequested(DataTransferManager s, DataRequestedEventArgs args)
@@ -255,5 +210,31 @@ public sealed partial class IllustrationViewerPage
 
             async void FileDispose(DataPackage dataPackage, object o) => await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
         }
+    }
+
+    /// <summary>
+    /// ReSharper disable once UnusedMember.Global
+    /// </summary>
+    public void SetPosition()
+    {
+        if (InnerTopBarPresenter.ActualWidth > TopBar.ActualWidth + 5)
+        {
+            if (InnerTopBarPresenter.Content is null)
+            {
+                OuterTopBarPresenter.Content = null;
+                InnerTopBarPresenter.Content = TopBar;
+            }
+        }
+        else if (OuterTopBarPresenter.Content is null)
+        {
+            InnerTopBarPresenter.Content = null;
+            OuterTopBarPresenter.Content = TopBar;
+        }
+    }
+
+    public override void CompleteDisposal()
+    {
+        base.CompleteDisposal();
+        _viewModel.Dispose();
     }
 }

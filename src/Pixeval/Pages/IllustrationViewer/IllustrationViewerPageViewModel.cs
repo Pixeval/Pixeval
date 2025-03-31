@@ -4,30 +4,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using FluentIcons.Common;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Model;
+using Mako.Global.Enum;
+using Mako.Model;
+using Pixeval.Util.ComponentModels;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Pixeval.Util.ComponentModels;
+using Windows.System;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
 public partial class IllustrationViewerPageViewModel : DetailedUiObservableObject, IDisposable
 {
     [ObservableProperty]
-    public partial bool ShowPixevalIcon { get; set; } = true;
-
-    [ObservableProperty]
-    public partial string AdditionalText { get; set; } = "";
-
-    [ObservableProperty]
-    public partial bool AdditionalTextBlockVisible { get; set; } = true;
+    public partial bool IsBottomListOpen { get; set; }
 
     /// <summary>
     /// 
@@ -37,7 +31,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     /// <param name="page"></param>
     public IllustrationViewerPageViewModel(IEnumerable<IllustrationItemViewModel> illustrationViewModels, int currentIllustrationIndex, IllustrationViewerPage page) : base(page)
     {
-        IllustrationsSource = illustrationViewModels.ToArray();
+        IllustrationsSource = [.. illustrationViewModels];
         CurrentIllustrationIndex = currentIllustrationIndex;
     }
 
@@ -128,9 +122,9 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
             field = value;
             // 这里可以触发总页数的更新
-            Pages = CurrentIllustration.GetMangaIllustrationViewModels().ToArray();
+            Pages = [.. CurrentIllustration.GetMangaIllustrationViewModels()];
             // 保证_pages里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
-            Images = Pages.Select(p => new ImageViewerPageViewModel(p, CurrentIllustration, FrameworkElement)).ToArray();
+            Images = [.. Pages.Select(p => new ImageViewerPageViewModel(p, CurrentIllustration, FrameworkElement))];
 
             IllustrationInfoTag.Parameter = CurrentIllustration.Entry;
             CommentsTag.Parameter = (SimpleWorkType.IllustAndManga, IllustrationId);
@@ -184,7 +178,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     /// <summary>
     /// 插画列表
     /// </summary>
-    public IList<IllustrationItemViewModel> Illustrations => ViewModelSource?.DataProvider.View ?? (IList<IllustrationItemViewModel>)IllustrationsSource!;
+    public IList<IllustrationItemViewModel> Illustrations => ViewModelSource?.DataProvider.View ?? (IList<IllustrationItemViewModel>) IllustrationsSource!;
 
     /// <summary>
     /// 一个插画所有的页面
@@ -277,8 +271,11 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     #region Commands
 
-    public XamlUICommand InfoAndCommentsCommand { get; } =
-        EntryViewerPageResources.InfoAndComments.GetCommand(Symbol.Info, VirtualKey.F12);
+    partial void OnIsBottomListOpenChanged(bool value) => BottomListCommand.RefreshBottomPanelCommand(value);
+
+    public XamlUICommand InfoAndCommentsCommand { get; } = EntryViewerPageResources.InfoAndComments.GetCommand(Symbol.Info, VirtualKey.F12);
+
+    public XamlUICommand BottomListCommand { get; } = MiscResources.OpenBottomList.GetCommand(Symbol.PanelBottomExpand, VirtualKey.F);
 
     public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(Symbol.Bookmark);
 

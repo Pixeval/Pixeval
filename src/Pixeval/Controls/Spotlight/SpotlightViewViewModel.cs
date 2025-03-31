@@ -1,9 +1,9 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using SpotlightViewDataProvider = Pixeval.Controls.SimpleViewDataProvider<
-    Pixeval.CoreApi.Model.Spotlight,
+    Mako.Model.Spotlight,
     Pixeval.Controls.SpotlightItemViewModel>;
 
 namespace Pixeval.Controls;

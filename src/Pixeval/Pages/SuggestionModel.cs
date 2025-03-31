@@ -1,12 +1,12 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Microsoft.UI.Xaml.Controls;
 using Pixeval.Attributes;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Database;
 using Pixeval.Util.UI;
 using Symbol = FluentIcons.Common.Symbol;
+using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
 
 namespace Pixeval.Pages;
 
@@ -26,7 +26,7 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
 
     public Symbol SettingsSymbol { get; init; }
 
-    public FontIcon? FontIcon => SuggestionType switch
+    public SymbolIcon? SymbolIcon => SuggestionType switch
     {
         SuggestionType.IllustId or SuggestionType.NovelId or SuggestionType.UserId => Symbol.Open.GetSymbolIcon(true),
         SuggestionType.Tag or SuggestionType.IllustrationTag or SuggestionType.NovelTag => Symbol.Tag.GetSymbolIcon(true),

@@ -1,14 +1,14 @@
 // Copyright (c) Pixeval.SourceGen.
 // Licensed under the GPL v3 License.
 
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
-using static Pixeval.SourceGen.SyntaxHelper;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static Pixeval.SourceGen.SyntaxHelper;
 
 namespace Pixeval.SourceGen;
 
@@ -28,11 +28,11 @@ public class FactoryGenerator : IIncrementalGenerator
         const string createDefault = "CreateDefault";
         var defaultFactory = $"{AttributeNamespace}.IDefaultFactory<{name}>";
         var list = typeSymbol.GetProperties(attributeList[0].AttributeClass!)
-            .Where(symbol => !symbol.IsReadOnly && !symbol.IsStatic)
+            .Where(symbol => symbol is { IsStatic: false, IsReadOnly: false, IsOverride: false })
             .Select(symbol =>
             {
-                var syntax = (PropertyDeclarationSyntax)symbol.DeclaringSyntaxReferences[0].GetSyntax();
-                return (ExpressionSyntax)AssignmentExpression(SyntaxKind.SimpleAssignmentExpression,
+                var syntax = (PropertyDeclarationSyntax) symbol.DeclaringSyntaxReferences[0].GetSyntax();
+                return (ExpressionSyntax) AssignmentExpression(SyntaxKind.SimpleAssignmentExpression,
                     IdentifierName(symbol.Name),
                     syntax.Initializer is { } init
                         ? init.Value
@@ -65,7 +65,7 @@ public class FactoryGenerator : IIncrementalGenerator
         }
 
         var generatedType = GetDeclaration(name, typeSymbol, method)
-            .WithBaseList(BaseList(SeparatedList([(BaseTypeSyntax)SimpleBaseType(ParseTypeName(defaultFactory))])));
+            .WithBaseList(BaseList(SeparatedList([(BaseTypeSyntax) SimpleBaseType(ParseTypeName(defaultFactory))])));
         var generatedNamespace = GetFileScopedNamespaceDeclaration(typeSymbol, generatedType, true);
         var compilationUnit = CompilationUnit()
             .AddMembers(generatedNamespace)

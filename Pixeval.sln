@@ -12,7 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		.github\CONTRIBUTING.md = .github\CONTRIBUTING.md
 		crowdin.yml = crowdin.yml
-		Directory.Packages.props = Directory.Packages.props
 		global.json = global.json
 		LICENSE = LICENSE
 		nuget.config = nuget.config
@@ -36,13 +35,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{F041EE9B-A618-438D-A16D-1265421E22FC}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\build.yml = .github\workflows\build.yml
-		.github\workflows\check-xaml-formatting.yml = .github\workflows\check-xaml-formatting.yml
 		.github\workflows\release.yml = .github\workflows\release.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{BE94830A-603A-4C95-9FAC-1B69CE8ABA47}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pixeval.CoreApi", "src\Pixeval.CoreApi\Pixeval.CoreApi.csproj", "{8DDC779F-33E3-43CF-BEAC-3A9355F13C55}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pixeval.Utilities", "src\Pixeval.Utilities\Pixeval.Utilities.csproj", "{AC5EAFCE-09A5-4BF1-91B4-B23D0110FCFF}"
 EndProject
@@ -51,6 +47,14 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pixeval.Controls", "src\Pixeval.Controls\Pixeval.Controls.csproj", "{97EB18FC-3948-465F-B7DC-D059B03CA5C4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pixeval.Caching", "src\Pixeval.Caching\Pixeval.Caching.csproj", "{CFC4EEF0-3B83-4728-9B4A-1D6E0C08CD4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mako", "src\Mako\Mako\Mako.csproj", "{11FDCB3F-2117-6C52-B102-4FA79F891494}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mako.SourceGen", "src\Mako\Mako.SourceGen\Mako.SourceGen.csproj", "{95ED5199-BCAA-28FB-CA2E-DA7045372C67}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Misaki", "src\Mako\Misaki\Misaki\Misaki.csproj", "{2EFAF198-50C1-E7E5-0318-BAEB05704636}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mako", "Mako", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,18 +84,6 @@ Global
 		{97004D5A-21BE-4137-A529-A9E150AEB3CE}.Release|x86.ActiveCfg = Release|x86
 		{97004D5A-21BE-4137-A529-A9E150AEB3CE}.Release|x86.Build.0 = Release|x86
 		{97004D5A-21BE-4137-A529-A9E150AEB3CE}.Release|x86.Deploy.0 = Release|x86
-		{8DDC779F-33E3-43CF-BEAC-3A9355F13C55}.Debug|arm64.ActiveCfg = Debug|arm64
-		{8DDC779F-33E3-43CF-BEAC-3A9355F13C55}.Debug|arm64.Build.0 = Debug|arm64
-		{8DDC779F-33E3-43CF-BEAC-3A9355F13C55}.Debug|x64.ActiveCfg = Debug|x64
-		{8DDC779F-33E3-43CF-BEAC-3A9355F13C55}.Debug|x64.Build.0 = Debug|x64
-		{8DDC779F-33E3-43CF-BEAC-3A9355F13C55}.Debug|x86.ActiveCfg = Debug|x86
-		{8DDC779F-33E3-43CF-BEAC-3A9355F13C55}.Debug|x86.Build.0 = Debug|x86
-		{8DDC779F-33E3-43CF-BEAC-3A9355F13C55}.Release|arm64.ActiveCfg = Release|arm64
-		{8DDC779F-33E3-43CF-BEAC-3A9355F13C55}.Release|arm64.Build.0 = Release|arm64
-		{8DDC779F-33E3-43CF-BEAC-3A9355F13C55}.Release|x64.ActiveCfg = Release|x64
-		{8DDC779F-33E3-43CF-BEAC-3A9355F13C55}.Release|x64.Build.0 = Release|x64
-		{8DDC779F-33E3-43CF-BEAC-3A9355F13C55}.Release|x86.ActiveCfg = Release|x86
-		{8DDC779F-33E3-43CF-BEAC-3A9355F13C55}.Release|x86.Build.0 = Release|x86
 		{AC5EAFCE-09A5-4BF1-91B4-B23D0110FCFF}.Debug|arm64.ActiveCfg = Debug|arm64
 		{AC5EAFCE-09A5-4BF1-91B4-B23D0110FCFF}.Debug|arm64.Build.0 = Debug|arm64
 		{AC5EAFCE-09A5-4BF1-91B4-B23D0110FCFF}.Debug|x64.ActiveCfg = Debug|x64
@@ -140,6 +132,42 @@ Global
 		{CFC4EEF0-3B83-4728-9B4A-1D6E0C08CD4D}.Release|x64.Build.0 = Release|x64
 		{CFC4EEF0-3B83-4728-9B4A-1D6E0C08CD4D}.Release|x86.ActiveCfg = Release|x86
 		{CFC4EEF0-3B83-4728-9B4A-1D6E0C08CD4D}.Release|x86.Build.0 = Release|x86
+		{11FDCB3F-2117-6C52-B102-4FA79F891494}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{11FDCB3F-2117-6C52-B102-4FA79F891494}.Debug|arm64.Build.0 = Debug|Any CPU
+		{11FDCB3F-2117-6C52-B102-4FA79F891494}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{11FDCB3F-2117-6C52-B102-4FA79F891494}.Debug|x64.Build.0 = Debug|Any CPU
+		{11FDCB3F-2117-6C52-B102-4FA79F891494}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{11FDCB3F-2117-6C52-B102-4FA79F891494}.Debug|x86.Build.0 = Debug|Any CPU
+		{11FDCB3F-2117-6C52-B102-4FA79F891494}.Release|arm64.ActiveCfg = Release|Any CPU
+		{11FDCB3F-2117-6C52-B102-4FA79F891494}.Release|arm64.Build.0 = Release|Any CPU
+		{11FDCB3F-2117-6C52-B102-4FA79F891494}.Release|x64.ActiveCfg = Release|Any CPU
+		{11FDCB3F-2117-6C52-B102-4FA79F891494}.Release|x64.Build.0 = Release|Any CPU
+		{11FDCB3F-2117-6C52-B102-4FA79F891494}.Release|x86.ActiveCfg = Release|Any CPU
+		{11FDCB3F-2117-6C52-B102-4FA79F891494}.Release|x86.Build.0 = Release|Any CPU
+		{95ED5199-BCAA-28FB-CA2E-DA7045372C67}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{95ED5199-BCAA-28FB-CA2E-DA7045372C67}.Debug|arm64.Build.0 = Debug|Any CPU
+		{95ED5199-BCAA-28FB-CA2E-DA7045372C67}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{95ED5199-BCAA-28FB-CA2E-DA7045372C67}.Debug|x64.Build.0 = Debug|Any CPU
+		{95ED5199-BCAA-28FB-CA2E-DA7045372C67}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{95ED5199-BCAA-28FB-CA2E-DA7045372C67}.Debug|x86.Build.0 = Debug|Any CPU
+		{95ED5199-BCAA-28FB-CA2E-DA7045372C67}.Release|arm64.ActiveCfg = Release|Any CPU
+		{95ED5199-BCAA-28FB-CA2E-DA7045372C67}.Release|arm64.Build.0 = Release|Any CPU
+		{95ED5199-BCAA-28FB-CA2E-DA7045372C67}.Release|x64.ActiveCfg = Release|Any CPU
+		{95ED5199-BCAA-28FB-CA2E-DA7045372C67}.Release|x64.Build.0 = Release|Any CPU
+		{95ED5199-BCAA-28FB-CA2E-DA7045372C67}.Release|x86.ActiveCfg = Release|Any CPU
+		{95ED5199-BCAA-28FB-CA2E-DA7045372C67}.Release|x86.Build.0 = Release|Any CPU
+		{2EFAF198-50C1-E7E5-0318-BAEB05704636}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{2EFAF198-50C1-E7E5-0318-BAEB05704636}.Debug|arm64.Build.0 = Debug|Any CPU
+		{2EFAF198-50C1-E7E5-0318-BAEB05704636}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2EFAF198-50C1-E7E5-0318-BAEB05704636}.Debug|x64.Build.0 = Debug|Any CPU
+		{2EFAF198-50C1-E7E5-0318-BAEB05704636}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2EFAF198-50C1-E7E5-0318-BAEB05704636}.Debug|x86.Build.0 = Debug|Any CPU
+		{2EFAF198-50C1-E7E5-0318-BAEB05704636}.Release|arm64.ActiveCfg = Release|Any CPU
+		{2EFAF198-50C1-E7E5-0318-BAEB05704636}.Release|arm64.Build.0 = Release|Any CPU
+		{2EFAF198-50C1-E7E5-0318-BAEB05704636}.Release|x64.ActiveCfg = Release|Any CPU
+		{2EFAF198-50C1-E7E5-0318-BAEB05704636}.Release|x64.Build.0 = Release|Any CPU
+		{2EFAF198-50C1-E7E5-0318-BAEB05704636}.Release|x86.ActiveCfg = Release|Any CPU
+		{2EFAF198-50C1-E7E5-0318-BAEB05704636}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -148,10 +176,13 @@ Global
 		{CF6471C8-02F1-4B25-9207-43312C206A45} = {BE94830A-603A-4C95-9FAC-1B69CE8ABA47}
 		{F041EE9B-A618-438D-A16D-1265421E22FC} = {BE94830A-603A-4C95-9FAC-1B69CE8ABA47}
 		{BE94830A-603A-4C95-9FAC-1B69CE8ABA47} = {1663D266-BE8A-4035-BE44-AB6D2BAFE62A}
+		{11FDCB3F-2117-6C52-B102-4FA79F891494} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{95ED5199-BCAA-28FB-CA2E-DA7045372C67} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{2EFAF198-50C1-E7E5-0318-BAEB05704636} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C5C0040E-8F07-4F3A-A4D8-AE760A819615}
-		RESX_NeutralResourcesLanguage = zh-CN
 		RESX_ConfirmAddLanguageFile = True
+		RESX_NeutralResourcesLanguage = zh-CN
 	EndGlobalSection
 EndGlobal

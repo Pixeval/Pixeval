@@ -179,7 +179,7 @@ public class ObservableHashSet<T>
     /// Gets a value indicating whether the hash set is read-only.
     /// </summary>
     public virtual bool IsReadOnly
-        => ((ICollection<T>)_set).IsReadOnly;
+        => ((ICollection<T>) _set).IsReadOnly;
 
     /// <inheritdoc />
     IEnumerator<T> IEnumerable<T>.GetEnumerator()

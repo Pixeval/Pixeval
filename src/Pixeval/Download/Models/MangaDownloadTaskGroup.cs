@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Database;
 using Pixeval.Download.Macros;
 using Pixeval.Options;

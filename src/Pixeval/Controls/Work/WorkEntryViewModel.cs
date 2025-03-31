@@ -3,7 +3,7 @@
 
 using System;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Util;
 
 namespace Pixeval.Controls;
@@ -12,20 +12,20 @@ public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>
 {
     protected WorkEntryViewModel(T entry) : base(entry)
     {
-        IsBookmarkedDisplay = Entry.IsBookmarked ? HeartButtonState.Checked : HeartButtonState.Unchecked;
+        IsBookmarkedDisplay = Entry.IsFavorite ? HeartButtonState.Checked : HeartButtonState.Unchecked;
         InitializeCommands();
     }
 
     IWorkEntry IWorkViewModel.Entry => Entry;
 
-    public int TotalBookmarks => Entry.TotalBookmarks;
+    public int TotalFavorite => Entry.TotalFavorite;
 
     public int TotalView => Entry.TotalView;
 
-    public bool IsBookmarked
+    public bool IsFavorite
     {
-        get => Entry.IsBookmarked;
-        set => Entry.IsBookmarked = value;
+        get => Entry.IsFavorite;
+        set => Entry.IsFavorite = value;
     }
 
     [ObservableProperty]
@@ -35,20 +35,26 @@ public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>
     {
         if (value is HeartButtonState.Pending)
             return;
-        IsBookmarked = value is HeartButtonState.Checked;
+        IsFavorite = value is HeartButtonState.Checked;
     }
 
     public Tag[] Tags => Entry.Tags;
 
     public string Title => Entry.Title;
 
-    public string Caption => Entry.Caption;
+    public string Description => Entry.Description;
 
     public UserInfo User => Entry.User;
 
-    public DateTimeOffset PublishDate => Entry.CreateDate;
+    public DateTimeOffset CreateDate => Entry.CreateDate;
 
-    public bool IsAiGenerated => Entry.AiType is 2;
+    public ImageUrls ThumbnailUrls => Entry.ThumbnailUrls;
+
+    public AiType AiType => Entry.AiType;
+
+    public XRestrict XRestrict => Entry.XRestrict;
+
+    public bool IsAiGenerated => Entry.AiType is AiType.AiGenerated;
 
     public bool IsXRestricted => Entry.XRestrict is not XRestrict.Ordinary;
 

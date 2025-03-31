@@ -6,7 +6,7 @@ using Pixeval.Settings;
 
 namespace Pixeval.Controls.Settings;
 
-public sealed partial class TokenizingSettingsExpander 
+public sealed partial class TokenizingSettingsExpander
 {
     public IMultiStringsAppSettingsEntry Entry { get; set; } = null!;
 

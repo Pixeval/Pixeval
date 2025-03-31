@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="MessageTextBlock.Text" xml:space="preserve">
-    <value>逆向搜索需要正确的填写SauceNAO API Key，您未填写或者填写的API Key错误，请仔细检查后再使用该功能</value>
+    <value>以图搜图需要正确的填写SauceNAO API Key，您未填写或者填写的API Key错误，请仔细检查后再使用该功能</value>
   </data>
   <data name="SetApiKeyHyperlinkButton.Content" xml:space="preserve">
     <value>修改API Key</value>

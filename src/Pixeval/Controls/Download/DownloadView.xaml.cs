@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.NovelViewer;
 
@@ -20,7 +20,7 @@ public sealed partial class DownloadView : UserControl, IStructuralDisposalCompl
 
     private void ItemsView_OnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs args)
     {
-        ViewModel.SelectedEntries = sender.SelectedItems.Cast<DownloadItemViewModel>().ToArray();
+        ViewModel.SelectedEntries = [.. sender.SelectedItems.Cast<DownloadItemViewModel>()];
     }
 
     private async void DownloadItem_OnOpenIllustrationRequested(DownloadItem sender, DownloadItemViewModel viewModel)
@@ -46,7 +46,7 @@ public sealed partial class DownloadView : UserControl, IStructuralDisposalCompl
         ViewModel.Dispose();
     }
 
-    public List<Action> ChildrenCompletes { get; } = [];
+    public List<Action<IStructuralDisposalCompleter?>> ChildrenCompletes { get; } = [];
 
     public bool CompleterRegistered { get; set; }
 

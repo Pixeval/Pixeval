@@ -24,13 +24,13 @@ public partial class SuggestionModelDataTemplateSelector : DataTemplateSelector
     protected override DataTemplate? SelectTemplateCore(object item)
     {
         if (item is SuggestionModel model && model.SuggestionType switch
-            {
-                SuggestionType.IllustrationTrendingTagHeader => IllustrationHeader,
-                SuggestionType.NovelTrendingTagHeader => NovelHeader,
-                SuggestionType.SettingEntryHeader => SettingEntryHeader,
-                SuggestionType.IllustrationAutoCompleteTagHeader => AutoCompletionHeader,
-                _ => null
-            } is { } header)
+        {
+            SuggestionType.IllustrationTrendingTagHeader => IllustrationHeader,
+            SuggestionType.NovelTrendingTagHeader => NovelHeader,
+            SuggestionType.SettingEntryHeader => SettingEntryHeader,
+            SuggestionType.IllustrationAutoCompleteTagHeader => AutoCompletionHeader,
+            _ => null
+        } is { } header)
         {
             var xaml = $$"""
                          <DataTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">

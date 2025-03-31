@@ -4,27 +4,29 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
+using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
-using Pixeval.CoreApi.Model;
+using Mako.Global.Enum;
+using Mako.Model;
 using Pixeval.Options;
-using Pixeval.Util.ComponentModels;
-using Pixeval.Util.UI;
-using Pixeval.AppManagement;
-using Pixeval.CoreApi.Global.Enum;
 using Pixeval.Settings;
 using Pixeval.Settings.Models;
+using Pixeval.Util.ComponentModels;
+using Pixeval.Util.UI;
+using Windows.System;
 using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Pages.NovelViewer;
 
 public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDisposable
 {
+    [ObservableProperty]
+    public partial bool IsBottomListOpen { get; set; }
+
     /// <summary>
     /// 
     /// </summary>
@@ -33,7 +35,7 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
     /// <param name="page"></param>
     public NovelViewerPageViewModel(IEnumerable<NovelItemViewModel> novelViewModels, int currentNovelIndex, NovelViewerPage page) : base(page)
     {
-        NovelsSource = novelViewModels.ToArray();
+        NovelsSource = [.. novelViewModels];
         CurrentNovelIndex = currentNovelIndex;
     }
 
@@ -94,7 +96,7 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
     /// <summary>
     /// 小说列表
     /// </summary>
-    public IList<NovelItemViewModel> Novels => ViewModelSource?.DataProvider.View ?? (IList<NovelItemViewModel>)NovelsSource!;
+    public IList<NovelItemViewModel> Novels => ViewModelSource?.DataProvider.View ?? (IList<NovelItemViewModel>) NovelsSource!;
 
     /// <summary>
     /// 当前小说
@@ -217,11 +219,15 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
 
     #region Commands
 
+    partial void OnIsBottomListOpenChanged(bool value) => BottomListCommand.RefreshBottomPanelCommand(value);
+
     public XamlUICommand NovelSettingsCommand { get; } =
         EntryViewerPageResources.NovelSettings.GetCommand(Symbol.Settings);
 
     public XamlUICommand InfoAndCommentsCommand { get; } =
         EntryViewerPageResources.InfoAndComments.GetCommand(Symbol.Info, VirtualKey.F12);
+
+    public XamlUICommand BottomListCommand { get; } = MiscResources.OpenBottomList.GetCommand(Symbol.PanelBottomExpand, VirtualKey.F);
 
     public XamlUICommand AddToBookmarkCommand { get; } = EntryItemResources.AddToBookmark.GetCommand(Symbol.Bookmark);
 

@@ -1,9 +1,9 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Windows.Foundation.Collections;
 using FluentIcons.Common;
 using Microsoft.UI.Xaml;
+using Windows.Foundation.Collections;
 
 namespace Pixeval.Settings;
 
@@ -11,7 +11,7 @@ public interface ISettingsEntry
 {
     FrameworkElement Element { get; }
 
-    Symbol HeaderIcon { get; } 
+    Symbol HeaderIcon { get; }
 
     string Header { get; }
 

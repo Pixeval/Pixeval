@@ -9,7 +9,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Pixeval.AppManagement;
-using Pixeval.Controls.Windowing;
+using Pixeval.Util.Threading;
 using Pixeval.Utilities;
 using Pixeval.Utilities.Threading;
 
@@ -109,7 +109,7 @@ public static partial class IoHelper
                     if (response.Content.Headers.ContentRange?.Length is { } length && length != startPosition)
                         return new ArgumentOutOfRangeException(nameof(startPosition), @"416: RequestedRangeNotSatisfiable");
                     if (progress is not null)
-                        _ = WindowFactory.RootWindow.DispatcherQueue.TryEnqueue(() => progress.Report(100));
+                        await ThreadingHelper.DispatchAsync(() => progress.Report(100));
                     return null;
             }
 
@@ -134,7 +134,7 @@ public static partial class IoHelper
                     {
                         lastReported = now;
                         var percentage = totalRead / (double) responseLength * 100;
-                        _ = WindowFactory.RootWindow.DispatcherQueue.TryEnqueue(() =>
+                        await ThreadingHelper.DispatchAsync(() =>
                             progress.Report(percentage)); // percentage, 100 as base
                     }
                 }
@@ -145,7 +145,7 @@ public static partial class IoHelper
             }
 
             if (progress is not null)
-                _ = WindowFactory.RootWindow.DispatcherQueue.TryEnqueue(() => progress.Report(100));
+                await ThreadingHelper.DispatchAsync(() => progress.Report(100));
             return null;
         }
         catch (Exception e)

@@ -2,12 +2,12 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using Pixeval.Util.Threading;
 using System.Threading.Tasks;
+using Pixeval.Pages;
 using Pixeval.Pages.NovelViewer;
+using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Pixeval.Pages;
 
 namespace Pixeval.Activation;
 

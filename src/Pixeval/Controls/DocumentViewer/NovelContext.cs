@@ -5,13 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Pixeval.AppManagement;
-using Pixeval.CoreApi.Model;
 using System.Text;
+using System.Threading;
+using Pixeval.AppManagement;
+using Mako.Model;
+using Pixeval.Utilities;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
-using Pixeval.Utilities;
-using System.Threading;
 
 namespace Pixeval.Controls;
 
@@ -25,9 +25,9 @@ public partial class NovelContext(NovelContent novelContent) : INovelContext<Str
     /// 所有图片的URL
     /// </summary>
     /// <returns>小说图片是内嵌的，没必要用原图</returns>
-    public string[] AllUrls { get; } = novelContent.Images.Select(x => x.OriginalUrl).Concat(novelContent.Illusts.Select(x => x.ThumbnailUrl)).ToArray();
+    public string[] AllUrls { get; } = [.. novelContent.Images.Select(x => x.OriginalUrl), .. novelContent.Illusts.Select(x => x.ThumbnailUrl)];
 
-    public string[] AllTokens { get; } = novelContent.Images.Select(x => x.NovelImageId.ToString()).Concat(novelContent.Illusts.Select(x => $"{x.Id}-{x.Page}")).ToArray();
+    public string[] AllTokens { get; } = [.. novelContent.Images.Select(x => x.NovelImageId.ToString()), .. novelContent.Illusts.Select(x => $"{x.Id}-{x.Page}")];
 
     public StringBuilder LoadMdContent()
     {

@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 
@@ -29,21 +30,22 @@ public interface IStructuralDisposalCompleter : IPageDisposalCompleter
 {
     IStructuralDisposalCompleter? ParentCompleter => FindParentCompleterRecursively(this as FrameworkElement);
 
-    List<Action> ChildrenCompletes { get; }
+    List<Action<IStructuralDisposalCompleter?>> ChildrenCompletes { get; }
 
     bool CompleterRegistered { get; set; }
 
     bool CompleterDisposed { get; set; }
 
-    void CompleteDisposalRecursively()
+    void CompleteDisposalRecursively(IStructuralDisposalCompleter? completer = null)
     {
-        if (CompleterDisposed) return;
+        completer?.ChildrenCompletes.Remove(CompleteDisposalRecursively);
+        if (CompleterDisposed)
+            return;
         CompleterDisposed = true;
+        foreach (var childrenComplete in ChildrenCompletes.ToArray()) 
+            childrenComplete(this);
+        Debug.Assert(ChildrenCompletes.Count is 0);
         CompleteDisposal();
-        foreach (var childrenComplete in ChildrenCompletes)
-        {
-            childrenComplete();
-        }
     }
 
     /// <summary>

@@ -5,22 +5,22 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
+using Mako.Net.Response;
+using Pixeval.Pages.Capability;
 using Pixeval.Util;
 using Pixeval.Util.ComponentModels;
 using Pixeval.Util.IO;
+using Pixeval.Util.IO.Caching;
 using Pixeval.Util.UI;
 using Windows.System;
-using Microsoft.UI.Xaml.Controls;
-using Pixeval.Controls;
-using Pixeval.CoreApi.Net.Response;
-using Pixeval.Pages.Capability;
 using WinUI3Utilities;
 using Symbol = FluentIcons.Common.Symbol;
-using Microsoft.UI.Xaml;
-using Pixeval.Util.IO.Caching;
 
 namespace Pixeval.Pages.IllustratorViewer;
 
@@ -86,7 +86,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
 
     public bool IsPremium => UserDetail.UserProfile.IsPremium;
 
-    public string Comment => UserDetail.UserEntity.Comment;
+    public string Comment => UserDetail.UserEntity.Description;
 
     public async Task SetAvatarAndBackgroundAsync()
     {
@@ -148,7 +148,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
 
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        UiHelper.ClipboardSetText( MakoHelper.GenerateUserWebUri(Id).OriginalString);
+        UiHelper.ClipboardSetText(MakoHelper.GenerateUserWebUri(Id).OriginalString);
         (args.Parameter as FrameworkElement)?.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
     }
 

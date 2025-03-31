@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using CommunityToolkit.WinUI.Collections;
-using Pixeval.CoreApi.Engine;
-using Pixeval.CoreApi.Model;
+using Mako.Engine;
+using Mako.Model;
+using Pixeval.Collections;
 
 namespace Pixeval.Controls;
 
@@ -23,7 +23,7 @@ public interface ISortableEntryViewViewModel : INotifyPropertyChanged, IDisposab
 
     IReadOnlyCollection<IWorkViewModel> SelectedEntries { get; set; }
 
-    void SetSortDescription(SortDescription description);
+    void SetSortDescription(ISortDescription<IWorkViewModel> description);
 
     void ClearSortDescription();
 

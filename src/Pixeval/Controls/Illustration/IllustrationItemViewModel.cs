@@ -6,8 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net.Response;
+using Mako.Model;
+using Mako.Net.Response;
 using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
@@ -44,7 +44,7 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<Illustration
 
     public int Height => Entry.Height;
 
-    public double AspectRatio => (double)Width / Height;
+    public double AspectRatio => (double) Width / Height;
 
     public Task<UgoiraMetadataResponse> UgoiraMetadata { get; }
 
@@ -115,7 +115,6 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<Illustration
         // The API result of manga (a work with multiple illustrations) is a single Illustration object
         // that only differs from the illustrations of a single work on the MetaPages property, this property
         // contains the download urls of the manga
-
         return Entry.MetaPages.Select(m => Entry with
         {
             MetaSinglePage = new() { OriginalImageUrl = m.ImageUrls.Original },

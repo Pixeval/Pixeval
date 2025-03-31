@@ -5,11 +5,10 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Pixeval.CoreApi.Model;
-using Pixeval.CoreApi.Net.Response;
+using Mako.Model;
+using Mako.Net.Response;
 using Pixeval.Database;
 using Pixeval.Options;
 using Pixeval.Util;
@@ -75,7 +74,7 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup, IImageDownload
         }
         else
         {
-            using var image = await Destinations.UgoiraSaveToImageAsync(Metadata.Delays.ToArray());
+            using var image = await Destinations.UgoiraSaveToImageAsync([.. Metadata.Delays]);
             image.SetIdTags(Entry);
             await image.SaveAsync(TokenizedDestination, IoHelper.GetUgoiraEncoder(UgoiraDownloadFormat), token);
         }

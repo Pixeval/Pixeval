@@ -1,11 +1,11 @@
 // Copyright (c) Pixeval.Controls.
 // Licensed under the GPL v3 License.
 
-using Microsoft.UI.Xaml;
-using System.Reflection;
 using System;
 using System.Diagnostics;
+using System.Reflection;
 using CommunityToolkit.WinUI;
+using Microsoft.UI.Xaml;
 using Microsoft.Xaml.Interactivity;
 using Pixeval.Utilities;
 using WinUI3Utilities;
@@ -57,7 +57,7 @@ public sealed partial class NavigatePropertyAction : DependencyObject, IAction
                 ThrowHelper.Argument(propertyInfo.PropertyType, $"{PropertyName} 应该是 bool 类型的属性，实际类型是 {propertyInfo.PropertyType.Name}。");
             }
 
-            var boolValue = (bool)propertyInfo.GetValue(targetObject)!;
+            var boolValue = (bool) propertyInfo.GetValue(targetObject)!;
 
             propertyInfo.SetValue(targetObject, !boolValue);
         }

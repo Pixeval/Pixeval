@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Controls;
-using Pixeval.Controls.Windowing;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
+using Pixeval.Util.Threading;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 
@@ -59,11 +59,11 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
         AfterAllDownloadAsync += AfterAllDownloadAsyncOverride;
     }
 
-    protected async Task AllTasksDownloadedAsync() 
+    protected async Task AllTasksDownloadedAsync()
     {
         if (IsAllCompleted && AfterAllDownloadAsync is not null)
         {
-            _ = WindowFactory.RootWindow.DispatcherQueue.TryEnqueue(() => IsPending = true);
+            await ThreadingHelper.DispatchAsync(() => IsPending = true);
             try
             {
                 await AfterAllDownloadAsync.Invoke(this, CancellationTokenSource.Token);
@@ -72,7 +72,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
             {
                 // ignored
             }
-            _ = WindowFactory.RootWindow.DispatcherQueue.TryEnqueue(() => IsPending = false);
+            await ThreadingHelper.DispatchAsync(() => IsPending = false);
         }
     }
 
@@ -92,7 +92,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
 
     public int Count => TasksSet.Count;
 
-    public IReadOnlyList<string> Destinations => TasksSet.Select(t => t.Destination).ToArray();
+    public IReadOnlyList<string> Destinations => [.. TasksSet.Select(t => t.Destination)];
 
     protected IReadOnlyList<ImageDownloadTask> TasksSet => _tasksSet;
 
@@ -167,7 +167,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
     [NotifyPropertyChangedFor(nameof(CurrentState))]
     public partial bool IsPending { get; set; }
 
-    [ObservableProperty] 
+    [ObservableProperty]
     public partial bool IsProcessing { get; set; }
 
     public DownloadState CurrentState

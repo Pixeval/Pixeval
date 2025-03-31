@@ -15,14 +15,12 @@ using Pixeval.AppManagement;
 using Pixeval.Controls.Windowing;
 using Pixeval.Pages.Login;
 using System.Threading.Tasks;
-using FluentIcons.WinUI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Controls;
-using Pixeval.Logging;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using WinUI3Utilities;
 
 #if DEBUG
@@ -37,7 +35,6 @@ public partial class App
 
     public App()
     {
-        _ = this.UseSegoeMetrics();
         SettingsValueConverter.Context = SettingsSerializeContext.Default;
         AppViewModel = new AppViewModel(this);
         BookmarkTag.AllCountedTagString = MiscResources.AllCountedTagName;
@@ -73,7 +70,7 @@ public partial class App
             }
         }
 
-        AppViewModel.Initialize(kind is ExtendedActivationKind.Protocol);
+        AppViewModel.Initialize();
 
         TabPage.CreatedWindowClosing += OnClosing;
         WindowFactory.Create(new LoginPage())
@@ -108,22 +105,29 @@ public partial class App
 
         static async void OnClosing(AppWindow w, AppWindowClosingEventArgs e)
         {
-            if (AppViewModel.AppSettings.ReconfirmationOfClosingWindow)
+            try
             {
-                e.Cancel = true;
-                var checkBox = new CheckBox
+                if (AppViewModel.AppSettings.ReconfirmationOfClosingWindow)
                 {
-                    Content = ExitDialogResources.ReconfirmationOfClosingWindowCheckBoxContent
-                };
-                var window = WindowFactory.GetForkedWindows(w.Id.Value);
-                if (await window.Content.To<FrameworkElement>().CreateOkCancelAsync(
-                        ExitDialogResources.ReconfirmationOfClosingWindowTitle,
-                        checkBox) is ContentDialogResult.Primary)
-                {
-                    AppViewModel.AppSettings.ReconfirmationOfClosingWindow = checkBox.IsChecked is false;
-                    AppInfo.SaveConfig(AppViewModel.AppSettings);
-                    window.Close();
+                    e.Cancel = true;
+                    var checkBox = new CheckBox
+                    {
+                        Content = ExitDialogResources.ReconfirmationOfClosingWindowCheckBoxContent
+                    };
+                    var window = WindowFactory.GetForkedWindows(w.Id.Value);
+                    if (await window.Content.To<FrameworkElement>().CreateOkCancelAsync(
+                            ExitDialogResources.ReconfirmationOfClosingWindowTitle,
+                            checkBox) is ContentDialogResult.Primary)
+                    {
+                        AppViewModel.AppSettings.ReconfirmationOfClosingWindow = checkBox.IsChecked is false;
+                        AppInfo.SaveConfig(AppViewModel.AppSettings);
+                        window.Close();
+                    }
                 }
+            }
+            catch
+            {
+                e.Cancel = false;
             }
         }
     }

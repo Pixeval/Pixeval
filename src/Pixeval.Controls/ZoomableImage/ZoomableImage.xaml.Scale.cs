@@ -1,13 +1,13 @@
 // Copyright (c) Pixeval.Controls.
 // Licensed under the GPL v3 License.
 
+using System;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml;
-using System;
+using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
 using WinUI3Utilities;
-using Microsoft.UI.Xaml.Media;
 
 namespace Pixeval.Controls;
 
@@ -102,7 +102,7 @@ public partial class ZoomableImage
                 SetPosition(InitPosition);
                 break;
             case ZoomableImageMode.Fit:
-                ImageScale = (float)ScaledFactor;
+                ImageScale = (float) ScaledFactor;
                 SetPosition(InitPosition);
                 break;
             case ZoomableImageMode.NotFit:

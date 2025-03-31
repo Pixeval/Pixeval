@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Util;
 using Pixeval.Util.IO.Caching;
 using Pixeval.Util.UI;
@@ -34,7 +34,7 @@ public partial class IllustratorItemViewModel
     /// <summary>
     /// Dominant color of the "No Image" image
     /// </summary>
-    private static readonly SolidColorBrush _DefaultAvatarBorderColorBrush = new(UiHelper.ParseHexColor("#D6DEE5"));
+    private static readonly SolidColorBrush _DefaultAvatarBorderColorBrush = new(C.ToAlphaColor(0xD6DEE5));
 
     public async Task LoadAvatarAsync()
     {

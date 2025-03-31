@@ -1,8 +1,8 @@
 // Copyright (c) Pixeval.Controls.
 // Licensed under the GPL v3 License.
 
-using CommunityToolkit.WinUI;
 using System;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -50,7 +50,7 @@ public sealed partial class TimelineUnit : ContentControl
 
     private double GetTimelineAxisHeight(bool isAuxAxis)
     {
-        if (ActualHeight is not 0 && _containerHeightFixed is 0) 
+        if (ActualHeight is not 0 && _containerHeightFixed is 0)
             _containerHeightFixed = ActualHeight;
 
         return isAuxAxis ? _containerHeightFixed : Math.Max(_containerHeightFixed - 45, 0);

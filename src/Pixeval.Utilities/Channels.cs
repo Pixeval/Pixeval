@@ -1,8 +1,8 @@
 // Copyright (c) Pixeval.Utilities.
 // Licensed under the GPL v3 License.
 
-using System.Threading.Channels;
 using System;
+using System.Threading.Channels;
 
 namespace Pixeval.Utilities;
 

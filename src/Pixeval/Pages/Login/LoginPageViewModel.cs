@@ -8,7 +8,6 @@ using System.Net.NetworkInformation;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Web;
-using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -18,13 +17,14 @@ using Pixeval.AppManagement;
 using Pixeval.Attributes;
 using Pixeval.Controls.DialogContent;
 using Pixeval.Controls.Windowing;
-using Pixeval.CoreApi;
-using Pixeval.Logging;
+using Mako;
 using Pixeval.Util;
-using Pixeval.Util.UI;
-using WinUI3Utilities.Attributes;
-using Pixeval.CoreApi.Model;
 using Pixeval.Util.ComponentModels;
+using Pixeval.Util.UI;
+using Windows.System;
+using Pixeval.Utilities;
+using WinUI3Utilities;
+using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Pages.Login;
 
@@ -130,22 +130,27 @@ public partial class LoginPageViewModel(FrameworkElement frameworkElement) : UiO
             {
                 IsFinished = true;
                 var code = HttpUtility.ParseQueryString(new Uri(e.Uri).Query)["code"]!;
-                TokenResponse tokenResponse;
                 try
                 {
-                    tokenResponse = await PixivAuth.AuthCodeToTokenResponseAsync(code, verifier);
-                    proxyServer?.Dispose();
+                    if (await PixivAuth.AuthCodeToTokenResponseAsync(code, verifier) is not { } tokenResponse)
+                    {
+                        ThrowHelper.Exception();
+                        return;
+                    }
+                    var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
+                    App.AppViewModel.MakoClient = new MakoClient(tokenResponse, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
+                    navigated();
                 }
                 catch
                 {
                     _ = await FrameworkElement.CreateAcknowledgementAsync(LoginPageResources.FetchingSessionFailedTitle,
                         LoginPageResources.FetchingSessionFailedContent);
                     CloseWindow();
-                    return;
                 }
-                var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
-                App.AppViewModel.MakoClient = new MakoClient(tokenResponse, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
-                navigated();
+                finally
+                {
+                    proxyServer?.Dispose();
+                }
             }
             else if (e.Uri.Contains("accounts.pixiv.net"))
             {
@@ -255,11 +260,12 @@ public partial class LoginPageViewModel(FrameworkElement frameworkElement) : UiO
 
     #region Browser
 
-    public void BrowserLogin()
+    public string BrowserLogin()
     {
         var verifier = PixivAuth.GetCodeVerify();
         var url = PixivAuth.GenerateWebPageUrl(verifier);
         _ = Launcher.LaunchUriAsync(new Uri(url));
+        return verifier;
     }
 
     #endregion

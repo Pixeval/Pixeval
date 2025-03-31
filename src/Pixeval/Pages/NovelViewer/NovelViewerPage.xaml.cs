@@ -3,21 +3,19 @@
 
 using System.ComponentModel;
 using System.Linq;
-using System.Numerics;
-using System.Threading.Tasks;
-using Windows.System;
-using WinUI3Utilities;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
-using WinRT;
-using Microsoft.Extensions.DependencyInjection;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Extensions;
-using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
 using Pixeval.Extensions.Common.Commands.Transformers;
+using Windows.System;
+using WinRT;
+using WinUI3Utilities;
+using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
 
 namespace Pixeval.Pages.NovelViewer;
 
@@ -26,28 +24,6 @@ public sealed partial class NovelViewerPage
     private NovelViewerPageViewModel _viewModel = null!;
 
     public NovelViewerPage() => InitializeComponent();
-
-    public bool PointerNotInArea
-    {
-        get;
-        set
-        {
-            field = value;
-            if (IsLoaded && field && TimeUp)
-                BottomCommandSection.Translation = new Vector3(0, 120, 0);
-        }
-    } = true;
-
-    public bool TimeUp
-    {
-        get;
-        set
-        {
-            field = value;
-            if (IsLoaded && field && PointerNotInArea)
-                BottomCommandSection.Translation = new Vector3(0, 120, 0);
-        }
-    }
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter) => SetViewModel(parameter);
 
@@ -77,16 +53,13 @@ public sealed partial class NovelViewerPage
             SettingsPanel.Children.Add(entry.Element);
 
         CommandBorderDropShadow.Receivers.Add(DocumentViewer);
-        ThumbnailListDropShadow.Receivers.Add(DocumentViewer);
 
         // TODO: https://github.com/microsoft/microsoft-ui-xaml/issues/9952
         // ThumbnailItemsView.StartBringItemIntoView(_viewModel.CurrentNovelIndex, new BringIntoViewOptions { AnimationDesired = true });
-        DocumentViewer_OnTapped(null!, null!);
 
         var extensionService = App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
         if (!extensionService.ActiveTextTransformerCommands.Any())
             return;
-        ToolsCommandBar.PrimaryCommands.Add(new AppBarSeparator());
         foreach (var extension in extensionService.ActiveTextTransformerCommands)
         {
             var appBarButton = new AppBarButton
@@ -97,8 +70,10 @@ public sealed partial class NovelViewerPage
                 CommandParameter = extension
             };
             ToolTipService.SetToolTip(appBarButton, extension.GetDescription());
-            ToolsCommandBar.PrimaryCommands.Add(appBarButton);
+            ExtensionsCommandBar.PrimaryCommands.Add(appBarButton);
         }
+
+        ExtensionsCommandBar.PrimaryCommands.Add(new AppBarSeparator());
 
         OnViewModelOnCurrentDocumentPropertyChanged(_viewModel.CurrentDocument, null!);
 
@@ -107,7 +82,7 @@ public sealed partial class NovelViewerPage
         void OnViewModelOnCurrentDocumentPropertyChanged(object? sender, PropertyChangedEventArgs args)
         {
             var vm = sender.To<DocumentViewerViewModel>();
-            foreach (var appBarButton in ToolsCommandBar.PrimaryCommands.OfType<AppBarButton>())
+            foreach (var appBarButton in ExtensionsCommandBar.PrimaryCommands.OfType<AppBarButton>())
                 if (appBarButton.Tag is ITextTransformerCommandExtension extension)
                     appBarButton.Command = vm.GetTransformExtensionCommand(extension);
         }
@@ -180,14 +155,6 @@ public sealed partial class NovelViewerPage
         }
     }
 
-    private async void DocumentViewer_OnTapped(object sender, TappedRoutedEventArgs e)
-    {
-        BottomCommandSection.Translation = new Vector3();
-        TimeUp = false;
-        await Task.Delay(3000);
-        TimeUp = true;
-    }
-
     private void Content_OnLoading(FrameworkElement sender, object args)
     {
         var teachingTip = sender.GetTag<TeachingTip>();
@@ -196,6 +163,26 @@ public sealed partial class NovelViewerPage
     }
 
     private (FrameworkElement, NovelContent?) DownloadParameter(NovelContent? content) => (this, content);
+
+    /// <summary>
+    /// ReSharper disable once UnusedMember.Global
+    /// </summary>
+    public void SetPosition()
+    {
+        if (InnerTopBarPresenter.ActualWidth > TopBar.ActualWidth + 5)
+        {
+            if (InnerTopBarPresenter.Content is null)
+            {
+                OuterTopBarPresenter.Content = null;
+                InnerTopBarPresenter.Content = TopBar;
+            }
+        }
+        else if (OuterTopBarPresenter.Content is null)
+        {
+            InnerTopBarPresenter.Content = null;
+            OuterTopBarPresenter.Content = TopBar;
+        }
+    }
 
     private double NullOr200(string? text)
     {

@@ -5,16 +5,16 @@ using System;
 using System.Collections;
 using System.Globalization;
 using System.Linq;
-using Windows.UI;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using Microsoft.UI;
+using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using WinUI3Utilities;
+using Windows.UI;
 using Windows.UI.Text;
-using Microsoft.UI.Text;
-using Microsoft.UI;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
@@ -38,7 +38,7 @@ public static class C
     public static Visibility IsNotNullToVisibility(object? value) => value is null ? Visibility.Collapsed : Visibility.Visible;
 
     public static Visibility IsEqualToVisibility(object? x, object? y) => Equals(x, y) ? Visibility.Visible : Visibility.Collapsed;
-    
+
     public static Visibility IsNotEqualToVisibility(object? x, object? y) => Equals(x, y) ? Visibility.Collapsed : Visibility.Visible;
 
     public static bool IsZeroD(double value) => value < double.Epsilon;
@@ -88,7 +88,7 @@ public static class C
 
     public static FontFamily ToFontFamily(string value) => new(value);
 
-    public static object? FirstOrDefault(object value) => value is IEnumerable e ? e.OfType<object>().FirstOrDefault() : null;
+    public static object? FirstOrDefault(object? value) => value is IEnumerable e ? e.OfType<object>().FirstOrDefault() : null;
 
     public static string ToPercentageString(object value, int precision)
     {

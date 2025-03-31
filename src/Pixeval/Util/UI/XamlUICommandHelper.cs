@@ -1,11 +1,11 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Windows.System;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Windows.System;
 using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Util.UI;
@@ -92,5 +92,13 @@ public static class XamlUiCommandHelper
         command.IconSource = (isFullScreen
             ? Symbol.ArrowMinimize
             : Symbol.ArrowMaximize).GetSymbolIconSource();
+    }
+
+    public static void RefreshBottomPanelCommand(this XamlUICommand command, bool isExpand)
+    {
+        command.Label = command.Description = isExpand ? MiscResources.CloseBottomList : MiscResources.OpenBottomList;
+        command.IconSource = (isExpand
+            ? Symbol.PanelBottomContract
+            : Symbol.PanelBottomExpand).GetSymbolIconSource(true);
     }
 }

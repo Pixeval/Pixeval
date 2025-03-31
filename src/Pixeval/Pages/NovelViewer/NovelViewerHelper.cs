@@ -6,11 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
+using Microsoft.UI.Xaml;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using WinUI3Utilities;
-using Microsoft.UI.Xaml;
 
 namespace Pixeval.Pages.NovelViewer;
 

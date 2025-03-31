@@ -6,31 +6,34 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage;
-using Windows.System;
-using Windows.UI.Core;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Graphics.Canvas.Geometry;
+using Microsoft.Graphics.Canvas.UI.Xaml;
+using Microsoft.UI;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.Windows.AppLifecycle;
-using Pixeval.Activation;
-using Pixeval.Database.Managers;
-using Pixeval.Messages;
-using Pixeval.Util;
-using Pixeval.Util.UI;
-using Pixeval.Utilities;
+using Microsoft.UI.Xaml.Media;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
 using Pixeval.Controls.Windowing;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.Logging;
+using Mako.Global.Enum;
+using Pixeval.Database.Managers;
+using Pixeval.Messages;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.IllustratorViewer;
+using Pixeval.Pages.Misc;
 using Pixeval.Pages.NovelViewer;
+using Pixeval.Util;
+using Pixeval.Util.UI;
+using Pixeval.Utilities;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
+using Windows.System;
+using Windows.UI;
+using Windows.UI.Core;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages;
@@ -67,12 +70,7 @@ public sealed partial class MainPage
     {
         CustomizeTitleBar();
         App.AppViewModel.AppLoggedIn();
-
-        // The application is invoked by a protocol, call the corresponding protocol handler.
-        if (App.AppViewModel.ConsumeProtocolActivation())
-        {
-            ActivationRegistrar.Dispatch(AppInstance.GetCurrent().GetActivatedEventArgs());
-        }
+        _viewModel.SubscribeTokenRefresh();
 
         _ = WeakReferenceMessenger.Default.TryRegister<MainPage, WorkTagClickedMessage>(this, (_, message) =>
         {
@@ -81,7 +79,7 @@ public sealed partial class MainPage
             PerformSearchWork(message.Type, message.Tag);
         });
 
-        if (_viewModel.MenuItems[(int)App.AppViewModel.AppSettings.DefaultSelectedTabItem] is NavigationViewTag tag)
+        if (_viewModel.MenuItems[(int) App.AppViewModel.AppSettings.DefaultSelectedTabItem] is NavigationViewTag tag)
             MainPageRootTab.AddPage(tag);
 
         // LoadRestrictedModeSettings();
@@ -91,9 +89,12 @@ public sealed partial class MainPage
         await AppInfo.AppVersion.GitHubCheckForUpdateAsync(client);
         if (AppInfo.AppVersion.UpdateAvailable)
             _viewModel.SettingsTag.ShowIconBadge = true;
+        _viewModel.TryLoadAvatar();
         return;
 
+#pragma warning disable CS8321 // 已声明本地函数，但从未使用过
         async void LoadRestrictedModeSettings()
+#pragma warning restore CS8321 // 已声明本地函数，但从未使用过
         {
             _viewModel.RestrictedModeProcessing = true;
             try
@@ -144,7 +145,13 @@ public sealed partial class MainPage
             if (Equals(tag, _viewModel.FeedTag) && App.AppViewModel.AppSettings.WebCookie is "")
                 _ = this.CreateAcknowledgementAsync(MainPageResources.FeedTabCannotBeOpenedTitle, MainPageResources.FeedTabCannotBeOpenedContent);
             else
+            {
+                if (Equals(tag, _viewModel.ExtensionsTag) && App.AppViewModel.VersionContext.NeverUsedExtensions)
+                    // AppInfo.SaveVersionContext(); 在ExtensionsPage中调用
+                    _viewModel.ExtensionsTag.ShowIconBadge = false;
+
                 MainPageRootTab.AddPage(tag);
+            }
         }
     }
 
@@ -152,7 +159,7 @@ public sealed partial class MainPage
     {
         if (FocusManager.GetFocusedElement(XamlRoot) is not TextBox)
             return;
-        var suggestBox = (AutoSuggestBox)sender;
+        var suggestBox = (AutoSuggestBox) sender;
         suggestBox.IsSuggestionListOpen = true;
         await _viewModel.SuggestionProvider.UpdateAsync(suggestBox.Text);
     }
@@ -259,7 +266,22 @@ public sealed partial class MainPage
         NavigateToSettingEntry(ReverseSearchApiKeyAttribute.Value);
     }
 
-    private void NavigateToSettingEntry(SettingsEntryAttribute entry) => MainPageRootTab.AddPage(MainPageViewModel.GetSettingsTag(entry));
+    private void NavigateToSettingEntry(SettingsEntryAttribute entry)
+    {
+        if (MainPageRootTab.TabView.TabItems.FirstOrDefault(t => t is TabViewItem { Content: Frame { Content: SettingsPage } }) is
+            TabViewItem { Content: Frame { Content: SettingsPage page } } item)
+        {
+            if (Equals(MainPageRootTab.TabView.SelectedItem, item))
+                page.ScrollToAttribute(entry);
+            else
+            {
+                page.TargetAttribute = entry;
+                MainPageRootTab.TabView.SelectedItem = item;
+            }
+        }
+        else
+            MainPageRootTab.AddPage(MainPageViewModel.GetSettingsTag(entry));
+    }
 
     /// <summary>
     /// The AutoSuggestBox does not have a 'Paste' event, so we check the keyboard event accordingly
@@ -304,31 +326,11 @@ public sealed partial class MainPage
     private async Task ShowReverseSearchApiKeyNotPresentDialog()
     {
         var result = await this.CreateOkCancelAsync(MainPageResources.ReverseSearchApiKeyNotPresentTitle, ReverseSearchApiKeyNotPresentDialogResources.MessageTextBlockText, ReverseSearchApiKeyNotPresentDialogResources.SetApiKeyHyperlinkButtonContent);
-        if (result is ContentDialogResult.Primary) 
+        if (result is ContentDialogResult.Primary)
             NavigateToSettingEntry(ReverseSearchApiKeyAttribute.Value);
     }
 
-    private void KeywordAutoSuggestBox_OnDragOver(object sender, DragEventArgs e)
-    {
-        e.AcceptedOperation = DataPackageOperation.Copy;
-    }
-
-    private async void KeywordAutoSuggestBox_OnDrop(object sender, DragEventArgs e)
-    {
-        if (App.AppViewModel.AppSettings.ReverseSearchApiKey is { Length: > 0 })
-        {
-            if (e.DataView.Contains(StandardDataFormats.StorageItems) && (await e.DataView.GetStorageItemsAsync()).ToArray() is [StorageFile item, ..])
-            {
-                await _viewModel.ReverseSearchAsync(await item.OpenStreamForReadAsync());
-            }
-        }
-        else
-        {
-            await ShowReverseSearchApiKeyNotPresentDialog();
-        }
-    }
-
-    private void TitleBar_OnPaneButtonClicked(object? sender, RoutedEventArgs e)
+    private void TitleBar_OnPaneButtonClicked(TitleBar sender, object e)
     {
         NavigationView.IsPaneOpen = !NavigationView.IsPaneOpen;
     }
@@ -397,4 +399,53 @@ public sealed partial class MainPage
             WindowFactory.RootWindow.Close();
         }
     }
+
+    private async void MainPage_OnDragEnter(object sender, DragEventArgs e)
+    {
+        var deferral = e.GetDeferral();
+        if (e.DataView.Contains(StandardDataFormats.StorageItems) &&
+            await e.DataView.GetStorageItemsAsync() is [StorageFile])
+        {
+            e.AcceptedOperation = DataPackageOperation.Copy;
+            deferral.Complete();
+            ImageSearchGrid.Opacity = 1;
+            CanvasControl.Invalidate();
+        }
+    }
+
+    private void MainPage_OnDragLeave(object sender, DragEventArgs e)
+    {
+        if (e.AllowedOperations is not DataPackageOperation.None)
+            ImageSearchGrid.Opacity = 0;
+    }
+
+    private async void MainPage_OnDrop(object sender, DragEventArgs e)
+    {
+        ImageSearchGrid.Opacity = 0;
+        if (App.AppViewModel.AppSettings.ReverseSearchApiKey is { Length: > 0 })
+        {
+            if (e.DataView.Contains(StandardDataFormats.StorageItems) && await e.DataView.GetStorageItemsAsync() is [StorageFile item])
+                await _viewModel.ReverseSearchAsync(await item.OpenStreamForReadAsync());
+        }
+        else
+        {
+            await ShowReverseSearchApiKeyNotPresentDialog();
+        }
+    }
+
+    private void CanvasControl_OnDraw(CanvasControl sender, CanvasDrawEventArgs e)
+    {
+        const float strokeWidth = 5;
+        const float halfStrokeWidth = strokeWidth / 2;
+        e.DrawingSession.Clear(Colors.Transparent);
+        e.DrawingSession.DrawRoundedRectangle(halfStrokeWidth, halfStrokeWidth, (float) sender.ActualWidth - strokeWidth, (float) sender.ActualHeight - strokeWidth, 8, 8,
+            _Color, strokeWidth, new()
+            {
+                DashCap = CanvasCapStyle.Round,
+                LineJoin = CanvasLineJoin.Round,
+                DashStyle = CanvasDashStyle.Dash
+            });
+    }
+
+    private static readonly Color _Color = Application.Current.GetResource<SolidColorBrush>("TextFillColorPrimaryBrush").Color;
 }

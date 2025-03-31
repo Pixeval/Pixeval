@@ -2,10 +2,10 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using Pixeval.Interop;
-using Microsoft.UI.Xaml;
-using System.Runtime.InteropServices.Marshalling;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Marshalling;
+using Microsoft.UI.Xaml;
+using Pixeval.Interop;
 
 namespace Pixeval.Util.UI;
 
@@ -25,7 +25,7 @@ public static partial class UiHelper
             _ = CoCreateInstance((nint) cls, 0, CLSCTX_INPROC_SERVER, (nint) (&i), out var taskBarList);
             var wrappers = new StrategyBasedComWrappers();
             var instance = wrappers.GetOrCreateObjectForComInstance(taskBarList, CreateObjectFlags.UniqueInstance);
-            return (ITaskBarList3)instance;
+            return (ITaskBarList3) instance;
         }
     }
 
@@ -39,12 +39,12 @@ public static partial class UiHelper
 
     public static void SetTaskBarIconProgressState(this Window window, TaskBarState state)
     {
-        _TaskBarList3Instance.SetProgressState((nint)window.AppWindow.Id.Value, state);
+        _TaskBarList3Instance.SetProgressState((nint) window.AppWindow.Id.Value, state);
 
     }
 
     public static void SetTaskBarIconProgressValue(this Window window, ulong progressValue, ulong max)
     {
-        _TaskBarList3Instance.SetProgressValue((nint)window.AppWindow.Id.Value, progressValue, max);
+        _TaskBarList3Instance.SetProgressValue((nint) window.AppWindow.Id.Value, progressValue, max);
     }
 }

@@ -2,17 +2,14 @@
 // Licensed under the GPL v3 License.
 
 using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.WinUI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using WinUI3Utilities;
-using WinUI3Utilities.Attributes;
 
 namespace Pixeval.Controls.Windowing;
 
-[WindowSizeHelper]
-public sealed partial class EnhancedWindow : Window
+public sealed class EnhancedWindow : Window
 {
     public ulong HWnd => AppWindow.Id.Value;
 
@@ -23,6 +20,8 @@ public sealed partial class EnhancedWindow : Window
         get => Content.To<Grid>().Children[0].To<EnhancedPage>();
         set => Content.To<Grid>().Children[0] = value;
     }
+
+    public OverlappedPresenter Presenter => AppWindow.Presenter.To<OverlappedPresenter>();
 
     public bool IsMaximize => AppWindow.Presenter is OverlappedPresenter { State: OverlappedPresenterState.Maximized };
 
@@ -65,8 +64,6 @@ public sealed partial class EnhancedWindow : Window
         if (_owner is not null)
             _owner.AppWindow.Closing -= OnOwnerOnClosing;
         WeakReferenceMessenger.Default.UnregisterAll(this);
-        var completer = Content.FindDescendant<FrameworkElement>(element => element is IStructuralDisposalCompleter) as IStructuralDisposalCompleter;
-        completer?.CompleteDisposalRecursively();
     }
 
     private void OnOwnerOnClosing(AppWindow sender, AppWindowClosingEventArgs e) => Close();

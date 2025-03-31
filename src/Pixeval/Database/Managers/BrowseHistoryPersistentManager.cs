@@ -3,8 +3,8 @@
 
 using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
-using Pixeval.CoreApi.Global.Enum;
-using Pixeval.CoreApi.Model;
+using Mako.Global.Enum;
+using Mako.Model;
 
 namespace Pixeval.Database.Managers;
 

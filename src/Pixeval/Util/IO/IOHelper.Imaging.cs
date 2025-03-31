@@ -6,13 +6,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.Storage.FileProperties;
-using Windows.Storage.Streams;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.CoreApi.Net.Response;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Mako.Net.Response;
 using Pixeval.Download.Macros;
 using Pixeval.Options;
+using Pixeval.Util.IO.Caching;
+using Pixeval.Utilities;
+using QRCoder;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Bmp;
@@ -21,11 +22,10 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Tiff;
 using SixLabors.ImageSharp.Formats.Webp;
+using Windows.Storage;
+using Windows.Storage.FileProperties;
+using Windows.Storage.Streams;
 using WinUI3Utilities;
-using QRCoder;
-using Microsoft.UI.Xaml.Media.Imaging;
-using Pixeval.Utilities;
-using Pixeval.Util.IO.Caching;
 
 namespace Pixeval.Util.IO;
 
@@ -83,7 +83,7 @@ public static partial class IoHelper
         progress?.Report(100);
         return s;
     }
-    
+
     public static async Task<Stream> UgoiraSaveToStreamAsync(this Stream stream, IReadOnlyList<int> delays, Stream? target = null, IProgress<double>? progress = null)
     {
         using var image = await stream.UgoiraSaveToImageAsync(delays, progress);
@@ -129,13 +129,13 @@ public static partial class IoHelper
             options.TaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
         await Parallel.ForAsync(0, streams.Count, options, async (i, token) =>
         {
-            var delay = delays.Count > i ? (uint)delays[i] : 10u;
+            var delay = delays.Count > i ? (uint) delays[i] : 10u;
             streams[i].Position = 0;
             images[i] = await Image.LoadAsync(streams[i], token);
             await streams[i].DisposeAsync();
             images[i].Frames[0].Metadata.GetFormatMetadata(WebpFormat.Instance).FrameDelay = delay;
             progressValue += average;
-            progress?.Report((int)progressValue);
+            progress?.Report((int) progressValue);
         });
 
         var image = images[0];
@@ -162,14 +162,14 @@ public static partial class IoHelper
             options.TaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
         await Parallel.ForAsync(0, streams.Count, options, async (i, token) =>
         {
-            var delay = delays.Count > i ? (uint)delays[i] : 10u;
+            var delay = delays.Count > i ? (uint) delays[i] : 10u;
             streams[i].Position = 0;
             images[i] = await Image.LoadAsync(streams[i], token);
             if (dispose)
                 await streams[i].DisposeAsync();
             images[i].Frames[0].Metadata.GetFormatMetadata(WebpFormat.Instance).FrameDelay = delay;
             progressValue += average;
-            progress?.Report((int)progressValue);
+            progress?.Report((int) progressValue);
         });
 
         var image = images[0];
@@ -190,7 +190,7 @@ public static partial class IoHelper
         var i = 0;
         foreach (var file in files)
         {
-            var delay = delays.Count > i ? (uint)delays[i] : 10u;
+            var delay = delays.Count > i ? (uint) delays[i] : 10u;
             if (image is null)
                 image = await Image.LoadAsync(file);
             else
@@ -330,7 +330,7 @@ public static partial class IoHelper
     public static async Task<Image> GetImageFromZipStreamAsync(Stream zipStream, UgoiraMetadataResponse ugoiraMetadataResponse)
     {
         var entryStreams = await Streams.ReadZipAsync(zipStream, true);
-        return await entryStreams.UgoiraSaveToImageAsync(ugoiraMetadataResponse.Delays.ToArray());
+        return await entryStreams.UgoiraSaveToImageAsync([.. ugoiraMetadataResponse.Delays]);
     }
 
     public static async Task<ImageSource> GenerateQrCodeForUrlAsync(string url)

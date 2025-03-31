@@ -5,8 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Windows.Storage;
 using Pixeval.Util.IO;
+using Windows.Storage;
 
 namespace Pixeval.AppManagement;
 
@@ -49,7 +49,7 @@ public class AppKnownFolders(string fullPath)
     public string FullPath { get; } = fullPath;
 
     public Uri FullUri { get; } = new(fullPath);
-    
+
     public DirectoryInfo DirectoryInfo { get; } = Directory.CreateDirectory(new(fullPath));
 
     public FileStream OpenAsyncWrite(string name)
@@ -64,7 +64,7 @@ public class AppKnownFolders(string fullPath)
 
     public string CombinePath(string path1, string path2) => Path.Combine(FullPath, path1, path2);
 
-    public string CombinePath(params IEnumerable<string> paths) => Path.Combine([FullPath, ..paths]);
+    public string CombinePath(params IEnumerable<string> paths) => Path.Combine([FullPath, .. paths]);
 
     public void Clear()
     {

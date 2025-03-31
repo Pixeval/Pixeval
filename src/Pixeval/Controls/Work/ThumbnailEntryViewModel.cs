@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media;
-using Pixeval.CoreApi.Model;
+using Mako.Model;
 using Pixeval.Util.IO.Caching;
 using Pixeval.Utilities;
 
@@ -46,8 +46,8 @@ public abstract partial class ThumbnailEntryViewModel<T>(T entry) : EntryViewMod
         {
             LoadingThumbnail = true;
             ThumbnailSource = await CacheHelper.GetSourceFromCacheAsync(
-                    ThumbnailUrl,
-                    cancellationToken: LoadingThumbnailCancellationTokenSource.Token);
+                ThumbnailUrl,
+                cancellationToken: LoadingThumbnailCancellationTokenSource.Token);
 
             LoadingThumbnail = false;
         }
@@ -56,7 +56,7 @@ public abstract partial class ThumbnailEntryViewModel<T>(T entry) : EntryViewMod
     }
 
     /// <summary>
-    /// 当控件不显示，或者Unload时，调用此方法以尝试释放内存
+    /// 当控件Unload时，调用此方法以尝试释放内存
     /// </summary>
     public void UnloadThumbnail(object key)
     {

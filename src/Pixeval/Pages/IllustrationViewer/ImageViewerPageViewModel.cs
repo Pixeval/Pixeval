@@ -8,30 +8,30 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using FluentIcons.Common;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Pixeval.AppManagement;
+using Pixeval.Attributes;
+using Pixeval.Controls;
+using Mako.Net.Response;
+using Pixeval.Database.Managers;
+using Pixeval.Download;
+using Pixeval.Extensions.Common;
+using Pixeval.Extensions.Common.Commands.Transformers;
+using Pixeval.Util.ComponentModels;
+using Pixeval.Util.IO;
+using Pixeval.Util.IO.Caching;
+using Pixeval.Util.UI;
+using Pixeval.Utilities;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.System;
 using Windows.System.UserProfile;
-using CommunityToolkit.Mvvm.ComponentModel;
-using FluentIcons.Common;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Pixeval.Attributes;
-using Pixeval.Controls;
-using Pixeval.Database.Managers;
-using Pixeval.Util.IO;
-using Pixeval.Util.UI;
-using Pixeval.Utilities;
-using Pixeval.AppManagement;
-using Pixeval.CoreApi.Net.Response;
-using Pixeval.Download;
-using Pixeval.Util.ComponentModels;
-using Pixeval.Extensions.Common;
-using Windows.ApplicationModel.DataTransfer;
-using Microsoft.UI.Xaml;
-using Pixeval.Extensions.Common.Commands.Transformers;
 using WinUI3Utilities;
-using Pixeval.Util.IO.Caching;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -55,7 +55,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     public partial IReadOnlyList<int>? MsIntervals { get; set; }
 
     /// <summary>
-    /// 原图流
+    /// 原图流（原来/处理前的图片，可以是缩略图）
     /// </summary>
     /// <remarks>
     /// 只有动图zip时才会是<see cref="Stream"/>，其他情况都是<see cref="IReadOnlyList{T}"/>
@@ -157,9 +157,9 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         return ret;
     }
 
-    public async Task GetOriginalStreamsSourceAsync(Stream destination, IProgress<double>? progress = null)
+    public async Task GetDisplayStreamsSourceAsync(Stream destination, IProgress<double>? progress = null)
     {
-        if (OriginalStreamsSource is not { } s)
+        if (DisplayStreamsSource is not { } s)
             return;
 
         switch (s)
@@ -183,11 +183,21 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     public async Task<StorageFile> SaveToFolderAsync(AppKnownFolders appKnownFolder)
     {
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadPathMacro);
-        var normalizedName = IoHelper.NormalizePathSegment(new IllustrationMetaPathParser().Reduce(name, IllustrationViewModel));
+        var normalizedName = IoHelper.NormalizePathSegment(IllustrationMetaPathParser.Instance.Reduce(name, IllustrationViewModel));
         normalizedName = IoHelper.ReplaceTokenExtensionFromUrl(normalizedName, IllustrationViewModel.IllustrationOriginalUrl);
         await using var stream = appKnownFolder.OpenAsyncWrite(normalizedName);
-        await GetOriginalStreamsSourceAsync(stream);
+        await GetDisplayStreamsSourceAsync(stream);
         return await StorageFile.GetFileFromPathAsync(appKnownFolder.CombinePath(normalizedName));
+    }
+
+    public async Task SaveAsync(string destination)
+    {
+        destination = IoHelper.NormalizePath(IllustrationMetaPathParser.Instance.Reduce(destination, IllustrationViewModel));
+        destination = IoHelper.ReplaceTokenExtensionFromUrl(destination, IllustrationViewModel.IllustrationOriginalUrl);
+        IoHelper.CreateParentDirectories(destination);
+        await using var stream = IoHelper.OpenAsyncWrite(destination);
+        await GetDisplayStreamsSourceAsync(stream);
+        FrameworkElement?.SuccessGrowl(EntryItemResources.Saved);
     }
 
     public ICommand GetTransformExtensionCommand(IImageTransformerCommandExtension extension)
@@ -226,7 +236,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                 // 显示图片
                 var last = DisplayStreamsSource;
                 DisplayStreamsSource = (IReadOnlyList<Stream>) [memoryStream];
-                if (last is IReadOnlyList<Stream> and [IDisposable disposable]&& !ReferenceEquals(disposable, stream))
+                if (last is IReadOnlyList<Stream> and [IDisposable disposable] && !ReferenceEquals(disposable, stream))
                     disposable.Dispose();
                 if (!token.IsCancellationRequested)
                     FrameworkElement.SuccessGrowl(ImageViewerPageResources.TransformerExtensionFinishedSuccessfully);
@@ -258,7 +268,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         LoadingProgress = progress;
         LoadingText = phase switch
         {
-            LoadingPhase.DownloadingImage => LoadingPhaseExtension.GetResource(LoadingPhase.DownloadingImage).Format((int)progress),
+            LoadingPhase.DownloadingImage => LoadingPhaseExtension.GetResource(LoadingPhase.DownloadingImage).Format((int) progress),
             _ => LoadingPhaseExtension.GetResource(phase)
         };
     }
@@ -317,7 +327,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                 if (ugoiraUrl is null)
                 {
                     ugoiraUrl = IllustrationViewModel.StaticUrl(_isOriginal);
-                    if (await DownloadUrlAsync(ugoiraUrl) is { } s) 
+                    if (await DownloadUrlAsync(ugoiraUrl) is { } s)
                         source = (IReadOnlyList<Stream>) [s];
                 }
                 // 非原图动图（压缩包）
@@ -353,6 +363,32 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         }
     }
 
+    private async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    {
+        if (DisplayStreamsSource is not (IReadOnlyList<Stream> and [{ } stream]))
+            return;
+        stream.Position = 0;
+        await UiHelper.ClipboardSetBitmapAsync(stream);
+        FrameworkElement?.SuccessGrowl(EntryItemResources.ImageSetToClipBoard);
+    }
+
+    private async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) =>
+        await SaveAsync(App.AppViewModel.AppSettings.DownloadPathMacro);
+
+    private async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    {
+        var folder = await FrameworkElement.OpenFolderPickerAsync();
+        if (folder is null)
+        {
+            FrameworkElement.InfoGrowl(EntryItemResources.SaveAsCancelled);
+            return;
+        }
+
+        var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadPathMacro);
+        var path = Path.Combine(folder.Path, name);
+        await SaveAsync(path);
+    }
+
     private void PlayGifCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         IsPlaying = !IsPlaying;
@@ -377,8 +413,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private async void SetPersonalization(Func<StorageFile, IAsyncOperation<bool>> operation)
     {
-        // TODO: 这里是否应该用原图设置？
-        if (OriginalStreamsSource is null)
+        if (DisplayStreamsSource is null)
             return;
 
         var file = await SaveToFolderAsync(AppKnownFolders.Wallpapers);
@@ -391,11 +426,20 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void ShareCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        DataTransferManagerInterop.ShowShareUIForWindow((nint)Window.HWnd);
+        DataTransferManagerInterop.ShowShareUIForWindow((nint) Window.HWnd);
     }
 
     private void InitializeCommands()
     {
+        CopyCommand.CanExecuteRequested += IsNotUgoiraAndLoadingCompletedCanExecuteRequested;
+        CopyCommand.ExecuteRequested += CopyCommandOnExecuteRequested;
+
+        SaveCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
+        SaveCommand.ExecuteRequested += SaveCommandOnExecuteRequested;
+
+        SaveAsCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
+        SaveAsCommand.ExecuteRequested += SaveAsCommandOnExecuteRequested;
+
         PlayGifCommand.CanExecuteRequested += (_, e) => e.CanExecute = IllustrationViewModel.IsUgoira && LoadSuccessfully;
         PlayGifCommand.ExecuteRequested += PlayGifCommandOnExecuteRequested;
 
@@ -430,6 +474,9 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void UpdateCommandCanExecute()
     {
+        CopyCommand.NotifyCanExecuteChanged();
+        SaveCommand.NotifyCanExecuteChanged();
+        SaveAsCommand.NotifyCanExecuteChanged();
         PlayGifCommand.NotifyCanExecuteChanged();
         RestoreResolutionCommand.NotifyCanExecuteChanged();
         ZoomInCommand.NotifyCanExecuteChanged();
@@ -451,10 +498,16 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     private void LoadingCompletedCanExecuteRequested(XamlUICommand _, CanExecuteRequestedEventArgs args) => args.CanExecute = LoadSuccessfully;
 
     private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully;
-    
+
     private void ExtensionCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully && ExtensionRunningLock;
 
     public (FrameworkElement, GetImageStreams) DownloadParameter => (FrameworkElement, GetImageStreamsAsync);
+
+    public XamlUICommand CopyCommand { get; } = EntryViewerPageResources.Copy.GetCommand(Symbol.Copy, VirtualKeyModifiers.Control, VirtualKey.C);
+  
+    public XamlUICommand SaveCommand { get; } = EntryViewerPageResources.Save.GetCommand(Symbol.Save);
+
+    public XamlUICommand SaveAsCommand { get; } = EntryViewerPageResources.SaveAs.GetCommand(Symbol.SaveEdit);
 
     public XamlUICommand PlayGifCommand { get; } = "".GetCommand(Symbol.Pause);
 
@@ -491,7 +544,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         IllustrationViewModel.UnloadThumbnail(this);
 
         OriginalStreamsSource = null;
-        
+
         LoadSuccessfully = false;
     }
 }
