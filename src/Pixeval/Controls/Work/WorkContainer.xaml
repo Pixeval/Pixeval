@@ -75,7 +75,11 @@
                 <AppBarButton
                     x:Uid="/WorkContainer/SelectAllButton"
                     Click="SelectAllToggleButton_OnClicked"
-                    Icon="{fluent:SymbolIcon Symbol=SelectAllOn}" />
+                    Icon="{fluent:SymbolIcon Symbol=SelectAllOn}">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="A" Modifiers="Control" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
                 <AppBarSeparator />
                 <AppBarButton
                     x:Name="AddAllToBookmarkButton"

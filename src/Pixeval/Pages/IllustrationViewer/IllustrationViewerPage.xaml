@@ -252,7 +252,7 @@
                     <controls:AppBarTextItem
                         Padding="15,0"
                         Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-                        Symbol="SlideGrid"
+                        Symbol="SlideSize"
                         Text="{x:Bind _viewModel.CurrentIllustration.SizeText, Mode=OneWay}" />
                     <AppBarSeparator />
                     <controls:AppBarTextItem
