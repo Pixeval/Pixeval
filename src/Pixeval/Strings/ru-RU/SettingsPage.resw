@@ -514,10 +514,10 @@
     <value>Введите API ключ</value>
   </data>
   <data name="ReverseSearchResultSimilarityThresholdEntry.Description" xml:space="preserve">
-    <value>Порог сходства результатов обратного поиска. Результаты ниже этого порога будут игнорироваться. Чем выше значение, тем больше сходство между результатами и исходным изображением</value>
+    <value>以图搜图结果的阈值，如果搜索结果低于该阈值则会被忽略，值越高则说明搜索结果和原图越相似</value>
   </data>
   <data name="ReverseSearchResultSimilarityThresholdEntry.Header" xml:space="preserve">
-    <value>Порог сходства обратного поиска</value>
+    <value>以图搜图阈值</value>
   </data>
   <data name="BrowseOriginalImageEntry.Description" xml:space="preserve">
     <value>Просмотр оригинальных изображений требует больше трафика и времени на загрузку, но обеспечивает лучшее качество и скорость загрузки</value>
@@ -530,6 +530,12 @@
   </data>
   <data name="ReconfirmationOfClosingWindowEntry.Header" xml:space="preserve">
     <value>关闭窗口再次确认</value>
+  </data>
+  <data name="ScrollRateEntry.Description" xml:space="preserve">
+    <value>低于0.1时关闭，开启后可自定义滚动速率，但可能造成不好的体验</value>
+  </data>
+  <data name="ScrollRateEntry.Header" xml:space="preserve">
+    <value>滚动速率</value>
   </data>
   <data name="SearchSettingsGroup.Text" xml:space="preserve">
     <value>Настройки поиска</value>
