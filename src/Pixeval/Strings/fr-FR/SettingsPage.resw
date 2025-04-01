@@ -531,6 +531,12 @@ Entrer une addresse IP et cliquer '+' pour ajouter</value>
   <data name="ReconfirmationOfClosingWindowEntry.Header" xml:space="preserve">
     <value>关闭窗口再次确认</value>
   </data>
+  <data name="ScrollRateEntry.Description" xml:space="preserve">
+    <value>低于0.1时关闭，开启后可自定义滚动速率，但可能造成不好的体验</value>
+  </data>
+  <data name="ScrollRateEntry.Header" xml:space="preserve">
+    <value>滚动速率</value>
+  </data>
   <data name="SearchSettingsGroup.Text" xml:space="preserve">
     <value>Configurations de recherche</value>
   </data>
