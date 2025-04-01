@@ -2,6 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using System.Linq;
 using System.Text;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Util;
@@ -74,7 +75,7 @@ public class PixivNovelMdDisplayParser(StringBuilder sb, int pageIndex) : PixivN
     {
         _ = currentText
             .AppendLine()
-            .Append($"![{imageId}]({Array.Find(viewModel.NovelContent.Images, t => t.NovelImageId == imageId)?.ThumbnailUrl})")
+            .Append($"![{imageId}]({viewModel.NovelContent.Images.FirstOrDefault(t => t.NovelImageId == imageId)?.ThumbnailUrl})")
             .AppendLine();
     }
 

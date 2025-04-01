@@ -9,8 +9,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     MinWidth="5"
     MinHeight="5"
-    ColumnSpacing="5"
-    RowSpacing="5"
+    ColumnSpacing="{x:Bind GetSpacing(CanTranslate), Mode=OneWay}"
+    RowSpacing="{x:Bind GetSpacing(CanTranslate), Mode=OneWay}"
     mc:Ignorable="d">
     <!--  MinHeight/MinWidth防止元素为空导致ScrollView可能的崩溃  -->
     <ContentPresenter

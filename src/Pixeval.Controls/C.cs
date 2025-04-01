@@ -37,6 +37,8 @@ public static class C
 
     public static Visibility IsNotNullToVisibility(object? value) => value is null ? Visibility.Collapsed : Visibility.Visible;
 
+    public static Visibility IsNotNullOrWhiteSpaceToVisibility(string? value) => string.IsNullOrWhiteSpace(value) ? Visibility.Collapsed : Visibility.Visible;
+
     public static Visibility IsEqualToVisibility(object? x, object? y) => Equals(x, y) ? Visibility.Visible : Visibility.Collapsed;
 
     public static Visibility IsNotEqualToVisibility(object? x, object? y) => Equals(x, y) ? Visibility.Collapsed : Visibility.Visible;

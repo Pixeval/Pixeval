@@ -19,7 +19,7 @@ public partial class NovelContext(NovelContent novelContent) : INovelContext<Str
 {
     public string? ImageExtension { get; set; }
 
-    public int TotalImagesCount { get; } = novelContent.Images.Length + novelContent.Illusts.Length;
+    public int TotalImagesCount { get; } = novelContent.Images.Count + novelContent.Illusts.Count;
 
     /// <summary>
     /// 所有图片的URL
@@ -92,29 +92,29 @@ public partial class NovelContext(NovelContent novelContent) : INovelContext<Str
 
     public (long Id, IEnumerable<string> Tags)? GetIdTags(int index)
     {
-        if (index < NovelContent.Images.Length)
+        if (index < NovelContent.Images.Count)
             return null;
-        var illust = NovelContent.Illusts[index - NovelContent.Images.Length];
+        var illust = NovelContent.Illusts[index - NovelContent.Images.Count];
         return (illust.Id, illust.Illust.Tags.Select(t => t.Tag));
     }
 
     public Stream? TryGetStream(int index)
     {
-        if (index < NovelContent.Images.Length)
+        if (index < NovelContent.Images.Count)
             return UploadedImages.GetValueOrDefault(NovelContent.Images[index].NovelImageId);
-        var illust = NovelContent.Illusts[index - NovelContent.Images.Length];
+        var illust = NovelContent.Illusts[index - NovelContent.Images.Count];
         return IllustrationImages.GetValueOrDefault((illust.Id, illust.Page));
     }
 
     public void SetStream(int index, Stream? stream)
     {
-        if (index < NovelContent.Images.Length)
+        if (index < NovelContent.Images.Count)
         {
             UploadedImages[NovelContent.Images[index].NovelImageId] = stream ?? AppInfo.GetImageNotAvailableStream();
         }
         else
         {
-            var illust = NovelContent.Illusts[index - NovelContent.Images.Length];
+            var illust = NovelContent.Illusts[index - NovelContent.Images.Count];
             IllustrationImages[(illust.Id, illust.Page)] = stream ?? AppInfo.GetImageNotAvailableStream();
         }
     }

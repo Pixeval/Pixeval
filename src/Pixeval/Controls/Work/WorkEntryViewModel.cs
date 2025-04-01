@@ -2,6 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Mako.Model;
 using Pixeval.Util;
@@ -38,7 +39,7 @@ public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>
         IsFavorite = value is HeartButtonState.Checked;
     }
 
-    public Tag[] Tags => Entry.Tags;
+    public IReadOnlyList<Tag> Tags => Entry.Tags;
 
     public string Title => Entry.Title;
 
