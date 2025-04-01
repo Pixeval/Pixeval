@@ -169,6 +169,9 @@ public partial record AppSettings() : IWindowSettings
     [SettingsEntry(Symbol.DismissSquareMultiple, nameof(ReconfirmationOfClosingWindowEntryHeader), nameof(ReconfirmationOfClosingWindowEntryDescription))]
     public bool ReconfirmationOfClosingWindow { get; set; } = true;
 
+    [SettingsEntry(Symbol.TopSpeed, nameof(ScrollRateEntryHeader), nameof(ScrollRateEntryDescription))]
+    public double ScrollRate { get; set; }
+
     [SettingsEntry(Symbol.Box, nameof(PixivNameResolverHeaderText), nameof(PixivNameResolverDescriptionText))]
     public string[] PixivAppApiNameResolver { get; set; } =
     [
