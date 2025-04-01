@@ -21,6 +21,7 @@ using Microsoft.UI.Xaml.Controls;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Mako.Model;
+using Pixeval.Controls;
 using WinUI3Utilities;
 
 #if DEBUG
@@ -53,6 +54,8 @@ public partial class App
 
         if (AppViewModel.AppSettings.AppFontFamilyName.IsNotNullOrEmpty())
             Current.Resources[ApplicationWideFontKey] = new FontFamily(AppViewModel.AppSettings.AppFontFamilyName);
+
+        AdvancedItemsView.ScrollRate = (float)AppViewModel.AppSettings.ScrollRate;
 
         var current = AppInstance.GetCurrent();
         var kind = current.GetActivatedEventArgs().Kind;

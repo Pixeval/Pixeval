@@ -18,19 +18,11 @@ using Pixeval.Options;
 using Pixeval.Settings;
 using Pixeval.Settings.Models;
 using Pixeval.Util.ComponentModels;
+using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
-using BackdropTypeExtension = Pixeval.Util.BackdropTypeExtension;
-using ElementThemeExtension = Pixeval.Util.ElementThemeExtension;
-using NovelRankOptionExtension = Pixeval.Util.NovelRankOptionExtension;
-using RankOptionExtension = Pixeval.Util.RankOptionExtension;
-using SearchIllustrationTagMatchOptionExtension = Pixeval.Util.SearchIllustrationTagMatchOptionExtension;
-using SearchNovelTagMatchOptionExtension = Pixeval.Util.SearchNovelTagMatchOptionExtension;
-using SimpleWorkTypeExtension = Pixeval.Util.SimpleWorkTypeExtension;
-using TargetFilterExtension = Pixeval.Util.TargetFilterExtension;
-using WorkSortOptionExtension = Pixeval.Util.WorkSortOptionExtension;
 
 namespace Pixeval.Pages.Misc;
 
@@ -133,7 +125,14 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     Placeholder = SettingsPageResources.BlockedTagsTokenizingTextBoxPlaceholderText
                 },
                 new BoolAppSettingsEntry(AppSettings,
-                    t => t.BrowseOriginalImage)
+                    t => t.BrowseOriginalImage),
+                new DoubleAppSettingsEntry(AppSettings,
+                    t => t.ScrollRate)
+                {
+                    Max = 10,
+                    Min = 0,
+                    ValueChanged = d => AdvancedItemsView.ScrollRate = (float)d
+                }
             },
             new(SettingsEntryCategory.Search)
             {

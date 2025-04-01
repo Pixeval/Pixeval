@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Numerics;
 using System.Threading.Tasks;
 using Windows.System;
 using CommunityToolkit.WinUI.Controls;
@@ -24,6 +25,23 @@ namespace Pixeval.Controls;
 /// <remarks><see cref="ItemsView.ItemTemplate"/>中必须使用<see cref="ItemContainer"/>作为根元素</remarks>
 public sealed partial class AdvancedItemsView : ItemsView
 {
+    public static float ScrollRate
+    {
+        get;
+        set
+        {
+            field = value switch
+            {
+                < 0.1f => 0,
+                > 10 => 10,
+                _ => value
+            };
+            ScrollRateChanged?.Invoke();
+        }
+    }
+
+    private static event Action? ScrollRateChanged;
+
     public event Func<AdvancedItemsView, EventArgs, Task<bool>> LoadMoreRequested;
 
     /// <summary>
@@ -89,12 +107,27 @@ public sealed partial class AdvancedItemsView : ItemsView
 
             return false;
         };
-        _scrollViewOnPropertyChangedToken = RegisterPropertyChangedCallback(ScrollViewProperty, ScrollViewOnPropertyChanged);
-        var itemsSourceOnPropertyChangedToken = RegisterPropertyChangedCallback(ItemsSourceProperty, ItemsSourceOnPropertyChanged);
-        Unloaded += (_, _) =>
+        _itemsSourceOnPropertyChangedToken = RegisterPropertyChangedCallback(ItemsSourceProperty, ItemsSourceOnPropertyChanged);
+        // 本方法之后会触发<see cref="AdvancedItemsViewOnSizeChanged"/>
+        Loaded += static async (sender, _) =>
         {
-            UnregisterPropertyChangedCallback(ScrollViewProperty, _scrollViewOnPropertyChangedToken);
-            UnregisterPropertyChangedCallback(ItemsSourceProperty, itemsSourceOnPropertyChangedToken);
+            var aiv = (AdvancedItemsView) sender; 
+            ScrollRateChanged += aiv.OnScrollRateChanged;
+            aiv.OnScrollRateChanged();
+            if (aiv.ScrollView is null || aiv._itemsRepeater != null!)
+                return;
+
+            aiv.ScrollView.ViewChanged += aiv.ScrollView_ViewChanged;
+            aiv.ScrollView.PointerWheelChanged += aiv.ScrollView_PointerWheelChanged;
+            aiv._itemsRepeater = aiv.ScrollView.Content.To<ItemsRepeater>();
+            aiv._itemsRepeater.SizeChanged += aiv.AdvancedItemsViewOnSizeChanged;
+            await aiv.TryRaiseLoadMoreRequestedAsync();
+        };
+        Unloaded += static (sender, _) =>
+        {
+            var aiv = (AdvancedItemsView) sender;
+            ScrollRateChanged -= aiv.OnScrollRateChanged;
+            aiv.UnregisterPropertyChangedCallback(ItemsSourceProperty, aiv._itemsSourceOnPropertyChangedToken);
         };
     }
 
@@ -234,38 +267,46 @@ public sealed partial class AdvancedItemsView : ItemsView
 
     #region EventHandlers
 
-    private readonly long _scrollViewOnPropertyChangedToken;
+    private readonly long _itemsSourceOnPropertyChangedToken;
 
-    /// <summary>
-    /// 本方法之后会触发<see cref="AdvancedItemsViewOnSizeChanged"/>
-    /// </summary>
-    private void ScrollViewOnPropertyChanged(DependencyObject sender, DependencyProperty dp)
+    private void OnScrollRateChanged()
     {
-        UnregisterPropertyChangedCallback(ScrollViewProperty, _scrollViewOnPropertyChangedToken);
-        ScrollView.ViewChanged += ScrollView_ViewChanged;
-        ScrollView.PointerWheelChanged += ScrollView_PointerWheelChanged;
-        _itemsRepeater = ScrollView.Content.To<ItemsRepeater>();
-        _itemsRepeater.SizeChanged += AdvancedItemsViewOnSizeChanged;
+        if (ScrollView is not null)
+            ScrollView.IgnoredInputKinds =
+                ScrollRate >= 0.1 ? ScrollingInputKinds.MouseWheel : ScrollingInputKinds.None;
     }
 
     private void ScrollView_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
     {
         var scrollView = (ScrollView)sender;
+        var currentPoint = e.GetCurrentPoint(scrollView);
         if (e.KeyModifiers is VirtualKeyModifiers.Control)
         {
-            var offset = e.GetCurrentPoint(scrollView).Properties.MouseWheelDelta > 0 ? 20 : -20;
+            var offset = currentPoint.Properties.MouseWheelDelta > 0 ? 20 : -20;
 
-            if (scrollView.ComputedVerticalScrollMode is ScrollingScrollMode.Enabled && MinItemHeight + offset is var i and > 100 and < 500)
+            if (scrollView.ComputedVerticalScrollMode is ScrollingScrollMode.Enabled &&
+                MinItemHeight + offset is var i and > 100 and < 500)
                 MinItemHeight = i;
-            if (scrollView.ComputedHorizontalScrollMode is ScrollingScrollMode.Enabled && MinItemWidth + offset is var j and > 100 and < 500)
+            if (scrollView.ComputedHorizontalScrollMode is ScrollingScrollMode.Enabled &&
+                MinItemWidth + offset is var j and > 100 and < 500)
                 MinItemWidth = j;
         }
-        else if (scrollView is
-                 {
-                     ComputedVerticalScrollMode: ScrollingScrollMode.Disabled,
-                     ComputedHorizontalScrollMode: ScrollingScrollMode.Enabled
-                 })
-            _ = scrollView.AddScrollVelocity(new(-e.GetCurrentPoint(scrollView).Properties.MouseWheelDelta, 0), null);
+        else
+        {
+            var rate = currentPoint.Properties.MouseWheelDelta * ScrollRate;
+            _ = scrollView switch
+            {
+                {
+                    ComputedVerticalScrollMode: ScrollingScrollMode.Disabled,
+                    ComputedHorizontalScrollMode: ScrollingScrollMode.Enabled
+                } => scrollView.AddScrollVelocity(new(-rate, 0), new(0.99f)),
+                {
+                    ComputedVerticalScrollMode: ScrollingScrollMode.Enabled,
+                    ComputedHorizontalScrollMode: ScrollingScrollMode.Disabled
+                } => scrollView.AddScrollVelocity(new(0, -rate), new(0.99f)),
+                _ => 0
+            };
+        }
     }
 
     private void AdvancedItemsViewOnSelectionChanged(ItemsView sender, ItemsViewSelectionChangedEventArgs e)
