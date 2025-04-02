@@ -102,8 +102,8 @@
         VerticalAlignment="Top"
         Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}"
         CommandParameter="{x:Bind}"
-        IsTapEnabled="False"
         State="{x:Bind ViewModel.IsBookmarkedDisplay, Mode=OneWay}" />
+
     <controls:DockPanel
         Grid.Column="1"
         Padding="10"
@@ -178,9 +178,10 @@
                     <Button
                         Padding="2"
                         Background="#7F7F7F7F"
-                        Click="TagButton_OnClicked"
-                        CornerRadius="{StaticResource ControlCornerRadius}">
-                        <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{x:Bind Name}" />
+                        CornerRadius="{StaticResource ControlCornerRadius}"
+                        Tag="{x:Bind}"
+                        Tapped="UIElement_OnTapped">
+                        <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{x:Bind ToolTip}" />
                     </Button>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
