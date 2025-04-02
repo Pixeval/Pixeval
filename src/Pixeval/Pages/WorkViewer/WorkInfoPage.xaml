@@ -9,7 +9,7 @@
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Pixeval.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:model="using:Mako.Model"
+    xmlns:misaki="using:Misaki"
     xmlns:pixeval="using:Pixeval.AppManagement"
     xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
@@ -98,39 +98,22 @@
             </Button>
             <!--#endregion-->
             <!--#region Tags-->
+            <!--  TODO Tag分类  -->
             <ItemsRepeater Margin="0,12,0,0" ItemsSource="{x:Bind _viewModel.Entry.Tags}">
                 <ItemsRepeater.Layout>
                     <controls:WrapLayout HorizontalSpacing="8" VerticalSpacing="8" />
                 </ItemsRepeater.Layout>
                 <ItemsRepeater.ItemTemplate>
-                    <DataTemplate x:DataType="model:Tag">
-                        <Button
-                            Click="WorkTagButton_OnClicked"
-                            Tag="{x:Bind Name}"
-                            ToolTipService.ToolTip="{x:Bind ToolTip}">
+                    <DataTemplate x:DataType="misaki:ITag">
+                        <Button Click="WorkTagButton_OnClicked" Tag="{x:Bind Name}">
                             <Button.Content>
-                                <controls:SwitchPresenter Value="{x:Bind controls2:C.IsNull(TranslatedName)}">
-                                    <controls:Case>
-                                        <controls:Case.Value>
-                                            <x:Boolean>True</x:Boolean>
-                                        </controls:Case.Value>
-                                        <controls2:TranslatableTextBlock
-                                            ButtonMargin="-2"
-                                            IsCompact="True"
-                                            IsHorizontal="True"
-                                            Text="{x:Bind Name}"
-                                            TextType="WorkTag" />
-                                    </controls:Case>
-                                    <controls:Case>
-                                        <controls:Case.Value>
-                                            <x:Boolean>False</x:Boolean>
-                                        </controls:Case.Value>
-                                        <TextBlock TextWrapping="Wrap">
-                                            <Run Text="{x:Bind Name}" />
-                                            <Run Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Text="{x:Bind TranslatedName}" />
-                                        </TextBlock>
-                                    </controls:Case>
-                                </controls:SwitchPresenter>
+                                <controls2:TranslatableTextBlock
+                                    ButtonMargin="-2"
+                                    IsCompact="True"
+                                    IsHorizontal="True"
+                                    PretranslatedText="{x:Bind TranslatedName}"
+                                    Text="{x:Bind Name}"
+                                    TextType="WorkTag" />
                             </Button.Content>
                             <Button.ContextFlyout>
                                 <MenuFlyout>

@@ -28,6 +28,12 @@ public sealed partial class TranslatableTextBlock : Grid
     public partial string? Text { get; set; }
 
     /// <summary>
+    /// 已经翻译好的文本，如果不为空则不走翻译流程
+    /// </summary>
+    [GeneratedDependencyProperty]
+    public partial string? PretranslatedText { get; set; }
+
+    /// <summary>
     /// 折叠模式（显示译文时隐藏原文）
     /// </summary>
     [GeneratedDependencyProperty]
@@ -43,7 +49,7 @@ public sealed partial class TranslatableTextBlock : Grid
     /// 当前是否可以翻译（<see cref="Text"/>为空则不行）
     /// </summary>
     [GeneratedDependencyProperty]
-    public partial bool CanTranslate { get; private set; }
+    public partial bool CanTranslate { get; set; }
 
     /// <summary>
     /// 是否正在翻译
@@ -133,6 +139,8 @@ public sealed partial class TranslatableTextBlock : Grid
     private Visibility CanDisplay(bool isCompact) =>
         isCompact && TranslationBoxPresenter.Content is not null ? Visibility.Collapsed : Visibility.Visible;
 
+    private double GetSpacing(bool canTranslate) => canTranslate ? 5 : 0;
+
     /// <summary>
     /// 设置<paramref name="maxLines"/>时，将<paramref name="text"/>显示到提示中
     /// </summary>
@@ -204,43 +212,65 @@ public sealed partial class TranslatableTextBlock : Grid
     partial void OnTextPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
         var canTranslate = !string.IsNullOrWhiteSpace(Text);
+        var hasPretranslatedText = !string.IsNullOrWhiteSpace(PretranslatedText);
         OriginalTextPresenterContent = Text is null
             ? null
             : UseMarkdown
                 ? GetNewMarkdownTextBlock(OriginalTextPresenterContent as MarkdownTextBlock, Text)
                 : GetNewTextBlock(OriginalTextPresenterContent as TextBlock, Text, TextBlockStyle);
 
-        TranslationBoxPresenterContent = null;
-        CanTranslate = canTranslate && _extensionService.ActiveTextTransformerCommands.Any();
+        CanTranslate = hasPretranslatedText || canTranslate && _extensionService.ActiveTextTransformerCommands.Any();
+        if (!IsTranslated || !hasPretranslatedText)
+            TranslationBoxPresenterContent = null;
     }
 
     private async void GetTranslationClicked(object sender, RoutedEventArgs e)
     {
-        if (TranslationBoxPresenter.Content is not null)
+        if (IsTranslated)
         {
             TranslationBoxPresenterContent = null;
             return;
         }
 
-        if (_extensionService.ActiveTextTransformerCommands.FirstOrDefault() is not { } translator)
-            return;
-        IsTranslating = true;
-        try
+        if (string.IsNullOrWhiteSpace(PretranslatedText))
         {
-            if (Text is not null)
+            if (_extensionService.ActiveTextTransformerCommands.FirstOrDefault() is not { } translator)
+                return;
+            IsTranslating = true;
+            try
             {
-                var translatedText = await translator.TransformAsync(Text, TextType);
-                if (translatedText is null)
-                    return;
-                TranslationBoxPresenterContent = UseMarkdown
-                    ? GetNewMarkdownTextBlock(TranslationBoxPresenterContent as MarkdownTextBlock, translatedText)
-                    : GetNewTextBlock(TranslationBoxPresenterContent as TextBlock, translatedText, IsCompact ? TextBlockStyle : TranslatedBlockStyleWhenNotCompact);
+                if (Text is not null)
+                {
+                    var translatedText = await translator.TransformAsync(Text, TextType);
+                    if (translatedText is null)
+                        return;
+                    TranslationBoxPresenterContent = UseMarkdown
+                        ? GetNewMarkdownTextBlock(TranslationBoxPresenterContent as MarkdownTextBlock, translatedText)
+                        : GetNewTextBlock(TranslationBoxPresenterContent as TextBlock, translatedText, IsCompact ? TextBlockStyle : TranslatedBlockStyleWhenNotCompact);
+                }
+            }
+            finally
+            {
+                IsTranslating = false;
             }
         }
-        finally
+        else
         {
-            IsTranslating = false;
+            TranslationBoxPresenterContent = UseMarkdown
+                ? GetNewMarkdownTextBlock(TranslationBoxPresenterContent as MarkdownTextBlock, PretranslatedText)
+                : GetNewTextBlock(TranslationBoxPresenterContent as TextBlock, PretranslatedText, IsCompact ? TextBlockStyle : TranslatedBlockStyleWhenNotCompact);
         }
+    }
+
+    partial void OnPretranslatedTextPropertyChanged(DependencyPropertyChangedEventArgs e)
+    {
+        CanTranslate |= !string.IsNullOrWhiteSpace(PretranslatedText);
+        TranslationBoxPresenterContent = string.IsNullOrWhiteSpace(PretranslatedText)
+            ? null
+            : UseMarkdown
+                ? GetNewMarkdownTextBlock(TranslationBoxPresenterContent as MarkdownTextBlock, PretranslatedText)
+                : GetNewTextBlock(TranslationBoxPresenterContent as TextBlock, PretranslatedText,
+                    IsCompact ? TextBlockStyle : TranslatedBlockStyleWhenNotCompact);
     }
 
     partial void OnIsCompactPropertyChanged(DependencyPropertyChangedEventArgs e) => MeasureLayout();
