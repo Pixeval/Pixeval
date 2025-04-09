@@ -156,8 +156,11 @@
   <data name="SelectedTooManyItemsTitle" xml:space="preserve">
     <value>This operation may cause performance problems</value>
   </data>
-  <data name="SelectionButton.Label" xml:space="preserve">
+    <data name="SelectionButton.Label" xml:space="preserve">
     <value>Multiple selection</value>
+  </data>
+  <data name="RefreshButton.Label" xml:space="preserve">
+    <value>刷新</value>
   </data>
   <data name="CancelSelectionButtonDefaultLabel" xml:space="preserve">
     <value>Cancel selection</value>
