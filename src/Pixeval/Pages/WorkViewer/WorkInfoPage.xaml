@@ -6,11 +6,12 @@
     xmlns:controls2="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.WinUI"
-    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Pixeval.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:misaki="using:Misaki"
     xmlns:pixeval="using:Pixeval.AppManagement"
+    xmlns:system="using:System"
     xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
     <controls2:EnhancedPage.Resources>
@@ -47,9 +48,9 @@
                     Content="{ui:SymbolIcon FontSize=12,
                                             Symbol=Copy}"
                     Style="{StaticResource PixevalTransparentButtonStyle}">
-                    <i:Interaction.Behaviors>
+                    <interactivity:Interaction.Behaviors>
                         <controls2:ButtonCopyBehavior TargetText="{x:Bind _viewModel.Entry.Id}" />
-                    </i:Interaction.Behaviors>
+                    </interactivity:Interaction.Behaviors>
                 </Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Spacing="20">
@@ -57,74 +58,105 @@
                 <controls2:IconText Symbol="Heart" Text="{x:Bind _viewModel.Entry.TotalFavorite}" />
             </StackPanel>
             <controls2:IconText Symbol="Clock" Text="{x:Bind controls2:C.CultureDateTimeOffsetFormatter(_viewModel.Entry.CreateDate, pixeval:AppSettings.CurrentCulture)}" />
-            <!--#region Illustrator Info-->
-            <Button
-                Margin="0,12,0,0"
-                Click="IllustratorPersonPicture_OnClicked"
-                Style="{StaticResource CardControlButton}">
-                <controls:DockPanel HorizontalSpacing="12" LastChildFill="False">
-                    <PersonPicture
-                        Width="50"
-                        Height="50"
-                        controls:DockPanel.Dock="Left"
-                        ProfilePicture="{x:Bind _viewModel.AvatarSource, Mode=OneWay}" />
-                    <TextBlock
-                        controls:DockPanel.Dock="Top"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        TextWrapping="Wrap">
-                        <Run Text="{x:Bind _viewModel.Illustrator.Name}" />
-                    </TextBlock>
-                    <StackPanel
-                        controls:DockPanel.Dock="Bottom"
-                        Orientation="Horizontal"
-                        Spacing="5">
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-                            Text="{x:Bind _viewModel.Illustrator.Id}" />
+            <!--#region Author Info-->
+            <ItemsRepeater ItemsSource="{x:Bind _viewModel.Entry.Authors}">
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate x:DataType="misaki:IUser">
                         <Button
-                            Padding="2"
-                            VerticalAlignment="Center"
-                            Content="{ui:SymbolIcon FontSize=12,
-                                                    Symbol=Copy}"
-                            Style="{StaticResource PixevalTransparentButtonStyle}">
-                            <i:Interaction.Behaviors>
-                                <controls2:ButtonCopyBehavior TargetText="{x:Bind _viewModel.Illustrator.Id}" />
-                            </i:Interaction.Behaviors>
+                            Margin="0,12,0,0"
+                            Click="IllustratorPersonPicture_OnClicked"
+                            Style="{StaticResource CardControlButton}">
+                            <controls:DockPanel HorizontalSpacing="12" LastChildFill="False">
+                                <PersonPicture
+                                    Width="50"
+                                    Height="50"
+                                    controls2:Source.ImageSource="{x:Bind local:WorkInfoPage.PickClosestUri(Avatar, 50, 50)}"
+                                    controls:DockPanel.Dock="Left" />
+                                <TextBlock
+                                    controls:DockPanel.Dock="Top"
+                                    Style="{StaticResource SubtitleTextBlockStyle}"
+                                    TextWrapping="Wrap">
+                                    <Run Text="{x:Bind Name}" />
+                                </TextBlock>
+                                <StackPanel
+                                    controls:DockPanel.Dock="Bottom"
+                                    Orientation="Horizontal"
+                                    Spacing="5">
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                                        Text="{x:Bind Id}" />
+                                    <Button
+                                        Padding="2"
+                                        VerticalAlignment="Center"
+                                        Content="{ui:SymbolIcon FontSize=12,
+                                                                Symbol=Copy}"
+                                        Style="{StaticResource PixevalTransparentButtonStyle}">
+                                        <interactivity:Interaction.Behaviors>
+                                            <controls2:ButtonCopyBehavior TargetText="{x:Bind Id}" />
+                                        </interactivity:Interaction.Behaviors>
+                                    </Button>
+                                </StackPanel>
+                            </controls:DockPanel>
                         </Button>
-                    </StackPanel>
-
-                </controls:DockPanel>
-            </Button>
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
             <!--#endregion-->
             <!--#region Tags-->
-            <!--  TODO Tag分类  -->
             <ItemsRepeater Margin="0,12,0,0" ItemsSource="{x:Bind _viewModel.Entry.Tags}">
                 <ItemsRepeater.Layout>
-                    <controls:WrapLayout HorizontalSpacing="8" VerticalSpacing="8" />
+                    <StackLayout Orientation="Vertical" Spacing="5" />
                 </ItemsRepeater.Layout>
                 <ItemsRepeater.ItemTemplate>
-                    <DataTemplate x:DataType="misaki:ITag">
-                        <Button Click="WorkTagButton_OnClicked" Tag="{x:Bind Name}">
-                            <Button.Content>
-                                <controls2:TranslatableTextBlock
-                                    ButtonMargin="-2"
-                                    IsCompact="True"
-                                    IsHorizontal="True"
-                                    PretranslatedText="{x:Bind TranslatedName}"
-                                    Text="{x:Bind Name}"
-                                    TextType="WorkTag" />
-                            </Button.Content>
-                            <Button.ContextFlyout>
-                                <MenuFlyout>
-                                    <MenuFlyoutItem
-                                        x:Uid="/WorkInfoPage/BlockTagMenuItem"
-                                        Click="MenuFlyoutItem_OnClick"
-                                        Icon="{fluent:SymbolIcon Symbol=TagDismiss}"
-                                        Tag="{x:Bind}" />
-                                </MenuFlyout>
-                            </Button.ContextFlyout>
-                        </Button>
+                    <DataTemplate x:DataType="system:Object">
+                        <Grid RowSpacing="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <controls2:TranslatableTextBlock
+                                Grid.Row="0"
+                                ButtonMargin="-2"
+                                IsCompact="True"
+                                IsHorizontal="True"
+                                PretranslatedText="{x:Bind local:WorkInfoPage.GetTagCategoryTranslatedName((system:Object))}"
+                                Text="{x:Bind local:WorkInfoPage.GetTagCategoryName((system:Object))}"
+                                TextType="WorkTag"
+                                Visibility="{x:Bind local:WorkInfoPage.IsEmptyToVisibility((system:Object))}" />
+                            <ItemsRepeater
+                                Grid.Row="1"
+                                Margin="0,12,0,0"
+                                ItemsSource="{x:Bind}">
+                                <ItemsRepeater.Layout>
+                                    <controls:WrapLayout HorizontalSpacing="8" VerticalSpacing="8" />
+                                </ItemsRepeater.Layout>
+                                <ItemsRepeater.ItemTemplate>
+                                    <DataTemplate x:DataType="misaki:ITag">
+                                        <Button Click="WorkTagButton_OnClicked" Tag="{x:Bind}">
+                                            <Button.Content>
+                                                <controls2:TranslatableTextBlock
+                                                    ButtonMargin="-2"
+                                                    IsCompact="True"
+                                                    IsHorizontal="True"
+                                                    PretranslatedText="{x:Bind TranslatedName}"
+                                                    Text="{x:Bind Name}"
+                                                    TextType="WorkTag" />
+                                            </Button.Content>
+                                            <Button.ContextFlyout>
+                                                <MenuFlyout>
+                                                    <MenuFlyoutItem
+                                                        x:Uid="/WorkInfoPage/BlockTagMenuItem"
+                                                        Click="MenuFlyoutItem_OnClick"
+                                                        Icon="{fluent:SymbolIcon Symbol=TagDismiss}"
+                                                        Tag="{x:Bind}" />
+                                                </MenuFlyout>
+                                            </Button.ContextFlyout>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsRepeater.ItemTemplate>
+                            </ItemsRepeater>
+                        </Grid>
                     </DataTemplate>
                 </ItemsRepeater.ItemTemplate>
             </ItemsRepeater>
