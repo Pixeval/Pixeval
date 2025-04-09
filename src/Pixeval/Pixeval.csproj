@@ -27,23 +27,23 @@
         <PackageReference Include="CommunityToolkit.Labs.WinUI.DependencyPropertyGenerator" Version="0.1.250129-build.2033" />
         <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.240517-build.1678" />
         <PackageReference Include="CommunityToolkit.Labs.WinUI.TokenView" Version="0.1.241129-build.1830" />
-        <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.1.240916" />
-        <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.1.240916" />
-        <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.1.240916" />
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.ColorPicker" Version="8.1.240916" />
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.1.240916" />
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.1.240916" />
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.1.240916" />
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.Sizers" Version="8.1.240916" />
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.TokenizingTextBox" Version="8.1.240916" />
-        <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.1.240916" />
-        <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.1.240916" />
+        <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.250402" />
+        <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.2.250402" />
+        <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.250402" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.ColorPicker" Version="8.2.250402" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.250402" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.2.250402" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.2.250402" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.Sizers" Version="8.2.250402" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.TokenizingTextBox" Version="8.2.250402" />
+        <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.2.250402" />
+        <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.250402" />
         <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.4.0" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-        <PackageReference Include="FluentIcons.WinUI" Version="1.1.292" />
+        <PackageReference Include="FluentIcons.WinUI" Version="1.1.293" />
         <PackageReference Include="JsonPoke" Version="1.2.0" />
         <PackageReference Include="LiteDB" Version="5.0.21" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.3" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
         <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250310001" />
@@ -59,7 +59,7 @@
         <PackageReference Include="PininSharp" Version="1.2.0" />
         <PackageReference Include="Pixeval.Extensions.Common" Version="4.3.11" />
         <PackageReference Include="Pixeval.QRCoder" Version="1.4.5" />
-        <PackageReference Include="QuestPDF" Version="2025.1.7" />
+        <PackageReference Include="QuestPDF" Version="2025.4.0" />
         <PackageReference Include="ReverseMarkdown" Version="4.6.0" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.5" />
