@@ -39,7 +39,7 @@
                         Text="{x:Bind TranslatedName}"
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="WrapWholeWords"
-                        Visibility="{x:Bind controls:C.IsNotNullToVisibility(TranslatedName)}" />
+                        Visibility="{x:Bind controls:C.IsNotNullOrWhiteSpaceToVisibility(TranslatedName)}" />
                 </StackPanel>
             </controls1:DockPanel>
         </DataTemplate>
