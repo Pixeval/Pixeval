@@ -24,10 +24,10 @@ public partial class MangaDownloadTaskGroup : DownloadTaskGroup, IImageDownloadT
         IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(Path.GetExtension(TokenizedDestination));
     }
 
-    public MangaDownloadTaskGroup(Illustration entry, string destination, IReadOnlyList<Stream?>? streams = null) : base(entry, destination, DownloadItemType.Manga)
+    public MangaDownloadTaskGroup(Illustration entry, string destination) : base(entry, destination, DownloadItemType.Manga)
     {
         IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(Path.GetExtension(TokenizedDestination));
-        SetTasksSet(streams);
+        SetTasksSet();
     }
 
     public override ValueTask InitializeTaskGroupAsync()
@@ -36,17 +36,14 @@ public partial class MangaDownloadTaskGroup : DownloadTaskGroup, IImageDownloadT
         return ValueTask.CompletedTask;
     }
 
-    private void SetTasksSet(IReadOnlyList<Stream?>? streams = null)
+    private void SetTasksSet()
     {
         if (TasksSet.Count > 0)
             return;
         var mangaOriginalUrls = Entry.MangaOriginalUrls;
         for (var i = 0; i < mangaOriginalUrls.Count; ++i)
         {
-            var imageDownloadTask = new ImageDownloadTask(new(mangaOriginalUrls[i]), IoHelper.ReplaceTokenExtensionFromUrl(TokenizedDestination, mangaOriginalUrls[i]).Replace(PicSetIndexMacro.NameConstToken, i.ToString()), DatabaseEntry.State)
-            {
-                Stream = streams?[i]
-            };
+            var imageDownloadTask = new ImageDownloadTask(new(mangaOriginalUrls[i]), IoHelper.ReplaceTokenExtensionFromUrl(TokenizedDestination, mangaOriginalUrls[i]).Replace(PicSetIndexMacro.NameConstToken, i.ToString()), DatabaseEntry.State);
             AddToTasksSet(imageDownloadTask);
         }
         SetNotCreateFromEntry();

@@ -16,7 +16,6 @@ using Microsoft.UI.Xaml.Media;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
 using Pixeval.Controls;
-using Mako.Net.Response;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Extensions.Common;
@@ -31,6 +30,7 @@ using Windows.Foundation;
 using Windows.Storage;
 using Windows.System;
 using Windows.System.UserProfile;
+using Mako.Model;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -126,37 +126,6 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         RestoreResolutionCommand.RefreshResolutionCommand(true);
     }
 
-    /// <summary>
-    /// 如果之前下载的图片就是原图，则可以直接返回下载的图片
-    /// </summary>
-    public async ValueTask<IReadOnlyList<Stream>?> GetImageStreamsAsync(bool needOriginal)
-    {
-        if (needOriginal && !_isOriginal)
-            return null;
-
-        if (OriginalStreamsSource is null)
-            return null;
-
-        IReadOnlyList<Stream> ret;
-        // 非原图的动图是ZIP格式
-        switch (OriginalStreamsSource)
-        {
-            case IReadOnlyList<Stream> streams:
-                ret = streams;
-                break;
-            case Stream stream:
-                ret = await Streams.ReadZipAsync(stream, false);
-                break;
-            default:
-                return null;
-        }
-
-        foreach (var s in ret)
-            s.Position = 0;
-
-        return ret;
-    }
-
     public async Task GetDisplayStreamsSourceAsync(Stream destination, IProgress<double>? progress = null)
     {
         if (DisplayStreamsSource is not { } s)
@@ -183,7 +152,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     public async Task<StorageFile> SaveToFolderAsync(AppKnownFolders appKnownFolder)
     {
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadPathMacro);
-        var normalizedName = IoHelper.NormalizePathSegment(IllustrationMetaPathParser.Instance.Reduce(name, IllustrationViewModel));
+        var normalizedName = IoHelper.NormalizePathSegment(ArtworkMetaPathParser.Instance.Reduce(name, IllustrationViewModel.Entry));
         normalizedName = IoHelper.ReplaceTokenExtensionFromUrl(normalizedName, IllustrationViewModel.IllustrationOriginalUrl);
         await using var stream = appKnownFolder.OpenAsyncWrite(normalizedName);
         await GetDisplayStreamsSourceAsync(stream);
@@ -192,7 +161,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     public async Task SaveAsync(string destination)
     {
-        destination = IoHelper.NormalizePath(IllustrationMetaPathParser.Instance.Reduce(destination, IllustrationViewModel));
+        destination = IoHelper.NormalizePath(ArtworkMetaPathParser.Instance.Reduce(destination, IllustrationViewModel.Entry));
         destination = IoHelper.ReplaceTokenExtensionFromUrl(destination, IllustrationViewModel.IllustrationOriginalUrl);
         IoHelper.CreateParentDirectories(destination);
         await using var stream = IoHelper.OpenAsyncWrite(destination);
@@ -291,9 +260,9 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
         async Task LoadOriginalImageAsync()
         {
-            var metadata = null as UgoiraMetadataResponse;
+            var metadata = null as UgoiraMetadata;
             if (IllustrationViewModel.IsUgoira)
-                metadata = await IllustrationViewModel.UgoiraMetadata;
+                metadata = await IllustrationViewModel.UgoiraMetadataAsync;
 
             _isOriginal = App.AppViewModel.AppSettings.BrowseOriginalImage;
 
@@ -356,9 +325,9 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                 if (ImageLoadingCancellationTokenSource.IsCancellationRequested)
                     return null;
                 return await CacheHelper.GetStreamFromCacheAsync(
-                        url,
-                        new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, startProgress + ratio * d)),
-                        cancellationToken: ImageLoadingCancellationTokenSource.Token);
+                    url,
+                    new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, startProgress + ratio * d)),
+                    cancellationToken: ImageLoadingCancellationTokenSource.Token);
             }
         }
     }
@@ -500,8 +469,6 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully;
 
     private void ExtensionCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully && ExtensionRunningLock;
-
-    public (FrameworkElement, GetImageStreams) DownloadParameter => (FrameworkElement, GetImageStreamsAsync);
 
     public XamlUICommand CopyCommand { get; } = EntryViewerPageResources.Copy.GetCommand(Symbol.Copy, VirtualKeyModifiers.Control, VirtualKey.C);
   

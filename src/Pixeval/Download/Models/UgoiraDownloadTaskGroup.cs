@@ -1,7 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
@@ -22,22 +21,19 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup, IImageDownload
 {
     public Illustration Entry => DatabaseEntry.Entry.To<Illustration>();
 
-    private UgoiraMetadataResponse Metadata { get; set; } = null!;
+    private UgoiraMetadata Metadata { get; set; } = null!;
 
     private string TempFolderPath => $"{TokenizedDestination}.tmp";
 
     [MemberNotNull(nameof(Metadata))]
-    private void SetMetadata(UgoiraMetadataResponse metadata, IReadOnlyList<Stream?>? streams = null)
+    private void SetMetadata(UgoiraMetadata metadata)
     {
         Metadata = metadata;
-        var ugoiraOriginalUrls = Entry.GetUgoiraOriginalUrls(Metadata.FrameCount);
+        var ugoiraOriginalUrls = Entry.GetUgoiraOriginalUrls(Metadata.Frames.Count);
         _ = Directory.CreateDirectory(TempFolderPath);
         for (var i = 0; i < ugoiraOriginalUrls.Count; ++i)
         {
-            var imageDownloadTask = new ImageDownloadTask(new(ugoiraOriginalUrls[i]), $"{TempFolderPath}\\{i}{Path.GetExtension(ugoiraOriginalUrls[i])}", DatabaseEntry.State)
-            {
-                Stream = streams?[i]
-            };
+            var imageDownloadTask = new ImageDownloadTask(new(ugoiraOriginalUrls[i]), $"{TempFolderPath}\\{i}{Path.GetExtension(ugoiraOriginalUrls[i])}", DatabaseEntry.State);
             AddToTasksSet(imageDownloadTask);
         }
         SetNotCreateFromEntry();
@@ -48,10 +44,10 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup, IImageDownload
         UgoiraDownloadFormat = IoHelper.GetUgoiraFormat(Path.GetExtension(TokenizedDestination));
     }
 
-    public UgoiraDownloadTaskGroup(Illustration entry, UgoiraMetadataResponse metadata, string destination, IReadOnlyList<Stream?>? streams = null) : base(entry, destination, DownloadItemType.Ugoira)
+    public UgoiraDownloadTaskGroup(Illustration entry, UgoiraMetadata metadata, string destination) : base(entry, destination, DownloadItemType.Ugoira)
     {
         UgoiraDownloadFormat = IoHelper.GetUgoiraFormat(Path.GetExtension(TokenizedDestination));
-        SetMetadata(metadata, streams);
+        SetMetadata(metadata);
     }
 
     public UgoiraDownloadTaskGroup(Illustration entry, string destination) : base(entry, destination,

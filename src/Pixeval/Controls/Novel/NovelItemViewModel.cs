@@ -12,10 +12,5 @@ public partial class NovelItemViewModel(Novel novel) : WorkEntryViewModel<Novel>
 
     public int TextLength => Entry.TextLength;
 
-    public NovelContent? Content { get; private set; }
-
-    public async Task<NovelContent> GetNovelContentAsync()
-    {
-        return Content ??= await App.AppViewModel.MakoClient.GetNovelContentAsync(Id);
-    }
+    public Task<NovelContent> ContentAsync { get; } = App.AppViewModel.MakoClient.GetNovelContentAsync(novel.Id);
 }

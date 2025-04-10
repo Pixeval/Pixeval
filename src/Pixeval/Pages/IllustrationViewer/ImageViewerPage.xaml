@@ -23,7 +23,7 @@
                     <AppBarButton Command="{x:Bind _viewModel.PlayGifCommand}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.IllustrationViewModel.IsUgoira)}" />
                     <AppBarButton
                         Command="{x:Bind _viewModel.OriginalIllustrationViewModel.BookmarkCommand}"
-                        CommandParameter="{x:Bind _viewModel.DownloadParameter}"
+                        CommandParameter="{x:Bind}"
                         IsEnabled="{x:Bind _viewModel.LoadSuccessfully, Mode=OneWay}" />
                     <AppBarSeparator />
                     <AppBarButton Command="{x:Bind _viewModel.ZoomInCommand}" />

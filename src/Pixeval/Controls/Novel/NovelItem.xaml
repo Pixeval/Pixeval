@@ -13,19 +13,14 @@
     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
     mc:Ignorable="d">
     <Grid.Resources>
-        <ExponentialEase
-            x:Key="EasingFunction"
-            EasingMode="EaseOut"
-            Exponent="12" />
         <!--  ReSharper disable once Xaml.RedundantResource  -->
         <Storyboard x:Key="ThumbnailStoryboard">
             <DoubleAnimation
-                EasingFunction="{StaticResource EasingFunction}"
                 Storyboard.TargetName="CoverImage"
                 Storyboard.TargetProperty="Opacity"
                 From="0"
                 To="1"
-                Duration="0:0:2" />
+                Duration="0:0:0.3" />
         </Storyboard>
     </Grid.Resources>
     <Grid.ColumnDefinitions>

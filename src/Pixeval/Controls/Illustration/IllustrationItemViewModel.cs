@@ -28,7 +28,7 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<Illustration
         MangaSaveCommand.CanExecuteRequested += (_, e) => e.CanExecute = isManga;
         MangaSaveAsCommand.CanExecuteRequested += (_, e) => e.CanExecute = isManga;
         var id = illustration.Id;
-        UgoiraMetadata = illustration.IsUgoira ? App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(id) : Task.FromResult<UgoiraMetadataResponse>(null!);
+        UgoiraMetadataAsync = illustration.IsUgoira ? App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(id) : Task.FromResult<UgoiraMetadata>(null!);
     }
 
     /// <summary>
@@ -46,13 +46,13 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<Illustration
 
     public double AspectRatio => (double) Width / Height;
 
-    public Task<UgoiraMetadataResponse> UgoiraMetadata { get; }
+    public Task<UgoiraMetadata> UgoiraMetadataAsync { get; }
 
     public string IllustrationLargeUrl => Entry.ThumbnailUrls.Large;
 
     public string MangaSingleLargeUrl => Entry.MetaPages[MangaIndex is -1 ? 0 : MangaIndex].ImageUrls.Large;
 
-    public async ValueTask<string> UgoiraMediumZipUrlAsync() => (await UgoiraMetadata).MediumUrl;
+    public async ValueTask<string> UgoiraMediumZipUrlAsync() => (await UgoiraMetadataAsync).ZipUrls.Medium;
 
     public string IllustrationOriginalUrl => Entry.OriginalSingleUrl!;
 
@@ -60,7 +60,7 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<Illustration
 
     public IReadOnlyList<string> MangaOriginalUrls => Entry.MangaOriginalUrls;
 
-    public List<string> UgoiraOriginalUrls => Entry.GetUgoiraOriginalUrls(UgoiraMetadata.Result.FrameCount);
+    public List<string> UgoiraOriginalUrls => Entry.GetUgoiraOriginalUrls(UgoiraMetadataAsync.Result.Frames.Count);
 
     public string SizeText => $"{Entry.Width} x {Entry.Height}";
 
