@@ -11,6 +11,4 @@ public interface IDownloadTaskFactory<in TContext, out TDownloadTask> where TDow
     IMetaPathParser<TContext> PathParser { get; }
 
     TDownloadTask Create(TContext context, string rawPath);
-
-    TDownloadTask CreateIntrinsic(TContext context, string rawPath, object param);
 }

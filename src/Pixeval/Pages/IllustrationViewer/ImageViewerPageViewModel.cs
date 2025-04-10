@@ -126,37 +126,6 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         RestoreResolutionCommand.RefreshResolutionCommand(true);
     }
 
-    /// <summary>
-    /// 如果之前下载的图片就是原图，则可以直接返回下载的图片
-    /// </summary>
-    public async ValueTask<IReadOnlyList<Stream>?> GetImageStreamsAsync(bool needOriginal)
-    {
-        if (needOriginal && !_isOriginal)
-            return null;
-
-        if (OriginalStreamsSource is null)
-            return null;
-
-        IReadOnlyList<Stream> ret;
-        // 非原图的动图是ZIP格式
-        switch (OriginalStreamsSource)
-        {
-            case IReadOnlyList<Stream> streams:
-                ret = streams;
-                break;
-            case Stream stream:
-                ret = await Streams.ReadZipAsync(stream, false);
-                break;
-            default:
-                return null;
-        }
-
-        foreach (var s in ret)
-            s.Position = 0;
-
-        return ret;
-    }
-
     public async Task GetDisplayStreamsSourceAsync(Stream destination, IProgress<double>? progress = null)
     {
         if (DisplayStreamsSource is not { } s)
@@ -356,9 +325,9 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                 if (ImageLoadingCancellationTokenSource.IsCancellationRequested)
                     return null;
                 return await CacheHelper.GetStreamFromCacheAsync(
-                        url,
-                        new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, startProgress + ratio * d)),
-                        cancellationToken: ImageLoadingCancellationTokenSource.Token);
+                    url,
+                    new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, startProgress + ratio * d)),
+                    cancellationToken: ImageLoadingCancellationTokenSource.Token);
             }
         }
     }
@@ -500,8 +469,6 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully;
 
     private void ExtensionCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully && ExtensionRunningLock;
-
-    public (FrameworkElement, GetImageStreams) DownloadParameter => (FrameworkElement, GetImageStreamsAsync);
 
     public XamlUICommand CopyCommand { get; } = EntryViewerPageResources.Copy.GetCommand(Symbol.Copy, VirtualKeyModifiers.Control, VirtualKey.C);
   

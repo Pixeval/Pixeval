@@ -98,30 +98,6 @@ public partial class NovelItemViewModel
         }
     }
 
-    /// <summary>
-    /// 此处只会将文章内容设置到剪贴板，所以不需要异步就可以很快结束
-    /// </summary>
-    protected override void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-    {
-        var frameworkElement = null as FrameworkElement;
-        NovelContent? novelContent;
-        switch (args.Parameter)
-        {
-            case (FrameworkElement h, NovelContent c):
-                frameworkElement = h;
-                novelContent = c;
-                break;
-            case NovelContent c:
-                novelContent = c;
-                break;
-            default:
-                return;
-        }
-
-        UiHelper.ClipboardSetText(novelContent.Text);
-        frameworkElement?.SuccessGrowl(EntryItemResources.NovelSetToClipBoard);
-    }
-
     public override Uri AppUri => MakoHelper.GenerateNovelAppUri(Id);
 
     public override Uri WebUri => MakoHelper.GenerateNovelWebUri(Id);

@@ -9,7 +9,6 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:md="using:CommunityToolkit.Labs.WinUI.MarkdownTextBlock"
-    xmlns:triggers="using:CommunityToolkit.WinUI"
     KeyboardAcceleratorPlacementMode="Hidden"
     mc:Ignorable="d">
     <controls:EnhancedPage.Resources>
@@ -71,10 +70,6 @@
                                 DefaultLabelPosition="Collapsed">
                                 <AppBarToggleButton Command="{x:Bind _viewModel.InfoAndCommentsCommand}" IsChecked="{x:Bind EntryViewerSplitView.IsPaneOpen, Mode=TwoWay}" />
                                 <AppBarSeparator />
-                                <AppBarButton
-                                    Command="{x:Bind _viewModel.CurrentNovel.CopyCommand, Mode=OneWay}"
-                                    CommandParameter="{x:Bind DownloadParameter(_viewModel.CurrentDocument.NovelContent), Mode=OneWay}"
-                                    IsEnabled="{x:Bind _viewModel.CurrentDocument.LoadSuccessfully, Mode=OneWay}" />
                                 <AppBarButton
                                     Command="{x:Bind _viewModel.CurrentNovel.SaveCommand, Mode=OneWay}"
                                     CommandParameter="{x:Bind DownloadParameter(_viewModel.CurrentDocument.NovelContent), Mode=OneWay}"

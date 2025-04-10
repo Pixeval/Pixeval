@@ -52,16 +52,16 @@
                                 DefaultLabelPosition="Collapsed">
                                 <AppBarButton Command="{x:Bind _viewModel.CurrentImage.PlayGifCommand, Mode=OneWay}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsUgoira), Mode=OneWay}" />
                                 <AppBarButton
-                                    Command="{x:Bind _viewModel.CurrentPage.CopyCommand, Mode=OneWay}"
-                                    CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
+                                    Command="{x:Bind _viewModel.CurrentImage.CopyCommand, Mode=OneWay}"
+                                    CommandParameter="{x:Bind}"
                                     IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
                                 <AppBarButton
                                     Command="{x:Bind _viewModel.CurrentPage.SaveCommand, Mode=OneWay}"
-                                    CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
+                                    CommandParameter="{x:Bind}"
                                     IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
                                 <AppBarButton
                                     Command="{x:Bind _viewModel.CurrentPage.SaveAsCommand, Mode=OneWay}"
-                                    CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
+                                    CommandParameter="{x:Bind}"
                                     IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
                                 <AppBarButton
                                     Command="{x:Bind _viewModel.CurrentIllustration.MangaSaveCommand, Mode=OneWay}"
@@ -82,9 +82,17 @@
                                 </AppBarButton>-->
                                 <AppBarButton
                                     x:Name="AddToBookmarkButton"
-                                    Click="AddToBookmarkButton_OnClicked"
                                     Command="{x:Bind _viewModel.AddToBookmarkCommand}"
-                                    CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}" />
+                                    CommandParameter="{x:Bind}">
+                                    <interactivity:Interaction.Behaviors>
+                                        <interactivity:EventTriggerBehavior EventName="Click">
+                                            <interactivity:ChangePropertyAction
+                                                PropertyName="IsOpen"
+                                                TargetObject="{x:Bind AddToBookmarkTeachingTip}"
+                                                Value="True" />
+                                        </interactivity:EventTriggerBehavior>
+                                    </interactivity:Interaction.Behaviors>
+                                </AppBarButton>
                                 <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
                                 <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
                                 <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.OpenInWebBrowserCommand, Mode=OneWay}" />
@@ -178,14 +186,14 @@
                                         <CommandBar DefaultLabelPosition="Collapsed" OverflowButtonVisibility="Collapsed">
                                             <AppBarButton
                                                 Command="{x:Bind _viewModel.CurrentIllustration.BookmarkCommand, Mode=OneWay}"
-                                                CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
+                                                CommandParameter="{x:Bind}"
                                                 IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
                                             <AppBarButton Command="{x:Bind _viewModel.CurrentImage.RotateCounterclockwiseCommand, Mode=OneWay}" />
                                             <AppBarToggleButton Command="{x:Bind _viewModel.CurrentImage.MirrorCommand, Mode=OneWay}" IsChecked="{x:Bind _viewModel.CurrentImage.IsMirrored, Mode=OneWay}" />
                                             <AppBarButton Command="{x:Bind _viewModel.CurrentImage.RotateClockwiseCommand, Mode=OneWay}" />
                                             <AppBarButton
                                                 Command="{x:Bind _viewModel.CurrentPage.SaveCommand, Mode=OneWay}"
-                                                CommandParameter="{x:Bind _viewModel.CurrentImage.DownloadParameter, Mode=OneWay}"
+                                                CommandParameter="{x:Bind}"
                                                 IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
                                             <AppBarButton
                                                 Command="{x:Bind _viewModel.CurrentIllustration.MangaSaveCommand, Mode=OneWay}"

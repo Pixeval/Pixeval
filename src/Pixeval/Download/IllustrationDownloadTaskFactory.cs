@@ -33,60 +33,20 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
             {
                 // 外部需要确保UgoiraMetadata已经加载
                 var metadata = context.UgoiraMetadata.Result;
-                var streams = null as IReadOnlyList<Stream?>;
-                if (App.AppViewModel.AppSettings.UseFileCache)
-                    streams = [.. context.UgoiraOriginalUrls.Select(url => CacheHelper.TryGetStreamFromCache(MakoHelper.GetOriginalCacheKey(url)))];
-                task = new UgoiraDownloadTaskGroup(context.Entry, metadata, path, streams);
+                task = new UgoiraDownloadTaskGroup(context.Entry, metadata, path);
                 break;
             }
             case { IsManga: true, MangaIndex: -1 }:
             {
-                var streams = null as IReadOnlyList<Stream?>;
-                if (App.AppViewModel.AppSettings.UseFileCache)
-                    streams = [.. context.MangaOriginalUrls.Select(url => CacheHelper.TryGetStreamFromCache(MakoHelper.GetOriginalCacheKey(url)))];
-                task = new MangaDownloadTaskGroup(context.Entry, path, streams);
+                task = new MangaDownloadTaskGroup(context.Entry, path);
                 break;
             }
             default:
             {
                 var stream = null as Stream;
                 if (App.AppViewModel.AppSettings.UseFileCache)
-                    stream = CacheHelper.TryGetStreamFromCache(
-                        MakoHelper.GetOriginalCacheKey(context.IllustrationOriginalUrl));
+                    stream = CacheHelper.TryGetStreamFromCache(context.IllustrationOriginalUrl);
                 task = new SingleImageDownloadTaskGroup(context.Entry, path, stream);
-                break;
-            }
-        }
-
-        manager.Insert(task.DatabaseEntry);
-        return task;
-    }
-
-    public IImageDownloadTaskGroup CreateIntrinsic(IllustrationItemViewModel context, string rawPath, object param)
-    {
-        var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
-        var path = IoHelper.NormalizePath(PathParser.Reduce(rawPath, context));
-        _ = manager.Delete(entry => entry.Destination == path);
-
-        IImageDownloadTaskGroup task;
-        switch (context)
-        {
-            case { IsUgoira: true }:
-            {
-                var (streams, metadata) = ((IReadOnlyList<Stream>, UgoiraMetadataResponse)) param;
-                task = new UgoiraDownloadTaskGroup(context.Entry, metadata, path, streams);
-                break;
-            }
-            case { IsManga: true, MangaIndex: -1 }: // 下载一篇漫画（未使用的分支）
-            {
-                var streams = (IReadOnlyList<Stream>) param;
-                task = new MangaDownloadTaskGroup(context.Entry, path, streams);
-                break;
-            }
-            default:
-            {
-                var stream = (IReadOnlyList<Stream>) param;
-                task = new SingleImageDownloadTaskGroup(context.Entry, path, stream[0]);
                 break;
             }
         }

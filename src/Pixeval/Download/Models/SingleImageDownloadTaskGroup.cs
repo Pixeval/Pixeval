@@ -36,7 +36,6 @@ public partial class SingleImageDownloadTaskGroup : ImageDownloadTask, IImageDow
     {
         CurrentState = DownloadState.Queued;
         ProgressPercentage = 0;
-        Stream = stream;
         SetNotCreateFromEntry();
     }
 

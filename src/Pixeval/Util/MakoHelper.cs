@@ -101,10 +101,6 @@ public static class MakoHelper
 
     public static Uri GenerateSpotlightAppUri(long id) => new($"{AppInfo.AppProtocol}://spotlight/{id}");
 
-    public static string GetThumbnailCacheKey(string url) => $"thumbnail-{url}";
-
-    public static string GetOriginalCacheKey(string url) => $"original-{url}";
-
     public static SortDescription<IWorkEntry>? GetSortDescription(WorkSortOption sortOption)
     {
         return sortOption switch

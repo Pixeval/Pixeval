@@ -61,8 +61,7 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
                 IllustrationDownloadFormat is IllustrationDownloadFormat.Original
                     ? IoHelper.ReplaceTokenExtensionFromUrl(name, url)
                     : name + imgExt,
-                DatabaseEntry.State)
-            { Stream = DocumentViewModel.TryGetStream(i) };
+                DatabaseEntry.State);
             AddToTasksSet(imageDownloadTask);
         }
 

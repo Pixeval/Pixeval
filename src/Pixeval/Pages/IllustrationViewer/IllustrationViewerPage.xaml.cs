@@ -121,13 +121,10 @@ public sealed partial class IllustrationViewerPage
     private void AddToBookmarkTeachingTip_OnCloseButtonClick(TeachingTip sender, object args)
     {
         _viewModel.CurrentIllustration.AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags,
-            BookmarkTagSelector.IsPrivate, _viewModel.CurrentImage.DownloadParameter));
+            BookmarkTagSelector.IsPrivate, this));
 
         this.SuccessGrowl(EntryViewerPageResources.AddedToBookmark);
     }
-
-    private void AddToBookmarkButton_OnClicked(object sender, RoutedEventArgs e) =>
-        AddToBookmarkTeachingTip.IsOpen = true;
 
     private void NextButton_OnClicked(object sender, IWinRTObject e)
     {

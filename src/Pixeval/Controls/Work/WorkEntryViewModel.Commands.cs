@@ -31,49 +31,28 @@ public partial class WorkEntryViewModel<T>
     public XamlUICommand BookmarkCommand { get; } = "".GetCommand(Symbol.Heart, VirtualKeyModifiers.Control, VirtualKey.D);
 
     /// <summary>
-    /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
+    /// Parameter1: <see langword="null"/><br/>
+    /// 
+    /// Parameter1: <see cref="FrameworkElement"/><br/>
+    /// 
+    /// Parameter3: <see cref="ValueTuple{T1, T2}"/>
     /// <list type="bullet">
     /// <item><term>T1</term><description><see cref="FrameworkElement"/></description></item>
-    /// <item><term>T2</term><description><see cref="GetImageStreams"/>?(<see cref="IllustrationItemViewModel"/>)</description></item>
     /// <item><term>T2</term><description><see cref="NovelContent"/>?(<see cref="NovelItemViewModel"/>)</description></item>
     /// </list>
-    /// 
-    /// Parameter2: <see cref="FrameworkElement"/><br/>
-    /// Parameter3: <see langword="null"/>
     /// </summary>
     public XamlUICommand SaveCommand { get; } = EntryItemResources.Save.GetCommand(Symbol.Save, VirtualKeyModifiers.Control, VirtualKey.S);
 
     /// <summary>
-    /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
+    /// Parameter1: <see cref="FrameworkElement"/><br/>
+    /// 
+    /// Parameter2: <see cref="ValueTuple{T1, T2}"/>(<see cref="NovelItemViewModel"/>)
     /// <list type="bullet">
     /// <item><term>T1</term><description><see cref="FrameworkElement"/></description></item>
-    /// <item><term>T2</term><description><see cref="GetImageStreams"/>?(<see cref="IllustrationItemViewModel"/>)</description></item>
-    /// <item><term>T2</term><description><see cref="NovelContent"/>?(<see cref="NovelItemViewModel"/>)</description></item>
+    /// <item><term>T2</term><description><see cref="NovelContent"/>?</description></item>
     /// </list>
-    /// 
-    /// Parameter2: <see cref="FrameworkElement"/>
     /// </summary>
     public XamlUICommand SaveAsCommand { get; } = EntryItemResources.SaveAs.GetCommand(Symbol.SaveEdit, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
-
-    /// <summary>
-    /// <see cref="IllustrationItemViewModel"/>:<br/>
-    /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
-    /// <list type="bullet">
-    /// <item><term>T1</term><description><see cref="FrameworkElement"/></description></item>
-    /// <item><term>T2</term><description><see cref="GetImageStreams"/></description></item>
-    /// </list>
-    /// 
-    /// Parameter2: <see cref="GetImageStreams"/><br/>
-    /// <see cref="NovelItemViewModel"/>:<br/>
-    /// Parameter1: <see cref="ValueTuple{T1, T2}"/>
-    /// <list type="bullet">
-    /// <item><term>T1</term><description><see cref="FrameworkElement"/></description></item>
-    /// <item><term>T2</term><description><see cref="NovelContent"/></description></item>
-    /// </list>
-    /// 
-    /// Parameter2: <see cref="NovelContent"/>
-    /// </summary>
-    public XamlUICommand CopyCommand { get; } = EntryItemResources.Copy.GetCommand(Symbol.Copy);
 
     public XamlUICommand OpenUserInfoPage { get; } = EntryItemResources.OpenUserInfoPage.GetCommand(Symbol.Person);
 
@@ -89,8 +68,6 @@ public partial class WorkEntryViewModel<T>
         SaveCommand.ExecuteRequested += SaveCommandOnExecuteRequested;
 
         SaveAsCommand.ExecuteRequested += SaveAsCommandOnExecuteRequested;
-
-        CopyCommand.ExecuteRequested += CopyCommandOnExecuteRequested;
     }
 
     private async void BookmarkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -124,6 +101,4 @@ public partial class WorkEntryViewModel<T>
     protected abstract void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args);
 
     protected abstract void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args);
-
-    protected abstract void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args);
 }

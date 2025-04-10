@@ -14,6 +14,7 @@ using Pixeval.AppManagement;
 using Pixeval.Extensions;
 using Pixeval.Extensions.Common;
 using Pixeval.Util.IO;
+using Pixeval.Util.IO.Caching;
 using Pixeval.Utilities;
 
 namespace Pixeval.Download.Models;
@@ -48,8 +49,6 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
     }
 
     protected virtual Task AfterDownloadAsyncOverride(ImageDownloadTask sender, CancellationToken token = default) => Task.CompletedTask;
-
-    public Stream? Stream { get; init; }
 
     public Uri Uri { get; }
 
@@ -136,10 +135,10 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
             CurrentState = DownloadState.Running;
             await SetRunningAsync(true);
             IoHelper.CreateParentDirectories(Destination);
-            if (Stream is not null)
+            if (CacheHelper.TryGetStreamFromCache(Uri.OriginalString) is { } stream)
             {
                 await using (var fs = OpenCreate(DownloadTempDestination))
-                    await Stream.CopyToAsync(fs, CancellationTokenSource.Token);
+                    await stream.CopyToAsync(fs, CancellationTokenSource.Token);
                 File.Move(DownloadTempDestination, Destination);
                 await PendingCompleteAsync();
                 return;
