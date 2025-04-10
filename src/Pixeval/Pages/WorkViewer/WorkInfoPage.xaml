@@ -19,6 +19,42 @@
         <Style x:Key="GrayTextBlock" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseMediumBrush}" />
         </Style>
+        <DataTemplate x:Key="UserCardDataTemplate" x:DataType="misaki:IUser">
+            <Button Click="IllustratorPersonPicture_OnClicked" Style="{StaticResource CardControlButton}">
+                <controls:DockPanel HorizontalSpacing="12" LastChildFill="False">
+                    <PersonPicture
+                        Width="50"
+                        Height="50"
+                        controls2:Source.ImageSource="{x:Bind local:WorkInfoPage.PickClosestUri(Avatar, 50, 50)}"
+                        controls:DockPanel.Dock="Left" />
+                    <TextBlock
+                        controls:DockPanel.Dock="Top"
+                        Style="{StaticResource SubtitleTextBlockStyle}"
+                        TextWrapping="Wrap">
+                        <Run Text="{x:Bind Name}" />
+                    </TextBlock>
+                    <StackPanel
+                        controls:DockPanel.Dock="Bottom"
+                        Orientation="Horizontal"
+                        Spacing="5">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                            Text="{x:Bind Id}" />
+                        <Button
+                            Padding="2"
+                            VerticalAlignment="Center"
+                            Content="{ui:SymbolIcon FontSize=12,
+                                                    Symbol=Copy}"
+                            Style="{StaticResource PixevalTransparentButtonStyle}">
+                            <interactivity:Interaction.Behaviors>
+                                <controls2:ButtonCopyBehavior TargetText="{x:Bind Id}" />
+                            </interactivity:Interaction.Behaviors>
+                        </Button>
+                    </StackPanel>
+                </controls:DockPanel>
+            </Button>
+        </DataTemplate>
     </controls2:EnhancedPage.Resources>
     <ScrollViewer
         HorizontalScrollBarVisibility="Disabled"
@@ -59,48 +95,21 @@
             </StackPanel>
             <controls2:IconText Symbol="Clock" Text="{x:Bind controls2:C.CultureDateTimeOffsetFormatter(_viewModel.Entry.CreateDate, pixeval:AppSettings.CurrentCulture)}" />
             <!--#region Author Info-->
-            <ItemsRepeater ItemsSource="{x:Bind _viewModel.Entry.Authors}">
-                <ItemsRepeater.ItemTemplate>
-                    <DataTemplate x:DataType="misaki:IUser">
-                        <Button
-                            Margin="0,12,0,0"
-                            Click="IllustratorPersonPicture_OnClicked"
-                            Style="{StaticResource CardControlButton}">
-                            <controls:DockPanel HorizontalSpacing="12" LastChildFill="False">
-                                <PersonPicture
-                                    Width="50"
-                                    Height="50"
-                                    controls2:Source.ImageSource="{x:Bind local:WorkInfoPage.PickClosestUri(Avatar, 50, 50)}"
-                                    controls:DockPanel.Dock="Left" />
-                                <TextBlock
-                                    controls:DockPanel.Dock="Top"
-                                    Style="{StaticResource SubtitleTextBlockStyle}"
-                                    TextWrapping="Wrap">
-                                    <Run Text="{x:Bind Name}" />
-                                </TextBlock>
-                                <StackPanel
-                                    controls:DockPanel.Dock="Bottom"
-                                    Orientation="Horizontal"
-                                    Spacing="5">
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-                                        Text="{x:Bind Id}" />
-                                    <Button
-                                        Padding="2"
-                                        VerticalAlignment="Center"
-                                        Content="{ui:SymbolIcon FontSize=12,
-                                                                Symbol=Copy}"
-                                        Style="{StaticResource PixevalTransparentButtonStyle}">
-                                        <interactivity:Interaction.Behaviors>
-                                            <controls2:ButtonCopyBehavior TargetText="{x:Bind Id}" />
-                                        </interactivity:Interaction.Behaviors>
-                                    </Button>
-                                </StackPanel>
-                            </controls:DockPanel>
-                        </Button>
-                    </DataTemplate>
-                </ItemsRepeater.ItemTemplate>
+            <ItemsRepeater
+                Margin="0,12,0,0"
+                ItemTemplate="{StaticResource UserCardDataTemplate}"
+                ItemsSource="{x:Bind _viewModel.Entry.Authors}">
+                <ItemsRepeater.Layout>
+                    <StackLayout Orientation="Vertical" Spacing="5" />
+                </ItemsRepeater.Layout>
+            </ItemsRepeater>
+            <ItemsRepeater
+                Margin="0,12,0,0"
+                ItemTemplate="{StaticResource UserCardDataTemplate}"
+                ItemsSource="{x:Bind _viewModel.Entry.Uploaders}">
+                <ItemsRepeater.Layout>
+                    <StackLayout Orientation="Vertical" Spacing="5" />
+                </ItemsRepeater.Layout>
             </ItemsRepeater>
             <!--#endregion-->
             <!--#region Tags-->

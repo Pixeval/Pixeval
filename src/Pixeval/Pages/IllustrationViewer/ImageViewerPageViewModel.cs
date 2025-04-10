@@ -16,7 +16,6 @@ using Microsoft.UI.Xaml.Media;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
 using Pixeval.Controls;
-using Mako.Net.Response;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Extensions.Common;
@@ -31,6 +30,7 @@ using Windows.Foundation;
 using Windows.Storage;
 using Windows.System;
 using Windows.System.UserProfile;
+using Mako.Model;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -152,7 +152,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     public async Task<StorageFile> SaveToFolderAsync(AppKnownFolders appKnownFolder)
     {
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadPathMacro);
-        var normalizedName = IoHelper.NormalizePathSegment(IllustrationMetaPathParser.Instance.Reduce(name, IllustrationViewModel));
+        var normalizedName = IoHelper.NormalizePathSegment(ArtworkMetaPathParser.Instance.Reduce(name, IllustrationViewModel.Entry));
         normalizedName = IoHelper.ReplaceTokenExtensionFromUrl(normalizedName, IllustrationViewModel.IllustrationOriginalUrl);
         await using var stream = appKnownFolder.OpenAsyncWrite(normalizedName);
         await GetDisplayStreamsSourceAsync(stream);
@@ -161,7 +161,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     public async Task SaveAsync(string destination)
     {
-        destination = IoHelper.NormalizePath(IllustrationMetaPathParser.Instance.Reduce(destination, IllustrationViewModel));
+        destination = IoHelper.NormalizePath(ArtworkMetaPathParser.Instance.Reduce(destination, IllustrationViewModel.Entry));
         destination = IoHelper.ReplaceTokenExtensionFromUrl(destination, IllustrationViewModel.IllustrationOriginalUrl);
         IoHelper.CreateParentDirectories(destination);
         await using var stream = IoHelper.OpenAsyncWrite(destination);
@@ -260,9 +260,9 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
         async Task LoadOriginalImageAsync()
         {
-            var metadata = null as UgoiraMetadataResponse;
+            var metadata = null as UgoiraMetadata;
             if (IllustrationViewModel.IsUgoira)
-                metadata = await IllustrationViewModel.UgoiraMetadata;
+                metadata = await IllustrationViewModel.UgoiraMetadataAsync;
 
             _isOriginal = App.AppViewModel.AppSettings.BrowseOriginalImage;
 

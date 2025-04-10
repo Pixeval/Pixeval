@@ -1,54 +1,48 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
-using Pixeval.Controls;
+using System;
+using CommunityToolkit.Diagnostics;
+using Mako.Model;
 using Mako.Net.Response;
+using Microsoft.Extensions.DependencyInjection;
+using Misaki;
 using Pixeval.Database.Managers;
-using Pixeval.Download.MacroParser;
 using Pixeval.Download.Models;
-using Pixeval.Util;
 using Pixeval.Util.IO;
-using Pixeval.Util.IO.Caching;
 
 namespace Pixeval.Download;
 
-public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IllustrationItemViewModel, IImageDownloadTaskGroup>
+public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration, IImageDownloadTaskGroup, UgoiraMetadata>
 {
-    public IMetaPathParser<IllustrationItemViewModel> PathParser => IllustrationMetaPathParser.Instance;
-
-    public IImageDownloadTaskGroup Create(IllustrationItemViewModel context, string rawPath)
+    public IImageDownloadTaskGroup Create(Illustration context, string rawPath, UgoiraMetadata? parameter)
     {
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
-        var path = IoHelper.NormalizePath(PathParser.Reduce(rawPath, context));
+        var path = IoHelper.NormalizePath(ArtworkMetaPathParser.Instance.Reduce(rawPath, context));
         _ = manager.Delete(entry => entry.Destination == path);
 
         IImageDownloadTaskGroup? task;
-        switch (context)
+        switch (context.ImageType)
         {
-            case { IsUgoira: true }:
+            case ImageType.SingleAnimatedImage:
             {
                 // 外部需要确保UgoiraMetadata已经加载
-                var metadata = context.UgoiraMetadata.Result;
-                task = new UgoiraDownloadTaskGroup(context.Entry, metadata, path);
+                ArgumentNullException.ThrowIfNull(parameter);
+                task = new UgoiraDownloadTaskGroup(context, parameter, path);
                 break;
             }
-            case { IsManga: true, MangaIndex: -1 }:
+            case ImageType.ImageSet:
             {
-                task = new MangaDownloadTaskGroup(context.Entry, path);
+                task = new MangaDownloadTaskGroup(context, path);
+                break;
+            }
+            case ImageType.SingleImage:
+            {
+                task = new SingleImageDownloadTaskGroup(context, path);
                 break;
             }
             default:
-            {
-                var stream = null as Stream;
-                if (App.AppViewModel.AppSettings.UseFileCache)
-                    stream = CacheHelper.TryGetStreamFromCache(context.IllustrationOriginalUrl);
-                task = new SingleImageDownloadTaskGroup(context.Entry, path, stream);
-                break;
-            }
+                return ThrowHelper.ThrowNotSupportedException<IImageDownloadTaskGroup>();
         }
 
         manager.Insert(task.DatabaseEntry);

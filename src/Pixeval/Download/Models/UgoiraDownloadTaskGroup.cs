@@ -21,15 +21,15 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup, IImageDownload
 {
     public Illustration Entry => DatabaseEntry.Entry.To<Illustration>();
 
-    private UgoiraMetadataResponse Metadata { get; set; } = null!;
+    private UgoiraMetadata Metadata { get; set; } = null!;
 
     private string TempFolderPath => $"{TokenizedDestination}.tmp";
 
     [MemberNotNull(nameof(Metadata))]
-    private void SetMetadata(UgoiraMetadataResponse metadata)
+    private void SetMetadata(UgoiraMetadata metadata)
     {
         Metadata = metadata;
-        var ugoiraOriginalUrls = Entry.GetUgoiraOriginalUrls(Metadata.FrameCount);
+        var ugoiraOriginalUrls = Entry.GetUgoiraOriginalUrls(Metadata.Frames.Count);
         _ = Directory.CreateDirectory(TempFolderPath);
         for (var i = 0; i < ugoiraOriginalUrls.Count; ++i)
         {
@@ -44,7 +44,7 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup, IImageDownload
         UgoiraDownloadFormat = IoHelper.GetUgoiraFormat(Path.GetExtension(TokenizedDestination));
     }
 
-    public UgoiraDownloadTaskGroup(Illustration entry, UgoiraMetadataResponse metadata, string destination) : base(entry, destination, DownloadItemType.Ugoira)
+    public UgoiraDownloadTaskGroup(Illustration entry, UgoiraMetadata metadata, string destination) : base(entry, destination, DownloadItemType.Ugoira)
     {
         UgoiraDownloadFormat = IoHelper.GetUgoiraFormat(Path.GetExtension(TokenizedDestination));
         SetMetadata(metadata);

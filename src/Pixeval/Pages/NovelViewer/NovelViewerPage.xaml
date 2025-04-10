@@ -72,11 +72,11 @@
                                 <AppBarSeparator />
                                 <AppBarButton
                                     Command="{x:Bind _viewModel.CurrentNovel.SaveCommand, Mode=OneWay}"
-                                    CommandParameter="{x:Bind DownloadParameter(_viewModel.CurrentDocument.NovelContent), Mode=OneWay}"
+                                    CommandParameter="{x:Bind}"
                                     IsEnabled="{x:Bind _viewModel.CurrentDocument.LoadSuccessfully, Mode=OneWay}" />
                                 <AppBarButton
                                     Command="{x:Bind _viewModel.CurrentNovel.SaveAsCommand, Mode=OneWay}"
-                                    CommandParameter="{x:Bind DownloadParameter(_viewModel.CurrentDocument.NovelContent), Mode=OneWay}"
+                                    CommandParameter="{x:Bind}"
                                     IsEnabled="{x:Bind _viewModel.CurrentDocument.LoadSuccessfully, Mode=OneWay}" />
                                 <AppBarSeparator />
                                 <AppBarButton
@@ -232,11 +232,11 @@
                                             OverflowButtonVisibility="Collapsed">
                                             <AppBarButton
                                                 Command="{x:Bind _viewModel.CurrentNovel.BookmarkCommand, Mode=OneWay}"
-                                                CommandParameter="{x:Bind DownloadParameter(_viewModel.CurrentDocument.NovelContent), Mode=OneWay}"
+                                                CommandParameter="{x:Bind}"
                                                 IsEnabled="{x:Bind _viewModel.CurrentDocument.LoadSuccessfully, Mode=OneWay}" />
                                             <AppBarButton
                                                 Command="{x:Bind _viewModel.CurrentNovel.SaveCommand, Mode=OneWay}"
-                                                CommandParameter="{x:Bind DownloadParameter(_viewModel.CurrentDocument.NovelContent), Mode=OneWay}"
+                                                CommandParameter="{x:Bind}"
                                                 IsEnabled="{x:Bind _viewModel.CurrentDocument.LoadSuccessfully, Mode=OneWay}" />
                                         </CommandBar>
                                     </controls1:DockPanel>

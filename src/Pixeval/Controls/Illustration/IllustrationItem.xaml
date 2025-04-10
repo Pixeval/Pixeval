@@ -17,19 +17,14 @@
         <ToolTip Content="{x:Bind ViewModel.Tooltip, Mode=OneWay}" Placement="Right" />
     </ToolTipService.ToolTip>
     <Grid.Resources>
-        <ExponentialEase
-            x:Key="EasingFunction"
-            EasingMode="EaseOut"
-            Exponent="12" />
         <!--  ReSharper disable once Xaml.RedundantResource  -->
         <Storyboard x:Key="ThumbnailStoryboard">
             <DoubleAnimation
-                EasingFunction="{StaticResource EasingFunction}"
                 Storyboard.TargetName="IllustrationThumbnailCard"
                 Storyboard.TargetProperty="Opacity"
                 From="0"
                 To="1"
-                Duration="0:0:2" />
+                Duration="0:0:0.3" />
         </Storyboard>
     </Grid.Resources>
     <Grid.RenderTransform>

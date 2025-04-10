@@ -8,7 +8,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Mako.Net.Response;
 using Pixeval.Download.Macros;
 using Pixeval.Options;
 using Pixeval.Util.IO.Caching;
@@ -25,6 +24,7 @@ using SixLabors.ImageSharp.Formats.Webp;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
+using Mako.Model;
 using WinUI3Utilities;
 
 namespace Pixeval.Util.IO;
@@ -327,10 +327,10 @@ public static partial class IoHelper
         };
     }
 
-    public static async Task<Image> GetImageFromZipStreamAsync(Stream zipStream, UgoiraMetadataResponse ugoiraMetadataResponse)
+    public static async Task<Image> GetImageFromZipStreamAsync(Stream zipStream, UgoiraMetadata ugoiraMetadata)
     {
         var entryStreams = await Streams.ReadZipAsync(zipStream, true);
-        return await entryStreams.UgoiraSaveToImageAsync([.. ugoiraMetadataResponse.Delays]);
+        return await entryStreams.UgoiraSaveToImageAsync([.. ugoiraMetadata.Delays]);
     }
 
     public static async Task<ImageSource> GenerateQrCodeForUrlAsync(string url)

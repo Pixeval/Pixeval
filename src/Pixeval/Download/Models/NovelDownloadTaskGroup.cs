@@ -81,7 +81,8 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
 
     public NovelDownloadTaskGroup(
         Novel entry,
-        string destination) : base(entry, destination, DownloadItemType.Novel)
+        string destination,
+        NovelContent? novelContent) : base(entry, destination, DownloadItemType.Novel)
     {
         var backSlash = TokenizedDestination.LastIndexOf('\\');
         DocPath = TokenizedDestination[..backSlash];
@@ -90,21 +91,8 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
         var imgExt = TokenizedDestination[(backSlash + 1)..];
         IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(imgExt);
         NovelDownloadFormat = IoHelper.GetNovelFormat(Path.GetExtension(DocPath));
-    }
-
-    public NovelDownloadTaskGroup(
-        Novel entry,
-        NovelContent novelContent,
-        string destination) : base(entry, destination, DownloadItemType.Novel)
-    {
-        var backSlash = TokenizedDestination.LastIndexOf('\\');
-        DocPath = TokenizedDestination[..backSlash];
-        PdfTempFolderPath = $"{DocPath}.tmp";
-        // .<ext> or .png or .etc 
-        var imgExt = TokenizedDestination[(backSlash + 1)..];
-        IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(imgExt);
-        NovelDownloadFormat = IoHelper.GetNovelFormat(Path.GetExtension(DocPath));
-        SetNovelContent(novelContent);
+        if (novelContent is not null)
+            SetNovelContent(novelContent);
     }
 
     public override async ValueTask InitializeTaskGroupAsync()

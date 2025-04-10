@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Microsoft.Extensions.DependencyInjection;
+using Mako.Model;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -15,7 +15,6 @@ using Pixeval.Download;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.MacroParser.Ast;
 using Pixeval.Download.Macros;
-using Pixeval.Download.Models;
 using Pixeval.Settings.Models;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
@@ -87,8 +86,7 @@ public sealed partial class DownloadMacroSettingsExpander
             var result = _TestParser.Parse();
             if (result is not null)
             {
-                var legitimatedNames = App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationDownloadTaskFactory>();
-                if (ValidateMacro(result, legitimatedNames) is { } ex)
+                if (ValidateMacro(result, ArtworkMetaPathParser.Instance) is { } ex)
                 {
                     DownloadMacroInvalidInfoBar.Message = ex;
                     DownloadMacroInvalidInfoBar.IsOpen = true;
@@ -142,7 +140,7 @@ public sealed partial class DownloadMacroSettingsExpander
     }
 
     private static string? ValidateMacro(
-        IMetaPathNode<string> tree, IDownloadTaskFactory<IllustrationItemViewModel, IDownloadTaskGroup> macroProvider)
+        IMetaPathNode<string> tree, IMetaPathParser<Illustration> macroProvider)
     {
         return ValidateMacro(tree, ImmutableDictionary<string, bool>.Empty, [], macroProvider);
     }
@@ -151,7 +149,7 @@ public sealed partial class DownloadMacroSettingsExpander
         IMetaPathNode<string> tree,
         ImmutableDictionary<string, bool> context,
         List<(string Name, ImmutableDictionary<string, bool> Context)> lastSegmentContexts,
-        IDownloadTaskFactory<IllustrationItemViewModel, IDownloadTaskGroup> macroProvider)
+        IMetaPathParser<Illustration> macroProvider)
     {
         return tree switch
         {
@@ -165,7 +163,7 @@ public sealed partial class DownloadMacroSettingsExpander
             PlainText<string> => null,
             OptionalMacroParameter<string>(var sequence) => ValidateMacro(sequence, context, lastSegmentContexts, macroProvider),
             Macro<string>({ Text: var name }, var optionalParams, var isNot) =>
-                macroProvider.PathParser.MacroProvider.TryResolve(name, isNot) switch
+                macroProvider.MacroProvider.TryResolve(name, isNot) switch
                 {
                     Unknown => MacroParserResources.UnknownMacroNameFormatted.Format(name),
                     // ITransducer

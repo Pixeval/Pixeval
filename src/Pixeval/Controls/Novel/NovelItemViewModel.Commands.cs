@@ -20,16 +20,11 @@ public partial class NovelItemViewModel
 {
     protected override Task<bool> SetBookmarkAsync(long id, bool isBookmarked, bool privately = false, IEnumerable<string>? tags = null) => MakoHelper.SetNovelBookmarkAsync(id, isBookmarked, privately, tags);
 
-    protected override void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+    protected override async void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         var frameworkElement = null as FrameworkElement;
-        NovelContent? content = null;
         switch (args.Parameter)
         {
-            case (FrameworkElement h, NovelContent vm):
-                frameworkElement = h;
-                content = vm;
-                break;
             case FrameworkElement h:
                 frameworkElement = h;
                 break;
@@ -39,26 +34,14 @@ public partial class NovelItemViewModel
                 return;
         }
 
-        SaveUtility(frameworkElement, content, App.AppViewModel.AppSettings.DownloadPathMacro);
+        SaveUtility(frameworkElement, await ContentAsync, App.AppViewModel.AppSettings.DownloadPathMacro);
     }
 
     protected override async void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        FrameworkElement frameworkElement;
-        NovelContent? content = null;
-        switch (args.Parameter)
-        {
-            case (FrameworkElement h, NovelContent vm):
-                frameworkElement = h;
-                content = vm;
-                break;
-            case FrameworkElement h:
-                frameworkElement = h;
-                break;
-            // 必须有Window来显示Picker
-            default:
-                return;
-        }
+        // 必须有Window来显示Picker
+        if (args.Parameter is not FrameworkElement frameworkElement)
+            return;
 
         var folder = await frameworkElement.OpenFolderPickerAsync();
         if (folder is null)
@@ -69,7 +52,7 @@ public partial class NovelItemViewModel
 
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadPathMacro);
         var path = Path.Combine(folder.Path, name);
-        SaveUtility(frameworkElement, content, path);
+        SaveUtility(frameworkElement, await ContentAsync, path);
     }
 
     /// <summary>
@@ -79,23 +62,12 @@ public partial class NovelItemViewModel
     /// <param name="content">为<see langword="null"/>则创建新的下载任务</param>
     /// <param name="path">文件路径</param>
     /// <returns></returns>
-    private void SaveUtility(FrameworkElement? frameworkElement, NovelContent? content, string path)
+    private void SaveUtility(FrameworkElement? frameworkElement, NovelContent content, string path)
     {
-        var ib = frameworkElement?.InfoGrowlReturn(EntryItemResources.NovelContentFetching);
-
         var factory = App.AppViewModel.AppServiceProvider.GetRequiredService<NovelDownloadTaskFactory>();
-        if (content is null)
-        {
-            var task = factory.Create(this, path);
-            App.AppViewModel.DownloadManager.QueueTask(task);
-            frameworkElement?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.DownloadTaskCreated);
-        }
-        else
-        {
-            var task = factory.CreateIntrinsic(this, path, content);
-            App.AppViewModel.DownloadManager.QueueTask(task);
-            frameworkElement?.RemoveSuccessGrowlAfterDelay(ib!, EntryItemResources.Saved);
-        }
+        var task = factory.Create(Entry, path, content);
+        App.AppViewModel.DownloadManager.QueueTask(task);
+        frameworkElement?.SuccessGrowl(EntryItemResources.DownloadTaskCreated);
     }
 
     public override Uri AppUri => MakoHelper.GenerateNovelAppUri(Id);

@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using FluentIcons.Common;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
-using Mako.Model;
 using Pixeval.Util.UI;
 using Windows.System;
 
@@ -31,26 +30,12 @@ public partial class WorkEntryViewModel<T>
     public XamlUICommand BookmarkCommand { get; } = "".GetCommand(Symbol.Heart, VirtualKeyModifiers.Control, VirtualKey.D);
 
     /// <summary>
-    /// Parameter1: <see langword="null"/><br/>
-    /// 
-    /// Parameter1: <see cref="FrameworkElement"/><br/>
-    /// 
-    /// Parameter3: <see cref="ValueTuple{T1, T2}"/>
-    /// <list type="bullet">
-    /// <item><term>T1</term><description><see cref="FrameworkElement"/></description></item>
-    /// <item><term>T2</term><description><see cref="NovelContent"/>?(<see cref="NovelItemViewModel"/>)</description></item>
-    /// </list>
+    /// Parameter: <see cref="FrameworkElement"/>?<br/>
     /// </summary>
     public XamlUICommand SaveCommand { get; } = EntryItemResources.Save.GetCommand(Symbol.Save, VirtualKeyModifiers.Control, VirtualKey.S);
 
     /// <summary>
-    /// Parameter1: <see cref="FrameworkElement"/><br/>
-    /// 
-    /// Parameter2: <see cref="ValueTuple{T1, T2}"/>(<see cref="NovelItemViewModel"/>)
-    /// <list type="bullet">
-    /// <item><term>T1</term><description><see cref="FrameworkElement"/></description></item>
-    /// <item><term>T2</term><description><see cref="NovelContent"/>?</description></item>
-    /// </list>
+    /// Parameter: <see cref="FrameworkElement"/><br/>
     /// </summary>
     public XamlUICommand SaveAsCommand { get; } = EntryItemResources.SaveAs.GetCommand(Symbol.SaveEdit, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, VirtualKey.S);
 
