@@ -1,7 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;

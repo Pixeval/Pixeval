@@ -7,7 +7,6 @@ using System.IO.Compression;
 using System.Threading;
 using System.Threading.Tasks;
 using Mako.Model;
-using Mako.Net.Response;
 using Pixeval.Database;
 using Pixeval.Options;
 using Pixeval.Util;
@@ -70,7 +69,7 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup, IImageDownload
         }
         else
         {
-            using var image = await Destinations.UgoiraSaveToImageAsync([.. Metadata.Delays]);
+            using var image = await Destinations.UgoiraSaveToImageAsync(Metadata.Delays);
             image.SetIdTags(Entry);
             await image.SaveAsync(TokenizedDestination, IoHelper.GetUgoiraEncoder(UgoiraDownloadFormat), token);
         }

@@ -56,7 +56,7 @@ public sealed partial class BookmarksPage : IScrollViewHost
         SetFilter(null);
     }
 
-    private bool BookmarkTagFilter(string name, IWorkViewModel viewModel) => _viewModel.ContainsTag(name, viewModel.Id);
+    private bool BookmarkTagFilter(string name, IWorkViewModel viewModel) => viewModel.Entry is IWorkEntry entry && _viewModel.ContainsTag(name, entry.Id);
 
     private async void ChangeSource()
     {

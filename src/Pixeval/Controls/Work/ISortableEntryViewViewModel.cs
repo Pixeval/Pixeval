@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Mako.Engine;
-using Mako.Model;
+using Misaki;
 using Pixeval.Collections;
 
 namespace Pixeval.Controls;
@@ -35,7 +35,7 @@ public interface ISortableEntryViewViewModel : INotifyPropertyChanged, IDisposab
 
     Range ViewRange { get; set; }
 
-    void ResetEngine(IFetchEngine<IWorkEntry>? newEngine, int itemsPerPage = 20, int itemLimit = -1);
+    void ResetEngine(IFetchEngine<IArtworkInfo>? newEngine, int itemsPerPage = 20, int itemLimit = -1);
 
-    void ResetSource(ObservableCollection<IWorkEntry>? source);
+    void ResetSource(ObservableCollection<IArtworkInfo>? source);
 }

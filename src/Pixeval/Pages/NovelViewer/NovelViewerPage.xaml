@@ -301,7 +301,7 @@
                     Padding="15,0"
                     Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
                     Symbol="AppTitle"
-                    Text="{x:Bind _viewModel.CurrentNovel.Title, Mode=OneWay}" />
+                    Text="{x:Bind _viewModel.CurrentNovel.Entry.Title, Mode=OneWay}" />
             </CommandBar>
             <CommandBar
                 x:Name="ExtensionsCommandBar"

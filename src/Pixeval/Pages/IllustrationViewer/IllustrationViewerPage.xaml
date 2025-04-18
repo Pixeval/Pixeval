@@ -36,7 +36,7 @@
             <controls:WorkViewerSplitView
                 x:Name="EntryViewerSplitView"
                 Grid.Row="1"
-                MenuItemsSource="{x:Bind _viewModel.Tags}">
+                MenuItemsSource="{x:Bind _viewModel.Tags, Mode=OneWay}">
                 <controls:WorkViewerSplitView.PaneContent>
                     <controls1:DockPanel>
                         <ContentPresenter x:Name="InnerTopBarPresenter" controls1:DockPanel.Dock="Top">
@@ -187,7 +187,8 @@
                                             <AppBarButton
                                                 Command="{x:Bind _viewModel.CurrentIllustration.BookmarkCommand, Mode=OneWay}"
                                                 CommandParameter="{x:Bind}"
-                                                IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
+                                                IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}"
+                                                Visibility="{x:Bind controls:C.IsNotNullToVisibility(_viewModel.CurrentIllustration.BookmarkCommand), Mode=OneWay}" />
                                             <AppBarButton Command="{x:Bind _viewModel.CurrentImage.RotateCounterclockwiseCommand, Mode=OneWay}" />
                                             <AppBarToggleButton Command="{x:Bind _viewModel.CurrentImage.MirrorCommand, Mode=OneWay}" IsChecked="{x:Bind _viewModel.CurrentImage.IsMirrored, Mode=OneWay}" />
                                             <AppBarButton Command="{x:Bind _viewModel.CurrentImage.RotateClockwiseCommand, Mode=OneWay}" />
@@ -267,7 +268,7 @@
                         Padding="15,0"
                         Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
                         Symbol="AppTitle"
-                        Text="{x:Bind _viewModel.CurrentIllustration.Title, Mode=OneWay}" />
+                        Text="{x:Bind _viewModel.CurrentIllustration.Entry.Title, Mode=OneWay}" />
                 </CommandBar>
                 <CommandBar
                     x:Name="ExtensionsCommandBar"

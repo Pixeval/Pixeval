@@ -9,7 +9,9 @@ using CommunityToolkit.WinUI.Collections;
 using Pixeval.AppManagement;
 using Mako.Global.Enum;
 using Mako.Model;
+using Misaki;
 using Pixeval.Collections;
+using Pixeval.Controls;
 using Pixeval.Options;
 using WinUI3Utilities;
 
@@ -101,7 +103,7 @@ public static class MakoHelper
 
     public static Uri GenerateSpotlightAppUri(long id) => new($"{AppInfo.AppProtocol}://spotlight/{id}");
 
-    public static SortDescription<IWorkEntry>? GetSortDescription(WorkSortOption sortOption)
+    public static SortDescription<IWorkViewModel>? GetSortDescription(WorkSortOption sortOption)
     {
         return sortOption switch
         {
@@ -109,7 +111,7 @@ public static class MakoHelper
             WorkSortOption.PublishDateAscending => new(WorkEntryPublishDateComparer.Instance, SortDirection.Ascending),
             WorkSortOption.PublishDateDescending => new(WorkEntryPublishDateComparer.Instance, SortDirection.Descending),
             WorkSortOption.DoNotSort => null,
-            _ => ThrowHelper.ArgumentOutOfRange<WorkSortOption, SortDescription<IWorkEntry>?>(sortOption)
+            _ => ThrowHelper.ArgumentOutOfRange<WorkSortOption, SortDescription<IWorkViewModel>?>(sortOption)
         };
     }
 
@@ -126,29 +128,29 @@ public static class MakoHelper
         return result.IsSuccessStatusCode ? isFollowed : !isFollowed;
     }
 
-    public static async Task<bool> SetIllustrationBookmarkAsync(long id, bool isBookmarked, bool privately = false, IEnumerable<string>? tags = null)
+    public static async Task<bool> SetIllustrationBookmarkAsync(Illustration id, bool privately = false, IEnumerable<string>? tags = null)
     {
-        var result = await (isBookmarked
-            ? App.AppViewModel.MakoClient.PostIllustrationBookmarkAsync(id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public, tags)
-            : App.AppViewModel.MakoClient.RemoveIllustrationBookmarkAsync(id));
+        var result = await (id.IsFavorite
+            ? App.AppViewModel.MakoClient.RemoveIllustrationBookmarkAsync(id.Id)
+            : App.AppViewModel.MakoClient.PostIllustrationBookmarkAsync(id.Id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public, tags));
         if (result.IsSuccessStatusCode)
         {
             await RefreshBookmarkTagsAsync();
-            return isBookmarked;
+            return !id.IsFavorite;
         }
-        return !isBookmarked;
+        return id.IsFavorite;
     }
 
-    public static async Task<bool> SetNovelBookmarkAsync(long id, bool isBookmarked, bool privately = false, IEnumerable<string>? tags = null)
+    public static async Task<bool> SetNovelBookmarkAsync(Novel id, bool privately = false, IEnumerable<string>? tags = null)
     {
-        var result = await (isBookmarked
-            ? App.AppViewModel.MakoClient.PostNovelBookmarkAsync(id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public, tags)
-            : App.AppViewModel.MakoClient.RemoveNovelBookmarkAsync(id));
+        var result = await (id.IsFavorite
+            ? App.AppViewModel.MakoClient.RemoveNovelBookmarkAsync(id.Id)
+            : App.AppViewModel.MakoClient.PostNovelBookmarkAsync(id.Id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public, tags));
         if (result.IsSuccessStatusCode)
         {
             await RefreshBookmarkTagsAsync();
-            return isBookmarked;
+            return !id.IsFavorite;
         }
-        return !isBookmarked;
+        return id.IsFavorite;
     }
 }

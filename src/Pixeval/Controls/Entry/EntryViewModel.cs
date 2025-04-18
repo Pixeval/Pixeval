@@ -39,9 +39,9 @@ public abstract class EntryViewModel<T>(T entry) : ObservableObject, IDisposable
 
     public abstract Uri AppUri { get; }
 
-    public abstract Uri WebUri { get; }
+    public abstract Uri WebsiteUri { get; }
 
-    public abstract Uri PixEzUri { get; }
+    public virtual Uri? PixEzUri => null;
 
     public XamlUICommand GenerateLinkCommand { get; } = EntryItemResources.GenerateLink.GetCommand(Symbol.Link);
 
@@ -62,13 +62,13 @@ public abstract class EntryViewModel<T>(T entry) : ObservableObject, IDisposable
 
     private void GenerateWebLinkCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        UiHelper.ClipboardSetText(WebUri.OriginalString);
+        UiHelper.ClipboardSetText(WebsiteUri.OriginalString);
         (args.Parameter as FrameworkElement)?.SuccessGrowl(EntryItemResources.LinkCopiedToClipboard);
     }
 
     private async void OpenInWebBrowserCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        _ = await Launcher.LaunchUriAsync(WebUri);
+        _ = await Launcher.LaunchUriAsync(WebsiteUri);
     }
 
     private async void ShowQrCodeCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
@@ -76,13 +76,13 @@ public abstract class EntryViewModel<T>(T entry) : ObservableObject, IDisposable
         if (args.Parameter is not TeachingTip showQrCodeTeachingTip)
             return;
 
-        var qrCodeSource = await IoHelper.GenerateQrCodeForUrlAsync(WebUri.OriginalString);
+        var qrCodeSource = await IoHelper.GenerateQrCodeForUrlAsync(WebsiteUri.OriginalString);
         ShowQrCodeCommandExecuteRequested(showQrCodeTeachingTip, qrCodeSource);
     }
 
     private async void ShowPixEzQrCodeCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        if (args.Parameter is not TeachingTip showQrCodeTeachingTip)
+        if (PixEzUri is null || args.Parameter is not TeachingTip showQrCodeTeachingTip)
             return;
 
         var qrCodeSource = await IoHelper.GenerateQrCodeAsync(PixEzUri.OriginalString);

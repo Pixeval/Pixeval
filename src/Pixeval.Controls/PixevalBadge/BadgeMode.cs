@@ -5,6 +5,7 @@ namespace Pixeval.Controls;
 
 public enum BadgeMode
 {
+    None,
     Premium,
     Following,
     Gif,

@@ -8,12 +8,13 @@ using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
 using Mako.Engine;
 using Mako.Model;
+using Misaki;
 
 namespace Pixeval.Controls;
 
 public interface IDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>
     : INotifyPropertyChanged, INotifyPropertyChanging, IDisposable
-    where T : class, IIdEntry
+    where T : class, IIdentityInfo
     where TViewModel : class, IFactory<T, TViewModel>
 {
     AdvancedObservableCollection<TViewModel> View { get; }

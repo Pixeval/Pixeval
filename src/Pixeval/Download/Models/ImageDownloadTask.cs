@@ -54,7 +54,7 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
 
     public string Destination { get; }
 
-    private string DownloadTempDestination => Destination + ".pixevaldownloading";
+    private string DownloadTempDestination => Destination + IoHelper.PixevalTempExtension;
 
     [ObservableProperty]
     public partial DownloadState CurrentState { get; set; }

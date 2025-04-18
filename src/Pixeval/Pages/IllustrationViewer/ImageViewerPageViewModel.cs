@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -22,7 +21,6 @@ using Pixeval.Extensions.Common;
 using Pixeval.Extensions.Common.Commands.Transformers;
 using Pixeval.Util.ComponentModels;
 using Pixeval.Util.IO;
-using Pixeval.Util.IO.Caching;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.ApplicationModel.DataTransfer;
@@ -30,7 +28,6 @@ using Windows.Foundation;
 using Windows.Storage;
 using Windows.System;
 using Windows.System.UserProfile;
-using Mako.Model;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -50,9 +47,6 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     [ObservableProperty]
     public partial string? LoadingText { get; set; }
-
-    [ObservableProperty]
-    public partial IReadOnlyList<int>? MsIntervals { get; set; }
 
     /// <summary>
     /// 原图流（原来/处理前的图片，可以是缩略图）
@@ -85,11 +79,6 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsFit))]
     public partial ZoomableImageMode ShowMode { get; set; }
-
-    /// <summary>
-    /// 由于多窗口，可能在加载图片后改变设置，所以此处缓存原图设置
-    /// </summary>
-    private bool _isOriginal;
 
     /// <summary>
     /// <see cref="ShowMode"/> is <see cref="ZoomableImageMode.Fit"/> or not
@@ -133,17 +122,17 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
         switch (s)
         {
-            case IReadOnlyList<Stream> and [{ } stream]:
+            case Stream stream:
                 stream.Position = 0;
                 await stream.CopyToAsync(destination);
                 break;
-            case IReadOnlyList<Stream> streams when IllustrationViewModel.IsUgoira:
-                _ = await streams.UgoiraSaveToStreamAsync(MsIntervals ?? [], destination, progress);
+            case (IReadOnlyList<Stream> streams, IReadOnlyList<int> delays):
+                _ = await streams.UgoiraSaveToStreamAsync(delays, destination, progress);
                 return;
-            case Stream stream:
+            case (Stream stream, IReadOnlyList<int> delays):
                 var list = await Streams.ReadZipAsync(stream, false);
-                _ = await list.UgoiraSaveToStreamAsync(MsIntervals ?? [], destination, progress);
-                break;
+                _ = await list.UgoiraSaveToStreamAsync(delays, destination, progress);
+                return;
             default:
                 return;
         }
@@ -153,19 +142,27 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     {
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadPathMacro);
         var normalizedName = IoHelper.NormalizePathSegment(ArtworkMetaPathParser.Instance.Reduce(name, IllustrationViewModel.Entry));
-        normalizedName = IoHelper.ReplaceTokenExtensionFromUrl(normalizedName, IllustrationViewModel.IllustrationOriginalUrl);
-        await using var stream = appKnownFolder.OpenAsyncWrite(normalizedName);
-        await GetDisplayStreamsSourceAsync(stream);
+        var tempName = IoHelper.ReplaceTokenExtensionWithTempExtension(normalizedName);
+        await using (var stream = appKnownFolder.CreateAsyncWrite(tempName))
+            await GetDisplayStreamsSourceAsync(stream);
+        string newName;
+        await using (var stream = appKnownFolder.OpenAsyncRead(tempName)) 
+            newName = await IoHelper.ReplaceTempExtensionFromStreamAsync(normalizedName, stream);
+        appKnownFolder.RenameFile(tempName, newName);
         return await StorageFile.GetFileFromPathAsync(appKnownFolder.CombinePath(normalizedName));
     }
 
     public async Task SaveAsync(string destination)
     {
         destination = IoHelper.NormalizePath(ArtworkMetaPathParser.Instance.Reduce(destination, IllustrationViewModel.Entry));
-        destination = IoHelper.ReplaceTokenExtensionFromUrl(destination, IllustrationViewModel.IllustrationOriginalUrl);
-        IoHelper.CreateParentDirectories(destination);
-        await using var stream = IoHelper.OpenAsyncWrite(destination);
-        await GetDisplayStreamsSourceAsync(stream);
+        var tempDestination = IoHelper.ReplaceTokenExtensionWithTempExtension(destination);
+        IoHelper.CreateParentDirectories(tempDestination);
+        await using (var stream = IoHelper.CreateAsyncWrite(tempDestination))
+            await GetDisplayStreamsSourceAsync(stream);
+        string newDestination;
+        await using (var stream = IoHelper.OpenAsyncRead(tempDestination))
+            newDestination = await IoHelper.ReplaceTempExtensionFromStreamAsync(destination, stream);
+        File.Move(tempDestination, newDestination);
         FrameworkElement?.SuccessGrowl(EntryItemResources.Saved);
     }
 
@@ -179,7 +176,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
         async void OnCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
         {
-            if (OriginalStreamsSource is not (IReadOnlyList<Stream> and [{ } stream]))
+            if (OriginalStreamsSource is not Stream stream)
                 return;
             ExtensionRunningLock = false;
             try
@@ -248,8 +245,17 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
             return;
         _disposed = false;
         _ = LoadThumbnailAsync();
-        BrowseHistoryPersistentManager.AddHistory(IllustrationViewModel.Entry);
-        await LoadOriginalImageAsync();
+        // TODO 浏览历史 BrowseHistoryPersistentManager.AddHistory(IllustrationViewModel.Entry);
+        var source = await IllustrationViewModel.LoadOriginalImageAsync(AdvancePhase, ImageLoadingCancellationTokenSource.Token);
+
+        if (source is not null)
+            OriginalStreamsSource = source;
+
+        LoadSuccessfully = true;
+
+        if (OriginalStreamsSource is not null && !_disposed)
+            UpdateCommandCanExecute();
+
         return;
 
         async Task LoadThumbnailAsync()
@@ -257,84 +263,11 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
             _ = await IllustrationViewModel.TryLoadThumbnailAsync(this);
             OnPropertyChanged(nameof(ThumbnailSource));
         }
-
-        async Task LoadOriginalImageAsync()
-        {
-            var metadata = null as UgoiraMetadata;
-            if (IllustrationViewModel.IsUgoira)
-                metadata = await IllustrationViewModel.UgoiraMetadataAsync;
-
-            _isOriginal = App.AppViewModel.AppSettings.BrowseOriginalImage;
-
-            var ugoiraUrl = metadata?.LargeUrl;
-            object? source = null;
-            // 原图动图（一张一张下）
-            if (ugoiraUrl is not null && _isOriginal)
-            {
-                var urls = IllustrationViewModel.UgoiraOriginalUrls;
-                var list = new List<Stream>();
-                var ratio = 1d / urls.Count;
-                var startProgress = 0d;
-                foreach (var url in urls)
-                {
-                    if (await DownloadUrlAsync(url, startProgress, ratio) is { } stream)
-                        list.Add(stream);
-                    else
-                    {
-                        list = null;
-                        break;
-                    }
-
-                    startProgress += 100 * ratio;
-                }
-
-                source = list;
-            }
-            else
-            {
-                // 静图
-                if (ugoiraUrl is null)
-                {
-                    ugoiraUrl = IllustrationViewModel.StaticUrl(_isOriginal);
-                    if (await DownloadUrlAsync(ugoiraUrl) is { } s)
-                        source = (IReadOnlyList<Stream>) [s];
-                }
-                // 非原图动图（压缩包）
-                else
-                {
-                    source = await DownloadUrlAsync(ugoiraUrl);
-                }
-            }
-
-            if (source is not null)
-            {
-                MsIntervals = metadata?.Delays.ToArray();
-                OriginalStreamsSource = source;
-            }
-
-            LoadSuccessfully = true;
-
-            if (OriginalStreamsSource is not null && !_disposed)
-                UpdateCommandCanExecute();
-
-            return;
-
-            async Task<Stream?> DownloadUrlAsync(string url, double startProgress = 0, double ratio = 1)
-            {
-                AdvancePhase(LoadingPhase.CheckingCache);
-                if (ImageLoadingCancellationTokenSource.IsCancellationRequested)
-                    return null;
-                return await CacheHelper.GetStreamFromCacheAsync(
-                    url,
-                    new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, startProgress + ratio * d)),
-                    cancellationToken: ImageLoadingCancellationTokenSource.Token);
-            }
-        }
     }
 
     private async void CopyCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
-        if (DisplayStreamsSource is not (IReadOnlyList<Stream> and [{ } stream]))
+        if (DisplayStreamsSource is not Stream stream)
             return;
         stream.Position = 0;
         await UiHelper.ClipboardSetBitmapAsync(stream);

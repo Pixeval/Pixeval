@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Mako.Engine;
-using Mako.Model;
+using Misaki;
 using Pixeval.Collections;
 using Pixeval.Utilities;
 using WinUI3Utilities;
@@ -17,7 +17,7 @@ namespace Pixeval.Controls;
 
 public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>(HashSet<string> blockedTags)
     : EntryViewViewModel<T, TViewModel>, ISortableEntryViewViewModel
-    where T : class, IWorkEntry
+    where T : class, IArtworkInfo
     where TViewModel : EntryViewModel<T>, IFactory<T, TViewModel>, IWorkViewModel
 {
     protected readonly HashSet<string> BlockedTags = [.. blockedTags];
@@ -72,16 +72,16 @@ public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessed
         set => DataProvider.View.Range = value;
     }
 
-    public void ResetEngine(IFetchEngine<IWorkEntry>? newEngine, int itemsPerPage = 20, int itemLimit = -1)
+    public void ResetEngine(IFetchEngine<IArtworkInfo>? newEngine, int itemsPerPage = 20, int itemLimit = -1)
     {
         DataProvider.ResetEngine((IFetchEngine<T>?) newEngine, itemsPerPage, itemLimit);
     }
 
-    public void ResetSource(ObservableCollection<IWorkEntry>? source) => ThrowHelper.NotSupported();
+    public void ResetSource(ObservableCollection<IArtworkInfo>? source) => ThrowHelper.NotSupported();
 
     protected bool DefaultFilter(IWorkViewModel entry)
     {
-        if (entry.Tags.Any(tag => BlockedTags.Contains(tag.Name)))
+        if (entry.Entry.Tags.Any(t => t.Any(tag => BlockedTags.Contains(tag.Name))))
             return false;
 
         return Filter?.Invoke(entry) is not false;

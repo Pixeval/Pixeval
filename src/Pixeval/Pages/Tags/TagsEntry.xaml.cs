@@ -52,7 +52,7 @@ public sealed partial class TagsEntry
                 return;
             }
         }
-        var vm = new IllustrationItemViewModel(ViewModel.Illustration);
+        var vm = IllustrationItemViewModel.CreateInstance(ViewModel.Illustration);
         this.CreateIllustrationPage(vm, [vm]);
     }
 

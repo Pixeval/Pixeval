@@ -109,7 +109,7 @@ public sealed partial class DownloadItemViewModel(IDownloadTaskGroup downloadTas
 
     public override Uri AppUri => ThrowHelper.NotSupported<Uri>();
 
-    public override Uri WebUri => ThrowHelper.NotSupported<Uri>();
+    public override Uri WebsiteUri => ThrowHelper.NotSupported<Uri>();
 
     public override Uri PixEzUri => ThrowHelper.NotSupported<Uri>();
 

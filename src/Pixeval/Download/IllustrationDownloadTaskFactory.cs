@@ -4,7 +4,6 @@
 using System;
 using CommunityToolkit.Diagnostics;
 using Mako.Model;
-using Mako.Net.Response;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
 using Pixeval.Database.Managers;

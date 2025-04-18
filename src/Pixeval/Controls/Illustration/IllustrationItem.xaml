@@ -32,8 +32,14 @@
     </Grid.RenderTransform>
     <Grid.ContextFlyout>
         <MenuFlyout>
-            <MenuFlyoutItem Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
-            <MenuFlyoutItem Click="AddToBookmark_OnClicked" Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}" />
+            <MenuFlyoutItem
+                Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}"
+                CommandParameter="{x:Bind}"
+                Visibility="{x:Bind local:C.IsNotNullToVisibility(ViewModel.BookmarkCommand), Mode=OneWay}" />
+            <MenuFlyoutItem
+                Click="AddToBookmark_OnClicked"
+                Command="{x:Bind ViewModel.AddToBookmarkCommand, Mode=OneWay}"
+                Visibility="{x:Bind local:C.IsNotNullToVisibility(ViewModel.AddToBookmarkCommand), Mode=OneWay}" />
             <MenuFlyoutItem Click="OpenUserInfoPage_OnClicked" Command="{x:Bind ViewModel.OpenUserInfoPage, Mode=OneWay}" />
             <MenuFlyoutSeparator />
             <MenuFlyoutItem Command="{x:Bind ViewModel.SaveCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
@@ -60,7 +66,8 @@
             VerticalAlignment="Top"
             Command="{x:Bind ViewModel.BookmarkCommand, Mode=OneWay}"
             CommandParameter="{x:Bind}"
-            State="{x:Bind ViewModel.IsBookmarkedDisplay, Mode=OneWay}" />
+            State="{x:Bind ViewModel.IsBookmarkedDisplay, Mode=OneWay}"
+            Visibility="{x:Bind local:C.IsNotNullToVisibility(ViewModel.BookmarkCommand), Mode=OneWay}" />
         <controls:DockPanel
             Margin="10"
             VerticalAlignment="Bottom"
@@ -69,11 +76,8 @@
             <local:PixevalBadge
                 controls:DockPanel.Dock="Left"
                 Mode="Ai"
-                Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsAiGenerated), Mode=OneWay}" />
-            <local:PixevalBadge
-                controls:DockPanel.Dock="Left"
-                Mode="{x:Bind ViewModel.XRestrictionCaption, Mode=OneWay}"
-                Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsXRestricted), Mode=OneWay}" />
+                Visibility="{x:Bind local:C.ToVisibility(ViewModel.Entry.IsAiGenerated), Mode=OneWay}" />
+            <local:PixevalBadge controls:DockPanel.Dock="Left" Mode="{x:Bind ViewModel.SafeBadgeMode, Mode=OneWay}" />
             <local:PixevalBadge
                 controls:DockPanel.Dock="Left"
                 Mode="Gif"

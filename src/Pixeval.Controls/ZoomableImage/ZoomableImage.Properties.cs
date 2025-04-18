@@ -1,7 +1,6 @@
 // Copyright (c) Pixeval.Controls.
 // Licensed under the GPL v3 License.
 
-using System.Collections.Generic;
 using CommunityToolkit.WinUI;
 
 namespace Pixeval.Controls;
@@ -10,9 +9,6 @@ public partial class ZoomableImage
 {
     [GeneratedDependencyProperty]
     public partial object? Source { get; set; }
-
-    [GeneratedDependencyProperty]
-    public partial IReadOnlyList<int>? MsIntervals { get; set; }
 
     [GeneratedDependencyProperty(DefaultValue = true)]
     public partial bool IsPlaying { get; set; }

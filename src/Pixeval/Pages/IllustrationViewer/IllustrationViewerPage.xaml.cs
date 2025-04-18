@@ -54,8 +54,8 @@ public sealed partial class IllustrationViewerPage
 
             if (args.PropertyName is nameof(vm.CurrentIllustrationIndex))
             {
-                var oldTag = args.OldTag.To<long>();
-                var newTag = args.NewTag.To<long>(); // vm.CurrentPage.Id
+                var oldTag = args.OldTag.To<string>();
+                var newTag = args.NewTag.To<string>(); // vm.CurrentPage.Id
                 if (oldTag == newTag)
                     return;
                 // TODO: https://github.com/microsoft/microsoft-ui-xaml/issues/9952
@@ -120,7 +120,10 @@ public sealed partial class IllustrationViewerPage
 
     private void AddToBookmarkTeachingTip_OnCloseButtonClick(TeachingTip sender, object args)
     {
-        _viewModel.CurrentIllustration.AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags,
+        if (_viewModel.CurrentIllustration.AddToBookmarkCommand is not { } command)
+            return;
+
+        command.Execute((BookmarkTagSelector.SelectedTags,
             BookmarkTagSelector.IsPrivate, this));
 
         this.SuccessGrowl(EntryViewerPageResources.AddedToBookmark);
@@ -196,7 +199,7 @@ public sealed partial class IllustrationViewerPage
             var props = request.Data.Properties;
 
             props.Title = EntryViewerPageResources.ShareTitleFormatted.Format(vm.Id);
-            props.Description = vm.Title;
+            props.Description = vm.Entry.Title;
 
             var file = await _viewModel.CurrentImage.SaveToFolderAsync(AppKnownFolders.Temp);
             request.Data.SetStorageItems([file]);

@@ -22,7 +22,7 @@ public partial class FeedItemCondensedViewModel(List<Feed?> entries) : AbstractF
 
     public override Uri AppUri => ThrowHelper.NotSupported<Uri>("AppUri is not supported for condensed feeds");
 
-    public override Uri WebUri => ThrowHelper.NotSupported<Uri>("WebUri is not supported for condensed feeds");
+    public override Uri WebsiteUri => ThrowHelper.NotSupported<Uri>("WebUri is not supported for condensed feeds");
 
     public override Uri PixEzUri => ThrowHelper.NotSupported<Uri>("PixEzUri is not supported for condensed feeds");
 

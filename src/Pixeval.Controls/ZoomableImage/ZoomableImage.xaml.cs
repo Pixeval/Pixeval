@@ -66,8 +66,8 @@ public sealed partial class ZoomableImage : UserControl, IStructuralDisposalComp
                         {
                             ++i;
                             var delay = 20;
-                            if (ClonedMsIntervals is { } t && t.Length > i)
-                                delay = ClonedMsIntervals[i];
+                            if (MsIntervals is { } t && t.Length > i)
+                                delay = MsIntervals[i];
                             totalDelay += delay;
                             if (delay < 5)
                                 continue;

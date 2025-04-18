@@ -7,16 +7,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media;
-using Mako.Model;
+using Misaki;
 using Pixeval.Util.IO.Caching;
 using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 
 public abstract partial class ThumbnailEntryViewModel<T>(T entry) : EntryViewModel<T>(entry)
-    where T : class, IIdEntry
+    where T : class, IIdentityInfo
 {
-    public long Id => Entry.Id;
+    public string Id => Entry.Id;
 
     private HashSet<int> References { get; } = [];
 
