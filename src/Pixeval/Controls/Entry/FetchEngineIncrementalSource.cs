@@ -6,13 +6,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Collections;
 using Mako.Engine;
-using Mako.Model;
+using Misaki;
 
 namespace Pixeval.Controls;
 
 public class FetchEngineIncrementalSource<T, TViewModel>(IAsyncEnumerable<T?> asyncEnumerator, int limit = -1)
     : IIncrementalSource<TViewModel>, IIncrementalSourceFactory<T, FetchEngineIncrementalSource<T, TViewModel>>
-    where T : IIdEntry
+    where T : IIdentityInfo
     where TViewModel : IFactory<T, TViewModel>
 {
     public static FetchEngineIncrementalSource<T, TViewModel> CreateInstance(IFetchEngine<T> fetchEngine, int limit = -1) => new(fetchEngine, limit);
@@ -22,7 +22,7 @@ public class FetchEngineIncrementalSource<T, TViewModel>(IAsyncEnumerable<T?> as
     /// </summary>
     private readonly IAsyncEnumerator<T> _asyncEnumerator = asyncEnumerator?.GetAsyncEnumerator()!;
 
-    private readonly HashSet<long> _yieldedItems = [];
+    private readonly HashSet<string> _yieldedItems = [];
 
     private int _yieldedCounter;
 
@@ -56,7 +56,7 @@ public class FetchEngineIncrementalSource<T, TViewModel>(IAsyncEnumerable<T?> as
         return result;
     }
 
-    protected virtual long Identifier(T entity) => entity.Id;
+    protected virtual string Identifier(T entity) => entity.Id;
 
     protected TViewModel Select(T entity, int index) => TViewModel.CreateInstance(entity);
 }

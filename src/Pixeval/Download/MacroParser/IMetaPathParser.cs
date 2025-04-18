@@ -9,5 +9,7 @@ public interface IMetaPathParser<in TContext>
 {
     IReadOnlyList<IMacro> MacroProvider { get; }
 
+    static abstract IMetaPathParser<TContext> Instance { get; }
+
     string Reduce(string raw, TContext context);
 }

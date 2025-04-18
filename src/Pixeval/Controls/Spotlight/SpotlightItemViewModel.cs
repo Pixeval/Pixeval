@@ -15,9 +15,9 @@ public partial class SpotlightItemViewModel : ThumbnailEntryViewModel<Spotlight>
 
     protected override string ThumbnailUrl => Entry.Thumbnail;
 
-    public override Uri AppUri => MakoHelper.GenerateSpotlightAppUri(Id);
+    public override Uri AppUri => MakoHelper.GenerateSpotlightAppUri(Entry.Id);
 
-    public override Uri WebUri => MakoHelper.GenerateSpotlightWebUri(Id);
+    public override Uri WebsiteUri => MakoHelper.GenerateSpotlightWebUri(Entry.Id);
 
-    public override Uri PixEzUri => MakoHelper.GenerateSpotlightPixEzUri(Id);
+    public override Uri PixEzUri => MakoHelper.GenerateSpotlightPixEzUri(Entry.Id);
 }

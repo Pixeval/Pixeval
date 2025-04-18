@@ -2,24 +2,26 @@
 // Licensed under the GPL v3 License.
 
 using System.Collections.Generic;
-using Pixeval.Controls;
+using Misaki;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.Macros;
 using Pixeval.Utilities;
 
 namespace Pixeval.Download;
 
-public class IllustrationMetaPathParser : IMetaPathParser<IllustrationItemViewModel>
+public class ArtworkMetaPathParser : IMetaPathParser<IArtworkInfo>
 {
-    public static IllustrationMetaPathParser Instance { get; } = new();
+    private ArtworkMetaPathParser()
+    {
+    }
 
-    private readonly MacroParser<IllustrationItemViewModel> _parser = new();
+    public static IMetaPathParser<IArtworkInfo> Instance { get; } = new ArtworkMetaPathParser();
 
-    private static readonly IReadOnlyList<IMacro> _MacroProviderStatic = MetaPathMacroAttributeHelper.GetIWorkViewModelInstances();
+    private readonly MacroParser<IArtworkInfo> _parser = new();
 
-    public IReadOnlyList<IMacro> MacroProvider => _MacroProviderStatic;
+    public IReadOnlyList<IMacro> MacroProvider { get; } = MetaPathMacroAttributeHelper.GetIArtworkInfoInstances();
 
-    public string Reduce(string raw, IllustrationItemViewModel context)
+    public string Reduce(string raw, IArtworkInfo context)
     {
         _parser.SetupParsingEnvironment(new Lexer(raw));
         if (_parser.Parse() is { } root)

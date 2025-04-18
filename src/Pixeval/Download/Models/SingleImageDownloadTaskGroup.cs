@@ -32,11 +32,10 @@ public partial class SingleImageDownloadTaskGroup : ImageDownloadTask, IImageDow
 
     public long Id => DatabaseEntry.Entry.Id;
 
-    public SingleImageDownloadTaskGroup(Illustration entry, string destination, Stream? stream = null) : this(new(destination, DownloadItemType.Illustration, entry))
+    public SingleImageDownloadTaskGroup(Illustration entry, string destination) : this(new(destination, DownloadItemType.Illustration, entry))
     {
         CurrentState = DownloadState.Queued;
         ProgressPercentage = 0;
-        Stream = stream;
         SetNotCreateFromEntry();
     }
 

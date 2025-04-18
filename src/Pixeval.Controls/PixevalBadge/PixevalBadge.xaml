@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:text="using:Windows.UI.Text"
     xmlns:winUi="using:CommunityToolkit.WinUI"
+    Visibility="{x:Bind GetVisibility(Mode), Mode=OneWay}"
     mc:Ignorable="d">
     <UserControl.Resources>
         <x:Boolean x:Key="True">True</x:Boolean>

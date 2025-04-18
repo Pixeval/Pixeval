@@ -16,4 +16,16 @@ public sealed partial class ImageViewerPage
         if (parameter is ImageViewerPageViewModel viewModel)
             _viewModel = viewModel;
     }
+
+    public override void CompleteDisposal()
+    {
+        base.CompleteDisposal();
+        Bindings.StopTracking();
+    }
+
+    public override void OnPageDeactivated(NavigatingCancelEventArgs e)
+    {
+        // TODO 可能的内存泄露：多个页面共用一个vm
+        Bindings.StopTracking();
+    }
 }

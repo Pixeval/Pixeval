@@ -123,7 +123,7 @@ public partial class WorkContainer : IScrollViewHost
             return;
         foreach (var selectedEntry in ViewModel.SelectedEntries)
         {
-            _ = await Launcher.LaunchUriAsync(selectedEntry.WebUri);
+            _ = await Launcher.LaunchUriAsync(selectedEntry.Entry.WebsiteUri);
         }
     }
 
@@ -137,7 +137,8 @@ public partial class WorkContainer : IScrollViewHost
             return;
 
         foreach (var i in ViewModel.SelectedEntries)
-            i.AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, null as object));
+            if (i.AddToBookmarkCommand is { } addToBookmarkCommand)
+                addToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, null as object));
 
         if (ViewModel.SelectedEntries.Count is var c and > 0)
             this.SuccessGrowl(WorkContainerResources.AddedAllToBookmarkContentFormatted.Format(c));

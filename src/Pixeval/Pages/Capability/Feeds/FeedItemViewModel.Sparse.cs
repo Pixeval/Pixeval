@@ -67,7 +67,7 @@ public partial class FeedItemSparseViewModel(Feed entry) : AbstractFeedItemViewM
         _ => ThrowHelper.ArgumentOutOfRange<FeedType?, Uri>(entry.Type)
     };
 
-    public override Uri WebUri => entry.Type switch
+    public override Uri WebsiteUri => entry.Type switch
     {
         FeedType.AddBookmark or FeedType.PostIllust => MakoHelper.GenerateIllustrationWebUri(entry.Id),
         FeedType.AddFavorite => MakoHelper.GenerateUserWebUri(entry.Id),

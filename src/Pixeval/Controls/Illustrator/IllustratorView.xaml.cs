@@ -25,7 +25,7 @@ public sealed partial class IllustratorView : IScrollViewHost, IStructuralDispos
 
     private async void IllustratorItemsView_OnItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs e)
     {
-        await this.CreateIllustratorPageAsync(e.InvokedItem.To<IllustratorItemViewModel>().UserId);
+        await this.CreateIllustratorPageAsync(e.InvokedItem.To<IllustratorItemViewModel>().Entry.Id);
     }
 
     public ScrollView ScrollView => AdvancedItemsView.ScrollView;

@@ -6,13 +6,13 @@ using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Collections;
 using Mako.Engine;
-using Mako.Model;
+using Misaki;
 
 namespace Pixeval.Controls;
 
 public abstract class EntryViewViewModel<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>
     : ObservableObject, IDisposable
-    where T : class, IIdEntry
+    where T : class, IIdentityInfo
     where TViewModel : EntryViewModel<T>, IFactory<T, TViewModel>
 {
     /// <summary>

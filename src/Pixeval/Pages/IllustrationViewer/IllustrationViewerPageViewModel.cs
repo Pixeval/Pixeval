@@ -15,6 +15,7 @@ using Pixeval.Util.ComponentModels;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.System;
+using Misaki;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -56,10 +57,6 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
     public IllustrationItemViewModel[]? IllustrationsSource { get; }
 
-    public long IllustrationId => CurrentIllustration.Entry.Id;
-
-    public UserEntity Illustrator => CurrentIllustration.Entry.User;
-
     public void Dispose()
     {
         GC.SuppressFinalize(this);
@@ -70,7 +67,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         ViewModelSource?.Dispose();
     }
 
-    public NavigationViewTag<WorkInfoPage, Illustration> IllustrationInfoTag { get; } =
+    public NavigationViewTag<WorkInfoPage, IArtworkInfo> IllustrationInfoTag { get; } =
         new(EntryViewerPageResources.InfoTabContent, null!);
 
     public NavigationViewTag<CommentsPage, (SimpleWorkType, long Id)> CommentsTag { get; } =
@@ -79,12 +76,8 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
     public NavigationViewTag<RelatedWorksPage, long> RelatedWorksTag { get; } =
         new(EntryViewerPageResources.RelatedWorksTabContent, 0);
 
-    public IReadOnlyList<NavigationViewTag> Tags =>
-    [
-        IllustrationInfoTag,
-        CommentsTag,
-        RelatedWorksTag
-    ];
+    [ObservableProperty]
+    public partial IReadOnlyList<NavigationViewTag>? Tags { get; set; }
 
     #region Current相关
 
@@ -118,7 +111,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
 
             var oldValue = field;
             // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
-            var oldTag = Pages?[CurrentPageIndex].Id ?? 0;
+            var oldTag = "0";// Pages?[CurrentPageIndex].Id ?? 0;
 
             field = value;
             // 这里可以触发总页数的更新
@@ -127,8 +120,16 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
             Images = [.. Pages.Select(p => new ImageViewerPageViewModel(p, CurrentIllustration, FrameworkElement))];
 
             IllustrationInfoTag.Parameter = CurrentIllustration.Entry;
-            CommentsTag.Parameter = (SimpleWorkType.IllustAndManga, IllustrationId);
-            RelatedWorksTag.Parameter = IllustrationId;
+            if (CurrentIllustration.Entry is Illustration illustration)
+            {
+                CommentsTag.Parameter = (SimpleWorkType.IllustAndManga, illustration.Id);
+                RelatedWorksTag.Parameter = illustration.Id;
+                Tags = [IllustrationInfoTag, CommentsTag, RelatedWorksTag];
+            }
+            else
+            {
+                Tags = [IllustrationInfoTag];
+            }
 
             // 此处不要触发CurrentPageIndex的OnDetailedPropertyChanged，否则会导航两次
             _currentPageIndex = 0;

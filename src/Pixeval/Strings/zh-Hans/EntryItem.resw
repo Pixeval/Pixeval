@@ -165,20 +165,8 @@
   <data name="DownloadTaskCreated" xml:space="preserve">
     <value>已创建下载任务</value>
   </data>
-  <data name="UgoiraProcessing" xml:space="preserve">
-    <value>正在处理动图：{0}%</value>
-  </data>
-  <data name="ImageProcessing" xml:space="preserve">
-    <value>正在处理图片</value>
-  </data>
-  <data name="NovelContentFetching" xml:space="preserve">
-    <value>正在获取小说内容</value>
-  </data>
   <data name="ImageSetToClipBoard" xml:space="preserve">
     <value>图片已复制到剪切板</value>
-  </data>
-  <data name="NovelSetToClipBoard" xml:space="preserve">
-    <value>小说已复制到剪切板</value>
   </data>
   <data name="TheIllustrationIsAMangaFormatted" xml:space="preserve">
     <value>这是一副图集，内含{0}张图片</value>

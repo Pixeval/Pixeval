@@ -52,10 +52,22 @@ public class AppKnownFolders(string fullPath)
 
     public DirectoryInfo DirectoryInfo { get; } = Directory.CreateDirectory(new(fullPath));
 
-    public FileStream OpenAsyncWrite(string name)
+    public FileStream OpenAsyncRead(string name)
     {
         EnsureExisted();
-        return IoHelper.OpenAsyncWrite(CombinePath(name));
+        return IoHelper.OpenAsyncRead(CombinePath(name));
+    }
+
+    public FileStream CreateAsyncWrite(string name)
+    {
+        EnsureExisted();
+        return IoHelper.CreateAsyncWrite(CombinePath(name));
+    }
+
+    public void RenameFile(string oldName, string newName)
+    {
+        EnsureExisted();
+        File.Move(CombinePath(oldName), CombinePath(newName));
     }
 
     public string[] GetFiles(string searchPattern = "*") => Directory.GetFiles(FullPath, searchPattern);

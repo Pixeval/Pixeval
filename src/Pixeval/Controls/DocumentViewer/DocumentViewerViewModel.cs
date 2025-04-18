@@ -92,7 +92,7 @@ public partial class DocumentViewerViewModel(FrameworkElement frameworkElement) 
         IsLoading = true;
         try
         {
-            NovelContent = await novelItem.GetNovelContentAsync();
+            NovelContent = await novelItem.ContentAsync;
             ((INovelContext<ImageSource>) this).InitImages();
             LoadRtfContent();
             if (CurrentPage is 0)

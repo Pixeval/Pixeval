@@ -1,20 +1,17 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Pixeval.Controls;
+using Misaki;
 using Pixeval.Download.MacroParser;
 
 namespace Pixeval.Download.Macros;
 
-[MetaPathMacro<IWorkViewModel>]
-public class IsR18GMacro : IPredicate<IWorkViewModel>
+[MetaPathMacro<IArtworkInfo>]
+public class IsR18GMacro : IPredicate<IArtworkInfo>
 {
     public bool IsNot { get; set; }
 
     public string Name => "if_r18g";
 
-    public bool Match(IWorkViewModel context)
-    {
-        return context is { IsXRestricted: true, XRestrictionCaption: BadgeMode.R18G };
-    }
+    public bool Match(IArtworkInfo context) => context.SafeRating.IsR18G;
 }

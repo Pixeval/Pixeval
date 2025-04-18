@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Numerics;
 using System.Threading;
 using Microsoft.Graphics.Canvas;
@@ -25,14 +26,7 @@ public partial class ZoomableImage
     private readonly List<CanvasBitmap> _frames = [];
     private readonly CancellationTokenSource _token = new();
 
-    private int[]? ClonedMsIntervals { get; set; }
-
-    partial void OnMsIntervalsPropertyChanged(DependencyPropertyChangedEventArgs e)
-    {
-        if (IsDisposed)
-            return;
-        ClonedMsIntervals = [.. MsIntervals ?? []];
-    }
+    private int[]? MsIntervals { get; set; }
 
     partial void OnSourcePropertyChanged(DependencyPropertyChangedEventArgs e)
     {
@@ -52,12 +46,24 @@ public partial class ZoomableImage
         _frames.Clear();
         try
         {
-            var sources = Source switch
+            IEnumerable<Stream>? sources;
+            switch (Source)
             {
-                Stream stream => await Streams.ReadZipAsync(stream, false),
-                IEnumerable<Stream> list => list,
-                _ => null
-            };
+                case Stream stream:
+                    sources = [stream];
+                    break;
+                case (Stream stream, IEnumerable<int> delays):
+                    sources = await Streams.ReadZipAsync(stream, false);
+                    MsIntervals = delays.ToArray();
+                    break;
+                case (IEnumerable<Stream> list, IEnumerable<int> delays):
+                    sources = list;
+                    MsIntervals = delays.ToArray();
+                    break;
+                default:
+                    sources = null;
+                    break;
+            }
 
             if (sources is null)
                 return;

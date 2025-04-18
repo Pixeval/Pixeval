@@ -9,7 +9,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
-using Mako.Model;
 using Pixeval.Extensions;
 using Pixeval.Extensions.Common.Commands.Transformers;
 using Windows.System;
@@ -96,7 +95,10 @@ public sealed partial class NovelViewerPage
 
     private void AddToBookmarkTeachingTip_OnCloseButtonClick(TeachingTip sender, object args)
     {
-        _viewModel.CurrentNovel.AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, DownloadParameter(_viewModel.CurrentDocument.NovelContent)));
+        if (_viewModel.CurrentNovel.AddToBookmarkCommand is not { } command)
+            return;
+
+        command.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, this));
     }
 
     private void AddToBookmarkButton_OnClicked(object sender, RoutedEventArgs e) => AddToBookmarkTeachingTip.IsOpen = true;
@@ -161,8 +163,6 @@ public sealed partial class NovelViewerPage
         var appBarButton = teachingTip.GetTag<AppBarButton>();
         teachingTip.Target = appBarButton.IsInOverflow ? null : appBarButton;
     }
-
-    private (FrameworkElement, NovelContent?) DownloadParameter(NovelContent? content) => (this, content);
 
     /// <summary>
     /// ReSharper disable once UnusedMember.Global

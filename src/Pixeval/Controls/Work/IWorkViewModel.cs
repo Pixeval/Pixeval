@@ -1,40 +1,26 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Input;
-using Mako.Model;
 using Pixeval.Filters;
 using WinUI3Utilities;
+using Misaki;
 
 namespace Pixeval.Controls;
 
-public interface IWorkViewModel : IWorkEntry
+public interface IWorkViewModel
 {
-    IWorkEntry Entry { get; }
+    IArtworkInfo Entry { get; }
 
-    bool IsAiGenerated { get; }
-
-    /// <summary>
-    /// R18 or R18G
-    /// </summary>
-    bool IsXRestricted { get; }
-
-    BadgeMode XRestrictionCaption { get; }
-
-    Uri AppUri { get; }
-
-    Uri WebUri { get; }
-
-    Uri PixEzUri { get; }
+    BadgeMode SafeBadgeMode { get; }
 
     /// <inheritdoc cref="WorkEntryViewModel{T}.AddToBookmarkCommand"/>
-    XamlUICommand AddToBookmarkCommand { get; }
+    XamlUICommand? AddToBookmarkCommand { get; }
 
     /// <inheritdoc cref="WorkEntryViewModel{T}.BookmarkCommand"/>
-    XamlUICommand BookmarkCommand { get; }
+    XamlUICommand? BookmarkCommand { get; }
 
     /// <inheritdoc cref="WorkEntryViewModel{T}.SaveCommand"/>
     XamlUICommand SaveCommand { get; }
@@ -74,35 +60,35 @@ public interface IWorkViewModel : IWorkEntry
         {
             StringLeaf stringLeaf => stringLeaf.Type switch
             {
-                StringType.Title => StringCompare(stringLeaf.Content, Title),
-                StringType.Author => StringCompare(stringLeaf.Content, User.Name),
-                StringType.Tag => Tags.Any(t => StringCompare(stringLeaf.Content, t.Name)),
+                StringType.Title => StringCompare(stringLeaf.Content, Entry.Title),
+                StringType.Author => Entry.Authors.Any(t => StringCompare(stringLeaf.Content, t.Name)),
+                StringType.Tag => Entry.Tags.Any(t => t.Any(h => StringCompare(stringLeaf.Content, h.Name) || StringCompare(stringLeaf.Content, h.TranslatedName))),
                 _ => ThrowHelper.ArgumentOutOfRange<StringType, bool>(stringLeaf.Type),
             },
             BoolLeaf boolLeaf => boolLeaf.IsExclude ^ boolLeaf.Type switch
             {
-                BoolType.R18 => IsXRestricted,
-                BoolType.R18G => XRestrictionCaption is BadgeMode.R18G,
-                BoolType.Ai => IsAiGenerated,
-                BoolType.Gif => Entry is Illustration { IsUgoira: true },
+                BoolType.R18 => Entry.SafeRating.IsR18,
+                BoolType.R18G => Entry.SafeRating.IsR18G,
+                BoolType.Ai => Entry.IsAiGenerated,
+                BoolType.Gif => Entry.ImageType is ImageType.SingleAnimatedImage,
                 _ => ThrowHelper.ArgumentOutOfRange<BoolType, bool>(boolLeaf.Type),
             },
-            NumericLeaf numericLeaf => User.Id == numericLeaf.Value,
+            // TODO NumericLeaf numericLeaf => Authors.Any(t => (numericLeaf.Value, t.Name)),
             NumericRangeLeaf numericRangeLeaf => numericRangeLeaf.Type switch
             {
-                NumericRangeType.Bookmark => numericRangeLeaf.IsInRange(TotalFavorite),
+                NumericRangeType.Bookmark => numericRangeLeaf.IsInRange(Entry.TotalFavorite),
                 NumericRangeType.Index => true,
                 _ => ThrowHelper.ArgumentOutOfRange<NumericRangeType, bool>(numericRangeLeaf.Type),
             },
             FloatRangeLeaf floatRangeLeaf => floatRangeLeaf.Type switch
             {
-                FloatRangeType.Ratio => this is not IllustrationItemViewModel illustration || floatRangeLeaf.IsInRange(illustration.AspectRatio),
+                FloatRangeType.Ratio => Entry is not IImageSize image || floatRangeLeaf.IsInRange(image.AspectRatio),
                 _ => ThrowHelper.ArgumentOutOfRange<FloatRangeType, bool>(floatRangeLeaf.Type),
             },
             DateLeaf dateLeaf => dateLeaf.Edge switch
             {
-                DateRangeEdge.Starting => CreateDate >= dateLeaf.Date,
-                DateRangeEdge.Ending => CreateDate < dateLeaf.Date,
+                DateRangeEdge.Starting => Entry.CreateDate >= dateLeaf.Date,
+                DateRangeEdge.Ending => Entry.CreateDate < dateLeaf.Date,
                 _ => ThrowHelper.ArgumentOutOfRange<DateRangeEdge, bool>(dateLeaf.Edge),
             },
             _ => ThrowHelper.ArgumentOutOfRange<QueryLeaf, bool>(queryToken),

@@ -111,7 +111,7 @@ public sealed partial class FeedPage
                     case FeedType.AddBookmark or FeedType.PostIllust:
                         var illustration = await _viewModel.PerformLoadAsync(() => App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(svmEntry.Id));
                         var illustrationViewer = new IllustrationViewerPage();
-                        illustrationViewer.SetViewModel((new List<IllustrationItemViewModel> { new(illustration) }, 0));
+                        illustrationViewer.SetViewModel((new List<IllustrationItemViewModel> { IllustrationItemViewModel.CreateInstance(illustration) }, 0));
                         FeedPageFrame.Content = illustrationViewer;
                         break;
                     case FeedType.AddNovelBookmark:

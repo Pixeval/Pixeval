@@ -13,19 +13,14 @@
     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
     mc:Ignorable="d">
     <Grid.Resources>
-        <ExponentialEase
-            x:Key="EasingFunction"
-            EasingMode="EaseOut"
-            Exponent="12" />
         <!--  ReSharper disable once Xaml.RedundantResource  -->
         <Storyboard x:Key="ThumbnailStoryboard">
             <DoubleAnimation
-                EasingFunction="{StaticResource EasingFunction}"
                 Storyboard.TargetName="CoverImage"
                 Storyboard.TargetProperty="Opacity"
                 From="0"
                 To="1"
-                Duration="0:0:2" />
+                Duration="0:0:0.3" />
         </Storyboard>
     </Grid.Resources>
     <Grid.ColumnDefinitions>
@@ -87,7 +82,7 @@
                 <ScrollView.OpacityTransition>
                     <ScalarTransition Duration="0:0:0.5" />
                 </ScrollView.OpacityTransition>
-                <labs:MarkdownTextBlock Text="{x:Bind ViewModel.Description}">
+                <labs:MarkdownTextBlock Text="{x:Bind ViewModel.Entry.Description}">
                     <labs:MarkdownTextBlock.Config>
                         <labs:MarkdownConfig />
                     </labs:MarkdownTextBlock.Config>
@@ -113,7 +108,7 @@
             controls:DockPanel.Dock="Top"
             MaxLines="3"
             Style="{StaticResource CaptionStrongTextBlockStyle}"
-            Text="{x:Bind ViewModel.Title, Mode=OneWay}"
+            Text="{x:Bind ViewModel.Entry.Title, Mode=OneWay}"
             TextTrimming="CharacterEllipsis"
             TextWrapping="WrapWholeWords" />
         <controls:DockPanel controls:DockPanel.Dock="Top">
@@ -122,7 +117,7 @@
                 Foreground="DarkGray"
                 MaxLines="1"
                 Style="{StaticResource BodyTextBlockStyle}"
-                Text="{x:Bind local:C.CultureDateTimeOffsetDateFormatter(ViewModel.CreateDate, pixeval:AppSettings.CurrentCulture), Mode=OneWay}"
+                Text="{x:Bind local:C.CultureDateTimeOffsetDateFormatter(ViewModel.Entry.CreateDate, pixeval:AppSettings.CurrentCulture), Mode=OneWay}"
                 TextTrimming="CharacterEllipsis"
                 TextWrapping="WrapWholeWords" />
             <TextBlock
@@ -130,7 +125,7 @@
                 Foreground="DarkGray"
                 MaxLines="1"
                 Style="{StaticResource BodyTextBlockStyle}"
-                Text="{x:Bind ViewModel.User.Name, Mode=OneWay}"
+                Text="{x:Bind ViewModel.Entry.User.Name, Mode=OneWay}"
                 TextTrimming="CharacterEllipsis"
                 TextWrapping="WrapWholeWords" />
         </controls:DockPanel>
@@ -141,15 +136,15 @@
             <local:IconText
                 controls:DockPanel.Dock="Right"
                 Symbol="TextAlignLeft"
-                Text="{x:Bind local:C.IntEllipsis(ViewModel.TextLength), Mode=OneWay}" />
+                Text="{x:Bind local:C.IntEllipsis(ViewModel.Entry.TextLength), Mode=OneWay}" />
             <local:IconText
                 controls:DockPanel.Dock="Right"
                 Symbol="Heart"
-                Text="{x:Bind local:C.IntEllipsis(ViewModel.TotalFavorite), Mode=OneWay}" />
+                Text="{x:Bind local:C.IntEllipsis(ViewModel.Entry.TotalFavorite), Mode=OneWay}" />
             <local:IconText
                 controls:DockPanel.Dock="Right"
                 Symbol="Eye"
-                Text="{x:Bind local:C.IntEllipsis(ViewModel.TotalView), Mode=OneWay}" />
+                Text="{x:Bind local:C.IntEllipsis(ViewModel.Entry.TotalView), Mode=OneWay}" />
         </controls:DockPanel>
         <controls:DockPanel
             controls:DockPanel.Dock="Bottom"
@@ -158,16 +153,13 @@
             <local:PixevalBadge
                 controls:DockPanel.Dock="Right"
                 Mode="Ai"
-                Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsAiGenerated), Mode=OneWay}" />
-            <local:PixevalBadge
-                controls:DockPanel.Dock="Right"
-                Mode="{x:Bind ViewModel.XRestrictionCaption, Mode=OneWay}"
-                Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsXRestricted), Mode=OneWay}" />
+                Visibility="{x:Bind local:C.ToVisibility(ViewModel.Entry.IsAiGenerated), Mode=OneWay}" />
+            <local:PixevalBadge controls:DockPanel.Dock="Right" Mode="{x:Bind ViewModel.SafeBadgeMode, Mode=OneWay}" />
         </controls:DockPanel>
         <ItemsControl
             x:Name="TagsList"
             controls:DockPanel.Dock="Top"
-            ItemsSource="{x:Bind ViewModel.Tags, Mode=OneWay}">
+            ItemsSource="{x:Bind ViewModel.Entry.Tags, Mode=OneWay}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <controls:WrapPanel HorizontalSpacing="5" VerticalSpacing="5" />
