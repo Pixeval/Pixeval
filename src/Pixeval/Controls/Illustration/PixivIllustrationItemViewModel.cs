@@ -29,7 +29,6 @@ public partial class PixivIllustrationItemViewModel : IllustrationItemViewModel
 
         var isOriginal = App.AppViewModel.AppSettings.BrowseOriginalImage;
 
-        object? source = null;
         // 原图动图（一张一张下）
         if (metadata?.LargeUrl is { } ugoiraUrl)
         {
@@ -37,7 +36,7 @@ public partial class PixivIllustrationItemViewModel : IllustrationItemViewModel
             {
                 var urls = UgoiraOriginalUrls;
                 var list = new List<Stream>();
-                var ratio = 1d / urls.Count;
+                var ratio = 1d / urls.Length;
                 var startProgress = 0d;
                 foreach (var url in urls)
                 {
@@ -52,30 +51,27 @@ public partial class PixivIllustrationItemViewModel : IllustrationItemViewModel
                     startProgress += 100 * ratio;
                 }
 
-                source = (list, metadata.Delays);
+                return (list, metadata.Delays);
             }
             // 非原图动图（压缩包）
-            else
-            {
-                source = (await DownloadUrlAsync(ugoiraUrl), metadata.Delays);
-            }
+            return (await DownloadUrlAsync(ugoiraUrl), metadata.Delays);
         }
         // 静图
-        else if (await DownloadUrlAsync(StaticUrl(isOriginal)) is { } s)
-            source = s;
+        if (await DownloadUrlAsync(StaticUrl(isOriginal)) is { } s)
+            return s;
 
-        return source;
+        return null;
 
         async Task<Stream?> DownloadUrlAsync(string url, double startProgress = 0, double ratio = 1)
-        {
-            advancePhase(LoadingPhase.CheckingCache, 0);
-            if (token.IsCancellationRequested)
-                return null;
-            return await CacheHelper.GetStreamFromCacheAsync(
-                url,
-                new Progress<double>(d => advancePhase(LoadingPhase.DownloadingImage, startProgress + ratio * d)),
-                cancellationToken: token);
-        }
+            {
+                advancePhase(LoadingPhase.CheckingCache, 0);
+                if (token.IsCancellationRequested)
+                    return null;
+                return await CacheHelper.GetStreamFromCacheAsync(
+                    url,
+                    new Progress<double>(d => advancePhase(LoadingPhase.DownloadingImage, startProgress + ratio * d)),
+                    cancellationToken: token);
+            }
     }
 
     public string IllustrationLargeUrl => Entry.ThumbnailUrls.Large;
@@ -90,7 +86,7 @@ public partial class PixivIllustrationItemViewModel : IllustrationItemViewModel
 
     public IReadOnlyList<string> MangaOriginalUrls => Entry.MangaOriginalUrls;
 
-    public List<string> UgoiraOriginalUrls => Entry.GetUgoiraOriginalUrls(UgoiraMetadataAsync.Result.Frames.Count);
+    public string[] UgoiraOriginalUrls => Entry.GetUgoiraOriginalUrls(UgoiraMetadataAsync.Result.Frames.Count);
 
 
     /// <summary>

@@ -2,14 +2,14 @@
 // Licensed under the GPL v3 License.
 
 using LiteDB;
-using Mako.Model;
+using Misaki;
 using Pixeval.Download;
 
 namespace Pixeval.Database;
 
 public class DownloadHistoryEntry : IHistoryEntry
 {
-    public DownloadHistoryEntry(string destination, DownloadItemType type, IWorkEntry entry)
+    public DownloadHistoryEntry(string destination, DownloadItemType type, IArtworkInfo entry)
     {
         Destination = destination;
         Type = type;
@@ -38,5 +38,5 @@ public class DownloadHistoryEntry : IHistoryEntry
 
     public DownloadItemType Type { get; set; }
 
-    public IWorkEntry Entry { get; set; } = null!;
+    public IArtworkInfo Entry { get; set; } = null!;
 }

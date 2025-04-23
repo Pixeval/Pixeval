@@ -11,9 +11,12 @@ using Pixeval.Pages.IllustrationViewer;
 using System;
 using System.Linq;
 using System.Threading;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Input;
 using Misaki;
 using WinUI3Utilities;
+using Pixeval.Util.IO.Caching;
+using System.IO;
 
 namespace Pixeval.Controls;
 
@@ -32,10 +35,68 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<IArtworkInfo
         MangaSaveAsCommand.CanExecuteRequested += (_, e) => e.CanExecute = isManga;
     }
 
-    public virtual Task<object?> LoadOriginalImageAsync(Action<LoadingPhase, double> advancePhase,
+    public virtual async Task<object?> LoadOriginalImageAsync(Action<LoadingPhase, double> advancePhase,
         CancellationToken token)
     {
-        return Task.FromResult<object?>(null);
+        var isOriginal = App.AppViewModel.AppSettings.BrowseOriginalImage;
+        var provider = App.AppViewModel.AppServiceProvider.GetKeyedService<IImageUriDownloadProvider>(Entry.Platform)
+            ?? App.AppViewModel.AppServiceProvider.GetService<IImageUriDownloadProvider>();
+        if (Entry is not IImageFrame frame)
+            return null;
+        switch (frame)
+        {
+            case ISingleImage { ImageType: ImageType.SingleImage } singleImage:
+            {
+                var f = isOriginal ? frame : Entry.Thumbnails.PickMax();
+                var url = f.ImageUri.OriginalString;
+
+                if (CacheHelper.TryGetStreamFromCache(url) is { } s)
+                {
+                    advancePhase(LoadingPhase.LoadingFromCache, 0);
+                    return s;
+                }
+
+                if (token.IsCancellationRequested)
+                    return null;
+
+                if (provider is null)
+                    return await CacheHelper.GetStreamFromCacheAsync(
+                        url,
+                        new Progress<double>(d => advancePhase(LoadingPhase.DownloadingImage, d)),
+                        cancellationToken: token);
+
+                var stream = await provider.DownloadSingleImageAsync(
+                    singleImage, 
+                    f,
+                    new Progress<double>(d => advancePhase(LoadingPhase.DownloadingImage, d)),
+                    token: token);
+                if (App.AppViewModel.AppSettings.UseFileCache)
+                {
+                    _ = CacheHelper.TryCacheStream(url, stream);
+                    stream.Position = 0;
+                }
+
+                return stream;
+            }
+            case ISingleAnimatedImage { ImageType: ImageType.SingleAnimatedImage } singleAnimatedImage:
+            {
+                var f = isOriginal ? singleAnimatedImage : singleAnimatedImage.AnimatedThumbnails.PickMax();
+                if (provider is null)
+                    return null;
+                var list = await provider.DownloadAnimatedImagePreferredSeparatedAsync(
+                    singleAnimatedImage,
+                    f,
+                    new Progress<double>(d => advancePhase(LoadingPhase.DownloadingImage, d)),
+                    token: token);
+                var arr1 = new Stream[list.Count];
+                var arr2 = new int[list.Count];
+                for (var i = 0; i < list.Count; ++i)
+                    (arr1[i], arr2[i]) = list[i];
+                return (arr1, arr2);
+            }
+        }
+
+        return null;
     }
 
     /// <summary>
@@ -95,7 +156,7 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<IArtworkInfo
     public static IllustrationItemViewModel CreateInstance(IArtworkInfo entry) =>
         entry.Platform switch
         {
-            IIdentityInfo.Pixiv => new PixivIllustrationItemViewModel((Illustration) entry),
+            IPlatformInfo.Pixiv => new PixivIllustrationItemViewModel((Illustration) entry),
             _ => new IllustrationItemViewModel(entry)
         };
 

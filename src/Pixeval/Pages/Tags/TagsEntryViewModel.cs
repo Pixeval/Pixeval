@@ -33,7 +33,7 @@ public partial class TagsEntryViewModel : ObservableObject, IMisakiModel
 
     public string FullPath { get; }
 
-    public long Id { get; private set; }
+    public string? Id { get; private set; }
 
     [ObservableProperty]
     public partial ImageSource? Thumbnail { get; private set; }
@@ -72,7 +72,7 @@ public partial class TagsEntryViewModel : ObservableObject, IMisakiModel
                 try
                 {
                     var image = await Image.LoadAsync(FullPath);
-                    image.SetIdTags(Id, TagsSet);
+                    image.SetIdTags(Id ?? "", TagsSet);
                     await using var stream = IoHelper.OpenAsyncWrite(FullPath);
                     await image.SaveAsync(stream, image.Metadata.DecodedImageFormat!);
                     return null;
@@ -103,14 +103,14 @@ public partial class TagsEntryViewModel : ObservableObject, IMisakiModel
     private static async void LoadInfo(TagsEntryViewModel entry, string path)
     {
         var tags = null as FrozenSet<string>;
-        var id = 0L;
+        var id = null as string;
         await Task.Run(async () =>
         {
             try
             {
                 // 理论上只有此句可能throw
                 var info = await Image.IdentifyAsync(path);
-                id = info.GetIllustrationId();
+                id = info.GetArtworkId();
                 tags = info.GetTags().ToFrozenSet();
             }
             catch

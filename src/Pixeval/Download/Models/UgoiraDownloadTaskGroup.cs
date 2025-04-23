@@ -1,12 +1,14 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
 using System.Threading;
 using System.Threading.Tasks;
-using Mako.Model;
+using Microsoft.Extensions.DependencyInjection;
+using Misaki;
 using Pixeval.Database;
 using Pixeval.Options;
 using Pixeval.Util;
@@ -16,49 +18,55 @@ using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
-public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup, IImageDownloadTaskGroup
+/// <summary>
+/// 只有<see cref="SingleAnimatedImageType.MultiFiles"/>使用这个类，其他使用<see cref="SingleImageDownloadTaskGroup"/>
+/// </summary>
+public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup
 {
-    public Illustration Entry => DatabaseEntry.Entry.To<Illustration>();
-
-    private UgoiraMetadata Metadata { get; set; } = null!;
+    public ISingleAnimatedImage Entry => DatabaseEntry.Entry.To<ISingleAnimatedImage>();
 
     private string TempFolderPath => $"{TokenizedDestination}.tmp";
 
-    [MemberNotNull(nameof(Metadata))]
-    private void SetMetadata(UgoiraMetadata metadata)
+    private IReadOnlyList<int> MsDelays { get; set; }
+
+    [MemberNotNull(nameof(MsDelays))]
+    private void SetTasksSet()
     {
-        Metadata = metadata;
-        var ugoiraOriginalUrls = Entry.GetUgoiraOriginalUrls(Metadata.Frames.Count);
         _ = Directory.CreateDirectory(TempFolderPath);
-        for (var i = 0; i < ugoiraOriginalUrls.Count; ++i)
+        var msDelays = new int[Entry.MultiImageUris!.Count];
+        for (var i = 0; i < Entry.MultiImageUris.Count; ++i)
         {
-            var imageDownloadTask = new ImageDownloadTask(new(ugoiraOriginalUrls[i]), $"{TempFolderPath}\\{i}{Path.GetExtension(ugoiraOriginalUrls[i])}", DatabaseEntry.State);
+            var (uri, msDelay) = Entry.MultiImageUris[i];
+            msDelays[i] = msDelay;
+            var imageDownloadTask = new ImageDownloadTask(uri,
+                $"{TempFolderPath}\\{i}{Path.GetExtension(uri.OriginalString)}", DatabaseEntry.State);
             AddToTasksSet(imageDownloadTask);
         }
+        MsDelays = msDelays;
         SetNotCreateFromEntry();
     }
 
     public UgoiraDownloadTaskGroup(DownloadHistoryEntry entry) : base(entry)
     {
         UgoiraDownloadFormat = IoHelper.GetUgoiraFormat(Path.GetExtension(TokenizedDestination));
+        MsDelays = null!;
     }
 
-    public UgoiraDownloadTaskGroup(Illustration entry, UgoiraMetadata metadata, string destination) : base(entry, destination, DownloadItemType.Ugoira)
+    public UgoiraDownloadTaskGroup(ISingleAnimatedImage entry, string destination) : base(entry, destination, DownloadItemType.Ugoira)
     {
+        if (!entry.PreferredAnimatedImageType.HasFlag(SingleAnimatedImageType.MultiFiles))
+            ThrowHelper.InvalidOperation($"{nameof(ISingleAnimatedImage.PreferredAnimatedImageType)} should be {nameof(SingleAnimatedImageType.MultiFiles)}");
+        if (!Entry.MultiImageUris!.IsPreloaded)
+            ThrowHelper.InvalidOperation($"{nameof(ISingleAnimatedImage.MultiImageUris)} should be preloaded");
         UgoiraDownloadFormat = IoHelper.GetUgoiraFormat(Path.GetExtension(TokenizedDestination));
-        SetMetadata(metadata);
-    }
-
-    public UgoiraDownloadTaskGroup(Illustration entry, string destination) : base(entry, destination,
-        DownloadItemType.Ugoira)
-    {
-        UgoiraDownloadFormat = IoHelper.GetUgoiraFormat(Path.GetExtension(TokenizedDestination));
+        SetTasksSet();
     }
 
     public override async ValueTask InitializeTaskGroupAsync()
     {
-        if (Metadata == null!)
-            SetMetadata(await App.AppViewModel.MakoClient.GetUgoiraMetadataAsync(Entry.Id));
+        if (!Entry.MultiImageUris!.IsPreloaded)
+            await Entry.MultiImageUris.PreloadListAsync(App.AppViewModel.GetDownloadProvider(Entry.Platform));
+        SetTasksSet();
     }
 
     protected override async Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender, CancellationToken token = default)
@@ -69,7 +77,7 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup, IImageDownload
         }
         else
         {
-            using var image = await Destinations.UgoiraSaveToImageAsync(Metadata.Delays);
+            using var image = await Destinations.UgoiraSaveToImageAsync(MsDelays);
             image.SetIdTags(Entry);
             await image.SaveAsync(TokenizedDestination, IoHelper.GetUgoiraEncoder(UgoiraDownloadFormat), token);
         }

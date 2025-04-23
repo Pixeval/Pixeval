@@ -1,7 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System;
 using CommunityToolkit.Diagnostics;
 using Mako.Model;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,22 +11,21 @@ using Pixeval.Util.IO;
 
 namespace Pixeval.Download;
 
-public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration, IImageDownloadTaskGroup, UgoiraMetadata>
+public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration, IDownloadTaskGroup, object>
 {
-    public IImageDownloadTaskGroup Create(Illustration context, string rawPath, UgoiraMetadata? parameter)
+    public IDownloadTaskGroup Create(Illustration context, string rawPath, object? parameter = null)
     {
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         var path = IoHelper.NormalizePath(ArtworkMetaPathParser.Instance.Reduce(rawPath, context));
         _ = manager.Delete(entry => entry.Destination == path);
 
-        IImageDownloadTaskGroup? task;
+        IDownloadTaskGroup? task;
         switch (context.ImageType)
         {
-            case ImageType.SingleAnimatedImage:
+            case ImageType.SingleImage:
+            case ImageType.SingleAnimatedImage when context.PreferredAnimatedImageType.HasFlag(SingleAnimatedImageType.SingleFile):
             {
-                // 外部需要确保UgoiraMetadata已经加载
-                ArgumentNullException.ThrowIfNull(parameter);
-                task = new UgoiraDownloadTaskGroup(context, parameter, path);
+                task = new SingleImageDownloadTaskGroup(context, path);
                 break;
             }
             case ImageType.ImageSet:
@@ -35,13 +33,13 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
                 task = new MangaDownloadTaskGroup(context, path);
                 break;
             }
-            case ImageType.SingleImage:
+            case ImageType.SingleAnimatedImage:
             {
-                task = new SingleImageDownloadTaskGroup(context, path);
+                task = new UgoiraDownloadTaskGroup(context, path);
                 break;
             }
             default:
-                return ThrowHelper.ThrowNotSupportedException<IImageDownloadTaskGroup>();
+                return ThrowHelper.ThrowNotSupportedException<IDownloadTaskGroup>();
         }
 
         manager.Insert(task.DatabaseEntry);

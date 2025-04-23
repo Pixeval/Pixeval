@@ -8,11 +8,13 @@ using Pixeval.AppManagement;
 using Pixeval.Caching;
 using Mako;
 using Mako.Net;
+using Misaki;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Extensions;
 using Pixeval.Util.IO.Caching;
 using Pixeval.Utilities;
+using WinUI3Utilities;
 
 namespace Pixeval;
 
@@ -64,6 +66,13 @@ public partial class AppViewModel(App app) : IDisposable
             .AddSingleton(provider => new SearchHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumSearchHistoryRecords))
             .AddSingleton(provider => new BrowseHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumBrowseHistoryRecords))
             .BuildServiceProvider();
+    }
+
+    public IImageUriDownloadProvider GetDownloadProvider(string platformKey)
+    {
+        return App.AppViewModel.AppServiceProvider.GetKeyedService<IImageUriDownloadProvider>(platformKey)
+               ?? App.AppViewModel.AppServiceProvider.GetService<IImageUriDownloadProvider>()
+               ?? ThrowHelper.NotSupported<IImageUriDownloadProvider>($"No provider found for {platformKey}");
     }
 
     public void Initialize()

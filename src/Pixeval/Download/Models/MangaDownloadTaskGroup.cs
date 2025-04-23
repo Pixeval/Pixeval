@@ -4,7 +4,7 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Mako.Model;
+using Misaki;
 using Pixeval.Database;
 using Pixeval.Download.Macros;
 using Pixeval.Options;
@@ -14,16 +14,16 @@ using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
-public partial class MangaDownloadTaskGroup : DownloadTaskGroup, IImageDownloadTaskGroup
+public partial class MangaDownloadTaskGroup : DownloadTaskGroup
 {
-    public Illustration Entry => DatabaseEntry.Entry.To<Illustration>();
+    public IImageSet Entry => DatabaseEntry.Entry.To<IImageSet>();
 
     public MangaDownloadTaskGroup(DownloadHistoryEntry entry) : base(entry)
     {
         IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(Path.GetExtension(TokenizedDestination));
     }
 
-    public MangaDownloadTaskGroup(Illustration entry, string destination) : base(entry, destination, DownloadItemType.Manga)
+    public MangaDownloadTaskGroup(IArtworkInfo entry, string destination) : base(entry, destination, DownloadItemType.Manga)
     {
         IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(Path.GetExtension(TokenizedDestination));
         SetTasksSet();
@@ -39,10 +39,9 @@ public partial class MangaDownloadTaskGroup : DownloadTaskGroup, IImageDownloadT
     {
         if (TasksSet.Count > 0)
             return;
-        var mangaOriginalUrls = Entry.MangaOriginalUrls;
-        for (var i = 0; i < mangaOriginalUrls.Count; ++i)
+        foreach (var page in Entry.Pages)
         {
-            var imageDownloadTask = new ImageDownloadTask(new(mangaOriginalUrls[i]), IoHelper.ReplaceTokenExtensionFromUrl(TokenizedDestination, mangaOriginalUrls[i]).Replace(PicSetIndexMacro.NameConstToken, i.ToString()), DatabaseEntry.State);
+            var imageDownloadTask = new ImageDownloadTask(page.ImageUri, IoHelper.ReplaceTokenExtensionFromUrl(TokenizedDestination, page.ImageUri).Replace(PicSetIndexMacro.NameConstToken, page.SetIndex.ToString()), DatabaseEntry.State);
             AddToTasksSet(imageDownloadTask);
         }
         SetNotCreateFromEntry();

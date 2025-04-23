@@ -174,7 +174,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>, 
 
     public async void WorkItem_OnRequestOpenUserInfoPage(FrameworkElement sender, IWorkViewModel e)
     {
-        if (e.Entry.Platform is IIdentityInfo.Pixiv)
+        if (e.Entry.Platform is IPlatformInfo.Pixiv)
             await this.CreateIllustratorPageAsync(long.Parse(e.Entry.Authors[0].Id));
     }
 

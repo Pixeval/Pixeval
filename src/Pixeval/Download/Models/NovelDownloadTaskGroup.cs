@@ -147,7 +147,7 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
         var destinations = Destinations;
         for (var i = 0; i < destinations.Count; ++i)
             if (DocumentViewModel.GetIdTags(i) is { Id: var id, Tags: var tags })
-                await ExifManager.SetIdTagsAsync(destinations[i], id, tags, IllustrationDownloadFormat, token);
+                await ExifManager.SetIdTagsAsync(destinations[i], id.ToString(), tags, IllustrationDownloadFormat, token);
     }
 
     public override string OpenLocalDestination => DocPath;

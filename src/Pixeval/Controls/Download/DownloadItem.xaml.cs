@@ -8,8 +8,10 @@ using Microsoft.UI.Xaml;
 using Pixeval.Util.UI;
 using Windows.Foundation;
 using Windows.System;
+using Pixeval.Download.Models;
 using WinUI3Utilities;
 using Symbol = FluentIcons.Common.Symbol;
+using Pixeval.Filters;
 
 namespace Pixeval.Controls;
 
@@ -76,4 +78,6 @@ public sealed partial class DownloadItem
     {
         _ = await this.CreateAcknowledgementAsync(DownloadItemResources.ErrorMessageDialogTitle, ViewModel.DownloadTask.ErrorCause?.ToString());
     }
+
+    private string GetAuthorsNames(DownloadItemViewModel vm) => string.Join(", ", vm.Entry.Authors);
 }

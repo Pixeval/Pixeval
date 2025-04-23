@@ -9,11 +9,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.AppManagement;
 using Mako.Net;
+using Pixeval.Caching;
 using Pixeval.Utilities;
 using IllustrationCacheTable = Pixeval.Caching.CacheTable<
     Pixeval.Util.IO.Caching.PixevalIllustrationCacheKey,
     Pixeval.Util.IO.Caching.PixevalIllustrationCacheHeader,
     Pixeval.Util.IO.Caching.PixevalIllustrationCacheProtocol>;
+using WinUI3Utilities;
 
 namespace Pixeval.Util.IO.Caching;
 
@@ -119,8 +121,8 @@ public static class CacheHelper
         {
             if (useFileCache)
             {
-                _ = CacheTable.TryCache(new PixevalIllustrationCacheKey(key, (int) s.Length), s);
-                _ = s.Seek(0, SeekOrigin.Begin);
+                _ = TryCacheStream(key, s);
+                s.Position = 0;
             }
             return s;
         }
@@ -146,5 +148,13 @@ public static class CacheHelper
                 .LogError(nameof(IllustrationCacheTable.TryReadCache), e);
         }
         return null;
+    }
+
+    /// <exception cref="InvalidOperationException"/>
+    public static AllocatorState TryCacheStream(string key, Stream stream)
+    {
+        if (!App.AppViewModel.AppSettings.UseFileCache)
+            ThrowHelper.InvalidOperation("check UseFileCache before TryCacheStream");
+        return CacheTable.TryCache(new(key, (int) stream.Length), stream);
     }
 }

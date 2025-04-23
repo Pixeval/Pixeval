@@ -339,6 +339,12 @@ public static partial class IoHelper
         return path.Replace(FileExtensionMacro.NameConstToken, url[index..]);
     }
 
+    public static string ReplaceTokenExtensionFromUrl(string path, Uri uri)
+    {
+        var url = uri.OriginalString;
+        return ReplaceTokenExtensionFromUrl(path, url);
+    }
+
     public static string ReplaceTokenExtensionWithTempExtension(string path)
     {
         return path.Replace(FileExtensionMacro.NameConstToken, PixevalTempExtension);

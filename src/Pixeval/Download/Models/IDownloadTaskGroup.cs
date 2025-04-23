@@ -7,13 +7,15 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using Mako.Model;
+using Misaki;
 using Pixeval.Database;
 
 namespace Pixeval.Download.Models;
 
-public interface IDownloadTaskGroup : IDownloadTaskBase, IIdEntry, INotifyPropertyChanged, INotifyPropertyChanging, IReadOnlyCollection<ImageDownloadTask>, IDisposable
+public interface IDownloadTaskGroup : IDownloadTaskBase, IIdentityInfo, INotifyPropertyChanged, INotifyPropertyChanging, IReadOnlyCollection<ImageDownloadTask>, IDisposable
 {
+    string IPlatformInfo.Platform => Pixiv;
+
     DownloadHistoryEntry DatabaseEntry { get; }
 
     ValueTask InitializeTaskGroupAsync();
