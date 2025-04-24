@@ -28,7 +28,7 @@ public partial class AppViewModel(App app) : IDisposable
 
     public DownloadManager DownloadManager { get; private set; } = null!;
 
-    public MakoClient MakoClient { get; set; } = null!; // The null-state of MakoClient is transient
+    public MakoClient MakoClient => (MakoClient) GetMisakiService(IPlatformInfo.Pixiv);
 
     public AppSettings AppSettings { get; } = AppInfo.LoadConfig() ?? new AppSettings();
 
@@ -56,23 +56,30 @@ public partial class AppViewModel(App app) : IDisposable
         var extensionService = new ExtensionService();
         extensionService.LoadAllHosts();
         return new ServiceCollection()
+            .AddSingleton(_ => new FileLogger(AppKnownFolders.Logs.FullPath))
+            .AddKeyedSingleton<IMisakiService, MakoClient>(IPlatformInfo.Pixiv,
+                (provider, key) => new(App.AppViewModel.AppSettings.ToMakoClientConfiguration(),
+                    provider.GetRequiredService<FileLogger>()))
+            .AddKeyedSingleton<IDownloadHttpClientService, MakoClient>(IPlatformInfo.Pixiv,
+                (provider, key) => (MakoClient) provider.GetRequiredKeyedService<IMisakiService>(IPlatformInfo.Pixiv))
             .AddSingleton<IllustrationDownloadTaskFactory>()
             .AddSingleton<NovelDownloadTaskFactory>()
             .AddSingleton(extensionService)
             .AddSingleton(cacheTable)
-            .AddSingleton(_ => new FileLogger(AppKnownFolders.Logs.FullPath))
             .AddSingleton(new LiteDatabase(AppInfo.DatabaseFilePath))
-            .AddSingleton(provider => new DownloadHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumDownloadHistoryRecords))
-            .AddSingleton(provider => new SearchHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumSearchHistoryRecords))
-            .AddSingleton(provider => new BrowseHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(), App.AppViewModel.AppSettings.MaximumBrowseHistoryRecords))
+            .AddSingleton(provider => new DownloadHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(),
+                App.AppViewModel.AppSettings.MaximumDownloadHistoryRecords))
+            .AddSingleton(provider => new SearchHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(),
+                App.AppViewModel.AppSettings.MaximumSearchHistoryRecords))
+            .AddSingleton(provider => new BrowseHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(),
+                App.AppViewModel.AppSettings.MaximumBrowseHistoryRecords))
             .BuildServiceProvider();
     }
 
-    public IImageUriDownloadProvider GetDownloadProvider(string platformKey)
+    public IMisakiService GetMisakiService(string platformKey)
     {
-        return App.AppViewModel.AppServiceProvider.GetKeyedService<IImageUriDownloadProvider>(platformKey)
-               ?? App.AppViewModel.AppServiceProvider.GetService<IImageUriDownloadProvider>()
-               ?? ThrowHelper.NotSupported<IImageUriDownloadProvider>($"No provider found for {platformKey}");
+        return AppServiceProvider.GetKeyedService<IMisakiService>(platformKey)
+               ?? ThrowHelper.NotSupported<IMisakiService>($"No service found for {platformKey}");
     }
 
     public void Initialize()

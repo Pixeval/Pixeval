@@ -153,4 +153,10 @@ public static class MakoHelper
         }
         return id.IsFavorite;
     }
+
+    public static async ValueTask TryPreloadListAsync<T>(this IPreloadableList<T> list, IPlatformInfo platform)
+    {
+        if (!list.IsPreloaded)
+            await list.PreloadListAsync(App.AppViewModel.GetMisakiService(platform.Platform));
+    }
 }

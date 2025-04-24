@@ -119,9 +119,9 @@ public static partial class IoHelper
         });
     }
 
-    public static async Task<Image> UgoiraSaveToImageAsync(this Stream stream, IReadOnlyList<int> delays, IProgress<double>? progress = null, bool dispose = false)
+    public static async Task<Image> UgoiraSaveToImageAsync(this Stream zipStream, IReadOnlyList<int> delays, IProgress<double>? progress = null, bool dispose = false)
     {
-        var streams = await Streams.ReadZipAsync(stream, dispose);
+        var streams = await Streams.ReadZipAsync(zipStream, dispose);
         return await streams.UgoiraSaveToImageAsync(delays, progress, true);
     }
 
@@ -306,6 +306,41 @@ public static partial class IoHelper
     {
         var entryStreams = await Streams.ReadZipAsync(zipStream, true);
         return await entryStreams.UgoiraSaveToImageAsync(ugoiraMetadata.Delays);
+    }
+    
+    public static async Task<(IReadOnlyList<Stream>, IReadOnlyList<int>)> SplitAnimatedImageStreamAsync(Stream animatedStream)
+    {
+        using var image = await Image.LoadAsync(animatedStream);
+        if (image.Frames.Count <= 1)
+            ThrowHelper.Argument("Not animated image");
+        var streams = new List<Stream>();
+        var msDelays = new List<int>();
+        try
+        {
+            while (image.Frames.Count is not 0)
+            {
+                var ms = 10;
+                if (image.Frames.RootFrame.Metadata.TryGetGifMetadata(out var gifFrameMetadata))
+                    ms = gifFrameMetadata.FrameDelay * 10;
+                else if (image.Frames.RootFrame.Metadata.TryGetPngMetadata(out var pngFrameMetadata))
+                    ms = (int) (pngFrameMetadata.FrameDelay.ToDouble() * 10);
+                else if (image.Frames.RootFrame.Metadata.TryGetWebpFrameMetadata(out var webpFrameMetadata))
+                    ms = (int) webpFrameMetadata.FrameDelay;
+                var exportFrame = image.Frames.ExportFrame(0);
+                var memoryStream = Streams.RentStream();
+                await exportFrame.SaveAsPngAsync(memoryStream);
+                streams.Add(memoryStream);
+                msDelays.Add(ms);
+            }
+            return (streams, msDelays);
+        }
+        catch (Exception e)
+        {
+            foreach (var stream in streams) 
+                await stream.DisposeAsync();
+            streams.Clear();
+            return ([], []);
+        }
     }
 
     public static async Task<ImageSource> GenerateQrCodeForUrlAsync(string url)

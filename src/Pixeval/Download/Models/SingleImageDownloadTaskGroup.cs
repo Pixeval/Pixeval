@@ -58,8 +58,9 @@ public partial class SingleImageDownloadTaskGroup : ImageDownloadTask, IDownload
             ISingleAnimatedImage
             {
                 ImageType: ImageType.SingleAnimatedImage,
-                PreferredAnimatedImageType: SingleAnimatedImageType.SingleFile
-            } animatedImage => animatedImage.SingleImageUri!,
+                PreferredAnimatedImageType: SingleAnimatedImageType.SingleZipFile or SingleAnimatedImageType.SingleFile
+            } animatedImage
+                => animatedImage.SingleImageUri!,
             _ => ThrowHelper.NotSupported<Uri>(info.ToString())
         };
 
@@ -87,8 +88,24 @@ public partial class SingleImageDownloadTaskGroup : ImageDownloadTask, IDownload
 
     protected override async Task AfterDownloadAsyncOverride(ImageDownloadTask sender, CancellationToken token = default)
     {
+        // TODO IllustrationDownloadFormat
         if (IllustrationDownloadFormat is IllustrationDownloadFormat.Original)
             return;
+        if (Entry is ISingleAnimatedImage
+            {
+                ImageType: ImageType.SingleAnimatedImage,
+                PreferredAnimatedImageType: SingleAnimatedImageType.SingleZipFile
+            } animatedImageZip)
+        {
+            await animatedImageZip.ZipImageDelays!.TryPreloadListAsync(animatedImageZip);
+            var msDelays = animatedImageZip.ZipImageDelays!;
+            var zipPath = Destination + ".zip";
+            File.Move(Destination, zipPath);
+            await using var read = IoHelper.OpenAsyncRead(zipPath);
+            await using var write = IoHelper.OpenAsyncWrite(Destination);
+            _ = await read.UgoiraSaveToStreamAsync(msDelays, write);
+        }
+
         await ExifManager.SetTagsAsync(Destination, Entry, IllustrationDownloadFormat, token);
     }
 

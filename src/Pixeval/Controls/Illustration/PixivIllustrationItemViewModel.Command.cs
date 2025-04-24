@@ -51,9 +51,8 @@ public partial class PixivIllustrationItemViewModel
     /// <returns></returns>
     private async ValueTask SaveUtilityAsync(FrameworkElement? frameworkElement, string path)
     {
-        if (IsUgoira && Entry is ISingleAnimatedImage { MultiImageUris: { IsPreloaded: false } } animatedImage)
-            await animatedImage.MultiImageUris.PreloadListAsync(
-                App.AppViewModel.GetDownloadProvider(animatedImage.Platform));
+        if (IsUgoira && Entry is ISingleAnimatedImage { MultiImageUris: not null } animatedImage)
+            await animatedImage.MultiImageUris.TryPreloadListAsync(animatedImage);
         var factory = App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationDownloadTaskFactory>();
         var task = factory.Create(Entry, path);
         App.AppViewModel.DownloadManager.QueueTask(task);

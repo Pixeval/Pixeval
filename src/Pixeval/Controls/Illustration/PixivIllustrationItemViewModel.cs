@@ -23,6 +23,7 @@ public partial class PixivIllustrationItemViewModel : IllustrationItemViewModel
 
     public override async Task<object?> LoadOriginalImageAsync(Action<LoadingPhase, double> advancePhase, CancellationToken token)
     {
+        return await base.LoadOriginalImageAsync(advancePhase, token);
         var metadata = null as UgoiraMetadata;
         if (Entry.IsUgoira)
             metadata = await UgoiraMetadataAsync;

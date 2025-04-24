@@ -83,8 +83,7 @@ public sealed partial class LoginPage
             if (refreshToken.IsNotNullOrEmpty())
             {
                 _viewModel.AdvancePhase(LoginPhaseEnum.Refreshing);
-                var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
-                App.AppViewModel.MakoClient = new MakoClient(refreshToken, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
+                App.AppViewModel.MakoClient.Build(refreshToken);
 
                 SuccessNavigating();
             }

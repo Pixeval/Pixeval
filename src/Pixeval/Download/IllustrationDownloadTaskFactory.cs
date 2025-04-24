@@ -23,7 +23,8 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
         switch (context.ImageType)
         {
             case ImageType.SingleImage:
-            case ImageType.SingleAnimatedImage when context.PreferredAnimatedImageType.HasFlag(SingleAnimatedImageType.SingleFile):
+            case ImageType.SingleAnimatedImage
+                when context.PreferredAnimatedImageType is SingleAnimatedImageType.SingleFile or SingleAnimatedImageType.SingleZipFile:
             {
                 task = new SingleImageDownloadTaskGroup(context, path);
                 break;
@@ -42,6 +43,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<Illustration
                 return ThrowHelper.ThrowNotSupportedException<IDownloadTaskGroup>();
         }
 
+        // TODO Preload bug
         manager.Insert(task.DatabaseEntry);
         return task;
     }

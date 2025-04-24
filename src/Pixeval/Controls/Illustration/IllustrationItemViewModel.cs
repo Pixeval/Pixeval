@@ -11,12 +11,13 @@ using Pixeval.Pages.IllustrationViewer;
 using System;
 using System.Linq;
 using System.Threading;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Input;
 using Misaki;
 using WinUI3Utilities;
 using Pixeval.Util.IO.Caching;
 using System.IO;
+using Pixeval.Util;
+using Pixeval.Util.IO;
 
 namespace Pixeval.Controls;
 
@@ -39,8 +40,6 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<IArtworkInfo
         CancellationToken token)
     {
         var isOriginal = App.AppViewModel.AppSettings.BrowseOriginalImage;
-        var provider = App.AppViewModel.AppServiceProvider.GetKeyedService<IImageUriDownloadProvider>(Entry.Platform)
-            ?? App.AppViewModel.AppServiceProvider.GetService<IImageUriDownloadProvider>();
         if (Entry is not IImageFrame frame)
             return null;
         switch (frame)
@@ -48,51 +47,50 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<IArtworkInfo
             case ISingleImage { ImageType: ImageType.SingleImage } singleImage:
             {
                 var f = isOriginal ? frame : Entry.Thumbnails.PickMax();
-                var url = f.ImageUri.OriginalString;
-
-                if (CacheHelper.TryGetStreamFromCache(url) is { } s)
-                {
-                    advancePhase(LoadingPhase.LoadingFromCache, 0);
-                    return s;
-                }
-
-                if (token.IsCancellationRequested)
-                    return null;
-
-                if (provider is null)
-                    return await CacheHelper.GetStreamFromCacheAsync(
-                        url,
-                        new Progress<double>(d => advancePhase(LoadingPhase.DownloadingImage, d)),
-                        cancellationToken: token);
-
-                var stream = await provider.DownloadSingleImageAsync(
+                var stream = await CacheHelper.GetSingleImageAsync(
                     singleImage, 
                     f,
                     new Progress<double>(d => advancePhase(LoadingPhase.DownloadingImage, d)),
-                    token: token);
-                if (App.AppViewModel.AppSettings.UseFileCache)
-                {
-                    _ = CacheHelper.TryCacheStream(url, stream);
-                    stream.Position = 0;
-                }
-
+                    token);
                 return stream;
             }
             case ISingleAnimatedImage { ImageType: ImageType.SingleAnimatedImage } singleAnimatedImage:
             {
-                var f = isOriginal ? singleAnimatedImage : singleAnimatedImage.AnimatedThumbnails.PickMax();
-                if (provider is null)
-                    return null;
-                var list = await provider.DownloadAnimatedImagePreferredSeparatedAsync(
-                    singleAnimatedImage,
-                    f,
-                    new Progress<double>(d => advancePhase(LoadingPhase.DownloadingImage, d)),
-                    token: token);
-                var arr1 = new Stream[list.Count];
-                var arr2 = new int[list.Count];
-                for (var i = 0; i < list.Count; ++i)
-                    (arr1[i], arr2[i]) = list[i];
-                return (arr1, arr2);
+                var f = isOriginal
+                    ? singleAnimatedImage
+                    : (await singleAnimatedImage.AnimatedThumbnails.ApplyAsync(t => t
+                        .TryPreloadListAsync(singleAnimatedImage))).PickMax();
+                switch (f.PreferredAnimatedImageType)
+                {
+                    case (SingleAnimatedImageType.MultiFiles):
+                    {
+                        var list = await CacheHelper.GetAnimatedImageSeparatedAsync(
+                            singleAnimatedImage,
+                            f,
+                            new Progress<double>(d => advancePhase(LoadingPhase.DownloadingImage, d)),
+                            token);
+                        var arr1 = new Stream[list.Count];
+                        var arr2 = new int[list.Count];
+                        for (var i = 0; i < list.Count; ++i)
+                            (arr1[i], arr2[i]) = list[i];
+                        return (arr1, arr2);
+                    }
+                    case SingleAnimatedImageType.SingleZipFile or SingleAnimatedImageType.SingleFile:
+                    {
+                        var stream = await CacheHelper.GetSingleImageAsync(
+                            singleAnimatedImage,
+                            f,
+                            new Progress<double>(d => advancePhase(LoadingPhase.DownloadingImage, d)),
+                            token);
+                        if (f.PreferredAnimatedImageType is not SingleAnimatedImageType.SingleZipFile)
+                            return await IoHelper.SplitAnimatedImageStreamAsync(stream);
+                        await f.ZipImageDelays!.TryPreloadListAsync(singleAnimatedImage);
+                        var zip = await Streams.ReadZipAsync(stream, true);
+                        return (zip, f.ZipImageDelays);
+                    }
+                }
+
+                break;
             }
         }
 

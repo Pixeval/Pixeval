@@ -35,6 +35,20 @@ public static class Functions
         return obj;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static async ValueTask<T> ApplyAsync<T>(this T obj, Func<T, ValueTask> block)
+    {
+        await block(obj);
+        return obj;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static async ValueTask<T> ApplyAsync<T>(this T obj, Func<T, Task> block)
+    {
+        await block(obj);
+        return obj;
+    }
+
     public static async Task<Result<TResult>> WithTimeoutAsync<TResult>(Task<TResult> task, int timeoutMills)
     {
         using var cancellationToken = new CancellationTokenSource();

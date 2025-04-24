@@ -34,20 +34,28 @@ public static partial class IoHelper
     }
 
     /// <inheritdoc cref="DownloadStreamAsync"/>
-    public static async Task<Result<Stream>> DownloadMemoryStreamAsync(
+    public static Task<Result<Stream>> DownloadMemoryStreamAsync(
         this HttpClient httpClient,
         string url,
         IProgress<double>? progress = null,
         long startPosition = 0,
         int bufferSize = 4096,
+        CancellationToken cancellationToken = default) =>
+        DownloadMemoryStreamAsync(httpClient, new Uri(url), progress, startPosition, bufferSize, cancellationToken);
+
+    /// <inheritdoc cref="DownloadStreamAsync"/>
+    public static async Task<Result<Stream>> DownloadMemoryStreamAsync(
+        this HttpClient httpClient,
+        Uri uri,
+        IProgress<double>? progress = null,
+        long startPosition = 0,
+        int bufferSize = 4096,
         CancellationToken cancellationToken = default)
     {
-        var uri = new Uri(url);
-
         if (uri.IsFile)
         {
             progress?.Report(100);
-            return Result<Stream>.AsSuccess(OpenAsyncRead(url));
+            return Result<Stream>.AsSuccess(OpenAsyncRead(uri.OriginalString));
         }
         if (uri.Scheme is "ms-appx")
         {
@@ -66,13 +74,10 @@ public static partial class IoHelper
     }
 
     /// <summary>
+    /// 一定是从网络下载<br/>
     /// Attempts to download the content that are located by the <paramref name="uri" /> to a
     /// <see cref="Stream" /> with progress supported
     /// </summary>
-    /// <remarks>
-    /// A <see cref="CancellationHandle" /> is used instead of <see cref="CancellationToken" />, since this function will be called in
-    /// such a frequent manner that the default behavior of <see cref="CancellationToken" /> will bring a huge impact on performance
-    /// </remarks>
     public static async Task<Exception?> DownloadStreamAsync(
         this HttpClient httpClient,
         Stream destination,

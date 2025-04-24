@@ -54,7 +54,7 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup
 
     public UgoiraDownloadTaskGroup(ISingleAnimatedImage entry, string destination) : base(entry, destination, DownloadItemType.Ugoira)
     {
-        if (!entry.PreferredAnimatedImageType.HasFlag(SingleAnimatedImageType.MultiFiles))
+        if (entry.PreferredAnimatedImageType is not SingleAnimatedImageType.MultiFiles)
             ThrowHelper.InvalidOperation($"{nameof(ISingleAnimatedImage.PreferredAnimatedImageType)} should be {nameof(SingleAnimatedImageType.MultiFiles)}");
         if (!Entry.MultiImageUris!.IsPreloaded)
             ThrowHelper.InvalidOperation($"{nameof(ISingleAnimatedImage.MultiImageUris)} should be preloaded");
@@ -64,8 +64,7 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup
 
     public override async ValueTask InitializeTaskGroupAsync()
     {
-        if (!Entry.MultiImageUris!.IsPreloaded)
-            await Entry.MultiImageUris.PreloadListAsync(App.AppViewModel.GetDownloadProvider(Entry.Platform));
+        await Entry.MultiImageUris!.TryPreloadListAsync(Entry);
         SetTasksSet();
     }
 
