@@ -19,20 +19,31 @@
     mc:Ignorable="d">
     <controls:EnhancedPage.Resources>
         <DataTemplate x:Key="CommonSuggestionModelTemplate" x:DataType="local:SuggestionModel">
-            <controls1:DockPanel Padding="0,10" HorizontalSpacing="10">
+            <Grid Padding="0,10" ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
                 <ContentPresenter
+                    Grid.Column="0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     controls1:DockPanel.Dock="Left"
                     Content="{x:Bind SymbolIcon}" />
-                <StackPanel VerticalAlignment="Center" Spacing="1">
+                <Grid Grid.Column="1" RowSpacing="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
                     <TextBlock
+                        Grid.Row="0"
                         MaxHeight="35"
                         Style="{StaticResource BodyTextBlockStyle}"
                         Text="{x:Bind Name}"
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="WrapWholeWords" />
                     <TextBlock
+                        Grid.Row="1"
                         MaxHeight="15"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Style="{StaticResource CaptionTextBlockStyle}"
@@ -40,8 +51,8 @@
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="WrapWholeWords"
                         Visibility="{x:Bind controls:C.IsNotNullOrWhiteSpaceToVisibility(TranslatedName)}" />
-                </StackPanel>
-            </controls1:DockPanel>
+                </Grid>
+            </Grid>
         </DataTemplate>
         <local:SuggestionModelDataTemplateSelector
             x:Key="SuggestionModelDataTemplateSelector"
