@@ -11,12 +11,10 @@ using Pixeval.Pages.IllustrationViewer;
 using System;
 using System.Linq;
 using System.Threading;
-using Microsoft.UI.Xaml.Input;
 using Misaki;
 using WinUI3Utilities;
 using Pixeval.Util.IO.Caching;
 using System.IO;
-using Microsoft.UI.Xaml;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 

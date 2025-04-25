@@ -7,7 +7,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Misaki;
 using Pixeval.Database;
 using Pixeval.Options;
