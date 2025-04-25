@@ -8,11 +8,10 @@ using System.Threading.Tasks;
 using FluentIcons.Common;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
-using Mako.Model;
+using Misaki;
 using Pixeval.Database;
 using Pixeval.Download;
 using Pixeval.Download.Models;
-using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Utilities;
 using WinUI3Utilities;
@@ -20,7 +19,7 @@ using WinUI3Utilities;
 namespace Pixeval.Controls;
 
 public sealed partial class DownloadItemViewModel(IDownloadTaskGroup downloadTask)
-    : ThumbnailEntryViewModel<IWorkEntry>(downloadTask.DatabaseEntry.Entry), IFactory<IDownloadTaskGroup, DownloadItemViewModel>
+    : ThumbnailEntryViewModel<IArtworkInfo>(downloadTask.DatabaseEntry.Entry), IFactory<IDownloadTaskGroup, DownloadItemViewModel>
 {
     public IDownloadTaskGroup DownloadTask { get; } = downloadTask;
 
@@ -103,17 +102,17 @@ public sealed partial class DownloadItemViewModel(IDownloadTaskGroup downloadTas
         _ => "SystemFillColorAttentionBrush"
     });
 
+    protected override string ThumbnailUrl => Entry.Thumbnails.PickClosest(50, 50).ImageUri.OriginalString;
+
 #pragma warning restore CA1822
 
     #region Not supported
 
     public override Uri AppUri => ThrowHelper.NotSupported<Uri>();
 
-    public override Uri WebUri => ThrowHelper.NotSupported<Uri>();
+    public override Uri WebsiteUri => ThrowHelper.NotSupported<Uri>();
 
     public override Uri PixEzUri => ThrowHelper.NotSupported<Uri>();
-
-    protected override string ThumbnailUrl => Entry.GetThumbnailUrl();
 
     #endregion
 }

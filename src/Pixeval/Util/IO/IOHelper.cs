@@ -2,19 +2,14 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats;
 using Windows.Storage;
-using Windows.Storage.Streams;
 
 namespace Pixeval.Util.IO;
 
@@ -53,37 +48,6 @@ public static partial class IoHelper
         await Task.WhenAll((await dir.GetItemsAsync()).Select(f => f.DeleteAsync().AsTask()));
     }
 
-    public static async Task<IRandomAccessStream> GetRandomAccessStreamFromByteArrayAsync(byte[] byteArray)
-    {
-        var stream = new InMemoryRandomAccessStream();
-        using var dataWriter = new DataWriter(stream.GetOutputStreamAt(0));
-        dataWriter.WriteBytes(byteArray);
-        _ = await dataWriter.StoreAsync();
-        _ = dataWriter.DetachStream();
-        return stream;
-    }
-
-    public static async Task<IImageFormat> DetectImageFormat(this IRandomAccessStream randomAccessStream)
-    {
-        await using var stream = randomAccessStream.AsStream();
-        return await Image.DetectFormatAsync(stream);
-    }
-
-    public static async Task<string> ToBase64StringAsync(this IRandomAccessStream randomAccessStream)
-    {
-        var array = ArrayPool<byte>.Shared.Rent((int) randomAccessStream.Size);
-        var buffer = await randomAccessStream.ReadAsync(array.AsBuffer(), (uint) randomAccessStream.Size, InputStreamOptions.None);
-        ArrayPool<byte>.Shared.Return(array);
-        return Convert.ToBase64String(buffer.ToArray());
-    }
-
-    public static async Task<string> GenerateBase64UrlForImageAsync(this IRandomAccessStream randomAccessStream)
-    {
-        var base64Str = await randomAccessStream.ToBase64StringAsync();
-        var format = await randomAccessStream.DetectImageFormat();
-        return $"data:image/{format?.Name.ToLower()},{base64Str}";
-    }
-
     // todo 简化为PostJsonAsync
     public static Task<HttpResponseMessage> PostFormAsync(this HttpClient httpClient, string url, params (string? Key, string? Value)[] parameters)
     {
@@ -115,6 +79,11 @@ public static partial class IoHelper
     public static FileStream OpenAsyncWrite(string path, int bufferSize = 4096)
     {
         return new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize, true);
+    }
+
+    public static FileStream CreateAsyncWrite(string path, int bufferSize = 4096)
+    {
+        return new FileStream(path, FileMode.CreateNew, FileAccess.Write, FileShare.None, bufferSize, true);
     }
 
     public static FileStream OpenAsyncRead(this FileInfo info, int bufferSize = 4096)

@@ -8,6 +8,7 @@ using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
 using Mako.Engine;
 using Mako.Model;
+using Misaki;
 using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
@@ -17,8 +18,8 @@ namespace Pixeval.Controls;
 /// 初始化时调用<see cref="ResetEngine"/>
 /// </summary>
 public partial class SharableViewDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>
-    : ObservableObject, IDataProvider<T, TViewModel>, IDisposable
-    where T : class, IIdEntry
+    : ObservableObject, IDataProvider<T, TViewModel>
+    where T : class, IIdentityInfo
     where TViewModel : EntryViewModel<T>, IFactory<T, TViewModel>, IDisposable
 {
     public SharedRef<IFetchEngine<T>?>? FetchEngineRef

@@ -2,6 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
@@ -9,34 +10,39 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
 using Mako.Global.Enum;
 using Mako.Model;
+using Misaki;
 using Pixeval.Messages;
 using Pixeval.Pages.IllustratorViewer;
 using ReverseMarkdown;
 using WinUI3Utilities;
+using System.Collections.Generic;
 
 namespace Pixeval.Pages;
 
 public sealed partial class WorkInfoPage
 {
-    private WorkInfoPageViewModel<IWorkEntry> _viewModel = null!;
+    private WorkInfoPageViewModel _viewModel = null!;
 
     public WorkInfoPage() => InitializeComponent();
 
     public override async void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        _viewModel = new(e.Parameter.To<IWorkEntry>());
+        _viewModel = new(e.Parameter.To<IArtworkInfo>());
         await SetWorkCaptionTextAsync();
-        await _viewModel.LoadAvatarAsync();
     }
 
     private void WorkTagButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        _ = WeakReferenceMessenger.Default.Send(new WorkTagClickedMessage(_viewModel.Entry is Illustration ? SimpleWorkType.IllustAndManga : SimpleWorkType.Novel, (string) ((FrameworkElement) sender).Tag));
+        if (_viewModel.Entry is IWorkEntry entry)
+            _ = WeakReferenceMessenger.Default.Send(new WorkTagClickedMessage(
+                entry is Illustration ? SimpleWorkType.IllustAndManga : SimpleWorkType.Novel,
+                ((FrameworkElement) sender).GetTag<ITag>().Name));
     }
 
     private async void IllustratorPersonPicture_OnClicked(object sender, RoutedEventArgs e)
     {
-        await this.CreateIllustratorPageAsync(_viewModel.Illustrator.Id);
+        if (_viewModel.Entry is IWorkEntry entry)
+            await this.CreateIllustratorPageAsync(entry.User.Id);
     }
 
     private async Task SetWorkCaptionTextAsync()
@@ -68,4 +74,25 @@ public sealed partial class WorkInfoPage
             AppInfo.SaveConfig(App.AppViewModel.AppSettings);
         }
     }
+
+    private static string GetTagCategoryName(object o)
+    {
+        var grouping = (IGrouping<ITagCategory, ITag>) o;
+        return grouping.Key.Name;
+    }
+
+    private static string GetTagCategoryTranslatedName(object o)
+    {
+        var grouping = (IGrouping<ITagCategory, ITag>) o;
+        return grouping.Key.TranslatedName;
+    }
+
+    private static Visibility IsEmptyToVisibility(object o)
+    {
+        var grouping = (IGrouping<ITagCategory, ITag>) o;
+        return grouping.Key == ITagCategory.Empty ? Visibility.Collapsed : Visibility.Visible;
+    }
+
+    public static string PickClosestUri(IReadOnlyCollection<IImageFrame> frames, int width, int height)
+        => frames.PickClosest(width, height).ImageUri.OriginalString;
 }

@@ -1,22 +1,32 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using System.Diagnostics.CodeAnalysis;
 using LiteDB;
-using Mako.Model;
+using Misaki;
 using Pixeval.Download;
+using Pixeval.Util;
+using WinUI3Utilities;
 
 namespace Pixeval.Database;
 
 public class DownloadHistoryEntry : IHistoryEntry
 {
-    public DownloadHistoryEntry(string destination, DownloadItemType type, IWorkEntry entry)
+    public DownloadHistoryEntry(string destination, DownloadItemType type, IArtworkInfo entry)
     {
+        if (entry is not ISerializable serializable)
+        {
+            ThrowHelper.InvalidOperation($"{nameof(entry)} should be {nameof(ISerializable)}");
+            return;
+        }
+
         Destination = destination;
         Type = type;
         Entry = entry;
+        SerializeKey = serializable.SerializeKey;
+        EntryString = serializable.Serialize();
     }
 
-    // ReSharper disable once UnusedMember.Global
     public DownloadHistoryEntry()
     {
     }
@@ -34,9 +44,20 @@ public class DownloadHistoryEntry : IHistoryEntry
     /// 当是一个文件时必须是一个有效的地址（不能是token&lt;...&gt;）<br/>
     /// 当是多个文件时，文件名可以包含token&lt;...&gt;，但其文件夹路径不能包含token&lt;...&gt;
     /// </summary>
+    // private set 反序列化使用
     public string Destination { get; private set; } = null!;
 
     public DownloadItemType Type { get; set; }
 
-    public IWorkEntry Entry { get; set; } = null!;
+    [BsonIgnore]
+    [field: AllowNull, MaybeNull]
+    public IArtworkInfo Entry => field ??= (IArtworkInfo)ArtworkSerializerTable.ArtworkTypeMethodsTable[SerializeKey](EntryString);
+
+    // private set 反序列化使用
+    // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local
+    public string SerializeKey { get; private set; } = null!;
+
+    // private set 反序列化使用
+    // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local
+    public string EntryString { get; private set; } = null!;
 }

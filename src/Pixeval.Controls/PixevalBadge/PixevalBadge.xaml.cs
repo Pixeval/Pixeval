@@ -25,6 +25,7 @@ public sealed partial class PixevalBadge : UserControl
 
     private static readonly Dictionary<BadgeMode, (string Text, Color Background)> _PropertySet = new()
     {
+        [BadgeMode.None] = ("None", Colors.DarkGray),
         [BadgeMode.Premium] = ("Premium", Colors.Orange),
         [BadgeMode.Following] = (PixevalBadgeResources.Following, Colors.Crimson),
         [BadgeMode.Gif] = ("GIF", Colors.Green),
@@ -43,5 +44,8 @@ public sealed partial class PixevalBadge : UserControl
     private string GetText(BadgeMode mode) => _PropertySet[mode].Text;
 
     private SolidColorBrush GetBrush(BadgeMode mode) => new SolidColorBrush(_PropertySet[mode].Background);
+
+    private Visibility GetVisibility(BadgeMode mode) =>
+        mode is BadgeMode.None ? Visibility.Collapsed : Visibility.Visible;
 #pragma warning restore CA1822
 }

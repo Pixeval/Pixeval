@@ -1,6 +1,7 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +9,7 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Mako.Model;
+using Misaki;
 using Pixeval.Database;
 using Pixeval.Database.Managers;
 using Pixeval.Options;
@@ -18,7 +19,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
-public partial class SingleImageDownloadTaskGroup : ImageDownloadTask, IImageDownloadTaskGroup
+public partial class SingleImageDownloadTaskGroup : ImageDownloadTask, IDownloadTaskGroup
 {
     public DownloadHistoryEntry DatabaseEntry { get; }
 
@@ -28,20 +29,19 @@ public partial class SingleImageDownloadTaskGroup : ImageDownloadTask, IImageDow
         return ValueTask.CompletedTask;
     }
 
-    public Illustration Entry => DatabaseEntry.Entry.To<Illustration>();
+    public IArtworkInfo Entry => DatabaseEntry.Entry.To<IArtworkInfo>();
 
-    public long Id => DatabaseEntry.Entry.Id;
+    public string Id => DatabaseEntry.Entry.Id;
 
-    public SingleImageDownloadTaskGroup(Illustration entry, string destination, Stream? stream = null) : this(new(destination, DownloadItemType.Illustration, entry))
+    public SingleImageDownloadTaskGroup(IArtworkInfo entry, string destination) : this(new(destination, DownloadItemType.Illustration, entry))
     {
         CurrentState = DownloadState.Queued;
         ProgressPercentage = 0;
-        Stream = stream;
         SetNotCreateFromEntry();
     }
 
-    public SingleImageDownloadTaskGroup(DownloadHistoryEntry entry) : base(new(entry.Entry.To<Illustration>().OriginalSingleUrl!),
-        IoHelper.ReplaceTokenExtensionFromUrl(entry.Destination, entry.Entry.To<Illustration>().OriginalSingleUrl!))
+    public SingleImageDownloadTaskGroup(DownloadHistoryEntry entry) : base(GetImageUri(entry.Entry),
+        IoHelper.ReplaceTokenExtensionFromUrl(entry.Destination, GetImageUri(entry.Entry)))
     {
         DatabaseEntry = entry;
         CurrentState = entry.State;
@@ -50,6 +50,19 @@ public partial class SingleImageDownloadTaskGroup : ImageDownloadTask, IImageDow
         // DatabaseEntry.Destination可以包含未被替换的token，从此可以拿到IllustrationDownloadFormat.Original
         IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(Path.GetExtension(DatabaseEntry.Destination));
     }
+
+    private static Uri GetImageUri(IArtworkInfo info) =>
+        info switch
+        {
+            ISingleImage { ImageType: ImageType.SingleImage } singleImage => singleImage.ImageUri,
+            ISingleAnimatedImage
+            {
+                ImageType: ImageType.SingleAnimatedImage,
+                PreferredAnimatedImageType: SingleAnimatedImageType.SingleZipFile or SingleAnimatedImageType.SingleFile
+            } animatedImage
+                => animatedImage.SingleImageUri!,
+            _ => ThrowHelper.NotSupported<Uri>(info.ToString())
+        };
 
     private void SetNotCreateFromEntry()
     {
@@ -75,8 +88,24 @@ public partial class SingleImageDownloadTaskGroup : ImageDownloadTask, IImageDow
 
     protected override async Task AfterDownloadAsyncOverride(ImageDownloadTask sender, CancellationToken token = default)
     {
+        // TODO IllustrationDownloadFormat
         if (IllustrationDownloadFormat is IllustrationDownloadFormat.Original)
             return;
+        if (Entry is ISingleAnimatedImage
+            {
+                ImageType: ImageType.SingleAnimatedImage,
+                PreferredAnimatedImageType: SingleAnimatedImageType.SingleZipFile
+            } animatedImageZip)
+        {
+            await animatedImageZip.ZipImageDelays!.TryPreloadListAsync(animatedImageZip);
+            var msDelays = animatedImageZip.ZipImageDelays!;
+            var zipPath = Destination + ".zip";
+            File.Move(Destination, zipPath);
+            await using var read = IoHelper.OpenAsyncRead(zipPath);
+            await using var write = IoHelper.OpenAsyncWrite(Destination);
+            _ = await read.UgoiraSaveToStreamAsync(msDelays, write);
+        }
+
         await ExifManager.SetTagsAsync(Destination, Entry, IllustrationDownloadFormat, token);
     }
 

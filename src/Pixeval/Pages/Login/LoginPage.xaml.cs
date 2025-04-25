@@ -3,12 +3,10 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Windowing;
-using Mako;
 using Pixeval.Settings.Models;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
@@ -83,8 +81,7 @@ public sealed partial class LoginPage
             if (refreshToken.IsNotNullOrEmpty())
             {
                 _viewModel.AdvancePhase(LoginPhaseEnum.Refreshing);
-                var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
-                App.AppViewModel.MakoClient = new MakoClient(refreshToken, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
+                App.AppViewModel.MakoClient.Build(refreshToken);
 
                 SuccessNavigating();
             }

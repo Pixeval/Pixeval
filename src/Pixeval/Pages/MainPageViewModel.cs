@@ -157,7 +157,7 @@ public partial class MainPageViewModel : UiObservableObject
                     .Where(r => r.Header.IndexId is 5 /*pixiv*/ or 6 /*pixivhistorical*/ && r.Header.Similarity >
                         App.AppViewModel.AppSettings.ReverseSearchResultSimilarityThreshold)
                     .Select(async r =>
-                        new IllustrationItemViewModel(
+                        IllustrationItemViewModel.CreateInstance(
                             await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(r.Data.PixivId))));
 
                 if (viewModels.Length is 0)

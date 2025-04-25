@@ -9,7 +9,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Web;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Win32;
@@ -17,12 +16,10 @@ using Pixeval.AppManagement;
 using Pixeval.Attributes;
 using Pixeval.Controls.DialogContent;
 using Pixeval.Controls.Windowing;
-using Mako;
 using Pixeval.Util;
 using Pixeval.Util.ComponentModels;
 using Pixeval.Util.UI;
 using Windows.System;
-using Pixeval.Utilities;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
@@ -137,8 +134,7 @@ public partial class LoginPageViewModel(FrameworkElement frameworkElement) : UiO
                         ThrowHelper.Exception();
                         return;
                     }
-                    var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
-                    App.AppViewModel.MakoClient = new MakoClient(tokenResponse, App.AppViewModel.AppSettings.ToMakoClientConfiguration(), logger);
+                    App.AppViewModel.MakoClient.Build(tokenResponse);
                     navigated();
                 }
                 catch

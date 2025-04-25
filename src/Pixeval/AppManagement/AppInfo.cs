@@ -42,7 +42,7 @@ public static partial class AppInfo
 
     public static IPropertySet LocalConfig => _containerConfig.Values;
 
-    public static readonly string DatabaseFilePath = AppKnownFolders.Local.CombinePath("PixevalData4.3.11.litedb");
+    public static readonly string DatabaseFilePath = AppKnownFolders.Local.CombinePath("PixevalData4.3.12.litedb");
 
     public static Versioning AppVersion { get; } = new();
 

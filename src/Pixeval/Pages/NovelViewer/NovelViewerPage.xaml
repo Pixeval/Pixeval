@@ -9,7 +9,6 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:md="using:CommunityToolkit.Labs.WinUI.MarkdownTextBlock"
-    xmlns:triggers="using:CommunityToolkit.WinUI"
     KeyboardAcceleratorPlacementMode="Hidden"
     mc:Ignorable="d">
     <controls:EnhancedPage.Resources>
@@ -72,16 +71,12 @@
                                 <AppBarToggleButton Command="{x:Bind _viewModel.InfoAndCommentsCommand}" IsChecked="{x:Bind EntryViewerSplitView.IsPaneOpen, Mode=TwoWay}" />
                                 <AppBarSeparator />
                                 <AppBarButton
-                                    Command="{x:Bind _viewModel.CurrentNovel.CopyCommand, Mode=OneWay}"
-                                    CommandParameter="{x:Bind DownloadParameter(_viewModel.CurrentDocument.NovelContent), Mode=OneWay}"
-                                    IsEnabled="{x:Bind _viewModel.CurrentDocument.LoadSuccessfully, Mode=OneWay}" />
-                                <AppBarButton
                                     Command="{x:Bind _viewModel.CurrentNovel.SaveCommand, Mode=OneWay}"
-                                    CommandParameter="{x:Bind DownloadParameter(_viewModel.CurrentDocument.NovelContent), Mode=OneWay}"
+                                    CommandParameter="{x:Bind}"
                                     IsEnabled="{x:Bind _viewModel.CurrentDocument.LoadSuccessfully, Mode=OneWay}" />
                                 <AppBarButton
                                     Command="{x:Bind _viewModel.CurrentNovel.SaveAsCommand, Mode=OneWay}"
-                                    CommandParameter="{x:Bind DownloadParameter(_viewModel.CurrentDocument.NovelContent), Mode=OneWay}"
+                                    CommandParameter="{x:Bind}"
                                     IsEnabled="{x:Bind _viewModel.CurrentDocument.LoadSuccessfully, Mode=OneWay}" />
                                 <AppBarSeparator />
                                 <AppBarButton
@@ -237,11 +232,11 @@
                                             OverflowButtonVisibility="Collapsed">
                                             <AppBarButton
                                                 Command="{x:Bind _viewModel.CurrentNovel.BookmarkCommand, Mode=OneWay}"
-                                                CommandParameter="{x:Bind DownloadParameter(_viewModel.CurrentDocument.NovelContent), Mode=OneWay}"
+                                                CommandParameter="{x:Bind}"
                                                 IsEnabled="{x:Bind _viewModel.CurrentDocument.LoadSuccessfully, Mode=OneWay}" />
                                             <AppBarButton
                                                 Command="{x:Bind _viewModel.CurrentNovel.SaveCommand, Mode=OneWay}"
-                                                CommandParameter="{x:Bind DownloadParameter(_viewModel.CurrentDocument.NovelContent), Mode=OneWay}"
+                                                CommandParameter="{x:Bind}"
                                                 IsEnabled="{x:Bind _viewModel.CurrentDocument.LoadSuccessfully, Mode=OneWay}" />
                                         </CommandBar>
                                     </controls1:DockPanel>
@@ -306,7 +301,7 @@
                     Padding="15,0"
                     Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
                     Symbol="AppTitle"
-                    Text="{x:Bind _viewModel.CurrentNovel.Title, Mode=OneWay}" />
+                    Text="{x:Bind _viewModel.CurrentNovel.Entry.Title, Mode=OneWay}" />
             </CommandBar>
             <CommandBar
                 x:Name="ExtensionsCommandBar"

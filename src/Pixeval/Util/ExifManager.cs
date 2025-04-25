@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Mako.Model;
+using Misaki;
 using Pixeval.Options;
 using Pixeval.Util.IO;
 using SixLabors.ImageSharp;
@@ -15,49 +15,49 @@ namespace Pixeval.Util;
 
 public static class ExifManager
 {
-    public static async Task SetTagsAsync(string imagePath, Illustration illustration, IllustrationDownloadFormat? illustrationDownloadFormat = null, CancellationToken token = default)
+    public static async Task SetTagsAsync(string imagePath, IArtworkInfo illustration, IllustrationDownloadFormat? illustrationDownloadFormat = null, CancellationToken token = default)
     {
         using var image = await Image.LoadAsync(imagePath, token);
         image.SetIdTags(illustration);
         await image.SaveAsync(imagePath, IoHelper.GetIllustrationEncoder(illustrationDownloadFormat), token);
     }
 
-    public static async Task SetTagsAsync(string imagePath, Illustration illustration, UgoiraDownloadFormat? ugoiraDownloadFormat = null, CancellationToken token = default)
+    public static async Task SetTagsAsync(string imagePath, IArtworkInfo illustration, UgoiraDownloadFormat? ugoiraDownloadFormat = null, CancellationToken token = default)
     {
         using var image = await Image.LoadAsync(imagePath, token);
         image.SetIdTags(illustration);
         await image.SaveAsync(imagePath, IoHelper.GetUgoiraEncoder(ugoiraDownloadFormat), token);
     }
 
-    public static void SetIdTags(this Image image, Illustration illustration)
+    public static void SetIdTags(this Image image, IArtworkInfo illustration)
     {
-        image.SetIdTags(illustration.Id, illustration.Tags.Select(t => t.Name));
+        image.SetIdTags(illustration.Id, illustration.Tags[ITagCategory.Empty].Select(t => t.Name));
     }
 
-    public static async Task SetIdTagsAsync(string imagePath, long id, IEnumerable<string> tags, IllustrationDownloadFormat? illustrationDownloadFormat = null, CancellationToken token = default)
+    public static async Task SetIdTagsAsync(string imagePath, string id, IEnumerable<string> tags, IllustrationDownloadFormat? illustrationDownloadFormat = null, CancellationToken token = default)
     {
         using var image = await Image.LoadAsync(imagePath, token);
         image.SetIdTags(id, tags);
         await image.SaveAsync(imagePath, IoHelper.GetIllustrationEncoder(illustrationDownloadFormat), token);
     }
 
-    public static async Task SetIdTagsAsync(string imagePath, long id, IEnumerable<string> tags, UgoiraDownloadFormat? ugoiraDownloadFormat = null, CancellationToken token = default)
+    public static async Task SetIdTagsAsync(string imagePath, string id, IEnumerable<string> tags, UgoiraDownloadFormat? ugoiraDownloadFormat = null, CancellationToken token = default)
     {
         using var image = await Image.LoadAsync(imagePath, token);
         image.SetIdTags(id, tags);
         await image.SaveAsync(imagePath, IoHelper.GetUgoiraEncoder(ugoiraDownloadFormat), token);
     }
 
-    public static void SetIdTags(this Image image, long id, IEnumerable<string> tags)
+    public static void SetIdTags(this Image image, string id, IEnumerable<string> tags)
     {
         var profile = image.Metadata.ExifProfile ??= new();
-        profile.SetValue(ExifTag.ImageNumber, (uint) id);
+        profile.SetValue(ExifTag.ImageID, id);
         profile.SetValue(ExifTag.UserComment, string.Join(';', tags));
     }
 
-    public static long GetIllustrationId(this ImageInfo image)
+    public static string? GetArtworkId(this ImageInfo image)
     {
-        if (image.Metadata.ExifProfile?.TryGetValue(ExifTag.ImageNumber, out var id) is true)
+        if (image.Metadata.ExifProfile?.TryGetValue(ExifTag.ImageID, out var id) is true)
             try
             {
                 return id.Value;
@@ -66,7 +66,7 @@ public static class ExifManager
             {
                 // ignored
             }
-        return 0;
+        return null;
     }
 
     public static string[] GetTags(this ImageInfo image)

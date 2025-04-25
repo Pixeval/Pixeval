@@ -15,7 +15,6 @@
             ImageScale="{x:Bind _viewModel.Scale, Mode=TwoWay}"
             IsPlaying="{x:Bind _viewModel.IsPlaying, Mode=OneWay}"
             Mode="{x:Bind _viewModel.ShowMode, Mode=TwoWay}"
-            MsIntervals="{x:Bind _viewModel.MsIntervals, Mode=OneWay}"
             Source="{x:Bind _viewModel.DisplayStreamsSource, Mode=OneWay}">
             <controls:ZoomableImage.ContextFlyout>
                 <!--  PrimaryCommands 点击后不会自动隐藏Flyout  -->
@@ -23,8 +22,9 @@
                     <AppBarButton Command="{x:Bind _viewModel.PlayGifCommand}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.IllustrationViewModel.IsUgoira)}" />
                     <AppBarButton
                         Command="{x:Bind _viewModel.OriginalIllustrationViewModel.BookmarkCommand}"
-                        CommandParameter="{x:Bind _viewModel.DownloadParameter}"
-                        IsEnabled="{x:Bind _viewModel.LoadSuccessfully, Mode=OneWay}" />
+                        CommandParameter="{x:Bind}"
+                        IsEnabled="{x:Bind _viewModel.LoadSuccessfully, Mode=OneWay}"
+                        Visibility="{x:Bind controls:C.IsNotNullToVisibility(_viewModel.OriginalIllustrationViewModel.BookmarkCommand), Mode=OneWay}" />
                     <AppBarSeparator />
                     <AppBarButton Command="{x:Bind _viewModel.ZoomInCommand}" />
                     <AppBarButton Command="{x:Bind _viewModel.ZoomOutCommand}" />

@@ -18,6 +18,7 @@ using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Pages.NovelViewer;
 using Pixeval.Util.UI;
 using Windows.Foundation;
+using Misaki;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls;
@@ -110,31 +111,17 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>, 
     }
 
     [MemberNotNull(nameof(ViewModel))]
-    public void ResetEngine(IFetchEngine<IWorkEntry> newEngine, int itemsPerPage = 20, int itemLimit = -1)
+    public void ResetEngine(IFetchEngine<IArtworkInfo> newEngine, int itemsPerPage = 20, int itemLimit = -1)
     {
-        var type = newEngine.GetType().GetInterfaces()[0].GenericTypeArguments.FirstOrDefault();
+        var type = newEngine.GetType().GetInterfaces()[0].GenericTypeArguments.SingleOrDefault();
         switch (ViewModel)
         {
             case NovelViewViewModel when type == typeof(Novel):
-            case IllustrationViewViewModel when type == typeof(Illustration):
+            case IllustrationViewViewModel when type != typeof(Novel):
                 ViewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
                 break;
             default:
-                if (type == typeof(Illustration))
-                {
-                    Type = SimpleWorkType.IllustAndManga;
-                    ViewModel?.Dispose();
-                    ViewModel = null!;
-                    AdvancedItemsView.MinItemWidth = DesiredWidth;
-                    AdvancedItemsView.MinItemHeight = DesiredHeight;
-                    AdvancedItemsView.LayoutType = LayoutType;
-                    AdvancedItemsView.ItemTemplate = this.GetResource<DataTemplate>("IllustrationItemDataTemplate");
-                    ViewModel = new IllustrationViewViewModel();
-                    ViewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
-                    ViewModelChanged?.Invoke(this, ViewModel);
-                    AdvancedItemsView.ItemsSource = ViewModel.View;
-                }
-                else if (type == typeof(Novel))
+                if (type == typeof(Novel))
                 {
                     Type = SimpleWorkType.Novel;
                     ViewModel?.Dispose();
@@ -144,12 +131,23 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>, 
                     AdvancedItemsView.LayoutType = ItemsViewLayoutType.Grid;
                     AdvancedItemsView.ItemTemplate = this.GetResource<DataTemplate>("NovelItemDataTemplate");
                     ViewModel = new NovelViewViewModel();
-                    ViewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
-                    ViewModelChanged?.Invoke(this, ViewModel);
-                    AdvancedItemsView.ItemsSource = ViewModel.View;
                 }
                 else
-                    ThrowHelper.ArgumentOutOfRange(ViewModel);
+                {
+                    Type = SimpleWorkType.IllustAndManga;
+                    ViewModel?.Dispose();
+                    ViewModel = null!;
+                    AdvancedItemsView.MinItemWidth = DesiredWidth;
+                    AdvancedItemsView.MinItemHeight = DesiredHeight;
+                    AdvancedItemsView.LayoutType = LayoutType;
+                    AdvancedItemsView.ItemTemplate = this.GetResource<DataTemplate>("IllustrationItemDataTemplate");
+                    ViewModel = new IllustrationViewViewModel();
+                }
+
+                ViewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
+                ViewModelChanged?.Invoke(this, ViewModel);
+                AdvancedItemsView.ItemsSource = ViewModel.View;
+
                 break;
         }
     }
@@ -160,7 +158,10 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>, 
 
     private void AddToBookmarkTeachingTip_OnCloseButtonClick(TeachingTip sender, object e)
     {
-        sender.GetTag<IWorkViewModel>().AddToBookmarkCommand.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, null as object));
+        if (sender.GetTag<IWorkViewModel>().AddToBookmarkCommand is not { } command)
+            return;
+
+        command.Execute((BookmarkTagSelector.SelectedTags, BookmarkTagSelector.IsPrivate, null as object));
 
         this.SuccessGrowl(EntryViewResources.AddedToBookmark);
     }
@@ -173,7 +174,8 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>, 
 
     public async void WorkItem_OnRequestOpenUserInfoPage(FrameworkElement sender, IWorkViewModel e)
     {
-        await this.CreateIllustratorPageAsync(e.User.Id);
+        if (e.Entry.Platform is IPlatformInfo.Pixiv)
+            await this.CreateIllustratorPageAsync(long.Parse(e.Entry.Authors[0].Id));
     }
 
     public void CompleteDisposal()

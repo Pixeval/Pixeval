@@ -2,14 +2,14 @@
 // Licensed under the GPL v3 License.
 
 using System.Collections.Generic;
-using Mako.Model;
+using Misaki;
 using IllustrationViewDataProvider = Pixeval.Controls.SharableViewDataProvider<
-    Mako.Model.Illustration,
+    Misaki.IArtworkInfo,
     Pixeval.Controls.IllustrationItemViewModel>;
 
 namespace Pixeval.Controls;
 
-public sealed partial class IllustrationViewViewModel : SortableEntryViewViewModel<Illustration, IllustrationItemViewModel>
+public sealed partial class IllustrationViewViewModel : SortableEntryViewViewModel<IArtworkInfo, IllustrationItemViewModel>
 {
     public IllustrationViewViewModel(IllustrationViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef(), viewModel.BlockedTags)
     {

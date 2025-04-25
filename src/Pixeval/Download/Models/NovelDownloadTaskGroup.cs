@@ -61,8 +61,7 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
                 IllustrationDownloadFormat is IllustrationDownloadFormat.Original
                     ? IoHelper.ReplaceTokenExtensionFromUrl(name, url)
                     : name + imgExt,
-                DatabaseEntry.State)
-            { Stream = DocumentViewModel.TryGetStream(i) };
+                DatabaseEntry.State);
             AddToTasksSet(imageDownloadTask);
         }
 
@@ -82,7 +81,8 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
 
     public NovelDownloadTaskGroup(
         Novel entry,
-        string destination) : base(entry, destination, DownloadItemType.Novel)
+        string destination,
+        NovelContent? novelContent) : base(entry, destination, DownloadItemType.Novel)
     {
         var backSlash = TokenizedDestination.LastIndexOf('\\');
         DocPath = TokenizedDestination[..backSlash];
@@ -91,21 +91,8 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
         var imgExt = TokenizedDestination[(backSlash + 1)..];
         IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(imgExt);
         NovelDownloadFormat = IoHelper.GetNovelFormat(Path.GetExtension(DocPath));
-    }
-
-    public NovelDownloadTaskGroup(
-        Novel entry,
-        NovelContent novelContent,
-        string destination) : base(entry, destination, DownloadItemType.Novel)
-    {
-        var backSlash = TokenizedDestination.LastIndexOf('\\');
-        DocPath = TokenizedDestination[..backSlash];
-        PdfTempFolderPath = $"{DocPath}.tmp";
-        // .<ext> or .png or .etc 
-        var imgExt = TokenizedDestination[(backSlash + 1)..];
-        IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(imgExt);
-        NovelDownloadFormat = IoHelper.GetNovelFormat(Path.GetExtension(DocPath));
-        SetNovelContent(novelContent);
+        if (novelContent is not null)
+            SetNovelContent(novelContent);
     }
 
     public override async ValueTask InitializeTaskGroupAsync()
@@ -160,7 +147,7 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
         var destinations = Destinations;
         for (var i = 0; i < destinations.Count; ++i)
             if (DocumentViewModel.GetIdTags(i) is { Id: var id, Tags: var tags })
-                await ExifManager.SetIdTagsAsync(destinations[i], id, tags, IllustrationDownloadFormat, token);
+                await ExifManager.SetIdTagsAsync(destinations[i], id.ToString(), tags, IllustrationDownloadFormat, token);
     }
 
     public override string OpenLocalDestination => DocPath;

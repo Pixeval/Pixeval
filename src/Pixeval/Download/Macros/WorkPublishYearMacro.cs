@@ -1,18 +1,15 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Pixeval.Controls;
+using Misaki;
 using Pixeval.Download.MacroParser;
 
 namespace Pixeval.Download.Macros;
 
-[MetaPathMacro<IWorkViewModel>]
-public class WorkPublishYearMacro : ITransducer<IWorkViewModel>
+[MetaPathMacro<IArtworkInfo>]
+public class WorkPublishYearMacro : ITransducer<IArtworkInfo>
 {
     public string Name => "publish_year";
 
-    public string Substitute(IWorkViewModel context)
-    {
-        return context.CreateDate.Year.ToString();
-    }
+    public string Substitute(IArtworkInfo context) => context.CreateDate.Year.ToString();
 }

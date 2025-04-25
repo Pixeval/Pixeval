@@ -35,7 +35,7 @@
         <TextBlock
             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
             Style="{StaticResource CaptionTextBlockStyle}"
-            Text="{x:Bind ViewModel.Entry.User.Name, Mode=OneWay}"
+            Text="{x:Bind GetAuthorsNames(ViewModel), Mode=OneWay}"
             TextTrimming="CharacterEllipsis"
             TextWrapping="NoWrap" />
     </StackPanel>

@@ -24,13 +24,13 @@ public partial class IllustratorItemViewModel
     private async void FollowCommandExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
     {
         FollowCommand.RefreshFollowCommand(IsFollowed, true);
-        IsFollowed = await MakoHelper.SetFollowAsync(UserId, !IsFollowed);
+        IsFollowed = await MakoHelper.SetFollowAsync(Entry.Id, !IsFollowed);
         FollowCommand.RefreshFollowCommand(IsFollowed, false);
     }
 
-    public override Uri AppUri => MakoHelper.GenerateUserAppUri(UserId);
+    public override Uri AppUri => Entry.UserInfo.AppUri;
 
-    public override Uri WebUri => MakoHelper.GenerateUserWebUri(UserId);
+    public override Uri WebsiteUri => Entry.UserInfo.WebsiteUri;
 
-    public override Uri PixEzUri => MakoHelper.GenerateUserPixEzUri(UserId);
+    public override Uri PixEzUri => MakoHelper.GenerateUserPixEzUri(Entry.Id);
 }

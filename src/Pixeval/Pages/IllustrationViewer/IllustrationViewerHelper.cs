@@ -9,8 +9,8 @@ using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
-using Mako.Model;
 using WinUI3Utilities;
+using Misaki;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -25,7 +25,7 @@ public static class IllustrationViewerHelper
         var viewModels = new List<IllustrationItemViewModel>();
         foreach (var otherId in otherIds)
         {
-            var illustrationItemViewModel = new IllustrationItemViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id));
+            var illustrationItemViewModel = IllustrationItemViewModel.CreateInstance(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id));
             viewModels.Add(illustrationItemViewModel);
             if (otherId == id)
             {
@@ -44,7 +44,7 @@ public static class IllustrationViewerHelper
     /// </summary>
     public static async Task CreateIllustrationPageAsync(this FrameworkElement frameworkElement, long id)
     {
-        var viewModel = new IllustrationItemViewModel(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id));
+        var viewModel = IllustrationItemViewModel.CreateInstance(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id));
 
         frameworkElement.CreateIllustrationPage(viewModel, [viewModel]);
     }
@@ -86,7 +86,7 @@ public static class IllustrationViewerHelper
         };
     }
 
-    private static void CreateIllustrationPage(FrameworkElement frameworkElement, Illustration illustration, object param)
+    private static void CreateIllustrationPage(FrameworkElement frameworkElement, IArtworkInfo illustration, object param)
     {
         if (frameworkElement.FindAscendantOrSelf<TabPage>() is not { } tabPage)
             return;

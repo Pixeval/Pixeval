@@ -2,52 +2,49 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using LiteDB;
 using Mako.Global.Enum;
 using Mako.Model;
+using Mako.Net.Response;
+using Misaki;
+using Pixeval.Util;
 using WinUI3Utilities;
 
 namespace Pixeval.Database;
 
 public class BrowseHistoryEntry() : IHistoryEntry
 {
-    public BrowseHistoryEntry(IWorkEntry entry) : this()
+    public BrowseHistoryEntry(IArtworkInfo entry) : this()
     {
-        ArgumentNullException.ThrowIfNull(entry);
-        switch (entry)
+        if (entry is not ISerializable serializable)
         {
-            case Illustration:
-                Id = entry.Id;
-                EntryDocument = BsonMapper.Global.ToDocument(entry);
-                Type = SimpleWorkType.IllustAndManga;
-                break;
-            case Novel:
-                Id = entry.Id;
-                EntryDocument = BsonMapper.Global.ToDocument(entry);
-                Type = SimpleWorkType.Novel;
-                break;
-            default:
-                ThrowHelper.ArgumentOutOfRange(entry);
-                break;
+            ThrowHelper.InvalidOperation($"{nameof(entry)} should be {nameof(ISerializable)}");
+            return;
         }
+
+        Entry = entry;
+        Id = entry.Id;
+        SerializeKey = serializable.SerializeKey;
+        EntryString = serializable.Serialize();
     }
 
     [BsonId(true)]
     public ObjectId? HistoryEntryId { get; set; }
 
-    public long Id { get; set; }
-
-    public BsonDocument? EntryDocument { get; set; }
-
-    public SimpleWorkType Type { get; set; }
-
     [BsonIgnore]
-    public IWorkEntry? TryGetEntry(SimpleWorkType type) =>
-        Type switch
-        {
-            _ when type != Type || EntryDocument is null => null,
-            SimpleWorkType.IllustAndManga => BsonMapper.Global.ToObject<Illustration>(EntryDocument),
-            SimpleWorkType.Novel => BsonMapper.Global.ToObject<Novel>(EntryDocument),
-            _ => null
-        };
+    [field: AllowNull, MaybeNull]
+    public IArtworkInfo Entry => field ??= (IArtworkInfo) ArtworkSerializerTable.ArtworkTypeMethodsTable[SerializeKey](EntryString);
+
+    // private set 反序列化使用
+    // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local
+    public string Id { get; private set; } = null!;
+
+    // private set 反序列化使用
+    // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local
+    public string SerializeKey { get; private set; } = null!;
+
+    // private set 反序列化使用
+    // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local
+    public string EntryString { get; private set; } = null!;
 }

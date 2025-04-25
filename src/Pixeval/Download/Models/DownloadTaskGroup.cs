@@ -17,6 +17,7 @@ using Pixeval.Database.Managers;
 using Pixeval.Util.Threading;
 using Pixeval.Utilities;
 using WinUI3Utilities;
+using Misaki;
 
 namespace Pixeval.Download.Models;
 
@@ -26,9 +27,9 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
 
     public abstract ValueTask InitializeTaskGroupAsync();
 
-    public long Id => DatabaseEntry.Entry.Id;
+    public string Id => DatabaseEntry.Entry.Id;
 
-    protected DownloadTaskGroup(IWorkEntry entry, string destination, DownloadItemType type) : this(new(destination, type, entry)) => SetNotCreateFromEntry();
+    protected DownloadTaskGroup(IArtworkInfo entry, string destination, DownloadItemType type) : this(new(destination, type, entry)) => SetNotCreateFromEntry();
 
     /// <summary>
     /// 将<see cref="IsCreateFromEntry"/>设置为<see langword="false"/>以便启动。<br/>

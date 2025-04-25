@@ -30,6 +30,8 @@ public sealed partial class TagsEntry
 
     private void TagButton_OnClicked(object sender, ItemClickEventArgs e) => TagClick?.Invoke(this, e.ClickedItem.To<string>());
 
+    private bool IsLong(string? id) => long.TryParse(id, out _);
+
     private async void GoToPageItem_OnClicked(object sender, RoutedEventArgs e)
     {
         if (ViewModel.Illustration is null)
@@ -37,10 +39,8 @@ public sealed partial class TagsEntry
             var growl = this.InfoGrowlReturn(TagsEntryResources.FetchingWorkInfo);
             try
             {
-                var illustration = await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(ViewModel.Id);
+                var illustration = await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(long.Parse(ViewModel.Id!));
                 ViewModel.Illustration = illustration;
-                if (growl is not null)
-                    Growl.RemoveGrowl(this, growl);
             }
             catch (Exception exception)
             {
@@ -51,8 +51,11 @@ public sealed partial class TagsEntry
                 growl.Message = exception.Message;
                 return;
             }
+
+            if (growl is not null)
+                Growl.RemoveGrowl(this, growl);
         }
-        var vm = new IllustrationItemViewModel(ViewModel.Illustration);
+        var vm = IllustrationItemViewModel.CreateInstance(ViewModel.Illustration);
         this.CreateIllustrationPage(vm, [vm]);
     }
 

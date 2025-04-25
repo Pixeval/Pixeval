@@ -2,73 +2,55 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
+using FluentIcons.Common;
 using Mako.Model;
-using Pixeval.Util;
+using Misaki;
+using Pixeval.Util.UI;
+using Windows.System;
 
 namespace Pixeval.Controls;
 
-public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>, IWorkViewModel where T : class, IWorkEntry
+public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>, IWorkViewModel where T : class, IArtworkInfo
 {
     protected WorkEntryViewModel(T entry) : base(entry)
     {
         IsBookmarkedDisplay = Entry.IsFavorite ? HeartButtonState.Checked : HeartButtonState.Unchecked;
-        InitializeCommands();
+
+        InitializeCommandsBase();
+
+        // TODO 用更通用的收藏接口
+        if (Entry is IWorkEntry)
+        {
+            AddToBookmarkCommand = EntryItemResources.AddToBookmark.GetCommand(Symbol.Bookmark);
+            AddToBookmarkCommand.ExecuteRequested += AddToBookmarkCommandOnExecuteRequested;
+
+            BookmarkCommand = "".GetCommand(Symbol.Heart, VirtualKeyModifiers.Control, VirtualKey.D);
+            BookmarkCommand.RefreshBookmarkCommand(IsFavorite, false);
+            BookmarkCommand.ExecuteRequested += BookmarkCommandOnExecuteRequested;
+        }
+
+        SaveCommand.ExecuteRequested += SaveCommandOnExecuteRequested;
+
+        SaveAsCommand.ExecuteRequested += SaveAsCommandOnExecuteRequested;
     }
 
-    IWorkEntry IWorkViewModel.Entry => Entry;
+    IArtworkInfo IWorkViewModel.Entry => Entry;
 
-    public int TotalFavorite => Entry.TotalFavorite;
-
-    public int TotalView => Entry.TotalView;
-
-    public bool IsFavorite
-    {
-        get => Entry.IsFavorite;
-        set => Entry.IsFavorite = value;
-    }
+    public bool IsFavorite => Entry.IsFavorite;
 
     [ObservableProperty]
     public partial HeartButtonState IsBookmarkedDisplay { get; set; }
 
-    partial void OnIsBookmarkedDisplayChanged(HeartButtonState value)
-    {
-        if (value is HeartButtonState.Pending)
-            return;
-        IsFavorite = value is HeartButtonState.Checked;
-    }
-
-    public IReadOnlyList<Tag> Tags => Entry.Tags;
-
-    public string Title => Entry.Title;
-
-    public string Description => Entry.Description;
-
-    public UserEntity User => Entry.User;
-
     public DateTimeOffset CreateDate => Entry.CreateDate;
 
-    public ImageUrls ThumbnailUrls => Entry.ThumbnailUrls;
-
-    public AiType AiType => Entry.AiType;
-
-    public XRestrict XRestrict => Entry.XRestrict;
-
-    public bool IsAiGenerated => Entry.AiType is AiType.AiGenerated;
-
-    public bool IsXRestricted => Entry.XRestrict is not XRestrict.Ordinary;
-
-    public bool IsPrivate => Entry.IsPrivate;
-
-    public bool IsMuted => Entry.IsMuted;
-
-    public BadgeMode XRestrictionCaption =>
-        Entry.XRestrict switch
+    public BadgeMode SafeBadgeMode =>
+        Entry.SafeRating switch
         {
-            XRestrict.R18G => BadgeMode.R18G,
-            _ => BadgeMode.R18
+            { IsR18G: true } => BadgeMode.R18G,
+            { IsR18: true } => BadgeMode.R18,
+            _ => BadgeMode.None
         };
 
-    protected override string ThumbnailUrl => Entry.GetThumbnailUrl();
+    protected override string ThumbnailUrl => Entry.Thumbnails.PickClosestHeight(300).ImageUri.OriginalString;
 }

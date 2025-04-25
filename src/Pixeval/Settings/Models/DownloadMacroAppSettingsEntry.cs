@@ -39,5 +39,5 @@ public partial class DownloadMacroAppSettingsEntry(
         ["pic_set_index"] = SettingsPageResources.PicSetIndexMacroTooltip
     }.ToImmutableDictionary();
 
-    public static ICollection<StringRepresentableItem> AvailableMacros { get; } = [.. MetaPathMacroAttributeHelper.GetIWorkViewModelInstances().Select(m => new StringRepresentableItem(_MacroTooltips[m.Name], $"@{{{(m is IPredicate ? $"{m.Name}=" : m.Name)}}}"))];
+    public static ICollection<StringRepresentableItem> AvailableMacros { get; } = [.. MetaPathMacroAttributeHelper.GetIArtworkInfoInstances().Select(m => new StringRepresentableItem(_MacroTooltips[m.Name], $"@{{{(m is IPredicate ? $"{m.Name}=" : m.Name)}}}"))];
 }

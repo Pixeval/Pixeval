@@ -1,14 +1,15 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Pixeval.Controls;
+using Mako.Model;
+using Misaki;
 using Pixeval.Download.MacroParser;
 using Pixeval.Util.IO;
 
 namespace Pixeval.Download.Macros;
 
-[MetaPathMacro<IWorkViewModel>]
-public class FileExtensionMacro : ITransducer<IWorkViewModel>, ILastSegment
+[MetaPathMacro<IArtworkInfo>]
+public class FileExtensionMacro : ITransducer<IArtworkInfo>, ILastSegment
 {
     public const string NameConst = "ext";
 
@@ -16,14 +17,13 @@ public class FileExtensionMacro : ITransducer<IWorkViewModel>, ILastSegment
 
     public string Name => NameConst;
 
-    public string Substitute(IWorkViewModel context)
+    public string Substitute(IArtworkInfo context)
     {
-        return context switch
+        return context.ImageType switch
         {
-            IllustrationItemViewModel illustrationItemViewModel => illustrationItemViewModel.IsUgoira
-                ? IoHelper.GetUgoiraExtension()
-                : IoHelper.GetIllustrationExtension(),
-            NovelItemViewModel => IoHelper.GetNovelExtension(),
+            ImageType.SingleImage or ImageType.ImageSet => IoHelper.GetIllustrationExtension(),
+            ImageType.SingleAnimatedImage => IoHelper.GetUgoiraExtension(),
+            ImageType.Other when context is Novel => IoHelper.GetNovelExtension(),
             _ => ""
         };
     }
