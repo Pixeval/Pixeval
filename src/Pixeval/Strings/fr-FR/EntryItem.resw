@@ -165,20 +165,8 @@
   <data name="DownloadTaskCreated" xml:space="preserve">
     <value>Téléchargement créé</value>
   </data>
-  <data name="UgoiraProcessing" xml:space="preserve">
-    <value>Ugoira en traitement: {0}%</value>
-  </data>
-  <data name="ImageProcessing" xml:space="preserve">
-    <value>Image en traitement</value>
-  </data>
-  <data name="NovelContentFetching" xml:space="preserve">
-    <value>Récupération du contenu de roman en cours</value>
-  </data>
   <data name="ImageSetToClipBoard" xml:space="preserve">
     <value>Image copiée</value>
-  </data>
-  <data name="NovelSetToClipBoard" xml:space="preserve">
-    <value>Roman copié</value>
   </data>
   <data name="TheIllustrationIsAMangaFormatted" xml:space="preserve">
     <value>Cette collection contient {0} illustrations</value>
