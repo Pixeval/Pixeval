@@ -165,20 +165,8 @@
   <data name="DownloadTaskCreated" xml:space="preserve">
     <value>Задание на скачивание создано</value>
   </data>
-  <data name="UgoiraProcessing" xml:space="preserve">
-    <value>Обработка анимации: {0}%</value>
-  </data>
-  <data name="ImageProcessing" xml:space="preserve">
-    <value>Обработка изображения</value>
-  </data>
-  <data name="NovelContentFetching" xml:space="preserve">
-    <value>Загрузка содержимого новеллы</value>
-  </data>
   <data name="ImageSetToClipBoard" xml:space="preserve">
     <value>Изображение скопировано в буфер обмена</value>
-  </data>
-  <data name="NovelSetToClipBoard" xml:space="preserve">
-    <value>Новелла скопирована в буфер обмена</value>
   </data>
   <data name="TheIllustrationIsAMangaFormatted" xml:space="preserve">
     <value>Это набор иллюстраций, содержащий {0} изображений</value>
