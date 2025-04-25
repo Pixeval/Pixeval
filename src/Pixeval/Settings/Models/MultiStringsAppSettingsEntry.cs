@@ -27,6 +27,7 @@ public partial class MultiStringsAppSettingsEntry
         _setter = setter;
         _propertyGetter = property.Compile();
         Value = getter(Settings);
+        Value.CollectionChanged += (_, _) => _setter(Settings, Value);
     }
 
     public override FrameworkElement Element => new TokenizingSettingsExpander { Entry = this };

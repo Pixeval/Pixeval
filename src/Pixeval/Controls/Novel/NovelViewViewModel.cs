@@ -17,11 +17,11 @@ public sealed partial class NovelViewViewModel : SortableEntryViewViewModel<Nove
         DataProvider.View.Range = viewModel.DataProvider.View.Range;
     }
 
-    public NovelViewViewModel() : this(new NovelViewDataProvider(), App.AppViewModel.AppSettings.BlockedTags)
+    public NovelViewViewModel() : this(new NovelViewDataProvider(), null)
     {
     }
 
-    private NovelViewViewModel(NovelViewDataProvider dataProvider, HashSet<string> blockedTags) : base(blockedTags)
+    private NovelViewViewModel(NovelViewDataProvider dataProvider, HashSet<string>? blockedTags) : base(blockedTags)
     {
         DataProvider = dataProvider;
         dataProvider.View.Filter = DefaultFilter;

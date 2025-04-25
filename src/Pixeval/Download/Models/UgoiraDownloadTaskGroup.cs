@@ -32,6 +32,7 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup
     [MemberNotNull(nameof(MsDelays))]
     private void SetTasksSet()
     {
+        // TODO 下载经常报错权限冲突
         _ = Directory.CreateDirectory(TempFolderPath);
         var msDelays = new int[Entry.MultiImageUris!.Count];
         for (var i = 0; i < Entry.MultiImageUris.Count; ++i)

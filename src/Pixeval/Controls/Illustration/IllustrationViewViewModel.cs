@@ -17,12 +17,11 @@ public sealed partial class IllustrationViewViewModel : SortableEntryViewViewMod
         DataProvider.View.Range = viewModel.DataProvider.View.Range;
     }
 
-    public IllustrationViewViewModel() : this(new IllustrationViewDataProvider(), App.AppViewModel.AppSettings.BlockedTags)
+    public IllustrationViewViewModel() : this(new IllustrationViewDataProvider(), null)
     {
-
     }
 
-    private IllustrationViewViewModel(IllustrationViewDataProvider dataProvider, HashSet<string> blockedTags) : base(blockedTags)
+    private IllustrationViewViewModel(IllustrationViewDataProvider dataProvider, HashSet<string>? blockedTags) : base(blockedTags)
     {
         DataProvider = dataProvider;
         dataProvider.View.Filter = DefaultFilter;
