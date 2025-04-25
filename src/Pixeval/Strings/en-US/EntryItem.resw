@@ -165,20 +165,8 @@
   <data name="DownloadTaskCreated" xml:space="preserve">
     <value>Created download task</value>
   </data>
-  <data name="UgoiraProcessing" xml:space="preserve">
-    <value>Processing ugoira：{0}%</value>
-  </data>
-  <data name="ImageProcessing" xml:space="preserve">
-    <value>Processing image</value>
-  </data>
-  <data name="NovelContentFetching" xml:space="preserve">
-    <value>Fetching novel content</value>
-  </data>
   <data name="ImageSetToClipBoard" xml:space="preserve">
     <value>Image copied to clipboard</value>
-  </data>
-  <data name="NovelSetToClipBoard" xml:space="preserve">
-    <value>Novel copied</value>
   </data>
   <data name="TheIllustrationIsAMangaFormatted" xml:space="preserve">
     <value>This work contains {0} pictures</value>
