@@ -3,12 +3,10 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
 using Pixeval.Controls.Windowing;
-using Mako;
 using Pixeval.Settings.Models;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;

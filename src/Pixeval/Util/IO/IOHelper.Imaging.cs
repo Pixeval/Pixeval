@@ -334,7 +334,7 @@ public static partial class IoHelper
             }
             return (streams, msDelays);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             foreach (var stream in streams) 
                 await stream.DisposeAsync();

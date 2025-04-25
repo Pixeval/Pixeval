@@ -117,7 +117,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>, 
         switch (ViewModel)
         {
             case NovelViewViewModel when type == typeof(Novel):
-            case IllustrationViewViewModel:
+            case IllustrationViewViewModel when type != typeof(Novel):
                 ViewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
                 break;
             default:

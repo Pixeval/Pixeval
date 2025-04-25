@@ -75,7 +75,7 @@
                 UseMarkdown="True" />
             <StackPanel Orientation="Horizontal" Spacing="5">
                 <TextBlock VerticalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}">
-                    <Run Text="PID" />
+                    <Run Text="ID" />
                     <Run Text="{x:Bind _viewModel.Entry.Id}" />
                 </TextBlock>
                 <Button

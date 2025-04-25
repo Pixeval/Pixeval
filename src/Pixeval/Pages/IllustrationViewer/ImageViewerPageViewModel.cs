@@ -245,7 +245,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
             return;
         _disposed = false;
         _ = LoadThumbnailAsync();
-        // TODO 浏览历史 BrowseHistoryPersistentManager.AddHistory(IllustrationViewModel.Entry);
+        BrowseHistoryPersistentManager.AddHistory(IllustrationViewModel.Entry);
         var source = await IllustrationViewModel.LoadOriginalImageAsync(AdvancePhase, ImageLoadingCancellationTokenSource.Token);
 
         if (source is not null)

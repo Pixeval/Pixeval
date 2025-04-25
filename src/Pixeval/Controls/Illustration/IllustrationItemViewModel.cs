@@ -16,6 +16,7 @@ using Misaki;
 using WinUI3Utilities;
 using Pixeval.Util.IO.Caching;
 using System.IO;
+using Microsoft.UI.Xaml;
 using Pixeval.Util;
 using Pixeval.Util.IO;
 
@@ -159,8 +160,4 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<IArtworkInfo
         };
 
     protected override Task<bool> SetBookmarkAsync(bool privately = false, IEnumerable<string>? tags = null) => ThrowHelper.NotSupported<Task<bool>>();
-
-    protected override void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) => throw new NotImplementedException();
-
-    protected override void SaveAsCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) => throw new NotImplementedException();
 }

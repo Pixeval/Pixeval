@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using LiteDB;
+using Mako.Model;
+using Misaki;
 using Pixeval.Download.Models;
 
 namespace Pixeval.Database.Managers;
@@ -119,11 +121,20 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
 
     private static IDownloadTaskGroup ToDownloadTaskGroup(DownloadHistoryEntry entry)
     {
-        return entry.Type switch
+        return entry.Entry switch
         {
-            DownloadItemType.Novel => new NovelDownloadTaskGroup(entry),
-            DownloadItemType.Ugoira => new UgoiraDownloadTaskGroup(entry),
-            DownloadItemType.Manga => new MangaDownloadTaskGroup(entry),
+            ISingleImage { ImageType: ImageType.SingleImage } or ISingleAnimatedImage
+            {
+                ImageType: ImageType.SingleAnimatedImage,
+                PreferredAnimatedImageType: SingleAnimatedImageType.SingleZipFile or SingleAnimatedImageType.SingleFile
+            } => new SingleImageDownloadTaskGroup(entry),
+            ISingleAnimatedImage
+            {
+                ImageType: ImageType.SingleAnimatedImage,
+                PreferredAnimatedImageType: SingleAnimatedImageType.MultiFiles
+            } => new UgoiraDownloadTaskGroup(entry),
+            IImageSet { ImageType: ImageType.ImageSet } => new MangaDownloadTaskGroup(entry),
+            Novel => new NovelDownloadTaskGroup(entry),
             _ => new SingleImageDownloadTaskGroup(entry)
         };
     }

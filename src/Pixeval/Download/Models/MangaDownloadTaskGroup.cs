@@ -23,7 +23,7 @@ public partial class MangaDownloadTaskGroup : DownloadTaskGroup
         IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(Path.GetExtension(TokenizedDestination));
     }
 
-    public MangaDownloadTaskGroup(IArtworkInfo entry, string destination) : base(entry, destination, DownloadItemType.Manga)
+    public MangaDownloadTaskGroup(IImageSet entry, string destination) : base(entry, destination, DownloadItemType.Manga)
     {
         IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(Path.GetExtension(TokenizedDestination));
         SetTasksSet();
