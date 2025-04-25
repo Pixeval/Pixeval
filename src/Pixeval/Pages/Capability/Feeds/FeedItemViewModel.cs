@@ -16,10 +16,10 @@ namespace Pixeval.Pages.Capability.Feeds;
 
 static file class FeedItemColors
 {
-    public static readonly SolidColorBrush AddBookmark = new(C.ToAlphaColor(0xFF5449));
-    public static readonly SolidColorBrush AddFavorite = new(C.ToAlphaColor(0x85976E));
-    public static readonly SolidColorBrush PostIllust = new(C.ToAlphaColor(0x769CDF));
-    public static readonly SolidColorBrush AddNovelBookmark = new(C.ToAlphaColor(0x9B9168));
+    public static readonly SolidColorBrush AddBookmark = new(C.ToAlphaColor(0xFFFF5449));
+    public static readonly SolidColorBrush AddFavorite = new(C.ToAlphaColor(0xFF85976E));
+    public static readonly SolidColorBrush PostIllust = new(C.ToAlphaColor(0xFF769CDF));
+    public static readonly SolidColorBrush AddNovelBookmark = new(C.ToAlphaColor(0xFF9B9168));
 }
 
 public interface IFeedEntry : IIdEntry
