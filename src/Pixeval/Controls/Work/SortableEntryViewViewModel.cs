@@ -15,12 +15,12 @@ using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>(HashSet<string> blockedTags)
+public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>(HashSet<string>? blockedTags)
     : EntryViewViewModel<T, TViewModel>, ISortableEntryViewViewModel
     where T : class, IArtworkInfo
     where TViewModel : EntryViewModel<T>, IFactory<T, TViewModel>, IWorkViewModel
 {
-    protected readonly HashSet<string> BlockedTags = [.. blockedTags];
+    protected HashSet<string> BlockedTags = [.. blockedTags ?? App.AppViewModel.AppSettings.BlockedTags];
 
     [ObservableProperty]
     public partial bool IsSelecting { get; set; }
@@ -74,6 +74,7 @@ public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessed
 
     public void ResetEngine(IFetchEngine<IArtworkInfo>? newEngine, int itemsPerPage = 20, int itemLimit = -1)
     {
+        BlockedTags = [.. App.AppViewModel.AppSettings.BlockedTags];
         DataProvider.ResetEngine((IFetchEngine<T>?) newEngine, itemsPerPage, itemLimit);
     }
 

@@ -5,7 +5,6 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Numerics;
 using System.Threading.Tasks;
 using Windows.System;
 using CommunityToolkit.WinUI.Controls;

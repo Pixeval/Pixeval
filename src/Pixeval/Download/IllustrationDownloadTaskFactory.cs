@@ -2,7 +2,6 @@
 // Licensed under the GPL v3 License.
 
 using CommunityToolkit.Diagnostics;
-using Mako.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
 using Pixeval.Database.Managers;

@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using Pixeval.AppManagement;
 using Pixeval.Util.Threading;
 using Pixeval.Utilities;
-using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Util.IO;
 

@@ -1,12 +1,8 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using LiteDB;
-using Mako.Global.Enum;
-using Mako.Model;
-using Mako.Net.Response;
 using Misaki;
 using Pixeval.Util;
 using WinUI3Utilities;

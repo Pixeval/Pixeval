@@ -16,8 +16,8 @@ public class ArtistNameMacro : ITransducer<IArtworkInfo>
     public string Name => "artist_name";
 
     public string Substitute(IArtworkInfo context) =>
-        ((IEnumerable<IUser>) context.Authors)
-        .Select(t => t.Name)
-        .Aggregate((x, y) => x + ',' + y)
-        .Let(IoHelper.NormalizePathSegment);
+        context.Authors
+            .Select(t => t.Name)
+            .Aggregate((x, y) => x + ',' + y)
+            .Let(IoHelper.NormalizePathSegment);
 }

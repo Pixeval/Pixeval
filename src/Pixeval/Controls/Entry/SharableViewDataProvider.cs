@@ -7,7 +7,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
 using Mako.Engine;
-using Mako.Model;
 using Misaki;
 using Pixeval.Utilities;
 

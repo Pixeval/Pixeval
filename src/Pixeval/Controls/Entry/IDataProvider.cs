@@ -7,7 +7,6 @@ using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.WinUI.Collections;
 using Pixeval.Collections;
 using Mako.Engine;
-using Mako.Model;
 using Misaki;
 
 namespace Pixeval.Controls;

@@ -1,7 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System.Collections.Generic;
 using System.Linq;
 using Misaki;
 using Pixeval.Download.MacroParser;
@@ -16,8 +15,8 @@ public class ArtistIdMacro : ITransducer<IArtworkInfo>
     public string Name => "artist_id";
 
     public string Substitute(IArtworkInfo context) =>
-        ((IEnumerable<IUser>) context.Authors)
-        .Select(t => t.Name)
-        .Aggregate((x, y) => x + ',' + y)
-        .Let(IoHelper.NormalizePathSegment);
+        context.Authors
+            .Select(t => t.Name)
+            .Aggregate((x, y) => x + ',' + y)
+            .Let(IoHelper.NormalizePathSegment);
 }
