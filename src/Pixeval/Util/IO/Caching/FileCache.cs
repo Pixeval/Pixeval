@@ -74,7 +74,7 @@ public class FileCache
                     break;
                 case Stream stream:
                 {
-                    await using var s = IoHelper.OpenAsyncWrite(filePath);
+                    await using var s = IoHelper.CreateAsyncWrite(filePath);
                     await stream.CopyToAsync(s);
                     break;
                 }

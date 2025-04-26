@@ -20,12 +20,12 @@ public partial class MangaDownloadTaskGroup : DownloadTaskGroup
 
     public MangaDownloadTaskGroup(DownloadHistoryEntry entry) : base(entry)
     {
-        IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(Path.GetExtension(TokenizedDestination));
+        DestinationIllustrationFormat = IoHelper.GetIllustrationFormat(Path.GetExtension(TokenizedDestination));
     }
 
     public MangaDownloadTaskGroup(IImageSet entry, string destination) : base(entry, destination, DownloadItemType.Manga)
     {
-        IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(Path.GetExtension(TokenizedDestination));
+        DestinationIllustrationFormat = IoHelper.GetIllustrationFormat(Path.GetExtension(TokenizedDestination));
     }
 
     public override ValueTask InitializeTaskGroupAsync()
@@ -48,17 +48,17 @@ public partial class MangaDownloadTaskGroup : DownloadTaskGroup
 
     protected override async Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender, CancellationToken token = default)
     {
-        if (IllustrationDownloadFormat is IllustrationDownloadFormat.Original)
+        if (DestinationIllustrationFormat is IllustrationDownloadFormat.Original)
             return;
         foreach (var destination in Destinations)
         {
             if (token.IsCancellationRequested)
                 return;
-            await ExifManager.SetTagsAsync(destination, Entry, IllustrationDownloadFormat, token);
+            await ExifManager.SetTagsAsync(destination, Entry, DestinationIllustrationFormat, token);
         }
     }
 
-    private IllustrationDownloadFormat IllustrationDownloadFormat { get; }
+    private IllustrationDownloadFormat DestinationIllustrationFormat { get; }
 
     public override string OpenLocalDestination
     {

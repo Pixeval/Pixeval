@@ -90,7 +90,7 @@ public record Supporter(string Nickname, string Name, Uri ProfilePicture, Uri Pr
                     await LoadAvatarAsync(supporter, BasePath, httpClient);
                     yield return supporter;
                 }
-            await using var fs = IoHelper.OpenAsyncWrite(path);
+            await using var fs = IoHelper.CreateAsyncWrite(path);
             await JsonSerializer.SerializeAsync(fs, Supporters, typeof(List<Supporter>), SupporterSerializeContext.Default);
         }
         else
@@ -103,7 +103,7 @@ public record Supporter(string Nickname, string Name, Uri ProfilePicture, Uri Pr
         var path = Path.Combine(basePath, supporter.Name + ".png");
         if (File.Exists(path))
             return;
-        var file = IoHelper.OpenAsyncWrite(path);
+        var file = IoHelper.CreateAsyncWrite(path);
         if (await client.DownloadStreamAsync(file, supporter.ProfilePicture) is not null)
         {
             await file.DisposeAsync();
