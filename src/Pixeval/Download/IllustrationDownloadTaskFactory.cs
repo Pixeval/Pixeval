@@ -21,6 +21,11 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IArtworkInfo
         IDownloadTaskGroup? task;
         switch (context)
         {
+            case ISingleImage { ImageType: ImageType.SingleImage } singleImage:
+            {
+                task = new SingleImageDownloadTaskGroup(singleImage, path);
+                break;
+            }
             case ISingleAnimatedImage
             {
                 ImageType: ImageType.SingleAnimatedImage,
@@ -30,14 +35,13 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IArtworkInfo
                 task = new UgoiraDownloadTaskGroup(singleAnimatedImage, path);
                 break;
             }
-            case ISingleImage { ImageType: ImageType.SingleImage }:
             case ISingleAnimatedImage
             {
                 ImageType: ImageType.SingleAnimatedImage,
                 PreferredAnimatedImageType: SingleAnimatedImageType.SingleFile or SingleAnimatedImageType.SingleZipFile
-            }:
+            } singleAnimatedImage:
             {
-                task = new SingleImageDownloadTaskGroup(context, path);
+                task = new SingleAnimatedImageDownloadTaskGroup(singleAnimatedImage, path);
                 break;
             }
             case IImageSet { ImageType: ImageType.ImageSet } imageSet:

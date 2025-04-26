@@ -176,12 +176,12 @@ public sealed partial class FeedPage
         _SparseFollowUserSuffix = sparseFollowUser[1];
         var condensedBookmark = FeedPageResources.CondensedBookmarkFormatted.Split("{0}");
         _CondensedBookmarkPrefix = condensedBookmark[0];
-        _CondensedBookmarkFormattedSuffix = condensedBookmark[1];
+        _CondensedBookmarkFormattedSuffix = condensedBookmark[1].Replace("{1}", "{0}");
         var condensedPostIllust = FeedPageResources.CondensedPostIllustFormatted.Split("{0}");
         _CondensedPostIllustPrefix = condensedPostIllust[0];
-        _CondensedPostIllustFormattedSuffix = condensedPostIllust[1];
+        _CondensedPostIllustFormattedSuffix = condensedPostIllust[1].Replace("{1}", "{0}");
         var condensedFollowUser = FeedPageResources.CondensedFollowUserFormatted.Split("{0}");
         _CondensedFollowUserIllustPrefix = condensedFollowUser[0];
-        _CondensedFollowUserFormattedSuffix = condensedFollowUser[1];
+        _CondensedFollowUserFormattedSuffix = condensedFollowUser[1].Replace("{1}", "{0}");
     }
 }

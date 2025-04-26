@@ -12,17 +12,22 @@
     <controls:ConstrainedBox controls:DockPanel.Dock="Top" AspectRatio="40:21">
         <local:LazyImage CornerRadius="0" Source="{x:Bind ViewModel.ThumbnailSource, Mode=OneWay}" />
     </controls:ConstrainedBox>
-    <controls:DockPanel
+    <Grid
         Padding="20"
         controls:DockPanel.Dock="Top"
-        LastChildFill="False"
-        VerticalSpacing="10">
-        <TextBlock
-            controls:DockPanel.Dock="Bottom"
-            Style="{StaticResource SubtitleTextBlockStyle}"
-            Text="{x:Bind ViewModel.Entry.Title, Mode=OneWay}"
-            TextTrimming="WordEllipsis" />
+        RowSpacing="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
         <ContentPresenter
+            Grid.Row="0"
+            Grid.Column="0"
             Padding="5,0"
             controls:DockPanel.Dock="Left"
             Background="{x:Bind GetBackgroundBrush(ViewModel.Entry.Category), Mode=OneWay}"
@@ -30,8 +35,18 @@
             <TextBlock Text="{x:Bind ViewModel.Entry.SubcategoryLabel, Mode=OneWay}" />
         </ContentPresenter>
         <TextBlock
+            Grid.Row="0"
+            Grid.Column="2"
             controls:DockPanel.Dock="Right"
             Foreground="DarkGray"
             Text="{x:Bind local:C.CultureDateTimeOffsetDateFormatter(ViewModel.Entry.PublishDate, pixeval:AppSettings.CurrentCulture), Mode=OneWay}" />
-    </controls:DockPanel>
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
+            controls:DockPanel.Dock="Bottom"
+            Style="{StaticResource SubtitleTextBlockStyle}"
+            Text="{x:Bind ViewModel.Entry.Title, Mode=OneWay}"
+            TextTrimming="WordEllipsis" />
+    </Grid>
 </controls:DockPanel>

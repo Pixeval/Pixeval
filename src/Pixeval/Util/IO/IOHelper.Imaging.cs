@@ -71,7 +71,7 @@ public static partial class IoHelper
     public static async Task UgoiraSaveToFileAsync(this Image image, string path, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
     {
         CreateParentDirectories(path);
-        await using var fileStream = OpenAsyncWrite(path);
+        await using var fileStream = CreateAsyncWrite(path);
         _ = await UgoiraSaveToStreamAsync(image, fileStream, ugoiraDownloadFormat);
     }
 
@@ -185,21 +185,21 @@ public static partial class IoHelper
     public static async Task IllustrationSaveToFileAsync(this Image image, string path, IllustrationDownloadFormat? illustrationDownloadFormat = null)
     {
         CreateParentDirectories(path);
-        await using var fileStream = OpenAsyncWrite(path);
+        await using var fileStream = CreateAsyncWrite(path);
         _ = await IllustrationSaveToStreamAsync(image, fileStream, illustrationDownloadFormat);
     }
 
     public static async Task StreamSaveToFileAsync(this Stream stream, string path)
     {
         CreateParentDirectories(path);
-        await using var fileStream = OpenAsyncWrite(path);
+        await using var fileStream = CreateAsyncWrite(path);
         await stream.CopyToAsync(fileStream);
     }
 
     public static async Task StreamsCompressSaveToFileAsync(this Stream stream, string path)
     {
         CreateParentDirectories(path);
-        await using var fileStream = OpenAsyncWrite(path);
+        await using var fileStream = CreateAsyncWrite(path);
         await stream.CopyToAsync(fileStream);
     }
 
@@ -233,7 +233,7 @@ public static partial class IoHelper
         ugoiraDownloadFormat ??= App.AppViewModel.AppSettings.UgoiraDownloadFormat;
         return ugoiraDownloadFormat switch
         {
-            UgoiraDownloadFormat.OriginalZip => ".zip",
+            UgoiraDownloadFormat.Original => FileExtensionMacro.NameConstToken,
             UgoiraDownloadFormat.Tiff or UgoiraDownloadFormat.APng or UgoiraDownloadFormat.Gif => "." + ugoiraDownloadFormat.ToString()!.ToLower(),
             UgoiraDownloadFormat.WebPLossless or UgoiraDownloadFormat.WebPLossy => ".webp",
             _ => ThrowHelper.ArgumentOutOfRange<UgoiraDownloadFormat?, string>(ugoiraDownloadFormat)
@@ -244,7 +244,7 @@ public static partial class IoHelper
     {
         return extension switch
         {
-            ".zip" => UgoiraDownloadFormat.OriginalZip,
+            FileExtensionMacro.NameConstToken => UgoiraDownloadFormat.Original,
             ".tiff" => UgoiraDownloadFormat.Tiff,
             ".apng" => UgoiraDownloadFormat.APng,
             ".gif" => UgoiraDownloadFormat.Gif,
@@ -383,6 +383,11 @@ public static partial class IoHelper
     public static string ReplaceTokenExtensionWithTempExtension(string path)
     {
         return path.Replace(FileExtensionMacro.NameConstToken, PixevalTempExtension);
+    }
+
+    public static string RemoveTokenExtension(string path)
+    {
+        return path.Replace(FileExtensionMacro.NameConstToken, null);
     }
 
     public static async Task<string> ReplaceTempExtensionFromStreamAsync(string path, Stream stream)

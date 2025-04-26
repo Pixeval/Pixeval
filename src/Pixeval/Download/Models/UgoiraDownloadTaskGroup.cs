@@ -2,9 +2,8 @@
 // Licensed under the GPL v3 License.
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.IO.Compression;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Misaki;
@@ -12,26 +11,28 @@ using Pixeval.Database;
 using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
-using SixLabors.ImageSharp;
 using WinUI3Utilities;
 
 namespace Pixeval.Download.Models;
 
 /// <summary>
-/// 只有<see cref="SingleAnimatedImageType.MultiFiles"/>使用这个类，其他使用<see cref="SingleImageDownloadTaskGroup"/>
+/// 只有<see cref="SingleAnimatedImageType.MultiFiles"/>使用这个类，其他使用<see cref="SingleImageDownloadTaskGroupBase"/>
 /// </summary>
 public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup
 {
     public ISingleAnimatedImage Entry => DatabaseEntry.Entry.To<ISingleAnimatedImage>();
 
-    private string TempFolderPath => $"{TokenizedDestination}.tmp";
+    private string TempFolderPath { get; set; } = null!;
 
-    private IReadOnlyList<int> MsDelays { get; set; }
+    private IReadOnlyList<int> MsDelays { get; set; } = null!;
 
-    [MemberNotNull(nameof(MsDelays))]
     private void SetTasksSet()
     {
-        // TODO 下载经常报错权限冲突
+        if (TasksSet.Count > 0)
+            return;
+        TempFolderPath = DestinationUgoiraFormat is UgoiraDownloadFormat.Original
+            ? IoHelper.RemoveTokenExtension(TokenizedDestination)
+            : TokenizedDestination + ".tmp";
         _ = Directory.CreateDirectory(TempFolderPath);
         var msDelays = new int[Entry.MultiImageUris!.Count];
         for (var i = 0; i < Entry.MultiImageUris.Count; ++i)
@@ -48,8 +49,7 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup
 
     public UgoiraDownloadTaskGroup(DownloadHistoryEntry entry) : base(entry)
     {
-        UgoiraDownloadFormat = IoHelper.GetUgoiraFormat(Path.GetExtension(TokenizedDestination));
-        MsDelays = null!;
+        DestinationUgoiraFormat = IoHelper.GetUgoiraFormat(Path.GetExtension(TokenizedDestination));
     }
 
     public UgoiraDownloadTaskGroup(ISingleAnimatedImage entry, string destination) : base(entry, destination, DownloadItemType.Ugoira)
@@ -58,34 +58,33 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup
             ThrowHelper.InvalidOperation($"{nameof(ISingleAnimatedImage.PreferredAnimatedImageType)} should be {nameof(SingleAnimatedImageType.MultiFiles)}");
         if (!Entry.MultiImageUris!.IsPreloaded)
             ThrowHelper.InvalidOperation($"{nameof(ISingleAnimatedImage.MultiImageUris)} should be preloaded");
-        UgoiraDownloadFormat = IoHelper.GetUgoiraFormat(Path.GetExtension(TokenizedDestination));
-        SetTasksSet();
+        DestinationUgoiraFormat = IoHelper.GetUgoiraFormat(Path.GetExtension(TokenizedDestination));
     }
 
-    public override async ValueTask InitializeTaskGroupAsync()
+    public override ValueTask InitializeTaskGroupAsync()
     {
-        await Entry.MultiImageUris!.TryPreloadListAsync(Entry);
         SetTasksSet();
+        return ValueTask.CompletedTask;
     }
 
     protected override async Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender, CancellationToken token = default)
     {
-        if (UgoiraDownloadFormat is UgoiraDownloadFormat.OriginalZip)
+        if (DestinationUgoiraFormat is UgoiraDownloadFormat.Original)
         {
-            ZipFile.CreateFromDirectory(TempFolderPath, TokenizedDestination, CompressionLevel.Optimal, false);
+            await File.WriteAllTextAsync(Path.Combine(TempFolderPath, "intervals in milliseconds.csv"),
+                string.Join(',', MsDelays.Select(t => t.ToString())), token);
+            return;
         }
-        else
-        {
-            using var image = await Destinations.UgoiraSaveToImageAsync(MsDelays);
-            image.SetIdTags(Entry);
-            await image.SaveAsync(TokenizedDestination, IoHelper.GetUgoiraEncoder(UgoiraDownloadFormat), token);
-        }
+
+        using var image = await Destinations.UgoiraSaveToImageAsync(MsDelays);
+        image.SetIdTags(Entry);
+        await image.UgoiraSaveToFileAsync(TokenizedDestination, DestinationUgoiraFormat);
         foreach (var imageDownloadTask in TasksSet)
             imageDownloadTask.Delete();
         IoHelper.DeleteEmptyFolder(TempFolderPath);
     }
 
-    private UgoiraDownloadFormat UgoiraDownloadFormat { get; }
+    private UgoiraDownloadFormat DestinationUgoiraFormat { get; }
 
     public override string OpenLocalDestination => TokenizedDestination;
 

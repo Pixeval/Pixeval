@@ -60,7 +60,7 @@
                                 <controls:SettingsExpander
                                     Description="{x:Bind Author}"
                                     Header="{x:Bind Name}"
-                                    HeaderIcon="{fluent:SymbolIcon Symbol=box}">
+                                    HeaderIcon="{fluent:SymbolIcon Symbol=Box}">
                                     <controls:SettingsExpander.Content>
                                         <Button
                                             Width="40"
