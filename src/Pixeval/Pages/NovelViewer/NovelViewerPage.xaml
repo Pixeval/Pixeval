@@ -39,7 +39,7 @@
             <controls:WorkViewerSplitView.PaneContent>
                 <SplitView
                     x:Name="NovelSettingsPane"
-                    DisplayMode="Inline"
+                    DisplayMode="Overlay"
                     PaneBackground="{ThemeResource LayerOnMicaBaseAltFillColorSecondaryBrush}"
                     PanePlacement="Right">
                     <SplitView.Pane>

@@ -63,7 +63,7 @@ public sealed partial class IllustrationViewerPage
                 EntryViewerSplitView.NavigationViewSelectRefresh();
             }
 
-            Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, vm.CurrentImage, info);
+            //Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, vm.CurrentImage, info);
         };
 
         _viewModel.PropertyChanged += (sender, args) =>
@@ -84,9 +84,9 @@ public sealed partial class IllustrationViewerPage
         };
 
         // 第一次_viewModel.CurrentIllustrationIndex变化时，还没有订阅事件，所以不会触发DetailedPropertyChanged，需要手动触发
-        Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.CurrentImage);
+        //Navigate<ImageViewerPage>(IllustrationImageShowcaseFrame, _viewModel.CurrentImage);
 
-        CommandBorderDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
+        //CommandBorderDropShadow.Receivers.Add(IllustrationImageShowcaseFrame);
 
         // TODO: https://github.com/microsoft/microsoft-ui-xaml/issues/9952
         // ThumbnailItemsView.StartBringItemIntoView(_viewModel.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
@@ -118,22 +118,11 @@ public sealed partial class IllustrationViewerPage
         _ = await viewModel.TryLoadThumbnailAsync(_viewModel);
     }
 
-    private void AddToBookmarkTeachingTip_OnCloseButtonClick(TeachingTip sender, object args)
-    {
-        if (_viewModel.CurrentIllustration.AddToBookmarkCommand is not { } command)
-            return;
-
-        command.Execute((BookmarkTagSelector.SelectedTags,
-            BookmarkTagSelector.IsPrivate, this));
-
-        this.SuccessGrowl(EntryViewerPageResources.AddedToBookmark);
-    }
-
     private void NextButton_OnClicked(object sender, IWinRTObject e)
     {
         switch (_viewModel.NextButtonAction)
         {
-            case true: ++PipsPager.SelectedPageIndex; break;
+            //case true: ++PipsPager.SelectedPageIndex; break;
             // 由于先后次序问题，必须操作SelectedIndex，而不是_viewModel.CurrentIllustrationIndex
             case false: ++ThumbnailItemsView.SelectedIndex; break;
             case null: break;
@@ -150,7 +139,7 @@ public sealed partial class IllustrationViewerPage
     {
         switch (_viewModel.PrevButtonAction)
         {
-            case true: --PipsPager.SelectedPageIndex; break;
+            //case true: --PipsPager.SelectedPageIndex; break;
             // 由于先后次序问题，必须操作SelectedIndex，而不是_viewModel.CurrentIllustrationIndex
             case false: --ThumbnailItemsView.SelectedIndex; break;
             case null: break;
@@ -215,22 +204,22 @@ public sealed partial class IllustrationViewerPage
     /// <summary>
     /// ReSharper disable once UnusedMember.Global
     /// </summary>
-    public void SetPosition()
-    {
-        if (InnerTopBarPresenter.ActualWidth > TopBar.ActualWidth + 5)
-        {
-            if (InnerTopBarPresenter.Content is null)
-            {
-                OuterTopBarPresenter.Content = null;
-                InnerTopBarPresenter.Content = TopBar;
-            }
-        }
-        else if (OuterTopBarPresenter.Content is null)
-        {
-            InnerTopBarPresenter.Content = null;
-            OuterTopBarPresenter.Content = TopBar;
-        }
-    }
+    //public void SetPosition()
+    //{
+    //    if (InnerTopBarPresenter.ActualWidth > TopBar.ActualWidth + 5)
+    //    {
+    //        if (InnerTopBarPresenter.Content is null)
+    //        {
+    //            OuterTopBarPresenter.Content = null;
+    //            InnerTopBarPresenter.Content = TopBar;
+    //        }
+    //    }
+    //    else if (OuterTopBarPresenter.Content is null)
+    //    {
+    //        InnerTopBarPresenter.Content = null;
+    //        OuterTopBarPresenter.Content = TopBar;
+    //    }
+    //}
 
     public override void CompleteDisposal()
     {

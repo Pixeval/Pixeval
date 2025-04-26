@@ -12,6 +12,7 @@ using FluentIcons.Common;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
 using Pixeval.Controls;
@@ -67,6 +68,9 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     /// </remarks>
     [ObservableProperty]
     public partial object? DisplayStreamsSource { get; private set; }
+
+    [ObservableProperty]
+    public partial ImageSource? DisplayImageSource { get; private set; }
 
     public ImageSource? ThumbnailSource => IllustrationViewModel.ThumbnailSource;
 
@@ -250,6 +254,13 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
         if (source is not null)
             OriginalStreamsSource = source;
+
+        if(source is Stream stream)
+        {
+            var image = new BitmapImage();
+            await image.SetSourceAsync(stream.AsRandomAccessStream());
+            DisplayImageSource = image;
+        }
 
         LoadSuccessfully = true;
 

@@ -198,17 +198,14 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
         }
     } = null!;
 
-    public ImageViewerPageViewModel[] Images
+    [ObservableProperty]
+    public partial ImageViewerPageViewModel[] Images { get; set; }
+
+
+    partial void OnImagesChanged(ImageViewerPageViewModel[] oldValue, ImageViewerPageViewModel[] newValue)
     {
-        get;
-        set
-        {
-            if (field == value)
-                return;
-            field?.ForEach(i => i.Dispose());
-            field = value;
-        }
-    } = null!;
+        oldValue?.ForEach(i => i.Dispose());
+    }
 
     #endregion
 
