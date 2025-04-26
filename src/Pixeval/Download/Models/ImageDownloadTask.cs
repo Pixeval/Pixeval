@@ -2,6 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -195,14 +196,18 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
 
         return;
 
-        static FileStream OpenCreate(string path) => File.Open(path, new FileStreamOptions
+        static FileStream OpenCreate(string path)
         {
-            BufferSize = 1 << 20,
-            Mode = FileMode.OpenOrCreate,
-            Access = FileAccess.Write,
-            Share = FileShare.Read,
-            Options = FileOptions.Asynchronous | FileOptions.SequentialScan
-        });
+            Debug.WriteLine(path);
+            return File.Open(path, new FileStreamOptions
+            {
+                BufferSize = 1 << 20,
+                Mode = FileMode.OpenOrCreate,
+                Access = FileAccess.Write,
+                Share = FileShare.Read,
+                Options = FileOptions.Asynchronous | FileOptions.SequentialScan
+            });
+        }
     }
 
     public void TryReset()

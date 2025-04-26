@@ -261,11 +261,11 @@
   <data name="Png" xml:space="preserve">
     <value>PNG/APNG（无损，文件小）</value>
   </data>
-  <data name="Original" xml:space="preserve">
+  <data name="OriginalIllustration" xml:space="preserve">
     <value>图片原始格式（JPG/PNG，无法自动添加标签）</value>
   </data>
-  <data name="OriginalZip" xml:space="preserve">
-    <value>动图原始格式（ZIP，无法添加标签）</value>
+  <data name="OriginalUgoira" xml:space="preserve">
+    <value>动图原始格式（无法自动添加标签）</value>
   </data>
   <data name="WebPLossless" xml:space="preserve">
     <value>无损WebP（无损，文件小，支持广泛）</value>

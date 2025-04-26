@@ -33,9 +33,9 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
     /// </remarks>
     private string DocPath { get; }
 
-    private IllustrationDownloadFormat IllustrationDownloadFormat { get; }
+    private IllustrationDownloadFormat DestinationIllustrationFormat { get; }
 
-    private NovelDownloadFormat NovelDownloadFormat { get; }
+    private NovelDownloadFormat DestinationNovelFormat { get; }
 
     private string PdfTempFolderPath { get; }
 
@@ -45,20 +45,20 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
     {
         NovelContent = novelContent;
         DocumentViewModel = new NovelContext(novelContent);
-        var directory = NovelDownloadFormat is NovelDownloadFormat.Pdf
+        var directory = DestinationNovelFormat is NovelDownloadFormat.Pdf
             ? PdfTempFolderPath
             : Path.GetDirectoryName(DocPath)!;
 
         _ = Directory.CreateDirectory(directory);
-        var imgExt = IoHelper.GetIllustrationExtension(IllustrationDownloadFormat);
-        if (IllustrationDownloadFormat is not IllustrationDownloadFormat.Original)
+        var imgExt = IoHelper.GetIllustrationExtension(DestinationIllustrationFormat);
+        if (DestinationIllustrationFormat is not IllustrationDownloadFormat.Original)
             DocumentViewModel.ImageExtension = imgExt;
         for (var i = 0; i < DocumentViewModel.TotalImagesCount; ++i)
         {
             var url = DocumentViewModel.AllUrls[i];
             var name = Path.Combine(directory, DocumentViewModel.AllTokens[i]);
             var imageDownloadTask = new ImageDownloadTask(new(url),
-                IllustrationDownloadFormat is IllustrationDownloadFormat.Original
+                DestinationIllustrationFormat is IllustrationDownloadFormat.Original
                     ? IoHelper.ReplaceTokenExtensionFromUrl(name, url)
                     : name + imgExt,
                 DatabaseEntry.State);
@@ -75,8 +75,8 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
         PdfTempFolderPath = $"{DocPath}.tmp";
         // .<ext> or .png or .etc 
         var imgExt = TokenizedDestination[(backSlash + 1)..];
-        IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(imgExt);
-        NovelDownloadFormat = IoHelper.GetNovelFormat(Path.GetExtension(DocPath));
+        DestinationIllustrationFormat = IoHelper.GetIllustrationFormat(imgExt);
+        DestinationNovelFormat = IoHelper.GetNovelFormat(Path.GetExtension(DocPath));
     }
 
     public NovelDownloadTaskGroup(
@@ -89,8 +89,8 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
         PdfTempFolderPath = $"{DocPath}.tmp";
         // .<ext> or .png or .etc 
         var imgExt = TokenizedDestination[(backSlash + 1)..];
-        IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(imgExt);
-        NovelDownloadFormat = IoHelper.GetNovelFormat(Path.GetExtension(DocPath));
+        DestinationIllustrationFormat = IoHelper.GetIllustrationFormat(imgExt);
+        DestinationNovelFormat = IoHelper.GetNovelFormat(Path.GetExtension(DocPath));
         if (novelContent is not null)
             SetNovelContent(novelContent);
     }
@@ -106,7 +106,7 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
 
     protected override async Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender, CancellationToken token = default)
     {
-        if (NovelDownloadFormat is NovelDownloadFormat.Pdf)
+        if (DestinationNovelFormat is NovelDownloadFormat.Pdf)
         {
             var i = 0;
             foreach (var imageDownloadTask in TasksSet)
@@ -132,22 +132,22 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
 
         ((INovelContext<Stream>) DocumentViewModel).InitImages();
 
-        var content = NovelDownloadFormat switch
+        var content = DestinationNovelFormat switch
         {
             NovelDownloadFormat.OriginalTxt => NovelContent.Text,
             NovelDownloadFormat.Html => DocumentViewModel.LoadHtmlContent().ToString(),
             NovelDownloadFormat.Md => DocumentViewModel.LoadMdContent().ToString(),
-            _ => ThrowHelper.ArgumentOutOfRange<NovelDownloadFormat, string>(NovelDownloadFormat)
+            _ => ThrowHelper.ArgumentOutOfRange<NovelDownloadFormat, string>(DestinationNovelFormat)
         };
 
         await File.WriteAllTextAsync(DocPath, content, token);
-        if (IllustrationDownloadFormat is IllustrationDownloadFormat.Original)
+        if (DestinationIllustrationFormat is IllustrationDownloadFormat.Original)
             return;
 
         var destinations = Destinations;
         for (var i = 0; i < destinations.Count; ++i)
             if (DocumentViewModel.GetIdTags(i) is { Id: var id, Tags: var tags })
-                await ExifManager.SetIdTagsAsync(destinations[i], id.ToString(), tags, IllustrationDownloadFormat, token);
+                await ExifManager.SetIdTagsAsync(destinations[i], id.ToString(), tags, DestinationIllustrationFormat, token);
     }
 
     public override string OpenLocalDestination => DocPath;
@@ -158,6 +158,6 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
             task.Delete();
         if (File.Exists(DocPath))
             File.Delete(DocPath);
-        IoHelper.DeleteEmptyFolder(NovelDownloadFormat is NovelDownloadFormat.Pdf ? PdfTempFolderPath : Path.GetDirectoryName(DocPath));
+        IoHelper.DeleteEmptyFolder(DestinationNovelFormat is NovelDownloadFormat.Pdf ? PdfTempFolderPath : Path.GetDirectoryName(DocPath));
     }
 }

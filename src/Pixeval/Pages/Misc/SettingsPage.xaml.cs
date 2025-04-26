@@ -218,8 +218,8 @@ public sealed partial class SettingsPage : IDisposable
         {
             var jsonSettingsPath = Path.Combine(folder.Path, Path.ChangeExtension(AppKnownFolders.SettingsDatName, "json"));
             var jsonSessionPath = Path.Combine(folder.Path, "session.json");
-            await using var jsonSettingsStream = IoHelper.OpenAsyncWrite(jsonSettingsPath);
-            await using var jsonSessionStream = IoHelper.OpenAsyncWrite(jsonSessionPath);
+            await using var jsonSettingsStream = IoHelper.CreateAsyncWrite(jsonSettingsPath);
+            await using var jsonSessionStream = IoHelper.CreateAsyncWrite(jsonSessionPath);
             await JsonSerializer.SerializeAsync(jsonSettingsStream, _viewModel.AppSettings, typeof(AppSettings), SettingsSerializeContext.Default);
             await JsonSerializer.SerializeAsync(jsonSessionStream, App.AppViewModel.LoginContext, typeof(LoginContext), SettingsSerializeContext.Default);
 
