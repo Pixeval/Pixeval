@@ -261,11 +261,11 @@
   <data name="Png" xml:space="preserve">
     <value>PNG/APNG (sans perte, taille légère)</value>
   </data>
-  <data name="Original" xml:space="preserve">
+  <data name="OriginalIllustration" xml:space="preserve">
     <value>Image format original (JPG/PNG, ne permet pas d'auto-tag)</value>
   </data>
-  <data name="OriginalZip" xml:space="preserve">
-    <value>Animation format original (ZIP, ne permet pas d'auto-tag)</value>
+  <data name="OriginalUgoira" xml:space="preserve">
+    <value>Animation format original (ne permet pas d'auto-tag)</value>
   </data>
   <data name="WebPLossless" xml:space="preserve">
     <value>WebP sans perte (taille légère, supporté par la plupart des lecteurs)</value>
