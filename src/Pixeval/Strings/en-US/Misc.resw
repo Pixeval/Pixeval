@@ -261,11 +261,11 @@
   <data name="Png" xml:space="preserve">
     <value>PNG/APNG（lossless，small）</value>
   </data>
-  <data name="Original" xml:space="preserve">
+  <data name="OriginalIllustration" xml:space="preserve">
     <value>Image original format (JPG/PNG, cannot add tags automatically)</value>
   </data>
-  <data name="OriginalZip" xml:space="preserve">
-    <value>Motion picture original format (ZIP, can't add tags)</value>
+  <data name="OriginalUgoira" xml:space="preserve">
+    <value>Motion picture original format (can't add tags automatically)</value>
   </data>
   <data name="WebPLossless" xml:space="preserve">
     <value>Lossless WebP（lossless，small，general）</value>
