@@ -16,7 +16,7 @@ public sealed partial class WorkViewerSplitView
     [GeneratedDependencyProperty]
     public partial object? PaneContent { get; set; }
 
-    [GeneratedDependencyProperty(DefaultValue = false)]
+    [GeneratedDependencyProperty(DefaultValue = true)]
     public partial bool IsPaneOpen { get; set; }
 
     public const double OpenPaneLength = 330;

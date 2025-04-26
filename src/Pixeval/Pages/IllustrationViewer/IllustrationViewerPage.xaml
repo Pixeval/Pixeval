@@ -6,7 +6,9 @@
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
+    xmlns:illustrationViewer="using:Pixeval.Pages.IllustrationViewer"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     KeyboardAcceleratorPlacementMode="Hidden"
     Loaded="IllustrationViewerPage_OnLoaded"
@@ -38,174 +40,28 @@
                 Grid.Row="1"
                 MenuItemsSource="{x:Bind _viewModel.Tags, Mode=OneWay}">
                 <controls:WorkViewerSplitView.PaneContent>
-                    <controls1:DockPanel>
-                        <ContentPresenter x:Name="InnerTopBarPresenter" controls1:DockPanel.Dock="Top">
-                            <interactivity:Interaction.Behaviors>
-                                <interactivity:EventTriggerBehavior EventName="SizeChanged">
-                                    <interactivity:CallMethodAction MethodName="SetPosition" TargetObject="{x:Bind}" />
-                                </interactivity:EventTriggerBehavior>
-                            </interactivity:Interaction.Behaviors>
-                            <CommandBar
-                                x:Name="TopBar"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                DefaultLabelPosition="Collapsed">
-                                <AppBarButton Command="{x:Bind _viewModel.CurrentImage.PlayGifCommand, Mode=OneWay}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsUgoira), Mode=OneWay}" />
-                                <AppBarButton
-                                    Command="{x:Bind _viewModel.CurrentImage.CopyCommand, Mode=OneWay}"
-                                    CommandParameter="{x:Bind}"
-                                    IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
-                                <AppBarButton
-                                    Command="{x:Bind _viewModel.CurrentPage.SaveCommand, Mode=OneWay}"
-                                    CommandParameter="{x:Bind}"
-                                    IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
-                                <AppBarButton
-                                    Command="{x:Bind _viewModel.CurrentPage.SaveAsCommand, Mode=OneWay}"
-                                    CommandParameter="{x:Bind}"
-                                    IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
-                                <AppBarButton
-                                    Command="{x:Bind _viewModel.CurrentIllustration.MangaSaveCommand, Mode=OneWay}"
-                                    CommandParameter="{x:Bind}"
-                                    Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
-                                <AppBarButton
-                                    Command="{x:Bind _viewModel.CurrentIllustration.MangaSaveAsCommand, Mode=OneWay}"
-                                    CommandParameter="{x:Bind}"
-                                    Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
-                                <AppBarSeparator />
-                                <!--<AppBarButton Command="{x:Bind _viewModel.CurrentImage.SetAsCommand, Mode=OneWay}">
-                                    <AppBarButton.Flyout>
-                                        <MenuFlyout>
-                                            <MenuFlyoutItem Command="{x:Bind _viewModel.CurrentImage.SetAsBackgroundCommand, Mode=OneWay}" />
-                                            <MenuFlyoutItem Command="{x:Bind _viewModel.CurrentImage.SetAsLockScreenCommand, Mode=OneWay}" />
-                                        </MenuFlyout>
-                                    </AppBarButton.Flyout>
-                                </AppBarButton>-->
-                                <AppBarButton
-                                    x:Name="AddToBookmarkButton"
-                                    Command="{x:Bind _viewModel.AddToBookmarkCommand}"
-                                    CommandParameter="{x:Bind}">
-                                    <interactivity:Interaction.Behaviors>
-                                        <interactivity:EventTriggerBehavior EventName="Click">
-                                            <interactivity:ChangePropertyAction
-                                                PropertyName="IsOpen"
-                                                TargetObject="{x:Bind AddToBookmarkTeachingTip}"
-                                                Value="True" />
-                                        </interactivity:EventTriggerBehavior>
-                                    </interactivity:Interaction.Behaviors>
-                                </AppBarButton>
-                                <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.GenerateLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
-                                <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.GenerateWebLinkCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
-                                <AppBarButton Command="{x:Bind _viewModel.CurrentIllustration.OpenInWebBrowserCommand, Mode=OneWay}" />
-                                <AppBarButton
-                                    x:Name="ShowQrCodeButton"
-                                    Command="{x:Bind _viewModel.CurrentIllustration.ShowQrCodeCommand, Mode=OneWay}"
-                                    CommandParameter="{x:Bind ShowQrCodeTeachingTip}" />
-                                <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ShareCommand, Mode=OneWay}" />
-                            </CommandBar>
-                        </ContentPresenter>
-                        <Grid Background="Transparent">
-                            <Frame
-                                x:Name="IllustrationImageShowcaseFrame"
-                                Grid.Row="0"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch" />
-                            <controls1:DockPanel LastChildFill="False">
-                                <controls:PageButton
-                                    Width="150"
-                                    controls1:DockPanel.Dock="Left"
-                                    ButtonClick="PrevButton_OnClicked"
-                                    ButtonRightTapped="PrevButton_OnRightTapped"
-                                    ButtonVisibility="{x:Bind controls:C.IsNotNullToVisibility(_viewModel.PrevButtonText), Mode=OneWay}"
-                                    IsPrev="True"
-                                    ToolTip="{x:Bind _viewModel.PrevButtonText, Mode=OneWay}" />
-                                <controls:PageButton
-                                    Width="150"
-                                    controls1:DockPanel.Dock="Right"
-                                    ButtonClick="NextButton_OnClicked"
-                                    ButtonRightTapped="NextButton_OnRightTapped"
-                                    ButtonVisibility="{x:Bind controls:C.IsNotNullToVisibility(_viewModel.NextButtonText), Mode=OneWay}"
-                                    IsPrev="False"
-                                    ToolTip="{x:Bind _viewModel.NextButtonText, Mode=OneWay}" />
-                            </controls1:DockPanel>
+                    <ListView
+                        x:Name="ImagesListView"
+                        Padding="24"
+                        ItemsSource="{x:Bind _viewModel.Images, Mode=OneWay}"
+                        SelectionMode="None">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="illustrationViewer:ImageViewerPageViewModel">
+                                <Grid>
+                                    <labs:Shimmer Margin="4" Visibility="{x:Bind controls:C.ToVisibilityNegation(LoadSuccessfully), Mode=OneWay}" />
+                                    <Image Source="{x:Bind DisplayImageSource, Mode=OneWay}" />
+                                    <ProgressRing
+                                        Width="50"
+                                        Height="50"
+                                        Margin="0,192"
+                                        IsIndeterminate="{x:Bind controls:C.IsZeroD(LoadingProgress), Mode=OneWay}"
+                                        Visibility="{x:Bind controls:C.ToVisibilityNegation(LoadSuccessfully), Mode=OneWay}"
+                                        Value="{x:Bind LoadingProgress, Mode=OneWay}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
 
-                            <!--  工具栏的识别区  -->
-                            <Grid
-                                Width="600"
-                                Height="200"
-                                Padding="50"
-                                VerticalAlignment="Bottom"
-                                Background="Transparent"
-                                Opacity="0">
-                                <Grid.OpacityTransition>
-                                    <ScalarTransition />
-                                </Grid.OpacityTransition>
-                                <interactivity:Interaction.Behaviors>
-                                    <interactivity:EventTriggerBehavior EventName="PointerEntered">
-                                        <interactivity:ChangePropertyAction PropertyName="Opacity" Value="1" />
-                                    </interactivity:EventTriggerBehavior>
-                                    <interactivity:EventTriggerBehavior EventName="PointerExited">
-                                        <interactivity:ChangePropertyAction PropertyName="Opacity" Value="0" />
-                                    </interactivity:EventTriggerBehavior>
-                                </interactivity:Interaction.Behaviors>
-                                <Border
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Bottom"
-                                    Background="{StaticResource BottomCommandSectionBackground}"
-                                    BorderBrush="{ThemeResource SecondaryAccentBorderBrush}"
-                                    BorderThickness="0.5"
-                                    CornerRadius="{ThemeResource ControlCornerRadius}"
-                                    Opacity="0.7"
-                                    Translation="0,0,30">
-                                    <Border.Shadow>
-                                        <ThemeShadow x:Name="CommandBorderDropShadow" />
-                                    </Border.Shadow>
-                                    <Border.OpacityTransition>
-                                        <ScalarTransition />
-                                    </Border.OpacityTransition>
-                                    <interactivity:Interaction.Behaviors>
-                                        <interactivity:EventTriggerBehavior EventName="PointerMoved">
-                                            <interactivity:ChangePropertyAction PropertyName="Opacity" Value="1" />
-                                        </interactivity:EventTriggerBehavior>
-                                        <interactivity:EventTriggerBehavior EventName="PointerExited">
-                                            <interactivity:ChangePropertyAction PropertyName="Opacity" Value="0.7" />
-                                        </interactivity:EventTriggerBehavior>
-                                    </interactivity:Interaction.Behaviors>
-                                    <controls1:DockPanel>
-                                        <PipsPager
-                                            x:Name="PipsPager"
-                                            Margin="5"
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            controls1:DockPanel.Dock="Top"
-                                            MaxVisiblePips="10"
-                                            NextButtonVisibility="Visible"
-                                            NumberOfPages="{x:Bind _viewModel.PageCount, Mode=OneWay}"
-                                            PreviousButtonVisibility="Visible"
-                                            SelectedPageIndex="{x:Bind _viewModel.CurrentPageIndex, Mode=TwoWay}"
-                                            Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
-                                        <CommandBar DefaultLabelPosition="Collapsed" OverflowButtonVisibility="Collapsed">
-                                            <AppBarButton
-                                                Command="{x:Bind _viewModel.CurrentIllustration.BookmarkCommand, Mode=OneWay}"
-                                                CommandParameter="{x:Bind}"
-                                                IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}"
-                                                Visibility="{x:Bind controls:C.IsNotNullToVisibility(_viewModel.CurrentIllustration.BookmarkCommand), Mode=OneWay}" />
-                                            <AppBarButton Command="{x:Bind _viewModel.CurrentImage.RotateCounterclockwiseCommand, Mode=OneWay}" />
-                                            <AppBarToggleButton Command="{x:Bind _viewModel.CurrentImage.MirrorCommand, Mode=OneWay}" IsChecked="{x:Bind _viewModel.CurrentImage.IsMirrored, Mode=OneWay}" />
-                                            <AppBarButton Command="{x:Bind _viewModel.CurrentImage.RotateClockwiseCommand, Mode=OneWay}" />
-                                            <AppBarButton
-                                                Command="{x:Bind _viewModel.CurrentPage.SaveCommand, Mode=OneWay}"
-                                                CommandParameter="{x:Bind}"
-                                                IsEnabled="{x:Bind _viewModel.CurrentImage.LoadSuccessfully, Mode=OneWay}" />
-                                            <AppBarButton
-                                                Command="{x:Bind _viewModel.CurrentIllustration.MangaSaveCommand, Mode=OneWay}"
-                                                CommandParameter="{x:Bind}"
-                                                Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
-                                        </CommandBar>
-                                    </controls1:DockPanel>
-                                </Border>
-                            </Grid>
-                        </Grid>
-                    </controls1:DockPanel>
                 </controls:WorkViewerSplitView.PaneContent>
             </controls:WorkViewerSplitView>
             <ContentPresenter x:Name="OuterTopBarPresenter" Grid.Row="0" />
@@ -261,12 +117,6 @@
                     <controls:AppBarTextItem
                         Padding="15,0"
                         Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-                        Symbol="SlideSize"
-                        Text="{x:Bind _viewModel.CurrentIllustration.SizeText, Mode=OneWay}" />
-                    <AppBarSeparator />
-                    <controls:AppBarTextItem
-                        Padding="15,0"
-                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
                         Symbol="AppTitle"
                         Text="{x:Bind _viewModel.CurrentIllustration.Entry.Title, Mode=OneWay}" />
                 </CommandBar>
@@ -276,52 +126,7 @@
                     HorizontalAlignment="Stretch"
                     DefaultLabelPosition="Collapsed"
                     Visibility="{x:Bind controls:C.ToVisibilityNegation(_viewModel.CurrentIllustration.IsUgoira), Mode=OneWay}" />
-                <CommandBar
-                    Grid.Column="3"
-                    HorizontalAlignment="Stretch"
-                    DefaultLabelPosition="Collapsed">
-                    <AppBarElementContainer VerticalContentAlignment="Center">
-                        <TextBlock Style="{StaticResource ViewerTextBlockStyle}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}">
-                            <Run Text="{x:Bind controls:C.PlusOneToString(_viewModel.CurrentPageIndex), Mode=OneWay}" />
-                            <Run Text="/" />
-                            <Run Text="{x:Bind _viewModel.PageCount, Mode=OneWay}" />
-                        </TextBlock>
-                    </AppBarElementContainer>
-                    <AppBarSeparator Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
-                    <AppBarButton Command="{x:Bind _viewModel.CurrentImage.RestoreResolutionCommand, Mode=OneWay}" IsCompact="True" />
-                    <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ZoomOutCommand, Mode=OneWay}" IsCompact="True" />
-                    <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ZoomInCommand, Mode=OneWay}" IsCompact="True" />
-                    <AppBarSeparator />
-                    <AppBarElementContainer VerticalContentAlignment="Center">
-                        <TextBlock
-                            MinWidth="60"
-                            Style="{StaticResource ViewerTextBlockStyle}"
-                            Text="{x:Bind controls:C.ToPercentageString(_viewModel.CurrentImage.Scale, 2), Mode=OneWay}" />
-                    </AppBarElementContainer>
-                </CommandBar>
             </Grid>
         </Grid>
-        <TeachingTip
-            x:Name="ShowQrCodeTeachingTip"
-            x:Uid="/EntryViewerPage/QrCodeTeachingTip"
-            IsLightDismissEnabled="True"
-            Tag="{x:Bind ShowQrCodeButton}">
-            <TeachingTip.HeroContent>
-                <Image Loading="Content_OnLoading" Tag="{x:Bind ShowQrCodeTeachingTip}" />
-            </TeachingTip.HeroContent>
-        </TeachingTip>
-        <TeachingTip
-            x:Name="AddToBookmarkTeachingTip"
-            x:Uid="/EntryViewerPage/AddToBookmarkTeachingTip"
-            CloseButtonClick="AddToBookmarkTeachingTip_OnCloseButtonClick"
-            IsLightDismissEnabled="True"
-            Tag="{x:Bind AddToBookmarkButton}">
-            <flyoutContent:BookmarkTagSelector
-                x:Name="BookmarkTagSelector"
-                MaxHeight="{StaticResource TeachingTipContentMaxHeightWithTarget}"
-                Loading="Content_OnLoading"
-                Tag="{x:Bind AddToBookmarkTeachingTip}"
-                Type="IllustAndManga" />
-        </TeachingTip>
     </Grid>
 </controls:EnhancedPage>
