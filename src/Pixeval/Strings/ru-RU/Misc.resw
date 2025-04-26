@@ -261,11 +261,11 @@
   <data name="Png" xml:space="preserve">
     <value>PNG/APNG (без потерь, маленький размер)</value>
   </data>
-  <data name="Original" xml:space="preserve">
+  <data name="OriginalIllustration" xml:space="preserve">
     <value>Оригинальный формат изображения (JPG/PNG, автоматические теги невозможны)</value>
   </data>
-  <data name="OriginalZip" xml:space="preserve">
-    <value>Оригинальный формат динамического изображения (ZIP, теги невозможны)</value>
+  <data name="OriginalUgoira" xml:space="preserve">
+    <value>Оригинальный формат динамического изображения (автоматические теги невозможны)</value>
   </data>
   <data name="WebPLossless" xml:space="preserve">
     <value>Без потерь WebP (без потерь, маленький размер, широкая поддержка)</value>
