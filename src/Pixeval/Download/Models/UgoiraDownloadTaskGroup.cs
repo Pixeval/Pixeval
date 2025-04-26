@@ -26,12 +26,12 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup
 
     private string TempFolderPath => $"{TokenizedDestination}.tmp";
 
-    private IReadOnlyList<int> MsDelays { get; set; }
+    private IReadOnlyList<int> MsDelays { get; set; } = null!;
 
-    [MemberNotNull(nameof(MsDelays))]
     private void SetTasksSet()
     {
-        // TODO 下载经常报错权限冲突
+        if (TasksSet.Count > 0)
+            return;
         _ = Directory.CreateDirectory(TempFolderPath);
         var msDelays = new int[Entry.MultiImageUris!.Count];
         for (var i = 0; i < Entry.MultiImageUris.Count; ++i)
@@ -49,7 +49,6 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup
     public UgoiraDownloadTaskGroup(DownloadHistoryEntry entry) : base(entry)
     {
         UgoiraDownloadFormat = IoHelper.GetUgoiraFormat(Path.GetExtension(TokenizedDestination));
-        MsDelays = null!;
     }
 
     public UgoiraDownloadTaskGroup(ISingleAnimatedImage entry, string destination) : base(entry, destination, DownloadItemType.Ugoira)
@@ -59,13 +58,12 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup
         if (!Entry.MultiImageUris!.IsPreloaded)
             ThrowHelper.InvalidOperation($"{nameof(ISingleAnimatedImage.MultiImageUris)} should be preloaded");
         UgoiraDownloadFormat = IoHelper.GetUgoiraFormat(Path.GetExtension(TokenizedDestination));
-        SetTasksSet();
     }
 
-    public override async ValueTask InitializeTaskGroupAsync()
+    public override ValueTask InitializeTaskGroupAsync()
     {
-        await Entry.MultiImageUris!.TryPreloadListAsync(Entry);
         SetTasksSet();
+        return ValueTask.CompletedTask;
     }
 
     protected override async Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender, CancellationToken token = default)

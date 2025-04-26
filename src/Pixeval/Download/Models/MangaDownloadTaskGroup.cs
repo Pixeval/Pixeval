@@ -26,7 +26,6 @@ public partial class MangaDownloadTaskGroup : DownloadTaskGroup
     public MangaDownloadTaskGroup(IImageSet entry, string destination) : base(entry, destination, DownloadItemType.Manga)
     {
         IllustrationDownloadFormat = IoHelper.GetIllustrationFormat(Path.GetExtension(TokenizedDestination));
-        SetTasksSet();
     }
 
     public override ValueTask InitializeTaskGroupAsync()
