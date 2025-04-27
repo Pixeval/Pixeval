@@ -16,6 +16,7 @@ using Pixeval.Pages.IllustratorViewer;
 using ReverseMarkdown;
 using WinUI3Utilities;
 using System.Collections.Generic;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Pages;
 
@@ -94,5 +95,5 @@ public sealed partial class WorkInfoPage
     }
 
     public static string PickClosestUri(IReadOnlyCollection<IImageFrame> frames, int width, int height)
-        => frames.PickClosest(width, height).ImageUri.OriginalString;
+        => frames.PickClosestFrame(width, height).ImageUri.OriginalString;
 }

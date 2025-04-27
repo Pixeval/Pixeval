@@ -157,6 +157,6 @@ public static class MakoHelper
     public static async ValueTask TryPreloadListAsync<T>(this IPreloadableList<T> list, IPlatformInfo platform)
     {
         if (!list.IsPreloaded)
-            await list.PreloadListAsync(App.AppViewModel.GetMisakiService(platform.Platform));
+            await list.PreloadListAsync(App.AppViewModel.GetPlatformService<IGetArtworkService>(platform.Platform));
     }
 }

@@ -16,8 +16,7 @@ public static class AppNotificationHelper
             return;
         var builder = new AppNotificationBuilder()
             .AddText(title)
-            .AddText(content)
-            .SetInlineImage(logoUri, AppNotificationImageCrop.Circle);
+            .AddText(content);
         contentBuilder?.Invoke(builder);
         if (logoUri is not null)
         {

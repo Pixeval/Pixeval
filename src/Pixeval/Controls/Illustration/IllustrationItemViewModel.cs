@@ -17,6 +17,7 @@ using Pixeval.Util.IO.Caching;
 using System.IO;
 using Pixeval.Util;
 using Pixeval.Util.IO;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Controls;
 
@@ -45,7 +46,7 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<IArtworkInfo
         {
             case ISingleImage { ImageType: ImageType.SingleImage } singleImage:
             {
-                var f = isOriginal ? frame : Entry.Thumbnails.PickMax();
+                var f = isOriginal ? frame : Entry.Thumbnails.PickMaxFrame();
                 var stream = await CacheHelper.GetSingleImageAsync(
                     singleImage, 
                     f,
