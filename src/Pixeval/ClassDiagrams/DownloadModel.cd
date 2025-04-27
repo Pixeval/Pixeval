@@ -1,31 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Pixeval.Download.Models.SingleImageDownloadTaskGroup" Collapsed="true">
-    <Position X="5.25" Y="5.25" Width="2.75" />
+    <Position X="1.5" Y="3.5" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAATAQAAABAAAJQAAAAAAAwCAAACCAAEAAAAAAACAAI=</HashCode>
+      <HashCode>AAAQAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAgAA=</HashCode>
       <FileName>Download\Models\SingleImageDownloadTaskGroup.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Download.Models.ImageDownloadTask" Collapsed="true">
-    <Position X="5.75" Y="3.75" Width="1.75" />
+    <Position X="4" Y="0.75" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>MAAgARAAQCAIqAAgAKAAQCACAAFICgQEyQAAIAIAgoA=</HashCode>
+      <HashCode>MEAgARAAQCAIqAAgAKAAQCQCAAEACgQEyQAAIAIAgoA=</HashCode>
       <FileName>Download\Models\ImageDownloadTask.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Download.Models.UgoiraDownloadTaskGroup" Collapsed="true">
-    <Position X="4.5" Y="2.25" Width="2.25" />
+    <Position X="4.5" Y="6.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAQAAIAAAAAAAYAAAAAAAgAAAEAAAAAAAAAAAAkAIA=</HashCode>
+      <HashCode>AABQAAIAAAAAAAAAAAAAAAgAAAMAAAAAAAAAAAAgAIA=</HashCode>
       <FileName>Download\Models\UgoiraDownloadTaskGroup.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Download.Models.DownloadTaskGroup" Collapsed="true">
-    <Position X="4.75" Y="0.75" Width="1.75" />
+    <Position X="4.75" Y="4.75" Width="1.75" />
     <TypeIdentifier>
       <HashCode>MAAiAQIAQDAAKJQAAEAAACwAIAECCAQsUEAIAANCEpI=</HashCode>
       <FileName>Download\Models\DownloadTaskGroup.cs</FileName>
@@ -33,39 +31,46 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Download.Models.MangaDownloadTaskGroup" Collapsed="true">
-    <Position X="1.5" Y="2.25" Width="2.25" />
+    <Position X="1.5" Y="6.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AABRAAIAAAAAAAAAAAAAAAgAAAEAAAAAAAAAAAAAAIA=</HashCode>
+      <HashCode>AABQAAIAAAAAAAAAAAAAAAgAAAEAAAAAAAAAAAAAgIA=</HashCode>
       <FileName>Download\Models\MangaDownloadTaskGroup.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Download.Models.NovelDownloadTaskGroup" Collapsed="true">
-    <Position X="7.5" Y="2.25" Width="2.25" />
+    <Position X="7.5" Y="6.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAARAAIAAkAAAAAAAAAAAQgAAAEAAAEUAAAAAAAAAIA=</HashCode>
+      <HashCode>AAAQAAIAAkAAAAAAAAAAAAgAAAEAAAEUAAAAAAAAgJA=</HashCode>
       <FileName>Download\Models\NovelDownloadTaskGroup.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="Pixeval.Download.Models.SingleImageDownloadTaskGroupBase" Collapsed="true">
+    <Position X="3.5" Y="2.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>CAACAQAAABAAAJQAAAAAAAwAAAACCAAEAAAAAAACAAI=</HashCode>
+      <FileName>Download\Models\SingleImageDownloadTaskGroup.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pixeval.Download.Models.SingleAnimatedImageDownloadTaskGroup" Collapsed="true">
+    <Position X="5" Y="3.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAAAAAACAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Download\Models\SingleImageDownloadTaskGroup.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Interface Name="Pixeval.Download.Models.IDownloadTaskBase" Collapsed="true">
-    <Position X="1.75" Y="3.75" Width="1.75" />
+    <Position X="1.75" Y="7.75" Width="1.75" />
     <TypeIdentifier>
       <HashCode>MAAgAAAAQAAAAAAAAAAAACAAAAEAAAAEQAAAAAIAAoA=</HashCode>
       <FileName>Download\Models\IDownloadTaskBase.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Pixeval.Download.Models.IDownloadTaskGroup" Collapsed="true">
-    <Position X="1.25" Y="5" Width="2.75" />
+    <Position X="1.25" Y="9" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAQAAABAAAIQAAAAAAAgAAAAAAAAAAAAAAAACAAI=</HashCode>
+      <HashCode>AAAAAQAAABAAAIQAAAAAAAgAAAAAEAAAAAAAAAACAAI=</HashCode>
       <FileName>Download\Models\IDownloadTaskGroup.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="Pixeval.Download.Models.IImageDownloadTaskGroup" Collapsed="true">
-    <Position X="1.5" Y="7" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>AAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Download\Models\IImageDownloadTaskGroup.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Font Name="Microsoft YaHei UI" Size="9" />
