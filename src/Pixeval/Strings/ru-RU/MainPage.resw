@@ -190,10 +190,10 @@
     <value>在此释放进行以图搜图</value>
   </data>
   <data name="ReverseSearchErrorTitle" xml:space="preserve">
-    <value>以图搜图发生错误</value>
+    <value>Ошибка обратного поиска</value>
   </data>
   <data name="ReverseSearchNotFoundContent" xml:space="preserve">
-    <value>很遗憾，以图搜图功能未能在Pixiv数据库中找到任何对应的结果，该功能仅限于搜索Pixiv上面的作品哦</value>
+    <value>К сожалению, поиск не нашел совпадений в базе Pixiv. Эта функция ограничена поиском только по Pixiv</value>
   </data>
   <data name="ReverseSearchNotFoundTitle" xml:space="preserve">
     <value>Результаты не найдены</value>
