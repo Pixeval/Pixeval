@@ -41,7 +41,9 @@ public partial class ZoomableImage
     /// property is set to <see cref="Stretch.UniformToFill"/> or <see cref="Stretch.Uniform"/>
     /// </summary>
     /// <remarks>当图片按原比例显示，并占满画布时，图片的缩放比例</remarks>
-    private double ScaledFactor => GetScaledFactor(new Size(CanvasControl.ActualWidth, CanvasControl.ActualHeight));
+    private double ScaledFactor => GetScaledFactor(CanvasSize);
+
+    private Size CanvasSize { get; set; }
 
     /// <summary>
     /// Get the scale factor of the original image when it is contained inside a <see cref="Image"/> control, and the <see cref="Image.Stretch"/>
@@ -82,35 +84,7 @@ public partial class ZoomableImage
 #pragma warning disable CA2245
             Mode = Mode;
 #pragma warning restore CA2245
-    }
-
-    partial void OnImageScalePropertyChanged(DependencyPropertyChangedEventArgs e)
-    {
-        if (IsDisposed)
-            return;
-        OnImageScaleChangedInternal(e.OldValue.To<float>());
-    }
-
-    partial void OnModePropertyChanged(DependencyPropertyChangedEventArgs e)
-    {
-        if (IsDisposed)
-            return;
-        switch (Mode)
-        {
-            case ZoomableImageMode.Original:
-                ImageScale = 1;
-                SetPosition(InitPosition);
-                break;
-            case ZoomableImageMode.Fit:
-                ImageScale = (float) ScaledFactor;
-                SetPosition(InitPosition);
-                break;
-            case ZoomableImageMode.NotFit:
-                break;
-            default:
-                ThrowHelper.ArgumentOutOfRange(e.NewValue.To<ZoomableImageMode>());
-                break;
-        }
+        CanvasSize = e.NewSize;
     }
 
     private void OnImageScaleChangedInternal(float oldScale)

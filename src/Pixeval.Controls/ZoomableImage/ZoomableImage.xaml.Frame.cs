@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Effects;
 using Microsoft.Graphics.Canvas.UI.Xaml;
@@ -27,17 +28,6 @@ public partial class ZoomableImage
     private readonly CancellationTokenSource _token = new();
 
     private int[]? MsIntervals { get; set; }
-
-    partial void OnSourcePropertyChanged(DependencyPropertyChangedEventArgs e)
-    {
-        if (IsDisposed)
-            return;
-        IsPlaying = true;
-        _timerRunning = false;
-        // 使CanvasControl具有大小，否则不会触发CanvasControlOnDraw
-        OriginalImageWidth = OriginalImageHeight = 10;
-        _needInitSource = true;
-    }
 
     private bool _needInitSource;
 
@@ -91,15 +81,9 @@ public partial class ZoomableImage
         _timerRunning = true;
     }
 
-    partial void OnIsPlayingPropertyChanged(DependencyPropertyChangedEventArgs e)
-    {
-        if (IsDisposed)
-            return;
-
-        _isPlayingInternal = IsPlaying;
-    }
-
-    private void CanvasControlOnDraw(CanvasControl sender, CanvasDrawEventArgs e)
+    private DateTime _gifStartTime = DateTime.Now;
+    private DateTime _pauseStart = DateTime.Now;
+    private void CanvasControlOnDraw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs e)
     {
         if (_needInitSource)
         {
@@ -107,8 +91,37 @@ public partial class ZoomableImage
             InitSource();
             return;
         }
+        // 刚开始时图片可能为空，等待图片加载
+        if (_frames.Count is 0)
+        {
+            // 尝试触发加载资源
+            CanvasControl.Invalidate();
+        }       
+        else if (_frames.Count is 1)//就一张图，直接显示
+        {
+            _currentFrame = _frames[0];
+        }
+        else if(IsPlaying)
+        {
+            //动图，计算当前帧
+            var surplus = (DateTime.Now - _gifStartTime).TotalMilliseconds;
+            var totalTime = 0;
+            var index = 0;
+            while (totalTime < surplus && index < _frames.Count)
+            {
+                totalTime += MsIntervals[index];
+                index++;
+            }
+            if (index == _frames.Count)//播放完毕，重置
+            {
+                _gifStartTime = DateTime.Now;
+                index = 0;                
+            }
+            _currentFrame = _frames[index];
+        }
+        
 
-        if (!IsPlaying || _timerRunning)
+        if (true)
         {
             if (_currentFrame is null)
                 return;
@@ -149,7 +162,7 @@ public partial class ZoomableImage
                 InterpolationMode = CanvasImageInterpolation.MultiSampleLinear
             };
 
-            e.DrawingSession.DrawImage(image, new Vector2((float) x, (float) y));
+            e.DrawingSession.DrawImage(image, (float)x, (float)y);
         }
     }
 }

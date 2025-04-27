@@ -11,10 +11,10 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             ImageIsMirrored="{x:Bind _viewModel.IsMirrored, Mode=OneWay}"
-            ImageRotationDegree="{x:Bind _viewModel.RotationDegree, Mode=TwoWay}"
-            ImageScale="{x:Bind _viewModel.Scale, Mode=TwoWay}"
+            ImageRotationDegree="{x:Bind _viewModel.RotationDegree, Mode=OneWay}"
+            ImageScale="{x:Bind _viewModel.Scale, Mode=OneWay}"
             IsPlaying="{x:Bind _viewModel.IsPlaying, Mode=OneWay}"
-            Mode="{x:Bind _viewModel.ShowMode, Mode=TwoWay}"
+            Mode="{x:Bind _viewModel.ShowMode, Mode=OneWay}"
             Source="{x:Bind _viewModel.DisplayStreamsSource, Mode=OneWay}">
             <controls:ZoomableImage.ContextFlyout>
                 <!--  PrimaryCommands 点击后不会自动隐藏Flyout  -->

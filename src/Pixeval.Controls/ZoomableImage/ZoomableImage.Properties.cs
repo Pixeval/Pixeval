@@ -1,33 +1,119 @@
 // Copyright (c) Pixeval.Controls.
 // Licensed under the GPL v3 License.
 
+using System;
 using CommunityToolkit.WinUI;
+using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
 public partial class ZoomableImage
 {
-    [GeneratedDependencyProperty]
-    public partial object? Source { get; set; }
+    public object? Source
+    {
+        get;
+        set
+        {
+            if (IsDisposed || field == value)
+                return;
+            IsPlaying = true;
+            _timerRunning = false;
+            field = value;
+            // 使CanvasControl具有大小，否则不会触发CanvasControlOnDraw
+            OriginalImageWidth = OriginalImageHeight = 10;
+            _needInitSource = true;
+        }
+    }
+    public bool IsPlaying {
+        get;
+        set
+        {
+            if(!value)//开始暂停
+            {
+                _pauseStart = DateTime.Now;
+            }
+            else
+            {
+                _gifStartTime += DateTime.Now - _pauseStart;
+            }
+            field = value;
 
-    [GeneratedDependencyProperty(DefaultValue = true)]
-    public partial bool IsPlaying { get; set; }
+        } 
+    } = true;
+    public int ImageRotationDegree
+    {
+        get;
+        set
+        {
+            if (IsDisposed || field == value)
+                return;
+            field = value;
+            if (ImageRotationDegree % 90 is not 0)
+            {
+                ThrowHelper.Argument(ImageRotationDegree, $"{nameof(ImageRotationDegree)} must be a multiple of 90");
+            }
 
-    [GeneratedDependencyProperty(DefaultValue = 0)]
-    public partial int ImageRotationDegree { get; set; }
+            switch (ImageRotationDegree)
+            {
+                case >= 360:
+                    ImageRotationDegree %= 360;
+                    return;
+                case <= -360:
+                    ImageRotationDegree = ImageRotationDegree % 360 + 360;
+                    return;
+                case < 0:
+                    ImageRotationDegree += 360;
+                    return;
+            }
 
-    [GeneratedDependencyProperty(DefaultValue = false)]
-    public partial bool ImageIsMirrored { get; set; }
+            // 更新图片大小
+            OnPropertyChanged(nameof(ImageWidth));
+            OnPropertyChanged(nameof(ImageHeight));
 
-    [GeneratedDependencyProperty(DefaultValue = 1f)]
-    public partial float ImageScale { get; set; }
+            // 更新图片位置
+            OnPropertyChanged(nameof(ImagePositionLeft));
+            OnPropertyChanged(nameof(ImagePositionTop));
+            OnPropertyChanged(nameof(ImagePositionRight));
+            OnPropertyChanged(nameof(ImagePositionBottom));
+        }
+    } = 0;
 
-    [GeneratedDependencyProperty]
-    public partial ZoomableImageMode Mode { get; set; }
+    public bool ImageIsMirrored { get; set; } = false;
 
-    [GeneratedDependencyProperty(DefaultValue = ZoomableImageMode.Fit)]
-    public partial ZoomableImageMode InitMode { get; set; }
+    public float ImageScale {
+        get;
+        set
+        {
+            if (IsDisposed)
+                return;
+            OnImageScaleChangedInternal(field.To<float>());
+            field = value;
+        }
+    }  = 1f;
 
-    [GeneratedDependencyProperty(DefaultValue = ZoomableImagePosition.AbsoluteCenter)]
-    public partial ZoomableImagePosition InitPosition { get; set; }
+    public ZoomableImageMode Mode { 
+        get;
+        set {
+            if (IsDisposed || field == value)
+                return;
+            field = value;
+            switch (Mode)
+            {
+                case ZoomableImageMode.Original:
+                    ImageScale = 1;
+                    SetPosition(InitPosition);
+                    break;
+                case ZoomableImageMode.Fit:
+                    ImageScale = (float) ScaledFactor;
+                    SetPosition(InitPosition);
+                    break;
+                case ZoomableImageMode.NotFit:
+                    break;
+                default:
+                    ThrowHelper.ArgumentOutOfRange(value.To<ZoomableImageMode>());
+                    break;
+            }
+        } }
+    public ZoomableImageMode InitMode { get; set; }
+    public ZoomableImagePosition InitPosition { get; set; }
 }

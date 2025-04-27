@@ -208,7 +208,7 @@ public partial class ZoomableImage
 
     private void CanvasOnPointerMoved(object sender, PointerRoutedEventArgs e)
     {
-        var canvas = CanvasControl.To<CanvasControl>();
+        var canvas = CanvasControl.To<CanvasAnimatedControl>();
         var currentPoint = e.GetCurrentPoint(canvas);
         if (currentPoint.Properties.IsLeftButtonPressed)
         {
