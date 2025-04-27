@@ -1,3 +1,6 @@
 [submodule "src/Mako"]
 	path = src/Mako
 	url = https://github.com/Pixeval/Mako.git
+[submodule "src/Imouto"]
+	path = src/Imouto
+	url = https://github.com/Pixeval/Imouto.git
