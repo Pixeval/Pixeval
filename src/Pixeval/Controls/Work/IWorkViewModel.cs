@@ -73,7 +73,6 @@ public interface IWorkViewModel
                 BoolType.Gif => Entry.ImageType is ImageType.SingleAnimatedImage,
                 _ => ThrowHelper.ArgumentOutOfRange<BoolType, bool>(boolLeaf.Type),
             },
-            // TODO NumericLeaf numericLeaf => Authors.Any(t => (numericLeaf.Value, t.Name)),
             NumericRangeLeaf numericRangeLeaf => numericRangeLeaf.Type switch
             {
                 NumericRangeType.Bookmark => numericRangeLeaf.IsInRange(Entry.TotalFavorite),
