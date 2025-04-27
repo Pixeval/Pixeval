@@ -187,7 +187,7 @@
     <value>Mirrored</value>
   </data>
   <data name="SetAs" xml:space="preserve">
-    <value>Set as...</value>
+    <value>设置显示的图片为</value>
   </data>
   <data name="SetAsBackgroundSucceededTitle" xml:space="preserve">
     <value>Set as background</value>
