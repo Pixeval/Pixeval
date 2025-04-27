@@ -514,10 +514,10 @@
     <value>Введите API ключ</value>
   </data>
   <data name="ReverseSearchResultSimilarityThresholdEntry.Description" xml:space="preserve">
-    <value>以图搜图结果的阈值，如果搜索结果低于该阈值则会被忽略，值越高则说明搜索结果和原图越相似</value>
+    <value>Порог сходства результатов обратного поиска. Результаты ниже этого порога будут игнорироваться. Чем выше значение, тем больше сходство между результатами и исходным изображением</value>
   </data>
   <data name="ReverseSearchResultSimilarityThresholdEntry.Header" xml:space="preserve">
-    <value>以图搜图阈值</value>
+    <value>Порог сходства обратного поиска</value>
   </data>
   <data name="BrowseOriginalImageEntry.Description" xml:space="preserve">
     <value>Просмотр оригинальных изображений требует больше трафика и времени на загрузку, но обеспечивает лучшее качество и скорость загрузки</value>
