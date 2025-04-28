@@ -292,17 +292,17 @@ public sealed partial class AdvancedItemsView : ItemsView
         }
         else
         {
-            var rate = currentPoint.Properties.MouseWheelDelta * ScrollRate;
+            var rate = currentPoint.Properties.MouseWheelDelta * 2 * (ScrollRate is 0 ? 5 : ScrollRate);
             _ = scrollView switch
             {
                 {
                     ComputedVerticalScrollMode: ScrollingScrollMode.Disabled,
                     ComputedHorizontalScrollMode: ScrollingScrollMode.Enabled
-                } => scrollView.AddScrollVelocity(new(-rate, 0), new(0.99f)),
+                } => scrollView.AddScrollVelocity(new(-rate, 0), new(0.999f)),
                 {
                     ComputedVerticalScrollMode: ScrollingScrollMode.Enabled,
                     ComputedHorizontalScrollMode: ScrollingScrollMode.Disabled
-                } => scrollView.AddScrollVelocity(new(0, -rate), new(0.99f)),
+                } => scrollView.AddScrollVelocity(new(0, -rate), new(0.999f)),
                 _ => 0
             };
         }

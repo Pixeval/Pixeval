@@ -40,13 +40,11 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<IArtworkInfo
         CancellationToken token)
     {
         var isOriginal = App.AppViewModel.AppSettings.BrowseOriginalImage;
-        if (Entry is not IImageFrame frame)
-            return null;
-        switch (frame)
+        switch (Entry)
         {
             case ISingleImage { ImageType: ImageType.SingleImage } singleImage:
             {
-                var f = isOriginal ? frame : Entry.Thumbnails.PickMaxFrame();
+                var f = isOriginal ? singleImage : Entry.Thumbnails.PickMaxFrame();
                 var stream = await CacheHelper.GetSingleImageAsync(
                     singleImage, 
                     f,
@@ -59,10 +57,10 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<IArtworkInfo
                 var f = isOriginal
                     ? singleAnimatedImage
                     : (await singleAnimatedImage.AnimatedThumbnails.ApplyAsync(t => t
-                        .TryPreloadListAsync(singleAnimatedImage))).PickMax();
+                        .TryPreloadListAsync(singleAnimatedImage))).PickMaxFrame();
                 switch (f.PreferredAnimatedImageType)
                 {
-                    case (SingleAnimatedImageType.MultiFiles):
+                    case SingleAnimatedImageType.MultiFiles:
                     {
                         var list = await CacheHelper.GetAnimatedImageSeparatedAsync(
                             singleAnimatedImage,
