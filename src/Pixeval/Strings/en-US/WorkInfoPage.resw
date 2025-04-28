@@ -120,46 +120,10 @@
   <data name="WorkCaptionEmpty" xml:space="preserve">
     <value>None</value>
   </data>
-  <data name="WorkCaptionTextBlock.Text" xml:space="preserve">
-    <value>Introduction</value>
-  </data>
-  <data name="IllustrationDimensionTextBlock.Text" xml:space="preserve">
-    <value>Resolution</value>
-  </data>
-  <data name="IllustrationDimensionUnknown" xml:space="preserve">
-    <value>Unknown</value>
-  </data>
   <data name="BlockTagMenuItem.Text" xml:space="preserve">
     <value>Block a tag</value>
   </data>
-  <data name="WorkIdTextBlock.Text" xml:space="preserve">
-    <value>Work ID</value>
-  </data>
   <data name="WorkTagListTextBlock.Text" xml:space="preserve">
     <value>Work tags</value>
-  </data>
-  <data name="WorkTitleTextBlock.Text" xml:space="preserve">
-    <value>Work title</value>
-  </data>
-  <data name="WorkTotalBookmarksTextBlock.Text" xml:space="preserve">
-    <value>Total bookmarks</value>
-  </data>
-  <data name="WorkTotalViewsTextBlock.Text" xml:space="preserve">
-    <value>Total views</value>
-  </data>
-  <data name="WorkUploadDateTextBlock.Text" xml:space="preserve">
-    <value>Upload date</value>
-  </data>
-  <data name="IllustratorId.Text" xml:space="preserve">
-    <value>Illustrator ID: </value>
-  </data>
-  <data name="IllustratorName.Text" xml:space="preserve">
-    <value>Illustrator name: </value>
-  </data>
-  <data name="IllustratorTextBlock.Text" xml:space="preserve">
-    <value>Illustrator info</value>
-  </data>
-  <data name="TitleTextBlock.Text" xml:space="preserve">
-    <value>Work info</value>
   </data>
 </root>
