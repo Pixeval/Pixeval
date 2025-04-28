@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml;
 using Pixeval.Controls.Windowing;
 using Mako.Net.Response;
 using WinUI3Utilities;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.IllustratorViewer;
 
@@ -29,8 +30,10 @@ public static class IllustratorViewerHelper
 
     public static void CreateIllustratorPage(this FrameworkElement frameworkElement, PixivSingleUserResponse userDetail)
     {
-        if (frameworkElement.FindAscendantOrSelf<TabPage>() is not { } tabPage)
-            return;
-        tabPage.AddPage(new NavigationViewTag<IllustratorViewerPage>(userDetail.UserEntity.Name, userDetail));
+        if (frameworkElement.FindAscendantOrSelf<TabPage>() is { } tabPage)
+            tabPage.AddPage(new NavigationViewTag<IllustratorViewerPage>(userDetail.UserEntity.Name, userDetail)
+            {
+                ImageUri = ViewerPageTag.GetPlatformUri()
+            });
     }
 }

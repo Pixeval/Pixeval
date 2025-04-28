@@ -17,6 +17,8 @@ using Pixeval.Utilities;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.System;
+using CommunityToolkit.WinUI;
+using Pixeval.Util.UI;
 using WinRT;
 using WinUI3Utilities;
 using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
@@ -58,6 +60,8 @@ public sealed partial class IllustrationViewerPage
                 var newTag = args.NewTag.To<string>(); // vm.CurrentPage.Id
                 if (oldTag == newTag)
                     return;
+                if (this.FindAscendant<Frame>()?.GetTag<ViewerPageTag>() is { } tag) 
+                    tag.SetArtwork(vm.CurrentIllustration.Entry);
                 // TODO: https://github.com/microsoft/microsoft-ui-xaml/issues/9952
                 // ThumbnailItemsView.StartBringItemIntoView(vm.CurrentIllustrationIndex, new BringIntoViewOptions { AnimationDesired = true });
                 EntryViewerSplitView.NavigationViewSelectRefresh();

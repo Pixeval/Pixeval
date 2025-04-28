@@ -34,6 +34,7 @@ using Windows.Storage;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.Core;
+using Misaki;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages;
@@ -218,7 +219,7 @@ public sealed partial class MainPage
             {
                 case SuggestionType.IllustId:
                     if (long.TryParse(sender.Text, out var illustId))
-                        await TabViewParameter.CreateIllustrationPageAsync(illustId);
+                        await TabViewParameter.CreateIllustrationPageAsync(illustId.ToString(), IPlatformInfo.Pixiv);
                     break;
                 case SuggestionType.NovelId:
                     if (long.TryParse(sender.Text, out var novelId))

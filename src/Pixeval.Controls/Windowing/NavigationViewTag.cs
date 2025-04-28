@@ -58,7 +58,7 @@ public partial class NavigationViewTag(string header, Type navigateTo, object? p
     public override string ToString() => Header;
 }
 
-public sealed partial class NavigationViewTag<TPage>(string header, object? parameter = null) : NavigationViewTag(header, typeof(TPage), parameter);
+public partial class NavigationViewTag<TPage>(string header, object? parameter = null) : NavigationViewTag(header, typeof(TPage), parameter);
 
 public sealed partial class NavigationViewTag<TPage, TParam>(string header, TParam parameter) : NavigationViewTag(header, typeof(TPage), parameter)
 {

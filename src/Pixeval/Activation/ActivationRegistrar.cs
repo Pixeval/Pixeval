@@ -1,25 +1,25 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System.Collections.Generic;
-using System.Linq;
+using System;
+using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Windows.AppLifecycle;
+using Pixeval.Pages;
 using Pixeval.Pages.Login;
 using Pixeval.Util.Threading;
+using Pixeval.Util.UI;
 using Windows.ApplicationModel.Activation;
+using Misaki;
+using Pixeval.Pages.IllustrationViewer;
+using Pixeval.Pages.IllustratorViewer;
+using Pixeval.Pages.NovelViewer;
+using Pixeval.Utilities;
 
 namespace Pixeval.Activation;
 
 public static class ActivationRegistrar
 {
-    public static readonly List<IAppActivationHandler> FeatureHandlers =
-    [
-        new IllustrationAppActivationHandler(),
-        new IllustratorAppActivationHandler(),
-        new NovelAppActivationHandler()
-    ];
-
     public static async void Dispatch(AppActivationArguments args)
     {
         if (args is
@@ -31,9 +31,28 @@ public static class ActivationRegistrar
             {
                 case "pixeval":
                 {
-                    if (FeatureHandlers.FirstOrDefault(f => f.ActivationFragment == activationUri.Host) is { } handler)
+                    var seg1 = activationUri.Segments[1].TrimEnd('/');
+                    try
                     {
-                        _ = handler.Execute(activationUri.PathAndQuery[1..]);
+                        _ = ThreadingHelper.DispatchTaskAsync(() =>
+                            activationUri.Host switch
+                            {
+                                "novel" => MainPage.Current.TabViewParameter.CreateNovelPageAsync(long.Parse(seg1)),
+                                "user" => MainPage.Current.TabViewParameter.CreateIllustratorPageAsync(long.Parse(seg1)),
+                                "illust" => MainPage.Current.TabViewParameter.CreateIllustrationPageAsync(seg1, IPlatformInfo.Pixiv),
+                                IPlatformInfo.Sankaku => MainPage.Current.TabViewParameter.CreateIllustrationPageAsync(seg1, IPlatformInfo.Sankaku),
+                                IPlatformInfo.Danbooru => MainPage.Current.TabViewParameter.CreateIllustrationPageAsync(seg1, IPlatformInfo.Danbooru),
+                                IPlatformInfo.Gelbooru => MainPage.Current.TabViewParameter.CreateIllustrationPageAsync(seg1, IPlatformInfo.Gelbooru),
+                                IPlatformInfo.Yandere => MainPage.Current.TabViewParameter.CreateIllustrationPageAsync(seg1, IPlatformInfo.Yandere),
+                                IPlatformInfo.Rule34 => MainPage.Current.TabViewParameter.CreateIllustrationPageAsync(seg1, IPlatformInfo.Rule34),
+                                _ => Task.CompletedTask
+                            });
+                    }
+                    catch (Exception e)
+                    {
+                        AppNotificationHelper.ShowTextAppNotification(
+                            ActivationsResources.ActivationFailedTitle,
+                            ActivationsResources.ActivationFailedContentFormatted.Format(e.Message));
                     }
 
                     break;

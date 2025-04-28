@@ -97,6 +97,7 @@ public sealed partial class ZoomableImage : UserControl, IStructuralDisposalComp
     {
         IsDisposed = true;
         CanvasControl.Draw -= CanvasControlOnDraw;
+        CanvasControl.RemoveFromVisualTree();
         _token.TryCancelDispose();
         foreach (var frame in _frames)
             frame.Dispose();

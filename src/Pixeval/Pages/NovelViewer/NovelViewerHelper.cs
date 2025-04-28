@@ -11,6 +11,7 @@ using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Mako.Model;
 using WinUI3Utilities;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.NovelViewer;
 
@@ -65,8 +66,10 @@ public static class NovelViewerHelper
 
     private static void CreateNovelPage(this FrameworkElement frameworkElement, Novel novel, object param)
     {
-        if (frameworkElement.FindAscendantOrSelf<TabPage>() is not { } tabPage)
-            return;
-        tabPage.AddPage(new NavigationViewTag<NovelViewerPage>(novel.Title, param));
+        if (frameworkElement.FindAscendantOrSelf<TabPage>() is { } tabPage)
+            tabPage.AddPage(new NavigationViewTag<NovelViewerPage>(novel.Title, param)
+            {
+                ImageUri = ViewerPageTag.GetPlatformUri()
+            });
     }
 }

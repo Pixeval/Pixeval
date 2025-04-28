@@ -9,9 +9,11 @@ public static class Source
     public static readonly DependencyProperty ImageSourceProperty = DependencyProperty.RegisterAttached(
         "ImageSource", typeof(string), typeof(Source), new(null));
 
-    public static async void SetImageSource(DependencyObject element, string value)
+    public static async void SetImageSource(DependencyObject element, string? value)
     {
         element.SetValue(ImageSourceProperty, value);
+        if (value is null)
+            return;
         switch (element)
         {
             case Image image:

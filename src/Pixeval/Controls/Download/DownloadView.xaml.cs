@@ -7,8 +7,10 @@ using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Mako.Model;
+using Misaki;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.NovelViewer;
+using Pixeval.Pages.IllustratorViewer;
 
 namespace Pixeval.Controls;
 
@@ -27,11 +29,11 @@ public sealed partial class DownloadView : UserControl, IStructuralDisposalCompl
     {
         switch (viewModel.Entry)
         {
-            case Illustration illustration:
-                await this.CreateIllustrationPageAsync(illustration.Id);
-                break;
             case Novel novel:
                 await this.CreateNovelPageAsync(novel.Id);
+                break;
+            case not null:
+                await this.CreateIllustrationPageAsync(viewModel.Entry);
                 break;
         }
     }

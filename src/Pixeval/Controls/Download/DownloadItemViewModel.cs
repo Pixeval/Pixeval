@@ -13,6 +13,7 @@ using Pixeval.Database;
 using Pixeval.Download;
 using Pixeval.Download.Models;
 using Pixeval.Util.IO;
+using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using WinUI3Utilities;
 
@@ -102,7 +103,7 @@ public sealed partial class DownloadItemViewModel(IDownloadTaskGroup downloadTas
         _ => "SystemFillColorAttentionBrush"
     });
 
-    protected override string ThumbnailUrl => Entry.Thumbnails.PickClosest(50, 50).ImageUri.OriginalString;
+    protected override string ThumbnailUrl => Entry.Thumbnails.PickClosestFrame(50, 50).ImageUri.OriginalString;
 
 #pragma warning restore CA1822
 

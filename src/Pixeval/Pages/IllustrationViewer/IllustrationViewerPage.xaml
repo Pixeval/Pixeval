@@ -257,18 +257,20 @@
                     DefaultLabelPosition="Collapsed">
                     <AppBarToggleButton Command="{x:Bind _viewModel.InfoAndCommentsCommand}" IsChecked="{x:Bind EntryViewerSplitView.IsPaneOpen, Mode=TwoWay}" />
                     <AppBarToggleButton Command="{x:Bind _viewModel.BottomListCommand}" IsChecked="{x:Bind _viewModel.IsBottomListOpen, Mode=TwoWay}" />
-                    <AppBarSeparator />
+                    <AppBarSeparator Visibility="{x:Bind controls:C.IsNotNullOrWhiteSpaceToVisibility(_viewModel.CurrentIllustration.SizeText), Mode=OneWay}" />
                     <controls:AppBarTextItem
                         Padding="15,0"
                         Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
                         Symbol="SlideSize"
-                        Text="{x:Bind _viewModel.CurrentIllustration.SizeText, Mode=OneWay}" />
-                    <AppBarSeparator />
+                        Text="{x:Bind _viewModel.CurrentIllustration.SizeText, Mode=OneWay}"
+                        Visibility="{x:Bind controls:C.IsNotNullOrWhiteSpaceToVisibility(_viewModel.CurrentIllustration.SizeText), Mode=OneWay}" />
+                    <AppBarSeparator Visibility="{x:Bind controls:C.IsNotNullOrWhiteSpaceToVisibility(_viewModel.CurrentIllustration.Entry.Title), Mode=OneWay}" />
                     <controls:AppBarTextItem
                         Padding="15,0"
                         Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
                         Symbol="AppTitle"
-                        Text="{x:Bind _viewModel.CurrentIllustration.Entry.Title, Mode=OneWay}" />
+                        Text="{x:Bind _viewModel.CurrentIllustration.Entry.Title, Mode=OneWay}"
+                        Visibility="{x:Bind controls:C.IsNotNullOrWhiteSpaceToVisibility(_viewModel.CurrentIllustration.Entry.Title), Mode=OneWay}" />
                 </CommandBar>
                 <CommandBar
                     x:Name="ExtensionsCommandBar"

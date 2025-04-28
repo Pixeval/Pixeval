@@ -3,6 +3,7 @@
 
 using System.ComponentModel;
 using System.Linq;
+using CommunityToolkit.WinUI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -11,6 +12,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Pixeval.Extensions;
 using Pixeval.Extensions.Common.Commands.Transformers;
+using Pixeval.Util.UI;
 using Windows.System;
 using WinRT;
 using WinUI3Utilities;
@@ -40,6 +42,9 @@ public sealed partial class NovelViewerPage
 
             var oldIndex = args.OldValue.To<int>();
             var newIndex = args.NewValue.To<int>(); // vm.CurrentNovelIndex
+
+            if (this.FindAscendant<Frame>()?.GetTag<ViewerPageTag>() is { } tag)
+                tag.SetArtwork(vm.CurrentNovel.Entry);
 
             EntryViewerSplitView.NavigationViewSelectRefresh();
             // TODO: https://github.com/microsoft/microsoft-ui-xaml/issues/9952

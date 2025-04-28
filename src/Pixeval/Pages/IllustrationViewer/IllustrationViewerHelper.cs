@@ -6,11 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using WinUI3Utilities;
 using Misaki;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -42,9 +44,17 @@ public static class IllustrationViewerHelper
     /// <summary>
     /// 此方法无法加载更多插画，加载单张图使用
     /// </summary>
-    public static async Task CreateIllustrationPageAsync(this FrameworkElement frameworkElement, long id)
+    public static Task CreateIllustrationPageAsync(this FrameworkElement frameworkElement, IIdentityInfo id)
+        => CreateIllustrationPageAsync(frameworkElement, id.Id, id.Platform);
+
+    /// <summary>
+    /// 此方法无法加载更多插画，加载单张图使用
+    /// </summary>
+    public static async Task CreateIllustrationPageAsync(this FrameworkElement frameworkElement, string id, string platform)
     {
-        var viewModel = IllustrationItemViewModel.CreateInstance(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id));
+        var getArtworkService = App.AppViewModel.AppServiceProvider.GetRequiredKeyedService<IGetArtworkService>(platform);
+
+        var viewModel = IllustrationItemViewModel.CreateInstance(await getArtworkService.GetArtworkAsync(id));
 
         frameworkElement.CreateIllustrationPage(viewModel, [viewModel]);
     }
@@ -90,6 +100,8 @@ public static class IllustrationViewerHelper
     {
         if (frameworkElement.FindAscendantOrSelf<TabPage>() is not { } tabPage)
             return;
-        tabPage.AddPage(new NavigationViewTag<IllustrationViewerPage>(illustration.Title, param));
+        var tag = new ViewerPageTag(param);
+        tag.SetArtwork(illustration);
+        tabPage.AddPage(tag);
     }
 }
