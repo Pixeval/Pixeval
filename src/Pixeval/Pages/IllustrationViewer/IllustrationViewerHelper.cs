@@ -12,6 +12,7 @@ using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using WinUI3Utilities;
 using Misaki;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -99,6 +100,8 @@ public static class IllustrationViewerHelper
     {
         if (frameworkElement.FindAscendantOrSelf<TabPage>() is not { } tabPage)
             return;
-        tabPage.AddPage(new NavigationViewTag<IllustrationViewerPage>(illustration.Title, param));
+        var tag = new ViewerPageTag(param);
+        tag.SetArtwork(illustration);
+        tabPage.AddPage(tag);
     }
 }

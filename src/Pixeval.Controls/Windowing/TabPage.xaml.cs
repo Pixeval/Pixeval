@@ -53,6 +53,7 @@ public sealed partial class TabPage
     {
         var frame = new Frame
         {
+            // TabViewItem不在视觉树上，而Content在，加个Frame方便找到NavigationViewTag
             Tag = viewModel,
             Background = Application.Current.Resources["LayerFillColorDefaultBrush"].To<Brush>()
         };
@@ -65,6 +66,18 @@ public sealed partial class TabPage
             IsClosable = true,
             Tag = viewModel,
             Content = frame
+        };
+        viewModel.PropertyChanged += (sender, args) =>
+        {
+            switch (args.PropertyName)
+            {
+                case nameof(viewModel.Header):
+                    tabViewItem.Header = string.IsNullOrEmpty(viewModel.Header) ? " " : viewModel.Header;
+                    break;
+                case nameof(viewModel.IconSource):
+                    tabViewItem.IconSource = viewModel.IconSource ?? new ImageIconSource { ImageSource = WindowFactory.IconImageSource };
+                    break;
+            }
         };
         TabView.TabItems.Add(tabViewItem);
         TabView.SelectedItem = tabViewItem;
