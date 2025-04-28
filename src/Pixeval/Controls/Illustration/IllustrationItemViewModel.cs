@@ -106,7 +106,8 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<IArtworkInfo
 
     public bool IsUgoira => Entry.ImageType is ImageType.SingleAnimatedImage;
 
-    public string? SizeText => Entry is IImageFrame frame ? $"{frame.Width} x {frame.Height}" : null;
+    public string? SizeText =>
+        Entry is IImageFrame { Width: > 0, Height: > 0 } frame ? $"{frame.Width} x {frame.Height}" : null;
 
     public string Tooltip
     {
