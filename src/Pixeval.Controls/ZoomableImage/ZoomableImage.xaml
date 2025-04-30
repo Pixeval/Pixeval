@@ -7,14 +7,17 @@
     xmlns:win2d="using:Microsoft.Graphics.Canvas.UI.Xaml"
     Loaded="ZoomableImage_OnLoaded"
     mc:Ignorable="d">
-    <win2d:CanvasAnimatedControl
-        x:Name="CanvasControl"
-        Draw="CanvasControlOnDraw"
-        PointerCaptureLost="CanvasControl_OnPointerReleased"
+    <Border
         PointerMoved="CanvasOnPointerMoved"
         PointerPressed="CanvasControl_OnPointerPressed"
         PointerReleased="CanvasControl_OnPointerReleased"
-        PointerWheelChanged="CanvasOnPointerWheelChanged"
-        SizeChanged="CanvasOnSizeChanged" />
+        PointerCaptureLost="CanvasControl_OnPointerReleased"
+        PointerWheelChanged="CanvasOnPointerWheelChanged">
+        <win2d:CanvasAnimatedControl
+            x:Name="CanvasControl"
+            Draw="CanvasControlOnDraw"
+            SizeChanged="CanvasOnSizeChanged" />
+    </Border>
+
     <!--  由于需要随时重新加载新图片，故创建资源的逻辑放在CanvasControlOnDraw的else分支中  -->
 </UserControl>

@@ -62,9 +62,14 @@ public partial class ZoomableImage
             _ => canvasWidth / ImageWidth
         };
     }
-
+    /// <summary>
+    /// 记录上次鼠标事件事件，用于无操作时自动暂停
+    /// </summary>
+    private DateTime _lastPointerActivityTime = DateTime.Now;
     private void CanvasOnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
     {
+        _lastPointerActivityTime = DateTime.Now;
+        CanvasControl.Paused = false;
         var point = e.GetCurrentPoint(CanvasControl);
         var originalScale = ImageScale;
         Zoom(point.Properties.MouseWheelDelta * 5);

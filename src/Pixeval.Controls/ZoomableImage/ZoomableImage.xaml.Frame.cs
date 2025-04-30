@@ -100,6 +100,10 @@ public partial class ZoomableImage
         else if (_frames.Count is 1)//就一张图，直接显示
         {
             _currentFrame = _frames[0];
+            if (DateTime.Now - _lastPointerActivityTime > TimeSpan.FromSeconds(3))
+            {
+                CanvasControl.Paused = true;
+            }
         }
         else if(IsPlaying)
         {
@@ -119,50 +123,47 @@ public partial class ZoomableImage
             }
             _currentFrame = _frames[index];
         }
-        
 
-        if (true)
+        if (_currentFrame is null)
+            return;
+        e.DrawingSession.Clear(Colors.Transparent);
+
+
+        var transform = Matrix3x2.Identity;
+        if (ImageIsMirrored)
         {
-            if (_currentFrame is null)
-                return;
-            e.DrawingSession.Clear(Colors.Transparent);
-
-            var transform = Matrix3x2.Identity;
-            if (ImageIsMirrored)
+            // 沿x轴翻转
+            transform *= new Matrix3x2
             {
-                // 沿x轴翻转
-                transform *= new Matrix3x2
-                {
-                    M11 = -1,
-                    M22 = 1
-                };
-                // 平移回原来位置
-                transform *= Matrix3x2.CreateTranslation((float) OriginalImageWidth, 0);
-            }
-
-            transform *= Matrix3x2.CreateRotation(
-                float.DegreesToRadians(ImageRotationDegree));
-
-            transform *= ImageRotationDegree switch
-            {
-                90 => Matrix3x2.CreateTranslation((float) OriginalImageHeight, 0),
-                180 => Matrix3x2.CreateTranslation((float) OriginalImageWidth, (float) OriginalImageHeight),
-                270 => Matrix3x2.CreateTranslation(0, (float) OriginalImageWidth),
-                _ => Matrix3x2.Identity
+                M11 = -1,
+                M22 = 1
             };
-
-            _ = Compute(out var scale, out _, out _, out var x, out var y);
-            // 最后调整scale，防止影响前面
-            transform *= Matrix3x2.CreateScale(scale);
-
-            var image = new Transform2DEffect
-            {
-                Source = _currentFrame,
-                TransformMatrix = transform,
-                InterpolationMode = CanvasImageInterpolation.MultiSampleLinear
-            };
-
-            e.DrawingSession.DrawImage(image, (float)x, (float)y);
+            // 平移回原来位置
+            transform *= Matrix3x2.CreateTranslation((float) OriginalImageWidth, 0);
         }
+
+        transform *= Matrix3x2.CreateRotation(
+            float.DegreesToRadians(ImageRotationDegree));
+
+        transform *= ImageRotationDegree switch
+        {
+            90 => Matrix3x2.CreateTranslation((float) OriginalImageHeight, 0),
+            180 => Matrix3x2.CreateTranslation((float) OriginalImageWidth, (float) OriginalImageHeight),
+            270 => Matrix3x2.CreateTranslation(0, (float) OriginalImageWidth),
+            _ => Matrix3x2.Identity
+        };
+
+        _ = Compute(out var scale, out _, out _, out var x, out var y);
+        // 最后调整scale，防止影响前面
+        transform *= Matrix3x2.CreateScale(scale);
+
+        var image = new Transform2DEffect
+        {
+            Source = _currentFrame,
+            TransformMatrix = transform,
+            InterpolationMode = CanvasImageInterpolation.MultiSampleLinear
+        };
+
+        e.DrawingSession.DrawImage(image, (float) x, (float) y);
     }
 }
