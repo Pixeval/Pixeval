@@ -1,7 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System.Collections.Generic;
 using System.Linq;
 using Misaki;
 using Pixeval.Download.MacroParser;

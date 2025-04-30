@@ -17,7 +17,6 @@ using ReverseMarkdown;
 using WinUI3Utilities;
 using System.Collections.Generic;
 using Windows.System;
-using Pixeval.Util.UI;
 
 namespace Pixeval.Pages;
 

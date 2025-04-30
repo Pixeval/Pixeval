@@ -7,10 +7,8 @@ using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Mako.Model;
-using Misaki;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.NovelViewer;
-using Pixeval.Pages.IllustratorViewer;
 
 namespace Pixeval.Controls;
 
