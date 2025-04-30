@@ -29,7 +29,7 @@ public partial class AppViewModel(App app) : IDisposable
 
     public DownloadManager DownloadManager { get; private set; } = null!;
 
-    public MakoClient MakoClient => (MakoClient) GetPlatformService<IGetArtworkService>(IPlatformInfo.Pixiv);
+    public MakoClient MakoClient => (MakoClient) GetRequiredPlatformService<IGetArtworkService>(IPlatformInfo.Pixiv);
 
     public AppSettings AppSettings { get; } = AppInfo.LoadConfig() ?? new AppSettings();
 
@@ -79,7 +79,13 @@ public partial class AppViewModel(App app) : IDisposable
             .BuildServiceProvider();
     }
 
-    public T GetPlatformService<T>(string platformKey) where T : IMisakiService
+    public T? GetPlatformService<T>(string platformKey) where T : IMisakiService
+    {
+        return AppServiceProvider.GetKeyedService<T>(platformKey)
+               ?? AppServiceProvider.GetKeyedService<T>(IPlatformInfo.All);
+    }
+
+    public T GetRequiredPlatformService<T>(string platformKey) where T : IMisakiService
     {
         return AppServiceProvider.GetKeyedService<T>(platformKey)
                ?? AppServiceProvider.GetKeyedService<T>(IPlatformInfo.All)

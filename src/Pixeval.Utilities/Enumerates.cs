@@ -222,6 +222,12 @@ public static class Enumerates
         }
     }
 
+    public static void AddIfNotNull<T>(this IList<T> dest, T? source)
+    {
+        if (source is not null)
+            dest.Add(source);
+    }
+
     public static int RemoveAll<T>(this IList<T> list, Predicate<T> match)
     {
         var count = 0;

@@ -1,6 +1,7 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ using Pixeval.Controls.Windowing;
 using WinUI3Utilities;
 using Misaki;
 using Pixeval.Util.UI;
+using Pixeval.Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -52,9 +54,10 @@ public static class IllustrationViewerHelper
     /// </summary>
     public static async Task CreateIllustrationPageAsync(this FrameworkElement frameworkElement, string id, string platform)
     {
-        var getArtworkService = App.AppViewModel.AppServiceProvider.GetRequiredKeyedService<IGetArtworkService>(platform);
+        if (await id.TryGetIArtworkInfoAsync(platform) is not { } entry)
+            return;
 
-        var viewModel = IllustrationItemViewModel.CreateInstance(await getArtworkService.GetArtworkAsync(id));
+        var viewModel = IllustrationItemViewModel.CreateInstance(entry);
 
         frameworkElement.CreateIllustrationPage(viewModel, [viewModel]);
     }
@@ -103,5 +106,22 @@ public static class IllustrationViewerHelper
         var tag = new ViewerPageTag(param);
         tag.SetArtwork(illustration);
         tabPage.AddPage(tag);
+    }
+
+    public static async Task<IArtworkInfo?> TryGetIArtworkInfoAsync(this string id, string platform)
+    {
+        var getArtworkService = App.AppViewModel.GetPlatformService<IGetArtworkService>(platform);
+        if (getArtworkService is null)
+            return null;
+        try
+        {
+            return await getArtworkService.GetArtworkAsync(id);
+        }
+        catch (Exception e)
+        {
+            var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
+            logger.LogError(nameof(TryGetIArtworkInfoAsync), e);
+            return null;
+        }
     }
 }
