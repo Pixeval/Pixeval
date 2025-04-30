@@ -11,6 +11,7 @@ using Pixeval.Util.Threading;
 using Pixeval.Util.UI;
 using Windows.ApplicationModel.Activation;
 using Misaki;
+using Pixeval.Controls.Windowing;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Pages.NovelViewer;
@@ -22,6 +23,12 @@ public static class ActivationRegistrar
 {
     public static async void Dispatch(AppActivationArguments args)
     {
+        if (AppInstance.GetInstances().Count is 1 && (WindowFactory.ForkedWindows.Count is 0 || App.AppViewModel.AppDebugTrace.ExitedSuccessfully))
+        {
+            AppInstance.Restart("");
+            return;
+        }
+
         if (args is
             {
                 Kind: ExtendedActivationKind.Protocol, Data: IProtocolActivatedEventArgs { Uri: var activationUri }
