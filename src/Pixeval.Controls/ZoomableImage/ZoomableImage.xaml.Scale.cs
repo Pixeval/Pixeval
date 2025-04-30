@@ -67,7 +67,7 @@ public partial class ZoomableImage
     {
         var point = e.GetCurrentPoint(CanvasControl);
         var originalScale = ImageScale;
-        Zoom(point.Properties.MouseWheelDelta);
+        Zoom(point.Properties.MouseWheelDelta * 5);
         var ratio = ImageScale / originalScale;
         var left = point.Position.X - ImageCenterX;
         var top = point.Position.Y - ImageCenterY;

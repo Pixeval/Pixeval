@@ -15,7 +15,7 @@ public partial class ZoomableImage
         _startCenterX = centerX;
         _startCenterY = centerY;
         _animationStartTime = now;
-        _animationEndTime = _animationStartTime + TimeSpan.FromSeconds(0.5);
+        _animationEndTime = _animationStartTime + TimeSpan.FromSeconds(0.3);
     }
 
     private DateTime Compute(out float scale, out double centerX, out double centerY, out double x, out double y, float? oldScale = null)
