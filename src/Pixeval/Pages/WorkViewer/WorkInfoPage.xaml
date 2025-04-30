@@ -20,7 +20,10 @@
             <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseMediumBrush}" />
         </Style>
         <DataTemplate x:Key="UserCardDataTemplate" x:DataType="misaki:IUser">
-            <Button Click="IllustratorPersonPicture_OnClicked" Style="{StaticResource CardControlButton}">
+            <Button
+                Click="IllustratorPersonPicture_OnClicked"
+                Style="{StaticResource CardControlButton}"
+                Tag="{x:Bind}">
                 <controls:DockPanel HorizontalSpacing="12" LastChildFill="False">
                     <PersonPicture
                         Width="50"
@@ -55,19 +58,21 @@
                 </controls:DockPanel>
             </Button>
         </DataTemplate>
+        <StackLayout x:Key="StackLayout" Spacing="5" />
     </controls2:EnhancedPage.Resources>
     <ScrollViewer
         HorizontalScrollBarVisibility="Disabled"
         HorizontalScrollMode="Disabled"
         VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="20,15" Spacing="4">
+        <StackPanel Margin="20,15" Spacing="5">
             <controls2:TranslatableTextBlock
                 HorizontalAlignment="Left"
                 IsCompact="True"
                 IsHorizontal="True"
                 Text="{x:Bind _viewModel.Entry.Title}"
                 TextBlockStyle="{StaticResource TitleTextBlockStyle}"
-                TextType="WorkTitle" />
+                TextType="WorkTitle"
+                Visibility="{x:Bind controls2:C.IsNotNullOrWhiteSpaceToVisibility(_viewModel.Entry.Title)}" />
             <controls2:TranslatableTextBlock
                 x:Name="WorkCaptionMarkdownTextBlock"
                 Margin="{StaticResource StackLayoutEntryPadding}"
@@ -89,54 +94,55 @@
                     </interactivity:Interaction.Behaviors>
                 </Button>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Spacing="20">
-                <controls2:IconText Symbol="Eye" Text="{x:Bind _viewModel.Entry.TotalView}" />
-                <controls2:IconText Symbol="Heart" Text="{x:Bind _viewModel.Entry.TotalFavorite}" />
+            <StackPanel
+                Orientation="Horizontal"
+                Spacing="20"
+                Visibility="{x:Bind GetSpacingVisibility(_viewModel.Entry.TotalView, _viewModel.Entry.TotalFavorite)}">
+                <controls2:IconText
+                    Symbol="Eye"
+                    Text="{x:Bind _viewModel.Entry.TotalView}"
+                    Visibility="{x:Bind controls2:C.IsPositiveToVisibility(_viewModel.Entry.TotalView)}" />
+                <controls2:IconText
+                    Symbol="Heart"
+                    Text="{x:Bind _viewModel.Entry.TotalFavorite}"
+                    Visibility="{x:Bind controls2:C.IsPositiveToVisibility(_viewModel.Entry.TotalFavorite)}" />
             </StackPanel>
-            <controls2:IconText Symbol="Clock" Text="{x:Bind controls2:C.CultureDateTimeOffsetFormatter(_viewModel.Entry.CreateDate, pixeval:AppSettings.CurrentCulture)}" />
+            <controls2:IconText
+                Symbol="Clock"
+                Text="{x:Bind controls2:C.CultureDateTimeOffsetFormatter(_viewModel.Entry.CreateDate, pixeval:AppSettings.CurrentCulture)}"
+                Visibility="{x:Bind controls2:C.IsDefaultTimeOffsetToVisibility(_viewModel.Entry.CreateDate)}" />
             <!--#region Author Info-->
+            <Rectangle Height="4" Visibility="{x:Bind GetSpacingVisibility(_viewModel.Entry.Authors.Count, _viewModel.Entry.Uploaders.Count)}" />
             <ItemsRepeater
-                Margin="0,12,0,0"
                 ItemTemplate="{StaticResource UserCardDataTemplate}"
-                ItemsSource="{x:Bind _viewModel.Entry.Authors}">
-                <ItemsRepeater.Layout>
-                    <StackLayout Orientation="Vertical" Spacing="5" />
-                </ItemsRepeater.Layout>
-            </ItemsRepeater>
+                ItemsSource="{x:Bind _viewModel.Entry.Authors}"
+                Layout="{StaticResource StackLayout}"
+                Visibility="{x:Bind controls2:C.IsNotZeroToVisibility(_viewModel.Entry.Authors.Count)}" />
             <ItemsRepeater
-                Margin="0,12,0,0"
                 ItemTemplate="{StaticResource UserCardDataTemplate}"
-                ItemsSource="{x:Bind _viewModel.Entry.Uploaders}">
-                <ItemsRepeater.Layout>
-                    <StackLayout Orientation="Vertical" Spacing="5" />
-                </ItemsRepeater.Layout>
-            </ItemsRepeater>
+                ItemsSource="{x:Bind _viewModel.Entry.Uploaders}"
+                Layout="{StaticResource StackLayout}"
+                Visibility="{x:Bind controls2:C.IsNotZeroToVisibility(_viewModel.Entry.Uploaders.Count)}" />
+            <Rectangle Height="4" Visibility="{x:Bind GetSpacingVisibility(_viewModel.Entry.Authors.Count, _viewModel.Entry.Uploaders.Count)}" />
             <!--#endregion-->
             <!--#region Tags-->
-            <ItemsRepeater Margin="0,12,0,0" ItemsSource="{x:Bind _viewModel.Entry.Tags}">
-                <ItemsRepeater.Layout>
-                    <StackLayout Orientation="Vertical" Spacing="5" />
-                </ItemsRepeater.Layout>
+            <ItemsRepeater ItemsSource="{x:Bind _viewModel.Entry.Tags}" Layout="{StaticResource StackLayout}">
                 <ItemsRepeater.ItemTemplate>
                     <DataTemplate x:DataType="system:Object">
-                        <Grid RowSpacing="5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
+                        <StackPanel>
                             <controls2:TranslatableTextBlock
-                                Grid.Row="0"
+                                Margin="10"
+                                HorizontalAlignment="Left"
                                 ButtonMargin="-2"
                                 IsCompact="True"
                                 IsHorizontal="True"
                                 PretranslatedText="{x:Bind local:WorkInfoPage.GetTagCategoryTranslatedName((system:Object))}"
                                 Text="{x:Bind local:WorkInfoPage.GetTagCategoryName((system:Object))}"
+                                TextBlockStyle="{StaticResource BodyStrongTextBlockStyle}"
                                 TextType="WorkTag"
+                                TranslatedBlockStyleWhenNotCompact="{StaticResource BodyStrongTextBlockStyle}"
                                 Visibility="{x:Bind local:WorkInfoPage.IsEmptyToVisibility((system:Object))}" />
-                            <ItemsRepeater
-                                Grid.Row="1"
-                                Margin="0,12,0,0"
-                                ItemsSource="{x:Bind}">
+                            <ItemsRepeater ItemsSource="{x:Bind}">
                                 <ItemsRepeater.Layout>
                                     <controls:WrapLayout HorizontalSpacing="8" VerticalSpacing="8" />
                                 </ItemsRepeater.Layout>
@@ -165,7 +171,7 @@
                                     </DataTemplate>
                                 </ItemsRepeater.ItemTemplate>
                             </ItemsRepeater>
-                        </Grid>
+                        </StackPanel>
                     </DataTemplate>
                 </ItemsRepeater.ItemTemplate>
             </ItemsRepeater>

@@ -27,11 +27,11 @@ public sealed partial class DownloadView : UserControl, IStructuralDisposalCompl
     {
         switch (viewModel.Entry)
         {
-            case Illustration illustration:
-                await this.CreateIllustrationPageAsync(illustration.Id);
-                break;
             case Novel novel:
                 await this.CreateNovelPageAsync(novel.Id);
+                break;
+            case not null:
+                await this.CreateIllustrationPageAsync(viewModel.Entry);
                 break;
         }
     }

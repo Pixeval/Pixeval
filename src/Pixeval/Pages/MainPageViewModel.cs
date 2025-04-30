@@ -3,8 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Helpers;
@@ -17,7 +15,6 @@ using Mako.Model;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.Capability.Feeds;
 using Pixeval.Pages.Download;
-using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.Misc;
 using Pixeval.Pages.Tags;
 using Pixeval.Util;
@@ -142,41 +139,6 @@ public partial class MainPageViewModel : UiObservableObject
         catch
         {
             // ignored
-        }
-    }
-
-    public async Task ReverseSearchAsync(Stream stream)
-    {
-        try
-        {
-            FrameworkElement.InfoGrowl(MainPageResources.ReverseSearchStartContent);
-            var result = await App.AppViewModel.MakoClient.ReverseSearchAsync(stream, App.AppViewModel.AppSettings.ReverseSearchApiKey);
-            if (result.Header.Status is 0)
-            {
-                var viewModels = await Task.WhenAll(result.Results
-                    .Where(r => r.Header.IndexId is 5 /*pixiv*/ or 6 /*pixivhistorical*/ && r.Header.Similarity >
-                        App.AppViewModel.AppSettings.ReverseSearchResultSimilarityThreshold)
-                    .Select(async r =>
-                        IllustrationItemViewModel.CreateInstance(
-                            await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(r.Data.PixivId))));
-
-                if (viewModels.Length is 0)
-                    FrameworkElement.ErrorGrowl(MainPageResources.ReverseSearchNotFoundTitle,
-                            MainPageResources.ReverseSearchNotFoundContent);
-                else
-                    FrameworkElement.CreateIllustrationPage(viewModels[0], viewModels);
-            }
-            else
-            {
-                FrameworkElement.ErrorGrowl(MainPageResources.ReverseSearchErrorTitle,
-                    result.Header.Status > 0
-                        ? MainPageResources.ReverseSearchServerSideErrorContent
-                        : MainPageResources.ReverseSearchClientSideErrorContent);
-            }
-        }
-        catch (Exception e)
-        {
-            FrameworkElement.ErrorGrowl(MiscResources.ExceptionEncountered, e.ToString());
         }
     }
 

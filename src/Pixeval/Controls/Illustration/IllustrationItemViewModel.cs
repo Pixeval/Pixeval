@@ -17,6 +17,7 @@ using Pixeval.Util.IO.Caching;
 using System.IO;
 using Pixeval.Util;
 using Pixeval.Util.IO;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Controls;
 
@@ -39,13 +40,11 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<IArtworkInfo
         CancellationToken token)
     {
         var isOriginal = App.AppViewModel.AppSettings.BrowseOriginalImage;
-        if (Entry is not IImageFrame frame)
-            return null;
-        switch (frame)
+        switch (Entry)
         {
             case ISingleImage { ImageType: ImageType.SingleImage } singleImage:
             {
-                var f = isOriginal ? frame : Entry.Thumbnails.PickMax();
+                var f = isOriginal ? singleImage : Entry.Thumbnails.PickMaxFrame();
                 var stream = await CacheHelper.GetSingleImageAsync(
                     singleImage, 
                     f,
@@ -58,10 +57,10 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<IArtworkInfo
                 var f = isOriginal
                     ? singleAnimatedImage
                     : (await singleAnimatedImage.AnimatedThumbnails.ApplyAsync(t => t
-                        .TryPreloadListAsync(singleAnimatedImage))).PickMax();
+                        .TryPreloadListAsync(singleAnimatedImage))).PickMaxFrame();
                 switch (f.PreferredAnimatedImageType)
                 {
-                    case (SingleAnimatedImageType.MultiFiles):
+                    case SingleAnimatedImageType.MultiFiles:
                     {
                         var list = await CacheHelper.GetAnimatedImageSeparatedAsync(
                             singleAnimatedImage,
@@ -107,7 +106,8 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<IArtworkInfo
 
     public bool IsUgoira => Entry.ImageType is ImageType.SingleAnimatedImage;
 
-    public string? SizeText => Entry is IImageFrame frame ? $"{frame.Width} x {frame.Height}" : null;
+    public string? SizeText =>
+        Entry is IImageFrame { Width: > 0, Height: > 0 } frame ? $"{frame.Width} x {frame.Height}" : null;
 
     public string Tooltip
     {

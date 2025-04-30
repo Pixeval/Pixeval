@@ -71,7 +71,7 @@ public static class CacheHelper
                 return stream;
             var useFileCache = App.AppViewModel.AppSettings.UseFileCache;
 
-            var client = App.AppViewModel.AppServiceProvider.GetRequiredKeyedService<IDownloadHttpClientService>(image.Platform)
+            var client = App.AppViewModel.GetRequiredPlatformService<IDownloadHttpClientService>(image.Platform)
                 .GetImageDownloadClient();
             if (await client.DownloadMemoryStreamAsync(frameUri, progress, cancellationToken: cancellationToken) is Result<Stream>.Success(var s))
             {

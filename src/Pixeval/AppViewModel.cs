@@ -2,6 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using Imouto.BooruParser;
 using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
@@ -28,7 +29,7 @@ public partial class AppViewModel(App app) : IDisposable
 
     public DownloadManager DownloadManager { get; private set; } = null!;
 
-    public MakoClient MakoClient => (MakoClient) GetMisakiService(IPlatformInfo.Pixiv);
+    public MakoClient MakoClient => (MakoClient) GetRequiredPlatformService<IGetArtworkService>(IPlatformInfo.Pixiv);
 
     public AppSettings AppSettings { get; } = AppInfo.LoadConfig() ?? new AppSettings();
 
@@ -57,11 +58,13 @@ public partial class AppViewModel(App app) : IDisposable
         extensionService.LoadAllHosts();
         return new ServiceCollection()
             .AddSingleton(_ => new FileLogger(AppKnownFolders.Logs.FullPath))
-            .AddKeyedSingleton<IMisakiService, MakoClient>(IPlatformInfo.Pixiv,
-                (provider, key) => new(App.AppViewModel.AppSettings.ToMakoClientConfiguration(),
-                    provider.GetRequiredService<FileLogger>()))
+            .AddBooruParsers()
+            .AddKeyedSingleton<IGetArtworkService, MakoClient>(IPlatformInfo.Pixiv,
+                (provider, key) => new(App.AppViewModel.AppSettings.ToMakoClientConfiguration(), provider.GetRequiredService<FileLogger>()))
             .AddKeyedSingleton<IDownloadHttpClientService, MakoClient>(IPlatformInfo.Pixiv,
-                (provider, key) => (MakoClient) provider.GetRequiredKeyedService<IMisakiService>(IPlatformInfo.Pixiv))
+                (provider, key) => (MakoClient) provider.GetRequiredKeyedService<IGetArtworkService>(IPlatformInfo.Pixiv))
+            .AddKeyedSingleton<IDownloadHttpClientService, MakoClient>(IPlatformInfo.Pixiv,
+                (provider, key) => (MakoClient) provider.GetRequiredKeyedService<IGetArtworkService>(IPlatformInfo.Pixiv))
             .AddSingleton<IllustrationDownloadTaskFactory>()
             .AddSingleton<NovelDownloadTaskFactory>()
             .AddSingleton(extensionService)
@@ -76,10 +79,17 @@ public partial class AppViewModel(App app) : IDisposable
             .BuildServiceProvider();
     }
 
-    public IMisakiService GetMisakiService(string platformKey)
+    public T? GetPlatformService<T>(string platformKey) where T : IMisakiService
     {
-        return AppServiceProvider.GetKeyedService<IMisakiService>(platformKey)
-               ?? ThrowHelper.NotSupported<IMisakiService>($"No service found for {platformKey}");
+        return AppServiceProvider.GetKeyedService<T>(platformKey)
+               ?? AppServiceProvider.GetKeyedService<T>(IPlatformInfo.All);
+    }
+
+    public T GetRequiredPlatformService<T>(string platformKey) where T : IMisakiService
+    {
+        return AppServiceProvider.GetKeyedService<T>(platformKey)
+               ?? AppServiceProvider.GetKeyedService<T>(IPlatformInfo.All)
+               ?? ThrowHelper.NotSupported<T>($"No service found for {platformKey}");
     }
 
     public void Initialize()

@@ -1,16 +1,20 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using WinUI3Utilities;
 using Misaki;
+using Pixeval.Util.UI;
+using Pixeval.Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -42,9 +46,18 @@ public static class IllustrationViewerHelper
     /// <summary>
     /// 此方法无法加载更多插画，加载单张图使用
     /// </summary>
-    public static async Task CreateIllustrationPageAsync(this FrameworkElement frameworkElement, long id)
+    public static Task CreateIllustrationPageAsync(this FrameworkElement frameworkElement, IIdentityInfo id)
+        => CreateIllustrationPageAsync(frameworkElement, id.Id, id.Platform);
+
+    /// <summary>
+    /// 此方法无法加载更多插画，加载单张图使用
+    /// </summary>
+    public static async Task CreateIllustrationPageAsync(this FrameworkElement frameworkElement, string id, string platform)
     {
-        var viewModel = IllustrationItemViewModel.CreateInstance(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id));
+        if (await id.TryGetIArtworkInfoAsync(platform) is not { } entry)
+            return;
+
+        var viewModel = IllustrationItemViewModel.CreateInstance(entry);
 
         frameworkElement.CreateIllustrationPage(viewModel, [viewModel]);
     }
@@ -90,6 +103,25 @@ public static class IllustrationViewerHelper
     {
         if (frameworkElement.FindAscendantOrSelf<TabPage>() is not { } tabPage)
             return;
-        tabPage.AddPage(new NavigationViewTag<IllustrationViewerPage>(illustration.Title, param));
+        var tag = new ViewerPageTag(param);
+        tag.SetArtwork(illustration);
+        tabPage.AddPage(tag);
+    }
+
+    public static async Task<IArtworkInfo?> TryGetIArtworkInfoAsync(this string id, string platform)
+    {
+        var getArtworkService = App.AppViewModel.GetPlatformService<IGetArtworkService>(platform);
+        if (getArtworkService is null)
+            return null;
+        try
+        {
+            return await getArtworkService.GetArtworkAsync(id);
+        }
+        catch (Exception e)
+        {
+            var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
+            logger.LogError(nameof(TryGetIArtworkInfoAsync), e);
+            return null;
+        }
     }
 }

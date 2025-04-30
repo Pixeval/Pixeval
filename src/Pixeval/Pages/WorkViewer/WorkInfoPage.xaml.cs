@@ -16,6 +16,7 @@ using Pixeval.Pages.IllustratorViewer;
 using ReverseMarkdown;
 using WinUI3Utilities;
 using System.Collections.Generic;
+using Windows.System;
 
 namespace Pixeval.Pages;
 
@@ -41,27 +42,31 @@ public sealed partial class WorkInfoPage
 
     private async void IllustratorPersonPicture_OnClicked(object sender, RoutedEventArgs e)
     {
-        if (_viewModel.Entry is IWorkEntry entry)
-            await this.CreateIllustratorPageAsync(entry.User.Id);
+        var user = sender.To<FrameworkElement>().GetTag<IUser>();
+        if (user is UserEntity entity)
+            await this.CreateIllustratorPageAsync(entity.Id);
+        else
+            await Launcher.LaunchUriAsync(user.WebsiteUri);
     }
 
     private async Task SetWorkCaptionTextAsync()
     {
         await Task.Yield();
         var caption = _viewModel.Entry.Description;
-        string? md;
         if (string.IsNullOrEmpty(caption))
-            md = WorkInfoPageResources.WorkCaptionEmpty;
-        else
         {
-            var markdownConverter = new Converter(new Config
-            {
-                UnknownTags = Config.UnknownTagsOption.PassThrough,
-                GithubFlavored = true
-            });
-            md = markdownConverter.Convert(caption);
+            // md = WorkInfoPageResources.WorkCaptionEmpty;
+            WorkCaptionMarkdownTextBlock.Visibility = Visibility.Collapsed;
+            return;
         }
+        var markdownConverter = new Converter(new Config
+        {
+            UnknownTags = Config.UnknownTagsOption.PassThrough,
+            GithubFlavored = true
+        });
+        var md = markdownConverter.Convert(caption);
         WorkCaptionMarkdownTextBlock.Text = md.ReplaceLineEndings(Environment.NewLine + Environment.NewLine);
+        WorkCaptionMarkdownTextBlock.Visibility = Visibility.Visible;
     }
 
     private void MenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
@@ -93,6 +98,9 @@ public sealed partial class WorkInfoPage
         return grouping.Key == ITagCategory.Empty ? Visibility.Collapsed : Visibility.Visible;
     }
 
-    public static string PickClosestUri(IReadOnlyCollection<IImageFrame> frames, int width, int height)
-        => frames.PickClosest(width, height).ImageUri.OriginalString;
+    public static string? PickClosestUri(IReadOnlyCollection<IImageFrame> frames, int width, int height)
+        => frames.PickClosest(width, height)?.ImageUri.OriginalString;
+
+    private Visibility GetSpacingVisibility(int x, int y)
+        => x > 0 || y > 0 ? Visibility.Visible : Visibility.Collapsed;
 }

@@ -156,23 +156,8 @@ public class Parser
             }
             case IQueryToken.At:
             {
-                switch (Peek)
-                {
-                    case IQueryToken.At:
-                    {
-                        _ = Eat<IQueryToken.At>();
-                        EatString(StringType.Author);
-                        break;
-                    }
-                    case IQueryToken.Numeric:
-                    {
-                        _ = Eat<IQueryToken.Numeric>();
-                        EatNumeric();
-                        break;
-                    }
-                    default:
-                        return ThrowUtils.MacroParse<bool>(MacroParserResources.ExpectedTokenAfterAtMarkFormatted.Format(Peek));
-                }
+                _ = Eat<IQueryToken.At>();
+                EatString(StringType.Author);
                 return true;
             }
             case IQueryToken.Plus:

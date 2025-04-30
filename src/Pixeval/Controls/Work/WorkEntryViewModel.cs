@@ -52,5 +52,5 @@ public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>
             _ => BadgeMode.None
         };
 
-    protected override string ThumbnailUrl => Entry.Thumbnails.PickClosestHeight(300).ImageUri.OriginalString;
+    protected override string ThumbnailUrl => Entry.Thumbnails.PickClosestHeightFrame(300).ImageUri.OriginalString;
 }

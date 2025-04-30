@@ -45,6 +45,10 @@ public static class C
 
     public static bool IsZeroD(double value) => value < double.Epsilon;
 
+    public static Visibility IsPositiveToVisibility(int value) => value > 0 ? Visibility.Visible : Visibility.Collapsed;
+
+    public static Visibility IsDefaultTimeOffsetToVisibility(DateTimeOffset value) => value == default ? Visibility.Collapsed : Visibility.Visible;
+
     public static bool IsNotZero(int value) => value is not 0;
 
     public static bool IsNotZeroL(long value) => value is not 0;
