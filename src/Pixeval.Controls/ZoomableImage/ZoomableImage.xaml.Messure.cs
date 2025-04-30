@@ -26,7 +26,7 @@ public partial class ZoomableImage
             if (field == value)
                 return;
             field = value;
-            var actualWidth = CanvasControl.ActualWidth;
+            var actualWidth = CanvasSize.Width;
             var bigger = actualWidth < ImageActualWidth;
             if (ImagePositionLeft < 0 && ImagePositionRight < actualWidth)
                 if (bigger)
@@ -57,7 +57,7 @@ public partial class ZoomableImage
             if (field == value)
                 return;
             field = value;
-            var actualHeight = CanvasControl.ActualHeight;
+            var actualHeight = CanvasSize.Height;
             var bigger = actualHeight < ImageActualHeight;
             if (ImagePositionTop < 0 && ImagePositionBottom < actualHeight)
                 if (bigger)
@@ -147,6 +147,11 @@ public partial class ZoomableImage
         set
         {
             field = value;
+            OnPropertyChanged(nameof(ImageWidth));
+            OnPropertyChanged(nameof(ImagePositionLeft));
+            OnPropertyChanged(nameof(ImagePositionTop));
+            OnPropertyChanged(nameof(ImagePositionRight));
+            OnPropertyChanged(nameof(ImagePositionBottom));
         }
     }
 
@@ -159,6 +164,11 @@ public partial class ZoomableImage
         set
         {
             field = value;
+            OnPropertyChanged(nameof(ImageHeight));
+            OnPropertyChanged(nameof(ImagePositionLeft));
+            OnPropertyChanged(nameof(ImagePositionTop));
+            OnPropertyChanged(nameof(ImagePositionRight));
+            OnPropertyChanged(nameof(ImagePositionBottom));
         }
     }
 
@@ -178,15 +188,15 @@ public partial class ZoomableImage
                 break;
             case ZoomableImagePosition.LeftCenter:
                 ImagePositionLeft = 0;
-                ImageCenterY = CanvasControl.ActualHeight / 2;
+                ImageCenterY = CanvasSize.Height / 2;
                 break;
             case ZoomableImagePosition.TopCenter:
-                ImageCenterX = CanvasControl.ActualWidth / 2;
+                ImageCenterX = CanvasSize.Width / 2;
                 ImagePositionTop = 0;
                 break;
             case ZoomableImagePosition.AbsoluteCenter:
-                ImageCenterX = CanvasControl.ActualWidth / 2;
-                ImageCenterY = CanvasControl.ActualHeight / 2;
+                ImageCenterX = CanvasSize.Width / 2;
+                ImageCenterY = CanvasSize.Height / 2;
                 break;
             case ZoomableImagePosition.Default:
                 break;

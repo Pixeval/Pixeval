@@ -48,6 +48,8 @@ public partial class ZoomableImage
             if (IsDisposed || field == value)
                 return;
             field = value;
+            CanvasControl.Paused = false;
+            _lastPointerActivityTime = DateTime.Now;
             if (ImageRotationDegree % 90 is not 0)
             {
                 ThrowHelper.Argument(ImageRotationDegree, $"{nameof(ImageRotationDegree)} must be a multiple of 90");
@@ -66,19 +68,31 @@ public partial class ZoomableImage
                     return;
             }
 
-            // 更新图片大小
-            OnPropertyChanged(nameof(ImageWidth));
-            OnPropertyChanged(nameof(ImageHeight));
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                // 更新图片大小
+                OnPropertyChanged(nameof(ImageWidth));
+                OnPropertyChanged(nameof(ImageHeight));
 
-            // 更新图片位置
-            OnPropertyChanged(nameof(ImagePositionLeft));
-            OnPropertyChanged(nameof(ImagePositionTop));
-            OnPropertyChanged(nameof(ImagePositionRight));
-            OnPropertyChanged(nameof(ImagePositionBottom));
+                // 更新图片位置
+                OnPropertyChanged(nameof(ImagePositionLeft));
+                OnPropertyChanged(nameof(ImagePositionTop));
+                OnPropertyChanged(nameof(ImagePositionRight));
+                OnPropertyChanged(nameof(ImagePositionBottom));
+                OnPropertyChanged();
+            });
         }
     } = 0;
 
-    public bool ImageIsMirrored { get; set; } = false;
+    public bool ImageIsMirrored {
+        get;
+        set
+        {
+            CanvasControl.Paused = false;
+            _lastPointerActivityTime = DateTime.Now;
+            field = value;
+        }
+    }
 
     public float ImageScale
     {
@@ -91,8 +105,7 @@ public partial class ZoomableImage
             _lastPointerActivityTime = DateTime.Now;
             OnImageScaleChangedInternal(field.To<float>());
             field = value;
-            DispatcherQueue.TryEnqueue
-                (() =>
+            DispatcherQueue.TryEnqueue(() =>
             {
                 OnPropertyChanged();
             });
@@ -121,7 +134,11 @@ public partial class ZoomableImage
                     ThrowHelper.ArgumentOutOfRange(value.To<ZoomableImageMode>());
                     break;
             }
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                OnPropertyChanged();
+            });
         } }
-    public ZoomableImageMode InitMode { get; set; }
-    public ZoomableImagePosition InitPosition { get; set; }
+    public ZoomableImageMode InitMode { get; set; } = ZoomableImageMode.Fit;
+    public ZoomableImagePosition InitPosition { get; set; } = ZoomableImagePosition.AbsoluteCenter;
 }

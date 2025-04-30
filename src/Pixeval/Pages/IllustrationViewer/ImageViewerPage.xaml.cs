@@ -21,9 +21,17 @@ public sealed partial class ImageViewerPage
 
     private void OnImageViewerPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(ZoomableImage.ImageScale))
+        switch (e.PropertyName)
         {
-            _viewModel.Scale = ImageViewer.ImageScale;
+            case nameof(ZoomableImage.ImageScale):
+                _viewModel.Scale = ImageViewer.ImageScale;
+                break;
+            case nameof(ZoomableImage.Mode):
+                _viewModel.ShowMode = ImageViewer.Mode;
+                break;
+            case nameof(ZoomableImage.ImageRotationDegree):
+                _viewModel.RotationDegree = ImageViewer.ImageRotationDegree;
+                break;
         }
     }
 

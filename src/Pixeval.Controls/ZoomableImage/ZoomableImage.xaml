@@ -17,7 +17,6 @@
             x:Name="CanvasControl"
             Draw="CanvasControlOnDraw"
             SizeChanged="CanvasOnSizeChanged" />
+        <!--  由于需要随时重新加载新图片，故创建资源的逻辑放在CanvasControlOnDraw的else分支中  -->
     </Border>
-
-    <!--  由于需要随时重新加载新图片，故创建资源的逻辑放在CanvasControlOnDraw的else分支中  -->
 </UserControl>
