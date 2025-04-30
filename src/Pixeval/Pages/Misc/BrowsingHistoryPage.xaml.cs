@@ -9,6 +9,7 @@ using Pixeval.Controls;
 using Mako.Global.Enum;
 using Mako.Model;
 using Microsoft.UI.Xaml;
+using Misaki;
 using Pixeval.Database.Managers;
 using Pixeval.Utilities;
 
@@ -35,12 +36,13 @@ public sealed partial class BrowsingHistoryPage : IScrollViewHost
         var type = SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>();
         var source = manager.Enumerate()
             .SelectNotNull(t => t.Entry)
+            .Where(t => t.ImageType is ImageType.Other ^ type is SimpleWorkType.IllustAndManga)
             .ToAsyncEnumerable();
 
         WorkContainer.WorkView.ResetEngine(type switch
         {
-            SimpleWorkType.IllustAndManga => App.AppViewModel.MakoClient.Computed(source.Cast<Illustration>()),
-            _ => App.AppViewModel.MakoClient.Computed(source.Cast<Novel>()),
+            SimpleWorkType.IllustAndManga => App.AppViewModel.MakoClient.Computed(source),
+            _ => App.AppViewModel.MakoClient.Computed(source.OfType<Novel>()),
         });
     }
 
