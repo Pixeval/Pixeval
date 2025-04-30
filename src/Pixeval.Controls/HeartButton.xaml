@@ -9,9 +9,9 @@
     xmlns:winUi="using:FluentIcons.WinUI"
     Width="26"
     Height="26"
-    Tapped="HeartButton_OnTapped"
     HorizontalAlignment="Center"
     VerticalAlignment="Center"
+    Tapped="HeartButton_OnTapped"
     mc:Ignorable="d">
     <Grid>
         <interactivity:Interaction.Behaviors>

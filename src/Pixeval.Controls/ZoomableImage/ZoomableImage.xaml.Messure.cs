@@ -147,11 +147,6 @@ public partial class ZoomableImage
         set
         {
             field = value;
-            OnPropertyChanged(nameof(ImageWidth));
-            OnPropertyChanged(nameof(ImagePositionLeft));
-            OnPropertyChanged(nameof(ImagePositionTop));
-            OnPropertyChanged(nameof(ImagePositionRight));
-            OnPropertyChanged(nameof(ImagePositionBottom));
         }
     }
 
@@ -164,11 +159,6 @@ public partial class ZoomableImage
         set
         {
             field = value;
-            OnPropertyChanged(nameof(ImageHeight));
-            OnPropertyChanged(nameof(ImagePositionLeft));
-            OnPropertyChanged(nameof(ImagePositionTop));
-            OnPropertyChanged(nameof(ImagePositionRight));
-            OnPropertyChanged(nameof(ImagePositionBottom));
         }
     }
 
@@ -212,6 +202,7 @@ public partial class ZoomableImage
         var currentPoint = e.GetCurrentPoint(canvas);
         if (currentPoint.Properties.IsLeftButtonPressed)
         {
+            CanvasControl.Paused = false;
             var now = DateTime.Now;
             if ((now - _lastTime).TotalMilliseconds < 50)
             {
@@ -219,6 +210,7 @@ public partial class ZoomableImage
                 ImageCenterY += currentPoint.Position.Y - _lastPoint.Y;
             }
             _lastTime = now;
+            _lastPointerActivityTime = now;
         }
 
         _lastPoint = currentPoint.Position;

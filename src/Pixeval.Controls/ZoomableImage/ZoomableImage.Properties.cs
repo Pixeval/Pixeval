@@ -80,14 +80,22 @@ public partial class ZoomableImage
 
     public bool ImageIsMirrored { get; set; } = false;
 
-    public float ImageScale {
+    public float ImageScale
+    {
         get;
         set
         {
             if (IsDisposed)
                 return;
+            CanvasControl.Paused = false;
+            _lastPointerActivityTime = DateTime.Now;
             OnImageScaleChangedInternal(field.To<float>());
             field = value;
+            DispatcherQueue.TryEnqueue
+                (() =>
+            {
+                OnPropertyChanged();
+            });
         }
     }  = 1f;
 
