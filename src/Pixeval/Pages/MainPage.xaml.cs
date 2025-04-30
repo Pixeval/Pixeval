@@ -36,6 +36,8 @@ using Windows.UI;
 using Windows.UI.Core;
 using Misaki;
 using WinUI3Utilities;
+using Pixeval.Controls;
+using System.Collections.Generic;
 
 namespace Pixeval.Pages;
 
@@ -300,7 +302,7 @@ public sealed partial class MainPage
                 if (string.IsNullOrWhiteSpace(App.AppViewModel.AppSettings.ReverseSearchApiKey))
                     await ShowReverseSearchApiKeyNotPresentDialog();
                 else
-                    await _viewModel.ReverseSearchAsync(stream);
+                    await ReverseSearchAsync(stream);
             }
         }
     }
@@ -312,7 +314,7 @@ public sealed partial class MainPage
             if (await this.OpenFileOpenPickerAsync() is { } file)
             {
                 await using var stream = await file.OpenStreamForReadAsync();
-                await _viewModel.ReverseSearchAsync(stream);
+                await ReverseSearchAsync(stream);
             }
         }
         else
@@ -426,7 +428,7 @@ public sealed partial class MainPage
         if (App.AppViewModel.AppSettings.ReverseSearchApiKey is { Length: > 0 })
         {
             if (e.DataView.Contains(StandardDataFormats.StorageItems) && await e.DataView.GetStorageItemsAsync() is [StorageFile item])
-                await _viewModel.ReverseSearchAsync(await item.OpenStreamForReadAsync());
+                await ReverseSearchAsync(await item.OpenStreamForReadAsync());
         }
         else
         {
@@ -449,4 +451,52 @@ public sealed partial class MainPage
     }
 
     private static readonly Color _Color = Application.Current.GetResource<SolidColorBrush>("TextFillColorPrimaryBrush").Color;
+
+    private async Task ReverseSearchAsync(Stream stream)
+    {
+        try
+        {
+            this.InfoGrowl(MainPageResources.ReverseSearchStartContent);
+            var result = await App.AppViewModel.MakoClient.ReverseSearchAsync(stream, App.AppViewModel.AppSettings.ReverseSearchApiKey);
+            var models = new List<IArtworkInfo>();
+            foreach (var r in result)
+            {
+                if (r.Header.Similarity < App.AppViewModel.AppSettings.ReverseSearchResultSimilarityThreshold)
+                    continue;
+                if (r.Data.PixivId is { } pixivId)
+                    models.AddIfNotNull(await pixivId.ToString().TryGetIArtworkInfoAsync(IPlatformInfo.Pixiv));
+
+                if (r.Data.DanbooruId is { } danbooruId)
+                    models.AddIfNotNull(await danbooruId.ToString().TryGetIArtworkInfoAsync(IPlatformInfo.Danbooru));
+
+                if (r.Data.YandereId is { } yandereId)
+                    models.AddIfNotNull(await yandereId.ToString().TryGetIArtworkInfoAsync(IPlatformInfo.Yandere));
+
+                if (r.Data.GelbooruId is { } gelbooruId)
+                    models.AddIfNotNull(await gelbooruId.ToString().TryGetIArtworkInfoAsync(IPlatformInfo.Gelbooru));
+
+                if (r.Data.SankakuId is { } sankakuId)
+                    models.AddIfNotNull(await sankakuId.ToString().TryGetIArtworkInfoAsync(IPlatformInfo.Sankaku));
+            }
+
+            if (models.Count is 0)
+                this.ErrorGrowl(MainPageResources.ReverseSearchNotFoundTitle,
+                    MainPageResources.ReverseSearchNotFoundContent);
+            else
+            {
+                var viewModels = models.Select(IllustrationItemViewModel.CreateInstance).ToArray();
+                MainPageRootTab.CreateIllustrationPage(viewModels[0], viewModels);
+            }
+            /*
+                this.ErrorGrowl(MainPageResources.ReverseSearchErrorTitle,
+                    result.Header.Status > 0
+                        ? MainPageResources.ReverseSearchServerSideErrorContent
+                        : MainPageResources.ReverseSearchClientSideErrorContent);
+            */
+        }
+        catch (Exception e)
+        {
+            this.ErrorGrowl(MiscResources.ExceptionEncountered, e.ToString());
+        }
+    }
 }

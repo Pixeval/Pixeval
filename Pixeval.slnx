@@ -4,39 +4,45 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
+  <Folder Name="/CoreApi/">
+    <Project Path="src/Imouto/Imouto.BooruParser/Imouto.BooruParser.csproj" />
+    <Project Path="src/Mako/Mako.SourceGen/Mako.SourceGen.csproj" />
+    <Project Path="src/Mako/Mako/Mako.csproj" />
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path=".gitattributes" />
-    <File Path=".gitignore" />
-    <File Path="LICENSE" />
-    <File Path="nuget.config" />
-    <File Path="Settings.XamlStyler" />
-  </Folder>
-  <Folder Name="/Solution Items/GitHub/">
     <File Path=".github/CONTRIBUTING.md" />
     <File Path=".github/README.en.md" />
     <File Path=".github/README.fr.md" />
     <File Path=".github/README.md" />
     <File Path=".github/README.ru.md" />
     <File Path=".github/SECURITY.md" />
-    <File Path=".github/translation.md" />
-    <File Path=".github/translation.ps1" />
+    <File Path=".github/StructuralDisposal.md" />
+    <File Path=".gitignore" />
+    <File Path="crowdin.yml" />
+    <File Path="global.json" />
+    <File Path="LICENSE" />
+    <File Path="nuget.config" />
+    <File Path="Pixeval.sln.DotSettings" />
+    <File Path="Pixeval_PublicKey.cer" />
+    <File Path="Settings.XamlStyler" />
   </Folder>
+  <Folder Name="/Solution Items/GitHub/" />
   <Folder Name="/Solution Items/GitHub/ISSUE_TEMPLATE/">
     <File Path=".github/ISSUE_TEMPLATE/bug_report.yaml" />
     <File Path=".github/ISSUE_TEMPLATE/feature_request.yaml" />
   </Folder>
   <Folder Name="/Solution Items/GitHub/workflows/">
     <File Path=".github/workflows/build.yml" />
-    <File Path=".github/workflows/check-xaml-formatting.yml" />
     <File Path=".github/workflows/release.yml" />
   </Folder>
-  <Project Path="src/Pixeval.Controls/Pixeval.Controls.csproj">
+  <Project Path="src/Pixeval.Caching/Pixeval.Caching.csproj">
     <Platform Solution="*|arm64" Project="arm64" />
     <Platform Solution="*|x64" Project="x64" />
     <Platform Solution="*|x86" Project="x86" />
   </Project>
-  <Project Path="src/Pixeval.CoreApi/Pixeval.CoreApi.csproj">
+  <Project Path="src/Pixeval.Controls/Pixeval.Controls.csproj">
     <Platform Solution="*|arm64" Project="arm64" />
     <Platform Solution="*|x64" Project="x64" />
     <Platform Solution="*|x86" Project="x86" />
@@ -53,4 +59,8 @@
     <Platform Solution="*|x86" Project="x86" />
     <Deploy />
   </Project>
+  <Properties Name="ExtensibilityGlobals" Scope="PostLoad">
+    <Property Name="RESX_ConfirmAddLanguageFile" Value="True" />
+    <Property Name="RESX_NeutralResourcesLanguage" Value="zh-CN" />
+  </Properties>
 </Solution>
