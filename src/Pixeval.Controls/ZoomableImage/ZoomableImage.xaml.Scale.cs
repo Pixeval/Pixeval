@@ -41,7 +41,9 @@ public partial class ZoomableImage
     /// property is set to <see cref="Stretch.UniformToFill"/> or <see cref="Stretch.Uniform"/>
     /// </summary>
     /// <remarks>当图片按原比例显示，并占满画布时，图片的缩放比例</remarks>
-    private double ScaledFactor => GetScaledFactor(new Size(CanvasControl.ActualWidth, CanvasControl.ActualHeight));
+    private double ScaledFactor => GetScaledFactor(CanvasSize);
+
+    private Size CanvasSize { get; set; }
 
     /// <summary>
     /// Get the scale factor of the original image when it is contained inside a <see cref="Image"/> control, and the <see cref="Image.Stretch"/>
@@ -60,12 +62,17 @@ public partial class ZoomableImage
             _ => canvasWidth / ImageWidth
         };
     }
-
+    /// <summary>
+    /// 记录上次鼠标事件事件，用于无操作时自动暂停
+    /// </summary>
+    private DateTime _lastPointerActivityTime = DateTime.Now;
     private void CanvasOnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
     {
+        _lastPointerActivityTime = DateTime.Now;
+        CanvasControl.Paused = false;
         var point = e.GetCurrentPoint(CanvasControl);
         var originalScale = ImageScale;
-        Zoom(point.Properties.MouseWheelDelta);
+        Zoom(point.Properties.MouseWheelDelta * 5);
         var ratio = ImageScale / originalScale;
         var left = point.Position.X - ImageCenterX;
         var top = point.Position.Y - ImageCenterY;
@@ -82,35 +89,7 @@ public partial class ZoomableImage
 #pragma warning disable CA2245
             Mode = Mode;
 #pragma warning restore CA2245
-    }
-
-    partial void OnImageScalePropertyChanged(DependencyPropertyChangedEventArgs e)
-    {
-        if (IsDisposed)
-            return;
-        OnImageScaleChangedInternal(e.OldValue.To<float>());
-    }
-
-    partial void OnModePropertyChanged(DependencyPropertyChangedEventArgs e)
-    {
-        if (IsDisposed)
-            return;
-        switch (Mode)
-        {
-            case ZoomableImageMode.Original:
-                ImageScale = 1;
-                SetPosition(InitPosition);
-                break;
-            case ZoomableImageMode.Fit:
-                ImageScale = (float) ScaledFactor;
-                SetPosition(InitPosition);
-                break;
-            case ZoomableImageMode.NotFit:
-                break;
-            default:
-                ThrowHelper.ArgumentOutOfRange(e.NewValue.To<ZoomableImageMode>());
-                break;
-        }
+        CanvasSize = e.NewSize;
     }
 
     private void OnImageScaleChangedInternal(float oldScale)

@@ -2,6 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using Microsoft.UI.Xaml.Navigation;
+using Pixeval.Controls;
 
 namespace Pixeval.Pages.IllustrationViewer;
 
@@ -15,6 +16,23 @@ public sealed partial class ImageViewerPage
     {
         if (parameter is ImageViewerPageViewModel viewModel)
             _viewModel = viewModel;
+        ImageViewer.PropertyChanged += OnImageViewerPropertyChanged;
+    }
+
+    private void OnImageViewerPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(ZoomableImage.ImageScale):
+                _viewModel.Scale = ImageViewer.ImageScale;
+                break;
+            case nameof(ZoomableImage.Mode):
+                _viewModel.ShowMode = ImageViewer.Mode;
+                break;
+            case nameof(ZoomableImage.ImageRotationDegree):
+                _viewModel.RotationDegree = ImageViewer.ImageRotationDegree;
+                break;
+        }
     }
 
     public override void CompleteDisposal()
