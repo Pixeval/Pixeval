@@ -136,7 +136,7 @@ public static class MakoHelper
         if (result.IsSuccessStatusCode)
         {
             await RefreshBookmarkTagsAsync();
-            return !id.IsFavorite;
+            id.IsFavorite = !id.IsFavorite;
         }
         return id.IsFavorite;
     }
@@ -149,7 +149,7 @@ public static class MakoHelper
         if (result.IsSuccessStatusCode)
         {
             await RefreshBookmarkTagsAsync();
-            return !id.IsFavorite;
+            id.IsFavorite = !id.IsFavorite;
         }
         return id.IsFavorite;
     }
