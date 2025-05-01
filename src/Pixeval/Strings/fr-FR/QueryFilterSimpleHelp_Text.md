@@ -6,7 +6,7 @@ La version simplifiée de manuel donne quelques exemples de recherche.
 | ----------------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | abc                                       | Recherche sur les titres avec mot clé 'abc'                                                          |
 | #abc                                      | Recherche sur le tag 'abc'                                                                           |
-| @nom d'auteur ou ID          | Recherche des artworks d'un auteur                                                                   |
+| @nom d'auteur                | Recherche des artworks d'un auteur                                                                   |
 | -r18g                                     | Exclure les artworks r18g                                                                            |
 |                                           | Inclure les animations GIF (contraints: r18, r18g, gif, ai)       |
 | i:10-                     | Afficher les illustrations à partir de la dixième de page actuelle                                   |

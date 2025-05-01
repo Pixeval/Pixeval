@@ -6,7 +6,7 @@ Simplified tutorial gives several examples for most common query cases.
 | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
 | abc                                                    | Any title that includes 'abc'                                                                      |
 | #abc                                                   | Any tag that includes 'abc'                                                                        |
-| @author name or ID                        | Lookup artworks of an author                                                                       |
+| @author name                              | Lookup artworks of an author                                                                       |
 | -r18g                                                  | Exclude r18g artworks                                                                              |
 | +gif                                                   | Include GIF animations (all constraints: r18, r18g, gif, ai)    |
 | i:10-                                  | Lookup from the tenth illustration of the current page                                             |

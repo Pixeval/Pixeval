@@ -183,6 +183,12 @@
   <data name="ReverseSearchClientSideErrorContent" xml:space="preserve">
     <value>Erreur de format de l'image, l'image trop large ou requêtes trop fréquentes, veuillez réessayer</value>
   </data>
+    <data name="ReverseSearchStartContent" xml:space="preserve">
+    <value>正在进行以图搜图</value>
+  </data>
+  <data name="ReverseSearchDropHintTextBlock.Text" xml:space="preserve">
+    <value>在此释放进行以图搜图</value>
+  </data>
   <data name="ReverseSearchErrorTitle" xml:space="preserve">
     <value>Erreur dans la recherche inversée</value>
   </data>
