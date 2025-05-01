@@ -11,5 +11,5 @@ Pixeval扩展拥有优先级，可以在扩展管理页拖动排序，越靠上�
 
 ### 卸载
 
-虽然扩展提供了卸载的功能，但由于[.NET的限制](https://learn.microsoft.com/dotnet/core/deploying/native-aot/libraries)，
+虽然扩展提供了卸载的功能，但由于[.NET的限制](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/libraries)，
 .NET的扩展在程序运行中不能完全卸载。所以需要关闭Pixeval后，由用户手动前往扩展文件夹删除指定扩展。
