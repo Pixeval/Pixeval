@@ -2,7 +2,6 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using CommunityToolkit.WinUI;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls;
@@ -17,18 +16,19 @@ public partial class ZoomableImage
             if (IsDisposed || field == value)
                 return;
             IsPlaying = true;
-            _timerRunning = false;
             field = value;
             // 使CanvasControl具有大小，否则不会触发CanvasControlOnDraw
             OriginalImageWidth = OriginalImageHeight = 10;
             _needInitSource = true;
         }
     }
-    public bool IsPlaying {
+
+    public bool IsPlaying
+    {
         get;
         set
         {
-            if(!value)//开始暂停
+            if (!value) //开始暂停
             {
                 _pauseStart = DateTime.Now;
             }
@@ -36,10 +36,12 @@ public partial class ZoomableImage
             {
                 _gifStartTime += DateTime.Now - _pauseStart;
             }
+
             field = value;
 
-        } 
+        }
     } = true;
+
     public int ImageRotationDegree
     {
         get;
@@ -84,7 +86,8 @@ public partial class ZoomableImage
         }
     } = 0;
 
-    public bool ImageIsMirrored {
+    public bool ImageIsMirrored
+    {
         get;
         set
         {
@@ -110,11 +113,13 @@ public partial class ZoomableImage
                 OnPropertyChanged();
             });
         }
-    }  = 1f;
+    } = 1f;
 
-    public ZoomableImageMode Mode { 
+    public ZoomableImageMode Mode
+    {
         get;
-        set {
+        set
+        {
             if (IsDisposed || field == value)
                 return;
             field = value;
@@ -134,11 +139,15 @@ public partial class ZoomableImage
                     ThrowHelper.ArgumentOutOfRange(value.To<ZoomableImageMode>());
                     break;
             }
+
             DispatcherQueue.TryEnqueue(() =>
             {
                 OnPropertyChanged();
             });
-        } }
+        }
+    }
+
     public ZoomableImageMode InitMode { get; set; } = ZoomableImageMode.Fit;
+
     public ZoomableImagePosition InitPosition { get; set; } = ZoomableImagePosition.AbsoluteCenter;
 }

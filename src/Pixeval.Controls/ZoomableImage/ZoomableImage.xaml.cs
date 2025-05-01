@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -14,7 +13,6 @@ using Pixeval.Utilities;
 namespace Pixeval.Controls;
 
 /// <summary>
-/// 主体：<see cref="ZoomableImageMain"/>，由此控制渲染速度<br/>
 /// 渲染：<see cref="CanvasControlOnDraw"/>，图片渲染逻辑<br/>
 /// 对外API：<see cref="Zoom(float)"/>、<see cref="SetPosition"/>
 /// </summary>
