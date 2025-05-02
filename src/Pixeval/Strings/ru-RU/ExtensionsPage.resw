@@ -148,9 +148,10 @@
     <value>Справочная документация</value>
   </data>
   <data name="ExtensionOutdated" xml:space="preserve">
-    <value>DLL加载成功，但扩展版本已过时，请从获取扩展处下载最新的版本</value>
+    <value>DLL успешно загружена, но версия расширения устарела. Пожалуйста, проверьте наличие новой версии и скачайте её.</value>
   </data>
   <data name="SomeExtensionsOutdatedFormatted" xml:space="preserve">
-    <value>有 {0} 个扩展版本已过时，请从获取扩展处下载最新的版本  </value>
+    <value>Устарело {0} расширений. Пожалуйста, обновите их до последней версии.
+</value>
   </data>
 </root>
