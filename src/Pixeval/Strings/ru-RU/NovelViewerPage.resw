@@ -118,12 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ApplyingTransformerExtensions" xml:space="preserve">
-    <value>正在应用文字翻译扩展</value>
+    <value>Применяется расширение перевода текста...</value>
   </data>
   <data name="TransformerExtensionFailed" xml:space="preserve">
-    <value>文字翻译扩展应用失败</value>
+    <value>Не удалось применить расширение перевода текста</value>
   </data>
   <data name="TransformerExtensionFinishedSuccessfully" xml:space="preserve">
-    <value>文字翻译扩展应用成功</value>
+    <value>Расширение перевода текста применено успешно</value>
   </data>
 </root>
