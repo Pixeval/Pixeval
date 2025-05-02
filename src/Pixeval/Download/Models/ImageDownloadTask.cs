@@ -58,16 +58,16 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
     private string DownloadTempDestination => Destination + IoHelper.PixevalTempExtension;
 
     [ObservableProperty]
-    public partial DownloadState CurrentState { get; set; }
+    public partial DownloadState CurrentState { get; protected set; }
 
     [ObservableProperty]
-    public partial double ProgressPercentage { get; set; }
+    public partial double ProgressPercentage { get; protected set; }
 
     [ObservableProperty]
-    public partial Exception? ErrorCause { get; set; }
+    public partial Exception? ErrorCause { get; private set; }
 
     [ObservableProperty]
-    public partial bool IsProcessing { get; set; }
+    public partial bool IsProcessing { get; private set; }
 
     protected CancellationTokenSource CancellationTokenSource { get; private set; } = new();
 
@@ -196,10 +196,8 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
 
         return;
 
-        static FileStream OpenCreate(string path)
-        {
-            Debug.WriteLine(path);
-            return File.Open(path, new FileStreamOptions
+        static FileStream OpenCreate(string path) =>
+            File.Open(path, new FileStreamOptions
             {
                 BufferSize = 1 << 20,
                 Mode = FileMode.OpenOrCreate,
@@ -207,7 +205,6 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
                 Share = FileShare.Read,
                 Options = FileOptions.Asynchronous | FileOptions.SequentialScan
             });
-        }
     }
 
     public void TryReset()

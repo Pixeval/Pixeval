@@ -24,6 +24,8 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup
 
     private string TempFolderPath { get; set; } = null!;
 
+    private string CsvPath => Path.Combine(TempFolderPath, "intervals in milliseconds.csv");
+
     private IReadOnlyList<int> MsDelays { get; set; } = null!;
 
     private void SetTasksSet()
@@ -71,7 +73,7 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup
     {
         if (DestinationUgoiraFormat is UgoiraDownloadFormat.Original)
         {
-            await File.WriteAllTextAsync(Path.Combine(TempFolderPath, "intervals in milliseconds.csv"),
+            await File.WriteAllTextAsync(CsvPath,
                 string.Join(',', MsDelays.Select(t => t.ToString())), token);
             return;
         }
@@ -86,14 +88,20 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup
 
     private UgoiraDownloadFormat DestinationUgoiraFormat { get; }
 
-    public override string OpenLocalDestination => TokenizedDestination;
+    public override string OpenLocalDestination => DestinationUgoiraFormat is UgoiraDownloadFormat.Original ? TempFolderPath : TokenizedDestination;
 
     public override void Delete()
     {
         foreach (var task in TasksSet)
             task.Delete();
-        IoHelper.DeleteEmptyFolder(TempFolderPath);
-        if (File.Exists(TokenizedDestination))
+        if (DestinationUgoiraFormat is UgoiraDownloadFormat.Original)
+        {
+            if (File.Exists(CsvPath))
+                File.Delete(CsvPath);
+        }
+        else if (File.Exists(TokenizedDestination))
             File.Delete(TokenizedDestination);
+
+        IoHelper.DeleteEmptyFolder(TempFolderPath);
     }
 }
