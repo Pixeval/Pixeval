@@ -151,10 +151,10 @@
     <value>В оконный режим</value>
   </data>
   <data name="OpenBottomList" xml:space="preserve">
-    <value>打开底部图片列表</value>
+    <value>Показать карусель изображений</value>
   </data>
   <data name="CloseBottomList" xml:space="preserve">
-    <value>关闭底部图片列表</value>
+    <value>Скрыть карусель изображений</value>
   </data>
   <data name="AppThemeLight" xml:space="preserve">
     <value>Светлая тема</value>
