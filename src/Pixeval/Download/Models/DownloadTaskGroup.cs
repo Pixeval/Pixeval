@@ -194,13 +194,13 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Ob
                         isRunning = true;
                         break;
                     case DownloadState.Paused:
-                        if (isCancelled)
-                            ThrowHelper.ArgumentOutOfRange(CurrentState);
+                        // if (isCancelled)
+                        //     ThrowHelper.ArgumentOutOfRange(task.CurrentState);
                         isPaused = true;
                         break;
                     case DownloadState.Cancelled:
-                        if (isPaused)
-                            ThrowHelper.ArgumentOutOfRange(CurrentState);
+                        // if (isPaused)
+                        //     ThrowHelper.ArgumentOutOfRange(task.CurrentState);
                         isCancelled = true;
                         break;
                     case DownloadState.Error:
