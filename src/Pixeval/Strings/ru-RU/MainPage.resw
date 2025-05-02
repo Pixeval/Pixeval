@@ -184,10 +184,10 @@
     <value>Ошибка формата изображения или изображение слишком большое, или слишком частые запросы. Пожалуйста, проверьте и попробуйте позже</value>
   </data>
     <data name="ReverseSearchStartContent" xml:space="preserve">
-    <value>正在进行以图搜图</value>
+    <value>Идет поиск по изображению...</value>
   </data>
   <data name="ReverseSearchDropHintTextBlock.Text" xml:space="preserve">
-    <value>在此释放进行以图搜图</value>
+    <value>Перетащите сюда для поиска по изображению</value>
   </data>
   <data name="ReverseSearchErrorTitle" xml:space="preserve">
     <value>Ошибка обратного поиска</value>
@@ -238,21 +238,21 @@
     <value>Результаты поиска среди пользователей</value>
   </data>
   <data name="OpenMyPageItem.Text" xml:space="preserve">
-    <value>打开个人页面</value>
+    <value>Открыть профиль</value>
   </data>
   <data name="OpenMyPageInBrowserItem.Text" xml:space="preserve">
-    <value>打开网页</value>
+    <value>Открыть в браузере</value>
   </data>
   <data name="RestrictedModeItem.Text" xml:space="preserve">
-    <value>受限模式</value>
+    <value>Ограниченный режим</value>
   </data>
   <data name="AiShowItem.Text" xml:space="preserve">
-    <value>显示AI作品</value>
+    <value>Показывать работы ИИ</value>
   </data>
   <data name="MoreViewingSettingsItem.Text" xml:space="preserve">
-    <value>更多浏览设置</value>
+    <value>Дополнительные настройки просмотра</value>
   </data>
   <data name="LogoutItem.Text" xml:space="preserve">
-    <value>登出账号</value>
+    <value>Выйти из аккаунта</value>
   </data>
 </root>
