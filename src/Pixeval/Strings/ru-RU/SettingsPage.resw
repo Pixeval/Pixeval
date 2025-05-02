@@ -526,16 +526,16 @@
     <value>Просмотр оригинальных изображений</value>
   </data>
   <data name="ReconfirmationOfClosingWindowEntry.Description" xml:space="preserve">
-    <value>在关闭窗口前，会弹出对话框要求你再次确认</value>
+    <value>Включение подтверждения при закрытии окна.</value>
   </data>
   <data name="ReconfirmationOfClosingWindowEntry.Header" xml:space="preserve">
-    <value>关闭窗口再次确认</value>
+    <value>Подтверждение закрытия окна</value>
   </data>
   <data name="ScrollRateEntry.Description" xml:space="preserve">
-    <value>低于0.1时关闭，开启后可自定义滚动速率，但可能造成不好的体验</value>
+    <value>Отключается при значении ниже 0.1. Включив, вы сможете настроить скорость прокрутки, но это может привести к ухудшению пользовательского опыта.</value>
   </data>
   <data name="ScrollRateEntry.Header" xml:space="preserve">
-    <value>滚动速率</value>
+    <value>Скорость прокрутки</value>
   </data>
   <data name="SearchSettingsGroup.Text" xml:space="preserve">
     <value>Настройки поиска</value>
@@ -724,36 +724,36 @@
     <value>Здесь хранятся файлы DLL расширений, которые будет загружать программа</value>
   </data>
   <data name="BackupSettingsEntry.Header" xml:space="preserve">
-    <value>备份设置</value>
+    <value>Резервное копирование настроек</value>
   </data>
   <data name="BackupSettingsEntry.Description" xml:space="preserve">
-    <value>选择导出或导入设置（导出后请注意防止敏感信息泄漏）</value>
+    <value>Выберите экспорт или импорт настроек (поместите копию в защищенное, от посторонних лиц или программ, место).</value>
   </data>
   <data name="OpenSettingsEntry.Header" xml:space="preserve">
-    <value>打开设置文件夹</value>
+    <value>Открыть папку с настройками</value>
   </data>
   <data name="OpenSettingsEntry.Description" xml:space="preserve">
-    <value>此处存储了软件的设置文件（包含账号信息）</value>
+    <value>Здесь хранятся файлы настроек программы (включая данные учетной записи Pixiv).</value>
   </data>
   <data name="ExportSettingsSuccess" xml:space="preserve">
-    <value>导出设置成功</value>
+    <value>Настройки успешно экспортированы</value>
   </data>
   <data name="ImportSessionSuccess" xml:space="preserve">
-    <value>导入会话成功</value>
+    <value>Сессия успешно импортирована</value>
   </data>
   <data name="ImportSettingsSuccess" xml:space="preserve">
-    <value>导入设置成功</value>
+    <value>Настройки успешно импортированы</value>
   </data>
   <data name="ExportSettingsPlaintextEntry.Header" xml:space="preserve">
-    <value>导出明文设置</value>
+    <value>Экспорт настроек (из текстового файла)</value>
   </data>
   <data name="ExportSettingsPlaintextEntry.Description" xml:space="preserve">
-    <value>以JSON格式导出设置</value>
+    <value>Экспортировать настройки в формате JSON</value>
   </data>
   <data name="ImportSettingsPlaintextEntry.Description" xml:space="preserve">
-    <value>导入JSON格式的明文设置</value>
+    <value>Импортировать настройки из файла JSON</value>
   </data>
   <data name="ImportSettingsPlaintextEntry.Header" xml:space="preserve">
-    <value>导入明文设置</value>
+    <value>Импорт настроек (из текстового файла)</value>
   </data>
 </root>
