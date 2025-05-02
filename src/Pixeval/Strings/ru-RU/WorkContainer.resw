@@ -160,7 +160,7 @@
     <value>Множественный выбор</value>
   </data>
   <data name="RefreshButton.Label" xml:space="preserve">
-    <value>刷新</value>
+    <value>Обновить</value>
   </data>
   <data name="CancelSelectionButtonDefaultLabel" xml:space="preserve">
     <value>Отменить выбор</value>
