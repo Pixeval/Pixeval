@@ -184,7 +184,7 @@
     <value>Ошибка формата изображения или изображение слишком большое, или слишком частые запросы. Пожалуйста, проверьте и попробуйте позже</value>
   </data>
     <data name="ReverseSearchStartContent" xml:space="preserve">
-    <value>Идет поиск по изображению...</value>
+    <value>Идет поиск по изображению</value>
   </data>
   <data name="ReverseSearchDropHintTextBlock.Text" xml:space="preserve">
     <value>Перетащите сюда для поиска по изображению</value>
