@@ -243,12 +243,12 @@ R: Следующая иллюстрация</value>
     <value>Настройки новеллы</value>
   </data>
   <data name="Copy" xml:space="preserve">
-    <value>Скопировать</value>
+    <value>Скопировать отображаемую картинку</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Сохранить</value>
+    <value>Сохранить отображаемую картинку</value>
   </data>
   <data name="SaveAs" xml:space="preserve">
-    <value>Сохранить как...</value>
+    <value>Сохранить отображаемую картинку как...</value>
   </data>
 </root>
