@@ -51,8 +51,8 @@ public static class PixivAuth
             var httpClient = App.AppViewModel.AppSettings.EnableDomainFronting
                 ? new HttpClient(new DelegatedHttpMessageHandler(MakoHttpOptions.CreateHttpMessageInvoker()))
                 : new();
-            httpClient.DefaultRequestHeaders.UserAgent.Add(new("PixivAndroidApp", "5.0.64"));
-            httpClient.DefaultRequestHeaders.UserAgent.Add(new("(Android 6.0)"));
+            httpClient.DefaultRequestHeaders.UserAgent.Add(new("PixivAndroidApp", "6.140.2"));
+            httpClient.DefaultRequestHeaders.UserAgent.Add(new("(Android 15.0)"));
             var scheme = App.AppViewModel.AppSettings.EnableDomainFronting ? "http" : "https";
 
             using var result = await httpClient.PostFormAsync(scheme + "://oauth.secure.pixiv.net/auth/token",
