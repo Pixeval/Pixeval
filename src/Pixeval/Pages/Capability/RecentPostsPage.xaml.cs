@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Mako.Global.Enum;
+using Mako.Model;
 using Microsoft.UI.Xaml;
 
 namespace Pixeval.Pages.Capability;
@@ -14,19 +15,15 @@ public sealed partial class RecentPostsPage : IScrollViewHost
     public RecentPostsPage()
     {
         InitializeComponent();
-        SimpleWorkTypeComboBox.SelectedEnum = App.AppViewModel.AppSettings.SimpleWorkType;
     }
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter) => ChangeSource();
 
     private void ComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e) => ChangeSource();
 
-    private void ChangeSource()
+    private async void ChangeSource()
     {
-        var privacyPolicy = PrivacyPolicyComboBox.GetSelectedItem<PrivacyPolicy>();
-        WorkContainer.WorkView.ResetEngine(SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>() is SimpleWorkType.IllustAndManga
-            ? App.AppViewModel.MakoClient.RecentIllustrationPosts(privacyPolicy)
-            : App.AppViewModel.MakoClient.RecentNovelPosts(privacyPolicy));
+        WorkContainer.WorkView.ResetEngine(await App.AppViewModel.GetEngineAsync<Illustration>("newworks"));
     }
 
     public ScrollView ScrollView => WorkContainer.ScrollView;

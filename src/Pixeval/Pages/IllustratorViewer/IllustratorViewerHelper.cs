@@ -1,6 +1,7 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using System;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
@@ -8,6 +9,7 @@ using Pixeval.Controls.Windowing;
 using Mako.Net.Response;
 using WinUI3Utilities;
 using Pixeval.Util.UI;
+using Mako.Model;
 
 namespace Pixeval.Pages.IllustratorViewer;
 
@@ -24,7 +26,14 @@ public static class IllustratorViewerHelper
 
     public static async Task CreateIllustratorPageAsync(this FrameworkElement frameworkElement, long userId)
     {
-        var userDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(userId, App.AppViewModel.AppSettings.TargetFilter);
+        var user = await App.AppViewModel.GetFromJsonAsync<UserEntity>("get/user", -1, ("followedUserId", userId.ToString()));
+        var userDetail = new PixivSingleUserResponse()
+        {
+            UserEntity = user,
+            UserProfile = Profile.CreateDefault(),
+            UserProfilePublicity = ProfilePublicity.CreateDefault(),
+            UserWorkspace = Workspace.CreateDefault()
+        };
         frameworkElement.CreateIllustratorPage(userDetail);
     }
 

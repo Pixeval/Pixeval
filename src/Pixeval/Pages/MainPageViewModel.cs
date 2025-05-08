@@ -65,11 +65,9 @@ public partial class MainPageViewModel : UiObservableObject
         new NavigationViewTag<RankingsPage>(MainPageResources.RankingsTabContent) { ImageUri = GetIconUri("ranking") },
         new NavigationViewTag<BookmarksPage>(MainPageResources.BookmarksTabContent) { ImageUri = GetIconUri("bookmarks") },
         new NavigationViewTag<FollowingsPage>(MainPageResources.FollowingsTabContent) { ImageUri = GetIconUri("followings") },
-        new NavigationViewTag<SpotlightsPage>(MainPageResources.SpotlightsTabContent) { ImageUri = GetIconUri("spotlight") },
         new NavigationViewTag<RecommendUsersPage>(MainPageResources.RecommendUsersTabContent) { ImageUri = GetIconUri("recommend-user") },
         new NavigationViewTag<RecentPostsPage>(MainPageResources.RecentPostsTabContent) { ImageUri = GetIconUri("recent-posts") },
         new NavigationViewTag<NewWorksPage>(MainPageResources.NewWorksTabContent) { ImageUri = GetIconUri("new-works") },
-        FeedTag,
         new NavigationViewSeparator(),
         new NavigationViewTag<BrowsingHistoryPage>(MainPageResources.HistoriesTabContent) { ImageUri = GetIconUri("history") },
         new NavigationViewTag<DownloadPage>(MainPageResources.DownloadListTabContent) { ImageUri = GetIconUri("download-list") }

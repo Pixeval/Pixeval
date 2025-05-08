@@ -18,32 +18,6 @@
             Style="{StaticResource TitleTextBlockStyle}" />
         <ScrollView>
             <StackPanel Margin="20,0,20,20" Spacing="20">
-                <StackPanel Spacing="10">
-                    <TextBlock x:Uid="/AboutPage/SpecialThanksSubtitleTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />
-                    <TextBlock
-                        x:Uid="/AboutPage/SpecialThanksContentTextBlock"
-                        Style="{StaticResource CaptionTextBlockStyle}"
-                        TextWrapping="Wrap" />
-                    <ItemsRepeater ItemsSource="{x:Bind Supporters}">
-                        <ItemsRepeater.Layout>
-                            <UniformGridLayout
-                                ItemsStretch="Fill"
-                                MinColumnSpacing="10"
-                                MinItemHeight="160"
-                                MinItemWidth="140"
-                                MinRowSpacing="10" />
-                        </ItemsRepeater.Layout>
-                        <ItemsRepeater.ItemTemplate>
-                            <DataTemplate x:DataType="local:Supporter">
-                                <controls1:PersonView
-                                    PersonName="{x:Bind AtName}"
-                                    PersonNickname="{x:Bind Nickname}"
-                                    PersonPicture="{x:Bind ProfileImage}"
-                                    PersonProfileNavigateUri="{x:Bind ProfileUri}" />
-                            </DataTemplate>
-                        </ItemsRepeater.ItemTemplate>
-                    </ItemsRepeater>
-                </StackPanel>
                 <StackPanel>
                     <TextBlock x:Uid="/AboutPage/DependenciesSubtitleTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />
                     <TextBlock
@@ -87,18 +61,6 @@
                             </DataTemplate>
                         </ItemsRepeater.ItemTemplate>
                     </ItemsRepeater>
-                </StackPanel>
-                <StackPanel Spacing="10">
-                    <TextBlock x:Uid="/AboutPage/SupportMeSubtitleTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />
-                    <TextBlock Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="Wrap">
-                        <Run x:Uid="/AboutPage/SupportMeContentPartI" />
-                        <Hyperlink NavigateUri="https://afdian.net/@dylech30th">
-                            <Hyperlink.Inlines>
-                                <Run x:Uid="/AboutPage/SupportMeHyperlinkContent" />
-                            </Hyperlink.Inlines>
-                        </Hyperlink>
-                        <Run x:Uid="/AboutPage/SupportMeContentPartII" />
-                    </TextBlock>
                 </StackPanel>
                 <StackPanel Spacing="10">
                     <TextBlock x:Uid="/AboutPage/OpenSourceLicenseSubtitleTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />

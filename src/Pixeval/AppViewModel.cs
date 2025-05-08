@@ -2,12 +2,18 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
 using Imouto.BooruParser;
 using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
 using Pixeval.Caching;
 using Mako;
+using Mako.Engine;
 using Mako.Net;
 using Misaki;
 using Pixeval.Database.Managers;
@@ -16,6 +22,7 @@ using Pixeval.Extensions;
 using Pixeval.Util.IO.Caching;
 using Pixeval.Utilities;
 using WinUI3Utilities;
+using Mako.Model;
 
 namespace Pixeval;
 
@@ -38,6 +45,28 @@ public partial class AppViewModel(App app) : IDisposable
     public AppDebugTrace AppDebugTrace { get; } = AppInfo.LoadDebugTrace() ?? new AppDebugTrace();
 
     public VersionContext VersionContext { get; } = AppInfo.LoadVersionContext() ?? new VersionContext();
+
+    public HttpClient HttpClient { get; } = new()
+    {
+        BaseAddress = new Uri("https://localhost:7259")
+    };
+
+    public async Task<T> GetFromJsonAsync<T>(string uri, long uid = -1, params IReadOnlyList<(string, string)> paramsList)
+    {
+        return (T) (await HttpClient.GetFromJsonAsync(uri + $"?userId={(uid is -1 ? PixivUid : uid)}" + string.Concat(paramsList.Select(p => $"&{p.Item1}={p.Item2}")), typeof(T), AppJsonSerializerContext.Default))!;
+    }
+
+    public async Task<IFetchEngine<T>> GetEngineAsync<T>(string uri, long uid = -1, params IReadOnlyList<(string, string)> paramsList)
+    {
+        try
+        {
+            return MakoClient.Computed((await GetFromJsonAsync<IReadOnlyList<T>>(uri, uid, paramsList)).ToAsyncEnumerable());
+        }
+        catch (Exception e)
+        {
+            return MakoClient.Computed(Array.Empty<T>().ToAsyncEnumerable());
+        }
+    }
 
     public long PixivUid => MakoClient.Me.Id;
 

@@ -97,12 +97,6 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 new EnumAppSettingsEntry(AppSettings,
                     t => t.DefaultSelectedTabItem,
                     MainPageTabItemExtension.GetItems()),
-                new StringAppSettingsEntry(AppSettings,
-                    t => t.WebCookie)
-                {
-                    Placeholder = SettingsPageResources.WebCookieTextBoxPlaceholderText,
-                    ValueChanged = t => App.AppViewModel.MakoClient.Configuration.Cookie = t
-                },
                 new BoolAppSettingsEntry(AppSettings,
                     t => t.ReconfirmationOfClosingWindow)
             },
@@ -162,38 +156,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 },
                 new EnumAppSettingsEntry(AppSettings,
                     t => t.WorkSortOption,
-                    WorkSortOptionExtension.GetItems()),
-                new EnumAppSettingsEntry(AppSettings,
-                    t => t.SimpleWorkType,
-                    SimpleWorkTypeExtension.GetItems()),
-                new MultiValuesEntry(t => t.IllustrationRankOption,
-                    [
-                        new EnumAppSettingsEntry(AppSettings,
-                            WorkTypeEnum.Illustration,
-                            t => t.IllustrationRankOption,
-                            RankOptionExtension.GetItems()),
-                        new EnumAppSettingsEntry(AppSettings,
-                            WorkTypeEnum.Novel,
-                            t => t.NovelRankOption,
-                            NovelRankOptionExtension.GetItems())
-                    ]),
-                new MultiValuesEntry(t => t.SearchIllustrationTagMatchOption,
-                    [
-                        new EnumAppSettingsEntry(AppSettings,
-                            WorkTypeEnum.Illustration,
-                            t => t.SearchIllustrationTagMatchOption,
-                            SearchIllustrationTagMatchOptionExtension.GetItems()),
-                        new EnumAppSettingsEntry(AppSettings,
-                            WorkTypeEnum.Novel,
-                            t => t.SearchNovelTagMatchOption,
-                            SearchNovelTagMatchOptionExtension.GetItems())
-                    ]),
-                new DateWithSwitchAppSettingsEntry(AppSettings,
-                    t => t.UseSearchStartDate,
-                    t => t.SearchStartDate),
-                new DateWithSwitchAppSettingsEntry(AppSettings,
-                    t => t.UseSearchEndDate,
-                    t => t.SearchEndDate)
+                    WorkSortOptionExtension.GetItems())
             },
             new(SettingsEntryCategory.Download)
             {

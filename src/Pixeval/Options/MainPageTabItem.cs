@@ -26,9 +26,6 @@ public enum MainPageTabItem
     [LocalizedResource(typeof(MainPageResources), nameof(MainPageResources.FollowingsTabContent))]
     Follow = 3,
 
-    [LocalizedResource(typeof(MainPageResources), nameof(MainPageResources.SpotlightsTabContent))]
-    Spotlight = 4,
-
     [LocalizedResource(typeof(MainPageResources), nameof(MainPageResources.RecommendUsersTabContent))]
     RecommendUser = 5,
 

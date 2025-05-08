@@ -122,20 +122,20 @@ public static class MakoHelper
 
     public static async Task<bool> SetFollowAsync(long id, bool isFollowed, bool privately = false)
     {
-        var result = await (isFollowed
-            ? App.AppViewModel.MakoClient.PostFollowUserAsync(id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public)
-            : App.AppViewModel.MakoClient.RemoveFollowUserAsync(id));
+        var result =
+            await App.AppViewModel.HttpClient.PostAsync(
+                $"follow?userId={App.AppViewModel.PixivUid}&followedUserId={id}&follow={isFollowed}", null);
         return result.IsSuccessStatusCode ? isFollowed : !isFollowed;
     }
 
     public static async Task<bool> SetIllustrationBookmarkAsync(Illustration id, bool privately = false, IEnumerable<string>? tags = null)
     {
-        var result = await (id.IsFavorite
-            ? App.AppViewModel.MakoClient.RemoveIllustrationBookmarkAsync(id.Id)
-            : App.AppViewModel.MakoClient.PostIllustrationBookmarkAsync(id.Id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public, tags));
+        var result =
+            await App.AppViewModel.HttpClient.PostAsync(
+                $"favorite?userId={App.AppViewModel.PixivUid}&illustrationId={id.Id}&favorite={!id.IsFavorite}", null);
         if (result.IsSuccessStatusCode)
         {
-            await RefreshBookmarkTagsAsync();
+            // await RefreshBookmarkTagsAsync();
             id.IsFavorite = !id.IsFavorite;
         }
         return id.IsFavorite;

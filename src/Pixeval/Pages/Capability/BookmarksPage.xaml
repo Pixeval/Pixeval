@@ -5,29 +5,6 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:model="using:Mako.Model"
     mc:Ignorable="d">
-    <controls:WorkContainer x:Name="WorkContainer" RefreshRequested="WorkContainer_OnRefreshRequested">
-        <controls:WorkContainer.CommandBarElements>
-            <controls:NotifyOnLoadedComboBox
-                x:Name="TagComboBox"
-                x:Uid="/BookmarksPage/TagComboBox"
-                SelectionChangedWhenLoaded="TagComboBox_OnSelectionChangedWhenLoaded">
-                <controls:NotifyOnLoadedComboBox.ItemTemplate>
-                    <DataTemplate x:DataType="model:BookmarkTag">
-                        <TextBlock Text="{x:Bind Name}" />
-                    </DataTemplate>
-                </controls:NotifyOnLoadedComboBox.ItemTemplate>
-            </controls:NotifyOnLoadedComboBox>
-            <controls:EnumComboBox
-                x:Name="PrivacyPolicyComboBox"
-                SelectionChanged="ComboBox_OnSelectionChanged"
-                Style="{StaticResource PrivacyPolicyComboBoxStyle}"
-                Visibility="{x:Bind controls:C.ToVisibility(_viewModel.IsMe)}" />
-            <controls:EnumComboBox
-                x:Name="SimpleWorkTypeComboBox"
-                SelectionChanged="ComboBox_OnSelectionChanged"
-                Style="{StaticResource SimpleWorkTypeComboBoxStyle}" />
-        </controls:WorkContainer.CommandBarElements>
-    </controls:WorkContainer>
+    <controls:WorkContainer x:Name="WorkContainer" RefreshRequested="WorkContainer_OnRefreshRequested" />
 </controls:EnhancedPage>

@@ -1,6 +1,7 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using Mako.Model;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
@@ -11,9 +12,9 @@ public sealed partial class RecommendUsersPage : IScrollViewHost
 {
     public RecommendUsersPage() => InitializeComponent();
 
-    public override void OnPageActivated(NavigationEventArgs e, object? parameter)
+    public override async void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        IllustratorView.ViewModel.ResetEngine(App.AppViewModel.MakoClient.RecommendIllustrators());
+        IllustratorView.ViewModel.ResetEngine(await App.AppViewModel.GetEngineAsync<User>("recommendation/users"));
     }
 
     public ScrollView ScrollView => IllustratorView.ScrollView;

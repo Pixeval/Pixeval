@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
+using Mako.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Pixeval.Controls;
@@ -110,12 +111,9 @@ public static class IllustrationViewerHelper
 
     public static async Task<IArtworkInfo?> TryGetIArtworkInfoAsync(this string id, string platform)
     {
-        var getArtworkService = App.AppViewModel.GetPlatformService<IGetArtworkService>(platform);
-        if (getArtworkService is null)
-            return null;
         try
         {
-            return await getArtworkService.GetArtworkAsync(id);
+            return await App.AppViewModel.GetFromJsonAsync<Illustration>("get/illustration", -1, ("illustrationId", id));
         }
         catch (Exception e)
         {

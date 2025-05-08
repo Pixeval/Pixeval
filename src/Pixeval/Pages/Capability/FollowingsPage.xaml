@@ -8,20 +8,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <controls1:DockPanel>
-        <!--  由于现在内容只有一个，所以当内容隐藏的时候，StackPanel也隐藏  -->
-        <StackPanel
-            Height="{StaticResource CommandBarHeight}"
-            Margin="{StaticResource ComboBoxLeftIndent}"
-            controls1:DockPanel.Dock="Top"
-            Orientation="Horizontal"
-            Visibility="{x:Bind controls:C.ToVisibility(IsMe)}">
-            <controls:EnumComboBox
-                x:Name="PrivacyPolicyComboBox"
-                VerticalAlignment="Center"
-                SelectionChanged="PrivacyPolicyComboBox_OnSelectionChanged"
-                Style="{StaticResource PrivacyPolicyComboBoxStyle}"
-                Visibility="{x:Bind controls:C.ToVisibility(IsMe)}" />
-        </StackPanel>
         <controls:IllustratorView x:Name="IllustratorView" />
     </controls1:DockPanel>
 </controls:EnhancedPage>

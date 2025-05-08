@@ -6,20 +6,5 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <controls:WorkContainer x:Name="WorkContainer" RefreshRequested="WorkContainer_OnRefreshRequested">
-        <controls:WorkContainer.CommandBarElements>
-            <controls:NotifyOnLoadedCalendarDatePicker
-                x:Name="RankDateTimeCalendarDatePicker"
-                DateChangedWhenLoaded="OnSelectionChanged"
-                MaxDate="{x:Bind MaxDate}" />
-            <controls:NotifyOnLoadedComboBox
-                x:Name="RankOptionComboBox"
-                x:Uid="/RankingsPage/RankOptionComboBox"
-                SelectionChangedWhenLoaded="OnSelectionChanged" />
-            <controls:EnumComboBox
-                x:Name="SimpleWorkTypeComboBox"
-                SelectionChanged="ComboBox_OnSelectionChanged"
-                Style="{StaticResource SimpleWorkTypeComboBoxStyle}" />
-        </controls:WorkContainer.CommandBarElements>
-    </controls:WorkContainer>
+    <controls:WorkContainer x:Name="WorkContainer" RefreshRequested="WorkContainer_OnRefreshRequested" />
 </controls:EnhancedPage>
