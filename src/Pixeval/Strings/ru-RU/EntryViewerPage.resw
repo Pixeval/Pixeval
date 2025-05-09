@@ -187,7 +187,7 @@
     <value>Зеркальное отражение</value>
   </data>
   <data name="SetAs" xml:space="preserve">
-    <value>设置显示的图片为</value>
+    <value>Установить как...</value>
   </data>
   <data name="SetAsBackgroundSucceededTitle" xml:space="preserve">
     <value>Фон установлен</value>
@@ -243,12 +243,12 @@ R: Следующая иллюстрация</value>
     <value>Настройки новеллы</value>
   </data>
   <data name="Copy" xml:space="preserve">
-    <value>复制显示的图片</value>
+    <value>Скопировать отображаемую картинку</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>保存显示的图片</value>
+    <value>Сохранить отображаемую картинку</value>
   </data>
   <data name="SaveAs" xml:space="preserve">
-    <value>另存为显示的图片</value>
+    <value>Сохранить отображаемую картинку как...</value>
   </data>
 </root>
