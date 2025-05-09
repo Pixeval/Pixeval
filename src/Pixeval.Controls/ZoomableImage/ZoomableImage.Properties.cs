@@ -122,7 +122,7 @@ public partial class ZoomableImage
         get;
         set
         {
-            if (IsDisposed || field == value)
+            if ((IsDisposed || field == value) && !_isInitMode)
                 return;
             field = value;
             switch (Mode)
