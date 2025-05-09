@@ -9,10 +9,9 @@ using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
 using Mako.Global.Enum;
 using Microsoft.UI.Xaml;
+using Pixeval.Util;
 using WinRT;
 using WinUI3Utilities;
-using NovelRankOptionExtension = Pixeval.Util.NovelRankOptionExtension;
-using RankOptionExtension = Pixeval.Util.RankOptionExtension;
 
 namespace Pixeval.Pages.Capability;
 
