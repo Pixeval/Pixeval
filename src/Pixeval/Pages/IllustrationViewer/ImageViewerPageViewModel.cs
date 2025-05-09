@@ -199,10 +199,11 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                 await result.CopyToAsync(memoryStream.ToIStream());
                 await result.DisposeAsync();
                 stream.Position = 0;
+                memoryStream.Position = 0;
                 // 显示图片
                 var last = DisplayStreamsSource;
-                DisplayStreamsSource = (IReadOnlyList<Stream>) [memoryStream];
-                if (last is IReadOnlyList<Stream> and [IDisposable disposable] && !ReferenceEquals(disposable, stream))
+                DisplayStreamsSource = memoryStream;
+                if (last is IDisposable disposable && !ReferenceEquals(disposable, stream))
                     disposable.Dispose();
                 if (!token.IsCancellationRequested)
                     FrameworkElement.SuccessGrowl(ImageViewerPageResources.TransformerExtensionFinishedSuccessfully);

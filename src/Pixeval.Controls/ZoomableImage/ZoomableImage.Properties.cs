@@ -15,8 +15,10 @@ public partial class ZoomableImage
         {
             if (IsDisposed || field == value)
                 return;
-            IsPlaying = true;
             field = value;
+            IsPlaying = true;
+            CanvasControl.Paused = false;
+            _lastPointerActivityTime = DateTime.Now;
             // 使CanvasControl具有大小，否则不会触发CanvasControlOnDraw
             OriginalImageWidth = OriginalImageHeight = 10;
             _needInitSource = true;
@@ -120,7 +122,7 @@ public partial class ZoomableImage
         get;
         set
         {
-            if (IsDisposed || field == value)
+            if ((IsDisposed || field == value) && !_isInitMode)
                 return;
             field = value;
             switch (Mode)

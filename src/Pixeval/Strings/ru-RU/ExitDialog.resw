@@ -142,10 +142,10 @@
     <value>Открыть папку с логами</value>
   </data>
   <data name="ReconfirmationOfClosingWindowCheckBox.Content" xml:space="preserve">
-    <value>下次不再提示直接关闭窗口</value>
+    <value>Больше не предлагать</value>
   </data>
   <data name="ReconfirmationOfClosingWindow.Title" xml:space="preserve">
-    <value>关闭窗口</value>
+    <value>Закрыть приложение?</value>
   </data>
   <data name="SignOutConfirmationDialogContent" xml:space="preserve">
     <value>Это действие необратимо</value>
