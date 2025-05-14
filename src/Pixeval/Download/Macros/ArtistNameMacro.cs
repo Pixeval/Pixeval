@@ -5,7 +5,6 @@ using System.Linq;
 using Misaki;
 using Pixeval.Download.MacroParser;
 using Pixeval.Util.IO;
-using Pixeval.Utilities;
 
 namespace Pixeval.Download.Macros;
 
@@ -15,8 +14,7 @@ public class ArtistNameMacro : ITransducer<IArtworkInfo>
     public string Name => "artist_name";
 
     public string Substitute(IArtworkInfo context) =>
-        context.Authors
-            .Select(t => t.Name)
-            .Aggregate((x, y) => x + ',' + y)
-            .Let(IoHelper.NormalizePathSegment);
+        IoHelper.NormalizePathSegment(
+            string.Join(',', context.Authors
+                .Select(t => t.Name)));
 }
