@@ -17,6 +17,7 @@ using ReverseMarkdown;
 using WinUI3Utilities;
 using System.Collections.Generic;
 using Windows.System;
+using Pixeval.Util.UI;
 
 namespace Pixeval.Pages;
 
@@ -69,7 +70,7 @@ public sealed partial class WorkInfoPage
         WorkCaptionMarkdownTextBlock.Visibility = Visibility.Visible;
     }
 
-    private void MenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
+    private void BlockItem_OnClick(object sender, RoutedEventArgs e)
     {
         var tag = sender.To<FrameworkElement>().GetTag<Tag>();
         var blockedTags = App.AppViewModel.AppSettings.BlockedTags;
@@ -78,6 +79,12 @@ public sealed partial class WorkInfoPage
             _ = blockedTags.Add(tag.Name);
             AppInfo.SaveConfig(App.AppViewModel.AppSettings);
         }
+    }
+
+    private void CopyItem_OnClick(object sender, RoutedEventArgs e)
+    {
+        var tag = sender.To<FrameworkElement>().GetTag<string>();
+        UiHelper.ClipboardSetText(tag);
     }
 
     private static string GetTagCategoryName(object o)

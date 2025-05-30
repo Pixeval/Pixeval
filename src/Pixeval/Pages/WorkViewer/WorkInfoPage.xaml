@@ -154,6 +154,7 @@
                                                     ButtonMargin="-2"
                                                     IsCompact="True"
                                                     IsHorizontal="True"
+                                                    IsTextSelectionEnabled="False"
                                                     PretranslatedText="{x:Bind TranslatedName}"
                                                     Text="{x:Bind Name}"
                                                     TextType="WorkTag" />
@@ -161,8 +162,19 @@
                                             <Button.ContextFlyout>
                                                 <MenuFlyout>
                                                     <MenuFlyoutItem
+                                                        x:Uid="/WorkInfoPage/CopyOriginalTagMenuItem"
+                                                        Click="CopyItem_OnClick"
+                                                        Icon="{fluent:SymbolIcon Symbol=Copy}"
+                                                        Tag="{x:Bind Name}" />
+                                                    <MenuFlyoutItem
+                                                        x:Uid="/WorkInfoPage/CopyTranslatedTagMenuItem"
+                                                        Click="CopyItem_OnClick"
+                                                        Icon="{fluent:SymbolIcon Symbol=CopyAdd}"
+                                                        Tag="{x:Bind TranslatedName}"
+                                                        Visibility="{x:Bind controls2:C.IsNotNullOrWhiteSpaceToVisibility(TranslatedName)}" />
+                                                    <MenuFlyoutItem
                                                         x:Uid="/WorkInfoPage/BlockTagMenuItem"
-                                                        Click="MenuFlyoutItem_OnClick"
+                                                        Click="BlockItem_OnClick"
                                                         Icon="{fluent:SymbolIcon Symbol=TagDismiss}"
                                                         Tag="{x:Bind}" />
                                                 </MenuFlyout>

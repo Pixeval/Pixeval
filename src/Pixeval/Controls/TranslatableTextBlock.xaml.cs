@@ -34,6 +34,15 @@ public sealed partial class TranslatableTextBlock : Grid
     public partial string? PretranslatedText { get; set; }
 
     /// <summary>
+    /// 翻译后的文本
+    /// </summary>
+    public string? TranslatedText
+    {
+        get => PretranslatedText ?? field;
+        private set;
+    }
+
+    /// <summary>
     /// 折叠模式（显示译文时隐藏原文）
     /// </summary>
     [GeneratedDependencyProperty]
@@ -105,6 +114,11 @@ public sealed partial class TranslatableTextBlock : Grid
     /// 使用Markdown
     /// </summary>
     public bool UseMarkdown { get; set; }
+
+    /// <summary>
+    /// 允许选中<see cref="TextBlock"/>中的文字
+    /// </summary>
+    public bool IsTextSelectionEnabled { get; set; } = true;
 
     /// <summary>
     /// 默认的Markdown配置
@@ -202,7 +216,7 @@ public sealed partial class TranslatableTextBlock : Grid
         tb.Text = text;
         tb.TextWrapping = TextWrapping.Wrap;
         tb.TextTrimming = TextTrimming.CharacterEllipsis;
-        tb.IsTextSelectionEnabled = true;
+        tb.IsTextSelectionEnabled = IsTextSelectionEnabled;
         tb.MaxLines = MaxLines;
         tb.Style = textBlockStyle;
         ToolTipService.SetToolTip(tb, NeedToolTip(MaxLines, text));
@@ -211,6 +225,7 @@ public sealed partial class TranslatableTextBlock : Grid
 
     partial void OnTextPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
+        TranslatedText = null;
         var canTranslate = !string.IsNullOrWhiteSpace(Text);
         var hasPretranslatedText = !string.IsNullOrWhiteSpace(PretranslatedText);
         OriginalTextPresenterContent = Text is null
@@ -232,7 +247,7 @@ public sealed partial class TranslatableTextBlock : Grid
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(PretranslatedText))
+        if (string.IsNullOrWhiteSpace(TranslatedText))
         {
             if (_extensionService.ActiveTextTransformerCommands.FirstOrDefault() is not { } translator)
                 return;
@@ -241,12 +256,12 @@ public sealed partial class TranslatableTextBlock : Grid
             {
                 if (Text is not null)
                 {
-                    var translatedText = await translator.TransformAsync(Text, TextType);
-                    if (translatedText is null)
+                    TranslatedText = await translator.TransformAsync(Text, TextType);
+                    if (TranslatedText is null)
                         return;
                     TranslationBoxPresenterContent = UseMarkdown
-                        ? GetNewMarkdownTextBlock(TranslationBoxPresenterContent as MarkdownTextBlock, translatedText)
-                        : GetNewTextBlock(TranslationBoxPresenterContent as TextBlock, translatedText, IsCompact ? TextBlockStyle : TranslatedBlockStyleWhenNotCompact);
+                        ? GetNewMarkdownTextBlock(TranslationBoxPresenterContent as MarkdownTextBlock, TranslatedText)
+                        : GetNewTextBlock(TranslationBoxPresenterContent as TextBlock, TranslatedText, IsCompact ? TextBlockStyle : TranslatedBlockStyleWhenNotCompact);
                 }
             }
             finally
@@ -257,8 +272,8 @@ public sealed partial class TranslatableTextBlock : Grid
         else
         {
             TranslationBoxPresenterContent = UseMarkdown
-                ? GetNewMarkdownTextBlock(TranslationBoxPresenterContent as MarkdownTextBlock, PretranslatedText)
-                : GetNewTextBlock(TranslationBoxPresenterContent as TextBlock, PretranslatedText, IsCompact ? TextBlockStyle : TranslatedBlockStyleWhenNotCompact);
+                ? GetNewMarkdownTextBlock(TranslationBoxPresenterContent as MarkdownTextBlock, TranslatedText)
+                : GetNewTextBlock(TranslationBoxPresenterContent as TextBlock, TranslatedText, IsCompact ? TextBlockStyle : TranslatedBlockStyleWhenNotCompact);
         }
     }
 
