@@ -163,6 +163,9 @@ public partial record AppSettings() : IWindowSettings
     [SettingsEntry(Symbol.ImageSparkle, nameof(BrowseOriginalImageEntryHeader), nameof(BrowseOriginalImageEntryDescription))]
     public bool BrowseOriginalImage { get; set; }
 
+    [SettingsEntry(Symbol.Info, nameof(OpenWorkInfoByDefaultHeader), nameof(OpenWorkInfoByDefaultDescription))]
+    public bool OpenWorkInfoByDefault { get; set; }
+
     [AttributeIgnore(typeof(CopyToAttribute))]
     public DateTimeOffset LastCheckedUpdate { get; set; } = DateTimeOffset.MinValue;
 

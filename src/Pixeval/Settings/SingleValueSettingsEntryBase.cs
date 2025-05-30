@@ -21,6 +21,7 @@ public abstract class SingleValueSettingsEntryBase<TValue>(
 
     public override void ValueSaving(IPropertySet values)
     {
-        values[Token] = Converter.Convert(Value);
+        if (Converter.TryConvert(Value, out var result))
+            values[Token] = result;
     }
 }

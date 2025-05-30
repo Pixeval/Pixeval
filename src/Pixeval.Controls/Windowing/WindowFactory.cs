@@ -8,9 +8,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Foundation;
 using Windows.Graphics;
-using Windows.Win32;
-using Windows.Win32.Foundation;
-using Windows.Win32.Graphics.Gdi;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls.Windowing;
@@ -154,25 +151,23 @@ public static class WindowFactory
 
     private static void FullDisplayOnScreen(this AppWindow appWindow, SizeInt32 desiredSize)
     {
-        var hWnd = (nint) appWindow.Id.Value;
-        var hWndDesktop = PInvoke.MonitorFromWindow(new HWND(hWnd), MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
-        var info = new MONITORINFO { cbSize = 40 };
-        _ = PInvoke.GetMonitorInfo(hWndDesktop, ref info);
+        var displayArea = DisplayArea.GetFromWindowId(appWindow.Id, DisplayAreaFallback.Primary);
+        var workArea = displayArea.WorkArea;
         var position = appWindow.Position;
         var size = desiredSize == default ? appWindow.Size : desiredSize;
-        var left = info.rcWork.Width - size.Width;
+        var left = workArea.Width - size.Width;
         if (left < 0)
         {
             left = 0;
-            desiredSize.Width = info.rcWork.Width;
+            desiredSize.Width = workArea.Width;
         }
         if (position.X > left)
             position.X = left;
-        var top = info.rcWork.Height - appWindow.Size.Height;
+        var top = workArea.Height - appWindow.Size.Height;
         if (top < 0)
         {
             top = 0;
-            desiredSize.Height = info.rcWork.Height;
+            desiredSize.Height = workArea.Height;
         }
         if (position.Y > top)
             position.Y = top;

@@ -132,7 +132,9 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     Max = 10,
                     Min = 0,
                     ValueChanged = d => AdvancedItemsView.ScrollRate = (float)d
-                }
+                },
+                new BoolAppSettingsEntry(AppSettings,
+                    t => t.OpenWorkInfoByDefault),
             },
             new(SettingsEntryCategory.Search)
             {
