@@ -49,7 +49,6 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
             ? PdfTempFolderPath
             : Path.GetDirectoryName(DocPath)!;
 
-        _ = Directory.CreateDirectory(directory);
         var imgExt = IoHelper.GetIllustrationExtension(DestinationIllustrationFormat);
         if (DestinationIllustrationFormat is not IllustrationDownloadFormat.Original)
             DocumentViewModel.ImageExtension = imgExt;
@@ -100,7 +99,8 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
         if (NovelContent == null!)
             SetNovelContent(await App.AppViewModel.MakoClient.GetNovelContentAsync(Entry.Id));
 
-        if (TasksSet.Count is 0)
+        // 小说若无图片，则没有子任务。所以此类任务是瞬间完成，理论上不存在排队、下载和暂停状态
+        if (TasksSet.Count is 0 && CurrentState is DownloadState.Queued or DownloadState.Running or DownloadState.Paused)
             await AllTasksDownloadedAsync();
     }
 
@@ -111,7 +111,7 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
             var i = 0;
             foreach (var imageDownloadTask in TasksSet)
             {
-                DocumentViewModel.SetStream(i, IoHelper.OpenAsyncRead(imageDownloadTask.Destination));
+                DocumentViewModel.SetStream(i, FileHelper.OpenAsyncRead(imageDownloadTask.Destination));
                 ++i;
             }
 
@@ -126,7 +126,7 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
                 ++i;
             }
 
-            IoHelper.DeleteEmptyFolder(PdfTempFolderPath);
+            FileHelper.DeleteEmptyFolder(PdfTempFolderPath);
             return;
         }
 
@@ -158,6 +158,6 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
             task.Delete();
         if (File.Exists(DocPath))
             File.Delete(DocPath);
-        IoHelper.DeleteEmptyFolder(DestinationNovelFormat is NovelDownloadFormat.Pdf ? PdfTempFolderPath : Path.GetDirectoryName(DocPath));
+        FileHelper.DeleteEmptyFolder(DestinationNovelFormat is NovelDownloadFormat.Pdf ? PdfTempFolderPath : Path.GetDirectoryName(DocPath));
     }
 }

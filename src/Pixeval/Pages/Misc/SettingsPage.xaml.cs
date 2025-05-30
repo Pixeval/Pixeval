@@ -18,11 +18,11 @@ using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
 using Pixeval.Settings;
-using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.Foundation;
 using Windows.System;
+using Pixeval.Util;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.Misc;
@@ -63,6 +63,11 @@ public sealed partial class SettingsPage : IDisposable
 
     private void SettingsPage_OnLoaded(object sender, RoutedEventArgs e) => ScrollToAttribute(TargetAttribute);
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="attribute"></param>
+    /// <param name="offset">神秘的偏移量</param>
     public void ScrollToAttribute(SettingsEntryAttribute? attribute, double offset = 0)
     {
         if (attribute is null)
@@ -74,7 +79,6 @@ public sealed partial class SettingsPage : IDisposable
         {
             var position = frameworkElement
                 .TransformToVisual(SettingsPanel)
-                // 神秘的偏移量
                 .TransformPoint(new Point(0, offset));
 
             _ = SettingsPageScrollView.ScrollTo(position.X, position.Y);
@@ -218,8 +222,8 @@ public sealed partial class SettingsPage : IDisposable
         {
             var jsonSettingsPath = Path.Combine(folder.Path, Path.ChangeExtension(AppKnownFolders.SettingsDatName, "json"));
             var jsonSessionPath = Path.Combine(folder.Path, "session.json");
-            await using var jsonSettingsStream = IoHelper.CreateAsyncWrite(jsonSettingsPath);
-            await using var jsonSessionStream = IoHelper.CreateAsyncWrite(jsonSessionPath);
+            await using var jsonSettingsStream = FileHelper.CreateAsyncWrite(jsonSettingsPath);
+            await using var jsonSessionStream = FileHelper.CreateAsyncWrite(jsonSessionPath);
             await JsonSerializer.SerializeAsync(jsonSettingsStream, _viewModel.AppSettings, typeof(AppSettings), SettingsSerializeContext.Default);
             await JsonSerializer.SerializeAsync(jsonSessionStream, App.AppViewModel.LoginContext, typeof(LoginContext), SettingsSerializeContext.Default);
 
@@ -240,7 +244,7 @@ public sealed partial class SettingsPage : IDisposable
             foreach (var file in files)
             {
                 var path = file.Path;
-                await using var stream = IoHelper.OpenAsyncRead(path);
+                await using var stream = FileHelper.OpenAsyncRead(path);
                 switch (file.Name)
                 {
                     case "session.json":

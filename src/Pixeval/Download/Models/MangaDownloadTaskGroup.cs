@@ -74,6 +74,6 @@ public partial class MangaDownloadTaskGroup : DownloadTaskGroup
     {
         foreach (var task in TasksSet)
             task.Delete();
-        IoHelper.DeleteEmptyFolder(OpenLocalDestination);
+        FileHelper.DeleteEmptyFolder(OpenLocalDestination);
     }
 }

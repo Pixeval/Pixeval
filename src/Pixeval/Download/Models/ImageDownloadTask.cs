@@ -2,7 +2,6 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -14,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
 using Pixeval.Extensions;
 using Pixeval.Extensions.Common;
+using Pixeval.Util;
 using Pixeval.Util.IO;
 using Pixeval.Util.IO.Caching;
 using Pixeval.Utilities;
@@ -103,7 +103,7 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
             path = AppInfo.ApplicationUriToPath(Uri);
         if (path is not null)
         {
-            File.Copy(path, Destination);
+            FileHelper.Copy(path, Destination);
             return true;
         }
         return false;
@@ -135,12 +135,11 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
         {
             CurrentState = DownloadState.Running;
             await SetRunningAsync(true);
-            IoHelper.CreateParentDirectories(Destination);
             if (CacheHelper.TryGetStreamFromCache(Uri.OriginalString) is { } stream)
             {
-                await using (var fs = OpenCreate(DownloadTempDestination))
+                await using (var fs = FileHelper.OpenAsyncWriteCreateParent(DownloadTempDestination))
                     await stream.CopyToAsync(fs, CancellationTokenSource.Token);
-                File.Move(DownloadTempDestination, Destination);
+                FileHelper.Move(DownloadTempDestination, Destination);
                 await PendingCompleteAsync();
                 return;
             }
@@ -164,7 +163,7 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
             else
             {
                 Exception? ex;
-                await using (var fileStream = OpenCreate(DownloadTempDestination))
+                await using (var fileStream = FileHelper.OpenAsyncWriteCreateParent(DownloadTempDestination))
                 {
                     ex = await httpClient.DownloadStreamAsync(fileStream, Uri, this, fileStream.Length,
                         cancellationToken: CancellationTokenSource.Token);
@@ -173,7 +172,7 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
                 switch (ex)
                 {
                     case null:
-                        File.Move(DownloadTempDestination, Destination);
+                        FileHelper.Move(DownloadTempDestination, Destination);
                         await PendingCompleteAsync();
                         break;
                     case TaskCanceledException: break;
@@ -193,18 +192,6 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
         {
             await SetRunningAsync(false);
         }
-
-        return;
-
-        static FileStream OpenCreate(string path) =>
-            File.Open(path, new FileStreamOptions
-            {
-                BufferSize = 1 << 20,
-                Mode = FileMode.OpenOrCreate,
-                Access = FileAccess.Write,
-                Share = FileShare.Read,
-                Options = FileOptions.Asynchronous | FileOptions.SequentialScan
-            });
     }
 
     public void TryReset()

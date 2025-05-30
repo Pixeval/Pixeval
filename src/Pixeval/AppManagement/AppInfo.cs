@@ -11,11 +11,11 @@ using Microsoft.Windows.Storage;
 using Pixeval.Controls.Windowing;
 using Mako.Net;
 using Pixeval.Database.Managers;
-using Pixeval.Util.IO;
 using Pixeval.Util.IO.Caching;
 using Pixeval.Util.UI;
 using Windows.ApplicationModel;
 using Windows.Foundation.Collections;
+using Pixeval.Util;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
 
@@ -93,7 +93,7 @@ public static partial class AppInfo
 
     public static Stream GetAssetStream(string relativeToAssetsFolder)
     {
-        return IoHelper.OpenAsyncRead(ApplicationUriToPath(new Uri($"ms-appx:///Assets/{relativeToAssetsFolder}")));
+        return FileHelper.OpenAsyncRead(ApplicationUriToPath(new Uri($"ms-appx:///Assets/{relativeToAssetsFolder}")));
     }
 
     public static async Task<byte[]> GetResourceBytesAsync(string path)

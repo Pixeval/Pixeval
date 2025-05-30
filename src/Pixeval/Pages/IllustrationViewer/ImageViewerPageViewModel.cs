@@ -28,6 +28,7 @@ using Windows.Foundation;
 using Windows.Storage;
 using Windows.System;
 using Windows.System.UserProfile;
+using Pixeval.Util;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
@@ -156,11 +157,10 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     {
         destination = IoHelper.NormalizePath(ArtworkMetaPathParser.Instance.Reduce(destination, IllustrationViewModel.Entry));
         var tempDestination = IoHelper.ReplaceTokenExtensionWithTempExtension(destination);
-        IoHelper.CreateParentDirectories(tempDestination);
-        await using (var stream = IoHelper.CreateAsyncWrite(tempDestination))
+        await using (var stream = FileHelper.CreateAsyncWriteCreateParent(tempDestination))
             await GetDisplayStreamsSourceAsync(stream);
         string newDestination;
-        await using (var stream = IoHelper.OpenAsyncRead(tempDestination))
+        await using (var stream = FileHelper.OpenAsyncRead(tempDestination))
             newDestination = await IoHelper.ReplaceTempExtensionFromStreamAsync(destination, stream);
         File.Move(tempDestination, newDestination);
         FrameworkElement?.SuccessGrowl(EntryItemResources.Saved);

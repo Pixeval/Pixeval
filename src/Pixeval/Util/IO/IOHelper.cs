@@ -1,7 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,7 +8,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using Windows.Storage;
 
 namespace Pixeval.Util.IO;
 
@@ -37,17 +35,6 @@ public static partial class IoHelper
         return GetInvalidNameChars.Aggregate(path, (s, c) => s.Replace(c.ToString(), "")).TrimEnd('.');
     }
 
-    public static void CreateParentDirectories(string fullPath)
-    {
-        var directory = Path.GetDirectoryName(fullPath);
-        _ = Directory.CreateDirectory(directory!);
-    }
-
-    public static async Task ClearDirectoryAsync(this StorageFolder dir)
-    {
-        await Task.WhenAll((await dir.GetItemsAsync()).Select(f => f.DeleteAsync().AsTask()));
-    }
-
     // todo 简化为PostJsonAsync
     public static Task<HttpResponseMessage> PostFormAsync(this HttpClient httpClient, string url, params (string? Key, string? Value)[] parameters)
     {
@@ -62,51 +49,5 @@ public static partial class IoHelper
             }
         };
         return httpClient.SendAsync(httpRequestMessage);
-    }
-
-    public static void DeleteEmptyFolder(string? path)
-    {
-        if (Directory.Exists(path))
-            if (!Directory.EnumerateFileSystemEntries(path).Any())
-                Directory.Delete(path);
-    }
-
-    public static FileStream OpenAsyncRead(string path, int bufferSize = 4096)
-    {
-        return new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize, true);
-    }
-
-    public static FileStream OpenAsyncWrite(string path, int bufferSize = 4096)
-    {
-        return new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize, true);
-    }
-
-    public static FileStream CreateAsyncWrite(string path, int bufferSize = 4096)
-    {
-        return new FileStream(path, FileMode.CreateNew, FileAccess.Write, FileShare.None, bufferSize, true);
-    }
-
-    public static FileStream OpenAsyncRead(this FileInfo info, int bufferSize = 4096)
-    {
-        return info.Open(new FileStreamOptions
-        {
-            Mode = FileMode.Open,
-            Access = FileAccess.Read,
-            Share = FileShare.Read,
-            BufferSize = bufferSize,
-            Options = FileOptions.Asynchronous
-        });
-    }
-
-    public static FileStream OpenAsyncWrite(this FileInfo info, int bufferSize = 4096)
-    {
-        return info.Open(new FileStreamOptions
-        {
-            Mode = FileMode.OpenOrCreate,
-            Access = FileAccess.Write,
-            Share = FileShare.None,
-            BufferSize = bufferSize,
-            Options = FileOptions.Asynchronous
-        });
     }
 }

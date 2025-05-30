@@ -5,8 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Pixeval.Util.IO;
 using Windows.Storage;
+using Pixeval.Util;
 
 namespace Pixeval.AppManagement;
 
@@ -55,13 +55,13 @@ public class AppKnownFolders(string fullPath)
     public FileStream OpenAsyncRead(string name)
     {
         EnsureExisted();
-        return IoHelper.OpenAsyncRead(CombinePath(name));
+        return FileHelper.OpenAsyncRead(CombinePath(name));
     }
 
     public FileStream CreateAsyncWrite(string name)
     {
         EnsureExisted();
-        return IoHelper.CreateAsyncWrite(CombinePath(name));
+        return FileHelper.CreateAsyncWrite(CombinePath(name));
     }
 
     public void RenameFile(string oldName, string newName)
