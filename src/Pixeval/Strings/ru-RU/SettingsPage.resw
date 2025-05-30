@@ -756,4 +756,10 @@
   <data name="ImportSettingsPlaintextEntry.Header" xml:space="preserve">
     <value>Импорт настроек (из текстового файла)</value>
   </data>
+  <data name="OpenWorkInfoByDefault.Header" xml:space="preserve">
+    <value>默认打开作品信息栏</value>
+  </data>
+  <data name="OpenWorkInfoByDefault.Description" xml:space="preserve">
+    <value>浏览作品时默认打开作品信息栏</value>
+  </data>
 </root>
