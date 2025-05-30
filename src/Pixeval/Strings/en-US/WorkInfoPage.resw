@@ -126,4 +126,10 @@
   <data name="WorkTagListTextBlock.Text" xml:space="preserve">
     <value>Work tags</value>
   </data>
+  <data name="CopyOriginalTagMenuItem.Text" xml:space="preserve">
+    <value>复制原文</value>
+  </data>
+  <data name="CopyTranslatedTagMenuItem.Text" xml:space="preserve">
+    <value>复制译文</value>
+  </data>
 </root>
