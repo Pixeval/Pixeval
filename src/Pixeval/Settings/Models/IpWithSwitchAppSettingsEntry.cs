@@ -112,12 +112,18 @@ public partial class IpWithSwitchAppSettingsEntry : BoolAppSettingsEntry
         var accountName = Settings.PixivAccountNameResolver = [.. PixivAccountNameResolver];
         var webApiName = Settings.PixivWebApiNameResolver = [.. PixivWebApiNameResolver];
 
-        values[nameof(AppSettings.PixivAppApiNameResolver)] = Converter.Convert(appApi);
-        values[nameof(AppSettings.PixivImageNameResolver)] = Converter.Convert(imageName);
-        values[nameof(AppSettings.PixivImageNameResolver2)] = Converter.Convert(imageName2);
-        values[nameof(AppSettings.PixivOAuthNameResolver)] = Converter.Convert(oAuthName);
-        values[nameof(AppSettings.PixivAccountNameResolver)] = Converter.Convert(accountName);
-        values[nameof(AppSettings.PixivWebApiNameResolver)] = Converter.Convert(webApiName);
+        if (Converter.TryConvert(appApi, out var resultAppApi))
+            values[nameof(AppSettings.PixivAppApiNameResolver)] = resultAppApi;
+        if (Converter.TryConvert(imageName, out var resultImageName))
+            values[nameof(AppSettings.PixivImageNameResolver)] = resultImageName;
+        if (Converter.TryConvert(imageName2, out var resultImageName2))
+            values[nameof(AppSettings.PixivImageNameResolver2)] = resultImageName2;
+        if (Converter.TryConvert(oAuthName, out var resultOAuthName))
+            values[nameof(AppSettings.PixivOAuthNameResolver)] = resultOAuthName;
+        if (Converter.TryConvert(accountName, out var resultAccountName))
+            values[nameof(AppSettings.PixivAccountNameResolver)] = resultAccountName;
+        if (Converter.TryConvert(webApiName, out var resultWebApiName))
+            values[nameof(AppSettings.PixivWebApiNameResolver)] = resultWebApiName;
 
         if (appApiNameSame || imageNameSame || imageName2Same || oAuthNameSame || accountNameSame || webApiNameSame)
             AppInfo.SetNameResolvers(Settings);

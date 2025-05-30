@@ -16,12 +16,16 @@ public sealed partial class WorkViewerSplitView
     [GeneratedDependencyProperty]
     public partial object? PaneContent { get; set; }
 
-    [GeneratedDependencyProperty(DefaultValue = false)]
+    [GeneratedDependencyProperty]
     public partial bool IsPaneOpen { get; set; }
 
     public const double OpenPaneLength = 330;
 
-    public WorkViewerSplitView() => InitializeComponent();
+    public WorkViewerSplitView()
+    {
+        IsPaneOpen = App.AppViewModel.AppSettings.OpenWorkInfoByDefault;
+        InitializeComponent();
+    }
 
     private void NavigationViewOnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs e)
     {

@@ -51,6 +51,7 @@ public partial class DateWithSwitchAppSettingsEntry : BoolAppSettingsEntry
     public override void ValueSaving(IPropertySet values)
     {
         base.ValueSaving(values);
-        values[_token] = Converter.Convert(Date);
+        if (Converter.TryConvert(Date, out var result))
+            values[_token] = result;
     }
 }

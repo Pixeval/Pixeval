@@ -202,15 +202,18 @@ public partial class ExtensionService : IDisposable
                 case IStringsArraySettingsExtension i:
                 {
                     string[] v;
-                    if (values.TryGetValue(token, out var value) && value is string s)
+                    if (values.TryGetValue(token, out var value)
+                        && value is string s
+                        && converter.TryConvertBack<string[]>(s, false, out var resultStringArray))
                     {
-                        v = converter.ConvertBack<string[]>(s, false)!;
+                        v = resultStringArray!;
                         i.OnValueChanged(v);
                     }
                     else
                     {
                         v = i.GetDefaultValue();
-                        values[token] = converter.Convert(v);
+                        if (converter.TryConvert(v, out var result))
+                            values[token] = result;
                     }
                     extensionSettingsGroup.Add(new ExtensionStringsArraySettingsEntry(i, v));
                     break;
