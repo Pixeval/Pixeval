@@ -54,12 +54,12 @@ public static partial class IoHelper
         if (uri.IsFile)
         {
             progress?.Report(100);
-            return Result<Stream>.AsSuccess(OpenAsyncRead(uri.OriginalString));
+            return Result<Stream>.AsSuccess(FileHelper.OpenAsyncRead(uri.OriginalString));
         }
         if (uri.Scheme is "ms-appx")
         {
             progress?.Report(100);
-            return Result<Stream>.AsSuccess(OpenAsyncRead(AppInfo.ApplicationUriToPath(uri)));
+            return Result<Stream>.AsSuccess(FileHelper.OpenAsyncRead(AppInfo.ApplicationUriToPath(uri)));
         }
         var stream = Streams.RentStream();
         var result = await httpClient.DownloadStreamAsync(stream, uri, progress, startPosition, bufferSize, cancellationToken);

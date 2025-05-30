@@ -41,7 +41,7 @@ public partial class SingleAnimatedImageDownloadTaskGroup : SingleImageDownloadT
                 var msDelays = Entry.ZipImageDelays!;
                 var zipPath = Destination + ".zip";
                 File.Move(Destination, zipPath);
-                await using var read = IoHelper.OpenAsyncRead(zipPath);
+                await using var read = FileHelper.OpenAsyncRead(zipPath);
                 using var image = await read.UgoiraSaveToImageAsync(msDelays);
                 image.SetIdTags(Entry);
                 await image.UgoiraSaveToFileAsync(Destination, DestinationUgoiraFormat);

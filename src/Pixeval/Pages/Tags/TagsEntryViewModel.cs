@@ -73,7 +73,7 @@ public partial class TagsEntryViewModel : ObservableObject, IMisakiModel
                 {
                     var image = await Image.LoadAsync(FullPath);
                     image.SetIdTags(Id ?? "", TagsSet);
-                    await using var stream = IoHelper.OpenAsyncWrite(FullPath);
+                    await using var stream = FileHelper.OpenAsyncWrite(FullPath);
                     await image.SaveAsync(FullPath);
                     return null;
                 }

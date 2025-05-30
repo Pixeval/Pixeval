@@ -35,7 +35,6 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup
         TempFolderPath = DestinationUgoiraFormat is UgoiraDownloadFormat.Original
             ? IoHelper.RemoveTokenExtension(TokenizedDestination)
             : TokenizedDestination + ".tmp";
-        _ = Directory.CreateDirectory(TempFolderPath);
         var msDelays = new int[Entry.MultiImageUris!.Count];
         for (var i = 0; i < Entry.MultiImageUris.Count; ++i)
         {
@@ -83,7 +82,7 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup
         await image.UgoiraSaveToFileAsync(TokenizedDestination, DestinationUgoiraFormat);
         foreach (var imageDownloadTask in TasksSet)
             imageDownloadTask.Delete();
-        IoHelper.DeleteEmptyFolder(TempFolderPath);
+        FileHelper.DeleteEmptyFolder(TempFolderPath);
     }
 
     private UgoiraDownloadFormat DestinationUgoiraFormat { get; }
@@ -102,6 +101,6 @@ public partial class UgoiraDownloadTaskGroup : DownloadTaskGroup
         else if (File.Exists(TokenizedDestination))
             File.Delete(TokenizedDestination);
 
-        IoHelper.DeleteEmptyFolder(TempFolderPath);
+        FileHelper.DeleteEmptyFolder(TempFolderPath);
     }
 }
