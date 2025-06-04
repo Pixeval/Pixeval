@@ -762,4 +762,16 @@ Type and click on "+" to add an IP</value>
   <data name="OpenWorkInfoByDefault.Description" xml:space="preserve">
     <value></value>
   </data>
+  <data name="AnimatedPathBlock.Text" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="SinglePathBlock.Text" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="SetPathBlock.Text" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="NovelPathBlock.Text" xml:space="preserve">
+    <value></value>
+  </data>
 </root>

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Mako.Model;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Pixeval.Download.Macros;
@@ -24,8 +25,8 @@ using SixLabors.ImageSharp.Formats.Webp;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
-using Mako.Model;
 using WinUI3Utilities;
+using static Pixeval.Filters.IQueryToken;
 
 namespace Pixeval.Util.IO;
 
@@ -165,15 +166,20 @@ public static partial class IoHelper
         foreach (var file in files)
         {
             var delay = delays.Count > i ? (uint) delays[i] : 10u;
+            var img = await Image.LoadAsync(file);
+            var rootFrame = img.Frames[0];
+            var webpFrameMetadata = rootFrame.Metadata.GetWebpMetadata();
+            webpFrameMetadata.FrameDelay = delay;
+            webpFrameMetadata.BlendMethod = WebpBlendMethod.Source;
             if (image is null)
-                image = await Image.LoadAsync(file);
+            {
+                image = img;
+                image.Metadata.GetWebpMetadata().RepeatCount = 0;
+            }
             else
             {
-                using var img = await Image.LoadAsync(file);
-                img.Frames[0].Metadata.GetFormatMetadata(WebpFormat.Instance).FrameDelay = delay;
-                img.Frames[0].Metadata.GetFormatMetadata(PngFormat.Instance).FrameDelay = new Rational(delay, 10);
-                img.Frames[0].Metadata.GetFormatMetadata(GifFormat.Instance).FrameDelay = (int) (delay / 10);
                 _ = image.Frames.AddFrame(img.Frames[0]);
+                img.Dispose();
             }
 
             ++i;
@@ -374,6 +380,11 @@ public static partial class IoHelper
     {
         var url = uri.OriginalString;
         return ReplaceTokenExtensionFromUrl(path, url);
+    }
+
+    public static string ReplaceTokenSetIndex(string path, int setIndex)
+    {
+        return path.Replace(PicSetIndexMacro.NameConstToken, setIndex.ToString());
     }
 
     public static string ReplaceTokenExtensionWithTempExtension(string path)

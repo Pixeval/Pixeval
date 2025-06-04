@@ -72,6 +72,7 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
         var backSlash = TokenizedDestination.LastIndexOf('\\');
         DocPath = TokenizedDestination[..backSlash];
         PdfTempFolderPath = $"{DocPath}.tmp";
+        FileHelper.CreateParentDirectories(DocPath);
         // .<ext> or .png or .etc 
         var imgExt = TokenizedDestination[(backSlash + 1)..];
         DestinationIllustrationFormat = IoHelper.GetIllustrationFormat(imgExt);
@@ -86,6 +87,7 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
         var backSlash = TokenizedDestination.LastIndexOf('\\');
         DocPath = TokenizedDestination[..backSlash];
         PdfTempFolderPath = $"{DocPath}.tmp";
+        FileHelper.CreateParentDirectories(DocPath);
         // .<ext> or .png or .etc 
         var imgExt = TokenizedDestination[(backSlash + 1)..];
         DestinationIllustrationFormat = IoHelper.GetIllustrationFormat(imgExt);
@@ -98,9 +100,9 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
     {
         if (NovelContent == null!)
             SetNovelContent(await App.AppViewModel.MakoClient.GetNovelContentAsync(Entry.Id));
-
-        // 小说若无图片，则没有子任务。所以此类任务是瞬间完成，理论上不存在排队、下载和暂停状态
-        if (TasksSet.Count is 0 && CurrentState is DownloadState.Queued or DownloadState.Running or DownloadState.Paused)
+        // 如果小说正文内容为空，说明是从数据库刚读出的任务，不要写文件
+        // 小说若无图片，则没有子任务。所以此类任务是瞬间完成，理论上不存在其他状态
+        else if (TasksSet.Count is 0)
             await AllTasksDownloadedAsync();
     }
 

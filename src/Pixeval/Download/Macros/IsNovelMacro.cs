@@ -1,7 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Mako.Model;
 using Misaki;
 using Pixeval.Download.MacroParser;
 
@@ -14,5 +13,5 @@ public class IsNovelMacro : IPredicate<IArtworkInfo>
 
     public string Name => "if_novel";
 
-    public bool Match(IArtworkInfo context) => context is Novel { ImageType: ImageType.Other };
+    public bool Match(IArtworkInfo context) => context.ImageType is ImageType.Other;
 }
