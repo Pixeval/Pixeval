@@ -154,8 +154,8 @@ public static class WindowFactory
         var displayArea = DisplayArea.GetFromWindowId(appWindow.Id, DisplayAreaFallback.Primary);
         var workArea = displayArea.WorkArea;
         var position = appWindow.Position;
-        var size = desiredSize == default ? appWindow.Size : desiredSize;
-        var left = workArea.Width - size.Width;
+        desiredSize = desiredSize == default ? appWindow.Size : desiredSize;
+        var left = workArea.Width - desiredSize.Width;
         if (left < 0)
         {
             left = 0;
@@ -163,7 +163,7 @@ public static class WindowFactory
         }
         if (position.X > left)
             position.X = left;
-        var top = workArea.Height - appWindow.Size.Height;
+        var top = workArea.Height - desiredSize.Height;
         if (top < 0)
         {
             top = 0;
