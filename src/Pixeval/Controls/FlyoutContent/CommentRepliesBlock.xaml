@@ -17,9 +17,9 @@
     <!--  ReSharper disable once UnusedMember.Local  -->
     <controls:CommentView
         x:Name="CommentView"
+        DeleteButtonClick="CommentView_OnDeleteButtonClick"
         HasNoItem="{x:Bind controls:C.Negation(ViewModel.RepliesIsNotNull), Mode=OneWay}"
         ItemsSource="{x:Bind ViewModel.Replies, Mode=OneWay}"
         OpenRepliesButtonClick="CommentView_OnOpenRepliesButtonClick"
-        DeleteButtonClick="CommentView_OnDeleteButtonClick"
         RequireEntryType="CommentView_OnRequireEntryType" />
 </controls1:DockPanel>
