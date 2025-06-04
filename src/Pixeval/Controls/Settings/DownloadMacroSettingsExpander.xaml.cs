@@ -16,9 +16,11 @@ using Pixeval.Download.MacroParser;
 using Pixeval.Download.MacroParser.Ast;
 using Pixeval.Download.Macros;
 using Pixeval.Settings.Models;
+using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.UI;
+using Misaki;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls.Settings;
@@ -43,6 +45,7 @@ public sealed partial class DownloadMacroSettingsExpander
                     return;
                 // The first time viewmodel get the value of DownloadPathMacro from AppSettings won't trigger the property changed event
                 _previousPath = Entry.Value;
+                SetExamplePaths();
                 SetPathMacroRichEditBoxDocument(Entry.Value);
             }
         }
@@ -55,6 +58,11 @@ public sealed partial class DownloadMacroSettingsExpander
     /// </summary>
     private static readonly MacroParser<string> _TestParser = new();
     private static readonly MacroParser<string> _PathParser = new();
+
+    private static readonly ISingleImage _SingleImage = new TestWork(ImageType.SingleImage);
+    private static readonly ISingleImage _SingleAnimatedImage = new TestWork(ImageType.SingleAnimatedImage);
+    private static readonly ISingleImage _ImageSet = new TestWork(ImageType.ImageSet);
+    private static readonly ISingleImage _Novel = new TestWork(ImageType.Other);
 
     /// <summary>
     /// The previous meta path after user changes the path field, if the path is illegal
@@ -72,7 +80,7 @@ public sealed partial class DownloadMacroSettingsExpander
 
     private void DownloadPathMacroTextBox_OnLostFocus(object sender, RoutedEventArgs e)
     {
-        if (Entry.Value.IsNullOrBlank())
+        if (string.IsNullOrWhiteSpace(Entry.Value))
         {
             DownloadMacroInvalidInfoBar.Message = SettingsPageResources.DownloadMacroInvalidInfoBarInputCannotBeBlank;
             DownloadMacroInvalidInfoBar.IsOpen = true;
@@ -92,6 +100,9 @@ public sealed partial class DownloadMacroSettingsExpander
                     DownloadMacroInvalidInfoBar.IsOpen = true;
                     Entry.Value = _previousPath;
                 }
+                else
+                    SetExamplePaths();
+
                 SetPathMacroRichEditBoxDocument(Entry.Value);
             }
         }
@@ -120,6 +131,21 @@ public sealed partial class DownloadMacroSettingsExpander
     {
         UiHelper.ClipboardSetText(e.ClickedItem.To<StringRepresentableItem>().StringRepresentation);
         this.SuccessGrowl(SettingsPageResources.MacroCopiedToClipboard);
+    }
+
+    private void SetExamplePaths()
+    {
+        SinglePathBlock.Text = GetPath(_SingleImage);
+        AnimatedPathBlock.Text = GetPath(_SingleAnimatedImage);
+        SetPathBlock.Text = IoHelper.ReplaceTokenSetIndex(GetPath(_ImageSet), _ImageSet.SetIndex);
+        NovelPathBlock.Text = GetPath(_Novel);
+        return;
+
+        string GetPath(IArtworkInfo info)
+        {
+            return IoHelper.NormalizePath(ArtworkMetaPathParser.Instance.Reduce(Entry.Value, info))
+                .Replace(FileExtensionMacro.NameConstToken, ".png");
+        }
     }
 
     private void SetPathMacroRichEditBoxDocument(string path)
@@ -252,4 +278,74 @@ public sealed partial class DownloadMacroSettingsExpander
 
         return manipulators;
     }
+}
+
+file record TestWork(ImageType ImageType) : ISingleImage, IImageSet, ISingleAnimatedImage
+{
+    public ulong ByteSize => 0;
+
+    public Uri ImageUri => null!;
+
+    public int SetIndex => 0;
+
+    public IPreloadableList<ISingleImage> Pages => null!;
+
+    public int PageCount => 0;
+
+    public SingleAnimatedImageType PreferredAnimatedImageType => SingleAnimatedImageType.SingleZipFile;
+
+    public Uri? SingleImageUri => null;
+
+    public IPreloadableList<int>? ZipImageDelays => null;
+
+    public IPreloadableList<(Uri Uri, int MsDelay)>? MultiImageUris => null;
+
+    public IPreloadableList<IAnimatedImageFrame> AnimatedThumbnails => null!;
+
+    public int Width => 0;
+
+    public int Height => 0;
+
+    public string Platform => null!;
+
+    public string Id => "12345678";
+
+    public string Title => nameof(Title);
+
+    public string Description => null!;
+
+    public Uri WebsiteUri => null!;
+
+    public Uri AppUri => null!;
+
+    public DateTimeOffset CreateDate => default;
+
+    public IPreloadableList<IUser> Authors { get; } =
+    [
+        new UserEntity
+        {
+            Id = 7654321,
+            Name = nameof(UserEntity.Name),
+            Account = "",
+            ProfileImageUrls = null!
+        }
+    ];
+
+    public IPreloadableList<IUser> Uploaders => null!;
+
+    public SafeRating SafeRating => default;
+
+    public ILookup<ITagCategory, ITag> Tags => null!;
+
+    public IReadOnlyCollection<IImageFrame> Thumbnails => null!;
+
+    public IReadOnlyDictionary<string, object> AdditionalInfo => null!;
+
+    public int TotalFavorite => 0;
+
+    public int TotalView => 0;
+
+    public bool IsFavorite => false;
+
+    public bool IsAiGenerated => false;
 }

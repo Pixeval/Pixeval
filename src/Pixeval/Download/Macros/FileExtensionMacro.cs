@@ -23,7 +23,7 @@ public class FileExtensionMacro : ITransducer<IArtworkInfo>, ILastSegment
         {
             ImageType.SingleImage or ImageType.ImageSet => IoHelper.GetIllustrationExtension(),
             ImageType.SingleAnimatedImage => IoHelper.GetUgoiraExtension(),
-            ImageType.Other when context is Novel => IoHelper.GetNovelExtension(),
+            ImageType.Other => IoHelper.GetNovelExtension(),
             _ => ""
         };
     }

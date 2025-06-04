@@ -26,6 +26,7 @@ using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
 using WinUI3Utilities;
+using static Pixeval.Filters.IQueryToken;
 
 namespace Pixeval.Util.IO;
 
@@ -379,6 +380,11 @@ public static partial class IoHelper
     {
         var url = uri.OriginalString;
         return ReplaceTokenExtensionFromUrl(path, url);
+    }
+
+    public static string ReplaceTokenSetIndex(string path, int setIndex)
+    {
+        return path.Replace(PicSetIndexMacro.NameConstToken, setIndex.ToString());
     }
 
     public static string ReplaceTokenExtensionWithTempExtension(string path)

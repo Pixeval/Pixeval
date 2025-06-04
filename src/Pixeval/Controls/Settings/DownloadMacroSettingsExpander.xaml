@@ -42,6 +42,22 @@
                     IsSpellCheckEnabled="False"
                     LostFocus="DownloadPathMacroTextBox_OnLostFocus"
                     TextChanged="DownloadPathMacroTextBox_OnTextChanged" />
+                <TextBlock>
+                    <Run x:Uid="/SettingsPage/SinglePathBlock" />
+                    <Run x:Name="SinglePathBlock" />
+                </TextBlock>
+                <TextBlock>
+                    <Run x:Uid="/SettingsPage/AnimatedPathBlock" />
+                    <Run x:Name="AnimatedPathBlock" />
+                </TextBlock>
+                <TextBlock>
+                    <Run x:Uid="/SettingsPage/SetPathBlock" />
+                    <Run x:Name="SetPathBlock" />
+                </TextBlock>
+                <TextBlock>
+                    <Run x:Uid="/SettingsPage/NovelPathBlock" />
+                    <Run x:Name="NovelPathBlock" />
+                </TextBlock>
                 <InfoBar
                     x:Name="DownloadMacroInvalidInfoBar"
                     x:Uid="/SettingsPage/DownloadMacroInvalidInfoBar"
