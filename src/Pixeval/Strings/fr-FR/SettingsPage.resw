@@ -762,4 +762,16 @@ Entrer une addresse IP et cliquer '+' pour ajouter</value>
   <data name="OpenWorkInfoByDefault.Description" xml:space="preserve">
     <value>浏览作品时默认打开作品信息栏</value>
   </data>
+  <data name="AnimatedPathBlock.Text" xml:space="preserve">
+    <value>动图：</value>
+  </data>
+  <data name="SinglePathBlock.Text" xml:space="preserve">
+    <value>单图：</value>
+  </data>
+  <data name="SetPathBlock.Text" xml:space="preserve">
+    <value>多图：</value>
+  </data>
+  <data name="NovelPathBlock.Text" xml:space="preserve">
+    <value>小说：</value>
+  </data>
 </root>
