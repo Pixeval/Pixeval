@@ -31,7 +31,7 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<IArtworkInfo
     {
         MangaSaveCommand.ExecuteRequested += SaveCommandOnExecuteRequested;
         MangaSaveAsCommand.ExecuteRequested += SaveAsCommandOnExecuteRequested;
-        var isManga = IsManga;
+        var isManga = IsPicSet;
         MangaSaveCommand.CanExecuteRequested += (_, e) => e.CanExecute = isManga;
         MangaSaveAsCommand.CanExecuteRequested += (_, e) => e.CanExecute = isManga;
     }
@@ -42,7 +42,8 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<IArtworkInfo
         var isOriginal = App.AppViewModel.AppSettings.BrowseOriginalImage;
         switch (Entry)
         {
-            case ISingleImage { ImageType: ImageType.SingleImage } singleImage:
+            // 当下载图集的其中一张图片时，ImageType会为ImageSet
+            case ISingleImage { ImageType: ImageType.SingleImage or ImageType.ImageSet } singleImage:
             {
                 var f = isOriginal ? singleImage : Entry.Thumbnails.PickMaxFrame();
                 var stream = await CacheHelper.GetSingleImageAsync(
@@ -98,13 +99,13 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<IArtworkInfo
     /// <summary>
     /// 当调用<see cref="GetMangaIllustrationViewModels"/>后，此属性会被赋值为当前<see cref="IllustrationItemViewModel"/>在Manga中的索引
     /// </summary>
-    public int MangaIndex => Entry is ISingleImage single
+    public int SetIndex => Entry is ISingleImage single
         ? single.SetIndex
         : -1;
 
-    public bool IsManga => Entry.ImageType is ImageType.ImageSet;
+    public bool IsPicSet => Entry.ImageType is ImageType.ImageSet;
 
-    public bool IsUgoira => Entry.ImageType is ImageType.SingleAnimatedImage;
+    public bool IsPicGif => Entry.ImageType is ImageType.SingleAnimatedImage;
 
     public string? SizeText =>
         Entry is IImageFrame { Width: > 0, Height: > 0 } frame ? $"{frame.Width} x {frame.Height}" : null;
@@ -114,10 +115,10 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<IArtworkInfo
         get
         {
             var sb = new StringBuilder(Entry.Title);
-            if (IsUgoira)
+            if (IsPicGif)
                 _ = sb.AppendLine()
                     .Append(EntryItemResources.TheIllustrationIsAnUgoira);
-            else if (IsManga && Entry is IImageSet set)
+            else if (IsPicSet && Entry is IImageSet set)
                 _ = sb.AppendLine()
                     .Append(EntryItemResources.TheIllustrationIsAMangaFormatted.Format(set.PageCount));
 
@@ -137,7 +138,7 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<IArtworkInfo
     /// </returns>
     public IEnumerable<IllustrationItemViewModel> GetMangaIllustrationViewModels()
     {
-        if (!IsManga || Entry is not IImageSet set)
+        if (!IsPicSet || Entry is not IImageSet set)
         {
             // 保证里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
             return [CreateInstance(Entry)];

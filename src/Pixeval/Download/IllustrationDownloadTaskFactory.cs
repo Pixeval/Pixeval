@@ -26,6 +26,11 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IArtworkInfo
                 task = new SingleImageDownloadTaskGroup(singleImage, path);
                 break;
             }
+            case ISingleImage { ImageType: ImageType.ImageSet, SetIndex: > -1 } singleImage:
+            {
+                task = new SingleImageDownloadTaskGroup(singleImage, path);
+                break;
+            }
             case ISingleAnimatedImage
             {
                 ImageType: ImageType.SingleAnimatedImage,

@@ -58,7 +58,7 @@ public partial class NovelDownloadTaskGroup : DownloadTaskGroup
             var name = Path.Combine(directory, DocumentViewModel.AllTokens[i]);
             var imageDownloadTask = new ImageDownloadTask(new(url),
                 DestinationIllustrationFormat is IllustrationDownloadFormat.Original
-                    ? IoHelper.ReplaceTokenExtensionFromUrl(name, url)
+                    ? IoHelper.ReplaceTokenExtensionFromUrl(name, url, -1)
                     : name + imgExt,
                 DatabaseEntry.State);
             AddToTasksSet(imageDownloadTask);

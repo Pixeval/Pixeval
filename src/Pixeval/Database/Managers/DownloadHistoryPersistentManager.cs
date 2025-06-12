@@ -123,7 +123,8 @@ public class DownloadHistoryPersistentManager(ILiteDatabase collection, int maxi
     {
         return entry.Entry switch
         {
-            ISingleImage { ImageType: ImageType.SingleImage } => new SingleImageDownloadTaskGroup(entry),
+            ISingleImage { ImageType: ImageType.SingleImage } or
+            ISingleImage { ImageType: ImageType.ImageSet, SetIndex: > -1 } => new SingleImageDownloadTaskGroup(entry),
             ISingleAnimatedImage
             {
                 ImageType: ImageType.SingleAnimatedImage,

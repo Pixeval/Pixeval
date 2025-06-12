@@ -143,12 +143,12 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     {
         var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadPathMacro);
         var normalizedName = IoHelper.NormalizePathSegment(ArtworkMetaPathParser.Instance.Reduce(name, IllustrationViewModel.Entry));
-        var tempName = IoHelper.ReplaceTokenExtensionWithTempExtension(normalizedName);
+        var tempName = IoHelper.ReplaceTokenExtensionWithTempExtension(normalizedName, IllustrationViewModel.SetIndex);
         await using (var stream = appKnownFolder.CreateAsyncWrite(tempName))
             await GetDisplayStreamsSourceAsync(stream);
         string newName;
         await using (var stream = appKnownFolder.OpenAsyncRead(tempName)) 
-            newName = await IoHelper.ReplaceTempExtensionFromStreamAsync(normalizedName, stream);
+            newName = await IoHelper.ReplaceTempExtensionFromStreamAsync(normalizedName, stream, IllustrationViewModel.SetIndex);
         appKnownFolder.RenameFile(tempName, newName);
         return await StorageFile.GetFileFromPathAsync(appKnownFolder.CombinePath(normalizedName));
     }
@@ -156,12 +156,12 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
     public async Task SaveAsync(string destination)
     {
         destination = IoHelper.NormalizePath(ArtworkMetaPathParser.Instance.Reduce(destination, IllustrationViewModel.Entry));
-        var tempDestination = IoHelper.ReplaceTokenExtensionWithTempExtension(destination);
+        var tempDestination = IoHelper.ReplaceTokenExtensionWithTempExtension(destination, IllustrationViewModel.SetIndex);
         await using (var stream = FileHelper.CreateAsyncWriteCreateParent(tempDestination))
             await GetDisplayStreamsSourceAsync(stream);
         string newDestination;
         await using (var stream = FileHelper.OpenAsyncRead(tempDestination))
-            newDestination = await IoHelper.ReplaceTempExtensionFromStreamAsync(destination, stream);
+            newDestination = await IoHelper.ReplaceTempExtensionFromStreamAsync(destination, stream, IllustrationViewModel.SetIndex);
         File.Move(tempDestination, newDestination);
         FrameworkElement?.SuccessGrowl(EntryItemResources.Saved);
     }
@@ -343,7 +343,7 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         SaveAsCommand.CanExecuteRequested += LoadingCompletedCanExecuteRequested;
         SaveAsCommand.ExecuteRequested += SaveAsCommandOnExecuteRequested;
 
-        PlayGifCommand.CanExecuteRequested += (_, e) => e.CanExecute = IllustrationViewModel.IsUgoira && LoadSuccessfully;
+        PlayGifCommand.CanExecuteRequested += (_, e) => e.CanExecute = IllustrationViewModel.IsPicGif && LoadSuccessfully;
         PlayGifCommand.ExecuteRequested += PlayGifCommandOnExecuteRequested;
 
         // 相当于鼠标滚轮滚动10次，方便快速缩放
@@ -400,9 +400,9 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 
     private void LoadingCompletedCanExecuteRequested(XamlUICommand _, CanExecuteRequestedEventArgs args) => args.CanExecute = LoadSuccessfully;
 
-    private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully;
+    private void IsNotUgoiraAndLoadingCompletedCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsPicGif && LoadSuccessfully;
 
-    private void ExtensionCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsUgoira && LoadSuccessfully && ExtensionRunningLock;
+    private void ExtensionCanExecuteRequested(XamlUICommand sender, CanExecuteRequestedEventArgs args) => args.CanExecute = !IllustrationViewModel.IsPicGif && LoadSuccessfully && ExtensionRunningLock;
 
     public XamlUICommand CopyCommand { get; } = EntryViewerPageResources.Copy.GetCommand(Symbol.Copy, VirtualKeyModifiers.Control, VirtualKey.C);
   

@@ -31,7 +31,7 @@ public abstract class SingleImageDownloadTaskGroupBase : ImageDownloadTask, IDow
     }
 
     public SingleImageDownloadTaskGroupBase(DownloadHistoryEntry entry) : base(GetImageUri(entry.Entry),
-        IoHelper.ReplaceTokenExtensionFromUrl(entry.Destination, GetImageUri(entry.Entry)))
+        IoHelper.ReplaceTokenExtensionFromUrl(entry.Destination, GetImageUri(entry.Entry), entry.Entry.TryGetSetIndex()))
     {
         DatabaseEntry = entry;
         CurrentState = entry.State;
@@ -43,6 +43,7 @@ public abstract class SingleImageDownloadTaskGroupBase : ImageDownloadTask, IDow
         info switch
         {
             ISingleImage { ImageType: ImageType.SingleImage } singleImage => singleImage.ImageUri,
+            ISingleImage { ImageType: ImageType.ImageSet, SetIndex: > -1 } singleImage => singleImage.ImageUri,
             ISingleAnimatedImage
                 {
                     ImageType: ImageType.SingleAnimatedImage,

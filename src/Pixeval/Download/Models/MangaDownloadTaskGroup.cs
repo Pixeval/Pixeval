@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Misaki;
 using Pixeval.Database;
-using Pixeval.Download.Macros;
 using Pixeval.Options;
 using Pixeval.Util;
 using Pixeval.Util.IO;
@@ -40,7 +39,7 @@ public partial class MangaDownloadTaskGroup : DownloadTaskGroup
             return;
         foreach (var page in Entry.Pages)
         {
-            var imageDownloadTask = new ImageDownloadTask(page.ImageUri, IoHelper.ReplaceTokenSetIndex(IoHelper.ReplaceTokenExtensionFromUrl(TokenizedDestination, page.ImageUri), page.SetIndex), DatabaseEntry.State);
+            var imageDownloadTask = new ImageDownloadTask(page.ImageUri, IoHelper.ReplaceTokenExtensionFromUrl(TokenizedDestination, page.ImageUri, page.SetIndex), DatabaseEntry.State);
             AddToTasksSet(imageDownloadTask);
         }
         SetNotCreateFromEntry();
