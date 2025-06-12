@@ -81,14 +81,14 @@
             <local:PixevalBadge
                 controls:DockPanel.Dock="Left"
                 Mode="Gif"
-                Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsUgoira), Mode=OneWay}" />
+                Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsPicGif), Mode=OneWay}" />
             <Grid controls:DockPanel.Dock="Right">
                 <fluent:SymbolIcon
                     Foreground="{ThemeResource LayerFillColorDefaultBrush}"
                     IconVariant="Filled"
                     Symbol="SquareMultiple"
-                    Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsManga), Mode=OneWay}" />
-                <fluent:SymbolIcon Symbol="SquareMultiple" Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsManga), Mode=OneWay}" />
+                    Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsPicSet), Mode=OneWay}" />
+                <fluent:SymbolIcon Symbol="SquareMultiple" Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsPicSet), Mode=OneWay}" />
             </Grid>
         </controls:DockPanel>
     </Grid>

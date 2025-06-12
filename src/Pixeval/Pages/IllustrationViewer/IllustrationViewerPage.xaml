@@ -50,7 +50,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 DefaultLabelPosition="Collapsed">
-                                <AppBarButton Command="{x:Bind _viewModel.CurrentImage.PlayGifCommand, Mode=OneWay}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsUgoira), Mode=OneWay}" />
+                                <AppBarButton Command="{x:Bind _viewModel.CurrentImage.PlayGifCommand, Mode=OneWay}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsPicGif), Mode=OneWay}" />
                                 <AppBarButton
                                     Command="{x:Bind _viewModel.CurrentImage.CopyCommand, Mode=OneWay}"
                                     CommandParameter="{x:Bind}"
@@ -66,11 +66,11 @@
                                 <AppBarButton
                                     Command="{x:Bind _viewModel.CurrentIllustration.MangaSaveCommand, Mode=OneWay}"
                                     CommandParameter="{x:Bind}"
-                                    Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
+                                    Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsPicSet), Mode=OneWay}" />
                                 <AppBarButton
                                     Command="{x:Bind _viewModel.CurrentIllustration.MangaSaveAsCommand, Mode=OneWay}"
                                     CommandParameter="{x:Bind}"
-                                    Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
+                                    Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsPicSet), Mode=OneWay}" />
                                 <AppBarSeparator />
                                 <!--<AppBarButton Command="{x:Bind _viewModel.CurrentImage.SetAsCommand, Mode=OneWay}">
                                     <AppBarButton.Flyout>
@@ -182,7 +182,7 @@
                                             NumberOfPages="{x:Bind _viewModel.PageCount, Mode=OneWay}"
                                             PreviousButtonVisibility="Visible"
                                             SelectedPageIndex="{x:Bind _viewModel.CurrentPageIndex, Mode=TwoWay}"
-                                            Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
+                                            Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsPicSet), Mode=OneWay}" />
                                         <CommandBar DefaultLabelPosition="Collapsed" OverflowButtonVisibility="Collapsed">
                                             <AppBarButton
                                                 Command="{x:Bind _viewModel.CurrentIllustration.BookmarkCommand, Mode=OneWay}"
@@ -199,7 +199,7 @@
                                             <AppBarButton
                                                 Command="{x:Bind _viewModel.CurrentIllustration.MangaSaveCommand, Mode=OneWay}"
                                                 CommandParameter="{x:Bind}"
-                                                Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
+                                                Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsPicSet), Mode=OneWay}" />
                                         </CommandBar>
                                     </controls1:DockPanel>
                                 </Border>
@@ -277,19 +277,19 @@
                     Grid.Column="2"
                     HorizontalAlignment="Stretch"
                     DefaultLabelPosition="Collapsed"
-                    Visibility="{x:Bind controls:C.ToVisibilityNegation(_viewModel.CurrentIllustration.IsUgoira), Mode=OneWay}" />
+                    Visibility="{x:Bind controls:C.ToVisibilityNegation(_viewModel.CurrentIllustration.IsPicGif), Mode=OneWay}" />
                 <CommandBar
                     Grid.Column="3"
                     HorizontalAlignment="Stretch"
                     DefaultLabelPosition="Collapsed">
                     <AppBarElementContainer VerticalContentAlignment="Center">
-                        <TextBlock Style="{StaticResource ViewerTextBlockStyle}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}">
+                        <TextBlock Style="{StaticResource ViewerTextBlockStyle}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsPicSet), Mode=OneWay}">
                             <Run Text="{x:Bind controls:C.PlusOneToString(_viewModel.CurrentPageIndex), Mode=OneWay}" />
                             <Run Text="/" />
                             <Run Text="{x:Bind _viewModel.PageCount, Mode=OneWay}" />
                         </TextBlock>
                     </AppBarElementContainer>
-                    <AppBarSeparator Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsManga), Mode=OneWay}" />
+                    <AppBarSeparator Visibility="{x:Bind controls:C.ToVisibility(_viewModel.CurrentIllustration.IsPicSet), Mode=OneWay}" />
                     <AppBarButton Command="{x:Bind _viewModel.CurrentImage.RestoreResolutionCommand, Mode=OneWay}" IsCompact="True" />
                     <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ZoomOutCommand, Mode=OneWay}" IsCompact="True" />
                     <AppBarButton Command="{x:Bind _viewModel.CurrentImage.ZoomInCommand, Mode=OneWay}" IsCompact="True" />

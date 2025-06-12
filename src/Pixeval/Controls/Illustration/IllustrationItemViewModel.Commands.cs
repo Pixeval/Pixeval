@@ -50,12 +50,12 @@ public partial class IllustrationItemViewModel
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="frameworkElement">承载提示<see cref="TeachingTip"/>的控件，为<see langword="null"/>则不显示</param>
+    /// <param name="frameworkElement">承载提示<see cref="Growl"/>的控件，为<see langword="null"/>则不显示</param>
     /// <param name="path">文件路径</param>
     /// <returns></returns>
     private async ValueTask SaveUtilityAsync(FrameworkElement? frameworkElement, string path)
     {
-        if (IsUgoira && Entry is ISingleAnimatedImage { MultiImageUris: not null } animatedImage)
+        if (IsPicGif && Entry is ISingleAnimatedImage { MultiImageUris: not null } animatedImage)
             await animatedImage.MultiImageUris.TryPreloadListAsync(animatedImage);
         var factory = App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationDownloadTaskFactory>();
         var task = factory.Create(Entry, path);

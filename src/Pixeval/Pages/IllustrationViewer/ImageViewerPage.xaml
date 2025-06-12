@@ -8,9 +8,9 @@
     mc:Ignorable="d">
     <Grid>
         <controls:ZoomableImage
+            x:Name="ImageViewer"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
-            x:Name="ImageViewer"
             ImageIsMirrored="{x:Bind _viewModel.IsMirrored, Mode=OneWay}"
             ImageRotationDegree="{x:Bind _viewModel.RotationDegree, Mode=OneWay}"
             ImageScale="{x:Bind _viewModel.Scale, Mode=OneWay}"
@@ -20,7 +20,7 @@
             <controls:ZoomableImage.ContextFlyout>
                 <!--  PrimaryCommands 点击后不会自动隐藏Flyout  -->
                 <CommandBarFlyout>
-                    <AppBarButton Command="{x:Bind _viewModel.PlayGifCommand}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.IllustrationViewModel.IsUgoira)}" />
+                    <AppBarButton Command="{x:Bind _viewModel.PlayGifCommand}" Visibility="{x:Bind controls:C.ToVisibility(_viewModel.IllustrationViewModel.IsPicGif)}" />
                     <AppBarButton
                         Command="{x:Bind _viewModel.OriginalIllustrationViewModel.BookmarkCommand}"
                         CommandParameter="{x:Bind}"
@@ -31,7 +31,7 @@
                     <AppBarButton Command="{x:Bind _viewModel.ZoomOutCommand}" />
                     <AppBarButton Command="{x:Bind _viewModel.ShareCommand}" />
                     <CommandBarFlyout.SecondaryCommands>
-                        <AppBarButton Command="{x:Bind _viewModel.CopyCommand}" Visibility="{x:Bind controls:C.ToVisibilityNegation(_viewModel.IllustrationViewModel.IsUgoira)}" />
+                        <AppBarButton Command="{x:Bind _viewModel.CopyCommand}" Visibility="{x:Bind controls:C.ToVisibilityNegation(_viewModel.IllustrationViewModel.IsPicGif)}" />
                         <AppBarButton Command="{x:Bind _viewModel.SaveCommand}" />
                         <AppBarButton Command="{x:Bind _viewModel.SaveAsCommand}" />
                         <AppBarButton Command="{x:Bind _viewModel.SetAsCommand}">

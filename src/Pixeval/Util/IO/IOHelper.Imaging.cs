@@ -25,6 +25,7 @@ using SixLabors.ImageSharp.Formats.Webp;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
+using Misaki;
 using WinUI3Utilities;
 using static Pixeval.Filters.IQueryToken;
 
@@ -370,16 +371,27 @@ public static partial class IoHelper
         return Path.ChangeExtension(path, url[index..]);
     }
 
-    public static string ReplaceTokenExtensionFromUrl(string path, string url)
-    {
-        var index = url.LastIndexOf('.');
-        return path.Replace(FileExtensionMacro.NameConstToken, url[index..]);
-    }
-
-    public static string ReplaceTokenExtensionFromUrl(string path, Uri uri)
+    public static string ReplaceTokenExtensionFromUrl(string path, Uri uri, int setIndex)
     {
         var url = uri.OriginalString;
-        return ReplaceTokenExtensionFromUrl(path, url);
+        return ReplaceTokenExtensionFromUrl(path, url, setIndex);
+    }
+
+    public static string ReplaceTokenExtensionFromUrl(string path, string url, int setIndex)
+    {
+        var index = url.LastIndexOf('.');
+        return ReplaceTokenSetIndex(path.Replace(FileExtensionMacro.NameConstToken, url[index..]), setIndex);
+    }
+
+    public static async Task<string> ReplaceTempExtensionFromStreamAsync(string path, Stream stream, int setIndex)
+    {
+        var ext = (await Image.DetectFormatAsync(stream)).FileExtensions.First();
+        return ReplaceTokenSetIndex(path.Replace(FileExtensionMacro.NameConstToken, $".{ext}"), setIndex);
+    }
+
+    public static string ReplaceTokenExtensionWithTempExtension(string path, int setIndex)
+    {
+        return ReplaceTokenSetIndex(path.Replace(FileExtensionMacro.NameConstToken, PixevalTempExtension), setIndex);
     }
 
     public static string ReplaceTokenSetIndex(string path, int setIndex)
@@ -387,19 +399,13 @@ public static partial class IoHelper
         return path.Replace(PicSetIndexMacro.NameConstToken, setIndex.ToString());
     }
 
-    public static string ReplaceTokenExtensionWithTempExtension(string path)
-    {
-        return path.Replace(FileExtensionMacro.NameConstToken, PixevalTempExtension);
-    }
-
     public static string RemoveTokenExtension(string path)
     {
         return path.Replace(FileExtensionMacro.NameConstToken, null);
     }
 
-    public static async Task<string> ReplaceTempExtensionFromStreamAsync(string path, Stream stream)
+    public static int TryGetSetIndex(this IArtworkInfo artworkInfo)
     {
-        var ext = (await Image.DetectFormatAsync(stream)).FileExtensions.First();
-        return path.Replace(FileExtensionMacro.NameConstToken, $".{ext}");
+        return artworkInfo is ISingleImage singleImage ? singleImage.SetIndex : -1;
     }
 }
