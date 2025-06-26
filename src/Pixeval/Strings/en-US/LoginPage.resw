@@ -60,45 +60,45 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -124,14 +124,8 @@
     <value>The app is about to exit, error message：
 {0}</value>
   </data>
-  <data name="LoginPhaseCheckingCertificateInstallation" xml:space="preserve">
-    <value>Checking certificate installation...</value>
-  </data>
   <data name="LoginPhaseCheckingWebView2Installation" xml:space="preserve">
     <value>Ensuring WebView2 installed...</value>
-  </data>
-  <data name="LoginPhaseInstallingCertificate" xml:space="preserve">
-    <value>Installing certificate, please confirm in the dialog...</value>
   </data>
   <data name="LoginPhaseRefreshing" xml:space="preserve">
     <value>Refreshing session...</value>
@@ -181,28 +175,6 @@ If this problem persists, contact the developer for further help.</value>
   </data>
   <data name="FetchingSessionFailedTitle" xml:space="preserve">
     <value>Failed to fetch session</value>
-  </data>
-  <data name="RootCertificateInstallationRequiredSecondaryButtonText" xml:space="preserve">
-    <value>Use Pixeval's certificate</value>
-  </data>
-  <data name="RootCertificateInstallationRequiredPrimaryButtonText" xml:space="preserve">
-    <value>Use your own certificate</value>
-  </data>
-  <data name="CertificateRequiredDialogContent.Text" xml:space="preserve">
-    <value>The certificate must be installed in order to login, the private key of this certificate is guaranteed not to be distributed, click "Use Pixeval's certificate" to the installation
-You can also choose to provide your own valid certificate by entering your certificate path and password in the text box below and selecting "Use your own certificate". If you are still unable to connect to Pixiv after this, you have provided the invalid certificate</value>
-  </data>
-  <data name="CertificateRequiredDialogPath.PlaceholderText" xml:space="preserve">
-    <value>Certificate path</value>
-  </data>
-  <data name="CertificateRequiredDialogPassword.PlaceholderText" xml:space="preserve">
-    <value>Certificate password</value>
-  </data>
-  <data name="CertificateRequiredDialogInvalidInfoBar.Title" xml:space="preserve">
-    <value>Incorrect certificate path or password</value>
-  </data>
-  <data name="RootCertificateInstallationRequiredTitle" xml:space="preserve">
-    <value>You need to install the certificate to login</value>
   </data>
   <data name="WebView2InstallationRequiredContent" xml:space="preserve">
     <value>WebView2 is required to log in using this method. By clicking OK the browser will be opened to download the WebView2 Runtime automatically, please restart the app after the installation.</value>

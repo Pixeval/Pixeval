@@ -60,45 +60,45 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -124,14 +124,8 @@
     <value>L'application va quitter. Voici le message d'erreur:
 {0}</value>
   </data>
-  <data name="LoginPhaseCheckingCertificateInstallation" xml:space="preserve">
-    <value>Vérification de certificat en cours...</value>
-  </data>
   <data name="LoginPhaseCheckingWebView2Installation" xml:space="preserve">
     <value>Vérification de WebView2 en cours...</value>
-  </data>
-  <data name="LoginPhaseInstallingCertificate" xml:space="preserve">
-    <value>Installation de certificat, veuillez confirmer dans le popup...</value>
   </data>
   <data name="LoginPhaseRefreshing" xml:space="preserve">
     <value>Rafraichir la session actuelle en cours...</value>
@@ -181,28 +175,6 @@
   </data>
   <data name="FetchingSessionFailedTitle" xml:space="preserve">
     <value>Récupération de session échouée</value>
-  </data>
-  <data name="RootCertificateInstallationRequiredSecondaryButtonText" xml:space="preserve">
-    <value>Utiliser le cert. de Pixeval</value>
-  </data>
-  <data name="RootCertificateInstallationRequiredPrimaryButtonText" xml:space="preserve">
-    <value>Utiliser mon cert.</value>
-  </data>
-  <data name="CertificateRequiredDialogContent.Text" xml:space="preserve">
-    <value>Une installation de certificat est nécessaire pour l'authentification. Ce certificat sera utilisé exclusivement pour le fonctionnement de Pixeval et ne sera jamais communiqué en dehors de votre appareil. Si vous confirmez en choisissant "Utiliser le cert. de Pixeval", vous acceptez de l'installer.
-Vous pouvez également choisir votre propre certificat en saisissant sa localisation et son mot de passe en sélectionnant l'option "Utiliser mon cert.". Si votre certificat n'est pas valide, une erreur de connexion surviendra.</value>
-  </data>
-  <data name="CertificateRequiredDialogPath.PlaceholderText" xml:space="preserve">
-    <value>localisation du certificat</value>
-  </data>
-  <data name="CertificateRequiredDialogPassword.PlaceholderText" xml:space="preserve">
-    <value>mot de passe associé (à ce certificat)</value>
-  </data>
-  <data name="CertificateRequiredDialogInvalidInfoBar.Title" xml:space="preserve">
-    <value>le certificat n'existe pas (dans cette addresse) ou mot de passe incorrect</value>
-  </data>
-  <data name="RootCertificateInstallationRequiredTitle" xml:space="preserve">
-    <value>Aucun certificat détecté</value>
   </data>
   <data name="WebView2InstallationRequiredContent" xml:space="preserve">
     <value>L'utilisation de cette méthode d'authentification nécessite une installation de WebView2, si vous confirmer, le téléchargement de Runtime WebView2 va commencer. Veuillez ensuite l'installer via l'exécution de l'EXE puis relancer l'application.</value>

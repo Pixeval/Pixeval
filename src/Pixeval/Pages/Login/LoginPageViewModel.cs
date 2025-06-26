@@ -9,6 +9,8 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Web;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Mako;
+using Mako.Net;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Win32;
@@ -19,6 +21,7 @@ using Pixeval.Controls.Windowing;
 using Pixeval.Util;
 using Pixeval.Util.ComponentModels;
 using Pixeval.Util.UI;
+using Pixeval.Utilities;
 using Windows.System;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
@@ -70,20 +73,6 @@ public partial class LoginPageViewModel(FrameworkElement frameworkElement) : UiO
         return !string.IsNullOrEmpty(regKey?.GetValue("pv") as string);
     }
 
-    public async Task<bool> CheckFakeRootCertificateInstallationAsync()
-    {
-        AdvancePhase(LoginPhaseEnum.CheckingCertificateInstallation);
-        using var cert = await AppInfo.GetFakeCaRootCertificateAsync();
-        return cert.Query(StoreName.Root, StoreLocation.CurrentUser);
-    }
-
-    public async Task InstallFakeRootCertificateAsync()
-    {
-        AdvancePhase(LoginPhaseEnum.InstallingCertificate);
-        using var cert = await AppInfo.GetFakeCaRootCertificateAsync();
-        cert.Install(StoreName.Root, StoreLocation.CurrentUser);
-    }
-
     private static int NegotiatePort(int preferPort = 49152)
     {
         var unavailable = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections().Select(t => t.LocalEndPoint.Port).ToHashSet();
@@ -108,9 +97,7 @@ public partial class LoginPageViewModel(FrameworkElement frameworkElement) : UiO
         var proxyServer = null as PixivAuthenticationProxyServer;
         if (EnableDomainFronting)
         {
-            if (await EnsureCertificateIsInstalled() is not { } cert)
-                return;
-            proxyServer = PixivAuthenticationProxyServer.Create(IPAddress.Loopback, port, cert);
+            proxyServer = PixivAuthenticationProxyServer.Create(IPAddress.Loopback, port, s => MakoHttpOptions.GetAddressesAsync(s));
             arguments += $" --ignore-certificate-errors --proxy-server=127.0.0.1:{port}";
         }
 
@@ -196,35 +183,6 @@ public partial class LoginPageViewModel(FrameworkElement frameworkElement) : UiO
         WebView.Source = new Uri(PixivAuth.GenerateWebPageUrl(verifier));
     }
 
-    private async Task<X509Certificate2?> EnsureCertificateIsInstalled()
-    {
-        if (!await CheckFakeRootCertificateInstallationAsync())
-        {
-            var content = new CertificateRequiredDialog();
-
-            var cd = FrameworkElement.CreateDialog(
-                LoginPageResources.RootCertificateInstallationRequiredTitle,
-                content,
-                LoginPageResources.RootCertificateInstallationRequiredPrimaryButtonText,
-                LoginPageResources.RootCertificateInstallationRequiredSecondaryButtonText,
-                MessageContentDialogResources.CancelButtonContent);
-            cd.PrimaryButtonClick += (_, e) => e.Cancel = !content.CheckCertificate();
-            var dialogResult = await cd.ShowAsync();
-
-            switch (dialogResult)
-            {
-                case ContentDialogResult.Primary:
-                    return content.X509Certificate2;
-                case ContentDialogResult.Secondary:
-                    await InstallFakeRootCertificateAsync();
-                    break;
-                default:
-                    return null;
-            }
-        }
-        return await AppInfo.GetFakeServerCertificateAsync();
-    }
-
     private async Task<bool> EnsureWebView2IsInstalled()
     {
         if (!CheckWebView2Installation())
@@ -275,12 +233,6 @@ public enum LoginPhaseEnum
 
     [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseWaitingForUserInput))]
     WaitingForUserInput,
-
-    [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseCheckingCertificateInstallation))]
-    CheckingCertificateInstallation,
-
-    [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseInstallingCertificate))]
-    InstallingCertificate,
 
     [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseCheckingWebView2Installation))]
     CheckingWebView2Installation,
