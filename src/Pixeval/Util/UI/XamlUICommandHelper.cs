@@ -1,11 +1,10 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Windows.System;
+using FluentIcons.Common;
 using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Util.UI;
@@ -49,13 +48,13 @@ public static class XamlUiCommandHelper
     public static void RefreshBookmarkCommand(this XamlUICommand command, bool isBookmarked, bool isPending)
     {
         command.Label = command.Description = isBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
-        command.IconSource = Symbol.Heart.GetSymbolIconSource(isBookmarked ^ isPending, isBookmarked ? new SolidColorBrush(Colors.Crimson) : null);
+        command.IconSource = Symbol.Heart.GetSymbolIconSource(isPending ? IconVariant.Filled : isBookmarked ? IconVariant.Color : IconVariant.Regular);
     }
 
     public static void RefreshFollowCommand(this XamlUICommand command, bool isFollowed, bool isPending)
     {
         command.Label = command.Description = isFollowed ? MiscResources.Unfollow : MiscResources.Follow;
-        command.IconSource = Symbol.Person.GetSymbolIconSource(isFollowed ^ isPending, isFollowed ? new SolidColorBrush(Colors.Crimson) : null);
+        command.IconSource = Symbol.Person.GetSymbolIconSource(isPending ? IconVariant.Filled : isFollowed ? IconVariant.Color : IconVariant.Regular);
     }
 
     public static XamlUICommand GetNewFollowCommand(bool isFollowed)
@@ -67,7 +66,7 @@ public static class XamlUiCommandHelper
 
     public static XamlUICommand GetNewFollowPrivatelyCommand()
     {
-        return MiscResources.FollowPrivately.GetCommand(Symbol.Star);
+        return MiscResources.FollowPrivately.GetCommand(Symbol.InprivateAccount);
     }
 
     public static void RefreshPlayCommand(this XamlUICommand command, bool isPlaying)
@@ -99,6 +98,6 @@ public static class XamlUiCommandHelper
         command.Label = command.Description = isExpand ? MiscResources.CloseBottomList : MiscResources.OpenBottomList;
         command.IconSource = (isExpand
             ? Symbol.PanelBottomContract
-            : Symbol.PanelBottomExpand).GetSymbolIconSource(true);
+            : Symbol.PanelBottomExpand).GetSymbolIconSource(IconVariant.Filled);
     }
 }

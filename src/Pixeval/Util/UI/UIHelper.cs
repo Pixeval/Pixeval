@@ -208,11 +208,11 @@ public static partial class UiHelper
         return icon;
     }
 
-    public static SymbolIconSource GetSymbolIconSource(this Symbol symbol, bool isFilled = false, Brush? foregroundBrush = null, bool useSmallFontSize = false)
+    public static SymbolIconSource GetSymbolIconSource(this Symbol symbol, IconVariant variant = IconVariant.Regular, Brush? foregroundBrush = null, bool useSmallFontSize = false)
     {
         var icon = new SymbolIconSource
         {
-            IconVariant = isFilled ? IconVariant.Filled : IconVariant.Regular,
+            IconVariant = variant,
             Symbol = symbol
         };
 

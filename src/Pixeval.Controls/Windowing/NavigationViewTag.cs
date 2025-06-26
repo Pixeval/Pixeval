@@ -3,6 +3,7 @@
 
 using System;
 using CommunityToolkit.Mvvm.ComponentModel;
+using FluentIcons.Common;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -30,14 +31,22 @@ public partial class NavigationViewTag(string header, Type navigateTo, object? p
             ? ImageUri is null
                 ? null
                 : new ImageIconSource { ImageSource = new BitmapImage(ImageUri) }
-            : new SymbolIconSource { Symbol = Symbol.Value };
+            : new SymbolIconSource
+            {
+                Symbol = Symbol.Value,
+                IconVariant = IconVariant.Color
+            };
 
     public IconElement? Icon =>
         Symbol is null
-        ? ImageUri is null
-            ? null
-            : new ImageIcon { Source = new BitmapImage(ImageUri) }
-        : new SymbolIcon { Symbol = Symbol.Value };
+            ? ImageUri is null
+                ? null
+                : new ImageIcon { Source = new BitmapImage(ImageUri) }
+            : new SymbolIcon
+            {
+                Symbol = Symbol.Value,
+                IconVariant = IconVariant.Color 
+            };
 
     [ObservableProperty]
     public partial bool ShowIconBadge { get; set; }

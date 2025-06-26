@@ -147,11 +147,13 @@
                         <AppBarButton
                             x:Uid="/MainPage/ReverseSearchButton"
                             Click="ReverseSearchButton_OnClicked"
-                            Content="{fluent:SymbolIcon Symbol=ImageSearch}" />
+                            Content="{fluent:SymbolIcon Symbol=SearchVisual,
+                                                        IconVariant=Color}" />
                         <AppBarButton
                             x:Uid="/MainPage/OpenSearchSettingButton"
                             Click="OpenSearchSettingButton_OnClicked"
-                            Content="{fluent:SymbolIcon Symbol=Settings}" />
+                            Content="{fluent:SymbolIcon Symbol=Settings,
+                                                        IconVariant=Color}" />
                     </CommandBar>
                     <AutoSuggestBox
                         x:Name="MainPageAutoSuggestionBox"

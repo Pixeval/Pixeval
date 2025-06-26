@@ -42,7 +42,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
         new(EntryViewerPageResources.BookmarksNavigationViewItemContent) { Symbol = Symbol.Library };
 
     public NavigationViewTag<FollowingsPage> FollowingsTag { get; } =
-        new(EntryViewerPageResources.FollowingsNavigationViewItemContent) { Symbol = Symbol.PersonAdd };
+        new(EntryViewerPageResources.FollowingsNavigationViewItemContent) { Symbol = Symbol.PersonHeart };
 
     public NavigationViewTag<MyPixivUsersPage> MyPixivUserTag { get; } =
         new(EntryViewerPageResources.MyPixivUserNavigationViewItemContent) { Symbol = Symbol.People };
