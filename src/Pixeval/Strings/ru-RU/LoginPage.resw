@@ -124,14 +124,8 @@
     <value>Приложение будет закрыто, вот информация об ошибке:
 {0}</value>
   </data>
-  <data name="LoginPhaseCheckingCertificateInstallation" xml:space="preserve">
-    <value>Проверка установки сертификата...</value>
-  </data>
   <data name="LoginPhaseCheckingWebView2Installation" xml:space="preserve">
     <value>Проверка установки WebView2...</value>
-  </data>
-  <data name="LoginPhaseInstallingCertificate" xml:space="preserve">
-    <value>Установка сертификата, пожалуйста, подтвердите в открывшемся диалоговом окне...</value>
   </data>
   <data name="LoginPhaseRefreshing" xml:space="preserve">
     <value>Обновление сессии...</value>
@@ -181,28 +175,6 @@
   </data>
   <data name="FetchingSessionFailedTitle" xml:space="preserve">
     <value>Не удалось получить сессию</value>
-  </data>
-  <data name="RootCertificateInstallationRequiredSecondaryButtonText" xml:space="preserve">
-    <value>Использовать сертификат Pixeval</value>
-  </data>
-  <data name="RootCertificateInstallationRequiredPrimaryButtonText" xml:space="preserve">
-    <value>Использовать собственный сертификат</value>
-  </data>
-  <data name="CertificateRequiredDialogContent.Text" xml:space="preserve">
-    <value>Для корректного входа необходимо установить сертификат. Приватный ключ этого сертификата не будет распространяться. Выбор "Использовать сертификат Pixeval" означает, что вы согласны установить данный сертификат.
-Вы также можете предоставить свой собственный сертификат. Введите путь к сертификату и пароль в текстовом поле ниже и выберите "Использовать собственный сертификат". Если после этого все равно не удастся подключиться к Pixiv, это означает, что сертификат неверен</value>
-  </data>
-  <data name="CertificateRequiredDialogPath.PlaceholderText" xml:space="preserve">
-    <value>Путь к сертификату</value>
-  </data>
-  <data name="CertificateRequiredDialogPassword.PlaceholderText" xml:space="preserve">
-    <value>Пароль к сертификату</value>
-  </data>
-  <data name="CertificateRequiredDialogInvalidInfoBar.Title" xml:space="preserve">
-    <value>Неверный путь к сертификату или неправильный пароль</value>
-  </data>
-  <data name="RootCertificateInstallationRequiredTitle" xml:space="preserve">
-    <value>Требуется установка корневого сертификата</value>
   </data>
   <data name="WebView2InstallationRequiredContent" xml:space="preserve">
     <value>Для входа этим способом необходимо установить WebView2. Нажмите "ОК", чтобы автоматически открыть браузер и скачать WebView2 Runtime, затем дважды щелкните по exe-файлу для установки и перезапустите приложение</value>
