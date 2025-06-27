@@ -91,8 +91,6 @@ public partial class MainPageViewModel : UiObservableObject
         SubscribeTokenRefresh();
     }
 
-    public double MainPageRootNavigationViewOpenPanelLength => 280;
-
     public SuggestionStateMachine SuggestionProvider { get; } = new();
 
     private WeakEventListener<MakoClient, object?, TokenUser> _tokenRefreshedListener = null!;

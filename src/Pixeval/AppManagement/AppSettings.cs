@@ -175,6 +175,9 @@ public partial record AppSettings() : IWindowSettings
     [SettingsEntry(Symbol.TopSpeed, nameof(ScrollRateEntryHeader), nameof(ScrollRateEntryDescription))]
     public double ScrollRate { get; set; }
 
+    [SettingsEntry(Symbol.PanelLeftExpand, nameof(NavigationViewOpenPaneWidthEntryHeader), nameof(NavigationViewOpenPaneWidthEntryDescription))]
+    public int NavigationViewOpenPaneWidth { get; set; } = 280;
+
     [SettingsEntry(Symbol.Box, nameof(PixivNameResolverHeaderText), nameof(PixivNameResolverDescriptionText))]
     public string[] PixivAppApiNameResolver { get; set; } =
     [

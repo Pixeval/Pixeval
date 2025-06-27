@@ -103,6 +103,15 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     Placeholder = SettingsPageResources.WebCookieTextBoxPlaceholderText,
                     ValueChanged = t => App.AppViewModel.MakoClient.Configuration.Cookie = t
                 },
+                new IntAppSettingsEntry(AppSettings,
+                    t => t.NavigationViewOpenPaneWidth)
+                {
+                    Max = 1000,
+                    // 48时图标会被挡住一部分
+                    Min = 50,
+                    SmallChange = 10,
+                    ValueChanged = t => MainPage.Current.NavigationView.OpenPaneLength = t
+                },
                 new BoolAppSettingsEntry(AppSettings,
                     t => t.ReconfirmationOfClosingWindow)
             },

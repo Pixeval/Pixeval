@@ -9,6 +9,7 @@
     xmlns:local="using:Pixeval.Pages"
     xmlns:management="using:Pixeval.AppManagement"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
     xmlns:win2d="using:Microsoft.Graphics.Canvas.UI.Xaml"
     xmlns:windowing="using:Pixeval.Controls.Windowing"
     AllowDrop="True"
@@ -180,6 +181,7 @@
             </TitleBar>
             <NavigationView
                 x:Name="NavigationView"
+                x:FieldModifier="public"
                 FooterMenuItemsSource="{x:Bind _viewModel.FooterMenuItems}"
                 IsBackButtonVisible="Collapsed"
                 IsPaneToggleButtonVisible="False"
@@ -187,7 +189,7 @@
                 ItemInvoked="NavigationView_OnItemInvoked"
                 MenuItemTemplateSelector="{StaticResource NavigationViewItemDataTemplateSelector}"
                 MenuItemsSource="{x:Bind _viewModel.MenuItems}"
-                OpenPaneLength="{x:Bind _viewModel.MainPageRootNavigationViewOpenPanelLength}">
+                OpenPaneLength="{x:Bind pixeval:App.AppViewModel.AppSettings.NavigationViewOpenPaneWidth}">
                 <NavigationView.Resources>
                     <StaticResource x:Key="NavigationViewContentBackground" ResourceKey="SystemControlTransparentBrush" />
                 </NavigationView.Resources>
