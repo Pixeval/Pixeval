@@ -774,4 +774,10 @@ Entrer une addresse IP et cliquer '+' pour ajouter</value>
   <data name="NovelPathBlock.Text" xml:space="preserve">
     <value>小说：</value>
   </data>
+  <data name="NavigationViewOpenPaneWidthEntryHeader" xml:space="preserve">
+    <value>左边栏展开长度</value>
+  </data>
+  <data name="NavigationViewOpenPaneWidthEntryDescription" xml:space="preserve">
+    <value>主窗口左侧导航边栏处于展开状态时的长度</value>
+  </data>
 </root>
