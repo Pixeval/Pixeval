@@ -14,7 +14,8 @@ namespace Pixeval.Controls;
 /// The <see cref="TokenInputTextBox"/> is intended to be used together with <see cref="TokenInput"/>, it contains a <see cref="TextBox"/>
 /// and a <see cref="TokenSubmitted"/> event to help user hook logic when a token is submitted, a token can be marked as case-sensitive
 /// or regex
-/// </summary>                                                            public partial class TokenInputTextBox : Control
+/// </summary>
+                                                            public partial class TokenInputTextBox : Control
 {
     [GeneratedDependencyProperty]
     public partial string? PlaceholderText { get; set; }
