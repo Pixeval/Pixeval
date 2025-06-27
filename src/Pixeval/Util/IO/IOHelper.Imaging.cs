@@ -27,7 +27,6 @@ using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
 using Misaki;
 using WinUI3Utilities;
-using static Pixeval.Filters.IQueryToken;
 
 namespace Pixeval.Util.IO;
 
