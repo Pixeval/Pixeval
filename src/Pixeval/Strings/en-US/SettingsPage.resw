@@ -774,10 +774,16 @@ Type and click on "+" to add an IP</value>
   <data name="NovelPathBlock.Text" xml:space="preserve">
     <value>小说：</value>
   </data>
-  <data name="NavigationViewOpenPaneWidthEntryHeader" xml:space="preserve">
+  <data name="NavigationViewOpenPaneWidthEntry.Header" xml:space="preserve">
     <value>左边栏展开长度</value>
   </data>
-  <data name="NavigationViewOpenPaneWidthEntryDescription" xml:space="preserve">
+  <data name="NavigationViewOpenPaneWidthEntry.Description" xml:space="preserve">
     <value>主窗口左侧导航边栏处于展开状态时的长度</value>
+  </data>
+  <data name="LossyImageDownloadQualityEntry.Header" xml:space="preserve">
+    <value>有损图像编码质量</value>
+  </data>
+  <data name="LossyImageDownloadQualityEntry.Description" xml:space="preserve">
+    <value>-1时使用默认设置，默认一般为75。对于JPG与有损WebP，0 表示文件最小，100 表示文件最大；对于无损WebP，该参数表示压缩时所付出的努力</value>
   </data>
 </root>
