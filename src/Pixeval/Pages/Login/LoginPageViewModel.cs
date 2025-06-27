@@ -5,7 +5,6 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Web;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -16,9 +15,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.Win32;
 using Pixeval.AppManagement;
 using Pixeval.Attributes;
-using Pixeval.Controls.DialogContent;
 using Pixeval.Controls.Windowing;
-using Pixeval.Util;
 using Pixeval.Util.ComponentModels;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
@@ -73,20 +70,12 @@ public partial class LoginPageViewModel(FrameworkElement frameworkElement) : UiO
         return !string.IsNullOrEmpty(regKey?.GetValue("pv") as string);
     }
 
-    private static int NegotiatePort(int preferPort = 49152)
+    private static int NegotiatePort()
     {
-        var unavailable = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections().Select(t => t.LocalEndPoint.Port).ToHashSet();
-        if (unavailable.Contains(preferPort))
-            for (var i = 49152; i <= ushort.MaxValue; ++i)
-            {
-                if (!unavailable.Contains(i))
-                {
-                    preferPort = i;
-                    break;
-                }
-            }
-
-        return preferPort;
+        using var listener = new System.Net.Sockets.TcpListener(IPAddress.Loopback, 0);
+        listener.Start();
+        var port = ((IPEndPoint) listener.LocalEndpoint).Port;
+        return port;
     }
 
     public async Task WebView2LoginAsync(EnhancedWindow window, bool useNewAccount, Action navigated)
