@@ -24,13 +24,13 @@ public abstract class SingleImageDownloadTaskGroupBase : ImageDownloadTask, IDow
 
     public string Id => DatabaseEntry.Entry.Id;
 
-    public SingleImageDownloadTaskGroupBase(IArtworkInfo entry, string destination) : this(new(destination, DownloadItemType.Illustration, entry))
+    protected SingleImageDownloadTaskGroupBase(IArtworkInfo entry, string destination) : this(new(destination, DownloadItemType.Illustration, entry))
     {
         CurrentState = DownloadState.Queued;
         ProgressPercentage = 0;
     }
 
-    public SingleImageDownloadTaskGroupBase(DownloadHistoryEntry entry) : base(GetImageUri(entry.Entry),
+    protected SingleImageDownloadTaskGroupBase(DownloadHistoryEntry entry) : base(GetImageUri(entry.Entry),
         IoHelper.ReplaceTokenExtensionFromUrl(entry.Destination, GetImageUri(entry.Entry), entry.Entry.TryGetSetIndex()))
     {
         DatabaseEntry = entry;

@@ -21,9 +21,9 @@ public static partial class IoHelper
         return result.Select(b => b.ToString("X2")).Aggregate((acc, str) => acc + str);
     }
 
-    public static string GetInvalidPathChars { get; } = @"*?""|" + new string(Path.GetInvalidPathChars());
+    public static string GetInvalidPathChars { get; } = @"<>*?""|" + new string(Path.GetInvalidPathChars());
 
-    public static string GetInvalidNameChars { get; } = @"\/*:?""|" + new string(Path.GetInvalidPathChars());
+    public static string GetInvalidNameChars { get; } = @"<>\/*:?""|" + new string(Path.GetInvalidPathChars());
 
     public static string NormalizePath(string path)
     {
