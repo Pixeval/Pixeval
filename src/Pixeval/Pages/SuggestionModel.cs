@@ -30,7 +30,7 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
     {
         SuggestionType.IllustId or SuggestionType.NovelId or SuggestionType.UserId => Symbol.Open.GetSymbolIcon(true),
         SuggestionType.Tag or SuggestionType.IllustrationTag or SuggestionType.NovelTag => Symbol.Tag.GetSymbolIcon(true),
-        SuggestionType.UserSearch => Symbol.Person.GetSymbolIcon(true),
+        SuggestionType.UserSearch => Symbol.PersonSearch.GetSymbolIcon(true),
         SuggestionType.Settings => SettingsSymbol.GetSymbolIcon(true),
         SuggestionType.History => Symbol.History.GetSymbolIcon(true),
         _ => null

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI.Helpers;
+using FluentIcons.Common;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Pixeval.Controls;
@@ -46,14 +47,14 @@ public partial class MainPageViewModel : UiObservableObject
 
     public Uri Url => MakoHelper.GenerateUserWebUri(Id);
 
-    public NavigationViewTag<FeedPage> FeedTag { get; } = new(MainPageResources.FeedTabContent) { ImageUri = GetIconUri("feed") };
+    public NavigationViewTag<FeedPage> FeedTag { get; } = new(MainPageResources.FeedTabContent) { Symbol = Symbol.Molecule };
 
-    public NavigationViewTag<ExtensionsPage> ExtensionsTag { get; } = new(MainPageResources.ExtensionsTabContent) { ImageUri = GetIconUri("extensions"), ShowIconBadge = App.AppViewModel.VersionContext.NeverUsedExtensions };
+    public NavigationViewTag<ExtensionsPage> ExtensionsTag { get; } = new(MainPageResources.ExtensionsTabContent) { Symbol = Symbol.PuzzlePiece, ShowIconBadge = App.AppViewModel.VersionContext.NeverUsedExtensions };
 
     public NavigationViewTag<SettingsPage> SettingsTag { get; } = GetSettingsTag();
 
     public static NavigationViewTag<SettingsPage> GetSettingsTag(object? parameter = null) =>
-        new(MainPageResources.SettingsTabContent, parameter) { ImageUri = GetIconUri("settings") };
+        new(MainPageResources.SettingsTabContent, parameter) { Symbol = Symbol.Settings };
 
     public NavigationViewTag<SearchUsersPage> SearchUsersTag { get; } = new(MainPageResources.SearchUsersResult);
 
@@ -61,25 +62,25 @@ public partial class MainPageViewModel : UiObservableObject
 
     public IReadOnlyList<INavigationViewItem> MenuItems =>
     [
-        new NavigationViewTag<RecommendationPage>(MainPageResources.RecommendationsTabContent) { ImageUri = GetIconUri("recommendations") },
-        new NavigationViewTag<RankingsPage>(MainPageResources.RankingsTabContent) { ImageUri = GetIconUri("ranking") },
-        new NavigationViewTag<BookmarksPage>(MainPageResources.BookmarksTabContent) { ImageUri = GetIconUri("bookmarks") },
-        new NavigationViewTag<FollowingsPage>(MainPageResources.FollowingsTabContent) { ImageUri = GetIconUri("followings") },
-        new NavigationViewTag<SpotlightsPage>(MainPageResources.SpotlightsTabContent) { ImageUri = GetIconUri("spotlight") },
-        new NavigationViewTag<RecommendUsersPage>(MainPageResources.RecommendUsersTabContent) { ImageUri = GetIconUri("recommend-user") },
-        new NavigationViewTag<RecentPostsPage>(MainPageResources.RecentPostsTabContent) { ImageUri = GetIconUri("recent-posts") },
-        new NavigationViewTag<NewWorksPage>(MainPageResources.NewWorksTabContent) { ImageUri = GetIconUri("new-works") },
+        new NavigationViewTag<RecommendationPage>(MainPageResources.RecommendationsTabContent) { Symbol = Symbol.Calendar },
+        new NavigationViewTag<RankingsPage>(MainPageResources.RankingsTabContent) { Symbol = Symbol.ArrowTrendingLines },
+        new NavigationViewTag<BookmarksPage>(MainPageResources.BookmarksTabContent) { Symbol = Symbol.Library },
+        new NavigationViewTag<FollowingsPage>(MainPageResources.FollowingsTabContent) { Symbol = Symbol.PersonHeart },
+        new NavigationViewTag<SpotlightsPage>(MainPageResources.SpotlightsTabContent) { Symbol = Symbol.SlideTextSparkle },
+        new NavigationViewTag<RecommendUsersPage>(MainPageResources.RecommendUsersTabContent) { Symbol = Symbol.PeopleCommunity },
+        new NavigationViewTag<RecentPostsPage>(MainPageResources.RecentPostsTabContent) { Symbol = Symbol.AlertUrgent },
+        new NavigationViewTag<NewWorksPage>(MainPageResources.NewWorksTabContent) { Symbol = Symbol.ArrowSync },
         FeedTag,
         new NavigationViewSeparator(),
-        new NavigationViewTag<BrowsingHistoryPage>(MainPageResources.HistoriesTabContent) { ImageUri = GetIconUri("history") },
-        new NavigationViewTag<DownloadPage>(MainPageResources.DownloadListTabContent) { ImageUri = GetIconUri("download-list") }
+        new NavigationViewTag<BrowsingHistoryPage>(MainPageResources.HistoriesTabContent) { Symbol = Symbol.History },
+        new NavigationViewTag<DownloadPage>(MainPageResources.DownloadListTabContent) { Symbol = Symbol.ArrowSquareDown }
     ];
 
     public IReadOnlyList<INavigationViewItem> FooterMenuItems =>
     [
         new NavigationViewTag<TagsPage>(MainPageResources.TagsTabContent) { ImageUri = GetIconUri("tag") },
         ExtensionsTag,
-        new NavigationViewTag<HelpPage>(MainPageResources.HelpTabContent) { ImageUri = GetIconUri("help") },
+        new NavigationViewTag<HelpPage>(MainPageResources.HelpTabContent) { Symbol = Symbol.ChatBubblesQuestion },
         new NavigationViewTag<AboutPage>(MainPageResources.AboutTabContent) { ImageUri = GetIconUri("about") },
         new NavigationViewSeparator(),
         SettingsTag

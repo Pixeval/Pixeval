@@ -124,14 +124,8 @@
     <value>应用程序即将退出，以下是异常信息：
 {0}</value>
   </data>
-  <data name="LoginPhaseCheckingCertificateInstallation" xml:space="preserve">
-    <value>正在检查证书安装情况...</value>
-  </data>
   <data name="LoginPhaseCheckingWebView2Installation" xml:space="preserve">
     <value>正在检查WebView2安装情况...</value>
-  </data>
-  <data name="LoginPhaseInstallingCertificate" xml:space="preserve">
-    <value>正在安装证书，请在打开的对话框中点击确认...</value>
   </data>
   <data name="LoginPhaseRefreshing" xml:space="preserve">
     <value>正在刷新现有会话...</value>
@@ -181,28 +175,6 @@
   </data>
   <data name="FetchingSessionFailedTitle" xml:space="preserve">
     <value>获取对话失败</value>
-  </data>
-  <data name="RootCertificateInstallationRequiredSecondaryButtonText" xml:space="preserve">
-    <value>使用Pixeval的证书</value>
-  </data>
-  <data name="RootCertificateInstallationRequiredPrimaryButtonText" xml:space="preserve">
-    <value>使用自己的证书</value>
-  </data>
-  <data name="CertificateRequiredDialogContent.Text" xml:space="preserve">
-    <value>如不安装证书则无法正常登录，本证书的私钥不会被分发，选择“使用Pixeval的证书”即代表您将会安装该证书
-你也可以选择自己提供有效的证书，请在下方文本框输入证书路径和密码并选择“使用自己的证书”。如果之后仍无法连接到Pixiv，则说明提供的证书有误</value>
-  </data>
-  <data name="CertificateRequiredDialogPath.PlaceholderText" xml:space="preserve">
-    <value>证书路径</value>
-  </data>
-  <data name="CertificateRequiredDialogPassword.PlaceholderText" xml:space="preserve">
-    <value>证书密码</value>
-  </data>
-  <data name="CertificateRequiredDialogInvalidInfoBar.Title" xml:space="preserve">
-    <value>证书路径错误或密码不正确</value>
-  </data>
-  <data name="RootCertificateInstallationRequiredTitle" xml:space="preserve">
-    <value>检测到本用户尚未安装证书</value>
   </data>
   <data name="WebView2InstallationRequiredContent" xml:space="preserve">
     <value>使用本方式登录需要安装WebView2，选择确认将会自动打开浏览器为您下载WebView2 Runtime，请您双击exe文件安装后重启应用</value>

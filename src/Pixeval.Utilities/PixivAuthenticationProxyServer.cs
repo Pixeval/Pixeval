@@ -9,22 +9,21 @@ using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
-using Mako.Net;
-using Pixeval.Utilities;
 
-namespace Pixeval.Util;
+namespace Pixeval.Utilities;
 
 public partial class PixivAuthenticationProxyServer : IDisposable
 {
     private readonly X509Certificate2? _certificate;
     private readonly TcpListener? _tcpListener;
+    private readonly Func<string, Task<IPAddress[]>> _dns;
 
-    private PixivAuthenticationProxyServer(X509Certificate2 certificate, TcpListener tcpListener)
+    private PixivAuthenticationProxyServer(X509Certificate2 certificate, TcpListener tcpListener, Func<string, Task<IPAddress[]>> dns)
     {
         _certificate = certificate;
         _tcpListener = tcpListener;
+        _dns = dns;
         _tcpListener.Start();
         _ = _tcpListener.BeginAcceptTcpClient(AcceptTcpClientCallback, _tcpListener);
     }
@@ -36,9 +35,12 @@ public partial class PixivAuthenticationProxyServer : IDisposable
         _tcpListener?.Stop();
     }
 
-    public static PixivAuthenticationProxyServer Create(IPAddress ip, int port, X509Certificate2 certificate)
+    public static PixivAuthenticationProxyServer Create(IPAddress ip, int port, Func<string, Task<IPAddress[]>> dns, X509Certificate2? certificate = null)
     {
-        return new PixivAuthenticationProxyServer(certificate, new TcpListener(ip, port));
+        var now = DateTimeOffset.UtcNow;
+        using var tempCert = CertGenerator.CreateCACertificate(null, now, now + TimeSpan.FromDays(3));
+        var cert = new X509Certificate2(tempCert.Export(X509ContentType.Pkcs12, ""), "", X509KeyStorageFlags.UserKeySet);
+        return new(cert, new(ip, port), dns);
     }
 
     private async void AcceptTcpClientCallback(IAsyncResult result)
@@ -61,7 +63,7 @@ public partial class PixivAuthenticationProxyServer : IDisposable
 
                     await using var writer = new StreamWriter(clientStream);
                     await writer.WriteLineAsync("HTTP/1.1 200 Connection established");
-                    await writer.WriteLineAsync($"Timestamp: {DateTime.Now}");
+                    await writer.WriteLineAsync($"Timestamp: {DateTime.UtcNow}");
                     await writer.WriteLineAsync("Proxy-agent: Pixeval");
                     await writer.WriteLineAsync();
                     await writer.FlushAsync();
@@ -70,7 +72,7 @@ public partial class PixivAuthenticationProxyServer : IDisposable
                     await clientSsl.AuthenticateAsServerAsync(_certificate!, false, SslProtocols.None, false);
                     // create an HTTP connection to the target IP
                     var host = HostRegex().Match(content).Groups["host"].Value;
-                    var serverSsl = await CreateConnection(await MakoHttpOptions.GetAddressesAsync(host, CancellationToken.None));
+                    var serverSsl = await CreateConnection(await _dns(host));
                     var request = Functions.IgnoreExceptionAsync(() => clientSsl.CopyToAsync(serverSsl));
                     var response = Functions.IgnoreExceptionAsync(() => serverSsl.CopyToAsync(clientSsl));
                     _ = await Task.WhenAny(request, response);

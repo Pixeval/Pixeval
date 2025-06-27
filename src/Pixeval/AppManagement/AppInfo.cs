@@ -101,16 +101,6 @@ public static partial class AppInfo
         return await File.ReadAllBytesAsync(ApplicationUriToPath(new Uri(path)));
     }
 
-    public static async Task<X509Certificate2> GetFakeCaRootCertificateAsync()
-    {
-        return new X509Certificate2(await GetAssetBytesAsync("Certs/pixeval_ca.cer"));
-    }
-
-    public static async Task<X509Certificate2> GetFakeServerCertificateAsync()
-    {
-        return new X509Certificate2(await GetAssetBytesAsync("Certs/pixeval_server_cert.zip"), AppProtocol, X509KeyStorageFlags.UserKeySet);
-    }
-
     public static void RestoreHistories()
     {
         var downloadHistoryPersistentManager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();

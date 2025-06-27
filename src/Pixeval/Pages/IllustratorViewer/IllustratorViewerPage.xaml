@@ -102,7 +102,7 @@
                         <controls:AppBarNumberItem
                             x:Uid="/EntryViewerPage/FollowingUserItem"
                             Number="{x:Bind _viewModel.Metrics.TotalFollowUsers, Mode=OneWay}"
-                            Symbol="PersonAdd" />
+                            Symbol="PersonHeart" />
                         <AppBarSeparator />
                         <controls:AppBarNumberItem
                             x:Uid="/EntryViewerPage/MyPixivUserItem"
