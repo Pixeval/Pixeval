@@ -239,6 +239,12 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                             t => t.NovelDownloadFormat,
                             NovelDownloadFormatExtension.GetItems())
                     ]),
+                new IntAppSettingsEntry(AppSettings,
+                    t => t.LossyImageDownloadQuality)
+                {
+                    Max = 100,
+                    Min = -1
+                },
                 new BoolAppSettingsEntry(AppSettings,
                     t => t.DownloadWhenBookmarked)
             },

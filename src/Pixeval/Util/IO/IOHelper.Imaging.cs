@@ -209,13 +209,30 @@ public static partial class IoHelper
     public static IImageEncoder GetIllustrationEncoder(IllustrationDownloadFormat? illustrationDownloadFormat = null)
     {
         illustrationDownloadFormat ??= App.AppViewModel.AppSettings.IllustrationDownloadFormat;
+        var quality = App.AppViewModel.AppSettings.LossyImageDownloadQuality;
         return illustrationDownloadFormat switch
         {
-            IllustrationDownloadFormat.Jpg => new JpegEncoder(),
+            IllustrationDownloadFormat.Jpg => new JpegEncoder
+            {
+                Quality = quality switch
+                {
+                    -1 => null,
+                    0 => 1,
+                    _ => quality
+                }
+            },
             IllustrationDownloadFormat.Png => new PngEncoder(),
             IllustrationDownloadFormat.Bmp => new BmpEncoder(),
-            IllustrationDownloadFormat.WebPLossless => new WebpEncoder { FileFormat = WebpFileFormatType.Lossless },
-            IllustrationDownloadFormat.WebPLossy => new WebpEncoder { FileFormat = WebpFileFormatType.Lossy },
+            IllustrationDownloadFormat.WebPLossless => new WebpEncoder
+            {
+                FileFormat = WebpFileFormatType.Lossless,
+                Quality = quality is -1 ? 75 : quality
+            },
+            IllustrationDownloadFormat.WebPLossy => new WebpEncoder
+            {
+                FileFormat = WebpFileFormatType.Lossy,
+                Quality = quality is -1 ? 75 : quality
+            },
             _ => ThrowHelper.ArgumentOutOfRange<IllustrationDownloadFormat?, IImageEncoder>(illustrationDownloadFormat)
         };
     }

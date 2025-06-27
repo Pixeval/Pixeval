@@ -63,6 +63,9 @@ public partial record AppSettings() : IWindowSettings
 
     public NovelDownloadFormat NovelDownloadFormat { get; set; }
 
+    [SettingsEntry(Symbol.FolderZip, nameof(LossyImageDownloadQualityEntryHeader), nameof(LossyImageDownloadQualityEntryDescription))]
+    public int LossyImageDownloadQuality { get; set; } = -1;
+
     [SettingsEntry(Symbol.ImageSplit, nameof(OverwriteDownloadedFileEntryHeader), nameof(OverwriteDownloadedFileEntryDescription))]
     public bool OverwriteDownloadedFile { get; set; }
 
