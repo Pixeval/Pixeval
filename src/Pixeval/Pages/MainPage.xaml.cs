@@ -171,44 +171,41 @@ public sealed partial class MainPage
     /// 搜索并跳转至搜索结果
     /// </summary>
     /// <param name="sender"></param>
-    /// <param name="args"></param>
-    private void KeywordAutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+    /// <param name="e"></param>
+    private void KeywordAutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
     {
-        if (args.ChosenSuggestion is SuggestionModel
+        if (e.ChosenSuggestion is not SuggestionModel
             {
+                Name: { } name,
+                TranslatedName: var translatedName,
                 SuggestionType:
-                SuggestionType.Settings or
-                SuggestionType.IllustId or
-                SuggestionType.NovelId or
-                SuggestionType.UserId or
-                SuggestionType.UserSearch or
-                SuggestionType.IllustrationAutoCompleteTagHeader or
-                SuggestionType.IllustrationTrendingTagHeader or
-                SuggestionType.NovelTrendingTagHeader or
-                SuggestionType.SettingEntryHeader
-            })
+                SuggestionType.Tag or
+                SuggestionType.IllustrationTag or
+                SuggestionType.NovelTag or
+                SuggestionType.History
+            } model)
             return;
 
-        if (args.QueryText.IsNullOrBlank())
+        if (string.IsNullOrWhiteSpace(name))
         {
             _ = this.CreateAcknowledgementAsync(MainPageResources.SearchKeywordCannotBeBlankTitle,
                 MainPageResources.SearchKeywordCannotBeBlankContent);
             return;
         }
 
-        switch (args.ChosenSuggestion)
+        switch (model.SuggestionType)
         {
-            case SuggestionModel({ } name, var translatedName, SuggestionType.IllustrationTag):
+            case SuggestionType.IllustrationTag:
                 PerformSearchWork(SimpleWorkType.IllustAndManga, name, translatedName);
                 break;
-            case SuggestionModel({ } name, var translatedName, SuggestionType.NovelTag):
+            case SuggestionType.NovelTag:
                 PerformSearchWork(SimpleWorkType.Novel, name, translatedName);
                 break;
-            case SuggestionModel({ } name, var translatedName, SuggestionType.Tag):
+            case SuggestionType.Tag:
                 PerformSearchWork(App.AppViewModel.AppSettings.SimpleWorkType, name, translatedName);
                 break;
             default:
-                PerformSearchWork(App.AppViewModel.AppSettings.SimpleWorkType, args.QueryText);
+                PerformSearchWork(App.AppViewModel.AppSettings.SimpleWorkType, name);
                 break;
         }
     }
@@ -240,14 +237,22 @@ public sealed partial class MainPage
                     break;
                 default:
                     sender.Text = name;
-                    break;
+                    return;
             }
         }
     }
 
-    private async void KeywordAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+    private string _lastText = "";
+
+    private async void KeywordAutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
     {
-        await _viewModel.SuggestionProvider.UpdateAsync(sender.Text);
+        if (e.Reason is AutoSuggestionBoxTextChangeReason.SuggestionChosen)
+            sender.Text = _lastText;
+        else
+        {
+            _lastText = sender.Text;
+            await _viewModel.SuggestionProvider.UpdateAsync(_lastText);
+        }
     }
 
     private void PerformSearchWork(SimpleWorkType type, string text, string? translatedName = null)

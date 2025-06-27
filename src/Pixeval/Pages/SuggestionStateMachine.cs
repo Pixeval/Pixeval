@@ -43,10 +43,8 @@ public class SuggestionStateMachine
 
     public Task UpdateAsync(string keyword)
     {
-        if (keyword.IsNotNullOrEmpty())
-        {
+        if (!string.IsNullOrEmpty(keyword))
             return FillSuggestions(keyword);
-        }
         Suggestions.Clear();
         return FillHistoryAndRecommendTags();
     }

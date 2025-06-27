@@ -2,13 +2,10 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using System.Linq;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using System.Web;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Mako;
 using Mako.Net;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
