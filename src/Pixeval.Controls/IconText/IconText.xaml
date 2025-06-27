@@ -1,0 +1,28 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:fluent="using:FluentIcons.WinUI"
+    xmlns:local="using:Pixeval.Controls">
+    <StaticResource x:Key="IconFontSize" ResourceKey="SmallIconFontSize" />
+    <Style TargetType="local:IconText">
+        <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:IconText">
+                    <controls:DockPanel HorizontalSpacing="5">
+                        <fluent:SymbolIcon
+                            VerticalAlignment="Center"
+                            controls:DockPanel.Dock="Left"
+                            FontSize="{StaticResource IconFontSize}"
+                            Symbol="{TemplateBinding Symbol}" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Style="{StaticResource BaseTextBlockStyle}"
+                            Text="{TemplateBinding Text}" />
+                    </controls:DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

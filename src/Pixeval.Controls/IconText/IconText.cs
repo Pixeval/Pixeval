@@ -1,12 +1,10 @@
-// Copyright (c) Pixeval.Controls.
-// Licensed under the GPL v3 License.
-
 using CommunityToolkit.WinUI;
-using FluentIcons.Common;
+using Microsoft.UI.Xaml.Controls;
+using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Controls;
 
-public sealed partial class IconText
+public sealed partial class IconText : Control
 {
     [GeneratedDependencyProperty]
     public partial Symbol Symbol { get; set; }
@@ -14,5 +12,5 @@ public sealed partial class IconText
     [GeneratedDependencyProperty]
     public partial string? Text { get; set; }
 
-    public IconText() => InitializeComponent();
+    public IconText() => DefaultStyleKey = typeof(IconText);
 }

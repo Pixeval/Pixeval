@@ -13,9 +13,6 @@
     CornerRadius="{ThemeResource ControlCornerRadius}"
     RenderTransformOrigin="0.5,0.5"
     mc:Ignorable="d">
-    <ToolTipService.ToolTip>
-        <ToolTip Content="{x:Bind ViewModel.Tooltip, Mode=OneWay}" Placement="Right" />
-    </ToolTipService.ToolTip>
     <Grid.Resources>
         <!--  ReSharper disable once Xaml.RedundantResource  -->
         <Storyboard x:Key="ThumbnailStoryboard">
@@ -78,18 +75,24 @@
                 Mode="Ai"
                 Visibility="{x:Bind local:C.ToVisibility(ViewModel.Entry.IsAiGenerated), Mode=OneWay}" />
             <local:PixevalBadge controls:DockPanel.Dock="Left" Mode="{x:Bind ViewModel.SafeBadgeMode, Mode=OneWay}" />
-            <local:PixevalBadge
-                controls:DockPanel.Dock="Left"
-                Mode="Gif"
-                Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsPicGif), Mode=OneWay}" />
-            <Grid controls:DockPanel.Dock="Right">
-                <fluent:SymbolIcon
-                    Foreground="{ThemeResource LayerFillColorDefaultBrush}"
-                    IconVariant="Filled"
-                    Symbol="SquareMultiple"
-                    Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsPicSet), Mode=OneWay}" />
-                <fluent:SymbolIcon Symbol="SquareMultiple" Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsPicSet), Mode=OneWay}" />
-            </Grid>
         </controls:DockPanel>
+        <Grid
+            Margin="5"
+            Padding="5"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Background="{ThemeResource ControlOnImageFillColorDefaultBrush}"
+            CornerRadius="4"
+            Visibility="{x:Bind local:C.ToVisibilityNegation(ViewModel.IsPicOne), Mode=OneWay}">
+            <local:IconText
+                Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                Symbol="ImageMultiple"
+                Text="{x:Bind ViewModel.PageCount, Mode=OneWay}"
+                Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsPicSet), Mode=OneWay}" />
+            <fluent:SymbolIcon
+                FontSize="{StaticResource SmallIconFontSize}"
+                Symbol="Gif"
+                Visibility="{x:Bind local:C.ToVisibility(ViewModel.IsPicGif), Mode=OneWay}" />
+        </Grid>
     </Grid>
 </Grid>

@@ -107,8 +107,12 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<IArtworkInfo
 
     public bool IsPicGif => Entry.ImageType is ImageType.SingleAnimatedImage;
 
+    public bool IsPicOne => Entry.ImageType is ImageType.SingleImage;
+
     public string? SizeText =>
         Entry is IImageFrame { Width: > 0, Height: > 0 } frame ? $"{frame.Width} x {frame.Height}" : null;
+
+    public int PageCount => Entry is IImageSet set ? set.PageCount : 1;
 
     public string Tooltip
     {
