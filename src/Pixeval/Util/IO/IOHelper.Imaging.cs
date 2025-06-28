@@ -412,12 +412,13 @@ public static partial class IoHelper
 
     public static string ReplaceTokenSetIndex(string path, int setIndex)
     {
-        return path.Replace(PicSetIndexMacro.NameConstToken, setIndex.ToString());
+        // 替换完<token>之后必须清除其他尖括号
+        return path.Replace(PicSetIndexMacro.NameConstToken, setIndex.ToString()).Replace("<", null).Replace(">", null);
     }
 
     public static string RemoveTokenExtension(string path)
     {
-        return path.Replace(FileExtensionMacro.NameConstToken, null);
+        return path.Replace(FileExtensionMacro.NameConstToken, null).Replace("<", null).Replace(">", null);
     }
 
     public static int TryGetSetIndex(this IArtworkInfo artworkInfo)

@@ -14,7 +14,7 @@ public class ArtistNameMacro : ITransducer<IArtworkInfo>
     public string Name => "artist_name";
 
     public string Substitute(IArtworkInfo context) =>
-        IoHelper.NormalizePathSegment(
+        IoHelper.NormalizePathSegmentInMacro(
             string.Join(',', context.Authors
                 .Select(t => t.Name)));
 }

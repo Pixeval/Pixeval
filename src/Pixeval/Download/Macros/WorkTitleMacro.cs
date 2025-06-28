@@ -13,5 +13,5 @@ public class WorkTitleMacro : ITransducer<IArtworkInfo>
 {
     public string Name => "title";
 
-    public string Substitute(IArtworkInfo context) => context.Title.Let(IoHelper.NormalizePathSegment);
+    public string Substitute(IArtworkInfo context) => context.Title.Let(IoHelper.NormalizePathSegmentInMacro);
 }

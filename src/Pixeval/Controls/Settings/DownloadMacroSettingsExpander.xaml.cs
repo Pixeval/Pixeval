@@ -318,7 +318,7 @@ file record TestWork(ImageType ImageType) : ISingleImage, IImageSet, ISingleAnim
 
     public Uri AppUri => null!;
 
-    public DateTimeOffset CreateDate => default;
+    public DateTimeOffset CreateDate => new(2020, 10, 12, 0, 0, 0, TimeSpan.Zero);
 
     public IPreloadableList<IUser> Authors { get; } =
     [
