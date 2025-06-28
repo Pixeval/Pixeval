@@ -174,6 +174,16 @@ public sealed partial class MainPage
     /// <param name="e"></param>
     private void KeywordAutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
     {
+        if (e.ChosenSuggestion is null)
+        {
+            if (string.IsNullOrWhiteSpace(e.QueryText))
+                _ = this.CreateAcknowledgementAsync(MainPageResources.SearchKeywordCannotBeBlankTitle,
+                    MainPageResources.SearchKeywordCannotBeBlankContent);
+            else
+                PerformSearchWork(App.AppViewModel.AppSettings.SimpleWorkType, e.QueryText);
+            return;
+        }
+
         if (e.ChosenSuggestion is not SuggestionModel
             {
                 Name: { } name,
