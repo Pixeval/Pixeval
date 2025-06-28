@@ -21,18 +21,25 @@ public static partial class IoHelper
         return result.Select(b => b.ToString("X2")).Aggregate((acc, str) => acc + str);
     }
 
-    public static string GetInvalidPathChars { get; } = @"<>*?""|" + new string(Path.GetInvalidPathChars());
+    public static string InvalidPathChars { get; } = @"*?""|" + new string(Path.GetInvalidPathChars());
 
-    public static string GetInvalidNameChars { get; } = @"<>\/*:?""|" + new string(Path.GetInvalidPathChars());
+    public static string InvalidNameChars { get; } = @"\/*:?""|" + new string(Path.GetInvalidPathChars());
+
+    public static string InvalidNameCharsInMacro { get; } = @"<>\/*:?""|" + new string(Path.GetInvalidPathChars());
 
     public static string NormalizePath(string path)
     {
-        return Path.GetFullPath(GetInvalidPathChars.Aggregate(path, (s, c) => s.Replace(c.ToString(), ""))).TrimEnd('.');
+        return Path.GetFullPath(InvalidPathChars.Aggregate(path, (s, c) => s.Replace(c.ToString(), ""))).TrimEnd('.');
+    }
+
+    public static string NormalizePathSegmentInMacro(string path)
+    {
+        return InvalidNameCharsInMacro.Aggregate(path, (s, c) => s.Replace(c.ToString(), "")).TrimEnd('.');
     }
 
     public static string NormalizePathSegment(string path)
     {
-        return GetInvalidNameChars.Aggregate(path, (s, c) => s.Replace(c.ToString(), "")).TrimEnd('.');
+        return InvalidNameChars.Aggregate(path, (s, c) => s.Replace(c.ToString(), "")).TrimEnd('.');
     }
 
     // todo 简化为PostJsonAsync

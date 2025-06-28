@@ -19,6 +19,7 @@ using Pixeval.Database.Managers;
 using Pixeval.Download;
 using Pixeval.Extensions.Common;
 using Pixeval.Extensions.Common.Commands.Transformers;
+using Pixeval.Util;
 using Pixeval.Util.ComponentModels;
 using Pixeval.Util.IO;
 using Pixeval.Util.UI;
@@ -28,7 +29,6 @@ using Windows.Foundation;
 using Windows.Storage;
 using Windows.System;
 using Windows.System.UserProfile;
-using Pixeval.Util;
 using WinUI3Utilities;
 
 namespace Pixeval.Pages.IllustrationViewer;
