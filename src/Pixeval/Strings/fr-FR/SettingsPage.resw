@@ -703,7 +703,7 @@ Entrer une addresse IP et cliquer '+' pour ajouter</value>
     <value>如果是动图，该宏会被替换为其参数</value>
   </data>
   <data name="PicSetIndexMacroTooltip" xml:space="preserve">
-    <value>Ce macro sera remplacé par l'indice de l'illustration courante dans la collection (n-ième illust.). Il faut l'utiliser avec le macro '@{if_pic_set=} et sur les noms de fichier</value>
+    <value>如果是多图，该宏会被替换为当前图片在多图中的索引（第几张）；必须与 @{if_pic_set=} 宏配合使用，必须在文件名上使用</value>
   </data>
   <data name="UseSearchEndDateEntry.Header" xml:space="preserve">
     <value>启用搜索结束日期</value>
