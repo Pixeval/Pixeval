@@ -11,6 +11,10 @@
     Loaded="TabPage_OnLoaded"
     Unloaded="TabPage_OnUnloaded"
     mc:Ignorable="d">
+    <controls:EnhancedPage.KeyboardAccelerators>
+        <KeyboardAccelerator Key="W" Modifiers="Control" Invoked="CloseCurrentTab_OnInvoked" />
+    </controls:EnhancedPage.KeyboardAccelerators>
+    <controls:EnhancedPage.KeyboardAcceleratorPlacementMode>Hidden</controls:EnhancedPage.KeyboardAcceleratorPlacementMode>
     <TabView
         x:Name="TabViewControl"
         HorizontalAlignment="Stretch"

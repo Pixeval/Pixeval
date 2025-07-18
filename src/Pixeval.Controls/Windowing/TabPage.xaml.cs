@@ -7,6 +7,7 @@ using CommunityToolkit.WinUI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Utilities;
@@ -100,12 +101,24 @@ public sealed partial class TabPage
         _ = frame.Navigate(viewModel.NavigateTo, viewModel.Parameter, viewModel.TransitionInfo);
     }
 
-    private async void TabView_OnTabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs e)
+    private async void CloseTab(TabViewItem tab)
     {
         await Task.Yield();
-        RemoveTab(e.Tab);
-        if (e.Tab.Content is Frame { Content: IStructuralDisposalCompleter completer })
+        RemoveTab(tab);
+        if (tab.Content is Frame { Content: IStructuralDisposalCompleter completer })
             completer.CompleteDisposalRecursively();
+    }
+
+    private void CloseCurrentTab_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs e)
+    {
+        if (TabView.SelectedItem is TabViewItem tab)
+            CloseTab(tab);
+        e.Handled = true;
+    }
+
+    private void TabView_OnTabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs e)
+    {
+        CloseTab(e.Tab);
     }
 
     private void TabView_OnTabDroppedOutside(TabView sender, TabViewTabDroppedOutsideEventArgs e)
