@@ -11,6 +11,6 @@
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.4.0" />
         <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.6" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.7" />
     </ItemGroup>
 </Project>
