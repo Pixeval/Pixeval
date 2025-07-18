@@ -8,13 +8,16 @@
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Controls.Windowing"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    KeyboardAcceleratorPlacementMode="Hidden"
     Loaded="TabPage_OnLoaded"
     Unloaded="TabPage_OnUnloaded"
     mc:Ignorable="d">
     <controls:EnhancedPage.KeyboardAccelerators>
-        <KeyboardAccelerator Key="W" Modifiers="Control" Invoked="CloseCurrentTab_OnInvoked" />
+        <KeyboardAccelerator
+            Key="W"
+            Invoked="CloseCurrentTab_OnInvoked"
+            Modifiers="Control" />
     </controls:EnhancedPage.KeyboardAccelerators>
-    <controls:EnhancedPage.KeyboardAcceleratorPlacementMode>Hidden</controls:EnhancedPage.KeyboardAcceleratorPlacementMode>
     <TabView
         x:Name="TabViewControl"
         HorizontalAlignment="Stretch"
