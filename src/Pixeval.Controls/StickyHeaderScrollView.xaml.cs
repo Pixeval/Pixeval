@@ -5,10 +5,12 @@ using System;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
 
 namespace Pixeval.Controls;
 
+[ContentProperty(Name = nameof(StickyContent))]
 public sealed partial class StickyHeaderScrollView
 {
     [GeneratedDependencyProperty]

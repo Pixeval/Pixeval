@@ -149,16 +149,14 @@
                                 <ItemsRepeater.ItemTemplate>
                                     <DataTemplate x:DataType="misaki:ITag">
                                         <Button Click="WorkTagButton_OnClicked" Tag="{x:Bind}">
-                                            <Button.Content>
-                                                <controls2:TranslatableTextBlock
-                                                    ButtonMargin="-2"
-                                                    IsCompact="True"
-                                                    IsHorizontal="True"
-                                                    IsTextSelectionEnabled="False"
-                                                    PretranslatedText="{x:Bind TranslatedName}"
-                                                    Text="{x:Bind Name}"
-                                                    TextType="WorkTag" />
-                                            </Button.Content>
+                                            <controls2:TranslatableTextBlock
+                                                ButtonMargin="-2"
+                                                IsCompact="True"
+                                                IsHorizontal="True"
+                                                IsTextSelectionEnabled="False"
+                                                PretranslatedText="{x:Bind TranslatedName}"
+                                                Text="{x:Bind Name}"
+                                                TextType="WorkTag" />
                                             <Button.ContextFlyout>
                                                 <MenuFlyout>
                                                     <MenuFlyoutItem

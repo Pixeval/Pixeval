@@ -46,17 +46,15 @@
         x:Uid="/EntryView/IllustrationQrCodeTeachingTip"
         HasNoItem="{x:Bind ViewModel.HasNoItem, Mode=OneWay}"
         IsLoadingMore="{x:Bind ItemsView.IsLoadingMore, Mode=OneWay}">
-        <local:EntryView.Content>
-            <local:AdvancedItemsView
-                x:Name="ItemsView"
-                IsItemInvokedEnabled="True"
-                ItemInvoked="ItemsView_OnItemInvoked"
-                SelectionChanged="WorkView_OnSelectionChanged"
-                SelectionMode="{x:Bind local:C.ToSelectionMode(ViewModel.IsSelecting), Mode=OneWay}">
-                <local:AdvancedItemsView.ItemTransitionProvider>
-                    <LinedFlowLayoutItemCollectionTransitionProvider />
-                </local:AdvancedItemsView.ItemTransitionProvider>
-            </local:AdvancedItemsView>
-        </local:EntryView.Content>
+        <local:AdvancedItemsView
+            x:Name="ItemsView"
+            IsItemInvokedEnabled="True"
+            ItemInvoked="ItemsView_OnItemInvoked"
+            SelectionChanged="WorkView_OnSelectionChanged"
+            SelectionMode="{x:Bind local:C.ToSelectionMode(ViewModel.IsSelecting), Mode=OneWay}">
+            <local:AdvancedItemsView.ItemTransitionProvider>
+                <LinedFlowLayoutItemCollectionTransitionProvider />
+            </local:AdvancedItemsView.ItemTransitionProvider>
+        </local:AdvancedItemsView>
     </local:EntryView>
 </UserControl>

@@ -3,6 +3,7 @@
 
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Markup;
 
 namespace Pixeval.Controls;
 
@@ -10,6 +11,7 @@ namespace Pixeval.Controls;
 /// This view is provided as a holder for, normally a list of items with optionally incremental loading functionality
 /// It features four additional properties in order to give a better UI experience
 /// </summary>
+[ContentProperty(Name = nameof(Content))]
 public sealed partial class EntryView
 {
     /// <summary>
