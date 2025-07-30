@@ -158,19 +158,17 @@
                 </NavigationView>
             </Grid>
         </controls:StickyHeaderScrollView.Header>
-        <controls:StickyHeaderScrollView.StickyContent>
-            <Grid>
-                <Frame x:Name="IllustratorViewerFrame" />
-                <TeachingTip
-                    x:Name="ShowQrCodeTeachingTip"
-                    x:Uid="/EntryViewerPage/QrCodeTeachingTip"
-                    IsLightDismissEnabled="True"
-                    Target="{x:Bind ShowQrCodeButton}">
-                    <TeachingTip.HeroContent>
-                        <Image />
-                    </TeachingTip.HeroContent>
-                </TeachingTip>
-            </Grid>
-        </controls:StickyHeaderScrollView.StickyContent>
+        <Grid>
+            <Frame x:Name="IllustratorViewerFrame" />
+            <TeachingTip
+                x:Name="ShowQrCodeTeachingTip"
+                x:Uid="/EntryViewerPage/QrCodeTeachingTip"
+                IsLightDismissEnabled="True"
+                Target="{x:Bind ShowQrCodeButton}">
+                <TeachingTip.HeroContent>
+                    <Image />
+                </TeachingTip.HeroContent>
+            </TeachingTip>
+        </Grid>
     </controls:StickyHeaderScrollView>
 </controls:EnhancedPage>

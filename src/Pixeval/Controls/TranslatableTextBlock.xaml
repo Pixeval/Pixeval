@@ -33,25 +33,23 @@
         Foreground="{ThemeResource TextFillColorTertiaryBrush}"
         IsEnabled="{x:Bind local:C.Negation(IsTranslating), Mode=OneWay}"
         Visibility="{x:Bind local:C.ToVisibility(CanTranslate), Mode=OneWay}">
-        <Button.Content>
-            <controls:SwitchPresenter Value="{x:Bind IsTranslating, Mode=OneWay}">
-                <controls:Case>
-                    <controls:Case.Value>
-                        <x:Boolean>True</x:Boolean>
-                    </controls:Case.Value>
-                    <ProgressRing
-                        Width="16"
-                        Height="16"
-                        IsActive="True"
-                        IsIndeterminate="True" />
-                </controls:Case>
-                <controls:Case Content="{fluent:SymbolIcon Symbol=TranslateAuto, FontSize=16}">
-                    <controls:Case.Value>
-                        <x:Boolean>False</x:Boolean>
-                    </controls:Case.Value>
-                </controls:Case>
-            </controls:SwitchPresenter>
-        </Button.Content>
+        <controls:SwitchPresenter Value="{x:Bind IsTranslating, Mode=OneWay}">
+            <controls:Case>
+                <controls:Case.Value>
+                    <x:Boolean>True</x:Boolean>
+                </controls:Case.Value>
+                <ProgressRing
+                    Width="16"
+                    Height="16"
+                    IsActive="True"
+                    IsIndeterminate="True" />
+            </controls:Case>
+            <controls:Case Content="{fluent:SymbolIcon Symbol=TranslateAuto, FontSize=16}">
+                <controls:Case.Value>
+                    <x:Boolean>False</x:Boolean>
+                </controls:Case.Value>
+            </controls:Case>
+        </controls:SwitchPresenter>
     </Button>
     <ContentPresenter
         x:Name="TranslationBoxPresenter"

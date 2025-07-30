@@ -49,92 +49,90 @@
                         Background="Transparent"
                         HasNoItem="{x:Bind _viewModel.HasNoItem, Mode=OneWay}"
                         IsLoadingMore="{x:Bind ItemsView.IsLoadingMore, Mode=OneWay}">
-                        <controls:EntryView.Content>
-                            <controls:AdvancedItemsView
-                                x:Name="ItemsView"
-                                HorizontalAlignment="Stretch"
-                                IsItemInvokedEnabled="False"
-                                ItemsSource="{x:Bind _viewModel.DataProvider.View, Mode=OneWay}"
-                                SelectionChanged="ItemsView_OnSelectionChanged"
-                                SelectionMode="Single">
-                                <controls:AdvancedItemsView.ItemTemplate>
-                                    <DataTemplate x:DataType="feeds:AbstractFeedItemViewModel">
-                                        <ItemContainer x:Name="FeedItemContainer" Width="320">
-                                            <Grid Width="320">
+                        <controls:AdvancedItemsView
+                            x:Name="ItemsView"
+                            HorizontalAlignment="Stretch"
+                            IsItemInvokedEnabled="False"
+                            ItemsSource="{x:Bind _viewModel.DataProvider.View, Mode=OneWay}"
+                            SelectionChanged="ItemsView_OnSelectionChanged"
+                            SelectionMode="Single">
+                            <controls:AdvancedItemsView.ItemTemplate>
+                                <DataTemplate x:DataType="feeds:AbstractFeedItemViewModel">
+                                    <ItemContainer x:Name="FeedItemContainer" Width="320">
+                                        <Grid Width="320">
+                                            <Grid
+                                                Width="320"
+                                                Height="80"
+                                                Padding="10,0"
+                                                ui:Effects.Shadow="{StaticResource ContentPanelShadow}"
+                                                Background="{x:Bind ItemBackground, Mode=OneWay}"
+                                                CornerRadius="4"
+                                                DataContext="{x:Bind Mode=OneWay}"
+                                                EffectiveViewportChanged="TimelineBlock_OnEffectiveViewportChanged"
+                                                Loaded="TimelineUnit_OnLoaded">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="60" />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
                                                 <Grid
-                                                    Width="320"
-                                                    Height="80"
-                                                    Padding="10,0"
-                                                    ui:Effects.Shadow="{StaticResource ContentPanelShadow}"
-                                                    Background="{x:Bind ItemBackground, Mode=OneWay}"
-                                                    CornerRadius="4"
-                                                    DataContext="{x:Bind Mode=OneWay}"
-                                                    EffectiveViewportChanged="TimelineBlock_OnEffectiveViewportChanged"
-                                                    Loaded="TimelineUnit_OnLoaded">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="60" />
-                                                        <ColumnDefinition />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Grid
-                                                        Grid.Column="0"
-                                                        Width="35"
-                                                        Height="35"
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"
-                                                        CornerRadius="50">
-                                                        <Grid.Background>
-                                                            <ImageBrush ImageSource="{x:Bind UserAvatar, Mode=OneWay}" Stretch="UniformToFill" />
-                                                        </Grid.Background>
+                                                    Grid.Column="0"
+                                                    Width="35"
+                                                    Height="35"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    CornerRadius="50">
+                                                    <Grid.Background>
+                                                        <ImageBrush ImageSource="{x:Bind UserAvatar, Mode=OneWay}" Stretch="UniformToFill" />
+                                                    </Grid.Background>
+                                                </Grid>
+                                                <Grid
+                                                    Grid.Column="1"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Stretch">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="5" />
+                                                        <RowDefinition Height="2*" />
+                                                    </Grid.RowDefinitions>
+                                                    <Grid Grid.Row="0">
+                                                        <TextBlock
+                                                            MaxWidth="155"
+                                                            HorizontalAlignment="Left"
+                                                            VerticalAlignment="Bottom"
+                                                            FontSize="13"
+                                                            FontWeight="Bold"
+                                                            Text="{x:Bind PostUsername}"
+                                                            TextTrimming="CharacterEllipsis"
+                                                            TextWrapping="WrapWholeWords" />
+                                                        <TextBlock
+                                                            HorizontalAlignment="Right"
+                                                            VerticalAlignment="Bottom"
+                                                            FontSize="10"
+                                                            Text="{x:Bind PostDateFormatted}" />
                                                     </Grid>
-                                                    <Grid
-                                                        Grid.Column="1"
-                                                        HorizontalAlignment="Stretch"
-                                                        VerticalAlignment="Stretch">
-                                                        <Grid.RowDefinitions>
-                                                            <RowDefinition Height="*" />
-                                                            <RowDefinition Height="5" />
-                                                            <RowDefinition Height="2*" />
-                                                        </Grid.RowDefinitions>
-                                                        <Grid Grid.Row="0">
-                                                            <TextBlock
-                                                                MaxWidth="155"
-                                                                HorizontalAlignment="Left"
-                                                                VerticalAlignment="Bottom"
-                                                                FontSize="13"
-                                                                FontWeight="Bold"
-                                                                Text="{x:Bind PostUsername}"
-                                                                TextTrimming="CharacterEllipsis"
-                                                                TextWrapping="WrapWholeWords" />
-                                                            <TextBlock
-                                                                HorizontalAlignment="Right"
-                                                                VerticalAlignment="Bottom"
-                                                                FontSize="10"
-                                                                Text="{x:Bind PostDateFormatted}" />
-                                                        </Grid>
-                                                        <Grid Grid.Row="2">
-                                                            <TextBlock
-                                                                x:Name="FeedContentTextBlock"
-                                                                Margin="0,0,60,0"
-                                                                FontSize="12"
-                                                                LineHeight="20"
-                                                                TextTrimming="CharacterEllipsis"
-                                                                TextWrapping="WrapWholeWords" />
-                                                            <SymbolIcon
-                                                                HorizontalAlignment="Right"
-                                                                Symbol="Pictures"
-                                                                Visibility="{x:Bind IsCondensed}" />
-                                                        </Grid>
+                                                    <Grid Grid.Row="2">
+                                                        <TextBlock
+                                                            x:Name="FeedContentTextBlock"
+                                                            Margin="0,0,60,0"
+                                                            FontSize="12"
+                                                            LineHeight="20"
+                                                            TextTrimming="CharacterEllipsis"
+                                                            TextWrapping="WrapWholeWords" />
+                                                        <SymbolIcon
+                                                            HorizontalAlignment="Right"
+                                                            Symbol="Pictures"
+                                                            Visibility="{x:Bind IsCondensed}" />
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
-                                        </ItemContainer>
-                                    </DataTemplate>
-                                </controls:AdvancedItemsView.ItemTemplate>
-                                <controls:AdvancedItemsView.ItemTransitionProvider>
-                                    <LinedFlowLayoutItemCollectionTransitionProvider />
-                                </controls:AdvancedItemsView.ItemTransitionProvider>
-                            </controls:AdvancedItemsView>
-                        </controls:EntryView.Content>
+                                        </Grid>
+                                    </ItemContainer>
+                                </DataTemplate>
+                            </controls:AdvancedItemsView.ItemTemplate>
+                            <controls:AdvancedItemsView.ItemTransitionProvider>
+                                <LinedFlowLayoutItemCollectionTransitionProvider />
+                            </controls:AdvancedItemsView.ItemTransitionProvider>
+                        </controls:AdvancedItemsView>
                     </controls:EntryView>
                 </Grid>
             </Grid>

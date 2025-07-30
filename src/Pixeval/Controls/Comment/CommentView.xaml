@@ -8,29 +8,27 @@
     Loaded="CommentView_OnLoaded"
     mc:Ignorable="d">
     <local:EntryView HasNoItem="{x:Bind HasNoItem, Mode=OneWay}" IsLoadingMore="{x:Bind CommentsList.IsLoadingMore, Mode=OneWay}">
-        <local:EntryView.Content>
-            <local:AdvancedItemsView
-                x:Name="CommentsList"
-                IsItemInvokedEnabled="False"
-                ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
-                LayoutType="VerticalStack"
-                SelectionMode="None">
-                <local:AdvancedItemsView.ItemTemplate>
-                    <DataTemplate x:Key="CommentDataTemplate" x:DataType="local:CommentItemViewModel">
-                        <ItemContainer>
-                            <local:CommentItem
-                                Margin="{StaticResource CardControlPadding}"
-                                DeleteButtonClick="CommentItem_OnDeleteButtonClick"
-                                OpenRepliesButtonClick="CommentItem_OnOpenRepliesButtonClick"
-                                RequireEntryType="CommentItem_OnRequireEntryType"
-                                ViewModel="{x:Bind}" />
-                        </ItemContainer>
-                    </DataTemplate>
-                </local:AdvancedItemsView.ItemTemplate>
-                <local:AdvancedItemsView.ItemTransitionProvider>
-                    <LinedFlowLayoutItemCollectionTransitionProvider />
-                </local:AdvancedItemsView.ItemTransitionProvider>
-            </local:AdvancedItemsView>
-        </local:EntryView.Content>
+        <local:AdvancedItemsView
+            x:Name="CommentsList"
+            IsItemInvokedEnabled="False"
+            ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
+            LayoutType="VerticalStack"
+            SelectionMode="None">
+            <local:AdvancedItemsView.ItemTemplate>
+                <DataTemplate x:Key="CommentDataTemplate" x:DataType="local:CommentItemViewModel">
+                    <ItemContainer>
+                        <local:CommentItem
+                            Margin="{StaticResource CardControlPadding}"
+                            DeleteButtonClick="CommentItem_OnDeleteButtonClick"
+                            OpenRepliesButtonClick="CommentItem_OnOpenRepliesButtonClick"
+                            RequireEntryType="CommentItem_OnRequireEntryType"
+                            ViewModel="{x:Bind}" />
+                    </ItemContainer>
+                </DataTemplate>
+            </local:AdvancedItemsView.ItemTemplate>
+            <local:AdvancedItemsView.ItemTransitionProvider>
+                <LinedFlowLayoutItemCollectionTransitionProvider />
+            </local:AdvancedItemsView.ItemTransitionProvider>
+        </local:AdvancedItemsView>
     </local:EntryView>
 </UserControl>

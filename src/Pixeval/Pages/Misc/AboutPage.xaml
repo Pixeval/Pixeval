@@ -61,19 +61,17 @@
                                     Description="{x:Bind Author}"
                                     Header="{x:Bind Name}"
                                     HeaderIcon="{fluent:SymbolIcon Symbol=Box}">
-                                    <controls:SettingsExpander.Content>
-                                        <Button
-                                            Width="40"
-                                            Height="35"
-                                            HorizontalContentAlignment="Center"
-                                            VerticalContentAlignment="Center"
-                                            Background="Transparent"
-                                            BorderThickness="0"
-                                            Click="LaunchUri"
-                                            Content="{fluent:SymbolIcon Symbol=Open,
-                                                                        FontSize=14}"
-                                            Tag="{x:Bind Url}" />
-                                    </controls:SettingsExpander.Content>
+                                    <Button
+                                        Width="40"
+                                        Height="35"
+                                        HorizontalContentAlignment="Center"
+                                        VerticalContentAlignment="Center"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Click="LaunchUri"
+                                        Content="{fluent:SymbolIcon Symbol=Open,
+                                                                    FontSize=14}"
+                                        Tag="{x:Bind Url}" />
                                     <controls:SettingsExpander.Items>
                                         <controls:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Vertical">
                                             <labs:MarkdownTextBlock Margin="5" Text="{x:Bind License}">
