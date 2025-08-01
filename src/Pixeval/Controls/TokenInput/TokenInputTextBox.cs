@@ -15,7 +15,7 @@ namespace Pixeval.Controls;
 /// and a <see cref="TokenSubmitted"/> event to help user hook logic when a token is submitted, a token can be marked as case-sensitive
 /// or regex
 /// </summary>
-                                                            public partial class TokenInputTextBox : Control
+public partial class TokenInputTextBox : Control
 {
     [GeneratedDependencyProperty]
     public partial string? PlaceholderText { get; set; }

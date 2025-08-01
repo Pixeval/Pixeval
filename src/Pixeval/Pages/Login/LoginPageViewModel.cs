@@ -83,7 +83,7 @@ public partial class LoginPageViewModel(FrameworkElement frameworkElement) : UiO
         var proxyServer = null as PixivAuthenticationProxyServer;
         if (EnableDomainFronting)
         {
-            proxyServer = PixivAuthenticationProxyServer.Create(IPAddress.Loopback, port, s => MakoHttpOptions.GetAddressesAsync(s));
+            proxyServer = PixivAuthenticationProxyServer.Create(IPAddress.Loopback, port, t => MakoHttpOptions.CreateConnectionAsync(t));
             arguments += $" --ignore-certificate-errors --proxy-server=127.0.0.1:{port}";
         }
 
