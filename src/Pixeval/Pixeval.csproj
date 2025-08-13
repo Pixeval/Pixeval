@@ -130,10 +130,17 @@
 
     <ItemGroup>
       <None Remove="Controls\WorkInfoUserCard.xaml" />
+      <None Remove="Pages\Home\HomePage.xaml" />
     </ItemGroup>
 
     <ItemGroup>
       <Page Update="Controls\WorkInfoUserCard.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="Pages\Home\HomePage.xaml">
         <Generator>MSBuild:Compile</Generator>
       </Page>
     </ItemGroup>
