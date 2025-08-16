@@ -183,7 +183,7 @@
   <data name="ReverseSearchClientSideErrorContent" xml:space="preserve">
     <value>图片格式错误或者图片过大或者请求频率过高，请仔细检查后稍后再试</value>
   </data>
-    <data name="ReverseSearchStartContent" xml:space="preserve">
+  <data name="ReverseSearchStartContent" xml:space="preserve">
     <value>正在进行以图搜图</value>
   </data>
   <data name="ReverseSearchDropHintTextBlock.Text" xml:space="preserve">
@@ -255,5 +255,8 @@
   </data>
   <data name="LogoutItem.Text" xml:space="preserve">
     <value>登出账号</value>
+  </data>
+  <data name="HomeTab.Content" xml:space="preserve">
+    <value>主页</value>
   </data>
 </root>

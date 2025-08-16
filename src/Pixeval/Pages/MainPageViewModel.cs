@@ -16,6 +16,7 @@ using Mako.Model;
 using Pixeval.Pages.Capability;
 using Pixeval.Pages.Capability.Feeds;
 using Pixeval.Pages.Download;
+using Pixeval.Pages.Home;
 using Pixeval.Pages.Misc;
 using Pixeval.Pages.Tags;
 using Pixeval.Util;
@@ -62,6 +63,7 @@ public partial class MainPageViewModel : UiObservableObject
 
     public IReadOnlyList<INavigationViewItem> MenuItems =>
     [
+        new NavigationViewTag<HomePage>(MainPageResources.HomeTabContent) { Symbol = Symbol.Home },
         new NavigationViewTag<RecommendationPage>(MainPageResources.RecommendationsTabContent) { Symbol = Symbol.Calendar },
         new NavigationViewTag<RankingsPage>(MainPageResources.RankingsTabContent) { Symbol = Symbol.ArrowTrendingLines },
         new NavigationViewTag<BookmarksPage>(MainPageResources.BookmarksTabContent) { Symbol = Symbol.Library },

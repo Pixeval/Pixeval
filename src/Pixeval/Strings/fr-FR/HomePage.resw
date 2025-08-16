@@ -117,146 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BookmarksTab.Content" xml:space="preserve">
-    <value>Bookmark</value>
+  <data name="SpotlightSectionTitle.Text" xml:space="preserve">
+    <value>Spotlight</value>
   </data>
-  <data name="RecommendUsersTab.Content" xml:space="preserve">
-    <value>Recommend Users</value>
+  <data name="RecommendedNovelSectionTitle.Text" xml:space="preserve">
+    <value>Romans Recommendés</value>
   </data>
-  <data name="FollowingsTab.Content" xml:space="preserve">
-    <value>Following</value>
+  <data name="RecommendedIllustrationsSectionTitle.Text" xml:space="preserve">
+    <value>Artworks Recommendés</value>
   </data>
-  <data name="HistoriesTab.Content" xml:space="preserve">
-    <value>History</value>
+  <data name="UserFeedSectionTitle.Text" xml:space="preserve">
+    <value>Fil d’Activités</value>
   </data>
-  <data name="TagsTab.Content" xml:space="preserve">
-    <value>标签</value>
-  </data>
-  <data name="RecentPostsTab.Content" xml:space="preserve">
-    <value>Updates</value>
-  </data>
-  <data name="NewWorksTab.Content" xml:space="preserve">
-    <value>All New Works</value>
-  </data>
-  <data name="SpotlightsTab.Content" xml:space="preserve">
-    <value>Spotlight 🏗️</value>
-  </data>
-  <data name="RankingsTab.Content" xml:space="preserve">
-    <value>Ranking</value>
-  </data>
-  <data name="FeedTab.Content" xml:space="preserve">
-    <value>关注动态</value>
-  </data>
-  <data name="RecommendationsTab.Content" xml:space="preserve">
-    <value>Recommendation</value>
-  </data>
-  <data name="DownloadListTab.Content" xml:space="preserve">
-    <value>Download Manager</value>
-  </data>
-  <data name="HelpTab.Content" xml:space="preserve">
-    <value>Help</value>
-  </data>
-  <data name="AboutTab.Content" xml:space="preserve">
-    <value>About</value>
-  </data>
-  <data name="SettingsTab.Content" xml:space="preserve">
-    <value>Settings</value>
-  </data>
-  <data name="OpenSearchSettingButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Search for settings</value>
-  </data>
-  <data name="ReverseSearchButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Reverse search</value>
-  </data>
-  <data name="MainPageAutoSuggestionBox.PlaceholderText" xml:space="preserve">
-    <value>Work ID/Work title/Artist ID/Artist title/Setting entry</value>
-  </data>
-  <data name="SearchKeywordCannotBeBlankContent" xml:space="preserve">
-    <value>The keyword must not be empty</value>
-  </data>
-  <data name="SearchKeywordCannotBeBlankTitle" xml:space="preserve">
-    <value>The keyword is illegal</value>
-  </data>
-  <data name="ReverseSearchApiKeyNotPresentTitle" xml:space="preserve">
-    <value>Empty API key/API key illegal</value>
-  </data>
-  <data name="ReverseSearchClientSideErrorContent" xml:space="preserve">
-    <value>Illegal image format/Image is too big/Request is too frequent, please try again later</value>
-  </data>
-  <data name="ReverseSearchStartContent" xml:space="preserve">
-    <value>正在进行以图搜图</value>
-  </data>
-  <data name="ReverseSearchDropHintTextBlock.Text" xml:space="preserve">
-    <value>在此释放进行以图搜图</value>
-  </data>
-  <data name="ReverseSearchErrorTitle" xml:space="preserve">
-    <value>Reverse search failed</value>
-  </data>
-  <data name="ReverseSearchNotFoundContent" xml:space="preserve">
-    <value>We can't find any matching work on Pixiv. The reverse search can only find works on Pixiv</value>
-  </data>
-  <data name="ReverseSearchNotFoundTitle" xml:space="preserve">
-    <value>Didn't find any result</value>
-  </data>
-  <data name="ReverseSearchResponseContentIsEmpty" xml:space="preserve">
-    <value>Result is empty</value>
-  </data>
-  <data name="ReverseSearchServerSideErrorContent" xml:space="preserve">
-    <value>Server error</value>
-  </data>
-  <data name="IllustrationHeaderSuggestionTextBlock.Text" xml:space="preserve">
-    <value>Work trending</value>
-  </data>
-  <data name="NovelHeaderSuggestionTextBlock.Text" xml:space="preserve">
-    <value>Novel trending</value>
-  </data>
-  <data name="SettingsEntryHeaderSuggestionTextBlock.Text" xml:space="preserve">
-    <value>Suggested settings</value>
-  </data>
-  <data name="TagAutoCompletionSuggestionTextBlock.Text" xml:space="preserve">
-    <value>Suggestions</value>
-  </data>
-  <data name="FeedTabCannotBeOpenedTitle" xml:space="preserve">
-    <value>无法使用用户动态功能</value>
-  </data>
-  <data name="FeedTabCannotBeOpenedContent" xml:space="preserve">
-    <value>用户动态功能需要使用 Cookie，请先在设置页面中填写对应 Cookie 后再使用此功能</value>
-  </data>
-  <data name="ExtensionsTab.Content" xml:space="preserve">
-    <value>扩展</value>
-  </data>
-  <data name="RefreshingSessionFailedTitle" xml:space="preserve">
-    <value>Failed to refresh session</value>
-  </data>
-  <data name="RefreshingSessionFailedContent" xml:space="preserve">
-    <value>Please login again
-If this issue recurs, please contact the developer for a solution</value>
-  </data>
-  <data name="SearchWorksResult" xml:space="preserve">
-    <value>搜索作品结果</value>
-  </data>
-  <data name="SearchUsersResult" xml:space="preserve">
-    <value>搜索用户结果</value>
-  </data>
-  <data name="OpenMyPageItem.Text" xml:space="preserve">
-    <value>打开个人页面</value>
-  </data>
-  <data name="OpenMyPageInBrowserItem.Text" xml:space="preserve">
-    <value>打开网页</value>
-  </data>
-  <data name="RestrictedModeItem.Text" xml:space="preserve">
-    <value>受限模式</value>
-  </data>
-  <data name="AiShowItem.Text" xml:space="preserve">
-    <value>显示AI作品</value>
-  </data>
-  <data name="MoreViewingSettingsItem.Text" xml:space="preserve">
-    <value>更多浏览设置</value>
-  </data>
-  <data name="LogoutItem.Text" xml:space="preserve">
-    <value>登出账号</value>
-  </data>
-  <data name="HomeTab.Content" xml:space="preserve">
-    <value>Home</value>
+  <data name="RecommendedIllustratorsSectionTitle.Text" xml:space="preserve">
+    <value>Illustrateurs Recommendés</value>
   </data>
 </root>
