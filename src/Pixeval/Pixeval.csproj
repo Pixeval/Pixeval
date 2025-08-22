@@ -120,22 +120,12 @@
         <AppInstallerUri>%UserProfile%\Desktop</AppInstallerUri>
         <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
         <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
-        <AppxBundlePlatforms>x64</AppxBundlePlatforms>
+        <AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
         <UserSecretsId>3def7e91-e55c-4da1-b2d9-54509ccc34fd</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
         <ProjectCapability Include="Msix" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="Controls\WorkInfoUserCard.xaml" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Page Update="Controls\WorkInfoUserCard.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
     </ItemGroup>
 
     <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
