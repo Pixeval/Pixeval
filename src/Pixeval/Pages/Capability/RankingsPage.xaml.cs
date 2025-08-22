@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mako;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.Controls;
@@ -28,7 +29,7 @@ public sealed partial class RankingsPage : IScrollViewHost
         SimpleWorkTypeComboBox.SelectedEnum = App.AppViewModel.AppSettings.SimpleWorkType;
     }
 
-    public DateTime MaxDate => DateTime.Now.AddDays(-2);
+    public DateTimeOffset MaxDate => MakoClient.GetRankingMaxDate();
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
@@ -61,7 +62,7 @@ public sealed partial class RankingsPage : IScrollViewHost
     private void ChangeSource()
     {
         var rankOption = RankOptionComboBox.SelectedItem.To<StringRepresentableItem>().Item.To<RankOption>();
-        var dateTime = RankDateTimeCalendarDatePicker.Date!.Value.DateTime;
+        var dateTime = RankDateTimeCalendarDatePicker.Date!.Value;
         WorkContainer.WorkView.ResetEngine(SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>() is SimpleWorkType.IllustAndManga
             ? App.AppViewModel.MakoClient.IllustrationRanking(rankOption, dateTime, App.AppViewModel.AppSettings.TargetFilter)
             : App.AppViewModel.MakoClient.NovelRanking(rankOption, dateTime, App.AppViewModel.AppSettings.TargetFilter));
