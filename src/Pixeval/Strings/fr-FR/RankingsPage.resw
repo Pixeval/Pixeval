@@ -171,4 +171,10 @@
   <data name="RankOptionDayR18Ai" xml:space="preserve">
     <value>Classement journalier des artworks IA et R-18</value>
   </data>
+  <data name="RankOptionWeekAi" xml:space="preserve">
+    <value>AI周榜</value>
+  </data>
+  <data name="RankOptionWeekAiR18" xml:space="preserve">
+    <value>AI R-18周榜</value>
+  </data>
 </root>
