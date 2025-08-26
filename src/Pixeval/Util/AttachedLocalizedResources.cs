@@ -26,22 +26,45 @@ namespace Pixeval.Util;
 [AttachedLocalizedResource(nameof(RankOption.WeekR18G), nameof(RankingsPageResources.RankOptionWeekR18G))]
 [AttachedLocalizedResource(nameof(RankOption.DayAi), nameof(RankingsPageResources.RankOptionDayAi))]
 [AttachedLocalizedResource(nameof(RankOption.DayR18Ai), nameof(RankingsPageResources.RankOptionDayR18Ai))]
-public static partial class RankOptionExtension;
+public static partial class IllustrationRankOptionExtension
+{
+    public static readonly RankOption[] IllustrationRankOptions =
+    [
+        RankOption.Day,
+        RankOption.Week,
+        RankOption.Month,
+        RankOption.DayMale,
+        RankOption.DayFemale,
+        RankOption.DayManga,
+        RankOption.WeekManga,
+        RankOption.MonthManga,
+        RankOption.WeekOriginal,
+        RankOption.WeekRookie,
+        RankOption.DayR18,
+        RankOption.DayMaleR18,
+        RankOption.DayFemaleR18,
+        RankOption.WeekR18,
+        RankOption.WeekR18G,
+        RankOption.DayAi,
+        RankOption.DayR18Ai
+        // RankOption.WeekAi,
+        // RankOption.WeekAiR18
+    ];
+}
 
 [AttachedLocalizationMetadata<RankOption>(typeof(RankingsPageResources))]
 [AttachedLocalizedResource(nameof(RankOption.Day), nameof(RankingsPageResources.RankOptionDay))]
 [AttachedLocalizedResource(nameof(RankOption.Week), nameof(RankingsPageResources.RankOptionWeek))]
 [AttachedLocalizedResource(nameof(RankOption.DayMale), nameof(RankingsPageResources.RankOptionDayMale))]
 [AttachedLocalizedResource(nameof(RankOption.DayFemale), nameof(RankingsPageResources.RankOptionDayFemale))]
-[AttachedLocalizedResource(nameof(RankOption.WeekOriginal), nameof(RankingsPageResources.RankOptionWeekOriginal))]
 [AttachedLocalizedResource(nameof(RankOption.WeekRookie), nameof(RankingsPageResources.RankOptionWeekRookie))]
 [AttachedLocalizedResource(nameof(RankOption.DayR18), nameof(RankingsPageResources.RankOptionDayR18))]
 [AttachedLocalizedResource(nameof(RankOption.DayMaleR18), nameof(RankingsPageResources.RankOptionDayMaleR18))]
 [AttachedLocalizedResource(nameof(RankOption.DayFemaleR18), nameof(RankingsPageResources.RankOptionDayFemaleR18))]
 [AttachedLocalizedResource(nameof(RankOption.WeekR18), nameof(RankingsPageResources.RankOptionWeekR18))]
 [AttachedLocalizedResource(nameof(RankOption.WeekR18G), nameof(RankingsPageResources.RankOptionWeekR18G))]
-[AttachedLocalizedResource(nameof(RankOption.DayAi), nameof(RankingsPageResources.RankOptionDayAi))]
-[AttachedLocalizedResource(nameof(RankOption.DayR18Ai), nameof(RankingsPageResources.RankOptionDayR18Ai))]
+[AttachedLocalizedResource(nameof(RankOption.WeekAi), nameof(RankingsPageResources.RankOptionWeekAi))]
+[AttachedLocalizedResource(nameof(RankOption.WeekAiR18), nameof(RankingsPageResources.RankOptionWeekAiR18))]
 public static partial class NovelRankOptionExtension
 {
     public static readonly RankOption[] NovelRankOptions =
@@ -54,15 +77,17 @@ public static partial class NovelRankOptionExtension
         // RankOption.DayManga,
         // RankOption.WeekManga,
         // RankOption.MonthManga,
-        RankOption.WeekOriginal,
+        // RankOption.WeekOriginal,
         RankOption.WeekRookie,
         RankOption.DayR18,
         RankOption.DayMaleR18,
         RankOption.DayFemaleR18,
         RankOption.WeekR18,
         RankOption.WeekR18G,
-        RankOption.DayAi,
-        RankOption.DayR18Ai
+        // RankOption.DayAi,
+        // RankOption.DayR18Ai,
+        RankOption.WeekAi,
+        RankOption.WeekAiR18
     ];
 }
 
