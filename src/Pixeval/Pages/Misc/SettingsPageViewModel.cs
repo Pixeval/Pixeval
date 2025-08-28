@@ -182,7 +182,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                         new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Illustration,
                             t => t.IllustrationRankOption,
-                            RankOptionExtension.GetItems()),
+                            IllustrationRankOptionExtension.GetItems()),
                         new EnumAppSettingsEntry(AppSettings,
                             WorkTypeEnum.Novel,
                             t => t.NovelRankOption,
