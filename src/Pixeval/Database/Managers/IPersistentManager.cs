@@ -33,7 +33,7 @@ public interface IPersistentManager<TEntry, out TModel> where TEntry : IHistoryE
 
     void Insert(TEntry t);
 
-    IEnumerable<TModel> Query(Expression<Func<TEntry, bool>> predicate);
+    IEnumerable<TModel> Query(Expression<Func<TEntry, bool>> predicate, int skip = 0, int limit = int.MaxValue);
 
     void Update(TEntry entry);
 
