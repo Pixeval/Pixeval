@@ -30,6 +30,7 @@ public partial class DoubleAppSettingsEntry(AppSettings settings, Expression<Fun
         : this(settings, property)
     {
         Header = SubHeader(workType);
+        Description = "";
         HeaderIcon = SubHeaderIcon(workType);
     }
 }
