@@ -29,6 +29,7 @@ public partial class EnumAppSettingsEntry(
         : this(settings, property, array)
     {
         Header = SubHeader(workType);
+        Description = "";
         HeaderIcon = SubHeaderIcon(workType);
     }
 }

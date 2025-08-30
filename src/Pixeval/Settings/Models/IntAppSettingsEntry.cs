@@ -30,6 +30,7 @@ public partial class IntAppSettingsEntry(AppSettings settings, Expression<Func<A
         : this(settings, property)
     {
         Header = SubHeader(workType);
+        Description = "";
         HeaderIcon = SubHeaderIcon(workType);
     }
 

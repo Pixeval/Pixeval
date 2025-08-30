@@ -23,6 +23,7 @@ public partial class BoolAppSettingsEntry(
         : this(settings, property)
     {
         Header = SubHeader(workType);
+        Description = "";
         HeaderIcon = SubHeaderIcon(workType);
     }
 }

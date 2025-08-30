@@ -25,6 +25,7 @@ public partial class StringAppSettingsEntry(
         : this(settings, property)
     {
         Header = SubHeader(workType);
+        Description = "";
         HeaderIcon = SubHeaderIcon(workType);
     }
 }

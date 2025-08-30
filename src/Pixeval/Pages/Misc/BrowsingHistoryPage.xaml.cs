@@ -34,9 +34,11 @@ public sealed partial class BrowsingHistoryPage : IScrollViewHost
     {
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
         var type = SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>();
-        var source = manager.Enumerate()
+        var isIllustration = type is SimpleWorkType.IllustAndManga;
+        var source = manager
+            .Reverse()
             .SelectNotNull(t => t.Entry)
-            .Where(t => t.ImageType is ImageType.Other ^ type is SimpleWorkType.IllustAndManga)
+            .Where(t => t.ImageType is ImageType.Other ^ isIllustration)
             .ToAsyncEnumerable();
 
         WorkContainer.WorkView.ResetEngine(type switch

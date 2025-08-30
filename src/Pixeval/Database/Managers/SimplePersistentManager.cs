@@ -30,9 +30,9 @@ public abstract class SimplePersistentManager<T>(ILiteDatabase db, int maximumRe
         _ = Collection.Insert(t);
     }
 
-    public IEnumerable<T> Query(Expression<Func<T, bool>> predicate)
+    public IEnumerable<T> Query(Expression<Func<T, bool>> predicate, int skip = 0, int limit = int.MaxValue)
     {
-        return Collection.Find(predicate);
+        return Collection.Find(predicate, skip, limit);
     }
 
     public void Update(T entry)
@@ -42,12 +42,12 @@ public abstract class SimplePersistentManager<T>(ILiteDatabase db, int maximumRe
 
     public IEnumerable<T> Take(int count)
     {
-        return Collection.Find(_ => true, 0, count);
+        return Collection.Find(LiteDB.Query.All(), 0, count);
     }
 
     public IEnumerable<T> TakeLast(int count)
     {
-        return Collection.Find(_ => true, Collection.Count() - count, count);
+        return Collection.Find(LiteDB.Query.All(LiteDB.Query.Descending), Collection.Count() - count, count);
     }
 
     public IEnumerable<T> Select(Expression<Func<T, bool>> predicate)
@@ -85,8 +85,9 @@ public abstract class SimplePersistentManager<T>(ILiteDatabase db, int maximumRe
     {
         if (Collection.Count() > limit)
         {
-            var last = Collection.FindAll().Take(^limit..).ToHashSet();
-            _ = Delete(e => !last.Contains(e));
+            var last = Collection.FindAll().Take(^limit..);
+            foreach (var id in last)
+                Collection.Delete(id.HistoryEntryId);
         }
     }
 

@@ -68,12 +68,12 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
             {
                 new EnumAppSettingsEntry(AppSettings,
                     t => t.Theme,
-                    ElementThemeExtension.GetItems()) { ValueChanged = t => WindowFactory.SetTheme((ElementTheme)t) },
+                    ElementThemeExtension.GetItems()) { ValueChanged = t => WindowFactory.SetTheme((ElementTheme) t) },
                 new EnumAppSettingsEntry(AppSettings,
                     t => t.Backdrop,
                     BackdropTypeExtension.GetItems())
                 {
-                    ValueChanged = t => WindowFactory.SetBackdrop((BackdropType)t)
+                    ValueChanged = t => WindowFactory.SetBackdrop((BackdropType) t)
                 },
                 new FontAppSettingsEntry(AppSettings,
                     t => t.AppFontFamilyName),
@@ -107,7 +107,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     t => t.NavigationViewOpenPaneWidth)
                 {
                     Max = 1000,
-                    // 48时图标会被挡住一部分
+                    // 48时NavigationViewItem的图标会被挡住一部分
                     Min = 50,
                     SmallChange = 10,
                     ValueChanged = t => MainPage.Current.NavigationView.OpenPaneLength = t
@@ -140,7 +140,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 {
                     Max = 10,
                     Min = 0,
-                    ValueChanged = d => AdvancedItemsView.ScrollRate = (float)d
+                    ValueChanged = d => AdvancedItemsView.ScrollRate = (float) d
                 },
                 new BoolAppSettingsEntry(AppSettings,
                     t => t.OpenWorkInfoByDefault),
@@ -178,27 +178,27 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                     t => t.SimpleWorkType,
                     SimpleWorkTypeExtension.GetItems()),
                 new MultiValuesEntry(t => t.IllustrationRankOption,
-                    [
-                        new EnumAppSettingsEntry(AppSettings,
-                            WorkTypeEnum.Illustration,
-                            t => t.IllustrationRankOption,
-                            IllustrationRankOptionExtension.GetItems()),
-                        new EnumAppSettingsEntry(AppSettings,
-                            WorkTypeEnum.Novel,
-                            t => t.NovelRankOption,
-                            NovelRankOptionExtension.GetItems())
-                    ]),
+                [
+                    new EnumAppSettingsEntry(AppSettings,
+                        WorkTypeEnum.Illustration,
+                        t => t.IllustrationRankOption,
+                        IllustrationRankOptionExtension.GetItems()),
+                    new EnumAppSettingsEntry(AppSettings,
+                        WorkTypeEnum.Novel,
+                        t => t.NovelRankOption,
+                        NovelRankOptionExtension.GetItems())
+                ]),
                 new MultiValuesEntry(t => t.SearchIllustrationTagMatchOption,
-                    [
-                        new EnumAppSettingsEntry(AppSettings,
-                            WorkTypeEnum.Illustration,
-                            t => t.SearchIllustrationTagMatchOption,
-                            SearchIllustrationTagMatchOptionExtension.GetItems()),
-                        new EnumAppSettingsEntry(AppSettings,
-                            WorkTypeEnum.Novel,
-                            t => t.SearchNovelTagMatchOption,
-                            SearchNovelTagMatchOptionExtension.GetItems())
-                    ]),
+                [
+                    new EnumAppSettingsEntry(AppSettings,
+                        WorkTypeEnum.Illustration,
+                        t => t.SearchIllustrationTagMatchOption,
+                        SearchIllustrationTagMatchOptionExtension.GetItems()),
+                    new EnumAppSettingsEntry(AppSettings,
+                        WorkTypeEnum.Novel,
+                        t => t.SearchNovelTagMatchOption,
+                        SearchNovelTagMatchOptionExtension.GetItems())
+                ]),
                 new DateWithSwitchAppSettingsEntry(AppSettings,
                     t => t.UseSearchStartDate,
                     t => t.SearchStartDate),
@@ -225,20 +225,20 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 },
                 new DownloadMacroAppSettingsEntry(AppSettings),
                 new MultiValuesEntry(t => t.IllustrationDownloadFormat,
-                    [
-                        new EnumAppSettingsEntry(AppSettings,
-                            WorkTypeEnum.Illustration,
-                            t => t.IllustrationDownloadFormat,
-                            IllustrationDownloadFormatExtension.GetItems()),
-                        new EnumAppSettingsEntry(AppSettings,
-                            WorkTypeEnum.Ugoira,
-                            t => t.UgoiraDownloadFormat,
-                            UgoiraDownloadFormatExtension.GetItems()),
-                        new EnumAppSettingsEntry(AppSettings,
-                            WorkTypeEnum.Novel,
-                            t => t.NovelDownloadFormat,
-                            NovelDownloadFormatExtension.GetItems())
-                    ]),
+                [
+                    new EnumAppSettingsEntry(AppSettings,
+                        WorkTypeEnum.Illustration,
+                        t => t.IllustrationDownloadFormat,
+                        IllustrationDownloadFormatExtension.GetItems()),
+                    new EnumAppSettingsEntry(AppSettings,
+                        WorkTypeEnum.Ugoira,
+                        t => t.UgoiraDownloadFormat,
+                        UgoiraDownloadFormatExtension.GetItems()),
+                    new EnumAppSettingsEntry(AppSettings,
+                        WorkTypeEnum.Novel,
+                        t => t.NovelDownloadFormat,
+                        NovelDownloadFormatExtension.GetItems())
+                ]),
                 new IntAppSettingsEntry(AppSettings,
                     t => t.LossyImageDownloadQuality)
                 {
