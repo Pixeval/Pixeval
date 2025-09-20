@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Mako.Model;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Misaki;
 using Pixeval.Download.Macros;
 using Pixeval.Options;
 using Pixeval.Util.IO.Caching;
@@ -25,7 +26,6 @@ using SixLabors.ImageSharp.Formats.Webp;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
-using Misaki;
 using WinUI3Utilities;
 
 namespace Pixeval.Util.IO;
@@ -336,22 +336,28 @@ public static partial class IoHelper
         var msDelays = new List<int>();
         try
         {
-            while (image.Frames.Count is not 0)
+            while (image.Frames.Count is not 1)
             {
-                var ms = 10;
-                if (image.Frames.RootFrame.Metadata.TryGetGifMetadata(out var gifFrameMetadata))
-                    ms = gifFrameMetadata.FrameDelay * 10;
-                else if (image.Frames.RootFrame.Metadata.TryGetPngMetadata(out var pngFrameMetadata))
-                    ms = (int) (pngFrameMetadata.FrameDelay.ToDouble() * 10);
-                else if (image.Frames.RootFrame.Metadata.TryGetWebpFrameMetadata(out var webpFrameMetadata))
-                    ms = (int) webpFrameMetadata.FrameDelay;
-                var exportFrame = image.Frames.ExportFrame(0);
-                var memoryStream = Streams.RentStream();
-                await exportFrame.SaveAsPngAsync(memoryStream);
+                using var exportFrame = image.Frames.ExportFrame(0);
+                var (memoryStream, ms) = await GetBitmapAndDelayAsync(exportFrame);
                 streams.Add(memoryStream);
                 msDelays.Add(ms);
             }
+            var (lastMemoryStream, lastMs) = await GetBitmapAndDelayAsync(image);
+            streams.Add(lastMemoryStream);
+            msDelays.Add(lastMs);
             return (streams, msDelays);
+
+            static async Task<(Stream Stream, int Delay)> GetBitmapAndDelayAsync(Image frame)
+            {
+                var webpFrameMetadata = frame.Frames.RootFrame.Metadata.GetWebpMetadata();
+                var delay = webpFrameMetadata.FrameDelay is var d && d < 1 ? 10 : (int) d;
+
+                var memoryStream = Streams.RentStream();
+                await frame.SaveAsPngAsync(memoryStream);
+                memoryStream.Position = 0;
+                return (memoryStream, delay);
+            }
         }
         catch (Exception)
         {
