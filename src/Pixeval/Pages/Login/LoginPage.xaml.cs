@@ -115,7 +115,11 @@ public sealed partial class LoginPage
 
     #region Token
 
-    private void TokenLogin_OnClicked(object sender, object e) => Refresh(_viewModel.RefreshToken);
+    private void TokenLogin_OnClicked(object sender, object e)
+    {
+        _viewModel.RefreshToken = _viewModel.RefreshToken.Trim();
+        Refresh(_viewModel.RefreshToken);
+    }
 
     #endregion
 
