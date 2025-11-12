@@ -59,8 +59,4 @@
     <Platform Solution="*|x86" Project="x86" />
     <Deploy />
   </Project>
-  <Properties Name="ExtensibilityGlobals" Scope="PostLoad">
-    <Property Name="RESX_ConfirmAddLanguageFile" Value="True" />
-    <Property Name="RESX_NeutralResourcesLanguage" Value="zh-CN" />
-  </Properties>
 </Solution>

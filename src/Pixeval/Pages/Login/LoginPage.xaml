@@ -16,12 +16,8 @@
     <controls2:DockPanel>
         <TitleBar
             Title="{x:Bind app:AppInfo.AppIdentifier}"
-            VerticalAlignment="Top"
-            controls2:DockPanel.Dock="Top">
-            <TitleBar.IconSource>
-                <ImageIconSource ImageSource="ms-appx:///Assets/Images/logo.svg" />
-            </TitleBar.IconSource>
-        </TitleBar>
+            controls2:DockPanel.Dock="Top"
+            Style="{StaticResource TitleBarStyle}" />
         <controls2:DockPanel
             Padding="50"
             HorizontalSpacing="20"

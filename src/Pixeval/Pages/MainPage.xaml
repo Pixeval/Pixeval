@@ -84,14 +84,10 @@
         <controls1:DockPanel>
             <TitleBar
                 x:Name="TitleBar"
-                Title="{x:Bind management:AppInfo.AppIdentifier}"
-                VerticalAlignment="Top"
                 controls1:DockPanel.Dock="Top"
                 IsPaneToggleButtonVisible="True"
-                PaneToggleRequested="TitleBar_OnPaneButtonClicked">
-                <TitleBar.IconSource>
-                    <ImageIconSource ImageSource="ms-appx:///Assets/Images/logo.svg" />
-                </TitleBar.IconSource>
+                PaneToggleRequested="TitleBar_OnPaneButtonClicked"
+                Style="{StaticResource TitleBarStyle}">
                 <TitleBar.RightHeader>
                     <Button
                         Padding="1"

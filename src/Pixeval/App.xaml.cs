@@ -49,6 +49,7 @@ public partial class App
 
     protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
+        Resources["AppIdentifier"] = AppInfo.AppIdentifier;
         Resources["DefaultAppBarButtonStyle"].To<Style>().Setters[7] = new Setter(FrameworkElement.WidthProperty, 45);
         Resources["DefaultAppBarToggleButtonStyle"].To<Style>().Setters[8] = new Setter(FrameworkElement.WidthProperty, 45);
 
