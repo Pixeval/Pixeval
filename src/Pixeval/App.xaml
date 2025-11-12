@@ -11,6 +11,8 @@
                 <ResourceDictionary Source="ms-appx:///Pixeval.Controls/Themes/Controls.xaml" />
                 <!--  Other merged dictionaries here  -->
             </ResourceDictionary.MergedDictionaries>
+            <!--  在OnLaunched设置  -->
+            <x:String x:Key="AppIdentifier"><![CDATA[]]></x:String>
             <x:Double x:Key="CollapsedAppBarButtonWidth">45</x:Double>
             <x:Double x:Key="CommandBarHeight">48</x:Double>
             <x:Double x:Key="TitleBarHeight">48</x:Double>

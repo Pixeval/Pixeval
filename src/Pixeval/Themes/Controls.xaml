@@ -48,14 +48,25 @@
         <Setter Property="ValidationMode" Value="InvalidInputOverwritten" />
     </Style>
     <Style
-        x:Key="CardControlButton"
+        x:Key="CardControlButtonStyle"
         BasedOn="{StaticResource DefaultButtonStyle}"
         TargetType="Button">
         <Setter Property="Padding" Value="{StaticResource CardControlPadding}" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
     </Style>
-
+    <!--  TODO:傻逼WinUI到现在不修这弱智bug https://github.com/microsoft/microsoft-ui-xaml/issues/10374  -->
+    <Style x:Key="TitleBarStyle" TargetType="TitleBar">
+        <Setter Property="Title" Value="{StaticResource AppIdentifier}" />
+        <Setter Property="LeftHeader">
+            <Setter.Value>
+                <ImageIcon
+                    Height="16"
+                    Margin="16,0,8,0"
+                    Source="ms-appx:///Assets/Images/logo.svg" />
+            </Setter.Value>
+        </Setter>
+    </Style>
     <numberFormatting:DecimalFormatter x:Key="IntegerRoundedDecimalFormatter" FractionDigits="0">
         <numberFormatting:DecimalFormatter.NumberRounder>
             <numberFormatting:IncrementNumberRounder Increment="1" RoundingAlgorithm="RoundHalfUp" />

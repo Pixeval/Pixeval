@@ -22,7 +22,7 @@
         <DataTemplate x:Key="UserCardDataTemplate" x:DataType="misaki:IUser">
             <Button
                 Click="IllustratorPersonPicture_OnClicked"
-                Style="{StaticResource CardControlButton}"
+                Style="{StaticResource CardControlButtonStyle}"
                 Tag="{x:Bind}">
                 <controls:DockPanel HorizontalSpacing="12" LastChildFill="False">
                     <PersonPicture
