@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.13.35931.197
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11312.210 d18.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pixeval.Caching", "src\Pixeval.Caching\Pixeval.Caching.csproj", "{5259E9F3-148F-DE42-F109-BEE38227C472}"
 EndProject
@@ -54,6 +54,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\build.yml = .github\workflows\build.yml
 		.github\workflows\release.yml = .github\workflows\release.yml
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pixeval.Experimental.Uno", "src\Pixeval.Experimental.Uno\Pixeval.Experimental.Uno.csproj", "{CAD06717-FEE6-6EE1-D1CD-6BA37393E049}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -167,6 +169,18 @@ Global
 		{11FDCB3F-2117-6C52-B102-4FA79F891494}.Release|x64.Build.0 = Release|Any CPU
 		{11FDCB3F-2117-6C52-B102-4FA79F891494}.Release|x86.ActiveCfg = Release|Any CPU
 		{11FDCB3F-2117-6C52-B102-4FA79F891494}.Release|x86.Build.0 = Release|Any CPU
+		{CAD06717-FEE6-6EE1-D1CD-6BA37393E049}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{CAD06717-FEE6-6EE1-D1CD-6BA37393E049}.Debug|arm64.Build.0 = Debug|Any CPU
+		{CAD06717-FEE6-6EE1-D1CD-6BA37393E049}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CAD06717-FEE6-6EE1-D1CD-6BA37393E049}.Debug|x64.Build.0 = Debug|Any CPU
+		{CAD06717-FEE6-6EE1-D1CD-6BA37393E049}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CAD06717-FEE6-6EE1-D1CD-6BA37393E049}.Debug|x86.Build.0 = Debug|Any CPU
+		{CAD06717-FEE6-6EE1-D1CD-6BA37393E049}.Release|arm64.ActiveCfg = Release|Any CPU
+		{CAD06717-FEE6-6EE1-D1CD-6BA37393E049}.Release|arm64.Build.0 = Release|Any CPU
+		{CAD06717-FEE6-6EE1-D1CD-6BA37393E049}.Release|x64.ActiveCfg = Release|Any CPU
+		{CAD06717-FEE6-6EE1-D1CD-6BA37393E049}.Release|x64.Build.0 = Release|Any CPU
+		{CAD06717-FEE6-6EE1-D1CD-6BA37393E049}.Release|x86.ActiveCfg = Release|Any CPU
+		{CAD06717-FEE6-6EE1-D1CD-6BA37393E049}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
