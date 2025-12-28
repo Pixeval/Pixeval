@@ -6,14 +6,14 @@
     xmlns:um="using:Uno.Material"
     xmlns:utu="using:Uno.Toolkit.UI"
     Background="{ThemeResource BackgroundBrush}">
-    <ScrollViewer IsTabStop="True">
-        <Grid utu:SafeArea.Insets="VisibleBounds">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    AutomationProperties.AutomationId="HelloTextBlock"
-                    Text="Hello Uno Platform!" />
-            </StackPanel>
-        </Grid>
-    </ScrollViewer>
+    <NavigationView>
+        <NavigationView.AutoSuggestBox>
+            <AutoSuggestBox />
+        </NavigationView.AutoSuggestBox>
+        <NavigationView.MenuItems>
+            <NavigationViewItem Content="Home" Icon="Home"/>
+            <NavigationViewItem Content="Settings" Icon="Setting"/>
+        </NavigationView.MenuItems>
+        <Frame x:Name="ContentFrame"/>
+    </NavigationView>
 </Page>

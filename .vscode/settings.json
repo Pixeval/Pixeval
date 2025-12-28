@@ -1,0 +1,7 @@
+{
+    "dotrush.roslyn.projectOrSolutionFiles": [
+        "/Users/dylech30th/Projects/Pixeval/Pixeval.sln"
+    ],
+    "dotnet.defaultSolution": "Pixeval.sln",
+    "unoplatform.ignoreCheck": true
+}

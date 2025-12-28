@@ -1,0 +1,19 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:system="clr-namespace:System;assembly=System.Runtime">
+    <Color x:Key="NavigationViewItemContentShadowColor">#22d3ee</Color>
+    <system:Double x:Key="NavigationViewSelectionIndicatorWidth">5</system:Double>
+    <system:Double x:Key="NavigationViewItemOnLeftMinHeight">45</system:Double>
+    <system:Double x:Key="NavigationViewSelectionIndicatorHeight">25</system:Double>
+    <Thickness x:Key="GlowingNavigationViewItemButtonMargin">20,2</Thickness>
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+            <SolidColorBrush x:Key="NavigationViewItemContentColor">#0891b2</SolidColorBrush>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+            <SolidColorBrush x:Key="NavigationViewItemContentColor">#22d3ee</SolidColorBrush>
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+</ResourceDictionary>
+

@@ -79,12 +79,9 @@ public class CacheTable<TKey, THeader, TProtocol>(
             {
                 var replacement = group.Key.Compact(group.ToDictionary(tuple => tuple.ptr, tuple => tuple.allocatedLength), garbage.Keys.ToHashSet());
                 // forward reference
-                _cacheTable = _cacheTable.SelectMany(pair =>
-                {
-                    return replacement.TryGetValue(pair.Value.ptr, out var newPointer)
+                _cacheTable = _cacheTable.SelectMany(pair => replacement.TryGetValue(pair.Value.ptr, out var newPointer)
                         ? new[] { KeyValuePair.Create(pair.Key, (pair.Value.node, newPointer, pair.Value.allocatedLength)) }
-                        : new[] { pair };
-                }).ToDictionary();
+                        : new[] { pair }).ToDictionary();
             }
 
             foreach (var (key, _) in garbage.Values)

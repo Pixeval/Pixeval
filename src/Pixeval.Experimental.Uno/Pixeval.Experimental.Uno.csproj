@@ -22,7 +22,6 @@
       https://aka.platform.uno/singleproject-features
     -->
     <UnoFeatures>
-      Material;
       Dsp;
       Hosting;
       Toolkit;
@@ -36,5 +35,8 @@
       SkiaRenderer;
     </UnoFeatures>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Uno.Toolkit.Skia.WinUI" Version="8.3.2" />
+  </ItemGroup>
 
 </Project>
