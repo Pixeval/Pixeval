@@ -90,7 +90,7 @@ public class Debounce<T, TResult> : IDisposable where T : struct, IEquatable<T>
         if (_executedTasks.LastOrDefault()?.Task.IsFinalizer ?? false && task.IsFinalizer)
         {
             var dependencyChain = FindDependencyChainFrom(new LinkedList<DebounceTaskWrapper>(_auxQueue), wrapper);
-            if (dependencyChain.FirstOrDefault()?.Task?.IsHead ?? false)
+            if (dependencyChain.FirstOrDefault()?.Task.IsHead ?? false)
             {
                 foreach (var debounceTaskWrapper in dependencyChain)
                 {

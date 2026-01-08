@@ -8,10 +8,10 @@ namespace Pixeval.Controls;
 [LocalizationMetadata(typeof(AdvancedItemsViewResources))]
 public enum ItemsViewLayoutType
 {
-    [LocalizedResource(typeof(AdvancedItemsViewResources), nameof(AdvancedItemsViewResources.LinedFlow))]
+    [LocalizedResource(nameof(AdvancedItemsViewResources.LinedFlow))]
     LinedFlow,
 
-    [LocalizedResource(typeof(AdvancedItemsViewResources), nameof(AdvancedItemsViewResources.Grid))]
+    [LocalizedResource(nameof(AdvancedItemsViewResources.Grid))]
     Grid,
 
     VerticalUniformStack,

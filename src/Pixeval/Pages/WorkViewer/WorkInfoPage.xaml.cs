@@ -76,7 +76,7 @@ public sealed partial class WorkInfoPage
         var blockedTags = App.AppViewModel.AppSettings.BlockedTags;
         if (!blockedTags.Contains(tag.Name))
         {
-            _ = blockedTags.Add(tag.Name);
+            blockedTags.Add(tag.Name);
             AppInfo.SaveConfig(App.AppViewModel.AppSettings);
         }
     }

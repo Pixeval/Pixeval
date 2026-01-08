@@ -8,24 +8,24 @@ namespace Pixeval.Pages.Misc;
 [LocalizationMetadata(typeof(SettingsPageResources))]
 public enum SettingsEntryCategory
 {
-    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.VersionSettingsGroupText))]
+    [LocalizedResource(nameof(SettingsPageResources.VersionSettingsGroupText))]
     Version,
 
-    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.SessionSettingsGroupText))]
+    [LocalizedResource(nameof(SettingsPageResources.SessionSettingsGroupText))]
     Session,
 
-    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.ApplicationSettingsGroupText))]
+    [LocalizedResource(nameof(SettingsPageResources.ApplicationSettingsGroupText))]
     Application,
 
-    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.BrowsingExperienceSettingsGroupText))]
+    [LocalizedResource(nameof(SettingsPageResources.BrowsingExperienceSettingsGroupText))]
     BrowsingExperience,
 
-    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.SearchSettingsGroupText))]
+    [LocalizedResource(nameof(SettingsPageResources.SearchSettingsGroupText))]
     Search,
 
-    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.DownloadSettingsGroupText))]
+    [LocalizedResource(nameof(SettingsPageResources.DownloadSettingsGroupText))]
     Download,
 
-    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.MiscSettingsGroupText))]
+    [LocalizedResource(nameof(SettingsPageResources.MiscSettingsGroupText))]
     Misc
 }

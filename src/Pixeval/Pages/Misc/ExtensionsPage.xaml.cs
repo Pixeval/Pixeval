@@ -63,8 +63,10 @@ public sealed partial class ExtensionsPage
 
                     try
                     {
+                        var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
+
                         _ = fileInfo.CopyTo(newDllPath);
-                        if (ExtensionService.TryLoadHost(newDllPath, out var isOutdated))
+                        if (ExtensionService.TryLoadHost(newDllPath, logger, out var isOutdated))
                         {
                             this.SuccessGrowl(ExtensionsPageResources.DllLoadedSuccessfully, fileName);
                             continue;
@@ -100,8 +102,10 @@ public sealed partial class ExtensionsPage
                             foreach (var dllName in dllNames)
                                 try
                                 {
+                                    var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
+
                                     var newDllPath = AppKnownFolders.Extensions.CombinePath(dllName);
-                                    if (ExtensionService.TryLoadHost(newDllPath, out var isOutdated))
+                                    if (ExtensionService.TryLoadHost(newDllPath, logger, out var isOutdated))
                                     {
                                         this.SuccessGrowl(ExtensionsPageResources.DllLoadedSuccessfully, fileName);
                                         continue;

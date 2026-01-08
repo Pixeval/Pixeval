@@ -5,14 +5,15 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.WinUI"
-    xmlns:local="using:Pixeval.Settings"
+    xmlns:local="using:Pixeval.Controls.Settings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Description="{x:Bind Entry.DescriptionControl}"
+    xmlns:winUi="using:AutoSettingsPage.WinUI"
+    Description="{x:Bind winUi:SettingsEntryHelper.DescriptionControl(Entry)}"
     Header="{x:Bind Entry.Header}"
-    Tag="{x:Bind Entry.Attribute}"
+    Tag="{x:Bind Entry.Token}"
     mc:Ignorable="d">
     <controls:SettingsCard.HeaderIcon>
-        <fluent:SymbolIcon Symbol="{x:Bind Entry.HeaderIcon}" />
+        <fluent:SymbolIcon Symbol="{x:Bind Entry.Icon}" />
     </controls:SettingsCard.HeaderIcon>
     <Grid ColumnSpacing="10">
         <Grid.ColumnDefinitions>
@@ -23,7 +24,9 @@
         <CalendarDatePicker
             Grid.Column="1"
             MinWidth="150"
-            Date="{x:Bind Entry.Date, Mode=TwoWay}"
-            IsEnabled="{x:Bind Entry.Value, Mode=OneWay}" />
+            Date="{x:Bind DateEntry.Value, Mode=TwoWay}"
+            IsEnabled="{x:Bind Entry.Value, Mode=OneWay}"
+            MaxDate="{x:Bind DateEntry.Max}"
+            MinDate="{x:Bind DateEntry.Min}" />
     </Grid>
 </controls:SettingsCard>

@@ -17,7 +17,6 @@ using Pixeval.Attributes;
 using Pixeval.Controls;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
-using Pixeval.Extensions.Common;
 using Pixeval.Extensions.Common.Commands.Transformers;
 using Pixeval.Util;
 using Pixeval.Util.ComponentModels;
@@ -188,16 +187,16 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
                 FrameworkElement.InfoGrowl(ImageViewerPageResources.ApplyingTransformerExtensions);
                 // 运行扩展
                 stream.Position = 0;
-                var result = await transformer.TransformAsync(stream.ToIStream());
-                if (result is null)
+                var memoryStream = Streams.RentStream();
+                try
+                {
+                    await transformer.TransformAsync(stream, memoryStream);
+                }
+                catch (Exception e)
                 {
                     FrameworkElement.ErrorGrowl(ImageViewerPageResources.TransformerExtensionFailed);
                     return;
                 }
-                _ = result.Seek(0, SeekOrigin.Begin);
-                var memoryStream = Streams.RentStream();
-                await result.CopyToAsync(memoryStream.ToIStream());
-                await result.DisposeAsync();
                 stream.Position = 0;
                 memoryStream.Position = 0;
                 // 显示图片
@@ -235,8 +234,8 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
         LoadingProgress = progress;
         LoadingText = phase switch
         {
-            LoadingPhase.DownloadingImage => LoadingPhaseExtension.GetResource(LoadingPhase.DownloadingImage).Format((int) progress),
-            _ => LoadingPhaseExtension.GetResource(phase)
+            LoadingPhase.DownloadingImage => ImageViewerPageResources.GetResource(LoadingPhase.DownloadingImage).Format((int) progress),
+            _ => ImageViewerPageResources.GetResource(phase)
         };
     }
 
@@ -453,18 +452,18 @@ public partial class ImageViewerPageViewModel : UiObservableObject, IDisposable
 [LocalizationMetadata(typeof(ImageViewerPageResources))]
 public enum LoadingPhase
 {
-    [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.CheckingCache))]
+    [LocalizedResource(nameof(ImageViewerPageResources.CheckingCache))]
     CheckingCache,
 
-    [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.LoadingFromCache))]
+    [LocalizedResource(nameof(ImageViewerPageResources.LoadingFromCache))]
     LoadingFromCache,
 
-    [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.MergingUgoiraFrames))]
+    [LocalizedResource(nameof(ImageViewerPageResources.MergingUgoiraFrames))]
     MergingUgoiraFrames,
 
-    [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.DownloadingImageFormatted), DownloadingImage)]
+    [LocalizedResource(nameof(ImageViewerPageResources.DownloadingImageFormatted))]
     DownloadingImage,
 
-    [LocalizedResource(typeof(ImageViewerPageResources), nameof(ImageViewerPageResources.LoadingImage))]
+    [LocalizedResource(nameof(ImageViewerPageResources.LoadingImage))]
     LoadingImage,
 }

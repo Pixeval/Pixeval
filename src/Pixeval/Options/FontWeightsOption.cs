@@ -13,76 +13,76 @@ public enum FontWeightsOption
     /// <see cref="FontWeights.Thin"/>
     /// </summary>
     /// <remarks>100</remarks>
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Thin))]
+    [LocalizedResource(nameof(MiscResources.Thin))]
     Thin,
 
     /// <summary>
     /// <see cref="FontWeights.ExtraLight"/>
     /// </summary>
     /// <remarks>200</remarks>
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.ExtraLight))]
+    [LocalizedResource(nameof(MiscResources.ExtraLight))]
     ExtraLight,
 
     /// <summary>
     /// <see cref="FontWeights.Light"/>
     /// </summary>
     /// <remarks>300</remarks>
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Light))]
+    [LocalizedResource(nameof(MiscResources.Light))]
     Light,
 
     /// <summary>
     /// <see cref="FontWeights.SemiLight"/>
     /// </summary>
     /// <remarks>350</remarks>
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.SemiLight))]
+    [LocalizedResource(nameof(MiscResources.SemiLight))]
     SemiLight,
 
     /// <summary>
     /// <see cref="FontWeights.Normal"/>
     /// </summary>
     /// <remarks>400</remarks>
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Normal))]
+    [LocalizedResource(nameof(MiscResources.Normal))]
     Normal,
 
     /// <summary>
     /// <see cref="FontWeights.Medium"/>
     /// </summary>
     /// <remarks>500</remarks>
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Medium))]
+    [LocalizedResource(nameof(MiscResources.Medium))]
     Medium,
 
     /// <summary>
     /// <see cref="FontWeights.SemiBold"/>
     /// </summary>
     /// <remarks>600</remarks>
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.SemiBold))]
+    [LocalizedResource(nameof(MiscResources.SemiBold))]
     SemiBold,
 
     /// <summary>
     /// <see cref="FontWeights.Bold"/>
     /// </summary>
     /// <remarks>700</remarks>
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Bold))]
+    [LocalizedResource(nameof(MiscResources.Bold))]
     Bold,
 
     /// <summary>
     /// <see cref="FontWeights.ExtraBold"/>
     /// </summary>
     /// <remarks>800</remarks>
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.ExtraBold))]
+    [LocalizedResource(nameof(MiscResources.ExtraBold))]
     ExtraBold,
 
     /// <summary>
     /// <see cref="FontWeights.Black"/>
     /// </summary>
     /// <remarks>900</remarks>
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Black))]
+    [LocalizedResource(nameof(MiscResources.Black))]
     Black,
 
     /// <summary>
     /// <see cref="FontWeights.ExtraBlack"/>
     /// </summary>
     /// <remarks>350</remarks>
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.ExtraBlack))]
+    [LocalizedResource(nameof(MiscResources.ExtraBlack))]
     ExtraBlack
 }

@@ -20,7 +20,7 @@ public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessed
     where T : class, IArtworkInfo
     where TViewModel : EntryViewModel<T>, IFactory<T, TViewModel>, IWorkViewModel
 {
-    protected HashSet<string> BlockedTags = [.. blockedTags ?? App.AppViewModel.AppSettings.BlockedTags];
+    protected HashSet<string> BlockedTags = blockedTags?.ToHashSet() ?? App.AppViewModel.AppSettings.BlockedTags.ToHashSet();
 
     [ObservableProperty]
     public partial bool IsSelecting { get; set; }

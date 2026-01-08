@@ -31,19 +31,22 @@ public static class Enumerates
         return v;
     }
 
-    public static IEnumerable<(int, T)> Indexed<T>(this IEnumerable<T> source)
+    extension<T>(IEnumerable<T> source)
     {
-        var counter = 0;
-        foreach (var item in source)
+        public IEnumerable<(int, T)> Indexed()
         {
-            yield return (counter++, item);
+            var counter = 0;
+            foreach (var item in source)
+            {
+                yield return (counter++, item);
+            }
         }
-    }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IList<T> AsList<T>(this IEnumerable<T> enumerable)
-    {
-        return enumerable as IList<T> ?? [.. enumerable];
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public IList<T> AsList()
+        {
+            return source as IList<T> ?? [.. source];
+        }
     }
 
     private class KeyedEqualityComparer<T, TKey>(Func<T, TKey> selector) : IEqualityComparer<T> where TKey : IEquatable<TKey>
@@ -63,75 +66,82 @@ public static class Enumerates
         }
     }
 
-    public static bool SequenceEquals<T, TKey>(this IEnumerable<T> @this,
-        IEnumerable<T> another,
-        Func<T, TKey> keySelector,
-        SequenceComparison comparison = SequenceComparison.Sequential)
-    where TKey : IEquatable<TKey>
+    extension<T>(IEnumerable<T> @this)
     {
-        return comparison switch
+        public bool SequenceEquals<TKey>(IEnumerable<T> another,
+            Func<T, TKey> keySelector,
+            SequenceComparison comparison = SequenceComparison.Sequential)
+            where TKey : IEquatable<TKey>
         {
-            SequenceComparison.Sequential => @this.SequenceEqual(another, new KeyedEqualityComparer<T, TKey>(keySelector)),
-            SequenceComparison.Unordered => @this.Order().SequenceEqual(another.Order(), new KeyedEqualityComparer<T, TKey>(keySelector)), // not the fastest way, but still enough
-            _ => ThrowUtils.ArgumentOutOfRange<SequenceComparison, bool>(comparison)
-        };
-    }
+            return comparison switch
+            {
+                SequenceComparison.Sequential => @this.SequenceEqual(another, new KeyedEqualityComparer<T, TKey>(keySelector)),
+                SequenceComparison.Unordered => @this.Order().SequenceEqual(another.Order(), new KeyedEqualityComparer<T, TKey>(keySelector)), // not the fastest way, but still enough
+                _ => ThrowUtils.ArgumentOutOfRange<SequenceComparison, bool>(comparison)
+            };
+        }
 
-    public static bool SequenceEquals<T>(this IEnumerable<T> @this,
-        IEnumerable<T> another,
-        SequenceComparison comparison = SequenceComparison.Sequential,
-        IEqualityComparer<T>? equalityComparer = null)
-    {
-        return comparison switch
+        public bool SequenceEquals(IEnumerable<T> another,
+            SequenceComparison comparison = SequenceComparison.Sequential,
+            IEqualityComparer<T>? equalityComparer = null)
         {
-            SequenceComparison.Sequential => @this.SequenceEqual(another, equalityComparer),
-            SequenceComparison.Unordered => @this.Order().SequenceEqual(another.Order(), equalityComparer), // not the fastest way, but still enough
-            _ => ThrowUtils.ArgumentOutOfRange<SequenceComparison, bool>(comparison)
-        };
+            return comparison switch
+            {
+                SequenceComparison.Sequential => @this.SequenceEqual(another, equalityComparer),
+                SequenceComparison.Unordered => @this.Order().SequenceEqual(another.Order(), equalityComparer), // not the fastest way, but still enough
+                _ => ThrowUtils.ArgumentOutOfRange<SequenceComparison, bool>(comparison)
+            };
+        }
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> enumerable)
+    extension<T>(IEnumerable<T?> enumerable)
     {
-        return enumerable.Where(i => i is not null)!;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> enumerable, Func<T, object?> keySelector)
-    {
-        return enumerable.Where(i => i is not null && keySelector(i) is not null)!;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IEnumerable<TResult> SelectNotNull<T, TResult>(this IEnumerable<T> src, Func<T, TResult?> selector) where TResult : notnull
-    {
-        return src.WhereNotNull().Select(selector).WhereNotNull();
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IEnumerable<TResult> SelectNotNull<T, TResult>(this IEnumerable<T> src, Func<T, object?> keySelector, Func<T, TResult> selector) where TResult : notnull
-    {
-        return src.WhereNotNull(keySelector).Select(selector).WhereNotNull();
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool None<T>(this IEnumerable<T> enumerable)
-    {
-        return !enumerable.Any();
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool None<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate)
-    {
-        return !enumerable.Any(predicate);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
-    {
-        foreach (var t in enumerable)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public IEnumerable<T> WhereNotNull()
         {
-            action(t);
+            return enumerable.Where(i => i is not null)!;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public IEnumerable<T> WhereNotNull(Func<T, object?> keySelector)
+        {
+            return enumerable.Where(i => i is not null && keySelector(i) is not null)!;
+        }
+    }
+
+    extension<T>(IEnumerable<T> src)
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public IEnumerable<TResult> SelectNotNull<TResult>(Func<T, TResult?> selector) where TResult : notnull
+        {
+            return src.WhereNotNull().Select(selector).WhereNotNull();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public IEnumerable<TResult> SelectNotNull<TResult>(Func<T, object?> keySelector, Func<T, TResult> selector) where TResult : notnull
+        {
+            return src.WhereNotNull(keySelector).Select(selector).WhereNotNull();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool None()
+        {
+            return !src.Any();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool None(Func<T, bool> predicate)
+        {
+            return !src.Any(predicate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ForEach(Action<T> action)
+        {
+            foreach (var t in src)
+            {
+                action(t);
+            }
         }
     }
 
@@ -139,27 +149,6 @@ public static class Enumerates
     public static bool IsNotNullOrEmpty<T>(this IEnumerable<T>? enumerable)
     {
         return enumerable is not null && enumerable.Any();
-    }
-
-    /// <summary>
-    /// https://stackoverflow.com/a/15407252/10439146 FirstOrDefault on value types
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="enumerable"></param>
-    /// <param name="predicate"></param>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T? FirstOrNull<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate) where T : struct
-    {
-        var matches = enumerable.Where(predicate).Take(1).ToArray();
-        return matches.Length is 0 ? null : matches[0];
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T? FirstOrNull<T>(this IEnumerable<T> enumerable) where T : struct
-    {
-        var matches = enumerable.Take(1).ToArray();
-        return matches.Length is 0 ? null : matches[0];
     }
 
     public static async Task<ObservableCollection<T>> ToObservableCollectionAsync<T>(this IAsyncEnumerable<T> that)
@@ -173,101 +162,56 @@ public static class Enumerates
         return results;
     }
 
-    public static IEnumerable<T> Traverse<T>(this IEnumerable<T> src, Action<T> action)
-    {
-        var enumerable = src as T[] ?? [.. src];
-        enumerable.ForEach(action);
-        return enumerable;
-    }
-
-    /// <summary>
-    /// Replace a collection by update transactions, best to use with ObservableCollection
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="dest">Collection to be updated</param>
-    /// <param name="source"></param>
-    public static void ReplaceByUpdate<T>(this IList<T> dest, IEnumerable<T> source)
-    {
-        var enumerable = source as T[] ?? [.. source];
-        if (enumerable.Length != 0)
-        {
-            _ = dest.RemoveAll(x => !enumerable.Contains(x));
-            enumerable.Where(x => !dest.Contains(x)).ForEach(dest.Add);
-        }
-        else
-        {
-            dest.Clear();
-        }
-    }
-
-    public static void ReplaceByUpdate<T>(this ISet<T> dest, IEnumerable<T> source)
-    {
-        var enumerable = source as T[] ?? [.. source];
-        if (enumerable.Length != 0)
-        {
-            dest.ToArray().Where(x => !enumerable.Contains(x)).ForEach(x => dest.Remove(x));
-            dest.AddRange(enumerable);
-        }
-        else
-        {
-            dest.Clear();
-        }
-    }
-
     public static void AddRange<T>(this ICollection<T> dest, IEnumerable<T> source)
     {
         foreach (var t in source)
-        {
             dest.Add(t);
-        }
     }
 
-    public static void AddIfNotNull<T>(this IList<T> dest, T? source)
+    /// <param name="dest">Collection to be updated</param>
+    /// <typeparam name="T"></typeparam>
+    extension<T>(IList<T> dest)
     {
-        if (source is not null)
-            dest.Add(source);
-    }
-
-    public static int RemoveAll<T>(this IList<T> list, Predicate<T> match)
-    {
-        var count = 0;
-
-        for (var i = list.Count - 1; i >= 0; i--)
+        public void AddIfNotNull(T? source)
         {
-            if (!match(list[i]))
+            if (source is not null)
+                dest.Add(source);
+        }
+
+        public int RemoveAll(Predicate<T> match)
+        {
+            var count = 0;
+
+            for (var i = dest.Count - 1; i >= 0; i--)
             {
-                continue;
+                if (!match(dest[i]))
+                {
+                    continue;
+                }
+
+                ++count;
+                dest.RemoveAt(i);
             }
 
-            ++count;
-            list.RemoveAt(i);
+            return count;
         }
 
-        return count;
-    }
-
-    public static void AddIfAbsent<T>(this ICollection<T> collection, T item, IEqualityComparer<T>? comparer = null)
-    {
-        if (!collection.Contains(item, comparer))
+        /// <summary>
+        /// Replace a collection by update transactions, best to use with ObservableCollection
+        /// </summary>
+        /// <param name="source"></param>
+        public void ReplaceByUpdate(IEnumerable<T> source)
         {
-            collection.Add(item);
+            var enumerable = source as T[] ?? [.. source];
+            if (enumerable.Length != 0)
+            {
+                _ = dest.RemoveAll(x => !enumerable.Contains(x));
+                enumerable.Where(x => !dest.Contains(x)).ForEach(dest.Add);
+            }
+            else
+            {
+                dest.Clear();
+            }
         }
     }
-
-    public static Task<IEnumerable<TResult>> WhereAsync<TResult>(this Task<IEnumerable<TResult>> enumerable, Func<TResult, bool> selector)
-    {
-        return enumerable.ContinueWith(t => t.Result.Where(selector));
-    }
-
-    public static Task<IEnumerable<TResult>> SelectAsync<T, TResult>(this Task<IEnumerable<T>> enumerable, Func<T, TResult> selector)
-    {
-        return enumerable.ContinueWith(t => t.Result.Select(selector));
-    }
-}
-
-public static class EmptyEnumerators<T>
-{
-    public static readonly IEnumerator<T> Sync = new List<T>().GetEnumerator();
-
-    public static readonly IAsyncEnumerator<T> Async = new AdaptedAsyncEnumerator<T>(Sync);
 }

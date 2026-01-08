@@ -214,15 +214,15 @@ public partial class LoginPageViewModel(FrameworkElement frameworkElement) : UiO
 [LocalizationMetadata(typeof(LoginPageResources))]
 public enum LoginPhaseEnum
 {
-    [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseRefreshing))]
+    [LocalizedResource(nameof(LoginPageResources.LoginPhaseRefreshing))]
     Refreshing,
 
-    [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseWaitingForUserInput))]
+    [LocalizedResource(nameof(LoginPageResources.LoginPhaseWaitingForUserInput))]
     WaitingForUserInput,
 
-    [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseCheckingWebView2Installation))]
+    [LocalizedResource(nameof(LoginPageResources.LoginPhaseCheckingWebView2Installation))]
     CheckingWebView2Installation,
 
-    [LocalizedResource(typeof(LoginPageResources), nameof(LoginPageResources.LoginPhaseSuccessNavigating))]
+    [LocalizedResource(nameof(LoginPageResources.LoginPhaseSuccessNavigating))]
     SuccessNavigating
 }

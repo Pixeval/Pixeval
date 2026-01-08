@@ -4,15 +4,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Controls"
+    xmlns:markup="using:FluentIcons.WinUI.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     MinWidth="200"
     Orientation="Vertical"
     mc:Ignorable="d">
-    <TextBlock Margin="10" Text="{x:Bind Header}" />
+    <TextBlock Margin="10" Text="{x:Bind Entry.Placeholder}" />
     <AutoSuggestBox
-        QueryIcon="{fluent:SymbolIcon Symbol=Add,
+        QueryIcon="{markup:SymbolIcon Symbol=Add,
                                       FontSize={StaticResource SmallIconFontSize}}"
         QuerySubmitted="AddItem"
         TextChanged="TextChanged" />
@@ -21,7 +21,7 @@
         AllowDrop="True"
         CanDragItems="True"
         CanReorderItems="True"
-        ItemsSource="{x:Bind ItemsSource, Mode=OneWay}">
+        ItemsSource="{x:Bind Entry.Value, Mode=OneWay}">
         <ListView.ItemTemplate>
             <DataTemplate x:DataType="x:String">
                 <controls:DockPanel Tag="{x:Bind}" Tapped="RemoveTapped">

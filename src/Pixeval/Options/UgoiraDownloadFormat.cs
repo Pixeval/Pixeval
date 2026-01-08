@@ -8,21 +8,21 @@ namespace Pixeval.Options;
 [LocalizationMetadata(typeof(MiscResources))]
 public enum UgoiraDownloadFormat
 {
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Tiff))]
+    [LocalizedResource(nameof(MiscResources.Tiff))]
     Tiff,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Png))]
+    [LocalizedResource(nameof(MiscResources.Png))]
     APng,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Gif))]
+    [LocalizedResource(nameof(MiscResources.Gif))]
     Gif,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.WebPLossy))]
+    [LocalizedResource(nameof(MiscResources.WebPLossy))]
     WebPLossy,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.WebPLossless))]
+    [LocalizedResource(nameof(MiscResources.WebPLossless))]
     WebPLossless,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.OriginalUgoira))]
+    [LocalizedResource(nameof(MiscResources.OriginalUgoira))]
     Original
 }

@@ -2,6 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using AutoSettingsPage.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Settings.Models;
@@ -9,7 +10,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Controls.Settings;
 
-public sealed partial class ProxySettingsExpander
+public sealed partial class ProxySettingsExpander : IEntryControl<ProxyAppSettingsEntry>
 {
     public ProxyAppSettingsEntry Entry { get; set; } = null!;
 

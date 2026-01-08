@@ -6,7 +6,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
+using AutoSettingsPage;
+using AutoSettingsPage.Models;
+using AutoSettingsPage.WinUI;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Mako.Global.Enum;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -16,7 +20,6 @@ using Pixeval.Controls.Windowing;
 using Pixeval.Extensions;
 using Pixeval.Options;
 using Pixeval.Settings;
-using Pixeval.Settings.Models;
 using Pixeval.Util.ComponentModels;
 using Pixeval.Util;
 using Pixeval.Util.IO;
@@ -62,206 +65,106 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
     /// <inheritdoc/>
     public SettingsPageViewModel(FrameworkElement frameworkElement) : base(frameworkElement)
     {
-        LocalGroups =
-        [
-            new(SettingsEntryCategory.Application)
-            {
-                new EnumAppSettingsEntry(AppSettings,
-                    t => t.Theme,
-                    ElementThemeExtension.GetItems()) { ValueChanged = t => WindowFactory.SetTheme((ElementTheme) t) },
-                new EnumAppSettingsEntry(AppSettings,
-                    t => t.Backdrop,
-                    BackdropTypeExtension.GetItems())
-                {
-                    ValueChanged = t => WindowFactory.SetBackdrop((BackdropType) t)
-                },
-                new FontAppSettingsEntry(AppSettings,
-                    t => t.AppFontFamilyName),
-                new LanguageAppSettingsEntry(),
-                new IpWithSwitchAppSettingsEntry(AppSettings)
-                {
-                    ValueChanged = t => App.AppViewModel.MakoClient.Configuration.DomainFronting = t
-                },
-                new ProxyAppSettingsEntry(AppSettings)
-                {
-                    ProxyChanged = t => App.AppViewModel.MakoClient.Configuration.Proxy = t
-                },
-                new StringAppSettingsEntry(AppSettings,
-                    t => t.MirrorHost)
-                {
-                    Placeholder = SettingsPageResources.ImageMirrorServerTextBoxPlaceholderText,
-                    ValueChanged = t => App.AppViewModel.MakoClient.Configuration.MirrorHost = t
-                },
-                new BoolAppSettingsEntry(AppSettings,
-                    t => t.UseFileCache),
-                new EnumAppSettingsEntry(AppSettings,
-                    t => t.DefaultSelectedTabItem,
-                    MainPageTabItemExtension.GetItems()),
-                new StringAppSettingsEntry(AppSettings,
-                    t => t.WebCookie)
-                {
-                    Placeholder = SettingsPageResources.WebCookieTextBoxPlaceholderText,
-                    ValueChanged = t => App.AppViewModel.MakoClient.Configuration.Cookie = t
-                },
-                new IntAppSettingsEntry(AppSettings,
-                    t => t.NavigationViewOpenPaneWidth)
-                {
-                    Max = 1000,
-                    // 48时NavigationViewItem的图标会被挡住一部分
-                    Min = 50,
-                    SmallChange = 10,
-                    ValueChanged = t => MainPage.Current.NavigationView.OpenPaneLength = t
-                },
-                new BoolAppSettingsEntry(AppSettings,
-                    t => t.ReconfirmationOfClosingWindow)
-            },
-            new(SettingsEntryCategory.BrowsingExperience)
-            {
-                new EnumAppSettingsEntry(AppSettings,
-                    t => t.ThumbnailDirection,
-                    ThumbnailDirectionExtension.GetItems()),
-                new EnumAppSettingsEntry(AppSettings,
-                    t => t.ItemsViewLayoutType,
-                    ItemsViewLayoutTypeExtension.GetItems()),
-                new EnumAppSettingsEntry(AppSettings,
-                    t => t.TargetFilter,
-                    TargetFilterExtension.GetItems()),
-                new MultiStringsAppSettingsEntry(AppSettings,
-                    t => t.BlockedTags,
-                    v => [..v.BlockedTags],
-                    (v, o) => v.BlockedTags = [.. o])
-                {
-                    Placeholder = SettingsPageResources.BlockedTagsTokenizingTextBoxPlaceholderText
-                },
-                new BoolAppSettingsEntry(AppSettings,
-                    t => t.BrowseOriginalImage),
-                new DoubleAppSettingsEntry(AppSettings,
-                    t => t.ScrollRate)
-                {
-                    Max = 10,
-                    Min = 0,
-                    ValueChanged = d => AdvancedItemsView.ScrollRate = (float) d
-                },
-                new BoolAppSettingsEntry(AppSettings,
-                    t => t.OpenWorkInfoByDefault),
-            },
-            new(SettingsEntryCategory.Search)
-            {
-                new StringAppSettingsEntry(AppSettings,
-                    t => t.ReverseSearchApiKey)
-                {
-                    DescriptionUri = new("https://saucenao.com/user.php?page=search-api"),
-                    Placeholder = SettingsPageResources.ReverseSearchApiKeyTextBoxPlaceholderText
-                },
-                new IntAppSettingsEntry(AppSettings,
-                    t => t.ReverseSearchResultSimilarityThreshold)
-                {
-                    Max = 100,
-                    Min = 1
-                },
-                new IntAppSettingsEntry(AppSettings,
-                    t => t.MaximumSearchHistoryRecords)
-                {
-                    Max = 200,
-                    Min = 10
-                },
-                new IntAppSettingsEntry(AppSettings,
-                    t => t.MaximumSuggestionBoxSearchHistory)
-                {
-                    Max = 20,
-                    Min = 0
-                },
-                new EnumAppSettingsEntry(AppSettings,
-                    t => t.WorkSortOption,
-                    WorkSortOptionExtension.GetItems()),
-                new EnumAppSettingsEntry(AppSettings,
-                    t => t.SimpleWorkType,
-                    SimpleWorkTypeExtension.GetItems()),
-                new MultiValuesEntry(t => t.IllustrationRankOption,
-                [
-                    new EnumAppSettingsEntry(AppSettings,
-                        WorkTypeEnum.Illustration,
-                        t => t.IllustrationRankOption,
-                        IllustrationRankOptionExtension.GetItems()),
-                    new EnumAppSettingsEntry(AppSettings,
-                        WorkTypeEnum.Novel,
-                        t => t.NovelRankOption,
-                        NovelRankOptionExtension.GetItems())
-                ]),
-                new MultiValuesEntry(t => t.SearchIllustrationTagMatchOption,
-                [
-                    new EnumAppSettingsEntry(AppSettings,
-                        WorkTypeEnum.Illustration,
-                        t => t.SearchIllustrationTagMatchOption,
-                        SearchIllustrationTagMatchOptionExtension.GetItems()),
-                    new EnumAppSettingsEntry(AppSettings,
-                        WorkTypeEnum.Novel,
-                        t => t.SearchNovelTagMatchOption,
-                        SearchNovelTagMatchOptionExtension.GetItems())
-                ]),
-                new DateWithSwitchAppSettingsEntry(AppSettings,
-                    t => t.UseSearchStartDate,
-                    t => t.SearchStartDate),
-                new DateWithSwitchAppSettingsEntry(AppSettings,
-                    t => t.UseSearchEndDate,
-                    t => t.SearchEndDate)
-            },
-            new(SettingsEntryCategory.Download)
-            {
-                new IntAppSettingsEntry(AppSettings,
-                    t => t.MaximumDownloadHistoryRecords)
-                {
-                    Max = ushort.MaxValue,
-                    Min = 10
-                },
-                new BoolAppSettingsEntry(AppSettings,
-                    t => t.OverwriteDownloadedFile),
-                new IntAppSettingsEntry(AppSettings,
-                    t => t.MaxDownloadTaskConcurrencyLevel)
-                {
-                    Max = Environment.ProcessorCount,
-                    Min = 1,
-                    ValueChanged = t => App.AppViewModel.DownloadManager.ConcurrencyDegree = t
-                },
-                new DownloadMacroAppSettingsEntry(AppSettings),
-                new MultiValuesEntry(t => t.IllustrationDownloadFormat,
-                [
-                    new EnumAppSettingsEntry(AppSettings,
-                        WorkTypeEnum.Illustration,
-                        t => t.IllustrationDownloadFormat,
-                        IllustrationDownloadFormatExtension.GetItems()),
-                    new EnumAppSettingsEntry(AppSettings,
-                        WorkTypeEnum.Ugoira,
-                        t => t.UgoiraDownloadFormat,
-                        UgoiraDownloadFormatExtension.GetItems()),
-                    new EnumAppSettingsEntry(AppSettings,
-                        WorkTypeEnum.Novel,
-                        t => t.NovelDownloadFormat,
-                        NovelDownloadFormatExtension.GetItems())
-                ]),
-                new IntAppSettingsEntry(AppSettings,
-                    t => t.LossyImageDownloadQuality)
-                {
-                    Max = 100,
-                    Min = -1
-                },
-                new BoolAppSettingsEntry(AppSettings,
-                    t => t.DownloadWhenBookmarked)
-            },
-            new(SettingsEntryCategory.Misc)
-            {
-                new IntAppSettingsEntry(AppSettings,
-                    t => t.MaximumBrowseHistoryRecords)
-                {
-                    Placeholder = SettingsPageResources.MaximumBrowseHistoryRecordsNumerBoxPlaceholderText,
-                    Max = ushort.MaxValue,
-                    Min = 10
-                }
-            }
-        ];
+        LocalGroups = SettingsBuilder.CreateGroupList(AppSettings)
+            .NewGroup(SettingsEntryCategory.Application)
+            .Config(group => group
+                .Enum(t => t.Theme, ElementTheme.Pairs,
+                    entry => entry.ValueChanged += t => WindowFactory.SetTheme((ElementTheme) t))
+                .Enum(t => t.Backdrop, BackdropType.Pairs,
+                    entry => entry.ValueChanged += t => WindowFactory.SetBackdrop((BackdropType) t))
+                .Font(t => t.AppFontFamilyName)
+                .Language()
+                .DomainFronting(t => t.EnableDomainFronting, entry =>
+                        entry.IPSet(t => t.PixivAppApiNameResolver)
+                            .IPSet(t => t.PixivImageNameResolver)
+                            .IPSet(t => t.PixivImageNameResolver2)
+                            .IPSet(t => t.PixivOAuthNameResolver)
+                            .IPSet(t => t.PixivAccountNameResolver)
+                            .IPSet(t => t.PixivWebApiNameResolver),
+                    entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.DomainFronting = t)
+                .Proxy(entry => entry.ProxyChanged = t => App.AppViewModel.MakoClient.Configuration.Proxy = t)
+                .String(t => t.MirrorHost,
+                    entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.MirrorHost = t)
+                .Bool(t => t.UseFileCache)
+                .Enum(t => t.DefaultSelectedTabItem, MainPageTabItem.Pairs)
+                .String(t => t.WebCookie,
+                    entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.Cookie = t)
+                // Min=48时NavigationViewItem的图标会被挡住一部分
+                .Int(t => t.NavigationViewOpenPaneWidth, 50, 1000, 10,
+                    entry => entry.ValueChanged += t => MainPage.Current.NavigationView.OpenPaneLength = t)
+                .Bool(t => t.ReconfirmationOfClosingWindow))
+            .NewGroup(SettingsEntryCategory.BrowsingExperience)
+            .Config(group => group
+                .Enum(t => t.ThumbnailDirection, ThumbnailDirection.Pairs)
+                .Enum(t => t.ItemsViewLayoutType, ItemsViewLayoutType.Pairs)
+                .Enum(t => t.TargetFilter, TargetFilter.Pairs)
+                .Collection(t => t.BlockedTags)
+                .Bool(t => t.BrowseOriginalImage)
+                .Double(t => t.ScrollRate, 0, 10, 1,
+                    entry => entry.ValueChanged += d => AdvancedItemsView.ScrollRate = (float) d)
+                .Bool(t => t.OpenWorkInfoByDefault))
+            .NewGroup(SettingsEntryCategory.Search)
+            .Config(group => group
+                .String(t => t.ReverseSearchApiKey,
+                    entry => entry.DescriptionUri = new("https://saucenao.com/user.php?page=search-api"))
+                .Int(t => t.ReverseSearchResultSimilarityThreshold, 1, 100, 1)
+                .Int(t => t.MaximumSearchHistoryRecords, 10, 200, 1)
+                .Int(t => t.MaximumSuggestionBoxSearchHistory, 0, 20, 1)
+                .Enum(t => t.WorkSortOption, WorkSortOption.Pairs)
+                .Enum(t => t.SimpleWorkType, SimpleWorkType.Pairs)
+                .MultiValues(t => t.IllustrationRankOption, entry =>
+                    entry.Enum(
+                            WorkTypeEnum.Illustration,
+                            t => t.IllustrationRankOption,
+                            RankOption.IllustrationPairs)
+                        .Enum(
+                            WorkTypeEnum.Novel,
+                            t => t.NovelRankOption,
+                            RankOption.NovelPairs))
+                .MultiValues(t => t.SearchIllustrationTagMatchOption, entry =>
+                    entry.Enum(
+                            WorkTypeEnum.Illustration,
+                            t => t.SearchIllustrationTagMatchOption,
+                            SearchIllustrationTagMatchOption.Pairs)
+                        .Enum(
+                            WorkTypeEnum.Novel,
+                            t => t.SearchNovelTagMatchOption,
+                            SearchNovelTagMatchOption.Pairs))
+                .DateWithSwitch(t => t.UseSearchStartDate,
+                    entry => entry.DateTimeOffset(t => t.SearchStartDate, DateTimeOffset.MinValue,
+                        DateTimeOffset.MaxValue))
+                .DateWithSwitch(t => t.UseSearchEndDate,
+                    entry => entry.DateTimeOffset(t => t.SearchEndDate, DateTimeOffset.MinValue,
+                        DateTimeOffset.MaxValue)))
+            .NewGroup(SettingsEntryCategory.Download)
+            .Config(group => group
+                .Int(t => t.MaximumDownloadHistoryRecords, 10, ushort.MaxValue, 1)
+                .Bool(t => t.OverwriteDownloadedFile)
+                .Int(t => t.MaxDownloadTaskConcurrencyLevel, 1, Environment.ProcessorCount, 1,
+                    entry => entry.ValueChanged += t => App.AppViewModel.DownloadManager.ConcurrencyDegree = t)
+                .DownloadMacro()
+                .MultiValues(t => t.IllustrationDownloadFormat, entry =>
+                    entry.Enum(
+                            WorkTypeEnum.Illustration,
+                            t => t.IllustrationDownloadFormat,
+                            IllustrationDownloadFormat.Pairs)
+                        .Enum(
+                            WorkTypeEnum.Ugoira,
+                            t => t.UgoiraDownloadFormat,
+                            UgoiraDownloadFormat.Pairs)
+                        .Enum(
+                            WorkTypeEnum.Novel,
+                            t => t.NovelDownloadFormat,
+                            NovelDownloadFormat.Pairs))
+                .Int(t => t.LossyImageDownloadQuality, -1, 100, 5)
+                .Bool(t => t.DownloadWhenBookmarked))
+            .NewGroup(SettingsEntryCategory.Misc)
+            .Config(group => group
+                .Int(t => t.MaximumBrowseHistoryRecords, 10, ushort.MaxValue, 10))
+            .Build();
     }
 
-    public SimpleSettingsGroup[] LocalGroups { get; }
+    public IReadOnlyList<ISettingsGroup> LocalGroups { get; }
 
     public IReadOnlyList<ExtensionSettingsGroup> ExtensionGroups { get; } =
         App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>().SettingsGroups;
@@ -377,7 +280,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
 
     public void ShowClearData(ClearDataKind kind)
     {
-        FrameworkElement.SuccessGrowl(ClearDataKindExtension.GetResource(kind));
+        FrameworkElement.SuccessGrowl(SettingsPageResources.GetResource(kind));
     }
 
     public void CancelToken()

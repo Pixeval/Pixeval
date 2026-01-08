@@ -14,27 +14,27 @@ namespace Pixeval.Options;
 [LocalizationMetadata(typeof(MainPageResources))]
 public enum MainPageTabItem
 {
-    [LocalizedResource(typeof(MainPageResources), nameof(MainPageResources.RecommendationsTabContent))]
+    [LocalizedResource(nameof(MainPageResources.RecommendationsTabContent))]
     Recommendation = 0,
 
-    [LocalizedResource(typeof(MainPageResources), nameof(MainPageResources.RankingsTabContent))]
+    [LocalizedResource(nameof(MainPageResources.RankingsTabContent))]
     Ranking = 1,
 
-    [LocalizedResource(typeof(MainPageResources), nameof(MainPageResources.BookmarksTabContent))]
+    [LocalizedResource(nameof(MainPageResources.BookmarksTabContent))]
     Bookmark = 2,
 
-    [LocalizedResource(typeof(MainPageResources), nameof(MainPageResources.FollowingsTabContent))]
+    [LocalizedResource(nameof(MainPageResources.FollowingsTabContent))]
     Follow = 3,
 
-    [LocalizedResource(typeof(MainPageResources), nameof(MainPageResources.SpotlightsTabContent))]
+    [LocalizedResource(nameof(MainPageResources.SpotlightsTabContent))]
     Spotlight = 4,
 
-    [LocalizedResource(typeof(MainPageResources), nameof(MainPageResources.RecommendUsersTabContent))]
+    [LocalizedResource(nameof(MainPageResources.RecommendUsersTabContent))]
     RecommendUser = 5,
 
-    [LocalizedResource(typeof(MainPageResources), nameof(MainPageResources.RecentPostsTabContent))]
+    [LocalizedResource(nameof(MainPageResources.RecentPostsTabContent))]
     RecentPost = 6,
 
-    [LocalizedResource(typeof(MainPageResources), nameof(MainPageResources.NewWorksTabContent))]
+    [LocalizedResource(nameof(MainPageResources.NewWorksTabContent))]
     NewWork = 7
 }

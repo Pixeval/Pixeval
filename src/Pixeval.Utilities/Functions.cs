@@ -16,37 +16,40 @@ public static class Functions
         return static t => t;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ROut Let<TIn, ROut>(this TIn obj, Func<TIn, ROut> block)
+    extension<TIn>(TIn obj)
     {
-        return block(obj);
-    }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ROut Let<ROut>(Func<TIn, ROut> block)
+        {
+            return block(obj);
+        }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Let<T>(this T obj, Action<T> block)
-    {
-        block(obj);
-    }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Let(Action<TIn> block)
+        {
+            block(obj);
+        }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T Apply<T>(this T obj, Action<T> block)
-    {
-        block(obj);
-        return obj;
-    }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public TIn Apply(Action<TIn> block)
+        {
+            block(obj);
+            return obj;
+        }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static async ValueTask<T> ApplyAsync<T>(this T obj, Func<T, ValueTask> block)
-    {
-        await block(obj);
-        return obj;
-    }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public async ValueTask<TIn> ApplyAsync(Func<TIn, ValueTask> block)
+        {
+            await block(obj);
+            return obj;
+        }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static async ValueTask<T> ApplyAsync<T>(this T obj, Func<T, Task> block)
-    {
-        await block(obj);
-        return obj;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public async ValueTask<TIn> ApplyAsync(Func<TIn, Task> block)
+        {
+            await block(obj);
+            return obj;
+        }
     }
 
     public static async Task<Result<TResult>> WithTimeoutAsync<TResult>(Task<TResult> task, int timeoutMills)

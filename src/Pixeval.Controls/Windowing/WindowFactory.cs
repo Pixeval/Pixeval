@@ -67,74 +67,76 @@ public static class WindowFactory
         return RootWindow;
     }
 
-    public static EnhancedWindow Fork(this EnhancedWindow owner, EnhancedPage content, out ulong hWnd)
+    /// <param name="owner"></param>
+    extension(EnhancedWindow owner)
     {
-        var window = new EnhancedWindow(owner, content);
-        hWnd = window.HWnd;
-        window.Closed += (sender, _) => _ForkedWindowsInternal.Remove(sender.To<EnhancedWindow>().HWnd);
-        _ForkedWindowsInternal[window.HWnd] = window;
-        return window;
-    }
-
-    public static EnhancedWindow WithSizeLimit(this EnhancedWindow window, int minWidth = 0, int minHeight = 0, int maxWidth = 0, int maxHeight = 0)
-    {
-        if (minWidth is not 0)
-            window.Presenter.PreferredMinimumWidth = minWidth;
-        if (minHeight is not 0)
-            window.Presenter.PreferredMinimumHeight = minHeight;
-        if (maxWidth is not 0)
-            window.Presenter.PreferredMaximumWidth = maxWidth;
-        if (maxHeight is not 0)
-            window.Presenter.PreferredMaximumHeight = maxHeight;
-        return window;
-    }
-
-    public static EnhancedWindow WithInitialized(this EnhancedWindow window, RoutedEventHandler onLoaded)
-    {
-        window.Initialized += onLoaded;
-        return window;
-    }
-
-    /// <summary>
-    /// 用户手动关闭时响应，代码关闭不触发<see cref="AppWindow.Closing"/>事件
-    /// </summary>
-    /// <param name="window"></param>
-    /// <param name="onClosed"></param>
-    /// <returns></returns>
-    public static EnhancedWindow WithClosing(this EnhancedWindow window, TypedEventHandler<AppWindow, AppWindowClosingEventArgs>? onClosed)
-    {
-        if (onClosed is not null)
-            window.AppWindow.Closing += onClosed;
-        return window;
-    }
-
-    /// <summary>
-    /// 窗口关闭时一定触发
-    /// </summary>
-    /// <param name="window"></param>
-    /// <param name="onDestroying"></param>
-    /// <returns></returns>
-    public static EnhancedWindow WithDestroying(this EnhancedWindow window, TypedEventHandler<AppWindow, object> onDestroying)
-    {
-        window.AppWindow.Destroying += onDestroying;
-        return window;
-    }
-
-    public static EnhancedWindow Init(this EnhancedWindow window, string title, SizeInt32 size = default, bool isMaximized = false)
-    {
-        window.Initialize(new InitializeInfo
+        public EnhancedWindow Fork(EnhancedPage content, out ulong hWnd)
         {
-            BackdropType = WindowSettings.Backdrop,
-            ExtendTitleBar = true,
-            IconPath = IconPath,
-            Title = title,
-            IsMaximized = isMaximized,
-            Theme = WindowSettings.Theme
-        });
-        if (!isMaximized)
-            window.AppWindow.FullDisplayOnScreen(size);
-        window.Initialized += (_, _) => window.SetTheme(WindowSettings.Theme);
-        return window;
+            var window = new EnhancedWindow(owner, content);
+            hWnd = window.HWnd;
+            window.Closed += (sender, _) => _ForkedWindowsInternal.Remove(sender.To<EnhancedWindow>().HWnd);
+            _ForkedWindowsInternal[window.HWnd] = window;
+            return window;
+        }
+
+        public EnhancedWindow WithSizeLimit(int minWidth = 0, int minHeight = 0, int maxWidth = 0, int maxHeight = 0)
+        {
+            if (minWidth is not 0)
+                owner.Presenter.PreferredMinimumWidth = minWidth;
+            if (minHeight is not 0)
+                owner.Presenter.PreferredMinimumHeight = minHeight;
+            if (maxWidth is not 0)
+                owner.Presenter.PreferredMaximumWidth = maxWidth;
+            if (maxHeight is not 0)
+                owner.Presenter.PreferredMaximumHeight = maxHeight;
+            return owner;
+        }
+
+        public EnhancedWindow WithInitialized(RoutedEventHandler onLoaded)
+        {
+            owner.Initialized += onLoaded;
+            return owner;
+        }
+
+        /// <summary>
+        /// 用户手动关闭时响应，代码关闭不触发<see cref="AppWindow.Closing"/>事件
+        /// </summary>
+        /// <param name="onClosed"></param>
+        /// <returns></returns>
+        public EnhancedWindow WithClosing(TypedEventHandler<AppWindow, AppWindowClosingEventArgs>? onClosed)
+        {
+            if (onClosed is not null)
+                owner.AppWindow.Closing += onClosed;
+            return owner;
+        }
+
+        /// <summary>
+        /// 窗口关闭时一定触发
+        /// </summary>
+        /// <param name="onDestroying"></param>
+        /// <returns></returns>
+        public EnhancedWindow WithDestroying(TypedEventHandler<AppWindow, object> onDestroying)
+        {
+            owner.AppWindow.Destroying += onDestroying;
+            return owner;
+        }
+
+        public EnhancedWindow Init(string title, SizeInt32 size = default, bool isMaximized = false)
+        {
+            owner.Initialize(new InitializeInfo
+            {
+                BackdropType = WindowSettings.Backdrop,
+                ExtendTitleBar = true,
+                IconPath = IconPath,
+                Title = title,
+                IsMaximized = isMaximized,
+                Theme = WindowSettings.Theme
+            });
+            if (!isMaximized)
+                owner.AppWindow.FullDisplayOnScreen(size);
+            owner.Initialized += (_, _) => owner.SetTheme(WindowSettings.Theme);
+            return owner;
+        }
     }
 
     public static void SetBackdrop(BackdropType backdropType)

@@ -5,8 +5,8 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Pages.Tags"
+    xmlns:markup="using:FluentIcons.WinUI.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <controls1:DockPanel>
@@ -15,7 +15,7 @@
                 <AppBarButton
                     Width="40"
                     Click="ChangeWorkingPath_OnClicked"
-                    Icon="{fluent:SymbolIcon Symbol=MoreHorizontal}" />
+                    Icon="{markup:SymbolIcon Symbol=MoreHorizontal}" />
             </CommandBar>
             <TextBlock VerticalAlignment="Center" Text="{x:Bind _viewModel.WorkingDirectory, Mode=OneWay}" />
         </StackPanel>

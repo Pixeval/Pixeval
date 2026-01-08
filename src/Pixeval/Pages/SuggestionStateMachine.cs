@@ -5,13 +5,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoSettingsPage;
+using Mako.Global.Enum;
+using Mako.Model;
 using Microsoft.Extensions.DependencyInjection;
 using PininSharp;
 using PininSharp.Searchers;
-using Pixeval.Attributes;
-using Mako.Global.Enum;
-using Mako.Model;
 using Pixeval.Database.Managers;
+using Pixeval.Settings;
 using Pixeval.Utilities;
 
 namespace Pixeval.Pages;
@@ -33,10 +34,8 @@ public class SuggestionStateMachine
 
     static SuggestionStateMachine()
     {
-        foreach (var settingsEntry in SettingsEntryAttribute.LazyValues.Value)
-        {
-            _SettingEntriesTreeSearcher.Put(settingsEntry.LocalizedResourceHeader, settingsEntry);
-        }
+        foreach (var settingsEntry in LocalSettingsEntryHelper.LazyValues.Value)
+            _SettingEntriesTreeSearcher.Put(settingsEntry.Header, settingsEntry);
     }
 
     public ObservableCollection<SuggestionModel> Suggestions { get; } = [];
@@ -101,7 +100,7 @@ public class SuggestionStateMachine
     private static HashSet<SettingsEntryAttribute> MatchSettings(string keyword)
     {
         var pinInResult = _SettingEntriesTreeSearcher.Search(keyword).ToHashSet();
-        var nonPinInResult = SettingsEntryAttribute.LazyValues.Value.Where(it => it.LocalizedResourceHeader.Contains(keyword));
+        var nonPinInResult = LocalSettingsEntryHelper.LazyValues.Value.Where(it => it.Header.Contains(keyword));
         pinInResult.AddRange(nonPinInResult);
         return pinInResult;
     }

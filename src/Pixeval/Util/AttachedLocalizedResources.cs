@@ -8,7 +8,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Util;
 
-[AttachedLocalizationMetadata<RankOption>(typeof(RankingsPageResources))]
+[AttachedLocalizationMetadata<RankOption>(typeof(RankingsPageResources), "Illustration")]
 [AttachedLocalizedResource(nameof(RankOption.Day), nameof(RankingsPageResources.RankOptionDay))]
 [AttachedLocalizedResource(nameof(RankOption.Week), nameof(RankingsPageResources.RankOptionWeek))]
 [AttachedLocalizedResource(nameof(RankOption.Month), nameof(RankingsPageResources.RankOptionMonth))]
@@ -26,7 +26,21 @@ namespace Pixeval.Util;
 [AttachedLocalizedResource(nameof(RankOption.WeekR18G), nameof(RankingsPageResources.RankOptionWeekR18G))]
 [AttachedLocalizedResource(nameof(RankOption.DayAi), nameof(RankingsPageResources.RankOptionDayAi))]
 [AttachedLocalizedResource(nameof(RankOption.DayR18Ai), nameof(RankingsPageResources.RankOptionDayR18Ai))]
-public static partial class IllustrationRankOptionExtension
+
+[AttachedLocalizationMetadata<RankOption>(typeof(RankingsPageResources), "Novel")]
+[AttachedLocalizedResource(nameof(RankOption.Day), nameof(RankingsPageResources.RankOptionDay))]
+[AttachedLocalizedResource(nameof(RankOption.Week), nameof(RankingsPageResources.RankOptionWeek))]
+[AttachedLocalizedResource(nameof(RankOption.DayMale), nameof(RankingsPageResources.RankOptionDayMale))]
+[AttachedLocalizedResource(nameof(RankOption.DayFemale), nameof(RankingsPageResources.RankOptionDayFemale))]
+[AttachedLocalizedResource(nameof(RankOption.WeekRookie), nameof(RankingsPageResources.RankOptionWeekRookie))]
+[AttachedLocalizedResource(nameof(RankOption.DayR18), nameof(RankingsPageResources.RankOptionDayR18))]
+[AttachedLocalizedResource(nameof(RankOption.DayMaleR18), nameof(RankingsPageResources.RankOptionDayMaleR18))]
+[AttachedLocalizedResource(nameof(RankOption.DayFemaleR18), nameof(RankingsPageResources.RankOptionDayFemaleR18))]
+[AttachedLocalizedResource(nameof(RankOption.WeekR18), nameof(RankingsPageResources.RankOptionWeekR18))]
+[AttachedLocalizedResource(nameof(RankOption.WeekR18G), nameof(RankingsPageResources.RankOptionWeekR18G))]
+[AttachedLocalizedResource(nameof(RankOption.WeekAi), nameof(RankingsPageResources.RankOptionWeekAi))]
+[AttachedLocalizedResource(nameof(RankOption.WeekAiR18), nameof(RankingsPageResources.RankOptionWeekAiR18))]
+public static partial class RankOptionExtension
 {
     public static readonly RankOption[] IllustrationRankOptions =
     [
@@ -50,23 +64,7 @@ public static partial class IllustrationRankOptionExtension
         // RankOption.WeekAi,
         // RankOption.WeekAiR18
     ];
-}
 
-[AttachedLocalizationMetadata<RankOption>(typeof(RankingsPageResources))]
-[AttachedLocalizedResource(nameof(RankOption.Day), nameof(RankingsPageResources.RankOptionDay))]
-[AttachedLocalizedResource(nameof(RankOption.Week), nameof(RankingsPageResources.RankOptionWeek))]
-[AttachedLocalizedResource(nameof(RankOption.DayMale), nameof(RankingsPageResources.RankOptionDayMale))]
-[AttachedLocalizedResource(nameof(RankOption.DayFemale), nameof(RankingsPageResources.RankOptionDayFemale))]
-[AttachedLocalizedResource(nameof(RankOption.WeekRookie), nameof(RankingsPageResources.RankOptionWeekRookie))]
-[AttachedLocalizedResource(nameof(RankOption.DayR18), nameof(RankingsPageResources.RankOptionDayR18))]
-[AttachedLocalizedResource(nameof(RankOption.DayMaleR18), nameof(RankingsPageResources.RankOptionDayMaleR18))]
-[AttachedLocalizedResource(nameof(RankOption.DayFemaleR18), nameof(RankingsPageResources.RankOptionDayFemaleR18))]
-[AttachedLocalizedResource(nameof(RankOption.WeekR18), nameof(RankingsPageResources.RankOptionWeekR18))]
-[AttachedLocalizedResource(nameof(RankOption.WeekR18G), nameof(RankingsPageResources.RankOptionWeekR18G))]
-[AttachedLocalizedResource(nameof(RankOption.WeekAi), nameof(RankingsPageResources.RankOptionWeekAi))]
-[AttachedLocalizedResource(nameof(RankOption.WeekAiR18), nameof(RankingsPageResources.RankOptionWeekAiR18))]
-public static partial class NovelRankOptionExtension
-{
     public static readonly RankOption[] NovelRankOptions =
     [
         RankOption.Day,
@@ -97,10 +95,10 @@ public static partial class NovelRankOptionExtension
 public static partial class TargetFilterExtension;
 
 [AttachedLocalizationMetadata<BackdropType>(typeof(MiscResources))]
+[AttachedLocalizedResource(nameof(BackdropType.None), nameof(MiscResources.NoneBackdrop))]
 [AttachedLocalizedResource(nameof(BackdropType.Acrylic), nameof(MiscResources.AcrylicBackdrop))]
 [AttachedLocalizedResource(nameof(BackdropType.Mica), nameof(MiscResources.MicaBackdrop))]
 [AttachedLocalizedResource(nameof(BackdropType.MicaAlt), nameof(MiscResources.MicaAltBackdrop))]
-[AttachedLocalizedResource(nameof(BackdropType.None), nameof(MiscResources.NoneBackdrop))]
 public static partial class BackdropTypeExtension;
 
 [AttachedLocalizationMetadata<SearchIllustrationTagMatchOption>(typeof(MiscResources))]
@@ -117,16 +115,16 @@ public static partial class SearchIllustrationTagMatchOptionExtension;
 public static partial class SearchNovelTagMatchOptionExtension;
 
 [AttachedLocalizationMetadata<ElementTheme>(typeof(MiscResources))]
-[AttachedLocalizedResource(nameof(ElementTheme.Dark), nameof(MiscResources.AppThemeDark))]
-[AttachedLocalizedResource(nameof(ElementTheme.Light), nameof(MiscResources.AppThemeLight))]
 [AttachedLocalizedResource(nameof(ElementTheme.Default), nameof(MiscResources.AppThemeSystemDefault))]
+[AttachedLocalizedResource(nameof(ElementTheme.Light), nameof(MiscResources.AppThemeLight))]
+[AttachedLocalizedResource(nameof(ElementTheme.Dark), nameof(MiscResources.AppThemeDark))]
 public static partial class ElementThemeExtension;
 
 [AttachedLocalizationMetadata<WorkSortOption>(typeof(MiscResources))]
+[AttachedLocalizedResource(nameof(WorkSortOption.DoNotSort), nameof(MiscResources.WorkSortOptionDoNotSort))]
 [AttachedLocalizedResource(nameof(WorkSortOption.PopularityDescending), nameof(MiscResources.WorkSortOptionPopularityDescending))]
 [AttachedLocalizedResource(nameof(WorkSortOption.PublishDateAscending), nameof(MiscResources.WorkSortOptionPublishDateAscending))]
 [AttachedLocalizedResource(nameof(WorkSortOption.PublishDateDescending), nameof(MiscResources.WorkSortOptionPublishDateDescending))]
-[AttachedLocalizedResource(nameof(WorkSortOption.DoNotSort), nameof(MiscResources.WorkSortOptionDoNotSort))]
 public static partial class WorkSortOptionExtension;
 
 [AttachedLocalizationMetadata<PrivacyPolicy>(typeof(MiscResources))]
@@ -144,3 +142,4 @@ public static partial class WorkTypeExtension;
 [AttachedLocalizedResource(nameof(SimpleWorkType.IllustAndManga), nameof(MiscResources.SimpleWorkTypeIllustAndManga))]
 [AttachedLocalizedResource(nameof(SimpleWorkType.Novel), nameof(MiscResources.SimpleWorkTypeNovel))]
 public static partial class SimpleWorkTypeExtension;
+

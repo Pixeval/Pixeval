@@ -6,6 +6,7 @@
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:markup="using:FluentIcons.WinUI.Markup"
     ColumnSpacing="20"
     mc:Ignorable="d">
     <!--<ToolTipService.ToolTip>
@@ -92,25 +93,25 @@
         <AppBarButton
             x:Uid="/DownloadItem/RedownloadItem"
             Click="RedownloadItem_OnClicked"
-            Icon="{fluent:SymbolIcon Symbol=ArrowDownload}"
+            Icon="{markup:SymbolIcon Symbol=ArrowDownload}"
             IsEnabled="{x:Bind ViewModel.IsRedownloadItemEnabled(ViewModel.DownloadTask.IsProcessing, ViewModel.DownloadTask.CurrentState), Mode=OneWay}" />
         <AppBarButton
             x:Uid="/DownloadItem/CancelDownloadItem"
             Click="CancelDownloadItem_OnClicked"
-            Icon="{fluent:SymbolIcon Symbol=Dismiss}"
+            Icon="{markup:SymbolIcon Symbol=Dismiss}"
             IsEnabled="{x:Bind ViewModel.IsCancelItemEnabled(ViewModel.DownloadTask.IsProcessing, ViewModel.DownloadTask.CurrentState), Mode=OneWay}" />
         <AppBarButton
             x:Uid="/DownloadItem/OpenDownloadLocationItem"
             Click="OpenDownloadLocationItem_OnClicked"
-            Icon="{fluent:SymbolIcon Symbol=FolderArrowRight}" />
+            Icon="{markup:SymbolIcon Symbol=FolderArrowRight}" />
         <AppBarButton
             x:Uid="/DownloadItem/GoToPageItem"
             Click="GoToPageItem_OnClicked"
-            Icon="{fluent:SymbolIcon Symbol=OpenFolder}" />
+            Icon="{markup:SymbolIcon Symbol=OpenFolder}" />
         <AppBarButton
             x:Uid="/DownloadItem/CheckErrorMessageInDetailItem"
             Click="CheckErrorMessageInDetail_OnClicked"
-            Icon="{fluent:SymbolIcon Symbol=DocumentError}"
+            Icon="{markup:SymbolIcon Symbol=DocumentError}"
             IsEnabled="{x:Bind ViewModel.IsError(ViewModel.DownloadTask.CurrentState), Mode=OneWay}" />
     </CommandBar>
 </Grid>

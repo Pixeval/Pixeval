@@ -15,21 +15,24 @@ public static partial class ReplyEmojiHelper
 
     private static readonly string _Pattern = string.Join("|", _StringToEmojiTable.Keys.Select(Regex.Escape));
 
-    /// <summary>
-    /// Returns the placeholder of the emoji in the reply content which has a form of
-    /// "(emoji_name)"
-    /// </summary>
-    public static string GetReplyEmojiPlaceholderKey(this PixivReplyEmoji emoji)
+    extension(PixivReplyEmoji emoji)
     {
-        return $"({emoji.ToString().ToLowerInvariant()})";
-    }
+        /// <summary>
+        /// Returns the placeholder of the emoji in the reply content which has a form of
+        /// "(emoji_name)"
+        /// </summary>
+        public string GetReplyEmojiPlaceholderKey()
+        {
+            return $"({emoji.ToString().ToLowerInvariant()})";
+        }
 
-    /// <summary>
-    /// Returns the url of the png image of the <see cref="PixivReplyEmoji" />
-    /// </summary>
-    public static string GetReplyEmojiDownloadUrl(this PixivReplyEmoji emoji)
-    {
-        return $"https://s.pximg.net/common/images/emoji/{(int) emoji}.png";
+        /// <summary>
+        /// Returns the url of the png image of the <see cref="PixivReplyEmoji" />
+        /// </summary>
+        public string GetReplyEmojiDownloadUrl()
+        {
+            return $"https://s.pximg.net/common/images/emoji/{(int) emoji}.png";
+        }
     }
 
     /// <summary>
@@ -37,7 +40,7 @@ public static partial class ReplyEmojiHelper
     /// </summary>
     public static string GetReplyEmojiDownloadUrlFromPlaceholderKey(this string content)
     {
-        return GetReplyEmojiDownloadUrl(_StringToEmojiTable[content]);
+        return _StringToEmojiTable[content].GetReplyEmojiDownloadUrl();
     }
 
     public static PixivReplyEmoji GetReplyEmojiFromPlaceholderKey(string content)
@@ -48,7 +51,7 @@ public static partial class ReplyEmojiHelper
     public static string GetMarkdownUrlFromPlaceholderKey(this string content)
     {
         // #24表示显示的图片大小
-        return $" ![{content}]({GetReplyEmojiDownloadUrl(_StringToEmojiTable[content])}#24) ";
+        return $" ![{content}]({_StringToEmojiTable[content].GetReplyEmojiDownloadUrl()}#24) ";
     }
 
     public static string GetContents(string content)
@@ -67,7 +70,7 @@ public static partial class ReplyEmojiHelper
             if (match.Index > lastEnd)
                 _ = sb.Append(span[lastEnd..match.Index]);
             lastEnd = match.Index + match.Length;
-            sb.Append(GetMarkdownUrlFromPlaceholderKey(span[match.Index..lastEnd].ToString()));
+            sb.Append(span[match.Index..lastEnd].ToString().GetMarkdownUrlFromPlaceholderKey());
         }
 
         if (span.Length > lastEnd)

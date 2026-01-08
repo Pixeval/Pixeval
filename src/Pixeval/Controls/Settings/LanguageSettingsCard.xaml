@@ -7,18 +7,18 @@
     xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:Pixeval.Settings.Models"
+    xmlns:winUi="using:AutoSettingsPage.WinUI"
     x:Uid="/SettingsPage/AppLanguageEntry"
-    HeaderIcon="{fluent:SymbolIcon Symbol=LocalLanguage}"
+    Description="{x:Bind winUi:SettingsEntryHelper.DescriptionControl(Entry)}"
+    Header="{x:Bind Entry.Header}"
+    Tag="{x:Bind Entry.Token}"
     mc:Ignorable="d">
-    <controls:SettingsCard.Description>
-        <HyperlinkButton
-            x:Uid="/SettingsPage/OpenLanguageSettingsHyperlinkButton"
-            Click="OpenLinkViaTag_OnClicked"
-            Tag="ms-settings:regionlanguage" />
-    </controls:SettingsCard.Description>
+    <controls:SettingsCard.HeaderIcon>
+        <fluent:SymbolIcon Symbol="{x:Bind Entry.Icon}" />
+    </controls:SettingsCard.HeaderIcon>
     <ComboBox
         x:Uid="/SettingsPage/AppLanguageEntryComboBox"
         Width="200"
         ItemsSource="{x:Bind models:LanguageAppSettingsEntry.AvailableLanguages}"
-        SelectedItem="{x:Bind models:LanguageAppSettingsEntry.AppLanguage, Mode=TwoWay}" />
+        SelectedItem="{x:Bind Entry.Value, Mode=TwoWay}" />
 </controls:SettingsCard>

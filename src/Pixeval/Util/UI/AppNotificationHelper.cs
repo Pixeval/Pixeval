@@ -2,6 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using System.Globalization;
 using Microsoft.Windows.AppNotifications;
 using Microsoft.Windows.AppNotifications.Builder;
 using Windows.Foundation;
@@ -68,7 +69,7 @@ public static class AppNotificationHelper
                     Title = Subtitle + _updateCounter,
                     Status = ProgressBarText + _updateCounter,
                     Value = progress,
-                    ValueStringOverride = progress.ToString()
+                    ValueStringOverride = progress.ToString(CultureInfo.InvariantCulture)
                 }, _tag);
         }
     }

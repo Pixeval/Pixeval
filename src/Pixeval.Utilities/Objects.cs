@@ -21,61 +21,36 @@ public static class Objects
 {
     public static readonly IEqualityComparer<string> CaseIgnoredComparer = new CaseIgnoredStringComparer();
 
-    /// <summary>
-    /// Normalize a double to a value between 0 and 1
-    /// </summary>
-    /// <param name="value">The value to be normalized</param>
-    /// <param name="max"></param>
-    /// <param name="min"></param>
-    /// <returns>[0, 1]</returns>
-    public static double Normalize(this double value, int max, int min)
-    {
-        return (value - min) / (max - min);
-    }
-
     public static TReturn Using<T, TReturn>(this T disposable, Func<T, TReturn> action) where T : IDisposable
     {
         return action(disposable);
     }
 
-    /// <summary>
-    /// 当<paramref name="str"/>为<see langword="const"/>时使用<see cref="GeneratedRegexAttribute"/>代替
-    /// </summary>
-    /// <param name="str"></param>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Regex ToRegex(this string str)
+    extension(string? str)
     {
-        return new Regex(str);
-    }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool IsNotNullOrEmpty()
+        {
+            return !string.IsNullOrEmpty(str);
+        }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsNotNullOrEmpty(this string? str)
-    {
-        return !string.IsNullOrEmpty(str);
-    }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool IsNotNullOrBlank()
+        {
+            return !string.IsNullOrWhiteSpace(str);
+        }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsNotNullOrBlank(this string? str)
-    {
-        return !string.IsNullOrWhiteSpace(str);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool IsNullOrBlank()
+        {
+            return string.IsNullOrWhiteSpace(str);
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsNullOrEmpty([NotNullWhen(false)] this string? str)
     {
         return string.IsNullOrEmpty(str);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsNullOrBlank(this string? str)
-    {
-        return string.IsNullOrWhiteSpace(str);
-    }
-
-    public static byte[] GetBytes(this string str, Encoding? encoding = null)
-    {
-        return encoding?.Let(e => e.GetBytes(str)) ?? Encoding.UTF8.GetBytes(str);
     }
 
     public static string GetString(this byte[] bytes, Encoding? encoding = null)
@@ -91,18 +66,67 @@ public static class Objects
         }
     }
 
-    public static async Task<string> HashAsync<THash>(this string str) where THash : HashAlgorithm, new()
+    /// <param name="str"></param>
+    public static string Format(this string str, params object?[] args)
     {
-        using var hasher = new THash();
-        await using var memoryStream = new MemoryStream(str.GetBytes());
-        var bytes = await hasher.ComputeHashAsync(memoryStream).ConfigureAwait(false);
-        return bytes.Select(b => b.ToString("x2")).Aggregate(string.Concat);
+        return string.Format(str, args);
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool EqualsIgnoreCase(this string str1, string str2)
+    /// <param name="str"></param>
+    extension(string str)
     {
-        return string.Equals(str1, str2, StringComparison.OrdinalIgnoreCase);
+        public async Task<string> HashAsync<THash>() where THash : HashAlgorithm, new()
+        {
+            using var hasher = new THash();
+            await using var memoryStream = new MemoryStream(str.GetBytes());
+            var bytes = await hasher.ComputeHashAsync(memoryStream).ConfigureAwait(false);
+            return bytes.Select(b => b.ToString("x2")).Aggregate(string.Concat);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool EqualsIgnoreCase(string str2)
+        {
+            return string.Equals(str, str2, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// 当<paramref name="str"/>为<see langword="const"/>时使用<see cref="GeneratedRegexAttribute"/>代替
+        /// </summary>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Regex ToRegex()
+        {
+            return new Regex(str);
+        }
+
+        public byte[] GetBytes(Encoding? encoding = null)
+        {
+            return encoding?.Let(e => e.GetBytes(str)) ?? Encoding.UTF8.GetBytes(str);
+        }
+
+        public string RemoveSurrounding(string prefix, string suffix)
+        {
+            return str[(str.StartsWith(prefix) ? prefix.Length : 0)..(str.EndsWith(suffix) ? ^suffix.Length : str.Length)];
+        }
+
+        public bool IsValidRegexPattern()
+        {
+            if (str.IsNullOrEmpty())
+            {
+                return false;
+            }
+
+            try
+            {
+                _ = new Regex(str, RegexOptions.None, new TimeSpan(0, 0, 2)).IsMatch(string.Empty);
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 
     /// <summary>
@@ -135,11 +159,6 @@ public static class Objects
         return !b;
     }
 
-    public static string RemoveSurrounding(this string str, string prefix, string suffix)
-    {
-        return str[(str.StartsWith(prefix) ? prefix.Length : 0)..(str.EndsWith(suffix) ? ^suffix.Length : str.Length)];
-    }
-
     public static async Task<string> HashAsync<T>(this T algorithm, byte[] bytes) where T : HashAlgorithm
     {
         await using var memoryStream = new MemoryStream(bytes);
@@ -151,24 +170,34 @@ public static class Objects
         return bytes.Select(b => b.ToString("X2")).Aggregate((s1, s2) => s1 + s2);
     }
 
-    public static string Format(this string str, params object?[] args)
+    /// <param name="i">The value to be normalized</param>
+    extension(double i)
     {
-        return string.Format(str, args);
-    }
+        /// <summary>
+        /// Start inclusive, end inclusive
+        /// </summary>
+        public bool InRange((double, double) range)
+        {
+            var (startInclusive, endInclusive) = range;
+            return i >= startInclusive && i <= endInclusive;
+        }
 
-    /// <summary>
-    /// Start inclusive, end inclusive
-    /// </summary>
-    public static bool InRange(this double i, (double, double) range)
-    {
-        var (startInclusive, endInclusive) = range;
-        return i >= startInclusive && i <= endInclusive;
-    }
+        public double CoerceIn((double, double) range)
+        {
+            var (startInclusive, endInclusive) = range;
+            return Math.Max(startInclusive, Math.Min(i, endInclusive));
+        }
 
-    public static double CoerceIn(this double i, (double, double) range)
-    {
-        var (startInclusive, endInclusive) = range;
-        return Math.Max(startInclusive, Math.Min(i, endInclusive));
+        /// <summary>
+        /// Normalize a double to a value between 0 and 1
+        /// </summary>
+        /// <param name="max"></param>
+        /// <param name="min"></param>
+        /// <returns>[0, 1]</returns>
+        public double Normalize(int max, int min)
+        {
+            return (i - min) / (max - min);
+        }
     }
 
     public static int CoerceIn(this int i, (int, int) range)
@@ -192,49 +221,33 @@ public static class Objects
         return (await task).UnwrapOrElse(orElse);
     }
 
-    public static bool IsValidRegexPattern(this string pattern)
+    extension(CancellationTokenSource cancellationTokenSource)
     {
-        if (pattern.IsNullOrEmpty())
+        public void TryCancel()
         {
-            return false;
+            if (!cancellationTokenSource.IsCancellationRequested)
+                cancellationTokenSource.Cancel();
         }
 
-        try
+        public void TryCancelDispose()
         {
-            _ = new Regex(pattern, RegexOptions.None, new TimeSpan(0, 0, 2)).IsMatch(string.Empty);
-        }
-        catch
-        {
-            return false;
+            if (!cancellationTokenSource.IsCancellationRequested)
+                cancellationTokenSource.Cancel();
+            cancellationTokenSource.Dispose();
         }
 
-        return true;
-    }
+        public async Task TryCancelAsync()
+        {
+            if (!cancellationTokenSource.IsCancellationRequested)
+                await cancellationTokenSource.CancelAsync();
+        }
 
-    public static void TryCancel(this CancellationTokenSource cancellationTokenSource)
-    {
-        if (!cancellationTokenSource.IsCancellationRequested)
-            cancellationTokenSource.Cancel();
-    }
-
-    public static void TryCancelDispose(this CancellationTokenSource cancellationTokenSource)
-    {
-        if (!cancellationTokenSource.IsCancellationRequested)
-            cancellationTokenSource.Cancel();
-        cancellationTokenSource.Dispose();
-    }
-
-    public static async Task TryCancelAsync(this CancellationTokenSource cancellationTokenSource)
-    {
-        if (!cancellationTokenSource.IsCancellationRequested)
-            await cancellationTokenSource.CancelAsync();
-    }
-
-    public static async Task TryCancelDisposeAsync(this CancellationTokenSource cancellationTokenSource)
-    {
-        if (!cancellationTokenSource.IsCancellationRequested)
-            await cancellationTokenSource.CancelAsync();
-        cancellationTokenSource.Dispose();
+        public async Task TryCancelDisposeAsync()
+        {
+            if (!cancellationTokenSource.IsCancellationRequested)
+                await cancellationTokenSource.CancelAsync();
+            cancellationTokenSource.Dispose();
+        }
     }
 
     private class CaseIgnoredStringComparer : IEqualityComparer<string>

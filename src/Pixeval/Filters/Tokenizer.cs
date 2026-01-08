@@ -96,19 +96,20 @@ public static class Tokenizer
         return Tokenize("");
     }
 
-    private static IList<IQueryToken> Prepend(this IList<IQueryToken> source,
-        IQueryToken element)
+    extension(IList<IQueryToken> source)
     {
-        source.Insert(0, element);
-        return source;
-    }
-
-    private static IList<IQueryToken> Prepend(this IList<IQueryToken> source,
-        IQueryToken.INullableToken element)
-    {
-        if (element.IsNotEmpty())
+        private IList<IQueryToken> Prepend(IQueryToken element)
+        {
             source.Insert(0, element);
-        return source;
+            return source;
+        }
+
+        private IList<IQueryToken> Prepend(IQueryToken.INullableToken element)
+        {
+            if (element.IsNotEmpty())
+                source.Insert(0, element);
+            return source;
+        }
     }
 }
 

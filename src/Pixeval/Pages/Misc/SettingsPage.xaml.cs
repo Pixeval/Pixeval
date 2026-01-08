@@ -13,7 +13,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Pixeval.AppManagement;
-using Pixeval.Attributes;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.Database.Managers;
@@ -22,6 +21,8 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.Foundation;
 using Windows.System;
+using AutoSettingsPage;
+using AutoSettingsPage.WinUI;
 using Pixeval.Util;
 using WinUI3Utilities;
 
@@ -47,7 +48,7 @@ public sealed partial class SettingsPage : IDisposable
         // ItemsControl会有缓动动画，ItemsRepeater会延迟加载，使用只好手动一次全部加载，以方便根据Tag导航
         var style = Resources["SettingHeaderStyle"] as Style;
 
-        foreach (var group in _viewModel.LocalGroups.Concat<ISettingsGroup>(_viewModel.ExtensionGroups))
+        foreach (var group in _viewModel.LocalGroups.Concat(_viewModel.ExtensionGroups))
         {
             SettingsPanel.Children.Add(new TextBlock
             {
@@ -55,7 +56,7 @@ public sealed partial class SettingsPage : IDisposable
                 Text = group.Header
             });
             foreach (var entry in group)
-                SettingsPanel.Children.Add(entry.Element);
+                SettingsPanel.Children.Add(SettingsEntryHelper.GetControl(entry));
         }
 
         ScrollToAttribute(parameter as SettingsEntryAttribute, -135);
@@ -128,7 +129,7 @@ public sealed partial class SettingsPage : IDisposable
             var settings = new AppSettings();
             foreach (var localGroup in _viewModel.LocalGroups)
                 foreach (var settingsEntry in localGroup)
-                    settingsEntry.ValueReset(settings);
+                    settingsEntry.LocalValueReset(settings);
             foreach (var extensionGroup in _viewModel.ExtensionGroups)
                 foreach (var settingsEntry in extensionGroup)
                     settingsEntry.ValueReset();
@@ -208,7 +209,7 @@ public sealed partial class SettingsPage : IDisposable
             return;
         foreach (var localGroup in _viewModel.LocalGroups)
             foreach (var settingsEntry in localGroup)
-                settingsEntry.ValueSaving(AppInfo.LocalConfig);
+                settingsEntry.LocalValueSaving(AppInfo.LocalConfig, App.AppViewModel.AppSettings);
         foreach (var extensionGroup in _viewModel.ExtensionGroups)
             foreach (var settingsEntry in extensionGroup)
                 settingsEntry.ValueSaving(extensionGroup.Model.Values);
@@ -262,7 +263,7 @@ public sealed partial class SettingsPage : IDisposable
                         {
                             foreach (var localGroup in _viewModel.LocalGroups)
                                 foreach (var settingsEntry in localGroup)
-                                    settingsEntry.ValueReset(appSettings);
+                                    settingsEntry.LocalValueReset(appSettings);
                             this.SuccessGrowl(SettingsPageResources.ImportSettingsSuccess, file.Name);
                         }
                         break;

@@ -5,10 +5,11 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:flyoutContent="using:Pixeval.Controls.FlyoutContent"
+    xmlns:markup="using:FluentIcons.WinUI.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
+    xmlns:winUi="using:AutoSettingsPage.WinUI"
     mc:Ignorable="d">
     <UserControl.Resources>
         <TeachingTip
@@ -36,7 +37,7 @@
                 controls1:DockPanel.Dock="Left"
                 Orientation="Horizontal"
                 Spacing="10">
-                <controls:EnumComboBox
+                <winUi:EnumComboBox
                     x:Name="SortOptionComboBox"
                     SelectedEnum="{x:Bind pixeval:App.AppViewModel.AppSettings.WorkSortOption}"
                     SelectionChanged="SortOptionComboBox_OnSelectionChanged"
@@ -45,19 +46,19 @@
                     x:Uid="/WorkContainer/FilterAutoSuggestBox"
                     Width="250"
                     VerticalAlignment="Center"
-                    QueryIcon="{fluent:SymbolIcon Symbol=Filter,
+                    QueryIcon="{markup:SymbolIcon Symbol=Filter,
                                                   FontSize={StaticResource SmallIconFontSize}}"
                     QuerySubmitted="FilterAutoSuggestBox_QuerySubmitted" />
             </StackPanel>
             <CommandBar controls1:DockPanel.Dock="Right" DefaultLabelPosition="Collapsed">
                 <AppBarToggleButton
                     x:Uid="/WorkContainer/SelectionButton"
-                    Icon="{fluent:SymbolIcon Symbol=Multiselect}"
+                    Icon="{markup:SymbolIcon Symbol=Multiselect}"
                     IsChecked="{x:Bind WorkView.ViewModel.IsSelecting, Mode=TwoWay}" />
                 <AppBarButton
                     x:Uid="/WorkContainer/RefreshButton"
                     Click="RefreshButton_OnClick"
-                    Icon="{fluent:SymbolIcon Symbol=ArrowClockwise}">
+                    Icon="{markup:SymbolIcon Symbol=ArrowClockwise}">
                     <AppBarButton.KeyboardAccelerators>
                         <KeyboardAccelerator Key="F5" />
                     </AppBarButton.KeyboardAccelerators>
@@ -69,13 +70,13 @@
                 Visibility="{x:Bind controls:C.ToVisibility(WorkView.ViewModel.IsSelecting), Mode=OneWay}">
                 <AppBarButton
                     Click="CancelSelectionButton_OnClicked"
-                    Icon="{fluent:SymbolIcon Symbol=SelectAllOff}"
+                    Icon="{markup:SymbolIcon Symbol=SelectAllOff}"
                     IsEnabled="{x:Bind WorkView.ViewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Label="{x:Bind WorkView.ViewModel.SelectionLabel, Mode=OneWay}" />
                 <AppBarButton
                     x:Uid="/WorkContainer/SelectAllButton"
                     Click="SelectAllToggleButton_OnClicked"
-                    Icon="{fluent:SymbolIcon Symbol=SelectAllOn}">
+                    Icon="{markup:SymbolIcon Symbol=SelectAllOn}">
                     <AppBarButton.KeyboardAccelerators>
                         <KeyboardAccelerator Key="A" Modifiers="Control" />
                     </AppBarButton.KeyboardAccelerators>
@@ -85,17 +86,17 @@
                     x:Name="AddAllToBookmarkButton"
                     x:Uid="/WorkContainer/AddAllToBookmarkButton"
                     Click="AddAllToBookmarkButton_OnClicked"
-                    Icon="{fluent:SymbolIcon Symbol=Bookmark}"
+                    Icon="{markup:SymbolIcon Symbol=Bookmark}"
                     IsEnabled="{x:Bind WorkView.ViewModel.IsAnyEntrySelected, Mode=OneWay}" />
                 <AppBarButton
                     x:Uid="/WorkContainer/SaveAllButton"
                     Click="SaveAllButton_OnClicked"
-                    Icon="{fluent:SymbolIcon Symbol=Save}"
+                    Icon="{markup:SymbolIcon Symbol=Save}"
                     IsEnabled="{x:Bind WorkView.ViewModel.IsAnyEntrySelected, Mode=OneWay}" />
                 <AppBarButton
                     x:Uid="/WorkContainer/OpenAllInBrowserButton"
                     Click="OpenAllInBrowserButton_OnClicked"
-                    Icon="{fluent:SymbolIcon Symbol=GlobeArrowUp}"
+                    Icon="{markup:SymbolIcon Symbol=GlobeArrowUp}"
                     IsEnabled="{x:Bind WorkView.ViewModel.IsAnyEntrySelected, Mode=OneWay}" />
             </CommandBar>
         </controls1:DockPanel>

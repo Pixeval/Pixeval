@@ -8,21 +8,21 @@ namespace Pixeval.Options;
 [LocalizationMetadata(typeof(MiscResources))]
 public enum IllustrationDownloadFormat
 {
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Jpg))]
+    [LocalizedResource(nameof(MiscResources.Jpg))]
     Jpg,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Png))]
+    [LocalizedResource(nameof(MiscResources.Png))]
     Png,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Bmp))]
+    [LocalizedResource(nameof(MiscResources.Bmp))]
     Bmp,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.WebPLossy))]
+    [LocalizedResource(nameof(MiscResources.WebPLossy))]
     WebPLossy,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.WebPLossless))]
+    [LocalizedResource(nameof(MiscResources.WebPLossless))]
     WebPLossless,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.OriginalIllustration))]
+    [LocalizedResource(nameof(MiscResources.OriginalIllustration))]
     Original,
 }

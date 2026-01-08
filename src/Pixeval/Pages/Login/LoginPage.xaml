@@ -6,8 +6,8 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls2="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Pages.Login"
+    xmlns:markup="using:FluentIcons.WinUI.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
     Loaded="LoginPage_OnLoaded"
@@ -84,7 +84,7 @@
                                     <Button
                                         x:Uid="/LoginPage/BrowserHelp"
                                         controls2:DockPanel.Dock="Right"
-                                        Content="{fluent:SymbolIcon Symbol=Question}"
+                                        Content="{markup:SymbolIcon Symbol=Question}"
                                         IsTabStop="False" />
                                     <Button
                                         x:Uid="/LoginPage/SubmitButton"
@@ -132,7 +132,7 @@
                                     <Button
                                         x:Uid="/LoginPage/WebViewHelp"
                                         controls2:DockPanel.Dock="Right"
-                                        Content="{fluent:SymbolIcon Symbol=Question}"
+                                        Content="{markup:SymbolIcon Symbol=Question}"
                                         IsTabStop="False" />
                                     <SplitButton
                                         x:Uid="/LoginPage/SubmitButton"
@@ -165,7 +165,7 @@
                     HorizontalAlignment="Right"
                     controls2:DockPanel.Dock="Bottom"
                     Click="ButtonBase_OnClick"
-                    Content="{fluent:SymbolIcon Symbol=LocalLanguage}"
+                    Content="{markup:SymbolIcon Symbol=LocalLanguage}"
                     ToolTipService.ToolTip="{x:Bind pixeval:SettingsPageResources.AppLanguageEntryHeader}">
                     <Button.ContextFlyout>
                         <MenuFlyout x:Name="MenuFlyout" Placement="TopEdgeAlignedRight" />

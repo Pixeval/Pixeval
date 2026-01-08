@@ -4,17 +4,17 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using AutoSettingsPage.Models;
+using AutoSettingsPage.WinUI;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Mako.Global.Enum;
+using Mako.Model;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
-using Mako.Global.Enum;
-using Mako.Model;
 using Pixeval.Options;
-using Pixeval.Settings;
-using Pixeval.Settings.Models;
 using Pixeval.Util.ComponentModels;
 using Pixeval.Util.UI;
 using Windows.System;
@@ -237,27 +237,26 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
 
     public static AppSettings Settings => App.AppViewModel.AppSettings;
 
-    public FontAppSettingsEntry NovelFontFamilyEntry { get; } = new(Settings, t => t.NovelFontFamily);
+    public FontSettingsEntry<AppSettings> NovelFontFamilyEntry { get; } = new(Settings, t => t.NovelFontFamily);
 
-    public ColorAppSettingsEntry NovelBackgroundEntry { get; } = new(Settings, t => t.NovelBackground);
+    public ColorSettingsEntry<AppSettings> NovelBackgroundEntry { get; } = new(Settings, t => t.NovelBackground);
 
-    public ColorAppSettingsEntry NovelFontColorEntry { get; } = new(Settings, t => t.NovelFontColor);
+    public ColorSettingsEntry<AppSettings> NovelFontColorEntry { get; } = new(Settings, t => t.NovelFontColor);
 
-    public EnumAppSettingsEntry NovelFontWeightEntry { get; } = new(Settings, t => t.NovelFontWeight, FontWeightsOptionExtension.GetItems());
+    public EnumSettingsEntry<AppSettings, object> NovelFontWeightEntry { get; } = new(Settings, t => t.NovelFontWeight, FontWeightsOption.Pairs);
 
-    public IntAppSettingsEntry NovelFontSizeEntry { get; } = new(Settings, t => t.NovelFontSize) { Max = 100, Min = 5 };
+    public IntSettingsEntry<AppSettings> NovelFontSizeEntry { get; } = new(Settings, t => t.NovelFontSize) { Max = 100, Min = 5 };
 
-    public IntAppSettingsEntry NovelLineHeightEntry { get; } = new(Settings, t => t.NovelLineHeight) { Max = 150, Min = 0 };
+    public IntSettingsEntry<AppSettings> NovelLineHeightEntry { get; } = new(Settings, t => t.NovelLineHeight) { Max = 150, Min = 0 };
 
-    public IntAppSettingsEntry NovelMaxWidthEntry { get; } = new(Settings, t => t.NovelMaxWidth)
+    public IntSettingsEntry<AppSettings> NovelMaxWidthEntry { get; } = new(Settings, t => t.NovelMaxWidth)
     {
-        LargeChange = 100,
-        SmallChange = 50,
+        Step = 50,
         Max = 10000,
         Min = 50
     };
 
-    public IAppSettingEntry<AppSettings>[] Entries =>
+    public ISettingsEntry[] Entries =>
     [
         NovelFontFamilyEntry,
         NovelBackgroundEntry,

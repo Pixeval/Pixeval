@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net8.0-windows10.0.26100.0</TargetFramework>
+        <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
         <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
         <RootNamespace>Pixeval.Controls</RootNamespace>
         <Platforms>x86;x64;arm64</Platforms>
@@ -17,18 +17,19 @@
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Labs.WinUI.DependencyPropertyGenerator" Version="0.1.250129-build.2033" />
         <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.240517-build.1678" />
-        <PackageReference Include="FluentIcons.WinUI" Version="1.1.292" />
+        <PackageReference Include="FluentIcons.WinUI" Version="2.0.316" />
         <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.6901" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7463" />
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.251106002" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
-        <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.2.250402" />
-        <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.2.250402" />
+        <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.2.251219" />
+        <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.2.251219" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.250402" />
-        <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250402" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.251219" />
+        <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.251219" />
         <PackageReference Include="WinUI3Utilities" Version="1.1.7.18" />
 
+        <ProjectReference Include="..\AutoSettingsPage\AutoSettingsPage.WinUI\AutoSettingsPage.WinUI.csproj" />
         <ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
         <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
     </ItemGroup>

@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Mako.Model"
+    xmlns:winUi="using:AutoSettingsPage.WinUI"
     mc:Ignorable="d">
     <controls:WorkContainer x:Name="WorkContainer" RefreshRequested="WorkContainer_OnRefreshRequested">
         <controls:WorkContainer.CommandBarElements>
@@ -19,12 +20,12 @@
                     </DataTemplate>
                 </controls:NotifyOnLoadedComboBox.ItemTemplate>
             </controls:NotifyOnLoadedComboBox>
-            <controls:EnumComboBox
+            <winUi:EnumComboBox
                 x:Name="PrivacyPolicyComboBox"
                 SelectionChanged="ComboBox_OnSelectionChanged"
                 Style="{StaticResource PrivacyPolicyComboBoxStyle}"
                 Visibility="{x:Bind controls:C.ToVisibility(_viewModel.IsMe)}" />
-            <controls:EnumComboBox
+            <winUi:EnumComboBox
                 x:Name="SimpleWorkTypeComboBox"
                 SelectionChanged="ComboBox_OnSelectionChanged"
                 Style="{StaticResource SimpleWorkTypeComboBoxStyle}" />

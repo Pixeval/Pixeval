@@ -18,6 +18,8 @@ namespace Pixeval.Extensions;
 
 public partial record ExtensionsHostModel(IExtensionsHost Host) : IDisposable
 {
+    public IExtensionsHost Host { get; } = Host;
+
     public bool IsActive
     {
         get
@@ -46,19 +48,19 @@ public partial record ExtensionsHostModel(IExtensionsHost Host) : IDisposable
 
     internal FreeLibrarySafeHandle? Handle { get; init; }
 
-    public string Name { get; } = Host.GetExtensionName();
+    public string Name { get; } = Host.ExtensionName;
 
-    public string Description { get; } = Host.GetDescription();
+    public string Description { get; } = Host.Description;
 
-    public string Author { get; } = Host.GetAuthorName();
+    public string Author { get; } = Host.AuthorName;
 
-    public string Version { get; } = Host.GetVersion();
+    public string Version { get; } = Host.Version;
 
-    public Uri Link { get; } = new Uri(Host.GetExtensionLink());
+    public Uri? Link { get; } = Uri.TryCreate(Host.ExtensionLink, UriKind.RelativeOrAbsolute, out var uri) ? uri : null;
 
-    public Uri? HelpLink { get; } = Host.GetHelpLink() is { } helpLink ? new Uri(helpLink) : null;
+    public Uri? HelpLink { get; } = Uri.TryCreate(Host.HelpLink, UriKind.RelativeOrAbsolute, out var uri) ? uri : null;
 
-    private BitmapImage? IconImageSource { get; } = GetIconSource(Host.GetIcon());
+    private BitmapImage? IconImageSource { get; } = GetIconSource(Host.Icon);
 
     public IconElement Icon => IconImageSource is null
         ? new SymbolIcon { Symbol = Symbol.PuzzlePiece }
@@ -66,7 +68,7 @@ public partial record ExtensionsHostModel(IExtensionsHost Host) : IDisposable
 
     public IPropertySet Values { get; } = GetValues(Host);
 
-    public IReadOnlyList<IExtension> Extensions { get; } = Host.GetExtensions();
+    public IReadOnlyList<IExtension> Extensions { get; } = Host.Extensions;
 
     private static IPropertySet GetValues(IExtensionsHost host)
     {

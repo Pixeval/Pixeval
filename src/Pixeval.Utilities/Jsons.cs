@@ -10,86 +10,101 @@ namespace Pixeval.Utilities;
 
 public static class Jsons
 {
-    public static IEnumerable<JsonProperty> EnumerateObjectOrEmpty(this JsonElement? element)
+    extension(JsonElement? element)
     {
-        return element?.EnumerateObject() as IEnumerable<JsonProperty> ?? [];
+        public IEnumerable<JsonProperty> EnumerateObjectOrEmpty()
+        {
+            return element?.EnumerateObject() as IEnumerable<JsonProperty> ?? [];
+        }
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static JsonElement GetProperty(this JsonProperty jsonElement, string prop)
+    extension(JsonProperty jsonElement)
     {
-        return jsonElement.Value.GetProperty(prop);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public JsonElement GetProperty(string prop)
+        {
+            return jsonElement.Value.GetProperty(prop);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public JsonElement? GetPropertyOrNull(string prop)
+        {
+            return jsonElement.Value.TryGetProperty(prop, out var result) ? result : null;
+        }
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static JsonElement? GetPropertyOrNull(this JsonElement element, string prop)
+    extension(JsonElement jsonElement)
     {
-        return element.TryGetProperty(prop, out var result) ? result : null;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string GetPropertyString()
+        {
+            return jsonElement.ToString();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string GetPropertyString(string prop)
+        {
+            return jsonElement.GetProperty(prop).ToString();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public JsonElement? GetPropertyOrNull(string prop)
+        {
+            return jsonElement.TryGetProperty(prop, out var result) ? result : null;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public long GetPropertyLong(string prop)
+        {
+            return jsonElement.GetProperty(prop).GetInt64();
+        }
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static JsonElement? GetPropertyOrNull(this JsonProperty property, string prop)
+    extension(JsonProperty jsonProperty)
     {
-        return property.Value.TryGetProperty(prop, out var result) ? result : null;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string GetPropertyString()
+        {
+            return jsonProperty.Value.ToString();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string GetPropertyString(string prop)
+        {
+            return jsonProperty.Value.GetProperty(prop).ToString();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public long GetPropertyLong(string prop)
+        {
+            return jsonProperty.Value.GetProperty(prop).GetInt64();
+        }
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? GetPropertyString(this JsonElement jsonElement)
+    extension(JsonProperty jsonProperty)
     {
-        return jsonElement.ToString();
-    }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public DateTimeOffset GetPropertyDateTimeOffset()
+        {
+            return jsonProperty.Value.GetDateTimeOffset();
+        }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? GetPropertyString(this JsonElement jsonElement, string prop)
-    {
-        return jsonElement.GetProperty(prop).ToString();
-    }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public DateTimeOffset GetPropertyDateTimeOffset(string prop)
+        {
+            return jsonProperty.Value.GetProperty(prop).GetDateTimeOffset();
+        }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? GetPropertyString(this JsonProperty jsonProperty)
-    {
-        return jsonProperty.Value.ToString();
-    }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public DateTime GetPropertyDateTime()
+        {
+            return jsonProperty.Value.GetDateTime();
+        }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? GetPropertyString(this JsonProperty jsonProperty, string prop)
-    {
-        return jsonProperty.Value.GetProperty(prop).ToString();
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static long GetPropertyLong(this JsonProperty jsonProperty, string prop)
-    {
-        return jsonProperty.Value.GetProperty(prop).GetInt64();
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static long GetPropertyLong(this JsonElement jsonElement, string prop)
-    {
-        return jsonElement.GetProperty(prop).GetInt64();
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static DateTimeOffset GetPropertyDateTimeOffset(this JsonProperty jsonProperty)
-    {
-        return jsonProperty.Value.GetDateTimeOffset();
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static DateTimeOffset GetPropertyDateTimeOffset(this JsonProperty jsonProperty, string prop)
-    {
-        return jsonProperty.Value.GetProperty(prop).GetDateTimeOffset();
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static DateTime GetPropertyDateTime(this JsonProperty jsonProperty)
-    {
-        return jsonProperty.Value.GetDateTime();
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static DateTime GetPropertyDateTime(this JsonProperty jsonProperty, string prop)
-    {
-        return jsonProperty.Value.GetProperty(prop).GetDateTime();
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public DateTime GetPropertyDateTime(string prop)
+        {
+            return jsonProperty.Value.GetProperty(prop).GetDateTime();
+        }
     }
 }

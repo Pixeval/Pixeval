@@ -5,9 +5,9 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls1="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:local="using:Pixeval.Pages.Tags"
+    xmlns:markup="using:FluentIcons.WinUI.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     HorizontalSpacing="20"
     mc:Ignorable="d">
@@ -26,24 +26,24 @@
         <AppBarButton
             x:Uid="/TagsEntry/EditTagItem"
             Click="EditTagItem_OnClicked"
-            Icon="{fluent:SymbolIcon Symbol=Tag}" />
+            Icon="{markup:SymbolIcon Symbol=Tag}" />
         <AppBarButton
             x:Uid="/TagsEntry/OpenItem"
             Click="OpenItem_OnClicked"
-            Icon="{fluent:SymbolIcon Symbol=Open}" />
+            Icon="{markup:SymbolIcon Symbol=Open}" />
         <AppBarButton
             x:Uid="/TagsEntry/GoToPageItem"
             Click="GoToPageItem_OnClicked"
-            Icon="{fluent:SymbolIcon Symbol=OpenFolder}"
+            Icon="{markup:SymbolIcon Symbol=OpenFolder}"
             IsEnabled="{x:Bind IsLong(ViewModel.Id), Mode=OneWay}" />
         <AppBarButton
             x:Uid="/TagsEntry/DeleteItem"
             Click="DeleteItem_OnClicked"
-            Icon="{fluent:SymbolIcon Symbol=Delete}" />
+            Icon="{markup:SymbolIcon Symbol=Delete}" />
         <AppBarButton
             x:Uid="/TagsEntry/OpenLocationItem"
             Click="OpenLocationItem_OnClicked"
-            Icon="{fluent:SymbolIcon Symbol=FolderArrowRight}" />
+            Icon="{markup:SymbolIcon Symbol=FolderArrowRight}" />
     </CommandBar>
     <StackPanel VerticalAlignment="Center" Spacing="5">
         <TextBlock

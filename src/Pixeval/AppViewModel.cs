@@ -54,10 +54,11 @@ public partial class AppViewModel(App app) : IDisposable
         var cacheTable = new CacheTable<PixevalIllustrationCacheKey, PixevalIllustrationCacheHeader, PixevalIllustrationCacheProtocol>(
             new PixevalIllustrationCacheProtocol(),
             new CacheToken(1, defaultCacheSizeInByte, AppKnownFolders.Cache.CombinePath(CacheHelper.CacheFolderName), 8));
+        var fileLogger = new FileLogger(AppKnownFolders.Logs.FullPath);
         var extensionService = new ExtensionService();
-        extensionService.LoadAllHosts();
+        extensionService.LoadAllHosts(fileLogger);
         return new ServiceCollection()
-            .AddSingleton(_ => new FileLogger(AppKnownFolders.Logs.FullPath))
+            .AddSingleton(_ => fileLogger)
             .AddBooruParsers()
             .AddKeyedSingleton<IGetArtworkService, MakoClient>(IPlatformInfo.Pixiv,
                 (provider, key) => new(App.AppViewModel.AppSettings.ToMakoClientConfiguration(), provider.GetRequiredService<FileLogger>()))

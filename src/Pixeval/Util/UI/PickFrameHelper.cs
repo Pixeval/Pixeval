@@ -15,11 +15,12 @@ public static class FrameSizeHelper
     private static IAnimatedImageFrame DefaultAnimated =>
         new AnimatedImageFrame(new ImageSize(1, 1), [(new Uri(DefaultImageUrls.ImageNotAvailable), 1)]);
 
-    public static IImageFrame PickClosestFrame(this IReadOnlyCollection<IImageFrame> frames, int width, int height) => frames.PickClosest(width, height) ?? Default;
-
-    public static IImageFrame PickClosestHeightFrame(this IReadOnlyCollection<IImageFrame> frames, int height) => frames.PickClosestHeight(height) ?? Default;
-
-    public static IImageFrame PickMaxFrame(this IReadOnlyCollection<IImageFrame> frames) => frames.PickMax() ?? Default;
+    extension(IReadOnlyCollection<IImageFrame> frames)
+    {
+        public IImageFrame PickClosestFrame(int width, int height) => frames.PickClosest(width, height) ?? Default;
+        public IImageFrame PickClosestHeightFrame(int height) => frames.PickClosestHeight(height) ?? Default;
+        public IImageFrame PickMaxFrame() => frames.PickMax() ?? Default;
+    }
 
     public static IAnimatedImageFrame PickMaxFrame(this IReadOnlyCollection<IAnimatedImageFrame> frames) => frames.PickMax() ?? DefaultAnimated;
 }

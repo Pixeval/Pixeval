@@ -5,9 +5,8 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Pages"
-    xmlns:management="using:Pixeval.AppManagement"
+    xmlns:markup="using:FluentIcons.WinUI.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
     xmlns:win2d="using:Microsoft.Graphics.Canvas.UI.Xaml"
@@ -98,36 +97,36 @@
                                 <MenuFlyoutItem
                                     x:Uid="/MainPage/OpenMyPageItem"
                                     Click="OpenMyPage_OnClick"
-                                    Icon="{fluent:SymbolIcon Symbol=Open}" />
+                                    Icon="{markup:SymbolIcon Symbol=Open}" />
                                 <MenuFlyoutItem
                                     x:Uid="/MainPage/OpenMyPageInBrowserItem"
                                     Click="OpenLinkViaTagUri_OnClicked"
-                                    Icon="{fluent:SymbolIcon Symbol=GlobeArrowUp}"
+                                    Icon="{markup:SymbolIcon Symbol=GlobeArrowUp}"
                                     Tag="{x:Bind _viewModel.Url, Mode=OneWay}" />
                                 <MenuFlyoutSeparator />
                                 <ToggleMenuFlyoutItem
                                     x:Name="RestrictedModeItem"
                                     x:Uid="/MainPage/RestrictedModeItem"
                                     Click="RestrictedModeItem_OnClick"
-                                    Icon="{fluent:SymbolIcon Symbol=PersonProhibited}"
+                                    Icon="{markup:SymbolIcon Symbol=PersonProhibited}"
                                     IsEnabled="{x:Bind controls:C.Negation(_viewModel.RestrictedModeProcessing), Mode=OneWay}"
                                     Visibility="Collapsed" />
                                 <ToggleMenuFlyoutItem
                                     x:Name="AiShowItem"
                                     x:Uid="/MainPage/AiShowItem"
                                     Click="AiShowButtonItem_OnClick"
-                                    Icon="{fluent:SymbolIcon Symbol=Bot}"
+                                    Icon="{markup:SymbolIcon Symbol=Bot}"
                                     IsEnabled="{x:Bind controls:C.Negation(_viewModel.AiShowProcessing), Mode=OneWay}" />
                                 <MenuFlyoutItem
                                     x:Uid="/MainPage/MoreViewingSettingsItem"
                                     Click="OpenLinkViaTag_OnClicked"
-                                    Icon="{fluent:SymbolIcon Symbol=MoreHorizontal}"
+                                    Icon="{markup:SymbolIcon Symbol=MoreHorizontal}"
                                     Tag="https://www.pixiv.net/settings/viewing" />
                                 <MenuFlyoutSeparator />
                                 <MenuFlyoutItem
                                     x:Uid="/MainPage/LogoutItem"
                                     Click="Logout_OnClicked"
-                                    Icon="{fluent:SymbolIcon Symbol=SignOut}" />
+                                    Icon="{markup:SymbolIcon Symbol=SignOut}" />
                             </MenuFlyout>
                         </Button.Flyout>
                         <PersonPicture
@@ -144,12 +143,12 @@
                         <AppBarButton
                             x:Uid="/MainPage/ReverseSearchButton"
                             Click="ReverseSearchButton_OnClicked"
-                            Content="{fluent:SymbolIcon Symbol=SearchVisual,
+                            Content="{markup:SymbolIcon Symbol=SearchVisual,
                                                         IconVariant=Color}" />
                         <AppBarButton
                             x:Uid="/MainPage/OpenSearchSettingButton"
                             Click="OpenSearchSettingButton_OnClicked"
-                            Content="{fluent:SymbolIcon Symbol=Settings,
+                            Content="{markup:SymbolIcon Symbol=Settings,
                                                         IconVariant=Color}" />
                     </CommandBar>
                     <AutoSuggestBox
@@ -162,7 +161,7 @@
                         ItemTemplateSelector="{StaticResource SuggestionModelDataTemplateSelector}"
                         ItemsSource="{x:Bind _viewModel.SuggestionProvider.Suggestions, Mode=OneWay}"
                         KeyDown="KeywordAutoSuggestionBox_OnKeyDown"
-                        QueryIcon="{fluent:SymbolIcon Symbol=Search,
+                        QueryIcon="{markup:SymbolIcon Symbol=Search,
                                                       FontSize={StaticResource SmallIconFontSize}}"
                         QuerySubmitted="KeywordAutoSuggestBox_QuerySubmitted"
                         SuggestionChosen="KeywordAutoSuggestBox_OnSuggestionChosen"

@@ -8,9 +8,9 @@ namespace Pixeval.Options;
 [LocalizationMetadata(typeof(MiscResources))]
 public enum ThumbnailDirection
 {
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.ThumbnailDirectionLandscape))]
+    [LocalizedResource(nameof(MiscResources.ThumbnailDirectionLandscape))]
     Landscape,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.ThumbnailDirectionPortrait))]
+    [LocalizedResource(nameof(MiscResources.ThumbnailDirectionPortrait))]
     Portrait
 }

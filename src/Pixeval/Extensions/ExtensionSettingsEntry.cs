@@ -3,30 +3,28 @@
 
 using System;
 using System.Collections.Generic;
-using Pixeval.Attributes;
+using System.Linq;
+using AutoSettingsPage;
+using AutoSettingsPage.Models;
+using Pixeval.Extensions.Common;
 using Pixeval.Extensions.Common.Settings;
-using Pixeval.Extensions.Models;
-using Pixeval.Settings;
-using WinUI3Utilities;
+using Windows.Foundation.Collections;
 
 namespace Pixeval.Extensions;
 
-public abstract class ExtensionSettingsEntry<TValue>(ISettingsExtension extension, TValue value)
-    : SingleValueSettingsEntryBase<TValue>(extension.GetLabel(), extension.GetDescription(), extension.GetIcon()), ISingleValueSettingsEntry<TValue>, IExtensionSettingEntry
+public partial class ExtensionSettingsEntry<TExtension, TValue>(TExtension extension, TValue value, Func<TExtension, TValue> getDefaultValue, Action<TValue> onValueChanged)
+    : ObservableSettingsEntry(extension.Token, extension.Label, extension.Description, extension.Icon), ISingleValueSettingsEntry<TValue>, IExtensionSettingEntry
+    where TExtension : ISettingsExtension
 {
-    public SettingsEntryAttribute? Attribute => null;
-
-    public override string Token => extension.GetToken();
-
-    public Action<TValue>? ValueChanged { get; set; }
+    public event Action<TValue>? ValueChanged;
 
     public override Uri? DescriptionUri
     {
-        get => extension.GetDescriptionUri() is { } uri ? new Uri(uri) : null;
-        set => ThrowHelper.NotSupported<Uri?>();
+        get => extension.DescriptionUri is { } uri ? new Uri(uri) : null;
+        set => throw new NotSupportedException();
     }
 
-    public override TValue Value
+    public TValue Value
     {
         get;
         set
@@ -35,9 +33,58 @@ public abstract class ExtensionSettingsEntry<TValue>(ISettingsExtension extensio
                 return;
             field = value;
             OnPropertyChanged();
-            ValueChanged?.Invoke(Value);
+            ValueChanged?.Invoke(value);
         }
     } = value;
 
-    public abstract void ValueReset();
+    /// <inheritdoc />
+    public string? Placeholder => extension.Placeholder;
+
+    public void ValueReset()
+    {
+        Value = getDefaultValue(extension);
+    }
+
+    public void ValueSaving(IPropertySet values)
+    {
+        onValueChanged(Value);
+        values[Token] = Value;
+    }
+}
+
+public partial class ExtensionDoubleSettingsEntry(IDoubleSettingsExtension extension, double value, Func<IDoubleSettingsExtension, double> getDefaultValue, Action<double> onValueChanged)
+    : ExtensionSettingsEntry<IDoubleSettingsExtension, double>(extension, value, getDefaultValue, onValueChanged), INumberSettingsEntry<double>
+{
+    private readonly IDoubleSettingsExtension _extension = extension;
+
+    /// <inheritdoc />
+    public double Max => _extension.MaxValue;
+
+    /// <inheritdoc />
+    public double Min => _extension.MinValue;
+
+    /// <inheritdoc />
+    public double Step => _extension.StepValue;
+}
+
+public partial class ExtensionIntSettingsEntry(IIntSettingsExtension extension, int value, Func<IIntSettingsExtension, int> getDefaultValue, Action<int> onValueChanged)
+    : ExtensionSettingsEntry<IIntSettingsExtension, int>(extension, value, getDefaultValue, onValueChanged), INumberSettingsEntry<int>
+{
+    private readonly IIntSettingsExtension _extension = extension;
+
+    /// <inheritdoc />
+    public int Max => _extension.MaxValue;
+
+    /// <inheritdoc />
+    public int Min => _extension.MinValue;
+
+    /// <inheritdoc />
+    public int Step => _extension.StepValue;
+}
+
+public partial class ExtensionEnumSettingsEntry(IEnumSettingsExtension extension, int value, Func<IEnumSettingsExtension, object> getDefaultValue, Action<int> onValueChanged)
+    : ExtensionSettingsEntry<IEnumSettingsExtension, object>(extension, value, getDefaultValue, o => onValueChanged((int) o)), IEnumSettingsEntry<object>
+{
+    /// <inheritdoc />
+    public IReadOnlyList<IReadOnlyEnumStringPair<object>> EnumItems { get; } = [.. extension.GetEnumKeyValues().Select(t => new EnumStringPair<object>(t.Value, t.Key))];
 }
