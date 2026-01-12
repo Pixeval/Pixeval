@@ -252,7 +252,7 @@ public class FileCache
     /// <returns>If the key exists</returns>
     public Task<bool> ExistsAsync(object key)
     {
-        Guard.IsNotNull(key, nameof(key));
+        Guard.IsNotNull(key);
 
         return key switch
         {
@@ -484,7 +484,7 @@ public class FileCache
     /// <returns>If the expiration data has been met</returns>
     public Task<bool> IsExpiredAsync(object key)
     {
-        Guard.IsNotNull(key, nameof(key));
+        Guard.IsNotNull(key);
 
         return key switch
         {

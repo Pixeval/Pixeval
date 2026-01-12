@@ -5,9 +5,9 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls1="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI.MarkdownTextBlock"
     xmlns:local="using:Pixeval.Pages.Misc"
+    xmlns:markup="using:FluentIcons.WinUI.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <controls:DockPanel VerticalSpacing="10">
@@ -60,7 +60,7 @@
                                 <controls:SettingsExpander
                                     Description="{x:Bind Author}"
                                     Header="{x:Bind Name}"
-                                    HeaderIcon="{fluent:SymbolIcon Symbol=Box}">
+                                    HeaderIcon="{markup:SymbolIcon Symbol=Box}">
                                     <Button
                                         Width="40"
                                         Height="35"
@@ -69,7 +69,7 @@
                                         Background="Transparent"
                                         BorderThickness="0"
                                         Click="LaunchUri"
-                                        Content="{fluent:SymbolIcon Symbol=Open,
+                                        Content="{markup:SymbolIcon Symbol=Open,
                                                                     FontSize=14}"
                                         Tag="{x:Bind Url}" />
                                     <controls:SettingsExpander.Items>

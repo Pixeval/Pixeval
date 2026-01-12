@@ -12,7 +12,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public sealed partial class SettingRadioButtons : UserControl
+public sealed partial class SettingsRadioButtons : UserControl
 {
     [GeneratedDependencyProperty]
     public partial object? ItemsSource { get; set; }
@@ -25,7 +25,7 @@ public sealed partial class SettingRadioButtons : UserControl
 
     private RadioButtons Buttons => Content.To<RadioButtons>();
 
-    public SettingRadioButtons()
+    public SettingsRadioButtons()
     {
         InitializeComponent();
         SelectedItemChanged(this, SelectedItem);
@@ -51,12 +51,12 @@ public sealed partial class SettingRadioButtons : UserControl
         SelectedItemChanged(this, e.NewValue);
     }
 
-    public event TypedEventHandler<SettingRadioButtons, SelectionChangedEventArgs>? SelectionChanged;
+    public event TypedEventHandler<SettingsRadioButtons, SelectionChangedEventArgs>? SelectionChanged;
 
     [MethodImpl(MethodImplOptions.Synchronized)]
     private static void SelectedItemChanged(DependencyObject d, object newValue)
     {
-        if (d is not SettingRadioButtons { Buttons: { } buttons, ItemsSource: not null })
+        if (d is not SettingsRadioButtons { Buttons: { } buttons, ItemsSource: not null })
             return;
         var correspondingItem = buttons.ItemsSource.To<IEnumerable<StringRepresentableItem>>().First(r => Equals(r.Item, newValue));
         // set RadioButtons.SelectedItem won't work

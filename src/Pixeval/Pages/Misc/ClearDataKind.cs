@@ -8,15 +8,15 @@ namespace Pixeval.Pages.Misc;
 [LocalizationMetadata(typeof(SettingsPageResources))]
 public enum ClearDataKind
 {
-    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.FileCacheCleared))]
+    [LocalizedResource(nameof(SettingsPageResources.FileCacheCleared))]
     FileCache,
 
-    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.BrowseHistoriesCleared))]
+    [LocalizedResource(nameof(SettingsPageResources.BrowseHistoriesCleared))]
     BrowseHistory,
 
-    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.SearchHistoriesCleared))]
+    [LocalizedResource(nameof(SettingsPageResources.SearchHistoriesCleared))]
     SearchHistory,
 
-    [LocalizedResource(typeof(SettingsPageResources), nameof(SettingsPageResources.DownloadHistoriesCleared))]
+    [LocalizedResource(nameof(SettingsPageResources.DownloadHistoriesCleared))]
     DownloadHistory
 }

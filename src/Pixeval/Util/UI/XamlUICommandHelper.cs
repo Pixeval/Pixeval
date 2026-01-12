@@ -11,50 +11,50 @@ namespace Pixeval.Util.UI;
 
 public static class XamlUiCommandHelper
 {
-    public static XamlUICommand GetCommand(this string label, Symbol icon) =>
-        GetCommand(label, icon.GetSymbolIconSource());
-
-    public static XamlUICommand GetCommand(this string label, Symbol icon, VirtualKey key) =>
-        GetCommand(label, icon.GetSymbolIconSource(), key);
-
-    public static XamlUICommand GetCommand(this string label, Symbol icon, VirtualKeyModifiers modifiers, VirtualKey key) =>
-        GetCommand(label, icon.GetSymbolIconSource(), modifiers, key);
-
-    public static XamlUICommand GetCommand(this string label, IconSource icon) =>
-        new()
-        {
-            Label = label,
-            Description = label,
-            IconSource = icon
-        };
-
-    public static XamlUICommand GetCommand(this string label, IconSource icon, VirtualKey key) =>
-        GetCommand(label, icon, VirtualKeyModifiers.None, key);
-
-    public static XamlUICommand GetCommand(this string label, IconSource icon, VirtualKeyModifiers modifiers, VirtualKey key) =>
-        new()
-        {
-            Label = label,
-            IconSource = icon,
-            KeyboardAccelerators = { new KeyboardAccelerator { Modifiers = modifiers, Key = key } }
-        };
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="command"></param>
-    /// <param name="isBookmarked"></param>
-    /// <param name="isPending">表示<paramref name="isBookmarked"/>的状态即将变化</param>
-    public static void RefreshBookmarkCommand(this XamlUICommand command, bool isBookmarked, bool isPending)
+    extension(string label)
     {
-        command.Label = command.Description = isBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
-        command.IconSource = Symbol.Heart.GetSymbolIconSource(isPending ? IconVariant.Filled : isBookmarked ? IconVariant.Color : IconVariant.Regular);
+        public XamlUICommand GetCommand(Symbol icon) => label.GetCommand(icon.GetSymbolIconSource());
+        public XamlUICommand GetCommand(Symbol icon, VirtualKey key) => label.GetCommand(icon.GetSymbolIconSource(), key);
+        public XamlUICommand GetCommand(Symbol icon, VirtualKeyModifiers modifiers, VirtualKey key) => label.GetCommand(icon.GetSymbolIconSource(), modifiers, key);
+
+        public XamlUICommand GetCommand(IconSource icon) =>
+            new()
+            {
+                Label = label,
+                Description = label,
+                IconSource = icon
+            };
+
+        public XamlUICommand GetCommand(IconSource icon, VirtualKey key) => label.GetCommand(icon, VirtualKeyModifiers.None, key);
+
+        public XamlUICommand GetCommand(IconSource icon, VirtualKeyModifiers modifiers, VirtualKey key) =>
+            new()
+            {
+                Label = label,
+                IconSource = icon,
+                KeyboardAccelerators = { new KeyboardAccelerator { Modifiers = modifiers, Key = key } }
+            };
     }
 
-    public static void RefreshFollowCommand(this XamlUICommand command, bool isFollowed, bool isPending)
+    /// <param name="command"></param>
+    extension(XamlUICommand command)
     {
-        command.Label = command.Description = isFollowed ? MiscResources.Unfollow : MiscResources.Follow;
-        command.IconSource = Symbol.Person.GetSymbolIconSource(isPending ? IconVariant.Filled : isFollowed ? IconVariant.Color : IconVariant.Regular);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="isBookmarked"></param>
+        /// <param name="isPending">表示<paramref name="isBookmarked"/>的状态即将变化</param>
+        public void RefreshBookmarkCommand(bool isBookmarked, bool isPending)
+        {
+            command.Label = command.Description = isBookmarked ? MiscResources.RemoveBookmark : MiscResources.AddBookmark;
+            command.IconSource = Symbol.Heart.GetSymbolIconSource(isPending ? IconVariant.Filled : isBookmarked ? IconVariant.Color : IconVariant.Regular);
+        }
+
+        public void RefreshFollowCommand(bool isFollowed, bool isPending)
+        {
+            command.Label = command.Description = isFollowed ? MiscResources.Unfollow : MiscResources.Follow;
+            command.IconSource = Symbol.Person.GetSymbolIconSource(isPending ? IconVariant.Filled : isFollowed ? IconVariant.Color : IconVariant.Regular);
+        }
     }
 
     public static XamlUICommand GetNewFollowCommand(bool isFollowed)
@@ -66,38 +66,41 @@ public static class XamlUiCommandHelper
 
     public static XamlUICommand GetNewFollowPrivatelyCommand()
     {
-        return MiscResources.FollowPrivately.GetCommand(Symbol.InprivateAccount);
+        return MiscResources.FollowPrivately.GetCommand(Symbol.InPrivateAccount);
     }
 
-    public static void RefreshPlayCommand(this XamlUICommand command, bool isPlaying)
+    extension(XamlUICommand command)
     {
-        command.Label = command.Description = isPlaying ? MiscResources.Pause : MiscResources.Play;
-        command.IconSource = (isPlaying
-            ? Symbol.Stop
-            : Symbol.Play).GetSymbolIconSource();
-    }
+        public void RefreshPlayCommand(bool isPlaying)
+        {
+            command.Label = command.Description = isPlaying ? MiscResources.Pause : MiscResources.Play;
+            command.IconSource = (isPlaying
+                ? Symbol.Stop
+                : Symbol.Play).GetSymbolIconSource();
+        }
 
-    public static void RefreshResolutionCommand(this XamlUICommand command, bool isFit)
-    {
-        command.Label = command.Description = isFit ? MiscResources.RestoreOriginalResolution : MiscResources.UniformToFillResolution;
-        command.IconSource = (isFit
-            ? Symbol.RatioOneToOne
-            : Symbol.PageFit).GetSymbolIconSource();
-    }
+        public void RefreshResolutionCommand(bool isFit)
+        {
+            command.Label = command.Description = isFit ? MiscResources.RestoreOriginalResolution : MiscResources.UniformToFillResolution;
+            command.IconSource = (isFit
+                ? Symbol.RatioOneToOne
+                : Symbol.PageFit).GetSymbolIconSource();
+        }
 
-    public static void RefreshFullScreenCommand(this XamlUICommand command, bool isFullScreen)
-    {
-        command.Label = command.Description = isFullScreen ? MiscResources.BackToWindow : MiscResources.FullScreen;
-        command.IconSource = (isFullScreen
-            ? Symbol.ArrowMinimize
-            : Symbol.ArrowMaximize).GetSymbolIconSource();
-    }
+        public void RefreshFullScreenCommand(bool isFullScreen)
+        {
+            command.Label = command.Description = isFullScreen ? MiscResources.BackToWindow : MiscResources.FullScreen;
+            command.IconSource = (isFullScreen
+                ? Symbol.ArrowMinimize
+                : Symbol.ArrowMaximize).GetSymbolIconSource();
+        }
 
-    public static void RefreshBottomPanelCommand(this XamlUICommand command, bool isExpand)
-    {
-        command.Label = command.Description = isExpand ? MiscResources.CloseBottomList : MiscResources.OpenBottomList;
-        command.IconSource = (isExpand
-            ? Symbol.PanelBottomContract
-            : Symbol.PanelBottomExpand).GetSymbolIconSource(IconVariant.Filled);
+        public void RefreshBottomPanelCommand(bool isExpand)
+        {
+            command.Label = command.Description = isExpand ? MiscResources.CloseBottomList : MiscResources.OpenBottomList;
+            command.IconSource = (isExpand
+                ? Symbol.PanelBottomContract
+                : Symbol.PanelBottomExpand).GetSymbolIconSource(IconVariant.Filled);
+        }
     }
 }

@@ -20,71 +20,74 @@ namespace Pixeval.Pages.IllustrationViewer;
 
 public static class IllustrationViewerHelper
 {
-    /// <summary>
-    /// 此方法无法加载更多插画
-    /// </summary>
-    public static async Task CreateIllustrationPageAsync(this FrameworkElement frameworkElement, long id, ICollection<long> otherIds)
+    /// <param name="frameworkElement"></param>
+    extension(FrameworkElement frameworkElement)
     {
-        var viewModel = null as IllustrationItemViewModel;
-        var viewModels = new List<IllustrationItemViewModel>();
-        foreach (var otherId in otherIds)
+        /// <summary>
+        /// 此方法无法加载更多插画
+        /// </summary>
+        public async Task CreateIllustrationPageAsync(long id, ICollection<long> otherIds)
         {
-            var illustrationItemViewModel = IllustrationItemViewModel.CreateInstance(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id));
-            viewModels.Add(illustrationItemViewModel);
-            if (otherId == id)
+            var viewModel = null as IllustrationItemViewModel;
+            var viewModels = new List<IllustrationItemViewModel>();
+            foreach (var otherId in otherIds)
             {
-                viewModel = illustrationItemViewModel;
+                var illustrationItemViewModel = IllustrationItemViewModel.CreateInstance(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id));
+                viewModels.Add(illustrationItemViewModel);
+                if (otherId == id)
+                {
+                    viewModel = illustrationItemViewModel;
+                }
             }
+
+            if (viewModel is null)
+                ThrowHelper.InvalidOperation("Specified illustration not found in the list.");
+
+            frameworkElement.CreateIllustrationPage(viewModel, viewModels);
         }
 
-        if (viewModel is null)
-            ThrowHelper.InvalidOperation("Specified illustration not found in the list.");
+        /// <summary>
+        /// 此方法无法加载更多插画，加载单张图使用
+        /// </summary>
+        public Task CreateIllustrationPageAsync(IIdentityInfo id)
+            =>
+                frameworkElement.CreateIllustrationPageAsync(id.Id, id.Platform);
 
-        frameworkElement.CreateIllustrationPage(viewModel, viewModels);
-    }
+        /// <summary>
+        /// 此方法无法加载更多插画，加载单张图使用
+        /// </summary>
+        public async Task CreateIllustrationPageAsync(string id, string platform)
+        {
+            if (await id.TryGetIArtworkInfoAsync(platform) is not { } entry)
+                return;
 
-    /// <summary>
-    /// 此方法无法加载更多插画，加载单张图使用
-    /// </summary>
-    public static Task CreateIllustrationPageAsync(this FrameworkElement frameworkElement, IIdentityInfo id)
-        => CreateIllustrationPageAsync(frameworkElement, id.Id, id.Platform);
+            var viewModel = IllustrationItemViewModel.CreateInstance(entry);
 
-    /// <summary>
-    /// 此方法无法加载更多插画，加载单张图使用
-    /// </summary>
-    public static async Task CreateIllustrationPageAsync(this FrameworkElement frameworkElement, string id, string platform)
-    {
-        if (await id.TryGetIArtworkInfoAsync(platform) is not { } entry)
-            return;
+            frameworkElement.CreateIllustrationPage(viewModel, [viewModel]);
+        }
 
-        var viewModel = IllustrationItemViewModel.CreateInstance(entry);
+        /// <summary>
+        /// 此方法无法加载更多插画
+        /// </summary>
+        /// <typeparam name="T">为了方便协变采用泛型</typeparam>
+        /// <param name="illustrationViewModel">指定的插画ViewModel</param>
+        /// <param name="illustrationViewModels">指定的插画ViewModel所在的列表</param>
+        public void CreateIllustrationPage<T>(T illustrationViewModel, IList<T> illustrationViewModels) where T : IllustrationItemViewModel
+        {
+            var index = illustrationViewModels.IndexOf(illustrationViewModel);
+            CreateIllustrationPage(frameworkElement, illustrationViewModel.Entry, (illustrationViewModels, index));
+        }
 
-        frameworkElement.CreateIllustrationPage(viewModel, [viewModel]);
-    }
-
-    /// <summary>
-    /// 此方法无法加载更多插画
-    /// </summary>
-    /// <typeparam name="T">为了方便协变采用泛型</typeparam>
-    /// <param name="frameworkElement"></param>
-    /// <param name="illustrationViewModel">指定的插画ViewModel</param>
-    /// <param name="illustrationViewModels">指定的插画ViewModel所在的列表</param>
-    public static void CreateIllustrationPage<T>(this FrameworkElement frameworkElement, T illustrationViewModel, IList<T> illustrationViewModels) where T : IllustrationItemViewModel
-    {
-        var index = illustrationViewModels.IndexOf(illustrationViewModel);
-        CreateIllustrationPage(frameworkElement, illustrationViewModel.Entry, (illustrationViewModels, index));
-    }
-
-    /// <summary>
-    /// 此方法可以使用<paramref name="illustrationViewViewModel"/>的<see cref="IllustrationViewViewModel.DataProvider"/>来加载更多插画
-    /// </summary>
-    /// <param name="frameworkElement"></param>
-    /// <param name="illustrationViewModel">指定的插画ViewModel</param>
-    /// <param name="illustrationViewViewModel">指定的插画ViewModel所在的<see cref="WorkView"/>的ViewModel</param>
-    public static void CreateIllustrationPage(this FrameworkElement frameworkElement, IllustrationItemViewModel illustrationViewModel, IllustrationViewViewModel illustrationViewViewModel)
-    {
-        var index = illustrationViewViewModel.DataProvider.View.IndexOf(illustrationViewModel);
-        CreateIllustrationPage(frameworkElement, illustrationViewModel.Entry, (illustrationViewViewModel, index));
+        /// <summary>
+        /// 此方法可以使用<paramref name="illustrationViewViewModel"/>的<see cref="IllustrationViewViewModel.DataProvider"/>来加载更多插画
+        /// </summary>
+        /// <param name="illustrationViewModel">指定的插画ViewModel</param>
+        /// <param name="illustrationViewViewModel">指定的插画ViewModel所在的<see cref="WorkView"/>的ViewModel</param>
+        public void CreateIllustrationPage(IllustrationItemViewModel illustrationViewModel, IllustrationViewViewModel illustrationViewViewModel)
+        {
+            var index = illustrationViewViewModel.DataProvider.View.IndexOf(illustrationViewModel);
+            CreateIllustrationPage(frameworkElement, illustrationViewModel.Entry, (illustrationViewViewModel, index));
+        }
     }
 
     public static IllustrationViewerPageViewModel GetIllustrationViewerPageViewModelFromHandle(this IllustrationViewerPage page, object? param)

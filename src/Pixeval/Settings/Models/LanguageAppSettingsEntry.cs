@@ -1,24 +1,33 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Pixeval.AppManagement;
-using Pixeval.Controls.Settings;
 using Pixeval.Pages.Misc;
-using Windows.Foundation.Collections;
 using Windows.Globalization;
+using AutoSettingsPage;
+using AutoSettingsPage.Models;
+using FluentIcons.Common;
 
 namespace Pixeval.Settings.Models;
 
 public partial class LanguageAppSettingsEntry()
-    : ObservableSettingsEntryBase("", "", default), IAppSettingEntry<AppSettings>
+    : ObservableSettingsEntry("Language", LanguageEntryAttribute), ISettingsValueReset<AppSettings>
 {
-    public override LanguageSettingsCard Element => new() { Entry = this };
+    public static SettingsEntryAttribute LanguageEntryAttribute { get; } = new(Symbol.LocalLanguage, nameof(SettingsPageResources.AppLanguageEntryHeader), nameof(SettingsPageResources.OpenLanguageSettingsHyperlinkButtonContent));
+
+    /// <inheritdoc />
+    public override Uri? DescriptionUri
+    {
+        get => new Uri("ms-settings:regionlanguage");
+        set => throw new NotSupportedException();
+    }
 
     public static IEnumerable<LanguageModel> AvailableLanguages { get; } = [LanguageModel.DefaultLanguage, LanguageModel.FromBcp47("zh-Hans"), LanguageModel.FromBcp47("ru-ru"), LanguageModel.FromBcp47("fr-fr"), LanguageModel.FromBcp47("en-us")];
 
-    public static LanguageModel AppLanguage
+    public LanguageModel Value
     {
         get => AvailableLanguages.FirstOrDefault(t => t.Name == ApplicationLanguages.PrimaryLanguageOverride) ?? LanguageModel.DefaultLanguage;
         set => ApplicationLanguages.PrimaryLanguageOverride = value.Name;
@@ -26,11 +35,7 @@ public partial class LanguageAppSettingsEntry()
 
     public void ValueReset(AppSettings defaultSetting)
     {
-        AppLanguage = LanguageModel.DefaultLanguage;
-        OnPropertyChanged(nameof(AppLanguage));
-    }
-
-    public override void ValueSaving(IPropertySet values)
-    {
+        Value = LanguageModel.DefaultLanguage;
+        OnPropertyChanged(nameof(Value));
     }
 }

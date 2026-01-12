@@ -6,6 +6,7 @@
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:winUi="using:AutoSettingsPage.WinUI"
     mc:Ignorable="d">
     <controls1:DockPanel>
         <!--  由于现在内容只有一个，所以当内容隐藏的时候，StackPanel也隐藏  -->
@@ -15,7 +16,7 @@
             controls1:DockPanel.Dock="Top"
             Orientation="Horizontal"
             Visibility="{x:Bind controls:C.ToVisibility(IsMe)}">
-            <controls:EnumComboBox
+            <winUi:EnumComboBox
                 x:Name="PrivacyPolicyComboBox"
                 VerticalAlignment="Center"
                 SelectionChanged="PrivacyPolicyComboBox_OnSelectionChanged"

@@ -37,14 +37,17 @@ public static partial class UiHelper
         nint riid,
         out nint ppv);
 
-    public static void SetTaskBarIconProgressState(this Window window, TaskBarState state)
+    extension(Window window)
     {
-        _TaskBarList3Instance.SetProgressState((nint) window.AppWindow.Id.Value, state);
+        public void SetTaskBarIconProgressState(TaskBarState state)
+        {
+            _TaskBarList3Instance.SetProgressState((nint) window.AppWindow.Id.Value, state);
 
-    }
+        }
 
-    public static void SetTaskBarIconProgressValue(this Window window, ulong progressValue, ulong max)
-    {
-        _TaskBarList3Instance.SetProgressValue((nint) window.AppWindow.Id.Value, progressValue, max);
+        public void SetTaskBarIconProgressValue(ulong progressValue, ulong max)
+        {
+            _TaskBarList3Instance.SetProgressValue((nint) window.AppWindow.Id.Value, progressValue, max);
+        }
     }
 }

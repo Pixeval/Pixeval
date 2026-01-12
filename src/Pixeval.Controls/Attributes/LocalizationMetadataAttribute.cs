@@ -13,8 +13,10 @@ public class LocalizationMetadataAttribute(Type resourceType) : Attribute
     public bool IsPartial { get; init; }
 }
 
-[AttributeUsage(AttributeTargets.Class)]
-public class AttachedLocalizationMetadataAttribute<T>(Type resourceType) : Attribute
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+public class AttachedLocalizationMetadataAttribute<T>(Type resourceType, string distinctName = "") : Attribute
 {
     public Type ResourceType { get; } = resourceType;
+
+    public string DistinctName { get; } = distinctName;
 }

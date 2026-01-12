@@ -8,15 +8,15 @@ namespace Pixeval.Options;
 [LocalizationMetadata(typeof(MiscResources))]
 public enum NovelDownloadFormat
 {
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Pdf))]
+    [LocalizedResource(nameof(MiscResources.Pdf))]
     Pdf,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Html))]
+    [LocalizedResource(nameof(MiscResources.Html))]
     Html,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.Md))]
+    [LocalizedResource(nameof(MiscResources.Md))]
     Md,
 
-    [LocalizedResource(typeof(MiscResources), nameof(MiscResources.OriginalTxt))]
+    [LocalizedResource(nameof(MiscResources.OriginalTxt))]
     OriginalTxt
 }

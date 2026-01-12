@@ -40,7 +40,7 @@ public class FeedProxyFetchEngine(IFetchEngine<Feed?> feedFetchEngine) : IFetchE
 
         public async ValueTask<bool> MoveNextAsync()
         {
-            if (_started is false)
+            if (!_started)
             {
                 // feedEnumerator is always one ahead.
                 _ = await feedEnumerator.MoveNextAsync();

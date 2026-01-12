@@ -1,12 +1,16 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using AutoSettingsPage;
 using CommunityToolkit.Mvvm.Messaging;
+using Mako.Global.Enum;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Graphics.Canvas.Geometry;
 using Microsoft.Graphics.Canvas.UI.Xaml;
@@ -16,16 +20,17 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Misaki;
 using Pixeval.AppManagement;
-using Pixeval.Attributes;
+using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
-using Mako.Global.Enum;
 using Pixeval.Database.Managers;
 using Pixeval.Messages;
 using Pixeval.Pages.IllustrationViewer;
 using Pixeval.Pages.IllustratorViewer;
 using Pixeval.Pages.Misc;
 using Pixeval.Pages.NovelViewer;
+using Pixeval.Settings;
 using Pixeval.Util;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
@@ -34,10 +39,7 @@ using Windows.Storage;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.Core;
-using Misaki;
 using WinUI3Utilities;
-using Pixeval.Controls;
-using System.Collections.Generic;
 
 namespace Pixeval.Pages;
 
@@ -242,7 +244,7 @@ public sealed partial class MainPage
                     PerformSearchUser(sender.Text);
                     break;
                 case SuggestionType.Settings:
-                    if (SettingsEntryAttribute.LazyValues.Value.FirstOrDefault(se => se.LocalizedResourceHeader == name) is { } entry)
+                    if (LocalSettingsEntryHelper.LazyValues.Value.FirstOrDefault(se => se.Header == name) is { } entry)
                         NavigateToSettingEntry(entry);
                     break;
                 default:
@@ -339,7 +341,7 @@ public sealed partial class MainPage
     }
 
     private Lazy<SettingsEntryAttribute> ReverseSearchApiKeyAttribute { get; } = new(() =>
-        SettingsEntryAttribute.GetFromPropertyName(nameof(AppSettings.ReverseSearchApiKey)));
+        LocalSettingsEntryHelper.GetFromPropertyName(nameof(AppSettings.ReverseSearchApiKey)));
 
     private async Task ShowReverseSearchApiKeyNotPresentDialog()
     {

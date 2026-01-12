@@ -5,8 +5,8 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls2="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI.MarkdownTextBlock"
+    xmlns:markup="using:FluentIcons.WinUI.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <controls2:EnhancedPage.Resources>
@@ -25,7 +25,7 @@
             Style="{StaticResource TitleTextBlockStyle}" />
         <ScrollView>
             <StackPanel Margin="20,0,20,20">
-                <controls:SettingsExpander x:Uid="/HelpPage/AppLinkHelpExpander" HeaderIcon="{fluent:SymbolIcon Symbol=Link}">
+                <controls:SettingsExpander x:Uid="/HelpPage/AppLinkHelpExpander" HeaderIcon="{markup:SymbolIcon Symbol=Link}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
                             <StackPanel Spacing="20">
@@ -37,7 +37,7 @@
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
-                <controls:SettingsExpander x:Uid="/HelpPage/DownloadMacroHelpExpander" HeaderIcon="{fluent:SymbolIcon Symbol=Rename}">
+                <controls:SettingsExpander x:Uid="/HelpPage/DownloadMacroHelpExpander" HeaderIcon="{markup:SymbolIcon Symbol=Rename}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
                             <labs:MarkdownTextBlock x:Uid="/TextGenerated/DownloadMacroHelp" Text="">
@@ -48,7 +48,7 @@
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
-                <controls:SettingsExpander x:Uid="/HelpPage/QueryFilterHelpExpander" HeaderIcon="{fluent:SymbolIcon Symbol=Filter}">
+                <controls:SettingsExpander x:Uid="/HelpPage/QueryFilterHelpExpander" HeaderIcon="{markup:SymbolIcon Symbol=Filter}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Vertical">
                             <controls:SettingsCard.Header>
@@ -72,7 +72,7 @@
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
-                <controls:SettingsExpander x:Uid="/HelpPage/ExtensionsHelpExpander" HeaderIcon="{fluent:SymbolIcon Symbol=PuzzlePiece}">
+                <controls:SettingsExpander x:Uid="/HelpPage/ExtensionsHelpExpander" HeaderIcon="{markup:SymbolIcon Symbol=PuzzlePiece}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
                             <labs:MarkdownTextBlock x:Uid="/TextGenerated/ExtensionsHelp" Text="">

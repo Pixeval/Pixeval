@@ -88,10 +88,10 @@ public sealed partial class Token : ObservableObject, IEquatable<Token>, IDeepCl
 
         if (IsRegularExpression)
         {
-            return Regex.IsMatch(input!, TokenContent);
+            return Regex.IsMatch(input, TokenContent);
         }
 
-        return CaseSensitive ? input == TokenContent : input!.Equals(TokenContent, StringComparison.OrdinalIgnoreCase);
+        return CaseSensitive ? input == TokenContent : input.Equals(TokenContent, StringComparison.OrdinalIgnoreCase);
     }
 
     public override int GetHashCode()

@@ -4,7 +4,9 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Folder Name="/CoreApi/">
+  <Folder Name="/Lib/">
+    <Project Path="src/AutoSettingsPage/AutoSettingsPage.WinUI/AutoSettingsPage.WinUI.csproj" />
+    <Project Path="src/AutoSettingsPage/AutoSettingsPage/AutoSettingsPage.csproj" />
     <Project Path="src/Imouto/Imouto.BooruParser/Imouto.BooruParser.csproj" />
     <Project Path="src/Mako/Mako.SourceGen/Mako.SourceGen.csproj" />
     <Project Path="src/Mako/Mako/Mako.csproj" />

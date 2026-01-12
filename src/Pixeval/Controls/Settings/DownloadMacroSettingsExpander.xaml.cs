@@ -20,12 +20,13 @@ using Pixeval.Util.IO;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Windows.UI;
+using AutoSettingsPage.WinUI;
 using Misaki;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls.Settings;
 
-public sealed partial class DownloadMacroSettingsExpander
+public sealed partial class DownloadMacroSettingsExpander : IEntryControl<DownloadMacroAppSettingsEntry>
 {
     public DownloadMacroAppSettingsEntry Entry
     {

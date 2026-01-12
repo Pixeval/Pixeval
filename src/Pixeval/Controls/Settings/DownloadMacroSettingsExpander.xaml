@@ -10,13 +10,14 @@
     xmlns:local="using:Pixeval.Settings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:Pixeval.Settings.Models"
+    xmlns:winUi="using:AutoSettingsPage.WinUI"
     x:Uid="/SettingsPage/DownloadPathMacroEntry"
-    Description="{x:Bind Entry.DescriptionControl}"
+    Description="{x:Bind winUi:SettingsEntryHelper.DescriptionControl(Entry)}"
     Header="{x:Bind Entry.Header}"
-    Tag="{x:Bind Entry.Attribute}"
+    Tag="{x:Bind Entry.Token}"
     mc:Ignorable="d">
     <controls:SettingsExpander.HeaderIcon>
-        <fluent:SymbolIcon Symbol="{x:Bind Entry.HeaderIcon}" />
+        <fluent:SymbolIcon Symbol="{x:Bind Entry.Icon}" />
     </controls:SettingsExpander.HeaderIcon>
     <controls:SettingsExpander.Items>
         <controls:SettingsCard ContentAlignment="Left">

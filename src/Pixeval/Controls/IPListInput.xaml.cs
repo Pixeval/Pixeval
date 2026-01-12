@@ -1,9 +1,10 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Net;
-using CommunityToolkit.WinUI;
+using AutoSettingsPage.Models;
+using AutoSettingsPage.WinUI;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -13,19 +14,16 @@ using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-public sealed partial class IPListInput : StackPanel
+public sealed partial class IPListInput : StackPanel, IEntryControl<ISingleValueSettingsEntry<ObservableCollection<string>>>
 {
-    [GeneratedDependencyProperty]
-    public partial string? Header { get; set; }
-
-    [GeneratedDependencyProperty]
-    public partial ICollection<string> ItemsSource { get; set; }
+    /// <inheritdoc />
+    public ISingleValueSettingsEntry<ObservableCollection<string>> Entry { get; set; } = null!;
 
     public IPListInput() => InitializeComponent();
 
     private void AddItem(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
     {
-        if (ItemsSource.Contains(sender.Text))
+        if (Entry.Value.Contains(sender.Text))
         {
             ErrorInfoBar.Severity = InfoBarSeverity.Warning;
             ErrorInfoBar.Message = IPListInputResources.DuplicatesWithExistingIP;
@@ -42,7 +40,7 @@ public sealed partial class IPListInput : StackPanel
         }
 
         ErrorInfoBar.IsOpen = false;
-        ItemsSource.Add(sender.Text);
+        Entry.Value.Add(sender.Text);
     }
 
     private void TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs e)
@@ -51,5 +49,5 @@ public sealed partial class IPListInput : StackPanel
     }
 
     private void RemoveTapped(object sender, TappedRoutedEventArgs e) =>
-        ItemsSource.Remove(sender.To<FrameworkElement>().GetTag<string>());
+        Entry.Value.Remove(sender.To<FrameworkElement>().GetTag<string>());
 }

@@ -14,6 +14,7 @@ using Pixeval.Extensions;
 using Pixeval.Extensions.Common.Commands.Transformers;
 using Pixeval.Util.UI;
 using Windows.System;
+using AutoSettingsPage.WinUI;
 using WinRT;
 using WinUI3Utilities;
 using SymbolIcon = FluentIcons.WinUI.SymbolIcon;
@@ -54,7 +55,7 @@ public sealed partial class NovelViewerPage
         _viewModel.CurrentDocumentPropertyChanged += OnViewModelOnCurrentDocumentPropertyChanged;
 
         foreach (var entry in _viewModel.Entries)
-            SettingsPanel.Children.Add(entry.Element);
+            SettingsPanel.Children.Add(SettingsEntryHelper.GetControl(entry));
 
         CommandBorderDropShadow.Receivers.Add(DocumentViewer);
 

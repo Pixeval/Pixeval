@@ -4,8 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Controls"
+    xmlns:markup="using:FluentIcons.WinUI.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <controls:DockPanel HorizontalSpacing="5">
@@ -14,7 +14,7 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             controls:DockPanel.Dock="Left"
-            Content="{fluent:SymbolIcon Symbol=Emoji,
+            Content="{markup:SymbolIcon Symbol=Emoji,
                                         FontSize={StaticResource SmallIconFontSize}}"
             Style="{StaticResource PixevalRoundedButtonStyle}">
             <Button.Flyout>
@@ -28,12 +28,12 @@
                             <NavigationViewItem
                                 x:Name="EmojiButtonFlyoutEmojiSectionNavigationViewItem"
                                 x:Uid="/CommentRepliesBlock/EmojiButtonFlyoutEmojiSectionNavigationViewItem"
-                                Icon="{fluent:SymbolIcon Symbol=Emoji}"
+                                Icon="{markup:SymbolIcon Symbol=Emoji}"
                                 IsSelected="True" />
                             <NavigationViewItem
                                 x:Name="EmojiButtonFlyoutStickersSectionNavigationViewItem"
                                 x:Uid="/CommentRepliesBlock/EmojiButtonFlyoutStickersSectionNavigationViewItem"
-                                Icon="{fluent:SymbolIcon Symbol=Sticker}" />
+                                Icon="{markup:SymbolIcon Symbol=Sticker}" />
                         </NavigationView.MenuItems>
                         <Frame
                             x:Name="EmojiButtonFlyoutFrame"
@@ -50,7 +50,7 @@
             Padding="0"
             controls:DockPanel.Dock="Right"
             Click="SendButton_OnClicked"
-            Content="{fluent:SymbolIcon Symbol=Send,
+            Content="{markup:SymbolIcon Symbol=Send,
                                         FontSize={StaticResource SmallIconFontSize}}"
             Style="{StaticResource PixevalTransparentButtonStyle}" />
         <RichEditBox

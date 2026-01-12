@@ -7,14 +7,16 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Text.Json.Serialization;
+using AutoSettingsPage;
 using FluentIcons.Common;
+using Mako.Global.Enum;
+using Mako.Net;
+using Mako.Preference;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Pixeval.Attributes;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
-using Mako.Global.Enum;
-using Mako.Preference;
 using Pixeval.Options;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
@@ -110,10 +112,10 @@ public partial record AppSettings() : IWindowSettings
     [SettingsEntry(Symbol.History, nameof(MaximumSearchHistoryRecordsEntryHeader), nameof(MaximumSearchHistoryRecordsEntryDescription))]
     public int MaximumSearchHistoryRecords { get; set; } = 50;
 
-    [SettingsEntry(Symbol.Key, nameof(ReverseSearchApiKeyEntryHeader), nameof(ReverseSearchApiKeyEntryDescriptionHyperlinkButtonContent))]
+    [SettingsEntry(Symbol.Key, nameof(ReverseSearchApiKeyEntryHeader), nameof(ReverseSearchApiKeyEntryDescriptionHyperlinkButtonContent), nameof(ReverseSearchApiKeyTextBoxPlaceholderText))]
     public string ReverseSearchApiKey { get; set; } = "";
 
-    [SettingsEntry(Symbol.Cookies, nameof(WebCookieEntryHeader), nameof(WebCookieEntryDescription))]
+    [SettingsEntry(Symbol.Cookies, nameof(WebCookieEntryHeader), nameof(WebCookieEntryDescription), nameof(WebCookieTextBoxPlaceholderText))]
     public string WebCookie { get; set; } = "";
 
     [SettingsEntry(Symbol.TargetArrow, nameof(ReverseSearchResultSimilarityThresholdEntryHeader), nameof(ReverseSearchResultSimilarityThresholdEntryDescription))]
@@ -134,8 +136,8 @@ public partial record AppSettings() : IWindowSettings
     [SettingsEntry(Symbol.GlanceHorizontal, nameof(ItemsViewLayoutTypeEntryHeader), nameof(ItemsViewLayoutTypeEntryDescription))]
     public ItemsViewLayoutType ItemsViewLayoutType { get; set; } = ItemsViewLayoutType.LinedFlow;
 
-    [SettingsEntry(Symbol.TagDismiss, nameof(BlockedTagsEntryHeader), nameof(BlockedTagsEntryDescription))]
-    public HashSet<string> BlockedTags { get; set; } = [];
+    [SettingsEntry(Symbol.TagDismiss, nameof(BlockedTagsEntryHeader), nameof(BlockedTagsEntryDescription), nameof(BlockedTagsTokenizingTextBoxPlaceholderText))]
+    public ObservableCollection<string> BlockedTags { get; set; } = [];
 
     [SettingsEntry(Symbol.Router, nameof(ProxyTypeEntryHeader), nameof(ProxyTypeEntryDescription))]
     public ProxyType ProxyType { get; set; }
@@ -147,10 +149,10 @@ public partial record AppSettings() : IWindowSettings
     /// The mirror host for image server, Pixeval will do a simple substitution that
     /// changes the host of the original url(i.pximg.net) to this one.
     /// </summary>
-    [SettingsEntry(Symbol.HardDrive, nameof(ImageMirrorServerEntryHeader), nameof(ImageMirrorServerEntryDescription))]
+    [SettingsEntry(Symbol.HardDrive, nameof(ImageMirrorServerEntryHeader), nameof(ImageMirrorServerEntryDescription), nameof(ImageMirrorServerTextBoxPlaceholderText))]
     public string MirrorHost { get; set; } = "";
 
-    [SettingsEntry(Symbol.History, nameof(MaximumBrowseHistoryRecordsEntryHeader), nameof(MaximumBrowseHistoryRecordsEntryDescription))]
+    [SettingsEntry(Symbol.History, nameof(MaximumBrowseHistoryRecordsEntryHeader), nameof(MaximumBrowseHistoryRecordsEntryDescription), nameof(MaximumBrowseHistoryRecordsNumerBoxPlaceholderText))]
     public int MaximumBrowseHistoryRecords { get; set; } = 100;
 
     [SettingsEntry(Symbol.ArrowCircleLeft, nameof(UseSearchStartDateEntryHeader), nameof(UseSearchStartDateEntryDescription))]
@@ -181,8 +183,8 @@ public partial record AppSettings() : IWindowSettings
     [SettingsEntry(Symbol.PanelLeftExpand, nameof(NavigationViewOpenPaneWidthEntryHeader), nameof(NavigationViewOpenPaneWidthEntryDescription))]
     public int NavigationViewOpenPaneWidth { get; set; } = 280;
 
-    [SettingsEntry(Symbol.Box, nameof(PixivNameResolverHeaderText), nameof(PixivNameResolverDescriptionText))]
-    public string[] PixivAppApiNameResolver { get; set; } =
+    [SettingsEntry(Symbol.Box, nameof(PixivNameResolverHeaderText), nameof(PixivNameResolverDescriptionText), Placeholder = MakoHttpOptions.AppApiHost)]
+    public ObservableCollection<string> PixivAppApiNameResolver { get; set; } =
     [
         "210.140.139.155",
         "210.140.139.156",
@@ -190,28 +192,32 @@ public partial record AppSettings() : IWindowSettings
         "210.140.139.158"
     ];
 
-    public string[] PixivWebApiNameResolver { get; set; } =
+    [SettingsEntry(Placeholder = MakoHttpOptions.WebApiHost)]
+    public ObservableCollection<string> PixivWebApiNameResolver { get; set; } =
     [
         "210.140.139.155",
         "210.140.139.156",
         "210.140.139.157"
     ];
 
-    public string[] PixivAccountNameResolver { get; set; } =
+    [SettingsEntry(Placeholder = MakoHttpOptions.AccountHost)]
+    public ObservableCollection<string> PixivAccountNameResolver { get; set; } =
     [
         "210.140.139.155",
         "210.140.139.156",
         "210.140.139.157"
     ];
 
-    public string[] PixivOAuthNameResolver { get; set; } =
+    [SettingsEntry(Placeholder = MakoHttpOptions.OAuthHost)]
+    public ObservableCollection<string> PixivOAuthNameResolver { get; set; } =
     [
         "210.140.139.155",
         "210.140.139.156",
         "210.140.139.157"
     ];
 
-    public string[] PixivImageNameResolver { get; set; } =
+    [SettingsEntry(Placeholder = MakoHttpOptions.ImageHost)]
+    public ObservableCollection<string> PixivImageNameResolver { get; set; } =
     [
         "210.140.139.134",
         "210.140.139.135",
@@ -219,7 +225,8 @@ public partial record AppSettings() : IWindowSettings
         "210.140.139.137"
     ];
 
-    public string[] PixivImageNameResolver2 { get; set; } =
+    [SettingsEntry(Placeholder = MakoHttpOptions.ImageHost2)]
+    public ObservableCollection<string> PixivImageNameResolver2 { get; set; } =
     [
         "210.140.139.135",
         "210.140.139.136",

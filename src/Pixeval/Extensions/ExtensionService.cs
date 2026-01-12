@@ -12,8 +12,6 @@ using Pixeval.Extensions.Common;
 using Pixeval.Extensions.Common.Commands.Transformers;
 using Pixeval.Extensions.Common.Downloaders;
 using Pixeval.Extensions.Common.Settings;
-using Pixeval.Extensions.Models;
-using Pixeval.Utilities;
 using Windows.Win32;
 using Pixeval.Extensions.Common.FormatProviders;
 using WinUI3Utilities;
@@ -28,11 +26,9 @@ public partial class ExtensionService : IDisposable
 
     public IReadOnlyList<ExtensionSettingsGroup> SettingsGroups => _settingsGroups;
 
-    public IReadOnlyList<IExtension> Extensions => HostModels
-        .Aggregate(new List<IExtension>(), (o, t) => o.Apply(p => p.AddRange(t.Extensions)));
+    public IEnumerable<IExtension> Extensions => HostModels.SelectMany(t => t.Extensions);
 
-    public IReadOnlyList<IExtension> ActiveExtensions => ActiveModels
-        .Aggregate(new List<IExtension>(), (o, t) => o.Apply(p => p.AddRange(t.Extensions)));
+    public IEnumerable<IExtension> ActiveExtensions => ActiveModels.SelectMany(t => t.Extensions);
 
     public IEnumerable<IImageTransformerCommandExtension> ActiveImageTransformerCommands => ActiveExtensions.OfType<IImageTransformerCommandExtension>();
 
@@ -48,22 +44,22 @@ public partial class ExtensionService : IDisposable
 
     public int OutDateExtensionHostsCount { get; private set; }
 
-    public void LoadAllHosts()
+    public void LoadAllHosts(ILogger logger)
     {
         foreach (var dll in AppKnownFolders.Extensions.GetFiles("*.dll"))
         {
-            _ = TryLoadHost(dll, out var isOutDate);
+            _ = TryLoadHost(dll, logger, out var isOutDate);
             if (isOutDate)
                 ++OutDateExtensionHostsCount;
         }
     }
 
-    public bool TryLoadHost(string path, out bool isOutdated)
+    public bool TryLoadHost(string path, ILogger logger, out bool isOutdated)
     {
         isOutdated = false;
         try
         {
-            if (LoadHost(path, out isOutdated) is not { } model)
+            if (LoadHost(path, logger, out isOutdated) is not { } model)
                 return false;
             LoadExtensions(model);
             var inserted = false;
@@ -96,7 +92,7 @@ public partial class ExtensionService : IDisposable
         model.Dispose();
     }
 
-    private static ExtensionsHostModel? LoadHost(string path, out bool isOutdated)
+    private static ExtensionsHostModel? LoadHost(string path, ILogger logger, out bool isOutdated)
     {
         isOutdated = false;
         try
@@ -118,13 +114,13 @@ public partial class ExtensionService : IDisposable
                 var rcw = (IExtensionsHost) wrappers.GetOrCreateObjectForComInstance(ppv, CreateObjectFlags.UniqueInstance);
                 _ = Marshal.Release(ppv);
 
-                if (rcw.GetSdkVersion() != IExtensionsHost.SdkVersion.ToString())
+                if (rcw.SdkVersion != IExtensionsHost.CurrentSdkVersion.ToString())
                 {
                     dllHandle.Dispose();
                     isOutdated = true;
                     return null;
                 }
-                rcw.Initialize(AppSettings.CurrentCulture.Name, AppKnownFolders.Temp.FullPath, AppKnownFolders.Extensions.FullPath);
+                rcw.Initialize(AppSettings.CurrentCulture.Name, AppKnownFolders.Temp.FullPath, AppKnownFolders.Extensions.FullPath, logger);
                 return new(rcw) { Handle = dllHandle };
             }
             catch
@@ -161,7 +157,7 @@ public partial class ExtensionService : IDisposable
         var settingsExtensions = extensions.OfType<ISettingsExtension>();
         foreach (var settingsExtension in settingsExtensions)
         {
-            var token = settingsExtension.GetToken();
+            var token = settingsExtension.Token;
             switch (settingsExtension)
             {
                 case IStringSettingsExtension i:
@@ -169,8 +165,8 @@ public partial class ExtensionService : IDisposable
                     if (values.TryGetValue(token, out var value) && value is string v)
                         i.OnValueChanged(v);
                     else
-                        values[token] = v = i.GetDefaultValue();
-                    extensionSettingsGroup.Add(new ExtensionStringSettingsEntry(i, v));
+                        v = i.DefaultValue;
+                    extensionSettingsGroup.Add(new ExtensionSettingsEntry<IStringSettingsExtension, string>(i, v, t => t.DefaultValue, i.OnValueChanged));
                     break;
                 }
                 case IIntOrEnumSettingsExtension i:
@@ -178,14 +174,14 @@ public partial class ExtensionService : IDisposable
                     if (values.TryGetValue(token, out var value) && value is int v)
                         i.OnValueChanged(v);
                     else
-                        values[token] = v = i.GetDefaultValue();
+                        v = i.DefaultValue;
                     switch (i)
                     {
                         case IIntSettingsExtension a:
-                            extensionSettingsGroup.Add(new ExtensionIntSettingsEntry(a, v));
+                            extensionSettingsGroup.Add(new ExtensionIntSettingsEntry(a, v, t => t.DefaultValue, a.OnValueChanged));
                             break;
                         case IEnumSettingsExtension b:
-                            extensionSettingsGroup.Add(new ExtensionEnumSettingsEntry(b, v));
+                            extensionSettingsGroup.Add(new ExtensionEnumSettingsEntry(b, v, t => t.DefaultValue, i.OnValueChanged));
                             break;
                     }
                     break;
@@ -195,27 +191,21 @@ public partial class ExtensionService : IDisposable
                     if (values.TryGetValue(token, out var value) && value is uint v)
                         i.OnValueChanged(v);
                     else
-                        values[token] = v = i.GetDefaultValue();
-                    extensionSettingsGroup.Add(new ExtensionColorSettingsEntry(i, v));
+                        v = i.DefaultValue;
+                    extensionSettingsGroup.Add(new ExtensionSettingsEntry<IColorSettingsExtension, uint>(i, v, t => t.DefaultValue, i.OnValueChanged));
                     break;
                 }
                 case IStringsArraySettingsExtension i:
                 {
-                    string[] v;
                     if (values.TryGetValue(token, out var value)
                         && value is string s
-                        && converter.TryConvertBack<string[]>(s, false, out var resultStringArray))
-                    {
-                        v = resultStringArray!;
+                        && converter.TryConvertBack(s, false, out string[]? v)
+                        && v is not null)
                         i.OnValueChanged(v);
-                    }
                     else
-                    {
-                        v = i.GetDefaultValue();
-                        if (converter.TryConvert(v, out var result))
-                            values[token] = result;
-                    }
-                    extensionSettingsGroup.Add(new ExtensionStringsArraySettingsEntry(i, v));
+                        v = i.DefaultValue;
+
+                    extensionSettingsGroup.Add(new ExtensionSettingsEntry<IStringsArraySettingsExtension, ObservableCollection<string>>(i, [.. v], t => [.. t.DefaultValue], t => i.OnValueChanged([.. t])));
                     break;
                 }
                 case IDateTimeOffsetSettingsExtension i:
@@ -223,8 +213,8 @@ public partial class ExtensionService : IDisposable
                     if (values.TryGetValue(token, out var value) && value is DateTimeOffset v)
                         i.OnValueChanged(v);
                     else
-                        values[token] = v = i.GetDefaultValue();
-                    extensionSettingsGroup.Add(new ExtensionDateSettingsEntry(i, v));
+                        v = i.DefaultValue;
+                    extensionSettingsGroup.Add(new ExtensionSettingsEntry<IDateTimeOffsetSettingsExtension, DateTimeOffset>(i, v, t => t.DefaultValue, i.OnValueChanged));
                     break;
                 }
                 case IBoolSettingsExtension i:
@@ -232,8 +222,8 @@ public partial class ExtensionService : IDisposable
                     if (values.TryGetValue(token, out var value) && value is bool v)
                         i.OnValueChanged(v);
                     else
-                        values[token] = v = i.GetDefaultValue();
-                    extensionSettingsGroup.Add(new ExtensionBoolSettingsEntry(i, v));
+                        v = i.DefaultValue;
+                    extensionSettingsGroup.Add(new ExtensionSettingsEntry<IBoolSettingsExtension, bool>(i, v, t => t.DefaultValue, i.OnValueChanged));
                     break;
                 }
                 case IDoubleSettingsExtension i:
@@ -241,8 +231,8 @@ public partial class ExtensionService : IDisposable
                     if (values.TryGetValue(token, out var value) && value is double v)
                         i.OnValueChanged(v);
                     else
-                        values[token] = v = i.GetDefaultValue();
-                    extensionSettingsGroup.Add(new ExtensionDoubleSettingsEntry(i, v));
+                        v = i.DefaultValue;
+                    extensionSettingsGroup.Add(new ExtensionDoubleSettingsEntry(i, v, t => t.DefaultValue, i.OnValueChanged));
                     break;
                 }
                 default:
@@ -259,7 +249,7 @@ public partial class ExtensionService : IDisposable
             return;
         Disposed = true;
         GC.SuppressFinalize(this);
-        while (HostModels is [{ } model, ..])
+        while (HostModels is [var model, ..])
             UnloadHost(model);
     }
 }

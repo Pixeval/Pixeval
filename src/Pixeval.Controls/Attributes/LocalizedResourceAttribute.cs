@@ -7,13 +7,9 @@ using System;
 namespace Pixeval.Attributes;
 
 [AttributeUsage(AttributeTargets.Field)]
-public class LocalizedResourceAttribute(Type resourceLoader, string key, object? formatKey = null) : Attribute
+public class LocalizedResourceAttribute(string key) : Attribute
 {
-    public Type ResourceLoader { get; } = resourceLoader;
-
     public string Key { get; } = key;
-
-    public object? FormatKey { get; } = formatKey;
 }
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]

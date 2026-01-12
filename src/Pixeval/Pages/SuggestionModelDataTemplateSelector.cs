@@ -54,8 +54,8 @@ public partial class NavigationViewItemDataTemplateSelector : DataTemplateSelect
     {
         return item switch
         {
-            NavigationViewTag _ => NavigationViewTagDataTemplate,
-            NavigationViewSeparator _ => NavigationViewSeparatorDataTemplate,
+            NavigationViewTag => NavigationViewTagDataTemplate,
+            NavigationViewSeparator => NavigationViewSeparatorDataTemplate,
             _ => null
         };
     }

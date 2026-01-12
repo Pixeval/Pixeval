@@ -49,11 +49,11 @@ public static partial class UiHelper
     /// <returns></returns>
     public static bool PerceivedBright(Color color)
     {
-        return 0.2126 * color.R + 0.7152 * color.G + 0.0722 * color.B >= 128;
+        return (0.2126 * color.R) + (0.7152 * color.G) + (0.0722 * color.B) >= 128;
     }
 
     /// <summary>
-    /// With higher <paramref name="magnitude"/> you will get brighter color and vice-versa.
+    /// With higher <paramref name="magnitude"/> you will get brighter color and vice versa.
     /// </summary>
     /// <param name="color"></param>
     /// <param name="magnitude"></param>
@@ -182,95 +182,106 @@ public static partial class UiHelper
         }
     }
 
-    public static void NavigateByNavigationViewTag(this Frame frame, NavigationView sender, NavigationTransitionInfo? transitionInfo = null)
+    extension(Frame frame)
     {
-        if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag })
+        public void NavigateByNavigationViewTag(NavigationView sender, NavigationTransitionInfo? transitionInfo = null)
+        {
+            if (sender.SelectedItem is NavigationViewItem { Tag: NavigationViewTag tag })
+            {
+                _ = frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo);
+            }
+        }
+
+        public void NavigateTag(NavigationViewTag tag, NavigationTransitionInfo? transitionInfo = null)
         {
             _ = frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo);
         }
     }
 
-    public static void NavigateTag(this Frame frame, NavigationViewTag tag, NavigationTransitionInfo? transitionInfo = null)
+    extension(Symbol symbol)
     {
-        _ = frame.Navigate(tag.NavigateTo, tag.Parameter, transitionInfo);
-    }
-
-    public static SymbolIcon GetSymbolIcon(this Symbol symbol, bool useSmallFontSize = false)
-    {
-        var icon = new SymbolIcon
+        public SymbolIcon GetSymbolIcon(bool useSmallFontSize = false)
         {
-            Symbol = symbol
-        };
+            var icon = new SymbolIcon
+            {
+                Symbol = symbol
+            };
 
-        if (useSmallFontSize)
-            icon.FontSize = 16; // 20 is default
+            if (useSmallFontSize)
+                icon.FontSize = 16; // 20 is default
 
-        return icon;
-    }
+            return icon;
+        }
 
-    public static SymbolIconSource GetSymbolIconSource(this Symbol symbol, IconVariant variant = IconVariant.Regular, Brush? foregroundBrush = null, bool useSmallFontSize = false)
-    {
-        var icon = new SymbolIconSource
+        public SymbolIconSource GetSymbolIconSource(IconVariant variant = IconVariant.Regular, Brush? foregroundBrush = null, bool useSmallFontSize = false)
         {
-            IconVariant = variant,
-            Symbol = symbol
-        };
+            var icon = new SymbolIconSource
+            {
+                IconVariant = variant,
+                Symbol = symbol
+            };
 
-        if (useSmallFontSize)
-            icon.FontSize = 16; // 20 is default
+            if (useSmallFontSize)
+                icon.FontSize = 16; // 20 is default
 
-        if (foregroundBrush is not null)
-            icon.Foreground = foregroundBrush;
+            if (foregroundBrush is not null)
+                icon.Foreground = foregroundBrush;
 
-        return icon;
-    }
-
-    public static bool IsFullyOrPartiallyVisible(this FrameworkElement child, FrameworkElement parent)
-    {
-        var childTransform = child.TransformToVisual(parent);
-        var childRectangle = childTransform.TransformBounds(new Rect(new Point(0, 0), child.RenderSize));
-        var ownerRectangle = new Rect(new Point(0, 0), parent.RenderSize);
-        return ownerRectangle.IntersectsWith(childRectangle);
+            return icon;
+        }
     }
 
     public static void ClearContent(this RichEditBox box) => box.Document.SetText(TextSetOptions.None, "");
 
-    public static IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(this FrameworkElement frameworkElement, PickerLocationId location = PickerLocationId.PicturesLibrary) => WindowFactory.GetWindowForElement(frameworkElement).PickSingleFolderAsync(location);
-
-    public static IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync(this FrameworkElement frameworkElement, PickerLocationId location = PickerLocationId.PicturesLibrary) => WindowFactory.GetWindowForElement(frameworkElement).PickSingleFileAsync(location);
-
-    public static IAsyncOperation<IReadOnlyList<StorageFile>> OpenMultipleJsonsOpenPickerAsync(this FrameworkElement frameworkElement)
+    extension(FrameworkElement frameworkElement)
     {
-        var fileOpenPicker = new FileOpenPicker
+        public IAsyncOperation<StorageFolder?> OpenFolderPickerAsync(PickerLocationId location = PickerLocationId.PicturesLibrary) => WindowFactory.GetWindowForElement(frameworkElement).PickSingleFolderAsync(location);
+        public IAsyncOperation<StorageFile?> OpenFileOpenPickerAsync(PickerLocationId location = PickerLocationId.PicturesLibrary) => WindowFactory.GetWindowForElement(frameworkElement).PickSingleFileAsync(location);
+
+        public IAsyncOperation<IReadOnlyList<StorageFile>> OpenMultipleJsonsOpenPickerAsync()
         {
-            SuggestedStartLocation = PickerLocationId.Desktop,
-            FileTypeFilter = { ".json" }
-        };
-        fileOpenPicker.FileTypeFilter.Add(".json");
-        InitializeWithWindow.Initialize(fileOpenPicker, (nint) WindowFactory.GetWindowForElement(frameworkElement).HWnd);
-        return fileOpenPicker.PickMultipleFilesAsync();
-    }
+            var fileOpenPicker = new FileOpenPicker
+            {
+                SuggestedStartLocation = PickerLocationId.Desktop,
+                FileTypeFilter = { ".json" }
+            };
+            fileOpenPicker.FileTypeFilter.Add(".json");
+            InitializeWithWindow.Initialize(fileOpenPicker, (nint) WindowFactory.GetWindowForElement(frameworkElement).HWnd);
+            return fileOpenPicker.PickMultipleFilesAsync();
+        }
 
-    public static IAsyncOperation<IReadOnlyList<StorageFile>> OpenMultipleDllsOpenPickerAsync(this FrameworkElement frameworkElement)
-    {
-        var fileOpenPicker = new FileOpenPicker
+        public IAsyncOperation<IReadOnlyList<StorageFile>> OpenMultipleDllsOpenPickerAsync()
         {
-            SuggestedStartLocation = PickerLocationId.Desktop,
-            FileTypeFilter = { ".dll", ".zip" }
-        };
-        InitializeWithWindow.Initialize(fileOpenPicker, (nint) WindowFactory.GetWindowForElement(frameworkElement).HWnd);
-        return fileOpenPicker.PickMultipleFilesAsync();
+            var fileOpenPicker = new FileOpenPicker
+            {
+                SuggestedStartLocation = PickerLocationId.Desktop,
+                FileTypeFilter = { ".dll", ".zip" }
+            };
+            InitializeWithWindow.Initialize(fileOpenPicker, (nint) WindowFactory.GetWindowForElement(frameworkElement).HWnd);
+            return fileOpenPicker.PickMultipleFilesAsync();
+        }
+
+        public bool IsFullyOrPartiallyVisible(FrameworkElement parent)
+        {
+            var childTransform = frameworkElement.TransformToVisual(parent);
+            var childRectangle = childTransform.TransformBounds(new Rect(new Point(0, 0), frameworkElement.RenderSize));
+            var ownerRectangle = new Rect(new Point(0, 0), parent.RenderSize);
+            return ownerRectangle.IntersectsWith(childRectangle);
+        }
     }
 
-    public static async Task<T> AwaitPageTransitionAsync<T>(this Frame root) where T : Page
+    extension(Frame root)
     {
-        await root.DispatcherQueue.SpinWaitAsync(() => root.Content is not T { IsLoaded: true });
-        return (T) root.Content;
-    }
+        public async Task<T> AwaitPageTransitionAsync<T>() where T : Page
+        {
+            await root.DispatcherQueue.SpinWaitAsync(() => root.Content is not T { IsLoaded: true });
+            return (T) root.Content;
+        }
 
-    public static async Task<Page> AwaitPageTransitionAsync(this Frame root, Type pageType)
-    {
-        await root.DispatcherQueue.SpinWaitAsync(() => root.Content is not Page { IsLoaded: true } || root.Content?.GetType() != pageType);
-        return (Page) root.Content;
+        public async Task<Page> AwaitPageTransitionAsync(Type pageType)
+        {
+            await root.DispatcherQueue.SpinWaitAsync(() => root.Content is not Page { IsLoaded: true } || root.Content?.GetType() != pageType);
+            return (Page) root.Content;
+        }
     }
 }

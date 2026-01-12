@@ -1,134 +1,98 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Pixeval.Settings.SettingsEntryBase" Collapsed="true">
-    <Position X="40" Y="1.5" Width="1.5" />
+    <Position X="36.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BAAAAAAAQAIgAAAAEAgAAAAAAAAAAAAAAAAYAAAQAAA=</HashCode>
+      <HashCode>BAAAAAAAQAIgAAAAEAAAAAAAAAAAAAAAAAAYAAAQAAA=</HashCode>
       <FileName>Settings\SettingsEntryBase.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Pixeval.Settings.Models.BoolAppSettingsEntry" Collapsed="true">
-    <Position X="18.25" Y="7" Width="3" />
+  <Class Name="Pixeval.Settings.Models.IntSettingsEntry&lt;TSettings&gt;" Collapsed="true">
+    <Position X="32.25" Y="7" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Settings\Models\BoolAppSettingsEntry.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Pixeval.Settings.Models.IntAppSettingsEntry" Collapsed="true">
-    <Position X="35.25" Y="7" Width="2.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAABAABAAAUAgAAAAAAAAACAAAAAAAAAAAIAA=</HashCode>
-      <FileName>Settings\Models\IntAppSettingsEntry.cs</FileName>
+      <HashCode>AAAAAAAAABAABAAAUAAAAAAAAAAACAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Settings\Models\IntSettingsEntry.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Pixeval.Settings.Models.StringAppSettingsEntry" Collapsed="true">
-    <Position X="11.75" Y="7" Width="3" />
+  <Class Name="Pixeval.Settings.Models.StringSettingsEntry&lt;TSettings&gt;" Collapsed="true">
+    <Position X="12.75" Y="7" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAABAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Settings\Models\StringAppSettingsEntry.cs</FileName>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Settings\Models\StringSettingsEntry.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Settings.Models.DownloadMacroAppSettingsEntry" Collapsed="true">
-    <Position X="10.5" Y="8.5" Width="2.75" />
+    <Position X="11" Y="8.5" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAAACAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Settings\Models\DownloadMacroAppSettingsEntry.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Pixeval.Settings.Models.FontAppSettingsEntry" Collapsed="true">
-    <Position X="14" Y="8.5" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAEAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Settings\Models\FontAppSettingsEntry.cs</FileName>
+      <FileName>Settings\Models\AppSettings\DownloadMacroAppSettingsEntry.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pixeval.Settings.Models.IpWithSwitchAppSettingsEntry" Collapsed="true">
-    <Position X="20.25" Y="8.5" Width="2.5" />
+    <Position X="21.75" Y="8.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAIgYHAIAAkAAAAAAAACgAAAACAEAAAQAAA=</HashCode>
-      <FileName>Settings\Models\IpWithSwitchAppSettingsEntry.cs</FileName>
+      <HashCode>AAAAAAAAAAIgYHAIAAEAAAAAAAACgAAAACAEAAAQAAA=</HashCode>
+      <FileName>Settings\Models\AppSettings\IpWithSwitchAppSettingsEntry.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pixeval.Settings.Models.LanguageAppSettingsEntry" Collapsed="true">
-    <Position X="73.75" Y="4.25" Width="2.25" />
+    <Position X="67" Y="4.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAgAAIAAAAAAAgAAAAAAAAAgAAQAAAAAAAAAAA=</HashCode>
-      <FileName>Settings\Models\LanguageAppSettingsEntry.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="Pixeval.Settings.Models.ClickableAppSettingsEntry" Collapsed="true">
-    <Position X="5.25" Y="2.75" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAIAAAAAAAgAAAAAAAAAgCAAAAAAEAAAAAA=</HashCode>
-      <FileName>Settings\Models\ClickableAppSettingsEntry.cs</FileName>
+      <HashCode>AAAAAAAgAAIAAAAAAAAAAAAAAAAAgAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Settings\Models\AppSettings\LanguageAppSettingsEntry.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Settings.SingleValueSettingsEntry&lt;TSettings, TValue&gt;" Collapsed="true">
-    <Position X="27.25" Y="5.75" Width="3" />
+    <Position X="24" Y="5.75" Width="3" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAACAAAEAAAAAAAAAEAAgAAAgAAgAAARQAA=</HashCode>
       <FileName>Settings\SingleValueSettingsEntry.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Pixeval.Settings.Models.ColorAppSettingsEntry" Collapsed="true">
-    <Position X="38.75" Y="7" Width="3" />
+  <Class Name="Pixeval.Settings.Models.EnumSettingsEntry&lt;TSettings&gt;" Collapsed="true">
+    <Position X="28.75" Y="7" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Settings\Models\ColorAppSettingsEntry.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Pixeval.Settings.Models.EnumAppSettingsEntry" Collapsed="true">
-    <Position X="27.25" Y="7" Width="3" />
-    <TypeIdentifier>
-      <HashCode>ACAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Settings\Models\EnumAppSettingsEntry.cs</FileName>
+      <HashCode>ACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Settings\Models\EnumSettingsEntry.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Settings.Models.ProxyAppSettingsEntry" Collapsed="true">
-    <Position X="27.75" Y="8.5" Width="2" />
+    <Position X="29" Y="8.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>ABAAAAAACAAgIBAAAAgAAAAAAAACgAAAAAAEEAAQAAA=</HashCode>
-      <FileName>Settings\Models\ProxyAppSettingsEntry.cs</FileName>
+      <HashCode>ABAAAAAACAAgIBAAAAAAAAAAAAACgAAAAAAEEAAQAAA=</HashCode>
+      <FileName>Settings\Models\AppSettings\ProxyAppSettingsEntry.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pixeval.Settings.SingleValueSettingsEntryBase&lt;TValue&gt;" Collapsed="true">
-    <Position X="40.5" Y="4.25" Width="2.75" />
+    <Position X="37.25" Y="4.25" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAQAIAAAAAAAAAAAAAAAAAAAAAAAAgAAABAAA=</HashCode>
       <FileName>Settings\SingleValueSettingsEntryBase.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Pixeval.Settings.Models.DateWithSwitchAppSettingsEntry" Collapsed="true">
-    <Position X="16.75" Y="8.5" Width="2.75" />
+  <Class Name="Pixeval.Settings.Models.DateWithSwitchSettingsEntry&lt;TSettings&gt;" Collapsed="true">
+    <Position X="17.75" Y="8.5" Width="3.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAIAAAIACAAEAAgAAAAAAAAAgAABAAAAAAAAQAA=</HashCode>
-      <FileName>Settings\Models\DateWithSwitchAppSettingsEntry.cs</FileName>
+      <HashCode>AAAAAAIAAAIACAAEAAAAAAAAAAAAgAABAAAAAAAAQAA=</HashCode>
+      <FileName>Settings\Models\DateWithSwitchSettingsEntry.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Pixeval.Settings.Models.DateAppSettingsEntry" Collapsed="true">
-    <Position X="31" Y="7" Width="3.5" />
+  <Class Name="Pixeval.Settings.Models.DoubleSettingsEntry&lt;TSettings&gt;" Collapsed="true">
+    <Position X="25" Y="7" Width="3" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Settings\Models\DateAppSettingsEntry.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Pixeval.Settings.Models.DoubleAppSettingsEntry" Collapsed="true">
-    <Position X="23.5" Y="7" Width="3" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAABAABAAAUAgAAAAAAAAACAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Settings\Models\DoubleAppSettingsEntry.cs</FileName>
+      <HashCode>AAAAAAAAABAABAAAUAAAAAAAAAAACAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Settings\Models\DoubleSettingsEntry.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Settings.ObservableSettingsEntryBase" Collapsed="true">
-    <Position X="42.25" Y="2.75" Width="2.25" />
+    <Position X="39" Y="2.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Settings\ObservableSettingsEntryBase.cs</FileName>
@@ -136,7 +100,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Extensions.ExtensionSettingsEntry&lt;TValue&gt;" Collapsed="true">
-    <Position X="59" Y="5.75" Width="2.75" />
+    <Position X="52.25" Y="5.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAEAAgAAAAAAgAAARAAA=</HashCode>
       <FileName>Extensions\ExtensionSettingsEntry.cs</FileName>
@@ -144,86 +108,108 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Extensions.Models.ExtensionBoolSettingsEntry" Collapsed="true">
-    <Position X="47.5" Y="7" Width="2.25" />
+    <Position X="40.75" Y="7" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAIAAAAAAAgAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
       <FileName>Extensions\Models\ExtensionBoolSettingsEntry.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pixeval.Extensions.Models.ExtensionColorSettingsEntry" Collapsed="true">
-    <Position X="50.5" Y="7" Width="2.25" />
+    <Position X="43.75" Y="7" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAIAAAAAAAgAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
       <FileName>Extensions\Models\ExtensionColorSettingsEntry.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pixeval.Extensions.Models.ExtensionDateSettingsEntry" Collapsed="true">
-    <Position X="53.5" Y="7" Width="2.75" />
+    <Position X="46.75" Y="7" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAIAAAAAAAgAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
       <FileName>Extensions\Models\ExtensionDateSettingsEntry.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Pixeval.Extensions.Models.ExtensionDoubleSettingsEntry" Collapsed="true">
-    <Position X="57" Y="7" Width="2.5" />
+    <Position X="50.25" Y="7" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAABIABAAAUAgAAAAAAAAAiAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAABIABAAAUAAAAAAAAAAAiAAAAAAAAAAAAAA=</HashCode>
       <FileName>Extensions\Models\ExtensionDoubleSettingsEntry.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Extensions.Models.ExtensionEnumSettingsEntry" Collapsed="true">
-    <Position X="60.25" Y="7" Width="2.25" />
+    <Position X="53.5" Y="7" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>ACAAAAAAAAIAAAAAAAgAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>ACAAAAAAAAIAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
       <FileName>Extensions\Models\ExtensionEnumSettingsEntry.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Extensions.Models.ExtensionIntSettingsEntry" Collapsed="true">
-    <Position X="63.25" Y="7" Width="2.25" />
+    <Position X="56.5" Y="7" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAABIABAAAUAgAAAAAAAAAiAAAAAAAAAAAIAA=</HashCode>
+      <HashCode>AAAAAAAAABIABAAAUAAAAAAAAAAAiAAAAAAAAAAAIAA=</HashCode>
       <FileName>Extensions\Models\ExtensionIntSettingsEntry.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Extensions.Models.ExtensionStringsArraySettingsEntry" Collapsed="true">
-    <Position X="66.25" Y="7" Width="3.5" />
+    <Position X="59.5" Y="7" Width="3.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAIABAAAAAgAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAIABAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
       <FileName>Extensions\Models\ExtensionStringsArraySettingsEntry.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Pixeval.Extensions.Models.ExtensionStringSettingsEntry" Collapsed="true">
-    <Position X="70.5" Y="7" Width="2.5" />
+    <Position X="63.75" Y="7" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAIABAAAAAgAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAIABAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
       <FileName>Extensions\Models\ExtensionStringSettingsEntry.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Pixeval.Settings.MultiValuesEntry" Collapsed="true">
-    <Position X="8.25" Y="2.75" Width="1.5" />
+  <Class Name="Pixeval.Settings.MultiValuesEntry&lt;TSettings&gt;" Collapsed="true">
+    <Position X="5" Y="2.75" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAIAACAAAAgAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAIAACAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
       <FileName>Settings\MultiValuesEntry.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Pixeval.Settings.Models.MultiStringsAppSettingsEntry" Collapsed="true">
-    <Position X="42.5" Y="7" Width="4.25" />
+  <Class Name="Pixeval.Settings.Models.MultiStringsSettingsEntry&lt;TSettings&gt;" Collapsed="true">
+    <Position X="35.75" Y="7" Width="4.25" />
     <TypeIdentifier>
-      <HashCode>AACAAAAAAAIABAAEAAgAAAAAAAAAAAAAAAAgAAAAQAA=</HashCode>
-      <FileName>Settings\Models\MultiStringsAppSettingsEntry.cs</FileName>
+      <HashCode>AAAAAAAAAAIABAAEAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Settings\Models\MultiStringsSettingsEntry.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pixeval.Settings.Models.ClickableSettingsEntry" Collapsed="true">
+    <Position X="8.25" Y="2.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAAAAAAAAACAAAAAAEAAAAAA=</HashCode>
+      <FileName>Settings\Models\ClickableSettingsEntry.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pixeval.Settings.Models.FontSettingsEntry&lt;TSettings&gt;" Collapsed="true">
+    <Position X="14.5" Y="8.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>Settings\Models\FontSettingsEntry.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pixeval.Settings.Models.BoolSettingsEntry&lt;TSettings&gt;" Collapsed="true">
+    <Position X="19.75" Y="7" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Settings\Models\BoolSettingsEntry.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Interface Name="Pixeval.Settings.ISettingsEntry" Collapsed="true">
     <Position X="11" Y="10.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BAAAAAAAAAIAAAAAAAgAAAAAAAAAAAAAAAAYAAAAAAA=</HashCode>
+      <HashCode>BAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAYAAAAAAA=</HashCode>
       <FileName>Settings\ISettingsEntry.cs</FileName>
     </TypeIdentifier>
   </Interface>
@@ -255,14 +241,14 @@
       <FileName>Settings\ISingleValueSettingsEntry.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Pixeval.Settings.IMultiStringsAppSettingsEntry" Collapsed="true">
+  <Interface Name="Pixeval.Settings.IMultiStringsSettingsEntry" Collapsed="true">
     <Position X="14.75" Y="13.25" Width="3.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Settings\ISingleValueSettingsEntry.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Pixeval.Settings.IAppSettingEntry&lt;TSetting&gt;" Collapsed="true">
+  <Interface Name="Pixeval.Settings.ISettingsEntry&lt;TSetting&gt;" Collapsed="true">
     <Position X="2.75" Y="11.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>

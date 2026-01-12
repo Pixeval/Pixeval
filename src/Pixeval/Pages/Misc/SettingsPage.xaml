@@ -5,11 +5,11 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls1="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fluent="using:FluentIcons.WinUI"
+    xmlns:markup="using:FluentIcons.WinUI.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:misc="using:Pixeval.Attributes"
-    xmlns:misc1="using:Pixeval.Pages.Misc"
+    xmlns:misc="using:Pixeval.Pages.Misc"
     xmlns:pixeval="using:Pixeval"
+    xmlns:settings="using:Pixeval.Settings"
     Loaded="SettingsPage_OnLoaded"
     Unloaded="SettingsPage_OnUnloaded"
     mc:Ignorable="d">
@@ -65,9 +65,9 @@
                 <TextBlock
                     x:Uid="/SettingsPage/VersionSettingsGroup"
                     Style="{StaticResource SettingHeaderStyle}"
-                    Tag="{x:Bind misc1:SettingsEntryCategory.Version}" />
+                    Tag="{x:Bind misc:SettingsEntryCategory.Version}" />
 
-                <controls:SettingsExpander HeaderIcon="{fluent:SymbolIcon Symbol=ArrowSync}" IsExpanded="{x:Bind _viewModel.ExpandExpander, Mode=OneWay}">
+                <controls:SettingsExpander HeaderIcon="{markup:SymbolIcon Symbol=ArrowSync}" IsExpanded="{x:Bind _viewModel.ExpandExpander, Mode=OneWay}">
                     <controls:SettingsExpander.Header>
                         <HyperlinkButton
                             Padding="0"
@@ -101,16 +101,16 @@
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenTempEntry"
-                            ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            ActionIcon="{markup:SymbolIcon Symbol=Open}"
                             Click="OpenFolder_OnClicked"
-                            HeaderIcon="{fluent:SymbolIcon Symbol=FolderLightning}"
+                            HeaderIcon="{markup:SymbolIcon Symbol=FolderLightning}"
                             IsClickEnabled="True"
                             Tag="Temp" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/MsStoreCheckForUpdatesEntry"
                             Click="OpenLinkViaTag_OnClicked"
                             Description="ms-windows-store://pdp/?ProductId=9P1RZL9Z8454"
-                            HeaderIcon="{fluent:SymbolIcon Symbol=StoreMicrosoft}"
+                            HeaderIcon="{markup:SymbolIcon Symbol=StoreMicrosoft}"
                             IsClickEnabled="True"
                             Tag="ms-windows-store://pdp/?ProductId=9P1RZL9Z8454" />
                         <controls:SettingsCard
@@ -143,15 +143,15 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/DownloadUpdateAutomaticallyEntry"
-                    HeaderIcon="{fluent:SymbolIcon Symbol=Communication}"
+                    HeaderIcon="{markup:SymbolIcon Symbol=Communication}"
                     IsEnabled="False"
-                    Tag="{x:Bind misc:SettingsEntryAttribute.AutoUpdate}">
+                    Tag="{x:Bind settings:LocalSettingsEntryHelper.AutoUpdate}">
                     <ToggleSwitch IsOn="{x:Bind _viewModel.DownloadUpdateAutomatically, Mode=TwoWay}" />
                 </controls:SettingsCard>
 
-                <controls:SettingsExpander x:Uid="/SettingsPage/BugReportEntry" HeaderIcon="{fluent:SymbolIcon Symbol=Bug}">
+                <controls:SettingsExpander x:Uid="/SettingsPage/BugReportEntry" HeaderIcon="{markup:SymbolIcon Symbol=Bug}">
                     <controls:SettingsExpander.Items>
-                        <controls:SettingsCard x:Uid="/SettingsPage/BugReportEntry" HeaderIcon="{fluent:SymbolIcon Symbol=Send}">
+                        <controls:SettingsCard x:Uid="/SettingsPage/BugReportEntry" HeaderIcon="{markup:SymbolIcon Symbol=Send}">
                             <CommandBar OverflowButtonVisibility="Collapsed">
                                 <AppBarButton
                                     x:Uid="/SettingsPage/GitHubBugReportEntry"
@@ -164,7 +164,7 @@
                                 <AppBarButton
                                     x:Uid="/SettingsPage/EMailBugReportEntry"
                                     Click="OpenLinkViaTag_OnClicked"
-                                    Icon="{fluent:SymbolIcon Symbol=Mail}"
+                                    Icon="{markup:SymbolIcon Symbol=Mail}"
                                     Tag="mailto:decem0730@hotmail.com" />
                                 <AppBarButton
                                     x:Uid="/SettingsPage/QQBugReportEntry"
@@ -178,37 +178,37 @@
                         </controls:SettingsCard>
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenLogEntry"
-                            ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            ActionIcon="{markup:SymbolIcon Symbol=Open}"
                             Click="OpenFolder_OnClicked"
-                            HeaderIcon="{fluent:SymbolIcon Symbol=FolderList}"
+                            HeaderIcon="{markup:SymbolIcon Symbol=FolderList}"
                             IsClickEnabled="True"
                             Tag="Logs" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenTempEntry"
-                            ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            ActionIcon="{markup:SymbolIcon Symbol=Open}"
                             Click="OpenFolder_OnClicked"
-                            HeaderIcon="{fluent:SymbolIcon Symbol=FolderLightning}"
+                            HeaderIcon="{markup:SymbolIcon Symbol=FolderLightning}"
                             IsClickEnabled="True"
                             Tag="Temp" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenLocalEntry"
-                            ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            ActionIcon="{markup:SymbolIcon Symbol=Open}"
                             Click="OpenFolder_OnClicked"
-                            HeaderIcon="{fluent:SymbolIcon Symbol=FolderBriefcase}"
+                            HeaderIcon="{markup:SymbolIcon Symbol=FolderBriefcase}"
                             IsClickEnabled="True"
                             Tag="Local" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenExtensionsEntry"
-                            ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            ActionIcon="{markup:SymbolIcon Symbol=Open}"
                             Click="OpenFolder_OnClicked"
-                            HeaderIcon="{fluent:SymbolIcon Symbol=FolderAdd}"
+                            HeaderIcon="{markup:SymbolIcon Symbol=FolderAdd}"
                             IsClickEnabled="True"
                             Tag="Extensions" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenSettingsEntry"
-                            ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            ActionIcon="{markup:SymbolIcon Symbol=Open}"
                             Click="OpenFolder_OnClicked"
-                            HeaderIcon="{fluent:SymbolIcon Symbol=FolderPerson}"
+                            HeaderIcon="{markup:SymbolIcon Symbol=FolderPerson}"
                             IsClickEnabled="True"
                             Tag="Settings" />
                     </controls:SettingsExpander.Items>
@@ -216,83 +216,83 @@
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/RateEntry"
-                    ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                    ActionIcon="{markup:SymbolIcon Symbol=Open}"
                     Click="OpenLinkViaTag_OnClicked"
-                    HeaderIcon="{fluent:SymbolIcon Symbol=Star}"
+                    HeaderIcon="{markup:SymbolIcon Symbol=Star}"
                     IsClickEnabled="True"
                     Tag="ms-windows-store://pdp/?ProductId=9P1RZL9Z8454" />
 
                 <TextBlock
                     x:Uid="/SettingsPage/SessionSettingsGroup"
                     Style="{StaticResource SettingHeaderStyle}"
-                    Tag="{x:Bind misc1:SettingsEntryCategory.Session}" />
+                    Tag="{x:Bind misc:SettingsEntryCategory.Session}" />
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/SignOutEntry"
                     Click="PerformSignOutButton_OnClicked"
-                    HeaderIcon="{fluent:SymbolIcon Symbol=SignOut}"
+                    HeaderIcon="{markup:SymbolIcon Symbol=SignOut}"
                     IsClickEnabled="True"
-                    Tag="{x:Bind misc:SettingsEntryAttribute.SignOut}" />
+                    Tag="{x:Bind settings:LocalSettingsEntryHelper.SignOut}" />
 
                 <controls:SettingsCard
                     x:Uid="/SettingsPage/ResetDefaultSettingsEntry"
-                    ActionIcon="{fluent:SymbolIcon Symbol=ArrowReset}"
+                    ActionIcon="{markup:SymbolIcon Symbol=ArrowReset}"
                     Click="ResetDefaultSettings_OnClicked"
-                    HeaderIcon="{fluent:SymbolIcon Symbol=Apps}"
+                    HeaderIcon="{markup:SymbolIcon Symbol=Apps}"
                     IsClickEnabled="True"
-                    Tag="{x:Bind misc:SettingsEntryAttribute.ResetSettings}" />
+                    Tag="{x:Bind settings:LocalSettingsEntryHelper.ResetSettings}" />
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/BackupSettingsEntry"
-                    HeaderIcon="{fluent:SymbolIcon Symbol=ClipboardSettings}"
-                    Tag="{x:Bind misc:SettingsEntryAttribute.ResetSettings}">
+                    HeaderIcon="{markup:SymbolIcon Symbol=ClipboardSettings}"
+                    Tag="{x:Bind settings:LocalSettingsEntryHelper.ResetSettings}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/OpenSettingsEntry"
-                            ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            ActionIcon="{markup:SymbolIcon Symbol=Open}"
                             Click="OpenFolder_OnClicked"
-                            HeaderIcon="{fluent:SymbolIcon Symbol=FolderPerson}"
+                            HeaderIcon="{markup:SymbolIcon Symbol=FolderPerson}"
                             IsClickEnabled="True"
                             Tag="Settings" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/ExportSettingsPlaintextEntry"
-                            ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            ActionIcon="{markup:SymbolIcon Symbol=Open}"
                             Click="ExportSettingsPlainText_OnClicked"
-                            HeaderIcon="{fluent:SymbolIcon Symbol=ArrowExport}"
+                            HeaderIcon="{markup:SymbolIcon Symbol=ArrowExport}"
                             IsClickEnabled="True" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/ImportSettingsPlaintextEntry"
-                            ActionIcon="{fluent:SymbolIcon Symbol=Open}"
+                            ActionIcon="{markup:SymbolIcon Symbol=Open}"
                             Click="ImportSettingsPlaintext_OnClicked"
-                            HeaderIcon="{fluent:SymbolIcon Symbol=ArrowImport}"
+                            HeaderIcon="{markup:SymbolIcon Symbol=ArrowImport}"
                             IsClickEnabled="True" />
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 
                 <controls:SettingsExpander
                     x:Uid="/SettingsPage/DeleteHistoriesEntry"
-                    HeaderIcon="{fluent:SymbolIcon Symbol=HistoryDismiss}"
-                    Tag="{x:Bind misc:SettingsEntryAttribute.DeleteHistories}">
+                    HeaderIcon="{markup:SymbolIcon Symbol=HistoryDismiss}"
+                    Tag="{x:Bind settings:LocalSettingsEntryHelper.DeleteHistories}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/DeleteFileCacheEntry"
                             Click="DeleteFileCacheEntryButton_OnClicked"
-                            HeaderIcon="{fluent:SymbolIcon Symbol=HistoryDismiss}"
+                            HeaderIcon="{markup:SymbolIcon Symbol=HistoryDismiss}"
                             IsClickEnabled="True" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/DeleteSearchHistoriesEntry"
                             Click="DeleteSearchHistoriesButton_OnClicked"
-                            HeaderIcon="{fluent:SymbolIcon Symbol=HistoryDismiss}"
+                            HeaderIcon="{markup:SymbolIcon Symbol=HistoryDismiss}"
                             IsClickEnabled="True" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/DeleteBrowseHistoriesEntry"
                             Click="DeleteBrowseHistoriesButton_OnClicked"
-                            HeaderIcon="{fluent:SymbolIcon Symbol=HistoryDismiss}"
+                            HeaderIcon="{markup:SymbolIcon Symbol=HistoryDismiss}"
                             IsClickEnabled="True" />
                         <controls:SettingsCard
                             x:Uid="/SettingsPage/DeleteDownloadHistoriesEntry"
                             Click="DeleteDownloadHistoriesButton_OnClicked"
-                            HeaderIcon="{fluent:SymbolIcon Symbol=HistoryDismiss}"
+                            HeaderIcon="{markup:SymbolIcon Symbol=HistoryDismiss}"
                             IsClickEnabled="True" />
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>

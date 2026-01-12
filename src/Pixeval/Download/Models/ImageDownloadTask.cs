@@ -305,15 +305,10 @@ public partial class ImageDownloadTask : ObservableObject, IDownloadTaskBase, IP
 
         public void Completed() => Finished = true;
 
-        public void Aborted(string exceptionMessage, string? stackTrace)
+        public void Aborted(IException? exception)
         {
             Finished = false;
-            Exception = new ConstructableException(exceptionMessage, stackTrace);
-        }
-
-        private class ConstructableException(string exceptionMessage, string? stackTrace) : Exception(exceptionMessage)
-        {
-            public override string? StackTrace => stackTrace;
+            Exception = exception?.ToException();
         }
     }
 }

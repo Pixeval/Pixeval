@@ -5,8 +5,8 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:local="using:Pixeval.Controls.Windowing"
+    xmlns:markup="using:FluentIcons.WinUI.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     KeyboardAcceleratorPlacementMode="Hidden"
     Loaded="TabPage_OnLoaded"
@@ -51,7 +51,7 @@
                     VerticalAlignment="Stretch"
                     controls1:DockPanel.Dock="Right"
                     Click="RevokeButton_OnClick"
-                    Content="{fluent:SymbolIcon Symbol=ArrowStepBack,
+                    Content="{markup:SymbolIcon Symbol=ArrowStepBack,
                                                 FontSize=16}"
                     Style="{StaticResource PixevalTransparentButtonStyle}"
                     Visibility="{x:Bind controls:C.ToVisibility(_ownsWindow)}" />

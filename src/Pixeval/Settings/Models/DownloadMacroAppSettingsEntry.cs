@@ -1,12 +1,12 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
+using AutoSettingsPage.Models;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
-using Pixeval.Controls.Settings;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.Macros;
 
@@ -14,11 +14,9 @@ namespace Pixeval.Settings.Models;
 
 public partial class DownloadMacroAppSettingsEntry(
     AppSettings settings)
-    : StringAppSettingsEntry(settings, t => t.DownloadPathMacro)
+    : StringSettingsEntry<AppSettings>(settings, t => t.DownloadPathMacro)
 {
-    public override DownloadMacroSettingsExpander Element => new() { Entry = this };
-
-    private static readonly ImmutableDictionary<string, string> _MacroTooltips = new Dictionary<string, string>
+    private static readonly FrozenDictionary<string, string> _MacroTooltips = new Dictionary<string, string>
     {
         ["ext"] = SettingsPageResources.ExtMacroTooltip,
         ["id"] = SettingsPageResources.IdMacroTooltip,
@@ -37,7 +35,7 @@ public partial class DownloadMacroAppSettingsEntry(
         ["if_pic_gif"] = SettingsPageResources.IfPicGifMacroTooltip,
         ["if_pic_all"] = SettingsPageResources.IfPicAllMacroTooltip,
         ["pic_set_index"] = SettingsPageResources.PicSetIndexMacroTooltip
-    }.ToImmutableDictionary();
+    }.ToFrozenDictionary();
 
     public static ICollection<StringRepresentableItem> AvailableMacros { get; } = [.. MetaPathMacroAttributeHelper.GetIArtworkInfoInstances().Select(m => new StringRepresentableItem(_MacroTooltips[m.Name], $"@{{{(m is IPredicate ? $"{m.Name}=" : m.Name)}}}"))];
 }

@@ -7,10 +7,13 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Pixeval.Extensions.Common;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace Pixeval.Utilities;
 
-public class FileLogger : ILogger
+public class FileLogger : ILogger, Pixeval.Extensions.Common.ILogger
 {
     private readonly string _basePath;
 
@@ -99,7 +102,11 @@ public class FileLogger : ILogger
 
     public bool IsEnabled(LogLevel logLevel) => true;
 
-    public IDisposable? BeginScope<TState>(TState state) where TState : notnull => throw new NotSupportedException();
+    public IDisposable BeginScope<TState>(TState state) where TState : notnull => throw new NotSupportedException();
+
+    /// <inheritdoc />
+    void Extensions.Common.ILogger.Log(Extensions.Common.LogLevel logLevel, string message, IException? exception, string memberName, string filePath, int lineNumber)
+        => LogPrivate((LogLevel) logLevel, message, exception?.ToException(), memberName, filePath, lineNumber);
 }
 
 public class LogModel

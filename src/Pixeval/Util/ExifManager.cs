@@ -55,24 +55,27 @@ public static class ExifManager
         profile.SetValue(ExifTag.UserComment, string.Join(';', tags));
     }
 
-    public static string? GetArtworkId(this ImageInfo image)
+    extension(ImageInfo image)
     {
-        if (image.Metadata.ExifProfile?.TryGetValue(ExifTag.ImageID, out var id) is true)
-            try
-            {
-                return id.Value;
-            }
-            catch
-            {
-                // ignored
-            }
-        return null;
-    }
+        public string? GetArtworkId()
+        {
+            if (image.Metadata.ExifProfile?.TryGetValue(ExifTag.ImageID, out var id) is true)
+                try
+                {
+                    return id.Value;
+                }
+                catch
+                {
+                    // ignored
+                }
+            return null;
+        }
 
-    public static string[] GetTags(this ImageInfo image)
-    {
-        return image.Metadata.ExifProfile?.TryGetValue(ExifTag.UserComment, out var tags) is true
-            ? tags.Value.Text.Split(';')
-            : [];
+        public string[] GetTags()
+        {
+            return image.Metadata.ExifProfile?.TryGetValue(ExifTag.UserComment, out var tags) is true
+                ? tags.Value.Text.Split(';')
+                : [];
+        }
     }
 }

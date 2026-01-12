@@ -17,14 +17,17 @@ public static class SyntaxHelper
     internal const string DisableSourceGeneratorAttribute = AttributeNamespace + "DisableSourceGeneratorAttribute";
     internal const string FrozenDictionaryTypeName = "global::System.Collections.Frozen.FrozenDictionary";
 
-    public static bool HasAttribute(this ISymbol s, string attributeFqName)
+    extension(ISymbol s)
     {
-        return s.GetAttributes().Any(als => als.AttributeClass?.ToDisplayString() == attributeFqName);
-    }
+        public bool HasAttribute(string attributeFqName)
+        {
+            return s.GetAttributes().Any(als => als.AttributeClass?.ToDisplayString() == attributeFqName);
+        }
 
-    public static AttributeData? GetAttribute(this ISymbol mds, string attributeFqName)
-    {
-        return mds.GetAttributes().FirstOrDefault(attr => attr?.AttributeClass?.ToDisplayString() == attributeFqName);
+        public AttributeData? GetAttribute(string attributeFqName)
+        {
+            return s.GetAttributes().FirstOrDefault(attr => attr?.AttributeClass?.ToDisplayString() == attributeFqName);
+        }
     }
 
     /// <summary>
@@ -112,6 +115,18 @@ public static class SyntaxHelper
 
     internal static FileScopedNamespaceDeclarationSyntax GetFileScopedNamespaceDeclaration(string namespaceName, MemberDeclarationSyntax generatedClass, bool nullableEnable)
         => FileScopedNamespaceDeclaration(ParseName(namespaceName))
+            .AddMembers(generatedClass)
+            .WithNamespaceKeyword(Token(SyntaxKind.NamespaceKeyword))
+            .WithLeadingTrivia(Trivia(NullableDirectiveTrivia(Token(SyntaxKind.EnableKeyword), nullableEnable)));
+
+    internal static NamespaceDeclarationSyntax GetNamespaceDeclaration(ISymbol specificClass, MemberDeclarationSyntax generatedClass, bool nullableEnable)
+        => NamespaceDeclaration(ParseName(specificClass.ContainingNamespace.ToDisplayString()))
+            .AddMembers(generatedClass)
+            .WithNamespaceKeyword(Token(SyntaxKind.NamespaceKeyword))
+            .WithLeadingTrivia(Trivia(NullableDirectiveTrivia(Token(SyntaxKind.EnableKeyword), nullableEnable)));
+
+    internal static NamespaceDeclarationSyntax GetNamespaceDeclaration(string namespaceName, MemberDeclarationSyntax generatedClass, bool nullableEnable)
+        => NamespaceDeclaration(ParseName(namespaceName))
             .AddMembers(generatedClass)
             .WithNamespaceKeyword(Token(SyntaxKind.NamespaceKeyword))
             .WithLeadingTrivia(Trivia(NullableDirectiveTrivia(Token(SyntaxKind.EnableKeyword), nullableEnable)));

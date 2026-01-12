@@ -8,22 +8,22 @@ namespace Pixeval.Options;
 [LocalizationMetadata(typeof(ProxyTypeResources))]
 public enum ProxyType
 {
-    [LocalizedResource(typeof(MiscResources), nameof(ProxyTypeResources.ProxyOptionSystem))]
+    [LocalizedResource(nameof(ProxyTypeResources.ProxyOptionSystem))]
     System,
 
-    [LocalizedResource(typeof(MiscResources), nameof(ProxyTypeResources.ProxyOptionNone))]
+    [LocalizedResource(nameof(ProxyTypeResources.ProxyOptionNone))]
     None,
 
-    [LocalizedResource(typeof(MiscResources), nameof(ProxyTypeResources.ProxyOptionHttp))]
+    [LocalizedResource(nameof(ProxyTypeResources.ProxyOptionHttp))]
     Http,
 
-    [LocalizedResource(typeof(MiscResources), nameof(ProxyTypeResources.ProxyOptionSocks4))]
+    [LocalizedResource(nameof(ProxyTypeResources.ProxyOptionSocks4))]
     Socks4,
 
-    [LocalizedResource(typeof(MiscResources), nameof(ProxyTypeResources.ProxyOptionSocks4A))]
+    [LocalizedResource(nameof(ProxyTypeResources.ProxyOptionSocks4A))]
     Socks4A,
 
-    [LocalizedResource(typeof(MiscResources), nameof(ProxyTypeResources.ProxyOptionSocks5))]
+    [LocalizedResource(nameof(ProxyTypeResources.ProxyOptionSocks5))]
     Socks5
 }
 

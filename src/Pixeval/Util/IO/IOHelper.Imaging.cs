@@ -34,15 +34,6 @@ public static partial class IoHelper
 {
     public const string PixevalTempExtension = ".pixevaldownloading";
 
-    public static async Task<ImageSource> DecodeBitmapImageAsync(this Stream imageStream, bool disposeOfImageStream, int? desiredWidth = null)
-    {
-        var bitmapImage = await imageStream.AsRandomAccessStream().DecodeBitmapImageAsync(false, desiredWidth);
-        if (disposeOfImageStream)
-            await imageStream.DisposeAsync();
-
-        return bitmapImage;
-    }
-
     public static async Task<ImageSource> DecodeBitmapImageAsync(this IRandomAccessStream imageStream, bool disposeOfImageStream, int? desiredWidth = null)
     {
         var bitmapImage = new BitmapImage { DecodePixelType = DecodePixelType.Logical };
@@ -72,7 +63,7 @@ public static partial class IoHelper
     public static async Task UgoiraSaveToFileAsync(this Image image, string path, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
     {
         await using var fileStream = FileHelper.CreateAsyncWriteCreateParent(path);
-        _ = await UgoiraSaveToStreamAsync(image, fileStream, ugoiraDownloadFormat);
+        _ = await image.UgoiraSaveToStreamAsync(fileStream, ugoiraDownloadFormat);
     }
 
     /// <summary>
@@ -81,14 +72,6 @@ public static partial class IoHelper
     public static async Task<Stream> UgoiraSaveToStreamAsync(this IReadOnlyList<Stream> streams, IReadOnlyList<int> delays, Stream? target = null, IProgress<double>? progress = null, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
     {
         using var image = await streams.UgoiraSaveToImageAsync(delays, progress);
-        var s = await image.UgoiraSaveToStreamAsync(target ?? Streams.RentStream(), ugoiraDownloadFormat);
-        progress?.Report(100);
-        return s;
-    }
-
-    public static async Task<Stream> UgoiraSaveToStreamAsync(this Stream stream, IReadOnlyList<int> delays, Stream? target = null, IProgress<double>? progress = null, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
-    {
-        using var image = await stream.UgoiraSaveToImageAsync(delays, progress);
         var s = await image.UgoiraSaveToStreamAsync(target ?? Streams.RentStream(), ugoiraDownloadFormat);
         progress?.Report(100);
         return s;
@@ -117,12 +100,6 @@ public static partial class IoHelper
             destination.Position = 0;
             return destination;
         });
-    }
-
-    public static async Task<Image> UgoiraSaveToImageAsync(this Stream zipStream, IReadOnlyList<int> delays, IProgress<double>? progress = null, bool dispose = false)
-    {
-        var streams = await Streams.ReadZipAsync(zipStream, dispose);
-        return await streams.UgoiraSaveToImageAsync(delays, progress, true);
     }
 
     public static async Task<Image> UgoiraSaveToImageAsync(this IReadOnlyList<Stream> streams, IReadOnlyList<int> delays, IProgress<double>? progress = null, bool dispose = false)
@@ -190,19 +167,45 @@ public static partial class IoHelper
     public static async Task IllustrationSaveToFileAsync(this Image image, string path, IllustrationDownloadFormat? illustrationDownloadFormat = null)
     {
         await using var fileStream = FileHelper.CreateAsyncWriteCreateParent(path);
-        _ = await IllustrationSaveToStreamAsync(image, fileStream, illustrationDownloadFormat);
+        _ = await image.IllustrationSaveToStreamAsync(fileStream, illustrationDownloadFormat);
     }
 
-    public static async Task StreamSaveToFileAsync(this Stream stream, string path)
+    extension(Stream stream)
     {
-        await using var fileStream = FileHelper.CreateAsyncWriteCreateParent(path);
-        await stream.CopyToAsync(fileStream);
-    }
+        public async Task StreamSaveToFileAsync(string path)
+        {
+            await using var fileStream = FileHelper.CreateAsyncWriteCreateParent(path);
+            await stream.CopyToAsync(fileStream);
+        }
 
-    public static async Task StreamsCompressSaveToFileAsync(this Stream stream, string path)
-    {
-        await using var fileStream = FileHelper.CreateAsyncWriteCreateParent(path);
-        await stream.CopyToAsync(fileStream);
+        public async Task StreamsCompressSaveToFileAsync(string path)
+        {
+            await using var fileStream = FileHelper.CreateAsyncWriteCreateParent(path);
+            await stream.CopyToAsync(fileStream);
+        }
+
+        public async Task<ImageSource> DecodeBitmapImageAsync(bool disposeOfImageStream, int? desiredWidth = null)
+        {
+            var bitmapImage = await stream.AsRandomAccessStream().DecodeBitmapImageAsync(false, desiredWidth);
+            if (disposeOfImageStream)
+                await stream.DisposeAsync();
+
+            return bitmapImage;
+        }
+
+        public async Task<Stream> UgoiraSaveToStreamAsync(IReadOnlyList<int> delays, Stream? target = null, IProgress<double>? progress = null, UgoiraDownloadFormat? ugoiraDownloadFormat = null)
+        {
+            using var image = await stream.UgoiraSaveToImageAsync(delays, progress);
+            var s = await image.UgoiraSaveToStreamAsync(target ?? Streams.RentStream(), ugoiraDownloadFormat);
+            progress?.Report(100);
+            return s;
+        }
+
+        public async Task<Image> UgoiraSaveToImageAsync(IReadOnlyList<int> delays, IProgress<double>? progress = null, bool dispose = false)
+        {
+            var streams = await Streams.ReadZipAsync(stream, dispose);
+            return await streams.UgoiraSaveToImageAsync(delays, progress, true);
+        }
     }
 
     public static IImageEncoder GetIllustrationEncoder(IllustrationDownloadFormat? illustrationDownloadFormat = null)

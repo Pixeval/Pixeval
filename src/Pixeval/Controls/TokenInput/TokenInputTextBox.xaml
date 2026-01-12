@@ -2,8 +2,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:fluent="using:FluentIcons.WinUI"
-    xmlns:local="using:Pixeval.Controls">
+    xmlns:local="using:Pixeval.Controls"
+    xmlns:markup="using:FluentIcons.WinUI.Markup">
     <Style TargetType="local:TokenInputTextBox">
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Center" />
@@ -24,7 +24,7 @@
                             Height="32"
                             Padding="0"
                             controls:DockPanel.Dock="Right"
-                            Content="{fluent:SymbolIcon Symbol=ArrowTurnDownLeft,
+                            Content="{markup:SymbolIcon Symbol=ArrowTurnDownLeft,
                                                         FontSize={StaticResource SmallIconFontSize}}"
                             Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SubmitEnable, Mode=OneWay}" />
                         <ToggleButton
@@ -33,7 +33,7 @@
                             Height="32"
                             Padding="0"
                             controls:DockPanel.Dock="Right"
-                            Content="{fluent:SymbolIcon Symbol=Code,
+                            Content="{markup:SymbolIcon Symbol=Code,
                                                         FontSize={StaticResource SmallIconFontSize}}"
                             IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Token.IsRegularExpression, Mode=TwoWay}" />
                         <ToggleButton
@@ -42,7 +42,7 @@
                             Height="32"
                             Padding="0"
                             controls:DockPanel.Dock="Right"
-                            Content="{fluent:SymbolIcon Symbol=TextChangeCase,
+                            Content="{markup:SymbolIcon Symbol=TextChangeCase,
                                                         FontSize={StaticResource SmallIconFontSize}}"
                             IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Token.CaseSensitive, Mode=TwoWay}" />
                         <!--  ReSharper disable once UnusedMember.Local  -->

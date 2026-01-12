@@ -5,9 +5,9 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:controls2="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fluent="using:FluentIcons.WinUI"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Pixeval.Pages"
+    xmlns:markup="using:FluentIcons.WinUI.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:misaki="using:Misaki"
     xmlns:pixeval="using:Pixeval.AppManagement"
@@ -162,18 +162,18 @@
                                                     <MenuFlyoutItem
                                                         x:Uid="/WorkInfoPage/CopyOriginalTagMenuItem"
                                                         Click="CopyItem_OnClick"
-                                                        Icon="{fluent:SymbolIcon Symbol=Copy}"
+                                                        Icon="{markup:SymbolIcon Symbol=Copy}"
                                                         Tag="{x:Bind Name}" />
                                                     <MenuFlyoutItem
                                                         x:Uid="/WorkInfoPage/CopyTranslatedTagMenuItem"
                                                         Click="CopyItem_OnClick"
-                                                        Icon="{fluent:SymbolIcon Symbol=CopyAdd}"
+                                                        Icon="{markup:SymbolIcon Symbol=CopyAdd}"
                                                         Tag="{x:Bind TranslatedName}"
                                                         Visibility="{x:Bind controls2:C.IsNotNullOrWhiteSpaceToVisibility(TranslatedName)}" />
                                                     <MenuFlyoutItem
                                                         x:Uid="/WorkInfoPage/BlockTagMenuItem"
                                                         Click="BlockItem_OnClick"
-                                                        Icon="{fluent:SymbolIcon Symbol=TagDismiss}"
+                                                        Icon="{markup:SymbolIcon Symbol=TagDismiss}"
                                                         Tag="{x:Bind}" />
                                                 </MenuFlyout>
                                             </Button.ContextFlyout>

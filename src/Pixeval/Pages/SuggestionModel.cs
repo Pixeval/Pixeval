@@ -1,7 +1,7 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Pixeval.Attributes;
+using AutoSettingsPage;
 using Mako.Model;
 using Pixeval.Database;
 using Pixeval.Util.UI;
@@ -58,9 +58,9 @@ public record SuggestionModel(string? Name, string? TranslatedName, SuggestionTy
 
     public static SuggestionModel FromSettings(SettingsEntryAttribute attribute)
     {
-        return new SuggestionModel(attribute.LocalizedResourceHeader, attribute.LocalizedResourceHeader, SuggestionType.Settings)
+        return new SuggestionModel(attribute.Header, attribute.Description, SuggestionType.Settings)
         {
-            SettingsSymbol = attribute.Symbol
+            SettingsSymbol = attribute.Icon
         };
     }
 

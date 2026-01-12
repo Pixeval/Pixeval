@@ -5,26 +5,26 @@ using System;
 using System.Reflection;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.AppManagement;
-using Pixeval.Attributes;
-using Pixeval.Controls.Settings;
 using Pixeval.Options;
 using Windows.System;
+using AutoSettingsPage;
+using AutoSettingsPage.Models;
 using Symbol = FluentIcons.Common.Symbol;
 
 namespace Pixeval.Settings.Models;
 
-public partial class ProxyAppSettingsEntry : EnumAppSettingsEntry
+public partial class ProxyAppSettingsEntry : EnumSettingsEntry<AppSettings, object>
 {
-    public ProxyAppSettingsEntry(AppSettings settings) : base(settings, t => t.ProxyType, ProxyTypeExtension.GetItems())
+    public ProxyAppSettingsEntry(AppSettings settings) : base(settings, t => t.ProxyType, ProxyType.Pairs)
     {
         var member = typeof(AppSettings).GetProperty(nameof(AppSettings.Proxy));
         Attribute2 = member?.GetCustomAttribute<SettingsEntryAttribute>();
 
         if (Attribute2 is { } attribute)
         {
-            Header2 = attribute.LocalizedResourceHeader;
-            Description2 = attribute.LocalizedResourceDescription;
-            HeaderIcon2 = attribute.Symbol;
+            Header2 = attribute.Header;
+            Description2 = attribute.Description;
+            HeaderIcon2 = attribute.Icon;
         }
     }
 
@@ -62,8 +62,6 @@ public partial class ProxyAppSettingsEntry : EnumAppSettingsEntry
     public SettingsEntryAttribute? Attribute2 { get; }
 
     #endregion
-
-    public override ProxySettingsExpander Element => new() { Entry = this };
 
     public Action<string?>? ProxyChanged { get; set; }
 
@@ -110,11 +108,5 @@ public partial class ProxyAppSettingsEntry : EnumAppSettingsEntry
             var builder = new UriBuilder(uri) { Scheme = scheme };
             return builder.ToString();
         }
-    }
-
-    public override void ValueReset(AppSettings defaultSettings)
-    {
-        base.ValueReset(defaultSettings);
-        Proxy = defaultSettings.Proxy;
     }
 }

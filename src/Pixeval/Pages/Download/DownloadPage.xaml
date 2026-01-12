@@ -5,15 +5,16 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fluent="using:FluentIcons.WinUI"
+    xmlns:markup="using:FluentIcons.WinUI.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:winUi="using:AutoSettingsPage.WinUI"
     mc:Ignorable="d">
     <controls1:DockPanel>
         <controls1:DockPanel
             Margin="{StaticResource ComboBoxLeftIndent}"
             controls1:DockPanel.Dock="Top"
             HorizontalSpacing="10">
-            <controls:EnumComboBox
+            <winUi:EnumComboBox
                 x:Uid="/DownloadPage/ModeFilterComboBox"
                 VerticalAlignment="Center"
                 controls1:DockPanel.Dock="Left"
@@ -25,7 +26,7 @@
                 VerticalAlignment="Center"
                 controls1:DockPanel.Dock="Left"
                 ItemsSource="{x:Bind DownloadView.ViewModel.FilteredTasks}"
-                QueryIcon="{fluent:SymbolIcon Symbol=Search,
+                QueryIcon="{markup:SymbolIcon Symbol=Search,
                                               FontSize={StaticResource SmallIconFontSize}}"
                 QuerySubmitted="FilterAutoSuggestBox_OnQuerySubmitted"
                 SuggestionChosen="FilterAutoSuggestBox_OnSuggestionChosen"
@@ -39,33 +40,33 @@
             <CommandBar DefaultLabelPosition="Right">
                 <AppBarButton
                     Click="CancelSelectButton_OnClicked"
-                    Icon="{fluent:SymbolIcon Symbol=SelectAllOff}"
+                    Icon="{markup:SymbolIcon Symbol=SelectAllOff}"
                     IsEnabled="{x:Bind DownloadView.ViewModel.IsAnyEntrySelected, Mode=OneWay}"
                     Label="{x:Bind DownloadView.ViewModel.SelectionLabel, Mode=OneWay}" />
                 <AppBarButton
                     x:Uid="/DownloadPage/SelectAllButton"
                     Click="SelectAllButton_OnClicked"
-                    Icon="{fluent:SymbolIcon Symbol=SelectAllOn}" />
+                    Icon="{markup:SymbolIcon Symbol=SelectAllOn}" />
                 <AppBarSeparator />
                 <AppBarButton
                     x:Uid="/DownloadPage/ResumeButton"
                     Click="ResumeAllButton_OnClicked"
-                    Icon="{fluent:SymbolIcon Symbol=Play}"
+                    Icon="{markup:SymbolIcon Symbol=Play}"
                     IsEnabled="{x:Bind DownloadView.ViewModel.IsAnyEntrySelected, Mode=OneWay}" />
                 <AppBarButton
                     x:Uid="/DownloadPage/PauseButton"
                     Click="PauseAllButton_OnClicked"
-                    Icon="{fluent:SymbolIcon Symbol=Pause}"
+                    Icon="{markup:SymbolIcon Symbol=Pause}"
                     IsEnabled="{x:Bind DownloadView.ViewModel.IsAnyEntrySelected, Mode=OneWay}" />
                 <AppBarButton
                     x:Uid="/DownloadPage/StopButton"
                     Click="CancelAllButton_OnClicked"
-                    Icon="{fluent:SymbolIcon Symbol=Stop}"
+                    Icon="{markup:SymbolIcon Symbol=Stop}"
                     IsEnabled="{x:Bind DownloadView.ViewModel.IsAnyEntrySelected, Mode=OneWay}" />
                 <AppBarButton
                     x:Uid="/DownloadPage/DeleteButton"
                     Click="ClearDownloadListButton_OnClicked"
-                    Icon="{fluent:SymbolIcon Symbol=Delete}"
+                    Icon="{markup:SymbolIcon Symbol=Delete}"
                     IsEnabled="{x:Bind DownloadView.ViewModel.IsAnyEntrySelected, Mode=OneWay}" />
             </CommandBar>
         </controls1:DockPanel>

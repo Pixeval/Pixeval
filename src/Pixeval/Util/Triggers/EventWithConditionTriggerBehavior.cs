@@ -166,7 +166,7 @@ public partial class EventWithConditionTriggerBehavior : Trigger
             return false;
         }
 
-        var rootVisual = (UIElement?) null;
+        UIElement? rootVisual = null;
         if (element.XamlRoot is not null)
         {
             rootVisual = element.XamlRoot.Content;
