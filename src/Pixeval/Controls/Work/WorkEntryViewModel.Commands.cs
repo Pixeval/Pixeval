@@ -47,7 +47,7 @@ public partial class WorkEntryViewModel<T>
             return;
         IsBookmarkedDisplay = HeartButtonState.Pending; // pre-update
         BookmarkCommand.RefreshBookmarkCommand(IsFavorite, true);
-        var result = await SetBookmarkAsync();
+        var result = await SetBookmarkAsync(!IsFavorite);
         IsBookmarkedDisplay = result ? HeartButtonState.Checked : HeartButtonState.Unchecked;
         BookmarkCommand.RefreshBookmarkCommand(result, false);
         if (App.AppViewModel.AppSettings.DownloadWhenBookmarked && result)
@@ -60,14 +60,14 @@ public partial class WorkEntryViewModel<T>
             return;
         IsBookmarkedDisplay = HeartButtonState.Pending; // pre-update
         BookmarkCommand.RefreshBookmarkCommand(IsFavorite, true);
-        var result = await SetBookmarkAsync(isPrivate, userTags);
+        var result = await SetBookmarkAsync(true, isPrivate, userTags);
         IsBookmarkedDisplay = result ? HeartButtonState.Checked : HeartButtonState.Unchecked;
         BookmarkCommand.RefreshBookmarkCommand(result, false);
         if (App.AppViewModel.AppSettings.DownloadWhenBookmarked)
             SaveCommand.Execute(parameter);
     }
 
-    protected abstract Task<bool> SetBookmarkAsync(bool privately = false, IEnumerable<string>? tags = null);
+    protected abstract Task<bool> SetBookmarkAsync(bool favorite, bool privately = false, IEnumerable<string>? tags = null);
 
     protected abstract void SaveCommandOnExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args);
 
