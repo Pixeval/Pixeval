@@ -128,28 +128,36 @@ public static class MakoHelper
         return result.IsSuccessStatusCode ? isFollowed : !isFollowed;
     }
 
-    public static async Task<bool> SetIllustrationBookmarkAsync(Illustration id, bool privately = false, IEnumerable<string>? tags = null)
+    public static async Task<bool> SetIllustrationBookmarkAsync(Illustration id, bool favorite, bool privately = false, IEnumerable<string>? tags = null)
     {
-        var result = await (id.IsFavorite
-            ? App.AppViewModel.MakoClient.RemoveIllustrationBookmarkAsync(id.Id)
-            : App.AppViewModel.MakoClient.PostIllustrationBookmarkAsync(id.Id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public, tags));
-        if (result.IsSuccessStatusCode)
+        try
         {
-            await RefreshBookmarkTagsAsync();
-            id.IsFavorite = !id.IsFavorite;
+            var result = await (favorite
+                ? App.AppViewModel.MakoClient.PostIllustrationBookmarkAsync(id.Id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public, tags)
+                : App.AppViewModel.MakoClient.RemoveIllustrationBookmarkAsync(id.Id));
+            if (result.IsSuccessStatusCode)
+            {
+                await RefreshBookmarkTagsAsync();
+                id.IsFavorite = favorite;
+            }
+            return id.IsFavorite;
         }
-        return id.IsFavorite;
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
-    public static async Task<bool> SetNovelBookmarkAsync(Novel id, bool privately = false, IEnumerable<string>? tags = null)
+    public static async Task<bool> SetNovelBookmarkAsync(Novel id, bool favorite, bool privately = false, IEnumerable<string>? tags = null)
     {
-        var result = await (id.IsFavorite
-            ? App.AppViewModel.MakoClient.RemoveNovelBookmarkAsync(id.Id)
-            : App.AppViewModel.MakoClient.PostNovelBookmarkAsync(id.Id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public, tags));
+        var result = await (favorite
+            ? App.AppViewModel.MakoClient.PostNovelBookmarkAsync(id.Id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public, tags)
+            : App.AppViewModel.MakoClient.RemoveNovelBookmarkAsync(id.Id));
         if (result.IsSuccessStatusCode)
         {
             await RefreshBookmarkTagsAsync();
-            id.IsFavorite = !id.IsFavorite;
+            id.IsFavorite = favorite;
         }
         return id.IsFavorite;
     }

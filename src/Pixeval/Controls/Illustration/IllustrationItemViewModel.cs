@@ -162,5 +162,5 @@ public partial class IllustrationItemViewModel : WorkEntryViewModel<IArtworkInfo
             _ => new IllustrationItemViewModel(entry)
         };
 
-    protected override Task<bool> SetBookmarkAsync(bool privately = false, IEnumerable<string>? tags = null) => ThrowHelper.NotSupported<Task<bool>>();
+    protected override Task<bool> SetBookmarkAsync(bool favorite, bool privately = false, IEnumerable<string>? tags = null) => ThrowHelper.NotSupported<Task<bool>>();
 }

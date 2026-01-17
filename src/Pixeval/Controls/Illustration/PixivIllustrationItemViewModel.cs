@@ -10,7 +10,7 @@ public partial class PixivIllustrationItemViewModel(Illustration illustration) :
 {
     private new Illustration Entry => (Illustration) base.Entry;
 
-    protected override Task<bool> SetBookmarkAsync(bool privately = false, IEnumerable<string>? tags = null) => MakoHelper.SetIllustrationBookmarkAsync(Entry, privately, tags);
+    protected override Task<bool> SetBookmarkAsync(bool favorite, bool privately = false, IEnumerable<string>? tags = null) => MakoHelper.SetIllustrationBookmarkAsync(Entry, favorite, privately, tags);
 
     public override Uri PixEzUri => MakoHelper.GenerateIllustrationPixEzUri(Entry.Id);
 }

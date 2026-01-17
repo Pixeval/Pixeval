@@ -19,6 +19,7 @@ using Pixeval.Pages.NovelViewer;
 using Pixeval.Util.UI;
 using Windows.Foundation;
 using Misaki;
+using Pixeval.Pages.Misc;
 using WinUI3Utilities;
 
 namespace Pixeval.Controls;
@@ -74,12 +75,17 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>, 
                 sender.Opacity = 1;
     }
 
-    private void ItemsView_OnItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs e)
+    private async void ItemsView_OnItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs e)
     {
         switch (e.InvokedItem, ViewModel)
         {
             case (NovelItemViewModel viewModel, NovelViewViewModel viewViewModel):
                 this.CreateNovelPage(viewModel, viewViewModel);
+                break;
+            case (IllustrationItemViewModel { Entry: ArtworkWrapper { Id: var id } }, _):
+                if (int.TryParse(id, out var result))
+                    await this.CreateIllustrationPageAsync(
+                        await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(result));
                 break;
             case (IllustrationItemViewModel viewModel, IllustrationViewViewModel viewViewModel):
                 this.CreateIllustrationPage(viewModel, viewViewModel);
@@ -174,7 +180,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>, 
 
     public async void WorkItem_OnRequestOpenUserInfoPage(FrameworkElement sender, IWorkViewModel e)
     {
-        if (e.Entry.Platform is IPlatformInfo.Pixiv)
+        if (e.Entry.Platform is IPlatformInfo.Pixiv || e.Entry is ArtworkWrapper)
             await this.CreateIllustratorPageAsync(long.Parse(e.Entry.Authors[0].Id));
     }
 
