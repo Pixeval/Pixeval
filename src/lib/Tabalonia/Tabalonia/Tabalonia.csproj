@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net10.0</TargetFrameworks>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <IsAotCompatible>true</IsAotCompatible>
+	    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+
+        <Version>0.10.7</Version>
+
+        <Copyright>Copyright 2022-$([System.DateTime]::Now.ToString(`yyyy`)) © The Tabalonia Project</Copyright>
+        <PackageProjectUrl>https://github.com/egorozh/Tabalonia</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/egorozh/Tabalonia</RepositoryUrl>
+        <PackageTags>Tab Control, Draggable, Avalonia, AvaloniaUI</PackageTags>
+        <Description>Tab Control with draggable tabs for Avalonia</Description>
+        <PackageIcon>Icon.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageReleaseNotes>Supported a light mode for the custom theme</PackageReleaseNotes>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    </PropertyGroup>
+
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
+    </ItemGroup>
+
+    <ItemGroup Label="PackageIcon">
+        <None Include="..\Icon.png" Pack="true" Visible="false" PackagePath="" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\README.md" Pack="true" Visible="false" PackagePath="\" />
+        <None Include="..\LICENSE" Pack="true" Visible="false" PackagePath="" />
+    </ItemGroup>
+
+</Project>

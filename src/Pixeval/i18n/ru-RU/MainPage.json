@@ -1,0 +1,112 @@
+{
+  "BookmarksTab": {
+    "Content": "Моё избранное"
+  },
+  "RecommendUsersTab": {
+    "Content": "Рекомендованные художники"
+  },
+  "FollowingsTab": {
+    "Content": "Мои подписки"
+  },
+  "HistoriesTab": {
+    "Content": "История просмотров"
+  },
+  "TagsTab": {
+    "Content": "Теги"
+  },
+  "RecentPostsTab": {
+    "Content": "Новинки от подписок"
+  },
+  "NewWorksTab": {
+    "Content": "Все новые работы"
+  },
+  "SpotlightsTab": {
+    "Content": "Рекомендации"
+  },
+  "RankingsTab": {
+    "Content": "Рейтинги"
+  },
+  "FeedTab": {
+    "Content": "Лента"
+  },
+  "RecommendationsTab": {
+    "Content": "Рекомендации дня"
+  },
+  "DownloadListTab": {
+    "Content": "Список загрузок"
+  },
+  "HelpTab": {
+    "Content": "Помощь"
+  },
+  "AboutTab": {
+    "Content": "О приложении"
+  },
+  "SettingsTab": {
+    "Content": "Настройки"
+  },
+  "OpenSearchSettingButton": {
+    "ToolTipService": {
+      "ToolTip": "Настройки поиска"
+    }
+  },
+  "ReverseSearchButton": {
+    "ToolTipService": {
+      "ToolTip": "Поиск по изображению"
+    }
+  },
+  "MainPageAutoSuggestionBox": {
+    "PlaceholderText": "Введите ID произведения/название/ID автора/имя автора/настройку"
+  },
+  "SearchKeywordCannotBeBlankContent": "Ключевое слово не может быть пустым",
+  "SearchKeywordCannotBeBlankTitle": "Неверный ввод",
+  "ReverseSearchApiKeyNotPresentTitle": "Не указан API ключ или ключ неверный",
+  "ReverseSearchClientSideErrorContent": "Ошибка формата изображения или изображение слишком большое, или слишком частые запросы. Пожалуйста, проверьте и попробуйте позже",
+  "ReverseSearchStartContent": "Идет поиск по изображению",
+  "ReverseSearchDropHintTextBlock": {
+    "Text": "Перетащите сюда для поиска по изображению"
+  },
+  "ReverseSearchErrorTitle": "Ошибка обратного поиска",
+  "ReverseSearchNotFoundContent": "К сожалению, поиск не нашел совпадений в базе Pixiv. Эта функция ограничена поиском только по Pixiv",
+  "ReverseSearchNotFoundTitle": "Результаты не найдены",
+  "ReverseSearchResponseContentIsEmpty": "Пустой ответ сервера",
+  "ReverseSearchServerSideErrorContent": "Ошибка на стороне сервера",
+  "IllustrationHeaderSuggestionTextBlock": {
+    "Text": "Тенденции иллюстраций"
+  },
+  "NovelHeaderSuggestionTextBlock": {
+    "Text": "Тенденции рассказов"
+  },
+  "SettingsEntryHeaderSuggestionTextBlock": {
+    "Text": "Соответствующие настройки"
+  },
+  "TagAutoCompletionSuggestionTextBlock": {
+    "Text": "Соответствующие теги"
+  },
+  "FeedTabCannotBeOpenedTitle": "Невозможно использовать функцию ленты пользователя",
+  "FeedTabCannotBeOpenedContent": "Для функции ленты пользователя требуется Cookie, пожалуйста, заполните соответствующий Cookie на странице настроек перед использованием этой функции",
+  "ExtensionsTab": {
+    "Content": "Расширения"
+  },
+  "RefreshingSessionFailedTitle": "Не удалось обновить сессию",
+  "RefreshingSessionFailedContent": "Пожалуйста, войдите снова",
+  "SearchWorksResult": "Результаты поиска работ",
+  "SearchUsersResult": "Результаты поиска среди пользователей",
+  "OpenMyPageItem": {
+    "Text": "Открыть профиль"
+  },
+  "OpenMyPageInBrowserItem": {
+    "Text": "Открыть в браузере"
+  },
+  "RestrictedModeItem": {
+    "Text": "Ограниченный режим"
+  },
+  "AiShowItem": {
+    "Text": "Показывать работы ИИ"
+  },
+  "MoreViewingSettingsItem": {
+    "Text": "Дополнительные настройки просмотра"
+  },
+  "LogoutItem": {
+    "Text": "Выйти из аккаунта"
+  }
+}

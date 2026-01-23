@@ -1,0 +1,82 @@
+<UserControl
+    x:Class="Pixeval.Views.Work.WorkContainer"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Pixeval"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:utilities="using:Pixeval.Utilities"
+    xmlns:viewModels="using:Pixeval.ViewModels"
+    xmlns:views="using:Pixeval.Views"
+    xmlns:work="using:Pixeval.Views.Work"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="{x:Type viewModels:ISortableEntryViewViewModel}"
+    mc:Ignorable="d">
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top">
+            <!--  Non-selection toolbar (right side)  -->
+            <controls:ToolBar x:Name="RightToolBar" DockPanel.Dock="Right">
+                <ToggleButton
+                    x:Name="SelectionToggleButton"
+                    Content="{markup:SymbolIcon Symbol=Multiselect}"
+                    IsChecked="{Binding IsSelecting, Mode=OneWayToSource}" />
+                <Button
+                    x:Name="RefreshButton"
+                    Click="RefreshButton_OnClick"
+                    Content="{markup:SymbolIcon Symbol=ArrowClockwise}" />
+            </controls:ToolBar>
+
+            <controls:ToolBar x:Name="ExtraCommandsBar" DockPanel.Dock="Left">
+                <controls:SymbolComboBox
+                    x:Name="SortOptionComboBox"
+                    ItemsSource="{x:Static utilities:WorkSortOptionExtension.Items}"
+                    SelectedIndex="{x:Static views:PixevalSettings.WorkSortOptionIndex}"
+                    SelectionChanged="SortOptionComboBox_OnSelectionChanged" />
+                <AutoCompleteBox
+                    x:Name="FilterAutoSuggestBox"
+                    Width="250"
+                    VerticalAlignment="Stretch"
+                    KeyDown="FilterAutoSuggestBox_OnKeyDown"
+                    Watermark="{I18N {x:Static local:WorkContainerResources.FilterAutoSuggestBoxPlaceholderText}}" />
+            </controls:ToolBar>
+
+            <!--  Selection toolbar (visible when selecting)  -->
+            <controls:ToolBar x:Name="SelectionToolBar" IsVisible="{Binding IsSelecting}">
+                <Button Click="CancelSelectionButton_OnClicked" IsEnabled="{Binding !!SelectedEntries.Count}">
+                    <controls:IconText Symbol="SelectAllOff" Text="{Binding SelectedEntries.Count, Converter={x:Static work:WorkContainer.CancelSelectionButtonConverter}}" />
+                </Button>
+                <Button Click="SelectAllToggleButton_OnClicked">
+                    <controls:IconText Symbol="SelectAllOn" Text="{I18N {x:Static local:WorkContainerResources.SelectAllButtonLabel}}" />
+                </Button>
+                <Button
+                    x:Name="AddAllToBookmarkButton"
+                    Click="AddAllToBookmarkButton_OnClicked"
+                    IsEnabled="{Binding !!SelectedEntries.Count}">
+                    <controls:IconText Symbol="Bookmark" Text="{I18N {x:Static local:WorkContainerResources.AddAllToBookmarkButtonLabel}}" />
+                </Button>
+                <Button Click="SaveAllButton_OnClicked" IsEnabled="{Binding !!SelectedEntries.Count}">
+                    <controls:IconText Symbol="Save" Text="{I18N {x:Static local:WorkContainerResources.SaveAllButtonLabel}}" />
+                </Button>
+                <Button Click="OpenAllInBrowserButton_OnClicked" IsEnabled="{Binding !!SelectedEntries.Count}">
+                    <controls:IconText Symbol="GlobeArrowUp" Text="{I18N {x:Static local:WorkContainerResources.OpenAllInBrowserButtonLabel}}" />
+                </Button>
+            </controls:ToolBar>
+        </DockPanel>
+
+        <work:TagSelector
+            x:Name="TagSelector"
+            Margin="5"
+            DockPanel.Dock="Top"
+            IsVisible="False"
+            TagsSelected="TagSelector_OnTagsSelected" />
+
+        <work:WorkView
+            x:Name="WorkView"
+            DataContextChanged="WorkView_OnDataContextChanged"
+            LayoutType="{x:Static views:PixevalSettings.LayoutType}"
+            RequestAddToBookmark="WorkView_OnRequestAddToBookmark" />
+    </DockPanel>
+</UserControl>

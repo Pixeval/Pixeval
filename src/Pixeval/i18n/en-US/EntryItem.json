@@ -1,0 +1,31 @@
+{
+  "GenerateLink": "Copy application link",
+  "GenerateWebLink": "Copy website link",
+  "OpenInWebBrowser": "Open in browser",
+  "LinkCopiedToClipboard": "Link copied to clipboard (See usage on help page)",
+  "ShowPixEzQrCode": "Generate PixEz QR code",
+  "ShowQRCode": "Generate QR code",
+  "AddToBookmark": "Bookmark",
+  "Save": "Save",
+  "SaveAs": "Save as",
+  "OpenUserInfoPage": "作者信息",
+  "MangaSave": "Save manga",
+  "MangaSaveAs": "Save manga as",
+  "Copy": "Copy to clipboard",
+  "SaveAsCancelled": "Cancelled the \"save as\" operation",
+  "Saved": "Saved",
+  "DownloadTaskCreated": "Created download task",
+  "ImageSetToClipBoard": "Image copied to clipboard",
+  "TheIllustrationIsAMangaFormatted": "This work contains {0} pictures",
+  "TheIllustrationIsAnUgoira": "This is an ugoira",
+  "OpenNovel": "Read the novel",
+  "UserMetricsFollowingsTextBlock": {
+    "Text": "Follwings"
+  },
+  "UserMetricsIllustrationCountTextBlock": {
+    "Text": "Works"
+  },
+  "UserMetricsMyPixivUsersTextBlock": {
+    "Text": "My Pixiv users"
+  }
+}

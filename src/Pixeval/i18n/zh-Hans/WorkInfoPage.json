@@ -1,0 +1,15 @@
+{
+  "WorkCaptionEmpty": "无",
+  "BlockTagMenuItem": {
+    "Text": "屏蔽标签"
+  },
+  "WorkTagListTextBlock": {
+    "Text": "作品标签"
+  },
+  "CopyOriginalTagMenuItem": {
+    "Text": "复制原文"
+  },
+  "CopyTranslatedTagMenuItem": {
+    "Text": "复制译文"
+  }
+}

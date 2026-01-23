@@ -1,0 +1,30 @@
+{
+  "ContentDialog": {
+    "Title": "Notification",
+    "PrimaryButtonText": "Quitter l'application",
+    "CloseButtonText": "Continuer à utiliser"
+  },
+  "MainTextBlock": {
+    "Text": "Il est détecté que l'application n'ait pas été terminé correctement, vous pouvez essayer de (redémarrage nécessaire):"
+  },
+  "ClearConfig": {
+    "Text": "Remise à zéro de configuration de l'application"
+  },
+  "ClearContext": {
+    "Text": "Remise à zéro de session"
+  },
+  "OpenLocalFolder": {
+    "Text": "Ouvrir le répertoire local"
+  },
+  "OpenLogFolder": {
+    "Text": "Ouvrir le répertoire des logs"
+  },
+  "ReconfirmationOfClosingWindowCheckBox": {
+    "Content": "下次不再提示直接关闭窗口"
+  },
+  "ReconfirmationOfClosingWindow": {
+    "Title": "关闭窗口"
+  },
+  "SignOutConfirmationDialogContent": "Cette opération est irréversible",
+  "SignOutConfirmationDialogTitle": "Etes-vous sûr de vous déconnecter?"
+}

@@ -1,0 +1,39 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:work="using:Pixeval.Views.Work">
+    <Design.PreviewWith>
+        <StackPanel
+            Width="250"
+            Background="{DynamicResource SystemRegionBrush}"
+            Spacing="10">
+            <work:AddNewBookmarkTagItem Height="50" />
+        </StackPanel>
+    </Design.PreviewWith>
+
+    <ControlTheme x:Key="{x:Type work:AddNewBookmarkTagItem}" TargetType="{x:Type work:AddNewBookmarkTagItem}">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <Button
+                        Name="PART_AddButton"
+                        VerticalAlignment="Center"
+                        Content="{markup:SymbolIcon Add}"
+                        IsVisible="{TemplateBinding IsExpanded,
+                                                    Converter={x:Static BoolConverters.Not}}" />
+                    <StackPanel
+                        VerticalAlignment="Center"
+                        IsVisible="{TemplateBinding IsExpanded}"
+                        Orientation="Horizontal"
+                        Spacing="4">
+                        <TextBox Name="PART_TextBox" MinWidth="120" />
+                        <Button Name="PART_ConfirmButton" Content="{markup:SymbolIcon Checkmark}" />
+                        <Button Name="PART_CancelButton" Content="{markup:SymbolIcon Dismiss}" />
+                    </StackPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

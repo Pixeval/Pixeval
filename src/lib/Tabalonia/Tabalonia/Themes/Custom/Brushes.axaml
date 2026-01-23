@@ -1,0 +1,55 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+            <SolidColorBrush x:Key="TabControlWindowActiveBackgroundBrush" Color="#D0D0D0" />
+            <SolidColorBrush x:Key="TabControlWindowInactiveBackgroundBrush" Color="#DFDFDF" />
+
+            <SolidColorBrush x:Key="TabItemBackgroundBrush" Color="#D0D0D0" />
+            <SolidColorBrush x:Key="TabItemBackgroundBrushWindowInactive" Color="#DEDEDE" />
+
+            <SolidColorBrush x:Key="SelectedTabItemBackgroundBrush" Color="#EBEBEB" />
+
+            <SolidColorBrush x:Key="TabItemHeaderBackgroundUnselectedPointerOver" Color="#DADADA" />
+            <SolidColorBrush x:Key="TabItemHeaderBackgroundUnselectedPointerOverWindowInactive" Color="#E6E6E6" />
+            <SolidColorBrush x:Key="TabItemRightSeparatorBackgroundBrush" Color="#999999" />
+
+            <SolidColorBrush x:Key="AddItemCommandButtonPointerOverBrush" Color="#EAE8E7" />
+
+            <SolidColorBrush x:Key="AddItemCommandButtonForegroundPointerOverBrush" Color="#EAE8E7" />
+            <SolidColorBrush x:Key="AddItemCommandButtonBackgroundPointerOverBrush" Color="#B9BABA" />
+            <SolidColorBrush x:Key="InactiveWindowAddCommandButtonForegroundBrush" Color="#404040" />
+            <SolidColorBrush x:Key="InactiveWindowAddCommandButtonPointerOverForegroundBrush" Color="#363636" />
+            <SolidColorBrush x:Key="AddItemCommandButtonBackgroundPressedBrush" Color="#CCCCCC" />
+            <SolidColorBrush x:Key="CloseItemButtonPointerOverBrush" Color="#666666" />
+            <SolidColorBrush x:Key="CloseItemButtonInactiveWindowBrush" Color="#999999" />
+            <SolidColorBrush x:Key="CloseItemButtonInactiveWindowPointerOverBrush" Color="#1A1A1A" />
+            <SolidColorBrush x:Key="CloseItemButtonPressedBrush" Color="#333333" />
+            <SolidColorBrush x:Key="CloseItemButtonForeground" Color="#000000" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+            <SolidColorBrush x:Key="TabControlWindowActiveBackgroundBrush" Color="#202020" />
+            <SolidColorBrush x:Key="TabControlWindowInactiveBackgroundBrush" Color="#2F2F2F" />
+
+            <SolidColorBrush x:Key="TabItemBackgroundBrush" Color="#202020" />
+            <SolidColorBrush x:Key="TabItemBackgroundBrushWindowInactive" Color="#2E2E2E" />
+
+            <SolidColorBrush x:Key="SelectedTabItemBackgroundBrush" Color="#3B3B3B" />
+
+            <SolidColorBrush x:Key="TabItemHeaderBackgroundUnselectedPointerOver" Color="#2A2A2A" />
+            <SolidColorBrush x:Key="TabItemHeaderBackgroundUnselectedPointerOverWindowInactive" Color="#363636" />
+            <SolidColorBrush x:Key="TabItemRightSeparatorBackgroundBrush" Color="#777777" />
+            
+            <SolidColorBrush x:Key="AddItemCommandButtonForegroundPointerOverBrush" Color="#151719" />
+            <SolidColorBrush x:Key="AddItemCommandButtonBackgroundPointerOverBrush" Color="#464546" />
+            <SolidColorBrush x:Key="InactiveWindowAddCommandButtonForegroundBrush" Color="#BFBFBF" />
+            <SolidColorBrush x:Key="InactiveWindowAddCommandButtonPointerOverForegroundBrush" Color="#C9C9C9" />
+            <SolidColorBrush x:Key="AddItemCommandButtonBackgroundPressedBrush" Color="#333333" />
+            <SolidColorBrush x:Key="CloseItemButtonPointerOverBrush" Color="#1A1A1A" />
+            <SolidColorBrush x:Key="CloseItemButtonInactiveWindowBrush" Color="#666666" />
+            <SolidColorBrush x:Key="CloseItemButtonInactiveWindowPointerOverBrush" Color="#b8b8b8" />
+            <SolidColorBrush x:Key="CloseItemButtonForeground" Color="#FFFFFF" />
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+
+</ResourceDictionary>

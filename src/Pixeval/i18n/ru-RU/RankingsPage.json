@@ -1,0 +1,22 @@
+{
+  "RankOptionComboBox": {
+    "PlaceholderText": "Выбор режима"
+  },
+  "RankOptionDay": "Ежедневный рейтинг",
+  "RankOptionWeek": "Еженедельный рейтинг",
+  "RankOptionMonth": "Ежемесячный рейтинг",
+  "RankOptionDayMale": "Ежедневный рейтинг для мужчин",
+  "RankOptionDayFemale": "Ежедневный рейтинг для женщин",
+  "RankOptionWeekOriginal": "Оригиналы",
+  "RankOptionWeekRookie": "Новички",
+  "RankOptionDayManga": "Ежедневный рейтинг манги",
+  "RankOptionWeekManga": "Еженедельный рейтинг манги",
+  "RankOptionMonthManga": "Ежемесячный рейтинг манги",
+  "RankOptionDayR18": "Ежедневный R-18 рейтинг",
+  "RankOptionDayMaleR18": "Ежедневный R-18 рейтинг для мужчин",
+  "RankOptionDayFemaleR18": "Ежедневный R-18 рейтинг для женщин",
+  "RankOptionWeekR18": "Еженедельный R-18 рейтинг",
+  "RankOptionWeekR18G": "Еженедельный R-18G рейтинг",
+  "RankOptionDayAi": "Ежедневный рейтинг ИИ",
+  "RankOptionDayR18Ai": "Ежедневный рейтинг ИИ R-18"
+}

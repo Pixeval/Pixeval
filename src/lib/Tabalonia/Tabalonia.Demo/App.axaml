@@ -1,0 +1,17 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:custom="clr-namespace:Tabalonia.Themes.Custom;assembly=Tabalonia"
+             x:Class="Tabalonia.Demo.App">
+
+    <Application.Styles>
+        <FluentTheme DensityStyle="Normal" />
+
+        <!-- <fluent:FluentTheme /> -->
+
+        <custom:CustomTheme />
+
+         <!--<StyleInclude Source="Styles/MyTheme.axaml" />--> 
+
+    </Application.Styles>
+
+</Application>

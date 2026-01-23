@@ -1,0 +1,124 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using SQLite;
+
+namespace Pixeval.Models.Database.Managers;
+
+/// <summary>
+/// A simple persistent manager without mapping
+/// </summary>
+/// <typeparam name="T"></typeparam>
+public abstract class SimplePersistentManager<T> : IPersistentManager<T, T>
+    where T : HistoryEntry, new()
+{
+    private readonly SQLiteConnection _db;
+
+    protected SimplePersistentManager(SQLiteConnection db, int maximumRecords)
+    {
+        _db = db;
+        MaximumRecords = maximumRecords;
+        _ = _db.CreateTable<T>();
+        return;
+        // TODO
+        // 不直接用 CreateTable<T>()，因其 MigrateTable 在 AOT 下因 ColumnInfo 被裁剪
+        // 会误判所有列不存在，导致 "duplicate column name" 异常
+        CreateTableIfNotExists<T>(_db);
+    }
+
+    private static void CreateTableIfNotExists<TTable>(SQLiteConnection db) where TTable : new()
+    {
+        var tableName = db.GetMapping<TTable>().TableName;
+        var count = db.ExecuteScalar<int>(
+            "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?", tableName);
+        if (count == 0)
+            _ = db.CreateTable<TTable>();
+    }
+
+    /// <inheritdoc />
+    public virtual TableQuery<T> Queryable => _db.Table<T>();
+
+    /// <inheritdoc />
+    public int MaximumRecords { get; set; }
+
+    /// <inheritdoc />
+    public virtual int Count => Queryable.Count();
+
+    /// <inheritdoc />
+    public virtual void Insert(T t)
+    {
+        if (Queryable.Count() > MaximumRecords)
+            Purge(MaximumRecords);
+
+        _db.Insert(t);
+    }
+
+    /// <inheritdoc />
+    public virtual IReadOnlyList<T> Query(Expression<Func<T, bool>> predicate, int skip = 0, int limit = int.MaxValue)
+    {
+        return Queryable.Where(predicate).Skip(skip).Take(limit).ToArray();
+    }
+
+    /// <inheritdoc />
+    public virtual void AddOrUpdate(T entry) => _db.InsertOrReplace(entry);
+
+    /// <inheritdoc />
+    public virtual void Update(T entry) => _db.Update(entry);
+
+    /// <inheritdoc />
+    public virtual IReadOnlyList<T> Take(int count) => Queryable.Take(count).ToArray();
+
+    /// <inheritdoc />
+    public virtual IReadOnlyList<T> TakeLast(int count)
+    {
+        var c = Count;
+        if (count > c)
+            count = c;
+        return Queryable.Skip(c - count).Take(count).ToArray();
+    }
+
+    /// <inheritdoc />
+    public virtual IReadOnlyList<T> Select(Expression<Func<T, bool>> predicate)
+    {
+        return Queryable.Where(predicate).ToArray();
+    }
+
+    /// <inheritdoc />
+    public virtual T? TryDelete(Expression<Func<T, bool>> predicate)
+    {
+        if (Queryable.FirstOrDefault(predicate) is { } e)
+        {
+            _db.Delete(e);
+            return e;
+        }
+
+        return null;
+    }
+
+    /// <inheritdoc />
+    public virtual int Delete(Expression<Func<T, bool>> predicate) => Queryable.Delete(predicate);
+
+    /// <inheritdoc />
+    public virtual IReadOnlyList<T> ToArray() => Queryable.ToArray();
+
+    /// <inheritdoc />
+    public virtual IReadOnlyList<T> Reverse() => Queryable.OrderByDescending(t => t.HistoryEntryId).ToArray();
+
+    /// <inheritdoc />
+    public virtual void Purge(int limit)
+    {
+        var deleteCount = Count - limit;
+        if (deleteCount > 0)
+        {
+            var toDelete = Queryable.Take(deleteCount).ToArray();
+            foreach (var item in toDelete)
+                _db.Delete(item);
+        }
+    }
+
+    /// <inheritdoc />
+    public virtual void Clear() => _db.DeleteAll<T>();
+}

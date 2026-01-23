@@ -1,0 +1,15 @@
+{
+  "WorkCaptionEmpty": "None",
+  "BlockTagMenuItem": {
+    "Text": "Block a tag"
+  },
+  "WorkTagListTextBlock": {
+    "Text": "Work tags"
+  },
+  "CopyOriginalTagMenuItem": {
+    "Text": ""
+  },
+  "CopyTranslatedTagMenuItem": {
+    "Text": ""
+  }
+}

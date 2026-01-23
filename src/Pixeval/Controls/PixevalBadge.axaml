@@ -1,0 +1,201 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Pixeval.Controls"
+    xmlns:markup="using:Pixeval.Views.Markup">
+    <Design.PreviewWith>
+        <Border Background="{DynamicResource SystemChromeGrayColor}">
+            <StackPanel Margin="20" Spacing="20">
+                <ThemeVariantScope RequestedThemeVariant="Light">
+                    <Border
+                        Padding="20"
+                        Background="{DynamicResource SystemRegionBrush}"
+                        CornerRadius="20">
+                        <StackPanel Background="{DynamicResource SystemRegionBrush}" Spacing="10">
+                            <TextBlock
+                                FontSize="16"
+                                FontWeight="Bold"
+                                Text="Light Theme" />
+                            <ItemsControl ItemsSource="{markup:EnumValues {x:Type local:BadgeMode}}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="10" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="{x:Type local:BadgeMode}">
+                                        <local:PixevalBadge Mode="{Binding}" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </ThemeVariantScope>
+
+                <ThemeVariantScope RequestedThemeVariant="Dark">
+                    <Border
+                        Padding="20"
+                        Background="{DynamicResource SystemRegionBrush}"
+                        CornerRadius="20">
+                        <StackPanel Spacing="10">
+                            <TextBlock
+                                FontSize="16"
+                                FontWeight="Bold"
+                                Text="Dark Theme" />
+                            <ItemsControl ItemsSource="{markup:EnumValues {x:Type local:BadgeMode}}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="10" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="{x:Type local:BadgeMode}">
+                                        <local:PixevalBadge Mode="{Binding}" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </ThemeVariantScope>
+            </StackPanel>
+        </Border>
+    </Design.PreviewWith>
+
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+            <SolidColorBrush x:Key="BadgeBackgroundBrushNone" Color="DarkGray" />
+            <SolidColorBrush x:Key="BadgeBackgroundBrushPremium" Color="DarkOrange" />
+            <SolidColorBrush x:Key="BadgeBackgroundBrushFollowing" Color="Crimson" />
+            <SolidColorBrush x:Key="BadgeBackgroundBrushGif" Color="ForestGreen" />
+            <SolidColorBrush x:Key="BadgeBackgroundBrushR18" Color="Crimson" />
+            <SolidColorBrush x:Key="BadgeBackgroundBrushR18G" Color="DarkMagenta" />
+            <SolidColorBrush x:Key="BadgeBackgroundBrushAi" Color="Gray" />
+
+            <SolidColorBrush x:Key="BadgeForegroundBrushNone" Color="White" />
+            <SolidColorBrush x:Key="BadgeForegroundBrushPremium" Color="White" />
+            <SolidColorBrush x:Key="BadgeForegroundBrushFollowing" Color="White" />
+            <SolidColorBrush x:Key="BadgeForegroundBrushGif" Color="White" />
+            <SolidColorBrush x:Key="BadgeForegroundBrushR18" Color="White" />
+            <SolidColorBrush x:Key="BadgeForegroundBrushR18G" Color="White" />
+            <SolidColorBrush x:Key="BadgeForegroundBrushAi" Color="White" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+            <SolidColorBrush x:Key="BadgeBackgroundBrushNone" Color="DimGray" />
+            <SolidColorBrush x:Key="BadgeBackgroundBrushPremium" Color="#FFB347" />
+            <SolidColorBrush x:Key="BadgeBackgroundBrushFollowing" Color="#FF6B6B" />
+            <SolidColorBrush x:Key="BadgeBackgroundBrushGif" Color="#52C75A" />
+            <SolidColorBrush x:Key="BadgeBackgroundBrushR18" Color="#FF6B6B" />
+            <SolidColorBrush x:Key="BadgeBackgroundBrushR18G" Color="Orchid" />
+            <SolidColorBrush x:Key="BadgeBackgroundBrushAi" Color="DarkGray" />
+
+            <SolidColorBrush x:Key="BadgeForegroundBrushNone" Color="White" />
+            <SolidColorBrush x:Key="BadgeForegroundBrushPremium" Color="Black" />
+            <SolidColorBrush x:Key="BadgeForegroundBrushFollowing" Color="White" />
+            <SolidColorBrush x:Key="BadgeForegroundBrushGif" Color="White" />
+            <SolidColorBrush x:Key="BadgeForegroundBrushR18" Color="White" />
+            <SolidColorBrush x:Key="BadgeForegroundBrushR18G" Color="White" />
+            <SolidColorBrush x:Key="BadgeForegroundBrushAi" Color="Black" />
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+
+    <ControlTheme x:Key="{x:Type local:PixevalBadge}" TargetType="{x:Type local:PixevalBadge}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:PixevalBadge}">
+                    <Border
+                        VerticalAlignment="Center"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{StaticResource ControlCornerRadius}">
+                        <TextBlock
+                            x:Name="BadgeTextBlock"
+                            Margin="3"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="9"
+                            FontWeight="Bold"
+                            Foreground="{TemplateBinding Foreground}"
+                            Text="{TemplateBinding Text}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style Selector="^[UseSmall=true] /template/ TextBlock#BadgeTextBlock">
+            <Setter Property="FontSize" Value="7" />
+            <Setter Property="Margin" Value="2" />
+            <Setter Property="FontWeight" Value="Normal" />
+        </Style>
+
+        <!--  Light Theme Styles  -->
+        <Style Selector="^[Mode=None]">
+            <Setter Property="Background" Value="{DynamicResource BadgeBackgroundBrushNone}" />
+            <Setter Property="Foreground" Value="{DynamicResource BadgeForegroundBrushNone}" />
+        </Style>
+
+        <Style Selector="^[Mode=Premium]">
+            <Setter Property="Background" Value="{DynamicResource BadgeBackgroundBrushPremium}" />
+            <Setter Property="Foreground" Value="{DynamicResource BadgeForegroundBrushPremium}" />
+        </Style>
+
+        <Style Selector="^[Mode=Following]">
+            <Setter Property="Background" Value="{DynamicResource BadgeBackgroundBrushFollowing}" />
+            <Setter Property="Foreground" Value="{DynamicResource BadgeForegroundBrushFollowing}" />
+        </Style>
+
+        <Style Selector="^[Mode=Gif]">
+            <Setter Property="Background" Value="{DynamicResource BadgeBackgroundBrushGif}" />
+            <Setter Property="Foreground" Value="{DynamicResource BadgeForegroundBrushGif}" />
+        </Style>
+
+        <Style Selector="^[Mode=R18]">
+            <Setter Property="Background" Value="{DynamicResource BadgeBackgroundBrushR18}" />
+            <Setter Property="Foreground" Value="{DynamicResource BadgeForegroundBrushR18}" />
+        </Style>
+
+        <Style Selector="^[Mode=R18G]">
+            <Setter Property="Background" Value="{DynamicResource BadgeBackgroundBrushR18G}" />
+            <Setter Property="Foreground" Value="{DynamicResource BadgeForegroundBrushR18G}" />
+        </Style>
+
+        <Style Selector="^[Mode=Ai]">
+            <Setter Property="Background" Value="{DynamicResource BadgeBackgroundBrushAi}" />
+            <Setter Property="Foreground" Value="{DynamicResource BadgeForegroundBrushAi}" />
+        </Style>
+
+        <!--  Dark Theme Styles  -->
+        <Style Selector="^[Mode=None]:dark">
+            <Setter Property="Background" Value="{DynamicResource BadgeBackgroundBrushNoneDark}" />
+            <Setter Property="Foreground" Value="{DynamicResource BadgeForegroundBrushNoneDark}" />
+        </Style>
+
+        <Style Selector="^[Mode=Premium]:dark">
+            <Setter Property="Background" Value="{DynamicResource BadgeBackgroundBrushPremiumDark}" />
+            <Setter Property="Foreground" Value="{DynamicResource BadgeForegroundBrushPremiumDark}" />
+        </Style>
+
+        <Style Selector="^[Mode=Following]:dark">
+            <Setter Property="Background" Value="{DynamicResource BadgeBackgroundBrushFollowingDark}" />
+            <Setter Property="Foreground" Value="{DynamicResource BadgeForegroundBrushFollowingDark}" />
+        </Style>
+
+        <Style Selector="^[Mode=Gif]:dark">
+            <Setter Property="Background" Value="{DynamicResource BadgeBackgroundBrushGifDark}" />
+            <Setter Property="Foreground" Value="{DynamicResource BadgeForegroundBrushGifDark}" />
+        </Style>
+
+        <Style Selector="^[Mode=R18]:dark">
+            <Setter Property="Background" Value="{DynamicResource BadgeBackgroundBrushR18Dark}" />
+            <Setter Property="Foreground" Value="{DynamicResource BadgeForegroundBrushR18Dark}" />
+        </Style>
+
+        <Style Selector="^[Mode=R18G]:dark">
+            <Setter Property="Background" Value="{DynamicResource BadgeBackgroundBrushR18GDark}" />
+            <Setter Property="Foreground" Value="{DynamicResource BadgeForegroundBrushR18GDark}" />
+        </Style>
+
+        <Style Selector="^[Mode=Ai]:dark">
+            <Setter Property="Background" Value="{DynamicResource BadgeBackgroundBrushAiDark}" />
+            <Setter Property="Foreground" Value="{DynamicResource BadgeForegroundBrushAiDark}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

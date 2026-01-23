@@ -1,0 +1,13 @@
+<Styles
+    x:Class="FluentAvalonia.UI.Themes.FluentAvaloniaTheme"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Styles.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <MergeResourceInclude Source="/UI/Themes/FrameStyles.axaml" />
+                <MergeResourceInclude Source="/UI/Themes/TextBlockStyles.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Styles.Resources>
+</Styles>

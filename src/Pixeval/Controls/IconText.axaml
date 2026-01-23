@@ -1,0 +1,39 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:fluent="using:FluentIcons.Avalonia"
+    xmlns:local="using:Pixeval.Controls">
+
+    <Design.PreviewWith>
+        <StackPanel Background="{DynamicResource SystemRegionBrush}" Spacing="5">
+            <local:IconText Symbol="Accessibility" Text="123" />
+            <local:IconText
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                IconSize="{StaticResource SmallIconFontSize}"
+                Symbol="Accessibility"
+                Text="123"
+                TextTheme="{StaticResource BaseTextBlockStyle}" />
+        </StackPanel>
+    </Design.PreviewWith>
+
+    <ControlTheme x:Key="{x:Type local:IconText}" TargetType="{x:Type local:IconText}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:IconText}">
+                    <DockPanel HorizontalSpacing="5">
+                        <fluent:SymbolIcon
+                            VerticalAlignment="Center"
+                            DockPanel.Dock="Left"
+                            FontSize="{TemplateBinding IconSize}"
+                            Symbol="{TemplateBinding Symbol}" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="{TemplateBinding FontSize}"
+                            Text="{TemplateBinding Text}"
+                            Theme="{TemplateBinding TextTheme}" />
+                    </DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

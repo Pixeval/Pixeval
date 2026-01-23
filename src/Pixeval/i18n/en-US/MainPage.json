@@ -1,0 +1,112 @@
+{
+  "BookmarksTab": {
+    "Content": "Bookmarks"
+  },
+  "RecommendUsersTab": {
+    "Content": "Reco Users"
+  },
+  "FollowingsTab": {
+    "Content": "Following"
+  },
+  "HistoriesTab": {
+    "Content": "History"
+  },
+  "TagsTab": {
+    "Content": "标签"
+  },
+  "RecentPostsTab": {
+    "Content": "Updates"
+  },
+  "NewWorksTab": {
+    "Content": "New Works"
+  },
+  "SpotlightsTab": {
+    "Content": "Spotlights"
+  },
+  "RankingsTab": {
+    "Content": "Rankings"
+  },
+  "FeedTab": {
+    "Content": "Feeds"
+  },
+  "RecommendationsTab": {
+    "Content": "Reco Works"
+  },
+  "DownloadListTab": {
+    "Content": "Download Manager"
+  },
+  "HelpTab": {
+    "Content": "Help"
+  },
+  "AboutTab": {
+    "Content": "About"
+  },
+  "SettingsTab": {
+    "Content": "Settings"
+  },
+  "OpenSearchSettingButton": {
+    "ToolTipService": {
+      "ToolTip": "Search for settings"
+    }
+  },
+  "ReverseSearchButton": {
+    "ToolTipService": {
+      "ToolTip": "Reverse search"
+    }
+  },
+  "MainPageAutoSuggestionBox": {
+    "PlaceholderText": "Work ID/Work title/Artist ID/Artist title/Setting entry"
+  },
+  "SearchKeywordCannotBeBlankContent": "The keyword must not be empty",
+  "SearchKeywordCannotBeBlankTitle": "The keyword is illegal",
+  "ReverseSearchApiKeyNotPresentTitle": "Empty API key/API key illegal",
+  "ReverseSearchClientSideErrorContent": "Illegal image format/Image is too big/Request is too frequent, please try again later",
+  "ReverseSearchStartContent": "正在进行以图搜图",
+  "ReverseSearchDropHintTextBlock": {
+    "Text": "在此释放进行以图搜图"
+  },
+  "ReverseSearchErrorTitle": "Reverse search failed",
+  "ReverseSearchNotFoundContent": "We can't find any matching work on Pixiv. The reverse search can only find works on Pixiv",
+  "ReverseSearchNotFoundTitle": "Didn't find any result",
+  "ReverseSearchResponseContentIsEmpty": "Result is empty",
+  "ReverseSearchServerSideErrorContent": "Server error",
+  "IllustrationHeaderSuggestionTextBlock": {
+    "Text": "Work trending"
+  },
+  "NovelHeaderSuggestionTextBlock": {
+    "Text": "Novel trending"
+  },
+  "SettingsEntryHeaderSuggestionTextBlock": {
+    "Text": "Suggested settings"
+  },
+  "TagAutoCompletionSuggestionTextBlock": {
+    "Text": "Suggestions"
+  },
+  "FeedTabCannotBeOpenedTitle": "无法使用用户动态功能",
+  "FeedTabCannotBeOpenedContent": "用户动态功能需要使用 Cookie，请先在设置页面中填写对应 Cookie 后再使用此功能",
+  "ExtensionsTab": {
+    "Content": "扩展"
+  },
+  "RefreshingSessionFailedTitle": "Failed to refresh session",
+  "RefreshingSessionFailedContent": "Please login again\nIf this issue recurs, please contact the developer for a solution",
+  "SearchWorksResult": "搜索作品结果",
+  "SearchUsersResult": "搜索用户结果",
+  "OpenMyPageItem": {
+    "Text": "打开个人页面"
+  },
+  "OpenMyPageInBrowserItem": {
+    "Text": "打开网页"
+  },
+  "RestrictedModeItem": {
+    "Text": "受限模式"
+  },
+  "AiShowItem": {
+    "Text": "显示AI作品"
+  },
+  "MoreViewingSettingsItem": {
+    "Text": "更多浏览设置"
+  },
+  "LogoutItem": {
+    "Text": "登出账号"
+  }
+}

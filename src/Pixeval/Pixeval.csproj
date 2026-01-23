@@ -1,0 +1,76 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<LangVersion>preview</LangVersion>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<IsAotCompatible>true</IsAotCompatible>
+		<AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<AvaloniaResource Include="Assets\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
+		<PackageReference Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />
+		<PackageReference Include="Avalonia.Controls.ColorPicker" Version="$(AvaloniaVersion)" />
+		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+		<PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.1.1">
+			<IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+			<PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+		<PackageReference Include="FluentIcons.Avalonia" Version="2.0.319" />
+		<PackageReference Include="LiveMarkdown.Avalonia" Version="1.9.1" />
+		<PackageReference Include="LiveMarkdown.Avalonia.Svg.Skia" Version="1.9.1" />
+		<PackageReference Include="PanAndZoom" Version="11.3.9.1" />
+		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
+		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
+		<PackageReference Include="Svg.Controls.Skia.Avalonia" Version="11.3.9.2" />
+		<PackageReference Include="Irihi.Ursa" Version="1.15.0" />
+		<PackageReference Include="Irihi.Ursa.Themes.Semi" Version="1.15.0" />
+		<PackageReference Include="Semi.Avalonia" Version="11.3.7.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\lib\AutoSettingsPage\AutoSettingsPage.Avalonia\AutoSettingsPage.Avalonia.csproj" />
+	  <ProjectReference Include="..\lib\AutoSettingsPage\AutoSettingsPage\AutoSettingsPage.csproj" />
+	  <ProjectReference Include="..\lib\Avalonia.AnimatedImage\Avalonia.AnimatedImage\Avalonia.AnimatedImage.csproj" />
+	  <ProjectReference Include="..\lib\FluentAvalonia\FluentAvalonia.csproj" />
+	  <ProjectReference Include="..\lib\Imouto\Imouto.BooruParser\Imouto.BooruParser.csproj" />
+	  <ProjectReference Include="..\lib\Mako\Mako\Mako.csproj" />
+	  <ProjectReference Include="..\lib\Tabalonia\Tabalonia\Tabalonia.csproj" />
+	  <ProjectReference Include="..\Pixeval.I18N\Pixeval.I18N.csproj" />
+	  <ProjectReference Include="..\Pixeval.Caching\Pixeval.Caching.csproj" />
+	  <ProjectReference Include="..\Pixeval.Download\Pixeval.Download.csproj" />
+	  <ProjectReference Include="..\Pixeval.Filters\Pixeval.Filters.csproj" />
+	  <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- 字符串资源相关 -->
+		<None Update="i18n\**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+
+		<None Update="i18n\Language.tt">
+			<Generator>TextTemplatingFileGenerator</Generator>
+			<LastGenOutput>Language.cs</LastGenOutput>
+		</None>
+
+		<Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+
+		<Compile Update="i18n\Language.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Language.tt</DependentUpon>
+		</Compile>
+
+		<Compile Update="Views\Settings\DateWithSwitchSettingsCard.axaml.cs">
+		  <DependentUpon>DateWithSwitchSettingsCard.axaml</DependentUpon>
+		</Compile>
+	</ItemGroup>
+</Project>

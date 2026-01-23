@@ -1,0 +1,43 @@
+<UserControl
+    x:Class="Pixeval.Views.Entry.UserView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:entry="using:Pixeval.Views.Entry"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="using:Pixeval.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="{x:Type viewModels:UserViewViewModel}"
+    mc:Ignorable="d">
+    <UserControl.DataContext>
+        <viewModels:UserViewViewModel />
+    </UserControl.DataContext>
+    <entry:EntryView
+        x:Name="EntryView"
+        HasNoItem="{Binding !DataProvider.View.Count}"
+        IsLoadingMore="{Binding #ListBox.(controls:IncrementalLoadingBehavior.IsLoadingMore)}">
+        <ListBox
+            x:Name="ListBox"
+            controls:IncrementalLoadingBehavior.IsEnabled="True"
+            controls:IncrementalLoadingBehavior.Threshold="200"
+            ContainerPrepared="ListBox_OnContainerPrepared"
+            ItemsSource="{Binding DataProvider.View}">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel
+                        ItemSpacing="5"
+                        ItemWidth="300"
+                        ItemsAlignment="Start"
+                        LineSpacing="5" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type viewModels:UserItemViewModel}">
+                    <entry:UserItem DataContextChanged="UserItem_OnDataContextChanged" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </entry:EntryView>
+</UserControl>

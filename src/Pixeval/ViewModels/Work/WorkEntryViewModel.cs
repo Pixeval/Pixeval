@@ -1,0 +1,30 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
+using System;
+using CommunityToolkit.Mvvm.ComponentModel;
+using Misaki;
+using Pixeval.Controls;
+
+namespace Pixeval.ViewModels;
+
+public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>, IWorkViewModel where T : class, IArtworkInfo
+{
+    protected WorkEntryViewModel(T entry) : base(entry)
+    {
+        IsBookmarkedDisplay = IsFavorite ? HeartButtonState.Checked : HeartButtonState.Unchecked;
+    }
+
+    public abstract bool IsBookmarkSupported { get; }
+
+    IArtworkInfo IWorkViewModel.Entry => Entry;
+
+    public bool IsFavorite => Entry.IsFavorite;
+
+    [ObservableProperty]
+    public partial HeartButtonState IsBookmarkedDisplay { get; set; }
+
+    public DateTimeOffset CreateDate => Entry.CreateDate;
+
+    protected override string ThumbnailUrl => Entry.Thumbnails.PickClosestHeight(300)?.ImageUri.OriginalString;
+}

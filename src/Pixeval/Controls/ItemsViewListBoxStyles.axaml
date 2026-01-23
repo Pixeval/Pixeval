@@ -1,0 +1,95 @@
+<Styles
+    x:Class="Pixeval.Controls.ItemsViewListBoxStyles"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls">
+
+    <Design.PreviewWith>
+        <ListBox Background="{DynamicResource SystemRegionBrush}" SelectionMode="Multiple">
+            <!--
+            <ListBox.Styles>
+                <controls:ListBoxStyles />
+            </ListBox.Styles>
+            -->
+            <ListBoxItem Padding="30,10" Content="Item 1" />
+            <ListBoxItem
+                Padding="30,10"
+                Content="Item 2"
+                IsSelected="True" />
+            <ListBoxItem Padding="30,10" Content="Item 3" />
+        </ListBox>
+    </Design.PreviewWith>
+
+    <Styles.Resources>
+        <ControlTheme
+            x:Key="{x:Type ListBoxItem}"
+            BasedOn="{StaticResource {x:Type ListBoxItem}}"
+            TargetType="{x:Type ListBoxItem}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                        <Panel>
+                            <ContentPresenter
+                                Margin="{TemplateBinding Padding}"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Content="{TemplateBinding Content}" />
+                            <controls:ListBoxItemCheckBox
+                                Name="SelectionCheckBox"
+                                Margin="1"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top"
+                                IsChecked="{TemplateBinding IsSelected,
+                                                            Mode=TwoWay}"
+                                IsVisible="False">
+                                <controls:ListBoxItemCheckBox.Resources>
+                                    <ResourceDictionary>
+                                        <ResourceDictionary.ThemeDictionaries>
+                                            <ResourceDictionary x:Key="Light">
+                                                <StaticResource x:Key="CheckBoxCheckBackgroundFillUnchecked" ResourceKey="ControlOnImageFillColorDefaultBrush" />
+                                            </ResourceDictionary>
+                                            <ResourceDictionary x:Key="Dark">
+                                                <StaticResource x:Key="CheckBoxCheckBackgroundFillUnchecked" ResourceKey="ControlOnImageFillColorDefaultBrush" />
+                                            </ResourceDictionary>
+                                        </ResourceDictionary.ThemeDictionaries>
+                                    </ResourceDictionary>
+                                </controls:ListBoxItemCheckBox.Resources>
+                            </controls:ListBoxItemCheckBox>
+                            <Border
+                                Name="HoverMask"
+                                Background="{DynamicResource SubtleFillColorSecondaryBrush}"
+                                IsHitTestVisible="False"
+                                IsVisible="False" />
+                            <Border
+                                Name="SelectionBorder"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{StaticResource ControlCornerRadius}"
+                                IsHitTestVisible="False"
+                                IsVisible="False" />
+                        </Panel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style Selector="^:pointerover /template/ Border#HoverMask">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </ControlTheme>
+    </Styles.Resources>
+
+    <Style Selector="ListBox[SelectionMode=Multiple] ListBoxItem /template/ CheckBox#SelectionCheckBox">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+
+    <Style Selector="ListBox[SelectionMode=Multiple] ListBoxItem /template/ Border#SelectionBorder">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+
+    <Style Selector="ListBox[SelectionMode=Multiple] ListBoxItem:selected">
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+    </Style>
+</Styles>

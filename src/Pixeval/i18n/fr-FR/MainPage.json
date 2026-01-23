@@ -1,0 +1,112 @@
+{
+  "BookmarksTab": {
+    "Content": "Mes favoris"
+  },
+  "RecommendUsersTab": {
+    "Content": "Auteurs recommendés"
+  },
+  "FollowingsTab": {
+    "Content": "Mes suivis"
+  },
+  "HistoriesTab": {
+    "Content": "Mon historique"
+  },
+  "TagsTab": {
+    "Content": "标签"
+  },
+  "RecentPostsTab": {
+    "Content": "Posts récents"
+  },
+  "NewWorksTab": {
+    "Content": "Tous les artworks"
+  },
+  "SpotlightsTab": {
+    "Content": "Spotlights"
+  },
+  "RankingsTab": {
+    "Content": "Classements"
+  },
+  "FeedTab": {
+    "Content": "关注动态"
+  },
+  "RecommendationsTab": {
+    "Content": "Coup de coeur"
+  },
+  "DownloadListTab": {
+    "Content": "Liste des téléchargements"
+  },
+  "HelpTab": {
+    "Content": "Aide"
+  },
+  "AboutTab": {
+    "Content": "A propos"
+  },
+  "SettingsTab": {
+    "Content": "Configurations"
+  },
+  "OpenSearchSettingButton": {
+    "ToolTipService": {
+      "ToolTip": "Configurations de la recherche"
+    }
+  },
+  "ReverseSearchButton": {
+    "ToolTipService": {
+      "ToolTip": "Recherche inversée"
+    }
+  },
+  "MainPageAutoSuggestionBox": {
+    "PlaceholderText": "Entrez un ID/nom d'artwork, un ID/nom d'auteur, ou une entrée de configuration"
+  },
+  "SearchKeywordCannotBeBlankContent": "Le mot clé à chercher ne peut pas être vide",
+  "SearchKeywordCannotBeBlankTitle": "Erreur de recherche",
+  "ReverseSearchApiKeyNotPresentTitle": "API Key non configurée ou mal configurée",
+  "ReverseSearchClientSideErrorContent": "Erreur de format de l'image, l'image trop large ou requêtes trop fréquentes, veuillez réessayer",
+  "ReverseSearchStartContent": "正在进行以图搜图",
+  "ReverseSearchDropHintTextBlock": {
+    "Text": "在此释放进行以图搜图"
+  },
+  "ReverseSearchErrorTitle": "Erreur dans la recherche inversée",
+  "ReverseSearchNotFoundContent": "Désolé, la recherche inversée n'a trouvé aucun résultat dans la DB de Pixiv, cette fonctionnalité est limité sur les illustrations existantes sur Pixiv",
+  "ReverseSearchNotFoundTitle": "Aucun résultat trouvé",
+  "ReverseSearchResponseContentIsEmpty": "La réponse est vide",
+  "ReverseSearchServerSideErrorContent": "Erreur dans le serveur",
+  "IllustrationHeaderSuggestionTextBlock": {
+    "Text": "Tendance des illustrations"
+  },
+  "NovelHeaderSuggestionTextBlock": {
+    "Text": "Tendance des romans"
+  },
+  "SettingsEntryHeaderSuggestionTextBlock": {
+    "Text": "Configurations connexes"
+  },
+  "TagAutoCompletionSuggestionTextBlock": {
+    "Text": "Tags connexes"
+  },
+  "FeedTabCannotBeOpenedTitle": "无法使用用户动态功能",
+  "FeedTabCannotBeOpenedContent": "用户动态功能需要使用 Cookie，请先在设置页面中填写对应 Cookie 后再使用此功能",
+  "ExtensionsTab": {
+    "Content": "扩展"
+  },
+  "RefreshingSessionFailedTitle": "Rafraichissement de session échoué",
+  "RefreshingSessionFailedContent": "Veuillez re-authentifier\nVeuillez contacter les développeurs en cas de problème récurrent",
+  "SearchWorksResult": "搜索作品结果",
+  "SearchUsersResult": "搜索用户结果",
+  "OpenMyPageItem": {
+    "Text": "打开个人页面"
+  },
+  "OpenMyPageInBrowserItem": {
+    "Text": "打开网页"
+  },
+  "RestrictedModeItem": {
+    "Text": "受限模式"
+  },
+  "AiShowItem": {
+    "Text": "显示AI作品"
+  },
+  "MoreViewingSettingsItem": {
+    "Text": "更多浏览设置"
+  },
+  "LogoutItem": {
+    "Text": "登出账号"
+  }
+}

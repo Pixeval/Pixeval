@@ -1,0 +1,57 @@
+<UserControl
+    x:Class="Pixeval.Views.Work.WorkView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:entry="using:Pixeval.Views.Entry"
+    xmlns:local="using:Pixeval.Views.Work"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:novel="using:Pixeval.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="{x:Type novel:ISortableEntryViewViewModel}"
+    mc:Ignorable="d">
+    <entry:EntryView
+        x:Name="EntryView"
+        HasNoItem="{Binding !View.Count}"
+        IsLoadingMore="{Binding #ListBox.(controls:IncrementalLoadingBehavior.IsLoadingMore)}">
+        <ListBox
+            x:Name="ListBox"
+            controls:IncrementalLoadingBehavior.IsEnabled="True"
+            controls:IncrementalLoadingBehavior.Threshold="200"
+            ContainerPrepared="ListBox_OnContainerPrepared"
+            SelectionChanged="WorkView_OnSelectionChanged"
+            SelectionMode="{Binding IsSelecting, Converter={x:Static local:WorkView.SelectionModeConverter}}">
+            <ListBox.Styles>
+                <controls:ItemsViewListBoxStyles />
+            </ListBox.Styles>
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <controls:WrapPanel
+                        ItemHeight="200"
+                        ItemSpacing="5"
+                        ItemWidth="{Binding $parent[local:WorkView].ItemWidth}"
+                        ItemsAlignment="Stretch"
+                        LineSpacing="5" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.DataTemplates>
+                <DataTemplate x:DataType="{x:Type novel:NovelItemViewModel}">
+                    <local:NovelItem
+                        DataContext="{Binding Mode=OneTime}"
+                        DataContextChanged="WorkItem_OnDataContextChanged"
+                        RequestAddToBookmark="WorkItem_OnRequestAddToBookmark"
+                        RequestOpenUserInfoPage="WorkItem_OnRequestOpenUserInfoPage" />
+                </DataTemplate>
+                <DataTemplate x:DataType="{x:Type novel:IllustrationItemViewModel}">
+                    <local:IllustrationItem
+                        DataContext="{Binding Mode=OneTime}"
+                        DataContextChanged="WorkItem_OnDataContextChanged"
+                        RequestAddToBookmark="WorkItem_OnRequestAddToBookmark"
+                        RequestOpenUserInfoPage="WorkItem_OnRequestOpenUserInfoPage" />
+                </DataTemplate>
+            </ListBox.DataTemplates>
+        </ListBox>
+    </entry:EntryView>
+</UserControl>

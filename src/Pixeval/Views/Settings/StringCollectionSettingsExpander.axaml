@@ -1,0 +1,32 @@
+<controls:SettingsExpander
+    x:Class="Pixeval.Views.Settings.StringCollectionSettingsExpander"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avalonia="using:AutoSettingsPage.Avalonia"
+    xmlns:controls="using:CommunityToolkit.Avalonia.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.Avalonia"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:AutoSettingsPage.Models"
+    xmlns:sco="using:System.Collections.ObjectModel"
+    xmlns:u="https://irihi.tech/ursa"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="{x:Type models:ISingleValueSettingsEntry,
+                        x:TypeArguments=sco:ObservableCollection(x:String)}"
+    Description="{Binding Converter={x:Static avalonia:SettingsEntryHelper.DescriptionConverter}}"
+    Header="{Binding Header}"
+    mc:Ignorable="d">
+    <controls:SettingsExpander.HeaderIcon>
+        <fluent:SymbolIcon Symbol="{Binding Icon}" />
+    </controls:SettingsExpander.HeaderIcon>
+    <controls:SettingsExpander.Items>
+        <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
+            <u:TagInput
+                x:Name="TagInput"
+                AllowDuplicates="False"
+                Tags="{Binding Value}"
+                Watermark="{Binding Placeholder}" />
+        </controls:SettingsCard>
+    </controls:SettingsExpander.Items>
+</controls:SettingsExpander>

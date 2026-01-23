@@ -1,0 +1,24 @@
+{
+  "AddExtensionsButton": {
+    "Label": "添加扩展"
+  },
+  "UnzipFailed": "解压压缩文件时出错",
+  "DllFileExistedError": "文件已在扩展文件夹中，将跳过该文件",
+  "DllLoadedSuccessfully": "已加载DLL",
+  "DllLoadFailed": "加载DLL失败",
+  "OpenExtensionsButton": {
+    "Label": "打开扩展文件夹"
+  },
+  "TitleTextBlock": {
+    "Text": "Pixeval 扩展管理器"
+  },
+  "UnloadExtensionsButton": {
+    "Label": "卸载扩展"
+  },
+  "ZipContainsNoDll": "压缩文件不包含可用的DLL",
+  "ExtensionsHelpButton": {
+    "Label": "帮助文档"
+  },
+  "ExtensionOutdated": "DLL加载成功，但扩展版本已过时，请从获取扩展处下载最新的版本",
+  "SomeExtensionsOutdatedFormatted": "有 {0} 个扩展版本已过时，请从获取扩展处下载最新的版本  "
+}

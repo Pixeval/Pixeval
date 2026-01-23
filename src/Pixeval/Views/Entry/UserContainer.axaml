@@ -1,0 +1,28 @@
+<UserControl
+    x:Class="Pixeval.Views.Entry.UserContainer"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:entry="using:Pixeval.Views.Entry"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top">
+            <controls:ToolBar x:Name="RightToolBar" DockPanel.Dock="Right">
+                <Button
+                    x:Name="RefreshButton"
+                    Click="RefreshButton_OnClick"
+                    Content="{markup:SymbolIcon Symbol=ArrowClockwise}" />
+            </controls:ToolBar>
+
+            <controls:ToolBar x:Name="ExtraCommandsBar" />
+        </DockPanel>
+
+        <entry:UserView x:Name="UserView" />
+    </DockPanel>
+</UserControl>

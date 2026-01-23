@@ -1,0 +1,78 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32319.34
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tabalonia", "Tabalonia\Tabalonia.csproj", "{95015D97-CC6A-4B6D-922D-B47BAF4D08B4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tabalonia.Demo", "Tabalonia.Demo\Tabalonia.Demo.csproj", "{6CD195FC-79B1-4534-8B83-72B3E8013573}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Drafts", "Drafts", "{5400CEC5-BD33-4569-AAEB-62772E37C300}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tabalonia", "..\Dragablz\src\Avalonia\Tabalonia\Tabalonia.csproj", "{6CA99C33-7949-41BA-81D3-BBA84282D9E7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tabalonia.Demo", "..\Dragablz\src\Avalonia\Tabalonia.Demo\Tabalonia.Demo.csproj", "{248463F7-2767-4F08-AB7B-E9AEB58A9710}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Tabalonia.Shared", "..\Dragablz\src\Core\Tabalonia.Shared\Tabalonia.Shared.shproj", "{2CF06F55-F1BC-4505-80F0-40A419C26876}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dragablz", "..\Dragablz\src\WPF\Dragablz\Dragablz.csproj", "{7B898B8A-B02D-4090-B058-15D18E904A7F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DragablzDemo", "..\Dragablz\src\WPF\DragablzDemo\DragablzDemo.csproj", "{74310C1E-A1AF-4767-A5D5-E739B1175269}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DragablzModernUIDemo", "..\Dragablz\src\WPF\DragablzModernUIDemo\DragablzModernUIDemo.csproj", "{CC771231-EF3A-45FF-8C17-B95251B329B0}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\Dragablz\src\Core\Tabalonia.Shared\Tabalonia.Shared.projitems*{2cf06f55-f1bc-4505-80f0-40a419c26876}*SharedItemsImports = 13
+		..\Dragablz\src\Core\Tabalonia.Shared\Tabalonia.Shared.projitems*{6ca99c33-7949-41ba-81d3-bba84282d9e7}*SharedItemsImports = 5
+		..\Dragablz\src\Core\Tabalonia.Shared\Tabalonia.Shared.projitems*{7b898b8a-b02d-4090-b058-15d18e904a7f}*SharedItemsImports = 5
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{95015D97-CC6A-4B6D-922D-B47BAF4D08B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95015D97-CC6A-4B6D-922D-B47BAF4D08B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95015D97-CC6A-4B6D-922D-B47BAF4D08B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95015D97-CC6A-4B6D-922D-B47BAF4D08B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CD195FC-79B1-4534-8B83-72B3E8013573}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CD195FC-79B1-4534-8B83-72B3E8013573}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CD195FC-79B1-4534-8B83-72B3E8013573}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CD195FC-79B1-4534-8B83-72B3E8013573}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CA99C33-7949-41BA-81D3-BBA84282D9E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CA99C33-7949-41BA-81D3-BBA84282D9E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CA99C33-7949-41BA-81D3-BBA84282D9E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CA99C33-7949-41BA-81D3-BBA84282D9E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{248463F7-2767-4F08-AB7B-E9AEB58A9710}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{248463F7-2767-4F08-AB7B-E9AEB58A9710}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{248463F7-2767-4F08-AB7B-E9AEB58A9710}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{248463F7-2767-4F08-AB7B-E9AEB58A9710}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B898B8A-B02D-4090-B058-15D18E904A7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B898B8A-B02D-4090-B058-15D18E904A7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B898B8A-B02D-4090-B058-15D18E904A7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B898B8A-B02D-4090-B058-15D18E904A7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74310C1E-A1AF-4767-A5D5-E739B1175269}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74310C1E-A1AF-4767-A5D5-E739B1175269}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74310C1E-A1AF-4767-A5D5-E739B1175269}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74310C1E-A1AF-4767-A5D5-E739B1175269}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC771231-EF3A-45FF-8C17-B95251B329B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC771231-EF3A-45FF-8C17-B95251B329B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC771231-EF3A-45FF-8C17-B95251B329B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC771231-EF3A-45FF-8C17-B95251B329B0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6CA99C33-7949-41BA-81D3-BBA84282D9E7} = {5400CEC5-BD33-4569-AAEB-62772E37C300}
+		{248463F7-2767-4F08-AB7B-E9AEB58A9710} = {5400CEC5-BD33-4569-AAEB-62772E37C300}
+		{2CF06F55-F1BC-4505-80F0-40A419C26876} = {5400CEC5-BD33-4569-AAEB-62772E37C300}
+		{7B898B8A-B02D-4090-B058-15D18E904A7F} = {5400CEC5-BD33-4569-AAEB-62772E37C300}
+		{74310C1E-A1AF-4767-A5D5-E739B1175269} = {5400CEC5-BD33-4569-AAEB-62772E37C300}
+		{CC771231-EF3A-45FF-8C17-B95251B329B0} = {5400CEC5-BD33-4569-AAEB-62772E37C300}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {712662D8-EF62-4BB3-A62E-6E342E8F12D4}
+	EndGlobalSection
+EndGlobal

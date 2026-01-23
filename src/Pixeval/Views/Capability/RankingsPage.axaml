@@ -1,0 +1,34 @@
+<UserControl
+    x:Class="Pixeval.RankingsPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Pixeval"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:utilities="using:Pixeval.Utilities"
+    xmlns:views="using:Pixeval.Views"
+    xmlns:work="using:Pixeval.Views.Work"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <work:WorkContainer x:Name="WorkContainer" RefreshRequested="WorkContainer_OnRefreshRequested">
+        <work:WorkContainer.CommandBarElements>
+            <CalendarDatePicker
+                x:Name="RankDateTimeCalendarDatePicker"
+                DisplayDateEnd="{x:Static local:RankingsPage.MaxDate}"
+                SelectedDate="{x:Static local:RankingsPage.MaxDate}"
+                SelectedDateChanged="CalendarDatePicker_OnSelectedDateChanged"
+                SelectedDateFormat="Short" />
+            <controls:SymbolComboBox
+                x:Name="RankOptionComboBox"
+                IconMode="False"
+                SelectionChanged="RankOptionComboBox_OnSelectionChanged" />
+            <controls:SymbolComboBox
+                x:Name="SimpleWorkTypeComboBox"
+                ItemsSource="{x:Static utilities:SimpleWorkTypeExtension.Items}"
+                SelectedIndex="{x:Static views:PixevalSettings.SimpleWorkTypeIndex}"
+                SelectionChanged="SimpleWorkTypeComboBox_OnSelectionChanged" />
+        </work:WorkContainer.CommandBarElements>
+    </work:WorkContainer>
+</UserControl>

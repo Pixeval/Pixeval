@@ -1,0 +1,27 @@
+<Solution>
+  <Folder Name="/Lib/">
+    <Project Path="src/lib/AutoSettingsPage/AutoSettingsPage.Avalonia/AutoSettingsPage.Avalonia.csproj" />
+    <Project Path="src/lib/AutoSettingsPage/AutoSettingsPage/AutoSettingsPage.csproj" />
+    <Project Path="src/lib/AutoSettingsPage/SettingsControls.Avalonia/SettingsControls.Avalonia.csproj" />
+    <Project Path="src/lib/Avalonia.AnimatedImage/Avalonia.AnimatedImage/Avalonia.AnimatedImage.csproj" />
+    <Project Path="src/lib/FluentAvalonia/FluentAvalonia.csproj" Id="e43f67a8-7d47-4a4f-8631-2fa7e7c7b171" />
+    <Project Path="src/lib/Imouto/Imouto.BooruParser/Imouto.BooruParser.csproj" />
+    <Project Path="src/lib/Mako/Mako.SourceGen/Mako.SourceGen.csproj" />
+    <Project Path="src/lib/Mako/Mako/Mako.csproj" />
+    <Project Path="src/lib/Tabalonia/Tabalonia/Tabalonia.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.props" />
+  </Folder>
+  <Project Path="src/Pixeval.Android/Pixeval.Android.csproj" />
+  <Project Path="src/Pixeval.Browser/Pixeval.Browser.csproj" />
+  <Project Path="src/Pixeval.Caching/Pixeval.Caching.csproj" />
+  <Project Path="src/Pixeval.Desktop/Pixeval.Desktop.csproj" />
+  <Project Path="src/Pixeval.Download/Pixeval.Download.csproj" />
+  <Project Path="src/Pixeval.Filters/Pixeval.Filters.csproj" />
+  <Project Path="src/Pixeval.I18N/Pixeval.I18N.csproj" />
+  <Project Path="src/Pixeval.iOS/Pixeval.iOS.csproj" />
+  <Project Path="src/Pixeval.SourceGen/Pixeval.SourceGen.csproj" />
+  <Project Path="src/Pixeval.Utilities/Pixeval.Utilities.csproj" />
+  <Project Path="src/Pixeval/Pixeval.csproj" />
+</Solution>

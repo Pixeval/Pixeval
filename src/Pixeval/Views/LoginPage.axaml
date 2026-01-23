@@ -1,0 +1,41 @@
+<UserControl
+    x:Class="Pixeval.Views.LoginPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:markup="using:Pixeval.Views.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="using:Pixeval.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="{x:Type viewModels:LoginPageViewModel}"
+    mc:Ignorable="d">
+    <UserControl.DataContext>
+        <viewModels:LoginPageViewModel />
+    </UserControl.DataContext>
+    <Grid
+        Margin="50"
+        VerticalAlignment="Center"
+        RowDefinitions="*,*,*,3*"
+        RowSpacing="5">
+        <TextBox
+            x:Name="TextBox"
+            Grid.Row="0"
+            Watermark="Refresh Token" />
+        <Button
+            Grid.Row="1"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            Click="LoginButton_OnClick"
+            Content="Log in" />
+        <Button
+            Grid.Row="2"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            Content="Open Browser（VPN needed）" />
+        <Button
+            Grid.Row="3"
+            Command="{Binding ChangeIconCommand}"
+            Content="{markup:SymbolIconEx Symbol={Binding LoginIcon}}" />
+    </Grid>
+</UserControl>

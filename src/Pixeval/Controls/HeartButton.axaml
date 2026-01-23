@@ -1,0 +1,30 @@
+<Button
+    x:Class="Pixeval.Controls.HeartButton"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Pixeval.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    HorizontalAlignment="Center"
+    VerticalAlignment="Center"
+    d:DesignHeight="50"
+    d:DesignWidth="50"
+    Tapped="Button_OnClick"
+    mc:Ignorable="d">
+    <Panel>
+        <local:WaveProgressHeart
+            x:Name="Back"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Background="{DynamicResource LayerFillColorDefaultBrush}"
+            Opacity="0.5"
+            ValueTransitionDuration="0:0:1"
+            ValueTransitionEasing="SineEaseOut" />
+        <local:WaveProgressHeart
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Stroke="{DynamicResource ControlStrongStrokeColorDefaultBrush}"
+            StrokeThickness="3"
+            Value="{Binding $parent[local:HeartButton].State, Converter={x:Static local:HeartButton.Converter}}" />
+    </Panel>
+</Button>

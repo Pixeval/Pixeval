@@ -1,0 +1,31 @@
+{
+  "ActionButtonContentOpen": "Open",
+  "ActionButtonContentPause": "Pause",
+  "ActionButtonContentRedownload": "Redownload",
+  "ActionButtonContentResume": "Resume",
+  "ActionButtonContentRetry": "Retry",
+  "CancelDownloadItem": {
+    "Label": "Cancel"
+  },
+  "CheckErrorMessageInDetailItem": {
+    "Label": "Error detail"
+  },
+  "DownloadCancelled": "Download cancelled",
+  "ActionDownloadCancelled": "Cancel",
+  "DownloadCompleted": "Download competed",
+  "DownloadErrorMessageFormatted": "Download failed: {0}",
+  "DownloadPaused": "Download paused",
+  "DownloadPending": "正在等待处理下载文件完成",
+  "DownloadQueued": "Download queued",
+  "DownloadRunningFormatted": "Progress: {0}%",
+  "ErrorMessageDialogTitle": "Error message",
+  "GoToPageItem": {
+    "Label": "View"
+  },
+  "OpenDownloadLocationItem": {
+    "Label": "Open download location"
+  },
+  "RedownloadItem": {
+    "Label": "Redownload"
+  }
+}

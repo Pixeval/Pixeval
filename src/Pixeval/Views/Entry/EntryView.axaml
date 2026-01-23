@@ -1,0 +1,65 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval"
+    xmlns:entry="using:Pixeval.Views.Entry"
+    xmlns:fluent="using:FluentIcons.Avalonia">
+
+    <Design.PreviewWith>
+        <StackPanel
+            Width="400"
+            Background="{DynamicResource SystemRegionBrush}"
+            Spacing="10">
+            <StackPanel Background="{DynamicResource SystemRegionBrush}">
+                <entry:EntryView>
+                    Content
+                </entry:EntryView>
+            </StackPanel>
+        </StackPanel>
+    </Design.PreviewWith>
+
+    <ControlTheme x:Key="{x:Type entry:EntryView}" TargetType="{x:Type entry:EntryView}">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <DockPanel Margin="5,0" VerticalSpacing="1">
+                    <ProgressBar
+                        Margin="-5,0"
+                        DockPanel.Dock="Bottom"
+                        IsIndeterminate="True"
+                        IsVisible="{TemplateBinding IsLoadingMore}" />
+                    <Grid>
+                        <StackPanel
+                            Grid.Row="0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Spacing="20">
+                            <StackPanel.IsVisible>
+                                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                    <TemplateBinding Property="HasNoItem" />
+                                    <TemplateBinding Converter="{x:Static BoolConverters.Not}" Property="IsLoadingMore" />
+                                </MultiBinding>
+                            </StackPanel.IsVisible>
+                            <fluent:SymbolIcon FontSize="150" Symbol="GiftOpen" />
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                Text="{I18N {x:Static controls:EntryViewResources.ResultIsEmptyTextBlock}}"
+                                Theme="{StaticResource TitleTextBlockStyle}" />
+                        </StackPanel>
+                        <!--<u:Skeleton
+                            Grid.Row="0"
+                            IsActive="True"
+                            IsLoading="True">
+                            <u:Skeleton.IsVisible>
+                                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                    <TemplateBinding Property="HasNoItem" />
+                                    <TemplateBinding Property="IsLoadingMore" />
+                                </MultiBinding>
+                            </u:Skeleton.IsVisible>
+                        </u:Skeleton>-->
+                        <ContentPresenter Grid.Row="0" Content="{TemplateBinding Content}" />
+                    </Grid>
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

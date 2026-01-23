@@ -1,0 +1,104 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Pixeval.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Design.PreviewWith>
+        <local:WaveProgressHeart
+            Width="50"
+            Background="Black"
+            Fill="Red"
+            Stroke="OrangeRed"
+            WaveStroke="Orange"
+            Value="0.5" />
+    </Design.PreviewWith>
+
+    <PathGeometry x:Key="HeartGeometry">
+        <PathGeometry.Figures>
+            <PathFigure IsClosed="True" StartPoint="7.92281,10.1545">
+                <BezierSegment
+                    Point1="12.0358,6.85826"
+                    Point2="17.9624,7.1521"
+                    Point3="21.7291,10.839" />
+                <LineSegment Point="24.0007,13.0625" />
+                <LineSegment Point="26.2675,10.8422" />
+                <BezierSegment
+                    Point1="30.0338,7.15321"
+                    Point2="35.9618,6.85812"
+                    Point3="40.0759,10.1548" />
+                <BezierSegment
+                    Point1="44.9267,14.042"
+                    Point2="45.3175,21.2843"
+                    Point3="40.913,25.6707" />
+                <LineSegment Point="24.883,41.6353" />
+                <BezierSegment
+                    Point1="24.3953,42.121"
+                    Point2="23.6067,42.1211"
+                    Point3="23.1189,41.6354" />
+                <LineSegment Point="7.0866,25.6702" />
+                <BezierSegment
+                    Point1="2.68198,21.2841"
+                    Point2="3.07229,14.0419"
+                    Point3="7.92281,10.1545" />
+            </PathFigure>
+        </PathGeometry.Figures>
+    </PathGeometry>
+
+    <PathGeometry x:Key="WaveGeometry">
+        <PathGeometry.Figures>
+            <PathFigure StartPoint="0,1">
+                <PolyBezierSegment Points="0.5,1 0.5,0 1,0" />
+                <PolyBezierSegment Points="1.5,0 1.5,1 2,1" />
+                <PolyBezierSegment Points="2.5,1 2.5,0 3,0" />
+                <PolyLineSegment Points="3,0 3,10 0,10 0,1" />
+            </PathFigure>
+        </PathGeometry.Figures>
+    </PathGeometry>
+
+    <ControlTheme x:Key="{x:Type local:WaveProgressHeart}" TargetType="{x:Type local:WaveProgressHeart}">
+        <Setter Property="Fill" Value="Crimson" />
+        <Setter Property="Background" Value="{DynamicResource LayerFillColorDefaultBrush}" />
+        <Setter Property="WaveStroke" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:WaveProgressHeart}">
+                    <Viewbox>
+                        <Panel
+                            Width="50"
+                            Height="50"
+                            Margin="0,-1.5,-1.5,0">
+                            <Border
+                                Name="PART_BorderClip"
+                                Background="{TemplateBinding Background}"
+                                Clip="{StaticResource HeartGeometry}">
+                                <Path
+                                    Name="PART_PathWave"
+                                    Width="150"
+                                    Height="67.5"
+                                    Margin="0,0,-100,-5"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Data="{StaticResource WaveGeometry}"
+                                    Fill="{TemplateBinding Fill}"
+                                    IsHitTestVisible="False"
+                                    RenderTransformOrigin="0.5,0.5"
+                                    Stretch="Fill"
+                                    Stroke="{TemplateBinding WaveStroke}"
+                                    StrokeThickness="{TemplateBinding WaveStrokeThickness}"
+                                    UseLayoutRounding="False" />
+                            </Border>
+                            <Path
+                                Data="{StaticResource HeartGeometry}"
+                                Fill="Transparent"
+                                IsHitTestVisible="False"
+                                Stroke="{TemplateBinding Stroke}"
+                                StrokeThickness="{TemplateBinding StrokeThickness}" />
+                        </Panel>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

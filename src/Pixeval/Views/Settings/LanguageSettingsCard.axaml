@@ -1,0 +1,35 @@
+<controls:SettingsCard
+    x:Class="Pixeval.Views.Settings.LanguageSettingsCard"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:am="using:Pixeval.AppManagement"
+    xmlns:avalonia="using:AutoSettingsPage.Avalonia"
+    xmlns:controls="using:CommunityToolkit.Avalonia.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:entries="using:Pixeval.Models.Settings.Entries"
+    xmlns:fluent="using:FluentIcons.Avalonia"
+    xmlns:globalization="using:System.Globalization"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:utilities="using:Pixeval.Utilities"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="{x:Type entries:LanguageSettingsEntry,
+                        x:TypeArguments=am:AppSettings}"
+    Description="{Binding Converter={x:Static avalonia:SettingsEntryHelper.DescriptionConverter}}"
+    Header="{Binding Header}"
+    mc:Ignorable="d">
+    <controls:SettingsCard.HeaderIcon>
+        <fluent:SymbolIcon Symbol="{Binding Icon}" />
+    </controls:SettingsCard.HeaderIcon>
+    <ComboBox
+        Width="200"
+        ItemsSource="{x:Static utilities:LanguageHelper.AvailableLanguages}"
+        SelectedValue="{Binding Value, Mode=TwoWay}"
+        SelectedValueBinding="{Binding Name}">
+        <ComboBox.ItemTemplate>
+            <DataTemplate x:DataType="globalization:CultureInfo">
+                <TextBlock Text="{Binding NativeName}" />
+            </DataTemplate>
+        </ComboBox.ItemTemplate>
+    </ComboBox>
+</controls:SettingsCard>

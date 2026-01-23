@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net10.0-ios</TargetFramework>
+		<SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+		<CodesignKey>iPhone Developer</CodesignKey>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Avalonia.iOS" Version="$(AvaloniaVersion)" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Pixeval\Pixeval.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<BundleResource Include="..\Pixeval\i18n\**\*.json" Link="i18n/%(RecursiveDir)%(Filename)%(Extension)" />
+		<BundleResource Include="..\Pixeval\i18n\**\*.md" Link="i18n/%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+</Project>

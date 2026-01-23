@@ -1,0 +1,65 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <MergeResourceInclude Source="/Controls/ToolBar.axaml" />
+        <MergeResourceInclude Source="/Controls/IconText.axaml" />
+        <MergeResourceInclude Source="/Controls/SymbolComboBox.axaml" />
+        <MergeResourceInclude Source="/Controls/WaveProgressHeart.axaml" />
+        <MergeResourceInclude Source="/Controls/PixevalBadge.axaml" />
+        <MergeResourceInclude Source="/Views/Entry/EntryView.axaml" />
+        <MergeResourceInclude Source="/Views/Work/TagSelector.axaml" />
+        <MergeResourceInclude Source="/Views/Work/AddNewBookmarkTagItem.axaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <CornerRadius x:Key="ControlTopCornerRadius">4,4,0,0</CornerRadius>
+    <CornerRadius x:Key="ControlBottomCornerRadius">0,0,4,4</CornerRadius>
+    <CornerRadius x:Key="ControlLeftCornerRadius">4,0,0,4</CornerRadius>
+    <CornerRadius x:Key="ControlRightCornerRadius">0,4,4,0</CornerRadius>
+
+    <ControlTheme
+        x:Key="CaptionStrongTextBlockStyle"
+        BasedOn="{StaticResource CaptionTextBlockStyle}"
+        TargetType="{x:Type TextBlock}">
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </ControlTheme>
+
+
+    <ControlTheme x:Key="RoundedButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="CornerRadius" Value="{StaticResource ControlCornerRadius}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border
+                        Padding="{TemplateBinding Padding}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        ClipToBounds="True"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                        <ContentPresenter
+                            Name="PART_ContentPresenter"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </ControlTheme>
+
+    <ControlTheme
+        x:Key="{x:Type ListBoxItem}"
+        BasedOn="{StaticResource {x:Type ListBoxItem}}"
+        TargetType="{x:Type ListBoxItem}">
+        <Setter Property="Padding" Value="0" />
+    </ControlTheme>
+
+    <ControlTheme
+        x:Key="{x:Type ListBox}"
+        BasedOn="{StaticResource {x:Type ListBox}}"
+        TargetType="{x:Type ListBox}">
+        <Setter Property="Background" Value="Transparent" />
+    </ControlTheme>
+
+</ResourceDictionary>

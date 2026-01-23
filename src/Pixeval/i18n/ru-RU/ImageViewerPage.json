@@ -1,0 +1,10 @@
+{
+  "ApplyingTransformerExtensions": "Применение расширений преобразования изображений",
+  "TransformerExtensionFinishedSuccessfully": "Расширение преобразования изображения успешно применено",
+  "CheckingCache": "Проверка кэша...",
+  "DownloadingImageFormatted": "Загрузка изображения: {0}%",
+  "LoadingFromCache": "Загрузка из кэша...",
+  "LoadingImage": "Декодирование изображения...",
+  "MergingUgoiraFrames": "Создание анимации...",
+  "TransformerExtensionFailed": "Не удалось применить расширение преобразования изображения"
+}

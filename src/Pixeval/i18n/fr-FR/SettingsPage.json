@@ -1,0 +1,444 @@
+{
+  "AppDescriptionTextBlock": {
+    "Text": "Pixeval est un client tierce de Pixiv, développé sous Windows UI 3. Cette application fournit de nombreuses fonctionnalités extras (Collection de favoris local, pas besoin de proxies en chine continentale, ...) en garantissant de supporter la plupart des features de Pixiv. \n\nVous pouvez trouvez plus d'informations sur le lien ci-dessous."
+  },
+  "AppFontFamilyComboBox": {
+    "PlaceholderText": "Choisir une police"
+  },
+  "AppFontFamilyEntry": {
+    "Header": "Configuration de police (effective après redémarrage)"
+  },
+  "AppLanguageEntry": {
+    "Header": "Paramètres de langue (effective après redémarrage)"
+  },
+  "OpenLanguageSettingsHyperlinkButton": {
+    "Content": "Ouvrir les paramètres de langue du système Windows"
+  },
+  "AppLanguageEntryComboBox": {
+    "PlaceholderText": "Sélectionner une langue"
+  },
+  "ApplicationSettingsGroup": {
+    "Text": "Configurations de l'application"
+  },
+  "BackdropEntry": {
+    "Header": "Backdrop de l'application"
+  },
+  "BrowsingExperienceSettingsGroup": {
+    "Text": "Configurations d'expérience de navigation"
+  },
+  "CheckingForUpdate": "Recherche de mises à jour en cours",
+  "DownloadingUpdate": "Téléchargement de mise à jour en cours",
+  "Unzipping": "Décompression en cours",
+  "IsUpToDate": "Vous utilisez actuellement la dernière version",
+  "IsInsider": "Vous utilisez actuellement une version insider",
+  "MajorUpdateAvailable": "Une mise à jour majeure est disponible",
+  "MinorUpdateAvailable": "Une mise à jour mineure est disponible",
+  "BuildUpdateAvailable": "Une mise à jour de build est disponible",
+  "UnknownUpdateState": "Etat de mise à jour inconnu",
+  "UpdateApp": "Mises à jour",
+  "LanguageSystemDefault": "Défaut de système",
+  "DownloadedAndWaitingToInstall": "Téléchargement de version {0} finalisé, voulez-vous effectuer une installation? Vous pouvez toutefois l'installer manuellement plus tard.",
+  "InstallCanceled": "Installation annulée",
+  "UpdateFailed": "Installation échouée",
+  "UpdateFailedInTempFolder": "Mise à jour échouée, vous pouvez consulter le paquet d'installation dans le répertoire temporaire",
+  "DownloadPathMacroEntry": {
+    "Header": "Endroit de téléchargement par défaut",
+    "Description": "Voir le mode d'emploi des Download Macros dans la page d'aide"
+  },
+  "DownloadPathMacroTextBox": {
+    "PlaceholderText": "Path Macro"
+  },
+  "RankOptionEntry": {
+    "Description": "Paramètres des classements",
+    "Header": "Type de classement"
+  },
+  "DefaultSearchSortOptionEntry": {
+    "Description": "Type de triage par défaut",
+    "Header": "Triage par défaut"
+  },
+  "SimpleWorkTypeEntry": {
+    "Description": "Type d'art à présenter par défaut",
+    "Header": "Type d'art par défaut"
+  },
+  "DefaultSearchTagMatchOptionEntry": {
+    "Description": "Stratégie avec laquelle on effectue le matching lors de la recherche des illustrations",
+    "Header": "Matching des mots clés"
+  },
+  "IllustrationOptionEntry": {
+    "Header": "Illustration"
+  },
+  "MangaOptionEntry": {
+    "Header": "Manga"
+  },
+  "UgoiraOptionEntry": {
+    "Header": "Ugoira"
+  },
+  "NovelOptionEntry": {
+    "Header": "Roman"
+  },
+  "PixivNameResolverHeader": {
+    "Text": "Résolution du nom"
+  },
+  "PixivNameResolverDescription": {
+    "Text": "Après l'activation de domain fronting, le nom sera résolu à cette addresse IP\nEntrer une addresse IP et cliquer '+' pour ajouter"
+  },
+  "DefaultSelectedTabEntry": {
+    "Description": "Ce tab sera affiché par défault lors des démarrages d'application",
+    "Header": "Tab par défaut"
+  },
+  "WebCookieTextBox": {
+    "PlaceholderText": "Pixiv 网页端 Cookie"
+  },
+  "WebCookieEntry": {
+    "Description": "诸如用户动态等功能需要该 Cookie 才能够正常使用",
+    "Header": "Cookie"
+  },
+  "DeleteBrowseHistoriesButton": {
+    "Content": "Supprimer"
+  },
+  "DeleteBrowseHistoriesEntry": {
+    "Description": "Supprimer toutes les historiques de navigation",
+    "Header": "Supprimer les historiques ce navigation"
+  },
+  "DeleteDownloadHistoriesButton": {
+    "Content": "Supprimer"
+  },
+  "DeleteDownloadHistoriesEntry": {
+    "Description": "Supprimer toute la trace des téléchargements",
+    "Header": "Supprimer la trace des téléchargements"
+  },
+  "DeleteSearchHistoriesButton": {
+    "Content": "Supprimer"
+  },
+  "DeleteFileCacheEntry": {
+    "Description": "Supprimer toutes les caches",
+    "Header": "Supprimer les caches"
+  },
+  "DeleteHistoriesEntry": {
+    "Header": "Supprimer les historiques"
+  },
+  "DeleteSearchHistoriesEntry": {
+    "Description": "Supprimer toutes les historiques de recherche",
+    "Header": "Supprimer les historiques de recherche"
+  },
+  "EnableDomainFrontingEntry": {
+    "Description": "Vous ne pourriez plus utiliser Pixeval dans les pays où Pixiv est bloqué quand vous activez cette option",
+    "Header": "Activer le domain fronting"
+  },
+  "DonateDeveloperHyperlinkButton": {
+    "Content": "Sponsoriser l'auteur"
+  },
+  "FileCacheCleared": "Caches nettoyés",
+  "DownloadHistoriesCleared": "Historiques de téléchargement supprimés",
+  "SearchHistoriesCleared": "Historiques de recherche supprimés",
+  "BrowseHistoriesCleared": "Historiques de navigation supprimés",
+  "DownloadMacroInvalidInfoBar": {
+    "Title": "Marco de téléchargement invalid"
+  },
+  "DownloadMacroInvalidInfoBarInputCannotBeBlank": "L'entrée ne peut pas être vide",
+  "DownloadMacroInvalidInfoBarMacroInvalidFormatted": "{0}, veuillez réessayer en respectant le format",
+  "DownloadSettingsGroup": {
+    "Text": "Configurations de téléchargement"
+  },
+  "DownloadUpdateAutomaticallyEntry": {
+    "Description": "A part des réseaux payants",
+    "Header": "Téléchargement des mises à jour automatique"
+  },
+  "FeedbackByEmailHyperlinkButton": {
+    "Content": "Contacter l'auteur par courriel"
+  },
+  "GitHubRepositoryHyperlinkButton": {
+    "Content": "Dépôt GitHub"
+  },
+  "ItemsViewLayoutTypeEntry": {
+    "Description": "Toutes les images auront la même taille en mode de maille. En mode de flux, seulement les deux extrémités de la première ligne seront alignées",
+    "Header": "Règle d'alignement des thumbnails"
+  },
+  "BlockedTagsTokenizingTextBox": {
+    "PlaceholderText": "Tags bloqués"
+  },
+  "BlockedTagsEntry": {
+    "Description": "Les tags bloqués ne seront pas affichés dans Pixeval (Utilisez le virgule pour les séparer)",
+    "Header": "Les tags bloqués global"
+  },
+  "ImageMirrorServerEntry": {
+    "Description": "Hôte de miroir pour télécharger les images. Veuillez à laisser vide si vous n'en connaissez pas",
+    "Header": "Nom d'hôte de service de miroir"
+  },
+  "ImageMirrorServerTextBox": {
+    "PlaceholderText": "Nom d'hôte"
+  },
+  "JoinFeedbackGroupHyperlinkButton": {
+    "Content": "Nous joindre dans le group"
+  },
+  "LastCheckedPrefix": "Dernière vérification:",
+  "MaxDownloadConcurrencyLevelEntry": {
+    "Description": "Nombre max. de tâches que vous pouvez effectuer simultanément. Valeur max est le nombre de core de votre CPU. Configurez avec précaution car trop de nombre pourra causer des lags de votre système",
+    "Header": "Nombre maximal des tâches en parallèl"
+  },
+  "MaximumBrowseHistoryRecordsEntry": {
+    "Description": "S'il y a plus de historiques de navigation que ce nombre, les historiques les plus anciennes seront supprimées",
+    "Header": "Nombre de limite des historiques de navigation"
+  },
+  "MaximumBrowseHistoryRecordsNumerBox": {
+    "PlaceholderText": "Entrez un nombre entre [10, 200]"
+  },
+  "MaximumDownloadHistoryRecordsEntry": {
+    "Description": "S'il y a plus de historiques de téléchargement que ce nombre, les historiques les plus anciennes seront supprimées",
+    "Header": "Nombre de limite des historiques de téléchargement"
+  },
+  "MaximumDownloadHistoryRecordsNumberBox": {
+    "PlaceholderText": "Entrez un nombre entre [10, 200]"
+  },
+  "RateEntry": {
+    "Description": "Vous aimez Pixeval? Donner un 5-⭐️ dans Microsoft Store~",
+    "Header": "Donner un avis pour Pixeval"
+  },
+  "MaximumSearchHistoryRecordsEntry": {
+    "Description": "S'il y a plus de historiques de recherche que ce nombre, les historiques les plus anciennes seront supprimées",
+    "Header": "Nombre de limite des recherches d'historique"
+  },
+  "MaximumSearchHistoryRecordsNumberBox": {
+    "PlaceholderText": "Entrez un nombre entre [10, 50]"
+  },
+  "MaximumSuggestionBoxSearchHistoryEntry": {
+    "Description": "S'il y a plus de historiques de recherche que ce nombre, la barre de recherche affichera uniquement des entrées correspondantes à ce nombre (tri par dates descendantes)",
+    "Header": "Nombre de limite des suggestions de recherche"
+  },
+  "MiscSettingsGroup": {
+    "Text": "Configurations auxiliaires"
+  },
+  "OpenFontSettingsHyperlinkButton": {
+    "Content": "Ouvrir les paramètres de police de Windows"
+  },
+  "OverwriteDownloadedFileEntry": {
+    "Description": "Les nouveaux téléchargements peuvent réécrire sur des fichiers existants si vous activez cette option",
+    "Header": "Réécriture des fichiers déjà téléchargés"
+  },
+  "PerformSignOutButton": {
+    "Content": "Effectuer une déconnexion"
+  },
+  "DownloadWhenBookmarkedEntry": {
+    "Description": "Votre art de favoris sera automatiquement téléchargé dès que vous le mettez en favoris",
+    "Header": "Téléchargement automatique lors d'ajout aux favoris"
+  },
+  "ReleaseNotesHyperlinkButton": {
+    "Content": "Journal des mises à jour"
+  },
+  "ReportBugHyperlinkButton": {
+    "Content": "Soumettre un issue sur GitHub"
+  },
+  "CheckForUpdatesButton": {
+    "Content": "Recherche de mise à jour"
+  },
+  "GitHubCheckForUpdatesEntry": {
+    "Header": "Recherche de mise à jour depuis GitHub"
+  },
+  "MsStoreCheckForUpdatesEntry": {
+    "Header": "Recherche de mise à jour depuis Microsoft Store"
+  },
+  "BugReportEntry": {
+    "Header": "Soumettre un issue",
+    "Description": "A propos des bugs d'application ou propositions de nouvelles fonctionnalités (journal de bug nécessaire)"
+  },
+  "BugReportChannelsEntry": {
+    "Header": "Canaux de soumission des issues",
+    "Description": "Vous pouvez soumettre un issue par des canaux ci-dessous"
+  },
+  "GitHubBugReportEntry": {
+    "ToolTipService": {
+      "ToolTip": "Soumettre un issue sur GitHub"
+    }
+  },
+  "EMailBugReportEntry": {
+    "ToolTipService": {
+      "ToolTip": "Soumettre un issue avec courriel"
+    }
+  },
+  "QQBugReportEntry": {
+    "ToolTipService": {
+      "ToolTip": "Soumettre un issue dans le groupe QQ"
+    }
+  },
+  "OpenLogEntry": {
+    "Header": "Ouvrir le répertoire des journaux",
+    "Description": "Veuillez joindre le journal concerné de ce répertoire lors de votre soumission de bug"
+  },
+  "OpenTempEntry": {
+    "Header": "Ouvrir le répertoire temporaire",
+    "Description": "Ce répertoire contient les fichiers temporaires qui sont effacés à chaque démarrage d'application"
+  },
+  "OpenLocalEntry": {
+    "Header": "Ouvrir le répertoire local",
+    "Description": "Ce répertoire contient les fichiers importants de configuration, merci de ne pas les modifier"
+  },
+  "ResetDefaultSettingsButton": {
+    "Content": "Remettre à zéro les configurations"
+  },
+  "ResetDefaultSettingsEntry": {
+    "Description": "Cliquer ce bouton pour une remise à zéro de toutes les configurations, cette opération est irréversible",
+    "Header": "Remettre à zéro des configurations"
+  },
+  "ResetSettingConfirmationDialogContent": "Cette opération est irréversible",
+  "ResetSettingConfirmationDialogTitle": "Etes-vous sûr de remettre à zéro toutes les configurations?",
+  "ReverseSearchApiKeyEntry": {
+    "Header": "SauceNAO的API Key"
+  },
+  "ReverseSearchApiKeyEntryDescriptionHyperlinkButton": {
+    "Content": "Récupérer votre API Key de SauceNAO ici (Authentification/Inscription requise)"
+  },
+  "ReverseSearchApiKeyTextBox": {
+    "PlaceholderText": "Entrez une API Key"
+  },
+  "ReverseSearchResultSimilarityThresholdEntry": {
+    "Description": "Seuil de confiance de la recherche inversée, les résultats avec une plus faible confiance seront ignorés. Cette indication décide à quel niveau un résultat ressemble à votre image originale",
+    "Header": "Seuil de recherche inversée"
+  },
+  "BrowseOriginalImageEntry": {
+    "Description": "Cette option nécessite plus de débit et de temps de chargement, mais vous aurez une meilleure expérience et une meilleure vitesse de téléchargement",
+    "Header": "Visualiser les images en original"
+  },
+  "ReconfirmationOfClosingWindowEntry": {
+    "Description": "在关闭窗口前，会弹出对话框要求你再次确认",
+    "Header": "关闭窗口再次确认"
+  },
+  "ScrollRateEntry": {
+    "Description": "低于0.1时关闭，开启后可自定义滚动速率，但可能造成不好的体验",
+    "Header": "滚动速率"
+  },
+  "SearchSettingsGroup": {
+    "Text": "Configurations de recherche"
+  },
+  "SessionSettingsGroup": {
+    "Text": "Configurations de session"
+  },
+  "SignOutEntry": {
+    "Description": "Me déconnecter et quitter l'application",
+    "Header": "Déconnecter"
+  },
+  "SpotlightSearchPageLimitNumberBox": {
+    "PlaceholderText": "Limitation de nombre de pages des spotlight parmi [1, 100]"
+  },
+  "TargetAPIPlatformEntry": {
+    "Description": "Spécifiez quelle plateforme d'API utilisée pour envoyer les requêtes. Si vous n'en connaissez pas, veuillez à la laisser vide",
+    "Header": "Plateforme API utilisée"
+  },
+  "ProxyTypeEntry": {
+    "Description": "Lors que le domain fronting est désactivé, ce proxy sera utilisé par Pixeval",
+    "Header": "Type de proxy"
+  },
+  "ProxyTextBoxEntry": {
+    "Description": "Les préfixes de protocole seront ignorés",
+    "Header": "Serveur de proxy"
+  },
+  "ProxyTextBoxErrorUri": "L'URI du serveur proxy est incorrect, veuillez la corriger",
+  "ThemeEntry": {
+    "Header": "Thème d'application"
+  },
+  "ThemeEntryDescriptionHyperlinkButton": {
+    "Content": "Ouvrir les paramètres du thème Windows"
+  },
+  "ThumbnailDirectionEntry": {
+    "Description": "Orientation de page lors de visualisation des illustrations",
+    "Header": "Orientation des vignettes"
+  },
+  "TitleTextBlock": {
+    "Text": "Configurations de Pixeval"
+  },
+  "UseFileCacheEntry": {
+    "Description": "Cette option permettra de réduire la consommation du réseau et augmenter votre expérience, mais les calculs CPU et les opérations I/O augmenteront",
+    "Header": "Utiliser les caches de fichier"
+  },
+  "VersionSettingsGroup": {
+    "Text": "Version"
+  },
+  "ViewPixevalWebsiteHyperlinkButton": {
+    "Content": "Page d'introduction"
+  },
+  "WorkDownloadFormatEntry": {
+    "Description": "Format d'art à télécharger",
+    "Header": "Format de téléchargement"
+  },
+  "NovelFontFamilyComboBox": {
+    "PlaceholderText": "Choisir une police"
+  },
+  "NovelFontWeightComboBox": {
+    "PlaceholderText": "Choisir le poid de police"
+  },
+  "NovelSettingsFontFamilyEntry": {
+    "Header": "Typographie"
+  },
+  "NovelSettingsFontColorEntry": {
+    "Header": "Couleur de texte",
+    "Description": "Couleur de texte"
+  },
+  "NovelSettingsBackgroundEntry": {
+    "Header": "Couleur de fond",
+    "Description": "Couleur de fond de page"
+  },
+  "NovelSettingsFontWeightEntry": {
+    "Header": "Poid de police",
+    "Description": "Poid de police de texte"
+  },
+  "NovelSettingsFontSizeEntry": {
+    "Header": "Taille des caractères",
+    "Description": "Taille des caractères de texte"
+  },
+  "NovelSettingsLineHeightEntry": {
+    "Header": "Hauteur de ligne",
+    "Description": "Hauteur de ligne de texte"
+  },
+  "NovelSettingsMaxWidthEntry": {
+    "Header": "Largeur de page",
+    "Description": "Largeur maximale de page"
+  },
+  "MacroCopiedToClipboard": "Le macro a été copié sur le clipboard",
+  "ExtMacroTooltip": "Extensions des fichiers, e.g. .jpg, .png, etc. A noter que ce macro contient déjà les points devant les suffixes \".\", ce macro doit uniquement être utilisé dans les noms de fichier",
+  "IdMacroTooltip": "ID d'art",
+  "TitleMacroTooltip": "Titre d'art",
+  "ArtistIdMacroTooltip": "ID d'auteur",
+  "ArtistNameMacroTooltip": "Nom d'auteur",
+  "PublishYearMacroTooltip": "L'année de publication",
+  "PublishMonthMacroTooltip": "Le mois de publication",
+  "PublishDayMacroTooltip": "Le jour de publication",
+  "IfPicSetMacroTooltip": "如果是多图，该宏会被替换为其参数",
+  "IfPicAllMacroTooltip": "如果是图片（包括静态单图、多图、动图），该宏会被替换为其参数",
+  "IfR18MacroTooltip": "Ce marco sera remplacé par son argument s'il s'agit d'un art restreint (R18 ou R18G)",
+  "IfR18GMacroTooltip": "Ce marco sera remplacé par son argument s'il s'agit d'un art R18G",
+  "IfAiMacroTooltip": "Ce marco sera remplacé par son argument s'il s'agit d'un art généré par l'IA",
+  "IfPicOneMacroTooltip": "如果是静态单图，该宏会被替换为其参数",
+  "IfNovelMacroTooltip": "Ce marco sera remplacé par son argument s'il s'agit d'un roman",
+  "IfPicGifMacroTooltip": "如果是动图，该宏会被替换为其参数",
+  "PicSetIndexMacroTooltip": "Ce macro sera remplacé par l'indice de l'illustration courante dans la collection (n-ième illust.). Il faut l'utiliser avec le macro '@{if_pic_set=} et sur les noms de fichier",
+  "UseSearchEndDateEntry": {
+    "Header": "启用搜索结束日期",
+    "Description": "启用后搜索作品的投稿日期将到此日期结束"
+  },
+  "UseSearchStartDateEntry": {
+    "Header": "启用搜索开始日期",
+    "Description": "启用后搜索作品的投稿日期将从此日期开始"
+  },
+  "OpenExtensionsEntry": {
+    "Header": "打开扩展文件夹",
+    "Description": "此处存储了软件会加载的扩展DLL文件"
+  },
+  "BackupSettingsEntry": {
+    "Header": "备份设置",
+    "Description": "选择导出或导入设置（导出后请注意防止敏感信息泄漏）"
+  },
+  "OpenSettingsEntry": {
+    "Header": "打开设置文件夹",
+    "Description": "此处存储了软件的设置文件（包含账号信息）"
+  },
+  "ExportSettingsSuccess": "导出设置成功",
+  "ImportSessionSuccess": "导入会话成功",
+  "ImportSettingsSuccess": "导入设置成功",
+  "ExportSettingsPlaintextEntry": {
+    "Header": "导出明文设置",
+    "Description": "以JSON格式导出设置"
+  },
+  "ImportSettingsPlaintextEntry": {
+    "Description": "导入JSON格式的明文设置",
+    "Header": "导入明文设置"
+  }
+}

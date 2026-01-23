@@ -1,0 +1,10 @@
+{
+  "ApplyingTransformerExtensions": "正在应用图片转换扩展",
+  "TransformerExtensionFinishedSuccessfully": "图片转换扩展应用成功",
+  "CheckingCache": "正在检查缓存...",
+  "DownloadingImageFormatted": "正在下载图片：{0}%",
+  "LoadingFromCache": "正在从缓存中加载...",
+  "LoadingImage": "正在解码图片...",
+  "MergingUgoiraFrames": "正在合成动图...",
+  "TransformerExtensionFailed": "图片转换扩展应用失败"
+}

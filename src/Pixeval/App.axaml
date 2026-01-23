@@ -1,0 +1,33 @@
+<Application
+    x:Class="Pixeval.App"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:autoSettingsPage="using:AutoSettingsPage.Avalonia"
+    xmlns:custom="using:Tabalonia.Themes.Custom"
+    xmlns:semi="https://irihi.tech/semi"
+    xmlns:u-semi="https://irihi.tech/ursa/themes/semi"
+    xmlns:ui="using:FluentAvalonia.UI.Themes"
+    RequestedThemeVariant="Default">
+
+    <Application.Styles>
+        <semi:SemiTheme Locale="zh-CN" />
+        <u-semi:SemiTheme Locale="zh-CN" />
+        <FluentTheme />
+        <custom:CustomTheme />
+        <ui:FluentAvaloniaTheme />
+        <autoSettingsPage:AutoSettingsPageTheme />
+        <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />
+        <StyleInclude Source="avares://LiveMarkdown.Avalonia/Styles.axaml" />
+    </Application.Styles>
+    <Application.Resources>
+        <ResourceDictionary>
+            <x:Double x:Key="SmallIconFontSize">16</x:Double>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://LiveMarkdown.Avalonia/Defaults.axaml" />
+                <MergeResourceInclude Source="Themes/Colors.axaml" />
+                <MergeResourceInclude Source="Themes/Brushes.axaml" />
+                <MergeResourceInclude Source="Themes/Controls.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

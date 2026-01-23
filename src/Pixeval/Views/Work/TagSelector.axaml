@@ -1,0 +1,72 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:model="using:Mako.Model"
+    xmlns:utilities="using:Pixeval.Utilities"
+    xmlns:work="using:Pixeval.Views.Work">
+
+    <Design.PreviewWith>
+        <StackPanel Width="400" Spacing="10">
+            <StackPanel Background="{DynamicResource SystemRegionBrush}">
+                <work:TagSelector>
+                    <work:TagSelector.TagsSource>
+                        <model:BookmarkTag Name="A" />
+                        <model:BookmarkTag Name="B" Count="2" />
+                        <model:BookmarkTag Name="C" Count="1" />
+                        <utilities:AddNewBookmarkTag />
+                    </work:TagSelector.TagsSource>
+                </work:TagSelector>
+            </StackPanel>
+        </StackPanel>
+    </Design.PreviewWith>
+
+    <ControlTheme x:Key="{x:Type work:TagSelector}" TargetType="{x:Type work:TagSelector}">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <DockPanel
+                    HorizontalSpacing="5"
+                    LastChildFill="False"
+                    VerticalSpacing="5">
+                    <ListBox
+                        Name="PART_ListBox"
+                        DockPanel.Dock="Top"
+                        ItemsSource="{TemplateBinding TagsSource}"
+                        SelectedItems="{TemplateBinding SelectedTags}"
+                        SelectionMode="Multiple,Toggle">
+                        <ListBox.ItemContainerTheme>
+                            <ControlTheme BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="{x:Type ListBoxItem}">
+                                <Setter Property="Padding" Value="12" />
+                                <Setter Property="CornerRadius" Value="{StaticResource ControlCornerRadius}" />
+                            </ControlTheme>
+                        </ListBox.ItemContainerTheme>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="{x:Type utilities:AddNewBookmarkTag}">
+                                <work:AddNewBookmarkTagItem Source="{Binding}" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel ItemSpacing="5" LineSpacing="5" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                    </ListBox>
+                    <CheckBox
+                        Content="{I18N {x:Static controls:MiscResources.BookmarkTagSelectorPrivateCheckBoxContent}}"
+                        DockPanel.Dock="Left"
+                        IsChecked="{TemplateBinding IsPrivate,
+                                                    Mode=TwoWay}" />
+                    <Button
+                        Name="PART_ConfirmButton"
+                        Content="{markup:SymbolIcon Checkmark}"
+                        DockPanel.Dock="Left" />
+                    <Button
+                        Name="PART_CancelButton"
+                        Content="{markup:SymbolIcon Dismiss}"
+                        DockPanel.Dock="Left" />
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>
