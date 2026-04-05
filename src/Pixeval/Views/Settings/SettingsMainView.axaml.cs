@@ -71,7 +71,7 @@ public partial class SettingsMainView : UserControl
             await using var stream = await file.OpenWriteAsync();
             await JsonSerializer.SerializeAsync(stream, vm.AppSettings, SettingsSerializerContext.Default.AppSettings);
 
-            viewContainer.ShowSuccess(SettingsPageResources.ExportSettingsSuccess);
+            viewContainer.ShowSuccess(I18NManager.GetResource(SettingsPageResources.ExportSettingsSuccess));
         }
         catch (Exception exception)
         {
@@ -104,7 +104,7 @@ public partial class SettingsMainView : UserControl
                 foreach (var localGroup in vm.LocalGroups)
                 foreach (var settingsEntry in localGroup)
                     settingsEntry.LocalValueReset(appSettings);
-                viewContainer.ShowSuccess(SettingsPageResources.ImportSettingsSuccess, file.Name);
+                viewContainer.ShowSuccess(I18NManager.GetResource(SettingsPageResources.ImportSettingsSuccess), file.Name);
             }
         }
         catch (Exception exception)

@@ -27,7 +27,7 @@
         SelectedValue="{Binding Value, Mode=TwoWay}"
         SelectedValueBinding="{Binding Name}">
         <ComboBox.ItemTemplate>
-            <DataTemplate x:DataType="globalization:CultureInfo">
+            <DataTemplate x:DataType="{x:Type globalization:CultureInfo}">
                 <TextBlock Text="{Binding NativeName}" />
             </DataTemplate>
         </ComboBox.ItemTemplate>

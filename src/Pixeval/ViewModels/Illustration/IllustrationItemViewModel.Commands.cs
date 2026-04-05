@@ -4,9 +4,10 @@
 using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Mako.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
-using Pixeval.Download;
+using Pixeval.I18N;
 using Pixeval.Models.Download;
 using Pixeval.Utilities;
 using Pixeval.Views.ViewContainers;
@@ -16,12 +17,12 @@ namespace Pixeval.ViewModels;
 public partial class IllustrationItemViewModel
 {
     /// <inheritdoc />
-    public override bool IsBookmarkSupported => Entry is Mako.Model.Illustration;
+    public override bool IsBookmarkSupported => Entry is Illustration;
 
     /// <inheritdoc />
     protected override async Task SaveAsync(Control? parameter)
     {
-        if (TopLevel.GetTopLevelForFlyout(parameter) is { ViewContainer: { } viewContainer })
+        if (TopLevel.GetTopLevel(parameter) is { ViewContainer: { } viewContainer })
             await SaveInternalAsync(viewContainer, App.AppViewModel.AppSettings.DownloadPathMacro);
     }
 
@@ -29,13 +30,13 @@ public partial class IllustrationItemViewModel
     protected override async Task SaveAsAsync(Control? parameter)
     {
         // 必须有TopLevel来显示Picker
-        if (TopLevel.GetTopLevelForFlyout(parameter) is not { ViewContainer: { } viewContainer } topLevel)
+        if (TopLevel.GetTopLevel(parameter) is not { ViewContainer: { } viewContainer } topLevel)
             return;
 
         var folder = await topLevel.StorageProvider.OpenFolderPickerAsync(new() { AllowMultiple = false });
         if (folder is not [{ } single])
         {
-            viewContainer.ShowInformation(EntryItemResources.SaveAsCancelled);
+            viewContainer.ShowInformation(I18NManager.GetResource(EntryItemResources.SaveAsCancelled));
             return;
         }
 
@@ -57,6 +58,6 @@ public partial class IllustrationItemViewModel
         var factory = App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationDownloadTaskFactory>();
         var task = factory.Create(Entry, path);
         App.AppViewModel.DownloadManager.QueueTask(task);
-        viewContainerBase?.ShowSuccess(EntryItemResources.DownloadTaskCreated);
+        viewContainerBase?.ShowSuccess(I18NManager.GetResource(EntryItemResources.DownloadTaskCreated));
     }
 }

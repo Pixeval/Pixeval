@@ -51,7 +51,7 @@
                     Icon="{markup:SymbolIcon Save}" />
                 <MenuItem Header="-" />
                 <MenuItem
-                    Click="{x:Static utilities:AvaloniaHelper.OpenUriTagInWebBrowser}"
+                    Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                     Header="{I18N {x:Static pixeval:EntryItemResources.OpenInWebBrowser}}"
                     Icon="{markup:SymbolIcon GlobeArrowUp}"
                     Tag="{Binding WebsiteUri}" />

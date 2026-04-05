@@ -51,7 +51,7 @@
                             Header="{I18N {x:Static pixeval:MainPageResources.OpenMyPageItemText}}"
                             Icon="{markup:SymbolIcon Symbol=Open}" />
                         <MenuItem
-                            Click="{x:Static utilities:AvaloniaHelper.OpenUriTagInWebBrowser}"
+                            Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                             Header="{I18N {x:Static pixeval:MainPageResources.OpenMyPageInBrowserItemText}}"
                             Icon="{markup:SymbolIcon Symbol=GlobeArrowUp}"
                             Tag="{Binding Url}" />
@@ -69,7 +69,7 @@
                             IsChecked="{Binding AiShowCache}"
                             ToggleType="CheckBox" />
                         <MenuItem
-                            Click="{x:Static utilities:AvaloniaHelper.OpenUriTagInWebBrowser}"
+                            Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                             Header="{I18N {x:Static pixeval:MainPageResources.MoreViewingSettingsItemText}}"
                             Icon="{markup:SymbolIcon Symbol=MoreHorizontal}"
                             Tag="https://www.pixiv.net/settings/viewing" />

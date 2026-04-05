@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Mako.Model;
 using Microsoft.Extensions.DependencyInjection;
-using Pixeval.Download;
+using Pixeval.I18N;
 using Pixeval.Models.Download;
 using Pixeval.Utilities;
 using Pixeval.Views.ViewContainers;
@@ -23,7 +23,7 @@ public partial class NovelItemViewModel
     /// <inheritdoc />
     protected override async Task SaveAsync(Control? parameter)
     {
-        if (TopLevel.GetTopLevelForFlyout(parameter) is { ViewContainer: { } viewContainer })
+        if (TopLevel.GetTopLevel(parameter) is { ViewContainer: { } viewContainer })
             SaveInternalAsync(viewContainer, await ContentAsync, App.AppViewModel.AppSettings.DownloadPathMacro);
     }
 
@@ -31,13 +31,13 @@ public partial class NovelItemViewModel
     protected override async Task SaveAsAsync(Control? parameter)
     {
         // 必须有TopLevel来显示Picker
-        if (TopLevel.GetTopLevelForFlyout(parameter) is not { ViewContainer: { } viewContainer } topLevel)
+        if (TopLevel.GetTopLevel(parameter) is not { ViewContainer: { } viewContainer } topLevel)
             return;
 
         var folder = await topLevel.StorageProvider.OpenFolderPickerAsync(new() { AllowMultiple = false });
         if (folder is not [{ } single])
         {
-            viewContainer.ShowInformation(EntryItemResources.SaveAsCancelled);
+            viewContainer.ShowInformation(I18NManager.GetResource(EntryItemResources.SaveAsCancelled));
             return;
         }
 
@@ -58,7 +58,7 @@ public partial class NovelItemViewModel
         var factory = App.AppViewModel.AppServiceProvider.GetRequiredService<NovelDownloadTaskFactory>();
         var task = factory.Create(Entry, path, content);
         App.AppViewModel.DownloadManager.QueueTask(task);
-        viewContainerBase?.ShowSuccess(EntryItemResources.DownloadTaskCreated);
+        viewContainerBase?.ShowSuccess(I18NManager.GetResource(EntryItemResources.DownloadTaskCreated));
     }
 
     public override Uri AppUri => Entry.AppUri;

@@ -5,11 +5,14 @@ using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
+using Avalonia.Platform.Storage;
 using FluentIcons.Avalonia;
 using FluentIcons.Common;
 using Pixeval.I18N;
@@ -24,9 +27,23 @@ public static class AvaloniaHelper
 {
     extension(TopLevel topLevel)
     {
-        public ViewContainerBase? ViewContainer => topLevel.Content as ViewContainerBase;
-
-        public static TopLevel? GetTopLevelForFlyout(Visual? visual) => TopLevel.GetTopLevel(TopLevel.GetTopLevel(visual)?.Parent?.Parent as Visual);
+        public ViewContainerBase? ViewContainer
+        {
+            get
+            {
+                while (true)
+                {
+                    if (topLevel.Content is ViewContainerBase vc)
+                        return vc;
+                    var parent = topLevel.Parent;
+                    if (parent is Popup)
+                        parent = parent.Parent;
+                    if (parent is not Visual visual || TopLevel.GetTopLevel(visual) is not { } t)
+                        return null;
+                    topLevel = t;
+                }
+            }
+        }
     }
 
     extension(ViewContainerBase control)
@@ -74,7 +91,7 @@ public static class AvaloniaHelper
         [typeof(UserWorkPostsPage)] = (default, I18NManager.GetResource(MainPageResources.NewWorksTabContent)),
         // [typeof(FeedsPage)] = (Symbol.Molecule, I18NManager.GetResource(MainPageResources.FeedTabContent)),
         // [typeof(BrowsingHistoryPage)] = (Symbol.History, I18NManager.GetResource(MainPageResources.HistoriesTabContent)),
-        // [typeof(DownloadPage)] = (Symbol.ArrowSquareDown, I18NManager.GetResource(MainPageResources.DownloadListTabContent))
+        [typeof(DownloadPage)] = (Symbol.ArrowSquareDown, I18NManager.GetResource(MainPageResources.DownloadListTabContent)),
         // [typeof(ExtensionsPage)] = (Symbol.PuzzlePiece, I18NManager.GetResource(MainPageResources.ExtensionsTabContent))
         // [typeof(HelpPage)] = (Symbol.ChatBubblesQuestion, I18NManager.GetResource(MainPageResources.HelpTabContent)),
         // [typeof(AboutPage)] = (Symbol.PersonStarburst, I18NManager.GetResource(MainPageResources.AboutTabContent)),
@@ -101,7 +118,7 @@ public static class AvaloniaHelper
     public static IReadOnlyList<NavigationInfo> FooterItems { get; } = [.. new[]
         {
             // typeof(BrowsingHistoryPage),
-            // typeof(DownloadPage),
+            typeof(DownloadPage),
             // typeof(ExtensionsPage),
             // typeof(HelpPage),
             // typeof(AboutPage),
@@ -113,7 +130,7 @@ public static class AvaloniaHelper
             return new NavigationInfo(t, value.Icon, value.Header);
         })];
 
-    public static EventHandler<RoutedEventArgs>? OpenUriTagInWebBrowser { get; }
+    public static EventHandler<RoutedEventArgs>? LaunchUriTagInWebBrowser { get; }
         = (sender, e) =>
         {
             if (sender is not Control { Tag: { } parameter } s
@@ -125,11 +142,25 @@ public static class AvaloniaHelper
             _ = launcher.LaunchUriAsync(uri);
         };
 
+    public static EventHandler<RoutedEventArgs>? LaunchFileTagInWebBrowser { get; }
+        = (sender, e) =>
+        {
+            if (sender is not Control { Tag: { } parameter } s
+                || TopLevel.GetTopLevel(s) is not { Launcher: { } launcher })
+                return;
+            if (parameter is not string str)
+                return;
+            if (new FileInfo(str) is { Exists: true } file)
+                _ = launcher.LaunchFileInfoAsync(file);
+            else if (new DirectoryInfo(str) is { Exists: true } directory)
+                _ = launcher.LaunchDirectoryInfoAsync(directory);
+        };
+
     public static EventHandler<RoutedEventArgs>? CopyTagToClipboard { get; }
         = (sender, e) =>
         {
             if (sender is not MenuItem { Tag: { } parameter } s
-                || TopLevel.GetTopLevelForFlyout(s) is not
+                || TopLevel.GetTopLevel(s) is not
                 {
                     ViewContainer: { } viewContainer,
                     Clipboard: { } clipboard

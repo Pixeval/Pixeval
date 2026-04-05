@@ -1,0 +1,63 @@
+<UserControl
+    x:Class="Pixeval.Views.Capability.DownloadPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.Avalonia"
+    xmlns:local="using:Pixeval.Views.Capability"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
+    xmlns:viewModels="using:Pixeval.ViewModels"
+    xmlns:views="using:Pixeval.Views.Download"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="{x:Type viewModels:DownloadViewViewModel}"
+    mc:Ignorable="d">
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top" LastChildFill="True">
+            <controls:ToolBar x:Name="TopToolBar" DockPanel.Dock="Right">
+                <Button Click="CancelSelectButton_OnClicked" IsEnabled="{Binding !!SelectedEntries.Count}">
+                    <controls:IconText Symbol="SelectAllOff" Text="{Binding SelectedEntries.Count, Converter={x:Static local:DownloadPage.SelectionCountLabelConverter}}" />
+                </Button>
+                <Button Click="SelectAllButton_OnClicked">
+                    <controls:IconText Symbol="SelectAllOn" Text="{I18N {x:Static pixeval:DownloadPageResources.SelectAllButtonLabel}}" />
+                </Button>
+                <Button Click="ResumeAllButton_OnClicked" IsEnabled="{Binding !!SelectedEntries.Count}">
+                    <controls:IconText Symbol="Play" Text="{I18N {x:Static pixeval:DownloadPageResources.ResumeButtonLabel}}" />
+                </Button>
+                <Button Click="PauseAllButton_OnClicked" IsEnabled="{Binding !!SelectedEntries.Count}">
+                    <controls:IconText Symbol="Pause" Text="{I18N {x:Static pixeval:DownloadPageResources.PauseButtonLabel}}" />
+                </Button>
+                <Button Click="CancelAllButton_OnClicked" IsEnabled="{Binding !!SelectedEntries.Count}">
+                    <controls:IconText Symbol="Stop" Text="{I18N {x:Static pixeval:DownloadPageResources.StopButtonLabel}}" />
+                </Button>
+                <Button Click="ClearDownloadListButton_OnClicked" IsEnabled="{Binding !!SelectedEntries.Count}">
+                    <controls:IconText Symbol="Delete" Text="{I18N {x:Static pixeval:DownloadPageResources.DeleteButtonLabel}}" />
+                </Button>
+            </controls:ToolBar>
+
+            <controls:ToolBar>
+                <ComboBox
+                    x:Name="ModeFilterComboBox"
+                    MinWidth="150"
+                    DisplayMemberBinding="{Binding Text}"
+                    ItemsSource="{x:Static local:DownloadPage.Options}"
+                    SelectedIndex="0"
+                    SelectionChanged="ModeFilterComboBox_OnSelectionChanged" />
+                <TextBox
+                    x:Name="FilterTextBox"
+                    Width="260"
+                    KeyDown="FilterTextBox_OnKeyDown"
+                    TextChanged="FilterTextBox_OnTextChanged"
+                    Watermark="{I18N {x:Static pixeval:DownloadPageResources.FilterAutoSuggestBoxPlaceholderText}}" />
+                <CheckBox
+                    x:Name="DeleteLocalFilesCheckBox"
+                    VerticalAlignment="Center"
+                    Content="{I18N {x:Static pixeval:DownloadPageDeleteTasksDialogResources.DeleteLocalFilesContent}}" />
+            </controls:ToolBar>
+        </DockPanel>
+
+        <views:DownloadView x:Name="DownloadView" />
+    </DockPanel>
+</UserControl>

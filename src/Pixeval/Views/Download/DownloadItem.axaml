@@ -1,0 +1,96 @@
+<UserControl
+    x:Class="Pixeval.Views.Download.DownloadItem"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.Avalonia"
+    xmlns:local="using:Pixeval"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="using:Pixeval.ViewModels"
+    d:DesignHeight="90"
+    d:DesignWidth="800"
+    x:DataType="{x:Type viewModels:DownloadItemViewModel}"
+    mc:Ignorable="d">
+    <Grid
+        ColumnDefinitions="Auto,*,Auto"
+        ColumnSpacing="12"
+        RowDefinitions="Auto,Auto"
+        RowSpacing="6">
+        <Image
+            Grid.RowSpan="2"
+            Width="56"
+            Height="56"
+            VerticalAlignment="Center"
+            Source="{Binding Thumbnail}"
+            Stretch="UniformToFill" />
+
+        <StackPanel
+            Grid.Row="0"
+            Grid.Column="1"
+            Orientation="Vertical"
+            Spacing="2">
+            <TextBlock
+                FontWeight="SemiBold"
+                Text="{Binding Entry.Title}"
+                TextTrimming="CharacterEllipsis" />
+            <TextBlock
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                Text="{Binding AuthorsText}"
+                TextTrimming="CharacterEllipsis" />
+        </StackPanel>
+
+        <controls:ToolBar
+            Grid.Row="0"
+            Grid.Column="2"
+            VerticalAlignment="Center">
+            <Button Click="ActionButton_OnClicked" IsEnabled="{Binding IsItemEnabled}">
+                <controls:IconText Symbol="{Binding ActionButtonSymbol}" Text="{Binding ActionButtonContent}" />
+            </Button>
+            <Button Click="RedownloadItem_OnClicked" IsEnabled="{Binding IsRedownloadItemEnabled}">
+                <controls:IconText Symbol="ArrowDownload" Text="{I18N {x:Static local:DownloadItemResources.RedownloadItemLabel}}" />
+            </Button>
+            <Button Click="CancelDownloadItem_OnClicked" IsEnabled="{Binding IsCancelItemEnabled}">
+                <controls:IconText Symbol="Dismiss" Text="{I18N {x:Static local:DownloadItemResources.CancelDownloadItemLabel}}" />
+            </Button>
+            <Button Click="OpenDownloadLocationItem_OnClicked">
+                <controls:IconText Symbol="FolderArrowRight" Text="{I18N {x:Static local:DownloadItemResources.OpenDownloadLocationItemLabel}}" />
+            </Button>
+            <Button Click="GoToPageItem_OnClicked">
+                <controls:IconText Symbol="Open" Text="{I18N {x:Static local:DownloadItemResources.GoToPageItemLabel}}" />
+            </Button>
+            <Button Click="CheckErrorMessageInDetail_OnClicked" IsEnabled="{Binding IsError}">
+                <controls:IconText Symbol="ErrorCircle" Text="{I18N {x:Static local:DownloadItemResources.CheckErrorMessageInDetailItemLabel}}" />
+            </Button>
+        </controls:ToolBar>
+
+        <Grid
+            Grid.Row="1"
+            Grid.Column="1"
+            ColumnDefinitions="*,Auto"
+            ColumnSpacing="8"
+            RowDefinitions="Auto,Auto"
+            RowSpacing="4">
+            <ProgressBar
+                Grid.ColumnSpan="2"
+                IsIndeterminate="{Binding IsPending}"
+                Maximum="100"
+                Value="{Binding ProgressPercentage}" />
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="0"
+                Foreground="{Binding StateBrush}"
+                Text="{Binding ProgressMessage}"
+                TextTrimming="CharacterEllipsis" />
+            <Border
+                Grid.Row="1"
+                Grid.Column="1"
+                Padding="6,2"
+                Background="{DynamicResource LayerFillColorSubtleBrush}"
+                CornerRadius="4"
+                IsVisible="{Binding ShowGroupStats}">
+                <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{Binding GroupStatsText}" />
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

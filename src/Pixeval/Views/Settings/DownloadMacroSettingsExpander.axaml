@@ -29,7 +29,7 @@
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
-                        <DataTemplate x:DataType="controls2:SymbolComboBoxItem">
+                        <DataTemplate x:DataType="{x:Type controls2:SymbolComboBoxItem}">
                             <Button Click="PathMacroTokenInputBox_OnTokenClick">
                                 <TextBlock Text="{Binding Description}" ToolTip.Tip="{Binding Value}" />
                             </Button>

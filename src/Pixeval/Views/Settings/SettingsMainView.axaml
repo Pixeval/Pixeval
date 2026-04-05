@@ -74,7 +74,7 @@
                             IsActive="True"
                             IsIndeterminate="{x:Bind controls1:C.Negation(_viewModel.DownloadingUpdate), Mode=OneWay}"
                             IsVisible="{x:Bind controls1:C.ToVisibility(_viewModel.CheckingUpdate), Mode=OneWay}"
-                            Value="{x:Bind _viewModel.DownloadingUpdateProgress, Mode=OneWay}" />
+                            Value="{x:Bind DownloadingUpdateProgress, Mode=OneWay}" />
                         <TextBlock
                             VerticalAlignment="Center"
                             IsVisible="{x:Bind controls1:C.IsNotNullToVisibility(_viewModel.UpdateMessage), Mode=OneWay}"
@@ -87,15 +87,15 @@
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard
                             ActionIcon="{markup:SymbolIcon Symbol=Open}"
-                            Click="{x:Static utilities:AvaloniaHelper.OpenUriTagInWebBrowser}"
+                            Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                             Description="{I18N {x:Static pixeval:SettingsPageResources.OpenTempEntryDescription}}"
                             Header="{I18N {x:Static pixeval:SettingsPageResources.OpenTempEntryHeader}}"
                             HeaderIcon="{markup:SymbolIcon Symbol=FolderLightning}"
                             IsClickEnabled="True"
-                            Tag="Temp" />
+                            Tag="{x:Static appManagement:AppInfo.TempFolder}" />
                         <controls:SettingsCard
                             ActionIcon="{markup:SymbolIcon ChevronRight}"
-                            Click="{x:Static utilities:AvaloniaHelper.OpenUriTagInWebBrowser}"
+                            Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                             Description="ms-windows-store://pdp/?ProductId=9P1RZL9Z8454"
                             Header="{I18N {x:Static pixeval:SettingsPageResources.MsStoreCheckForUpdatesEntryHeader}}"
                             HeaderIcon="{markup:SymbolIcon Symbol=StoreMicrosoft}"
@@ -103,7 +103,7 @@
                             Tag="ms-windows-store://pdp/?ProductId=9P1RZL9Z8454" />
                         <controls:SettingsCard
                             ActionIcon="{markup:SymbolIcon ChevronRight}"
-                            Click="{x:Static utilities:AvaloniaHelper.OpenUriTagInWebBrowser}"
+                            Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                             Description="https://github.com/Pixeval/Pixeval/releases"
                             Header="{I18N {x:Static pixeval:SettingsPageResources.GitHubCheckForUpdatesEntryHeader}}"
                             IsClickEnabled="True"
@@ -126,18 +126,18 @@
                             HeaderIcon="{markup:SymbolIcon Symbol=Send}">
                             <controls1:ToolBar>
                                 <Button
-                                    Click="{x:Static utilities:AvaloniaHelper.OpenUriTagInWebBrowser}"
+                                    Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                                     Tag="https://github.com/Pixeval/Pixeval/issues/new/choose"
                                     ToolTip.Tip="{I18N {x:Static pixeval:SettingsPageResources.GitHubBugReportEntryToolTipServiceToolTip}}">
                                     <Image Source="{SvgImage avares://Pixeval/Assets/GitHub.svg}" />
                                 </Button>
                                 <Button
-                                    Click="{x:Static utilities:AvaloniaHelper.OpenUriTagInWebBrowser}"
+                                    Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                                     Content="{markup:SymbolIcon Symbol=Mail}"
                                     Tag="mailto:decem0730@hotmail.com"
                                     ToolTip.Tip="{I18N {x:Static pixeval:SettingsPageResources.EMailBugReportEntryToolTipServiceToolTip}}" />
                                 <Button
-                                    Click="{x:Static utilities:AvaloniaHelper.OpenUriTagInWebBrowser}"
+                                    Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                                     Tag="https://jq.qq.com/?_wv=1027&amp;k=trDeCrog"
                                     ToolTip.Tip="{I18N {x:Static pixeval:SettingsPageResources.QQBugReportEntryToolTipServiceToolTip}}">
                                     <Image Source="{SvgImage avares://Pixeval/Assets/QQ.svg}" />
@@ -146,50 +146,50 @@
                         </controls:SettingsCard>
                         <controls:SettingsCard
                             ActionIcon="{markup:SymbolIcon Symbol=Open}"
-                            Click="{x:Static utilities:AvaloniaHelper.OpenUriTagInWebBrowser}"
+                            Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                             Description="{I18N {x:Static pixeval:SettingsPageResources.OpenLogEntryDescription}}"
                             Header="{I18N {x:Static pixeval:SettingsPageResources.OpenLogEntryHeader}}"
                             HeaderIcon="{markup:SymbolIcon Symbol=FolderList}"
                             IsClickEnabled="True"
-                            Tag="Logs" />
+                            Tag="{x:Static appManagement:AppInfo.LogsFolder}" />
                         <controls:SettingsCard
                             ActionIcon="{markup:SymbolIcon Symbol=Open}"
-                            Click="{x:Static utilities:AvaloniaHelper.OpenUriTagInWebBrowser}"
+                            Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                             Description="{I18N {x:Static pixeval:SettingsPageResources.OpenTempEntryDescription}}"
                             Header="{I18N {x:Static pixeval:SettingsPageResources.OpenTempEntryHeader}}"
                             HeaderIcon="{markup:SymbolIcon Symbol=FolderLightning}"
                             IsClickEnabled="True"
-                            Tag="Temp" />
+                            Tag="{x:Static appManagement:AppInfo.TempFolder}" />
                         <controls:SettingsCard
                             ActionIcon="{markup:SymbolIcon Symbol=Open}"
-                            Click="{x:Static utilities:AvaloniaHelper.OpenUriTagInWebBrowser}"
+                            Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                             Description="{I18N {x:Static pixeval:SettingsPageResources.OpenLocalEntryDescription}}"
                             Header="{I18N {x:Static pixeval:SettingsPageResources.OpenLocalEntryHeader}}"
                             HeaderIcon="{markup:SymbolIcon Symbol=FolderBriefcase}"
                             IsClickEnabled="True"
-                            Tag="Local" />
+                            Tag="{x:Static appManagement:AppInfo.ApplicationFolderPath}" />
                         <controls:SettingsCard
                             ActionIcon="{markup:SymbolIcon Symbol=Open}"
-                            Click="{x:Static utilities:AvaloniaHelper.OpenUriTagInWebBrowser}"
+                            Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                             Description="{I18N {x:Static pixeval:SettingsPageResources.OpenExtensionsEntryDescription}}"
                             Header="{I18N {x:Static pixeval:SettingsPageResources.OpenExtensionsEntryHeader}}"
                             HeaderIcon="{markup:SymbolIcon Symbol=FolderAdd}"
                             IsClickEnabled="True"
-                            Tag="Extensions" />
+                            Tag="{x:Static appManagement:AppInfo.ExtensionsFolder}" />
                         <controls:SettingsCard
                             ActionIcon="{markup:SymbolIcon Symbol=Open}"
-                            Click="{x:Static utilities:AvaloniaHelper.OpenUriTagInWebBrowser}"
+                            Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                             Description="{I18N {x:Static pixeval:SettingsPageResources.OpenSettingsEntryDescription}}"
                             Header="{I18N {x:Static pixeval:SettingsPageResources.OpenSettingsEntryHeader}}"
                             HeaderIcon="{markup:SymbolIcon Symbol=FolderPerson}"
                             IsClickEnabled="True"
-                            Tag="Settings" />
+                            Tag="{x:Static appManagement:AppInfo.SettingsFolder}" />
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 
                 <controls:SettingsCard
                     ActionIcon="{markup:SymbolIcon Symbol=Open}"
-                    Click="{x:Static utilities:AvaloniaHelper.OpenUriTagInWebBrowser}"
+                    Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                     Description="{I18N {x:Static pixeval:SettingsPageResources.RateEntryDescription}}"
                     Header="{I18N {x:Static pixeval:SettingsPageResources.RateEntryHeader}}"
                     HeaderIcon="{markup:SymbolIcon Symbol=Star}"
@@ -222,7 +222,7 @@
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard
                             ActionIcon="{markup:SymbolIcon Symbol=Open}"
-                            Click="{x:Static utilities:AvaloniaHelper.OpenUriTagInWebBrowser}"
+                            Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                             Description="{I18N {x:Static pixeval:SettingsPageResources.OpenSettingsEntryDescription}}"
                             Header="{I18N {x:Static pixeval:SettingsPageResources.OpenSettingsEntryHeader}}"
                             HeaderIcon="{markup:SymbolIcon Symbol=FolderPerson}"

@@ -103,7 +103,7 @@
                         <MenuItem Header="-" />
                         <!--  网页链接  -->
                         <MenuItem
-                            Click="{x:Static utilities:AvaloniaHelper.OpenUriTagInWebBrowser}"
+                            Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                             Header="{I18N {x:Static pixeval:EntryItemResources.OpenInWebBrowser}}"
                             Icon="{markup:SymbolIcon GlobeArrowUp}"
                             Tag="{Binding IllustrationViewModel.WebsiteUri}" />

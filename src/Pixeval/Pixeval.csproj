@@ -68,9 +68,5 @@
 			<AutoGen>True</AutoGen>
 			<DependentUpon>Language.tt</DependentUpon>
 		</Compile>
-
-		<Compile Update="Views\Settings\DateWithSwitchSettingsCard.axaml.cs">
-		  <DependentUpon>DateWithSwitchSettingsCard.axaml</DependentUpon>
-		</Compile>
 	</ItemGroup>
 </Project>

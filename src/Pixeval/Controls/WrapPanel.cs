@@ -384,7 +384,7 @@ public class WrapPanel : Panel, INavigableContainer, IOrientationBasedMeasures
                 }
             }
 
-            Debug.Assert(this.Minor(finalSize) >= totalMinor + minorSpacing * minorSpacingCount);
+            Debug.Assert(MathUtilities.GreaterThanOrClose(this.Minor(finalSize), totalMinor + minorSpacing * minorSpacingCount));
 
             switch (tempItemsAlignment)
             {

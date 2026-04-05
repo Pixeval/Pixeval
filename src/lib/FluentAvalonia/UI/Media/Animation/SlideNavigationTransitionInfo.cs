@@ -88,7 +88,7 @@ public class SlideNavigationTransitionInfo : NavigationTransitionInfo
 
         await animation.RunAsync(ctrl, cancellationToken);
 
-        (ctrl as Visual).Opacity = 1;
+        (ctrl as Visual)?.Opacity = 1;
     }
 }
 
