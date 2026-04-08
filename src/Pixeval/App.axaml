@@ -12,7 +12,7 @@
 
     <Application.Styles>
         <semi:SemiTheme Locale="zh-CN" />
-        <u-semi:SemiTheme Locale="zh-CN" />
+        <semi:UrsaSemiTheme Locale="zh-CN" />
         <FluentTheme />
         <custom:CustomTheme />
         <ui:FluentAvaloniaTheme />
