@@ -3,10 +3,10 @@
 	url = https://github.com/Pixeval/Imouto.git
 [submodule "src/lib/AutoSettingsPage"]
 	path = src/lib/AutoSettingsPage
-	url = https://github.com/Poker-sang/AutoSettingsPage.git
+	url = https://github.com/Pixeval/AutoSettingsPage.git
 [submodule "src/lib/Mako"]
 	path = src/lib/Mako
 	url = https://github.com/Pixeval/Mako.git
 [submodule "src/lib/Avalonia.AnimatedImage"]
 	path = src/lib/Avalonia.AnimatedImage
-	url = https://github.com/Poker-sang/Avalonia.AnimatedImage.git
+	url = https://github.com/Pixeval/Avalonia.AnimatedImage.git

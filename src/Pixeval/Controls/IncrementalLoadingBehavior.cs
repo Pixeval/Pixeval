@@ -12,6 +12,7 @@ using Avalonia.Interactivity;
 using Avalonia.VisualTree;
 using Pixeval.Collections;
 using Pixeval.Utilities;
+using SmoothScroll.Avalonia.Controls;
 
 namespace Pixeval.Controls;
 
@@ -116,7 +117,7 @@ public static class IncrementalLoadingBehavior
                 if (itemsControl.FindDescendantOfType<ScrollViewer>() is not { } scrollViewer)
                     return false;
 
-                if (scrollViewer.FindDescendantOfType<ScrollContentPresenter>() is not { } scrollContentPresenter)
+                if (scrollViewer.FindDescendantOfType<ScrollPresenter>() is not { } scrollContentPresenter)
                     return false;
 
                 var isNearBottom =
