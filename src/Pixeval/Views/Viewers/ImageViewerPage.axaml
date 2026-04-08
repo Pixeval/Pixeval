@@ -3,103 +3,104 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ai="using:Avalonia.AnimatedImage"
+    xmlns:controls="clr-namespace:SmoothScroll.Avalonia.Controls;assembly=SmoothScroll.Avalonia.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
     xmlns:utilities="using:Pixeval.Utilities"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
-    xmlns:controls="clr-namespace:SmoothScroll.Avalonia.Controls;assembly=SmoothScroll.Avalonia.Controls"
     d:DesignHeight="450"
     d:DesignWidth="800"
     x:DataType="{x:Type viewers:ImageViewerPageViewModel}"
     mc:Ignorable="d">
     <Grid>
         <!--  图片查看器（缩放/平移）  -->
-        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <controls:ScrollView
-                x:Name="ZoomBorder"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                ClipToBounds="True"
-                Focusable="True"
-                IsVisible="{Binding LoadSuccessfully}">
-                <Border>
-                    <!--  Border隔离外部RenderTransform影响  -->
-                    <ai:AnimatedImage
-                        x:Name="ImageViewer"
-                        RenderTransformOrigin="50%,50%"
-                        Source="{Binding DisplaySource}"
-                        Stretch="Uniform">
-                        <ai:AnimatedImage.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform ScaleX="{Binding MirrorScaleX}" />
-                                <RotateTransform Angle="{Binding RotationDegree}" />
-                            </TransformGroup>
-                        </ai:AnimatedImage.RenderTransform>
-                    </ai:AnimatedImage>
-                </Border>
-                <controls:ScrollView.ContextFlyout>
-                    <MenuFlyout>
-                        <!--  播放/暂停（仅动图可见）  -->
-                        <MenuItem
-                            Header="{I18N {x:Static pixeval:MiscResources.Play}}"
-                            Icon="{markup:SymbolIcon Pause}"
-                            IsChecked="{Binding IsPlaying, Mode=TwoWay}"
-                            IsEnabled="{Binding LoadSuccessfully}"
-                            IsVisible="{Binding IllustrationViewModel.IsPicGif}"
-                            ToggleType="CheckBox" />
-                        <!--  收藏  -->
-                        <MenuItem
-                            Command="{Binding OriginalIllustrationViewModel.BookmarkCommand}"
-                            CommandParameter="{Binding $self, Mode=OneTime}"
-                            Header="{I18N {x:Static pixeval:MiscResources.AddBookmark}}"
-                            Icon="{markup:SymbolIcon Heart}"
-                            IsVisible="{Binding OriginalIllustrationViewModel.IsBookmarkSupported}" />
-                        <MenuItem Header="-" />
-                        <!--  保存  -->
-                        <MenuItem
-                            Command="{Binding IllustrationViewModel.SaveCommand}"
-                            CommandParameter="{Binding $self, Mode=OneTime}"
-                            Header="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}"
-                            Icon="{markup:SymbolIcon Save}" />
-                        <MenuItem
-                            Command="{Binding IllustrationViewModel.SaveAsCommand}"
-                            CommandParameter="{Binding $self, Mode=OneTime}"
-                            Header="{I18N {x:Static pixeval:EntryViewerPageResources.SaveAs}}"
-                            Icon="{markup:SymbolIcon SaveEdit}" />
-                        <MenuItem Header="-" />
-                        <!--  旋转/镜像  -->
-                        <MenuItem
-                            Command="{Binding RotateClockwiseCommand}"
-                            Header="{I18N {x:Static pixeval:EntryViewerPageResources.RotateClockwise}}"
-                            Icon="{markup:SymbolIcon ArrowRotateClockwise}" />
-                        <MenuItem
-                            Command="{Binding RotateCounterclockwiseCommand}"
-                            Header="{I18N {x:Static pixeval:EntryViewerPageResources.RotateCounterclockwise}}"
-                            Icon="{markup:SymbolIcon ArrowRotateCounterclockwise}" />
-                        <MenuItem
-                            Header="{I18N {x:Static pixeval:EntryViewerPageResources.Mirror}}"
-                            Icon="{markup:SymbolIcon FlipHorizontal}"
-                            IsChecked="{Binding IsMirrored, Mode=TwoWay}"
-                            IsEnabled="{Binding LoadSuccessfully}"
-                            ToggleType="CheckBox" />
-                        <MenuItem Header="-" />
-                        <!--  网页链接  -->
-                        <MenuItem
-                            Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
-                            Header="{I18N {x:Static pixeval:EntryItemResources.OpenInWebBrowser}}"
-                            Icon="{markup:SymbolIcon GlobeArrowUp}"
-                            Tag="{Binding IllustrationViewModel.WebsiteUri}" />
-                        <MenuItem
-                            Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
-                            Header="{I18N {x:Static pixeval:EntryItemResources.GenerateWebLink}}"
-                            Icon="{markup:SymbolIcon LinkMultiple}"
-                            Tag="{Binding IllustrationViewModel.WebsiteUri}" />
-                    </MenuFlyout>
-                </controls:ScrollView.ContextFlyout>
-            </controls:ScrollView>
-        </ScrollViewer>
+        <controls:ScrollView
+            x:Name="ZoomBorder"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            HorizontalScrollBarVisibility="Hidden" 
+            VerticalScrollBarVisibility="Hidden"
+            ClipToBounds="True"
+            Focusable="True"
+            IsVisible="{Binding LoadSuccessfully}">
+            <Border>
+                <!--  Border隔离外部RenderTransform影响  -->
+                <ai:AnimatedImage
+                    x:Name="ImageViewer"
+                    RenderTransformOrigin="50%,50%"
+                    Source="{Binding DisplaySource}"
+                    Stretch="Uniform">
+                    <ai:AnimatedImage.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="{Binding MirrorScaleX}" />
+                            <RotateTransform Angle="{Binding RotationDegree}" />
+                        </TransformGroup>
+                    </ai:AnimatedImage.RenderTransform>
+                </ai:AnimatedImage>
+            </Border>
+            <controls:ScrollView.ContextFlyout>
+                <MenuFlyout>
+                    <!--  播放/暂停（仅动图可见）  -->
+                    <MenuItem
+                        Header="{I18N {x:Static pixeval:MiscResources.Play}}"
+                        Icon="{markup:SymbolIcon Pause}"
+                        IsChecked="{Binding IsPlaying, Mode=TwoWay}"
+                        IsEnabled="{Binding LoadSuccessfully}"
+                        IsVisible="{Binding IllustrationViewModel.IsPicGif}"
+                        ToggleType="CheckBox" />
+                    <!--  收藏  -->
+                    <MenuItem
+                        Command="{Binding OriginalIllustrationViewModel.BookmarkCommand}"
+                        CommandParameter="{Binding $self, Mode=OneTime}"
+                        Header="{I18N {x:Static pixeval:MiscResources.AddBookmark}}"
+                        Icon="{markup:SymbolIcon Heart}"
+                        IsVisible="{Binding OriginalIllustrationViewModel.IsBookmarkSupported}" />
+                    <MenuItem Header="-" />
+                    <!--  保存  -->
+                    <MenuItem
+                        Command="{Binding IllustrationViewModel.SaveCommand}"
+                        CommandParameter="{Binding $self, Mode=OneTime}"
+                        Header="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}"
+                        Icon="{markup:SymbolIcon Save}" />
+                    <MenuItem
+                        Command="{Binding IllustrationViewModel.SaveAsCommand}"
+                        CommandParameter="{Binding $self, Mode=OneTime}"
+                        Header="{I18N {x:Static pixeval:EntryViewerPageResources.SaveAs}}"
+                        Icon="{markup:SymbolIcon SaveEdit}" />
+                    <MenuItem Header="-" />
+                    <!--  旋转/镜像  -->
+                    <MenuItem
+                        Command="{Binding RotateClockwiseCommand}"
+                        Header="{I18N {x:Static pixeval:EntryViewerPageResources.RotateClockwise}}"
+                        Icon="{markup:SymbolIcon ArrowRotateClockwise}" />
+                    <MenuItem
+                        Command="{Binding RotateCounterclockwiseCommand}"
+                        Header="{I18N {x:Static pixeval:EntryViewerPageResources.RotateCounterclockwise}}"
+                        Icon="{markup:SymbolIcon ArrowRotateCounterclockwise}" />
+                    <MenuItem
+                        Header="{I18N {x:Static pixeval:EntryViewerPageResources.Mirror}}"
+                        Icon="{markup:SymbolIcon FlipHorizontal}"
+                        IsChecked="{Binding IsMirrored, Mode=TwoWay}"
+                        IsEnabled="{Binding LoadSuccessfully}"
+                        ToggleType="CheckBox" />
+                    <MenuItem Header="-" />
+                    <!--  网页链接  -->
+                    <MenuItem
+                        Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
+                        Header="{I18N {x:Static pixeval:EntryItemResources.OpenInWebBrowser}}"
+                        Icon="{markup:SymbolIcon GlobeArrowUp}"
+                        Tag="{Binding IllustrationViewModel.WebsiteUri}" />
+                    <MenuItem
+                        Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
+                        Header="{I18N {x:Static pixeval:EntryItemResources.GenerateWebLink}}"
+                        Icon="{markup:SymbolIcon LinkMultiple}"
+                        Tag="{Binding IllustrationViewModel.WebsiteUri}" />
+                </MenuFlyout>
+            </controls:ScrollView.ContextFlyout>
+        </controls:ScrollView>
+
 
         <!--  加载中遮罩  -->
         <Grid IsVisible="{Binding !LoadSuccessfully}">
