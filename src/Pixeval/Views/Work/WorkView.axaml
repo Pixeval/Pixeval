@@ -18,6 +18,7 @@
         IsLoadingMore="{Binding #ListBox.(controls:IncrementalLoadingBehavior.IsLoadingMore)}">
         <ListBox
             x:Name="ListBox"
+            UseLayoutRounding="False"
             controls:IncrementalLoadingBehavior.IsEnabled="True"
             controls:IncrementalLoadingBehavior.Threshold="200"
             ContainerPrepared="ListBox_OnContainerPrepared"
