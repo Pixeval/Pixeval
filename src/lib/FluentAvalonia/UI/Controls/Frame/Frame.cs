@@ -14,6 +14,7 @@ using Avalonia.Interactivity;
 using Avalonia.Threading;
 using FluentAvalonia.UI.Media.Animation;
 using FluentAvalonia.UI.Navigation;
+using NavigationEventArgs = FluentAvalonia.UI.Navigation.NavigationEventArgs;
 
 namespace FluentAvalonia.UI.Controls;
 

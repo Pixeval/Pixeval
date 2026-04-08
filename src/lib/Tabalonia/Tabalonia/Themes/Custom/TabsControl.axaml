@@ -32,7 +32,7 @@
     <ControlTheme x:Key="{x:Type controls:TabsControl}" TargetType="{x:Type controls:TabsControl}">
 
         <Setter Property="Background" Value="{DynamicResource TabControlWindowActiveBackgroundBrush}" />
-        <Setter Property="Margin" Value="0,0,0,2" />
+        <Setter Property="Margin" Value="0,0,0,0" />
         <Setter Property="AdjacentHeaderItemOffset" Value="-8" />
         <Setter Property="TabItemWidth" Value="250" />
 

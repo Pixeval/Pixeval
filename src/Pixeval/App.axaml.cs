@@ -5,6 +5,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Rendering;
 using LiveMarkdown.Avalonia;
 using Pixeval.AppManagement;
 using Pixeval.I18N;
@@ -54,8 +55,6 @@ public class App : Application
         switch (ApplicationLifetime)
         {
             case IClassicDesktopStyleApplicationLifetime desktop:
-                DisableAvaloniaDataAnnotationValidation();
-
                 desktop.Exit += (o, e) =>
                 {
                     AppInfo.SaveContext();
@@ -106,23 +105,6 @@ public class App : Application
             }
         }
         viewContainer.NavigateTo<LoginPage>();
-    }
-
-    /// <summary>
-    /// Avoid duplicate validations from both Avalonia and the CommunityToolkit.<br/>
-    /// More info: <seealso href="https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins"/>
-    /// </summary>
-    private static void DisableAvaloniaDataAnnotationValidation()
-    {
-        //// Get an array of plugins to remove
-        //var dataValidationPluginsToRemove =
-        //    BindingPlugins.DataValidators.OfType<DataAnnotationsValidationPlugin>().ToArray();
-
-        //// remove each entry found
-        //foreach (var plugin in dataValidationPluginsToRemove)
-        //{
-        //    BindingPlugins.DataValidators.Remove(plugin);
-        //}
     }
 
     private void RegisterUnhandledExceptionHandler()

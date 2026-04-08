@@ -9,6 +9,7 @@ using Pixeval.Utilities;
 using Pixeval.Views.Capability;
 using Tabalonia.Controls;
 using Tabalonia.InterTab;
+using NavigationEventArgs = FluentAvalonia.UI.Navigation.NavigationEventArgs;
 
 namespace Pixeval.Views.ViewContainers;
 

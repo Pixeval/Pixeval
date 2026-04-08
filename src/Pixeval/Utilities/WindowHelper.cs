@@ -23,22 +23,7 @@ public static class WindowHelper
         public Window Init(string? title, WindowIcon? icon, double width = 0, double height = 0, double minWidth = 0, double minHeight = 0, bool isMaximized = false)
         {
             window.ExtendClientAreaToDecorationsHint = true;
-            window.ExtendClientAreaChromeHints = ExtendClientAreaChromeHints.Default;
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                window.PropertyChanged += (w, e) =>
-                {
-                    if (w is not Window window)
-                        return;
-                    if (e.Property == Window.WindowStateProperty)
-                        window.Padding = new(e.GetNewValue<WindowState>() switch
-                        {
-                            // 傻逼 Windows 最大化会缩小窗口内容区域
-                            WindowState.Maximized => 8,
-                            _ => 0
-                        });
-                };
-            }
+            window.WindowDecorations = WindowDecorations.Full;
             window.Icon = icon;
             window.Title = title;
             window.WindowState = isMaximized ? WindowState.Maximized : WindowState.Normal;

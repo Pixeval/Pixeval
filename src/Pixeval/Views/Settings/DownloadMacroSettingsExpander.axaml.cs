@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using AutoSettingsPage.Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using CommunityToolkit.Avalonia.Controls;
 using Mako.Model;

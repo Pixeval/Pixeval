@@ -5,6 +5,8 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using FluentAvalonia.UI.Navigation;
 
+using NavigationEventArgs = FluentAvalonia.UI.Navigation.NavigationEventArgs;
+
 namespace FluentAvalonia.UI.Controls;
 
 public partial class Frame : ContentControl

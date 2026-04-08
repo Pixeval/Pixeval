@@ -27,6 +27,7 @@
                 <MergeResourceInclude Source="Themes/Colors.axaml" />
                 <MergeResourceInclude Source="Themes/Brushes.axaml" />
                 <MergeResourceInclude Source="Themes/Controls.axaml" />
+				<MergeResourceInclude Source="Themes/WindowDrawnDecorations.axaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
