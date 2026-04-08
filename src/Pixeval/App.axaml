@@ -5,6 +5,7 @@
     xmlns:autoSettingsPage="using:AutoSettingsPage.Avalonia"
     xmlns:custom="using:Tabalonia.Themes.Custom"
     xmlns:semi="https://irihi.tech/semi"
+    xmlns:smoothScroll="using:SmoothScroll.Avalonia.Controls"
     xmlns:u-semi="https://irihi.tech/ursa/themes/semi"
     xmlns:ui="using:FluentAvalonia.UI.Themes"
     RequestedThemeVariant="Default">
@@ -18,6 +19,8 @@
         <autoSettingsPage:AutoSettingsPageTheme />
         <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />
         <StyleInclude Source="avares://LiveMarkdown.Avalonia/Styles.axaml" />
+        <smoothScroll:ScrollViewDefaultTheme />
+        <smoothScroll:ScrollViewerSmoothTheme />
     </Application.Styles>
     <Application.Resources>
         <ResourceDictionary>
@@ -27,7 +30,7 @@
                 <MergeResourceInclude Source="Themes/Colors.axaml" />
                 <MergeResourceInclude Source="Themes/Brushes.axaml" />
                 <MergeResourceInclude Source="Themes/Controls.axaml" />
-				<MergeResourceInclude Source="Themes/WindowDrawnDecorations.axaml" />
+                <MergeResourceInclude Source="Themes/WindowDrawnDecorations.axaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

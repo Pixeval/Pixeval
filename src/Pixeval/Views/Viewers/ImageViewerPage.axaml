@@ -7,9 +7,9 @@
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
-    xmlns:pz="using:Avalonia.Controls.PanAndZoom"
     xmlns:utilities="using:Pixeval.Utilities"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
+    xmlns:controls="clr-namespace:SmoothScroll.Avalonia.Controls;assembly=SmoothScroll.Avalonia.Controls"
     d:DesignHeight="450"
     d:DesignWidth="800"
     x:DataType="{x:Type viewers:ImageViewerPageViewModel}"
@@ -17,15 +17,13 @@
     <Grid>
         <!--  图片查看器（缩放/平移）  -->
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <pz:ZoomBorder
+            <controls:ScrollView
                 x:Name="ZoomBorder"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 ClipToBounds="True"
                 Focusable="True"
-                IsVisible="{Binding LoadSuccessfully}"
-                PanButton="Left"
-                Stretch="Uniform">
+                IsVisible="{Binding LoadSuccessfully}">
                 <Border>
                     <!--  Border隔离外部RenderTransform影响  -->
                     <ai:AnimatedImage
@@ -41,7 +39,7 @@
                         </ai:AnimatedImage.RenderTransform>
                     </ai:AnimatedImage>
                 </Border>
-                <pz:ZoomBorder.ContextFlyout>
+                <controls:ScrollView.ContextFlyout>
                     <MenuFlyout>
                         <!--  播放/暂停（仅动图可见）  -->
                         <MenuItem
@@ -58,20 +56,6 @@
                             Header="{I18N {x:Static pixeval:MiscResources.AddBookmark}}"
                             Icon="{markup:SymbolIcon Heart}"
                             IsVisible="{Binding OriginalIllustrationViewModel.IsBookmarkSupported}" />
-                        <MenuItem Header="-" />
-                        <!--  缩放  -->
-                        <MenuItem
-                            Command="{Binding #ZoomBorder.ZoomInCommand}"
-                            Header="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomIn}}"
-                            Icon="{markup:SymbolIcon ZoomIn}" />
-                        <MenuItem
-                            Command="{Binding #ZoomBorder.ZoomOutCommand}"
-                            Header="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomOut}}"
-                            Icon="{markup:SymbolIcon ZoomOut}" />
-                        <MenuItem
-                            Command="{Binding #ZoomBorder.FitCommand}"
-                            Header="{I18N {x:Static pixeval:MiscResources.RestoreOriginalResolution}}"
-                            Icon="{markup:SymbolIcon RatioOneToOne}" />
                         <MenuItem Header="-" />
                         <!--  保存  -->
                         <MenuItem
@@ -113,8 +97,8 @@
                             Icon="{markup:SymbolIcon LinkMultiple}"
                             Tag="{Binding IllustrationViewModel.WebsiteUri}" />
                     </MenuFlyout>
-                </pz:ZoomBorder.ContextFlyout>
-            </pz:ZoomBorder>
+                </controls:ScrollView.ContextFlyout>
+            </controls:ScrollView>
         </ScrollViewer>
 
         <!--  加载中遮罩  -->
