@@ -26,7 +26,7 @@
                 x:Name="TagInput"
                 AllowDuplicates="False"
                 Tags="{Binding Value}"
-                Watermark="{Binding Placeholder}" />
+                PlaceholderText="{Binding Placeholder}" />
         </controls:SettingsCard>
     </controls:SettingsExpander.Items>
 </controls:SettingsExpander>

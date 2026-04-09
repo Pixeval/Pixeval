@@ -41,7 +41,7 @@
                     AcceptsReturn="False"
                     Text="{Binding Value, Mode=OneTime}"
                     TextChanged="DownloadPathMacroTextBox_OnTextChanged"
-                    Watermark="{I18N {x:Static pixeval:SettingsPageResources.DownloadPathMacroTextBoxPlaceholderText}}" />
+                    PlaceholderText="{I18N {x:Static pixeval:SettingsPageResources.DownloadPathMacroTextBoxPlaceholderText}}" />
                 <TextBlock>
                     <Run Text="{I18N {x:Static pixeval:SettingsPageResources.SinglePathBlockText}}" />
                     <Run x:Name="SinglePathBlock" />

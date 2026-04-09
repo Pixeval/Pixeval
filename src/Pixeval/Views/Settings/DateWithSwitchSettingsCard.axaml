@@ -29,7 +29,7 @@
             DisplayDateEnd="{Binding DateEntry.Max}"
             DisplayDateStart="{Binding DateEntry.Min}"
             IsEnabled="{Binding Value}"
-            SelectedDate="{Binding DateEntry.Value, Mode=TwoWay}"
-            Watermark="{Binding Placeholder}" />
+            PlaceholderText="{Binding Placeholder}"
+            SelectedDate="{Binding DateEntry.Value, Mode=TwoWay}" />
     </Grid>
 </controls:SettingsCard>

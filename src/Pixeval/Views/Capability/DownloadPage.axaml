@@ -49,8 +49,8 @@
                     x:Name="FilterTextBox"
                     Width="260"
                     KeyDown="FilterTextBox_OnKeyDown"
-                    TextChanged="FilterTextBox_OnTextChanged"
-                    Watermark="{I18N {x:Static pixeval:DownloadPageResources.FilterAutoSuggestBoxPlaceholderText}}" />
+                    PlaceholderText="{I18N {x:Static pixeval:DownloadPageResources.FilterAutoSuggestBoxPlaceholderText}}"
+                    TextChanged="FilterTextBox_OnTextChanged" />
                 <CheckBox
                     x:Name="DeleteLocalFilesCheckBox"
                     VerticalAlignment="Center"
