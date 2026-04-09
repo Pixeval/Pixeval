@@ -28,23 +28,20 @@
             IsVisible="{Binding LoadSuccessfully}"
             IsZoomEnabled="True"
             VerticalScrollBarVisibility="Hidden">
-            <Border>
-                <!--  Border隔离外部RenderTransform影响  -->
-                <ai:AnimatedImage
-                    x:Name="ImageViewer"
-                    RenderTransformOrigin="50%,50%"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    Source="{Binding DisplaySource}"
-                    Stretch="Uniform">
-                    <ai:AnimatedImage.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform ScaleX="{Binding MirrorScaleX}" />
-                            <RotateTransform Angle="{Binding RotationDegree}" />
-                        </TransformGroup>
-                    </ai:AnimatedImage.RenderTransform>
-                </ai:AnimatedImage>
-            </Border>
+            <ai:AnimatedImage
+                x:Name="ImageViewer"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                RenderTransformOrigin="50%,50%"
+                Source="{Binding DisplaySource}"
+                Stretch="Uniform">
+                <ai:AnimatedImage.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="{Binding MirrorScaleX}" />
+                        <RotateTransform Angle="{Binding RotationDegree}" />
+                    </TransformGroup>
+                </ai:AnimatedImage.RenderTransform>
+            </ai:AnimatedImage>
             <controls:ScrollView.ContextFlyout>
                 <MenuFlyout>
                     <!--  播放/暂停（仅动图可见）  -->
