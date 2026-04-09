@@ -5,8 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoSettingsPage;
+using AutoSettingsPage.Avalonia;
 using AutoSettingsPage.Models;
 using Avalonia;
+using Avalonia.Media;
 using Avalonia.Styling;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
@@ -43,7 +45,7 @@ public class SettingsPageViewModel : ViewModelBase
                         ApplicationTheme.Dark => ThemeVariant.Dark,
                         _ => ThemeVariant.Default
                     })
-                // .Font(t => t.AppFontFamilyName)
+                .Font(t => t.AppFontFamily, entry => entry.ValueChanged += t => Application.Current?.Resources["ContentControlThemeFontFamily"] = new FontFamily(t))
                 .DomainFronting(t => t.EnableDomainFronting, entry =>
                         entry.IPSet(t => t.PixivAppApiNameResolver)
                             .IPSet(t => t.PixivImageNameResolver)

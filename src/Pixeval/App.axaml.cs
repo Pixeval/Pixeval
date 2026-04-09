@@ -5,7 +5,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Avalonia.Rendering;
+using Avalonia.Media;
 using LiveMarkdown.Avalonia;
 using Pixeval.AppManagement;
 using Pixeval.I18N;
@@ -35,6 +35,7 @@ public class App : Application
         AppViewModel.InitializeProvider();
         
         AvaloniaXamlLoader.Load(this);
+        Resources["ContentControlThemeFontFamily"] = new FontFamily(AppViewModel.AppSettings.AppFontFamily);
 
         AsyncImageLoader.DefaultDecoders =
         [

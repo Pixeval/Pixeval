@@ -45,8 +45,8 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
     public void Initialize()
     {
         var fontFamily = I18NManager.GetResource(AppSettingsResources.AppDefaultFontFamilyName);
-        if (AppSettings.AppFontFamilyName == null!)
-            AppSettings.AppFontFamilyName = fontFamily;
+        if (AppSettings.AppFontFamily == null!)
+            AppSettings.AppFontFamily = fontFamily;
         if (AppSettings.NovelFontFamily == null!)
             AppSettings.NovelFontFamily = fontFamily;
     }

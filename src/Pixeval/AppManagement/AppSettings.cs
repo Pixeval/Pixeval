@@ -40,7 +40,7 @@ public record AppSettings
     public bool UseFileCache { get; set; } = true;
 
     [SettingsEntry(Symbol.TextFont, AppFontFamilyEntryHeader, OpenFontSettingsHyperlinkButtonContent)]
-    public string AppFontFamilyName { get; set; } = null!;
+    public string AppFontFamily { get; set; } = null!;
 
     [SettingsEntry(Symbol.Checkmark, DefaultSelectedTabEntryHeader, DefaultSelectedTabEntryDescription)]
     public MainPageTabItem DefaultSelectedTabItem { get; set; }
@@ -297,8 +297,8 @@ public record AppSettings
 
     private static string GetSpecialFolder()
     {
-        var picPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures, Environment.SpecialFolderOption.Create);
-        var docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments, Environment.SpecialFolderOption.Create);
+        var picPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures, Environment.SpecialFolderOption.None);
+        var docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments, Environment.SpecialFolderOption.None);
         var picDirectory = Path.GetDirectoryName(picPath);
         return picDirectory == Path.GetDirectoryName(docPath)
             ? picDirectory +
