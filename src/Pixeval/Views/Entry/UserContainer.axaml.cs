@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 
@@ -23,7 +24,7 @@ public partial class UserContainer : UserControl
         {
             if (e is { Action: NotifyCollectionChangedAction.Add, NewItems: { } newItems })
                 foreach (Control argsNewItem in newItems)
-                    ExtraCommandsBar.Items.Insert(0, argsNewItem);
+                    ExtraCommandsBar.Children.Insert(0, argsNewItem);
             else
                 throw new ArgumentException("This collection does not support operations except the Add");
         };

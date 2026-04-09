@@ -6,7 +6,6 @@
     xmlns:custom="using:Tabalonia.Themes.Custom"
     xmlns:semi="https://irihi.tech/semi"
     xmlns:smoothScroll="using:SmoothScroll.Avalonia.Controls"
-    xmlns:u-semi="https://irihi.tech/ursa/themes/semi"
     xmlns:ui="using:FluentAvalonia.UI.Themes"
     RequestedThemeVariant="Default">
 

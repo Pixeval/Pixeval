@@ -18,18 +18,26 @@
     <DockPanel>
         <DockPanel DockPanel.Dock="Top">
             <!--  Non-selection toolbar (right side)  -->
-            <controls:ToolBar x:Name="RightToolBar" DockPanel.Dock="Right">
-                <ToggleButton
+            <CommandBar
+                x:Name="RightToolBar"
+                DefaultLabelPosition="Collapsed"
+                DockPanel.Dock="Right">
+                <CommandBarToggleButton
                     x:Name="SelectionToggleButton"
-                    Content="{markup:SymbolIcon Symbol=Multiselect}"
+                    Icon="{markup:SymbolIcon Symbol=Multiselect}"
                     IsChecked="{Binding IsSelecting, Mode=OneWayToSource}" />
-                <Button
+                <CommandBarButton
                     x:Name="RefreshButton"
                     Click="RefreshButton_OnClick"
-                    Content="{markup:SymbolIcon Symbol=ArrowClockwise}" />
-            </controls:ToolBar>
+                    Icon="{markup:SymbolIcon Symbol=ArrowClockwise}" />
+            </CommandBar>
 
-            <controls:ToolBar x:Name="ExtraCommandsBar" DockPanel.Dock="Left">
+            <StackPanel
+                x:Name="ExtraCommandsBar"
+                VerticalAlignment="Center"
+                DockPanel.Dock="Left"
+                Orientation="Horizontal"
+                Spacing="5">
                 <controls:SymbolComboBox
                     x:Name="SortOptionComboBox"
                     ItemsSource="{x:Static utilities:WorkSortOptionExtension.Items}"
@@ -40,30 +48,40 @@
                     Width="250"
                     VerticalAlignment="Stretch"
                     KeyDown="FilterAutoSuggestBox_OnKeyDown"
-                    Watermark="{I18N {x:Static local:WorkContainerResources.FilterAutoSuggestBoxPlaceholderText}}" />
-            </controls:ToolBar>
+                    PlaceholderText="{I18N {x:Static local:WorkContainerResources.FilterAutoSuggestBoxPlaceholderText}}" />
+            </StackPanel>
 
             <!--  Selection toolbar (visible when selecting)  -->
-            <controls:ToolBar x:Name="SelectionToolBar" IsVisible="{Binding IsSelecting}">
-                <Button Click="CancelSelectionButton_OnClicked" IsEnabled="{Binding !!SelectedEntries.Count}">
-                    <controls:IconText Symbol="SelectAllOff" Text="{Binding SelectedEntries.Count, Converter={x:Static work:WorkContainer.CancelSelectionButtonConverter}}" />
-                </Button>
-                <Button Click="SelectAllToggleButton_OnClicked">
-                    <controls:IconText Symbol="SelectAllOn" Text="{I18N {x:Static local:WorkContainerResources.SelectAllButtonLabel}}" />
-                </Button>
-                <Button
+            <CommandBar
+                x:Name="SelectionToolBar"
+                DefaultLabelPosition="Right"
+                IsVisible="{Binding IsSelecting}">
+                <CommandBarButton
+                    Click="CancelSelectionButton_OnClicked"
+                    Icon="{markup:SymbolIcon SelectAllOff}"
+                    IsEnabled="{Binding !!SelectedEntries.Count}"
+                    Label="{Binding SelectedEntries.Count, Converter={x:Static work:WorkContainer.CancelSelectionButtonConverter}}" />
+                <CommandBarButton
+                    Click="SelectAllToggleButton_OnClicked"
+                    Icon="{markup:SymbolIcon SelectAllOn}"
+                    Label="{I18N {x:Static local:WorkContainerResources.SelectAllButtonLabel}}" />
+                <CommandBarButton
                     x:Name="AddAllToBookmarkButton"
                     Click="AddAllToBookmarkButton_OnClicked"
-                    IsEnabled="{Binding !!SelectedEntries.Count}">
-                    <controls:IconText Symbol="Bookmark" Text="{I18N {x:Static local:WorkContainerResources.AddAllToBookmarkButtonLabel}}" />
-                </Button>
-                <Button Click="SaveAllButton_OnClicked" IsEnabled="{Binding !!SelectedEntries.Count}">
-                    <controls:IconText Symbol="Save" Text="{I18N {x:Static local:WorkContainerResources.SaveAllButtonLabel}}" />
-                </Button>
-                <Button Click="OpenAllInBrowserButton_OnClicked" IsEnabled="{Binding !!SelectedEntries.Count}">
-                    <controls:IconText Symbol="GlobeArrowUp" Text="{I18N {x:Static local:WorkContainerResources.OpenAllInBrowserButtonLabel}}" />
-                </Button>
-            </controls:ToolBar>
+                    Icon="{markup:SymbolIcon Bookmark}"
+                    IsEnabled="{Binding !!SelectedEntries.Count}"
+                    Label="{I18N {x:Static local:WorkContainerResources.AddAllToBookmarkButtonLabel}}" />
+                <CommandBarButton
+                    Click="SaveAllButton_OnClicked"
+                    Icon="{markup:SymbolIcon Save}"
+                    IsEnabled="{Binding !!SelectedEntries.Count}"
+                    Label="{I18N {x:Static local:WorkContainerResources.SaveAllButtonLabel}}" />
+                <CommandBarButton
+                    Click="OpenAllInBrowserButton_OnClicked"
+                    Icon="{markup:SymbolIcon GlobeArrowUp}"
+                    IsEnabled="{Binding !!SelectedEntries.Count}"
+                    Label="{I18N {x:Static local:WorkContainerResources.OpenAllInBrowserButtonLabel}}" />
+            </CommandBar>
         </DockPanel>
 
         <work:TagSelector

@@ -124,25 +124,29 @@
                             Description="{I18N {x:Static pixeval:SettingsPageResources.BugReportChannelsEntryDescription}}"
                             Header="{I18N {x:Static pixeval:SettingsPageResources.BugReportChannelsEntryHeader}}"
                             HeaderIcon="{markup:SymbolIcon Symbol=Send}">
-                            <controls1:ToolBar>
-                                <Button
+                            <CommandBar Background="Transparent" DefaultLabelPosition="Collapsed">
+                                <CommandBarButton
                                     Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                                     Tag="https://github.com/Pixeval/Pixeval/issues/new/choose"
                                     ToolTip.Tip="{I18N {x:Static pixeval:SettingsPageResources.GitHubBugReportEntryToolTipServiceToolTip}}">
-                                    <Image Source="{SvgImage avares://Pixeval/Assets/GitHub.svg}" />
-                                </Button>
-                                <Button
+                                    <CommandBarButton.Icon>
+                                        <Image MaxWidth="20" Source="{SvgImage avares://Pixeval/Assets/GitHub.svg}" />
+                                    </CommandBarButton.Icon>
+                                </CommandBarButton>
+                                <CommandBarButton
                                     Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
-                                    Content="{markup:SymbolIcon Symbol=Mail}"
+                                    Icon="{markup:SymbolIcon Symbol=Mail}"
                                     Tag="mailto:decem0730@hotmail.com"
                                     ToolTip.Tip="{I18N {x:Static pixeval:SettingsPageResources.EMailBugReportEntryToolTipServiceToolTip}}" />
-                                <Button
+                                <CommandBarButton
                                     Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                                     Tag="https://jq.qq.com/?_wv=1027&amp;k=trDeCrog"
                                     ToolTip.Tip="{I18N {x:Static pixeval:SettingsPageResources.QQBugReportEntryToolTipServiceToolTip}}">
-                                    <Image Source="{SvgImage avares://Pixeval/Assets/QQ.svg}" />
-                                </Button>
-                            </controls1:ToolBar>
+                                    <CommandBarButton.Icon>
+                                        <Image MaxWidth="20" Source="{SvgImage avares://Pixeval/Assets/QQ.svg}" />
+                                    </CommandBarButton.Icon>
+                                </CommandBarButton>
+                            </CommandBar>
                         </controls:SettingsCard>
                         <controls:SettingsCard
                             ActionIcon="{markup:SymbolIcon Symbol=Open}"

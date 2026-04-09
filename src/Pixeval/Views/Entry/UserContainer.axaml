@@ -13,14 +13,21 @@
 
     <DockPanel>
         <DockPanel DockPanel.Dock="Top">
-            <controls:ToolBar x:Name="RightToolBar" DockPanel.Dock="Right">
-                <Button
+            <CommandBar
+                x:Name="RightToolBar"
+                DefaultLabelPosition="Collapsed"
+                DockPanel.Dock="Right">
+                <CommandBarButton
                     x:Name="RefreshButton"
                     Click="RefreshButton_OnClick"
-                    Content="{markup:SymbolIcon Symbol=ArrowClockwise}" />
-            </controls:ToolBar>
+                    Icon="{markup:SymbolIcon Symbol=ArrowClockwise}" />
+            </CommandBar>
 
-            <controls:ToolBar x:Name="ExtraCommandsBar" />
+            <StackPanel
+                x:Name="ExtraCommandsBar"
+                VerticalAlignment="Center"
+                Orientation="Horizontal"
+                Spacing="5" />
         </DockPanel>
 
         <entry:UserView x:Name="UserView" />

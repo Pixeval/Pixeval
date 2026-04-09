@@ -6,6 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:local="using:Pixeval"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:Pixeval.ViewModels"
     d:DesignHeight="90"
@@ -40,29 +42,42 @@
                 TextTrimming="CharacterEllipsis" />
         </StackPanel>
 
-        <controls:ToolBar
+        <CommandBar
             Grid.Row="0"
             Grid.Column="2"
-            VerticalAlignment="Center">
-            <Button Click="ActionButton_OnClicked" IsEnabled="{Binding IsItemEnabled}">
-                <controls:IconText Symbol="{Binding ActionButtonSymbol}" Text="{Binding ActionButtonContent}" />
-            </Button>
-            <Button Click="RedownloadItem_OnClicked" IsEnabled="{Binding IsRedownloadItemEnabled}">
-                <controls:IconText Symbol="ArrowDownload" Text="{I18N {x:Static local:DownloadItemResources.RedownloadItemLabel}}" />
-            </Button>
-            <Button Click="CancelDownloadItem_OnClicked" IsEnabled="{Binding IsCancelItemEnabled}">
-                <controls:IconText Symbol="Dismiss" Text="{I18N {x:Static local:DownloadItemResources.CancelDownloadItemLabel}}" />
-            </Button>
-            <Button Click="OpenDownloadLocationItem_OnClicked">
-                <controls:IconText Symbol="FolderArrowRight" Text="{I18N {x:Static local:DownloadItemResources.OpenDownloadLocationItemLabel}}" />
-            </Button>
-            <Button Click="GoToPageItem_OnClicked">
-                <controls:IconText Symbol="Open" Text="{I18N {x:Static local:DownloadItemResources.GoToPageItemLabel}}" />
-            </Button>
-            <Button Click="CheckErrorMessageInDetail_OnClicked" IsEnabled="{Binding IsError}">
-                <controls:IconText Symbol="ErrorCircle" Text="{I18N {x:Static local:DownloadItemResources.CheckErrorMessageInDetailItemLabel}}" />
-            </Button>
-        </controls:ToolBar>
+            VerticalAlignment="Center"
+            DefaultLabelPosition="Right">
+            <CommandBarButton
+                Click="ActionButton_OnClicked"
+                Icon="{markup1:SymbolIconEx Symbol={Binding ActionButtonSymbol}}"
+                IsEnabled="{Binding IsItemEnabled}"
+                Label="{Binding ActionButtonContent}" />
+            <CommandBar.SecondaryCommands>
+                <CommandBarButton
+                    Click="RedownloadItem_OnClicked"
+                    Icon="{markup:SymbolIcon ArrowDownload}"
+                    IsEnabled="{Binding IsRedownloadItemEnabled}"
+                    Label="{I18N {x:Static local:DownloadItemResources.RedownloadItemLabel}}" />
+                <CommandBarButton
+                    Click="CancelDownloadItem_OnClicked"
+                    Icon="{markup:SymbolIcon Dismiss}"
+                    IsEnabled="{Binding IsCancelItemEnabled}"
+                    Label="{I18N {x:Static local:DownloadItemResources.CancelDownloadItemLabel}}" />
+                <CommandBarButton
+                    Click="OpenDownloadLocationItem_OnClicked"
+                    Icon="{markup:SymbolIcon FolderArrowRight}"
+                    Label="{I18N {x:Static local:DownloadItemResources.OpenDownloadLocationItemLabel}}" />
+                <CommandBarButton
+                    Click="GoToPageItem_OnClicked"
+                    Icon="{markup:SymbolIcon Open}"
+                    Label="{I18N {x:Static local:DownloadItemResources.GoToPageItemLabel}}" />
+                <CommandBarButton
+                    Click="CheckErrorMessageInDetail_OnClicked"
+                    Icon="{markup:SymbolIcon ErrorCircle}"
+                    IsEnabled="{Binding IsError}"
+                    Label="{I18N {x:Static local:DownloadItemResources.CheckErrorMessageInDetailItemLabel}}" />
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
 
         <Grid
             Grid.Row="1"
