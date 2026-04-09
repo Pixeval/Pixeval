@@ -20,16 +20,21 @@
             x:Name="ZoomBorder"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
-            HorizontalScrollBarVisibility="Hidden" 
-            VerticalScrollBarVisibility="Hidden"
+            HorizontalContentAlignment="Stretch"
+            VerticalContentAlignment="Stretch"
             ClipToBounds="True"
             Focusable="True"
-            IsVisible="{Binding LoadSuccessfully}">
+            HorizontalScrollBarVisibility="Hidden"
+            IsVisible="{Binding LoadSuccessfully}"
+            IsZoomEnabled="True"
+            VerticalScrollBarVisibility="Hidden">
             <Border>
                 <!--  Border隔离外部RenderTransform影响  -->
                 <ai:AnimatedImage
                     x:Name="ImageViewer"
                     RenderTransformOrigin="50%,50%"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
                     Source="{Binding DisplaySource}"
                     Stretch="Uniform">
                     <ai:AnimatedImage.RenderTransform>
