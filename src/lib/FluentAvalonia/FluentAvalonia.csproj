@@ -9,7 +9,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
-		<PackageReference Include="FluentIcons.Avalonia" Version="2.0.319" />
+		<PackageReference Include="FluentIcons.Avalonia" Version="2.1.323" />
 	</ItemGroup>
 
 </Project>
