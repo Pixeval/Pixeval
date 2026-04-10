@@ -9,7 +9,7 @@ public partial class SettingsPage : UserControl
     public SettingsPage()
     {
         InitializeComponent();
-        _ = Frame.Navigate<SettingsMainView>();
+        _ = NavigationPage.PushAsync(new SettingsMainView());
     }
 
     /// <inheritdoc />

@@ -1,5 +1,4 @@
 using AutoSettingsPage.Avalonia;
-using Avalonia.Controls;
 using CommunityToolkit.Avalonia.Controls;
 using Pixeval.AppManagement;
 using Pixeval.Models.Settings.Entries;

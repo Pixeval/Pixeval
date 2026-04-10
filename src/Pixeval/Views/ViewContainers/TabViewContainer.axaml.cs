@@ -111,5 +111,6 @@ public partial class TabViewContainer : ViewContainerBase
 
     private void Logout_OnClicked(object? sender, RoutedEventArgs e)
     {
+        TopLevel.GetTopLevel(this)?.ViewContainer?.NavigateTo<Login.LoginPage>();
     }
 }    

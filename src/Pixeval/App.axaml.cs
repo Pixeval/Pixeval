@@ -11,10 +11,10 @@ using Pixeval.AppManagement;
 using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
-using Pixeval.Views;
 using Pixeval.Views.Capability;
 using Pixeval.Views.ViewContainers;
 using Pixeval.Views.Viewers;
+using LoginPage = Pixeval.Views.Login.LoginPage;
 
 namespace Pixeval;
 
@@ -63,7 +63,8 @@ public class App : Application
                 };
 
                 viewContainer = new TabViewContainer();
-                desktop.MainWindow = new Window { Content = viewContainer }
+                // 这个窗口可能会被用户关闭，所以不设为desktop.MainWindow
+                new Window { Content = viewContainer }
                     .Init(
                         AppInfo.AppIdentifier,
                         AppInfo.IconApplicationUri,
@@ -71,7 +72,7 @@ public class App : Application
                         AppViewModel.AppSettings.WindowHeight,
                         800,
                         450,
-                        AppViewModel.AppSettings.IsMaximized);
+                        AppViewModel.AppSettings.IsMaximized).Show();
 
                 break;
             case ISingleViewApplicationLifetime singleViewPlatform:

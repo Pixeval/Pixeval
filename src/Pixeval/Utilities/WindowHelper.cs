@@ -2,8 +2,6 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using System.Runtime.InteropServices;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform;
 using Pixeval.AppManagement;

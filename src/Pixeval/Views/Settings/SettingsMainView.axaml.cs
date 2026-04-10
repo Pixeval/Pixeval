@@ -4,7 +4,6 @@ using System.Text.Json;
 using AutoSettingsPage.Models;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using FluentAvalonia.UI.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
 using Pixeval.I18N;
@@ -16,21 +15,25 @@ using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Settings;
 
-public partial class SettingsMainView : UserControl
+public partial class SettingsMainView : ContentPage
 {
     public SettingsMainView()
     {
         InitializeComponent();
     }
 
-    private void SettingsCard_OnClick(object? sender, RoutedEventArgs e)
+    private async void SettingsCard_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (Parent is Frame frame && sender is Control { DataContext: ISettingsGroup group })
-            frame.Navigate<SettingsSubView>(group);
+        if (IsInNavigationPage && Parent is NavigationPage frame && sender is Control { DataContext: ISettingsGroup group })
+            await frame.PushAsync(new SettingsSubView(group));
     }
 
     private async void PerformSignOutButton_OnClicked(object sender, RoutedEventArgs e)
     {
+        //if (await this.CreateOkCancelAsync(SettingsPageResources.ResetSettingConfirmationDialogTitle,
+        //        SettingsPageResources.ResetSettingConfirmationDialogContent) is ContentDialogResult.Primary)
+        // 关闭除此之外所有窗口
+        TopLevel.GetTopLevel(this)?.ViewContainer?.NavigateTo<Login.LoginPage>();
     }
 
     private async void ResetDefaultSettings_OnClicked(object sender, RoutedEventArgs e)

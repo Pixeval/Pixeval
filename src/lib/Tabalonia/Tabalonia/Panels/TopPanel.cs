@@ -1,5 +1,3 @@
-using Tabalonia.Controls;
-
 namespace Tabalonia.Panels;
 
 public sealed class TopPanel : Panel

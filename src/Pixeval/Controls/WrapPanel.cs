@@ -5,12 +5,10 @@
 
 using System;
 using System.Diagnostics;
-using System.Numerics;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
-using Avalonia.Utilities;
 using Pixeval.Utilities;
 using static System.Math;
 

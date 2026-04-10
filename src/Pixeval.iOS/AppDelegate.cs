@@ -1,9 +1,3 @@
-using Foundation;
-using UIKit;
-using Avalonia;
-using Avalonia.iOS;
-using Avalonia.Media;
-
 namespace Pixeval.iOS;
 
 // The UIApplicationDelegate for the application. This class is responsible for launching the 

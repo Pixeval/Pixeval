@@ -1,39 +1,26 @@
-<UserControl
+<ContentPage
     x:Class="Pixeval.Views.Settings.SettingsSubView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="using:Pixeval.Views.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:AutoSettingsPage.Models"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <DockPanel VerticalSpacing="20">
-        <DockPanel DockPanel.Dock="Top" HorizontalSpacing="20">
-            <Button
-                Click="Button_OnClick"
-                Content="{markup:SymbolIcon ArrowLeft}"
-                DockPanel.Dock="Left" />
-            <TextBlock
-                x:Name="HeaderTextBlock"
-                VerticalAlignment="Center"
-                Theme="{StaticResource SubtitleTextBlockStyle}" />
-        </DockPanel>
-        <ScrollViewer>
-            <ItemsControl x:Name="ItemsControl">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="{x:Type models:ISettingsEntry}">
-                        <ContentPresenter Content="{Binding Converter={x:Static converters:PixevalConverters.SettingsEntryConverter}}" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
-    </DockPanel>
-</UserControl>
+    <ScrollViewer>
+        <ItemsControl x:Name="ItemsControl" Margin="20">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type models:ISettingsEntry}">
+                    <ContentPresenter Content="{Binding Converter={x:Static converters:PixevalConverters.SettingsEntryConverter}}" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </ScrollViewer>
+</ContentPage>
