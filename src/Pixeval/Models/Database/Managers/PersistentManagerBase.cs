@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using SQLite;
 
 namespace Pixeval.Models.Database.Managers;
 
-public abstract class PersistentManagerBase<TEntry, TModel> : IPersistentManager<TEntry, TModel>
+public abstract class PersistentManagerBase<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntry, TModel> : IPersistentManager<TEntry, TModel>
     where TEntry : HistoryEntry, new()
 {
     private readonly SQLiteConnection _db;
@@ -16,20 +17,6 @@ public abstract class PersistentManagerBase<TEntry, TModel> : IPersistentManager
         _db = db;
         MaximumRecords = maximumRecords;
         _ = _db.CreateTable<TEntry>();
-        return;
-        // TODO
-        // 不直接用 CreateTable<TEntry>()，因其 MigrateTable 在 AOT 下因 ColumnInfo 被裁剪
-        // 会误判所有列不存在，导致 "duplicate column name" 异常
-        CreateTableIfNotExists<TEntry>(_db);
-    }
-
-    private static void CreateTableIfNotExists<TTable>(SQLiteConnection db) where TTable : new()
-    {
-        var tableName = db.GetMapping<TTable>().TableName;
-        var count = db.ExecuteScalar<int>(
-            "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?", tableName);
-        if (count == 0)
-            db.CreateTable<TTable>();
     }
 
     /// <inheritdoc />
@@ -47,7 +34,7 @@ public abstract class PersistentManagerBase<TEntry, TModel> : IPersistentManager
         if (Queryable.Count() > MaximumRecords)
             Purge(MaximumRecords);
 
-        _db.Insert(t);
+        _db.Insert(t, typeof(TEntry));
     }
 
     /// <inheritdoc />
@@ -55,10 +42,10 @@ public abstract class PersistentManagerBase<TEntry, TModel> : IPersistentManager
         Queryable.Where(predicate).Skip(skip).Take(limit).Select(ToModel).ToArray();
 
     /// <inheritdoc />
-    public virtual void AddOrUpdate(TEntry entry) => _db.InsertOrReplace(entry);
+    public virtual void AddOrUpdate(TEntry entry) => _db.InsertOrReplace(entry, typeof(TEntry));
 
     /// <inheritdoc />
-    public virtual void Update(TEntry entry) => _db.Update(entry);
+    public virtual void Update(TEntry entry) => _db.Update(entry, typeof(TEntry));
 
     /// <inheritdoc />
     public virtual IReadOnlyList<TModel> Take(int count) => Queryable.Take(count).Select(ToModel).ToArray();
@@ -81,7 +68,7 @@ public abstract class PersistentManagerBase<TEntry, TModel> : IPersistentManager
     {
         if (Queryable.Where(predicate).FirstOrDefault() is { } e)
         {
-            _db.Delete(e);
+            _db.Delete<TEntry>(e.HistoryEntryId);
             return e;
         }
 
@@ -114,7 +101,7 @@ public abstract class PersistentManagerBase<TEntry, TModel> : IPersistentManager
         {
             var toDelete = Queryable.Take(deleteCount).ToArray();
             foreach (var item in toDelete)
-                _db.Delete(item);
+                _db.Delete<TEntry>(item.HistoryEntryId);
         }
     }
 

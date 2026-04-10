@@ -102,8 +102,7 @@
                             </Transitions>
                         </ScrollViewer.Transitions>
 
-                        <!--<md:MarkdownRenderer x:Name="MarkdownRenderer"/>-->
-                        <md:MarkdownTextBlock Text="{Binding Entry.Description}" TextWrapping="Wrap" />
+                        <md:MarkdownRenderer controls:MarkdownRendererBehavior.Text="{Binding Entry.Description}" />
                     </ScrollViewer>
                 </Panel>
             </controls:ConstrainedBox>

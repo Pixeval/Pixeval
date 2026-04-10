@@ -3,16 +3,23 @@
 
 using System;
 using Avalonia.Controls;
-using Avalonia.Interactivity;
-using Pixeval.I18N;
-using Pixeval.Utilities;
 
 namespace Pixeval.Views.Viewers;
 
 public partial class ImageViewerPage : UserControl
 {
-    public ImageViewerPage()
+    public ImageViewerPage() => InitializeComponent();
+
+    /// <summary>
+    /// 默认缩放到适应窗口大小（Uniform）
+    /// </summary>
+    private void ImageViewer_OnSizeChanged(object? sender, SizeChangedEventArgs e)
     {
-        InitializeComponent();
+        if (sender is not Control { Bounds.Size: { Width: not 0, Height: not 0 } imageSize } ||
+            ZoomBorder is not { Bounds.Size: { Width: not 0, Height: not 0 } panelSize })
+            return;
+        var ratio = panelSize / imageSize;
+        var zoomFactor = Math.Min(ratio.X, ratio.Y);
+        ZoomBorder.ZoomTo(zoomFactor);
     }
 }

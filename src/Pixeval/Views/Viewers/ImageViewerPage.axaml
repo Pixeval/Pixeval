@@ -33,6 +33,7 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 RenderTransformOrigin="50%,50%"
+                SizeChanged="ImageViewer_OnSizeChanged"
                 Source="{Binding DisplaySource}"
                 Stretch="Uniform">
                 <ai:AnimatedImage.RenderTransform>

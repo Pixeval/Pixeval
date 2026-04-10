@@ -316,7 +316,6 @@ public record AppSettings
 [JsonSerializable(typeof(ObservableCollection<string>))]
 public partial class SettingsSerializerContext : JsonSerializerContext;
 
-// TODO ItemsViewLayoutType
 [LocalizationMetadata]
 public enum ItemsViewLayoutType
 {

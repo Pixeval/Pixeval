@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using SQLite;
 
@@ -12,7 +13,7 @@ namespace Pixeval.Models.Database.Managers;
 /// A simple persistent manager without mapping
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public abstract class SimplePersistentManager<T> : IPersistentManager<T, T>
+public abstract class SimplePersistentManager<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : IPersistentManager<T, T>
     where T : HistoryEntry, new()
 {
     private readonly SQLiteConnection _db;
@@ -22,20 +23,6 @@ public abstract class SimplePersistentManager<T> : IPersistentManager<T, T>
         _db = db;
         MaximumRecords = maximumRecords;
         _ = _db.CreateTable<T>();
-        return;
-        // TODO
-        // 不直接用 CreateTable<T>()，因其 MigrateTable 在 AOT 下因 ColumnInfo 被裁剪
-        // 会误判所有列不存在，导致 "duplicate column name" 异常
-        CreateTableIfNotExists<T>(_db);
-    }
-
-    private static void CreateTableIfNotExists<TTable>(SQLiteConnection db) where TTable : new()
-    {
-        var tableName = db.GetMapping<TTable>().TableName;
-        var count = db.ExecuteScalar<int>(
-            "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?", tableName);
-        if (count == 0)
-            _ = db.CreateTable<TTable>();
     }
 
     /// <inheritdoc />
@@ -53,7 +40,7 @@ public abstract class SimplePersistentManager<T> : IPersistentManager<T, T>
         if (Queryable.Count() > MaximumRecords)
             Purge(MaximumRecords);
 
-        _db.Insert(t);
+        _db.Insert(t, typeof(T));
     }
 
     /// <inheritdoc />
@@ -63,10 +50,10 @@ public abstract class SimplePersistentManager<T> : IPersistentManager<T, T>
     }
 
     /// <inheritdoc />
-    public virtual void AddOrUpdate(T entry) => _db.InsertOrReplace(entry);
+    public virtual void AddOrUpdate(T entry) => _db.InsertOrReplace(entry, typeof(T));
 
     /// <inheritdoc />
-    public virtual void Update(T entry) => _db.Update(entry);
+    public virtual void Update(T entry) => _db.Update(entry, typeof(T));
 
     /// <inheritdoc />
     public virtual IReadOnlyList<T> Take(int count) => Queryable.Take(count).ToArray();
@@ -91,7 +78,7 @@ public abstract class SimplePersistentManager<T> : IPersistentManager<T, T>
     {
         if (Queryable.FirstOrDefault(predicate) is { } e)
         {
-            _db.Delete(e);
+            _db.Delete<T>(e.HistoryEntryId);
             return e;
         }
 
@@ -115,7 +102,7 @@ public abstract class SimplePersistentManager<T> : IPersistentManager<T, T>
         {
             var toDelete = Queryable.Take(deleteCount).ToArray();
             foreach (var item in toDelete)
-                _db.Delete(item);
+                _db.Delete<T>(item.HistoryEntryId);
         }
     }
 
