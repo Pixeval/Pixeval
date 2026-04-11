@@ -4,7 +4,6 @@ using System.Web;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform;
-using Avalonia.VisualTree;
 using Mako.Net;
 using Pixeval.AppManagement;
 using Pixeval.Utilities;

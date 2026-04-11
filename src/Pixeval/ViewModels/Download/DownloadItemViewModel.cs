@@ -4,7 +4,6 @@
 using System;
 using System.ComponentModel;
 using System.Linq;
-using Avalonia.Media;
 using FluentIcons.Common;
 using Misaki;
 using Pixeval.Download;
@@ -32,10 +31,6 @@ public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo
 
     public bool ShowGroupStats => DownloadTask.Count > 1;
 
-    public string GroupStatsText => $"{DownloadTask.ActiveCount}/{DownloadTask.CompletedCount}/{DownloadTask.ErrorCount}";
-
-    public double ProgressPercentage => DownloadTask.ProgressPercentage;
-
     public DownloadState CurrentState => DownloadTask.CurrentState;
 
     public bool IsPending => CurrentState is DownloadState.Pending;
@@ -47,7 +42,7 @@ public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo
     public string ProgressMessage => CurrentState switch
     {
         DownloadState.Queued => I18NManager.GetResource(DownloadItemResources.DownloadQueued),
-        DownloadState.Running => I18NManager.GetResource(DownloadItemResources.DownloadRunningFormatted, (int)ProgressPercentage),
+        DownloadState.Running => I18NManager.GetResource(DownloadItemResources.DownloadRunningFormatted, (int) DownloadTask.ProgressPercentage),
         DownloadState.Error => I18NManager.GetResource(DownloadItemResources.DownloadErrorMessageFormatted, DownloadTask.ErrorCause?.Message),
         DownloadState.Completed => I18NManager.GetResource(DownloadItemResources.DownloadCompleted),
         DownloadState.Cancelled => I18NManager.GetResource(DownloadItemResources.DownloadCancelled),
@@ -82,13 +77,11 @@ public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo
 
     public bool IsCancelItemEnabled => !DownloadTask.IsProcessing && CurrentState is DownloadState.Running or DownloadState.Queued or DownloadState.Paused;
 
-    public IBrush StateBrush => CurrentState switch
+    public string StateBrushKey => CurrentState switch
     {
-        DownloadState.Paused => Brushes.Goldenrod,
-        DownloadState.Cancelled => Brushes.Gray,
-        DownloadState.Error => Brushes.IndianRed,
-        DownloadState.Completed => Brushes.ForestGreen,
-        _ => Brushes.DodgerBlue
+        DownloadState.Paused => "SystemFillColorCautionBrush",
+        DownloadState.Cancelled => "SystemFillColorNeutralBrush",
+        _ => "SystemFillColorAttentionBrush",
     };
 
     public void ExecutePrimaryAction()
@@ -104,30 +97,12 @@ public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo
             case Symbol.ArrowRepeatAll:
                 DownloadTask.TryReset();
                 break;
-            case Symbol.Open:
-                break;
             case Symbol.Play:
                 DownloadTask.TryResume();
                 break;
+            case Symbol.Open:
+                break;
         }
-    }
-
-    public void RefreshState()
-    {
-        OnPropertyChanged(nameof(ShowGroupStats));
-        OnPropertyChanged(nameof(GroupStatsText));
-        OnPropertyChanged(nameof(ProgressPercentage));
-        OnPropertyChanged(nameof(CurrentState));
-        OnPropertyChanged(nameof(IsPending));
-        OnPropertyChanged(nameof(IsError));
-        OnPropertyChanged(nameof(IsPaused));
-        OnPropertyChanged(nameof(ProgressMessage));
-        OnPropertyChanged(nameof(ActionButtonSymbol));
-        OnPropertyChanged(nameof(ActionButtonContent));
-        OnPropertyChanged(nameof(IsItemEnabled));
-        OnPropertyChanged(nameof(IsRedownloadItemEnabled));
-        OnPropertyChanged(nameof(IsCancelItemEnabled));
-        OnPropertyChanged(nameof(StateBrush));
     }
 
     protected override string ThumbnailUrl => Entry.Thumbnails.PickMax()?.ImageUri.OriginalString ?? string.Empty;
@@ -140,16 +115,31 @@ public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo
 
     private void DownloadTaskOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        if (e.PropertyName is nameof(IDownloadTaskBase.CurrentState))
+        {
+            OnPropertyChanged(nameof(CurrentState));
+            OnPropertyChanged(nameof(IsPending));
+            OnPropertyChanged(nameof(IsError));
+            OnPropertyChanged(nameof(IsPaused));
+            OnPropertyChanged(nameof(ShowGroupStats));
+            OnPropertyChanged(nameof(StateBrushKey));
+            OnPropertyChanged(nameof(ActionButtonSymbol));
+            OnPropertyChanged(nameof(ActionButtonContent));
+        }
+        if (e.PropertyName is nameof(IDownloadTaskBase.CurrentState)
+            or nameof(IDownloadTaskBase.IsProcessing))
+        {
+            OnPropertyChanged(nameof(IsItemEnabled));
+            OnPropertyChanged(nameof(IsRedownloadItemEnabled));
+            OnPropertyChanged(nameof(IsCancelItemEnabled));
+        }
         if (e.PropertyName is nameof(IDownloadTaskBase.CurrentState)
             or nameof(IDownloadTaskBase.ProgressPercentage)
-            or nameof(IDownloadTaskBase.IsProcessing)
-            or nameof(IDownloadTaskBase.ErrorCause)
-            or nameof(IDownloadTaskGroupBase.ActiveCount)
-            or nameof(IDownloadTaskGroupBase.CompletedCount)
-            or nameof(IDownloadTaskGroupBase.ErrorCount)
-            or "")
+            or nameof(IDownloadTaskBase.ErrorCause))
         {
-            RefreshState();
+            OnPropertyChanged(nameof(IsItemEnabled));
+            OnPropertyChanged(nameof(IsRedownloadItemEnabled));
+            OnPropertyChanged(nameof(IsCancelItemEnabled));
         }
     }
 }

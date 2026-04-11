@@ -25,12 +25,9 @@ public partial class DownloadItem : UserControl
             return;
 
         if (vm.ActionButtonSymbol is Symbol.Open)
-        {
             await OpenPathAsync(vm.DownloadTask.OpenLocalDestination);
-            return;
-        }
-
-        vm.ExecutePrimaryAction();
+        else
+            vm.ExecutePrimaryAction();
     }
 
     private void RedownloadItem_OnClicked(object? sender, RoutedEventArgs e)
@@ -80,7 +77,22 @@ public partial class DownloadItem : UserControl
         try
         {
             var info = new DirectoryInfo(path);
-            _ = await launcher.LaunchDirectoryInfoAsync(info);
+            if (info.Exists)
+            {
+                _ = await launcher.LaunchDirectoryInfoAsync(info);
+                return;
+            }
+
+            var file = new FileInfo(path);
+            if (file.Exists)
+            {
+                _ = await launcher.LaunchFileInfoAsync(file);
+                return;
+            }
+            // todo not exists
+            TopLevel.GetTopLevel(this)?.ViewContainer?.ShowError(
+                I18NManager.GetResource(DownloadItemResources.ActionButtonContentOpen),
+                path);
         }
         catch
         {

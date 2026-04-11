@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:local="using:Pixeval"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:markup1="using:Pixeval.Views.Markup"
@@ -84,28 +83,40 @@
             Grid.Column="1"
             ColumnDefinitions="*,Auto"
             ColumnSpacing="8"
-            RowDefinitions="Auto,Auto"
+            RowDefinitions="Auto,*"
             RowSpacing="4">
             <ProgressBar
                 Grid.ColumnSpan="2"
                 IsIndeterminate="{Binding IsPending}"
                 Maximum="100"
-                Value="{Binding ProgressPercentage}" />
+                Value="{Binding DownloadTask.ProgressPercentage}" />
             <TextBlock
                 Grid.Row="1"
                 Grid.Column="0"
-                Foreground="{Binding StateBrush}"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                 Text="{Binding ProgressMessage}"
-                TextTrimming="CharacterEllipsis" />
-            <Border
+                TextTrimming="CharacterEllipsis"
+                TextWrapping="NoWrap" />
+            <StackPanel
                 Grid.Row="1"
                 Grid.Column="1"
-                Padding="6,2"
-                Background="{DynamicResource LayerFillColorSubtleBrush}"
-                CornerRadius="4"
-                IsVisible="{Binding ShowGroupStats}">
-                <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{Binding GroupStatsText}" />
-            </Border>
+                IsVisible="{Binding ShowGroupStats}"
+                Orientation="Horizontal"
+                Spacing="5">
+                <controls:DigitalSignalItem
+                    x:Name="StateDigitalSignalItem"
+                    Fill="{markup1:BindingDynamicResource {Binding StateBrushKey}}"
+                    IsVisible="{Binding !!DownloadTask.ActiveCount}"
+                    Text="{Binding DownloadTask.ActiveCount}" />
+                <controls:DigitalSignalItem
+                    Fill="{DynamicResource SystemFillColorSuccessBrush}"
+                    IsVisible="{Binding !!DownloadTask.CompletedCount}"
+                    Text="{Binding DownloadTask.CompletedCount}" />
+                <controls:DigitalSignalItem
+                    Fill="{DynamicResource SystemFillColorCriticalBrush}"
+                    IsVisible="{Binding !!DownloadTask.ErrorCount}"
+                    Text="{Binding DownloadTask.ErrorCount}" />
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>
