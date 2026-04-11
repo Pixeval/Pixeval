@@ -93,6 +93,7 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
             {
                 LoginContext.CurrentRefreshToken = tokenResponse.RefreshToken;
                 LoginContext.Users[tokenResponse.RefreshToken] = sender.Me!;
+                AppInfo.SaveLoginContext(LoginContext);
             }
         }
     }

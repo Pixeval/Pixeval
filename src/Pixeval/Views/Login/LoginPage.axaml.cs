@@ -26,7 +26,7 @@ public partial class LoginPage : UserControl
 
         App.AppViewModel.MakoClient.SetToken(token);
         if (await App.AppViewModel.MakoClient.IdentifyTokenAsync())
-            LoginNavigate(token);
+            LoginNavigate();
     }
 
     private void OpenWebView_OnClick(object? sender, RoutedEventArgs e)
@@ -61,8 +61,9 @@ public partial class LoginPage : UserControl
                 var code = HttpUtility.ParseQueryString(uri.Query)["code"]!;
                 try
                 {
-                    if (await App.AppViewModel.MakoClient.RequestSessionAsync(code, verifier) is { } refreshToken)
-                        Avalonia.Threading.Dispatcher.UIThread.Invoke(() => LoginNavigate(refreshToken));
+                    App.AppViewModel.MakoClient.SetCode(code, verifier);
+                    if (await App.AppViewModel.MakoClient.IdentifyTokenAsync())
+                        Avalonia.Threading.Dispatcher.UIThread.Invoke(LoginNavigate);
                     // TODO else
                     //_ = await TopLevel.GetTopLevel(this)?.ViewContainer?.CreateAcknowledgementAsync(LoginPageResources.FetchingSessionFailedTitle,
                     //    LoginPageResources.FetchingSessionFailedContent);
@@ -76,12 +77,8 @@ public partial class LoginPage : UserControl
         WebView.Source = new Uri(PixivAuth.GenerateWebPageUrl(verifier));
     }
 
-    public void LoginNavigate(string refreshToken)
+    public void LoginNavigate()
     {
-        var loginContext = App.AppViewModel.LoginContext;
-        loginContext.CurrentRefreshToken = refreshToken;
-        AppInfo.SaveLoginContext(loginContext);
-
         var viewContainer = TopLevel.GetTopLevel(this)?.ViewContainer;
         viewContainer?.NavigateTo<RecommendWorksPage>(true);
     }

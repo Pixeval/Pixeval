@@ -96,7 +96,6 @@ public class App : Application
             if (await AppViewModel.MakoClient.IdentifyTokenAsync())
             {
                 viewContainer.NavigateTo<RecommendWorksPage>();
-                viewContainer.NavigateTo(typeof(WorkViewerSplitView), null, "header");
                 return;
             }
         }
