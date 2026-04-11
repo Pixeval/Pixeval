@@ -26,12 +26,12 @@
 		
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
 		<PackageReference Include="FluentIcons.Avalonia" Version="2.1.323" />
-		<PackageReference Include="LiveMarkdown.Avalonia" Version="2.0.0-rc1" />
-		<PackageReference Include="LiveMarkdown.Avalonia.Svg.Skia" Version="2.0.0-rc1" />
+		<PackageReference Include="Markdown.Avalonia.Html" Version="12.0.0-a1" />
+		<PackageReference Include="Markdown.Avalonia.Tight" Version="12.0.0-a1" />
 		<PackageReference Include="SmoothScroll.Avalonia" Version="12.0.0.3" />
 		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.10.196-beta" />
-		<PackageReference Include="Svg.Controls.Skia.Avalonia" Version="12.0.0" />
+		<PackageReference Include="Svg.Controls.Skia.Avalonia" Version="12.0.0.1" />
 		<PackageReference Include="Irihi.Ursa" Version="2.0.0-rc1" />
 		<PackageReference Include="Irihi.Ursa.Themes.Semi" Version="2.0.0-rc1" />
 		<PackageReference Include="Semi.Avalonia" Version="12.0.0" />
@@ -50,8 +50,8 @@
 	  <ProjectReference Include="..\Pixeval.Download\Pixeval.Download.csproj" />
 	  <ProjectReference Include="..\Pixeval.Filters\Pixeval.Filters.csproj" />
 	  <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
-	</ItemGroup>
-
+	</ItemGroup>	
+		
 	<ItemGroup>
 		<!-- 字符串资源相关 -->
 		<None Update="i18n\**">

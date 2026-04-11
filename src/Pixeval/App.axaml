@@ -17,7 +17,6 @@
         <ui:FluentAvaloniaTheme />
         <autoSettingsPage:AutoSettingsPageTheme />
         <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />
-        <StyleInclude Source="avares://LiveMarkdown.Avalonia/Styles.axaml" />
         <smoothScroll:ScrollViewDefaultTheme />
         <smoothScroll:ScrollViewerSmoothTheme />
     </Application.Styles>
@@ -25,7 +24,6 @@
         <ResourceDictionary>
             <x:Double x:Key="SmallIconFontSize">16</x:Double>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceInclude Source="avares://LiveMarkdown.Avalonia/Defaults.axaml" />
                 <MergeResourceInclude Source="Themes/Colors.axaml" />
                 <MergeResourceInclude Source="Themes/Brushes.axaml" />
                 <MergeResourceInclude Source="Themes/Controls.axaml" />

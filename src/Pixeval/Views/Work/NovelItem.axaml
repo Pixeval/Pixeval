@@ -9,7 +9,6 @@
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:md="using:LiveMarkdown.Avalonia"
     xmlns:model="using:Mako.Model"
     xmlns:novel="using:Pixeval.ViewModels"
     xmlns:utilities="using:Pixeval.Utilities"
@@ -88,22 +87,21 @@
                             </Transitions>
                         </Image.Transitions>
                     </Image>
-                    <ScrollViewer
+                    <!--  TODO Padding="10,0"  -->
+                    <controls:MarkdownBox
                         x:Name="DescriptionBlock"
                         Margin="0,30,0,10"
-                        Padding="10,0"
+                        Markdown="{Binding Entry.Description}"
                         Opacity="0">
-                        <ScrollViewer.Transitions>
+                        <controls:MarkdownBox.Transitions>
                             <Transitions>
                                 <DoubleTransition
                                     Easing="CubicEaseOut"
                                     Property="Opacity"
                                     Duration="0:0:0.5" />
                             </Transitions>
-                        </ScrollViewer.Transitions>
-
-                        <md:MarkdownRenderer controls:MarkdownRendererBehavior.Text="{Binding Entry.Description}" />
-                    </ScrollViewer>
+                        </controls:MarkdownBox.Transitions>
+                    </controls:MarkdownBox>
                 </Panel>
             </controls:ConstrainedBox>
 

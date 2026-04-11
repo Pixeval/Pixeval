@@ -16,12 +16,12 @@ using Pixeval.Utilities;
 namespace Pixeval.Controls;
 
 /// <summary>
-/// Provides attached properties for incremental loading behavior on ItemsControl.
+/// Provides attached properties for incremental loading behavior on <see cref="ItemsControl"/>.
 /// </summary>
 public static class IncrementalLoadingBehavior
 {
     /// <summary>
-    /// Attached property to enable incremental loading on an ItemsControl.
+    /// Attached property to enable incremental loading on an <see cref="ItemsControl"/>.
     /// </summary>
     public static readonly AttachedProperty<bool> IsEnabledProperty =
         AvaloniaProperty.RegisterAttached<ItemsControl, bool>(
