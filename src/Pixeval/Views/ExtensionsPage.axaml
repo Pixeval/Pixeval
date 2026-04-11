@@ -1,0 +1,122 @@
+<UserControl
+    x:Class="Pixeval.Views.ExtensionsPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.Avalonia.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="using:Pixeval.Models.Extensions"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
+    xmlns:views="using:Pixeval.Views"
+    x:Name="Root"
+    d:DesignHeight="800"
+    d:DesignWidth="600"
+    x:DataType="views:ExtensionsPage"
+    mc:Ignorable="d">
+    <DockPanel>
+        <TextBlock
+            Margin="20,40,20,20"
+            DockPanel.Dock="Top"
+            Text="{I18N {x:Static pixeval:ExtensionsPageResources.TitleTextBlockText}}"
+            Theme="{StaticResource TitleTextBlockStyle}" />
+        <CommandBar DockPanel.Dock="Top">
+            <CommandBarButton
+                Click="AddExtensionsOnClick"
+                Icon="{markup:SymbolIcon PlugConnectedAdd}"
+                Label="{I18N {x:Static pixeval:ExtensionsPageResources.AddExtensionsButtonLabel}}" />
+            <CommandBarButton
+                Click="OpenExtensionsOnClick"
+                Icon="{markup:SymbolIcon FolderAdd}"
+                Label="{I18N {x:Static pixeval:ExtensionsPageResources.OpenExtensionsButtonLabel}}" />
+        </CommandBar>
+        <!--  TODO 通过网络获取或删除  -->
+        <controls:SettingsExpander
+            Margin="20,10,20,0"
+            DockPanel.Dock="Top"
+            Header="可获取的扩展"
+            HeaderIcon="{markup:SymbolIcon Symbol=Rocket}">
+            <controls:SettingsExpander.Items>
+                <controls:SettingsCard
+                    Click="ExtensionCard_OnClick"
+                    Description="AI 提升画质扩展"
+                    Header="Real-ESRGAN 提升画质"
+                    HeaderIcon="{markup:SymbolIcon Symbol=ImageSparkle}"
+                    IsClickEnabled="True" />
+                <controls:SettingsCard
+                    Click="ExtensionCard_OnClick"
+                    Description="Aria2 下载转发扩展"
+                    Header="Aria2 下载"
+                    HeaderIcon="{markup:SymbolIcon Symbol=ArrowDownload}"
+                    IsClickEnabled="True" />
+                <controls:SettingsCard
+                    Click="ExtensionCard_OnClick"
+                    Description="DeepLX 翻译扩展，无需API Key"
+                    Header="DeepLX 翻译"
+                    HeaderIcon="{markup:SymbolIcon Symbol=Translate}"
+                    IsClickEnabled="True" />
+                <controls:SettingsCard
+                    Click="ExtensionCard_OnClick"
+                    Description="通过 Ollama 调用本地运行的大模型翻译服务，需要预先安装 Ollama"
+                    Header="Ollama 翻译"
+                    HeaderIcon="{markup:SymbolIcon Symbol=Translate}"
+                    IsClickEnabled="True" />
+                <controls:SettingsCard
+                    Click="ExtensionCard_OnClick"
+                    Description="百度翻译扩展，需要手动输入API Key"
+                    Header="百度翻译"
+                    HeaderIcon="{markup:SymbolIcon Symbol=Translate}"
+                    IsClickEnabled="True" />
+                <controls:SettingsCard
+                    Click="ExtensionCard_OnClick"
+                    Description="DeepL 翻译扩展，需要手动输入API Key"
+                    Header="DeepL 翻译"
+                    HeaderIcon="{markup:SymbolIcon Symbol=Translate}"
+                    IsClickEnabled="True" />
+            </controls:SettingsExpander.Items>
+        </controls:SettingsExpander>
+        <ScrollViewer Margin="20,10,20,20">
+            <ItemsControl ItemsSource="{Binding #Root.Models}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type extensions:ExtensionsHostModel}">
+                        <controls:SettingsCard Description="{Binding Description}" HeaderIcon="{Binding Icon}">
+                            <controls:SettingsCard.Header>
+                                <Grid ColumnDefinitions="200,Auto" ColumnSpacing="10">
+                                    <HyperlinkButton
+                                        Grid.Column="0"
+                                        Padding="0"
+                                        HorizontalContentAlignment="Left"
+                                        Content="{Binding Name}"
+                                        FontWeight="Bold"
+                                        NavigateUri="{Binding Link}" />
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                        Text="{Binding Author}" />
+                                </Grid>
+                            </controls:SettingsCard.Header>
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <ToggleSwitch IsChecked="{Binding IsActive, Mode=TwoWay}" />
+                                <CommandBar>
+                                    <CommandBar.SecondaryCommands>
+                                        <CommandBarButton
+                                            Click="ExtensionsHelpOnClick"
+                                            Icon="{markup:SymbolIcon BookQuestionMark}"
+                                            IsVisible="{Binding HelpLink, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                            Label="{I18N {x:Static pixeval:ExtensionsPageResources.ExtensionsHelpButtonLabel}}"
+                                            Tag="{Binding HelpLink}" />
+                                        <CommandBarButton
+                                            Click="UnloadHostOnClick"
+                                            Icon="{markup:SymbolIcon PlugDisconnected}"
+                                            Label="{I18N {x:Static pixeval:ExtensionsPageResources.UnloadExtensionsButtonLabel}}"
+                                            Tag="{Binding}" />
+                                    </CommandBar.SecondaryCommands>
+                                </CommandBar>
+                            </StackPanel>
+                        </controls:SettingsCard>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

@@ -19,7 +19,7 @@ public partial class DownloadView : UserControl, IStructuralDisposalCompleter
             return;
 
         if (viewModel.Entry is Novel)
-            ;// _ = await TopLevel.GetTopLevel(this)!.Launcher.LaunchUriAsync(viewModel.Entry.WebsiteUri);
+            ;// todo _ = await TopLevel.GetTopLevel(this)!.Launcher.LaunchUriAsync(viewModel.Entry.WebsiteUri);
         else
             await viewContainer.CreateIllustrationPageAsync(viewModel.Entry);
     }

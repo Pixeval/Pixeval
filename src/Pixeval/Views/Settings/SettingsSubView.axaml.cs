@@ -5,9 +5,10 @@ namespace Pixeval.Views.Settings;
 
 public partial class SettingsSubView : ContentPage
 {
-    public SettingsSubView(ISettingsGroup group)
+    public SettingsSubView() => InitializeComponent();
+
+    public SettingsSubView(ISettingsGroup group) : this()
     {
-        InitializeComponent();
         Header = group.Header;
         ItemsControl.ItemsSource = group;
     }
