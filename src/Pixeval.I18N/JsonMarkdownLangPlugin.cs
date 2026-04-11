@@ -76,7 +76,7 @@ public class JsonMarkdownLangPlugin : ILangPlugin
                             using var doc = JsonDocument.Parse(File.ReadAllText(file.FullName));
                             var root = doc.RootElement;
 
-                            // 递归收集所有键值对（排除根节点的三个元数据属性）
+                            // 递归收集所有键值对
                             CollectJsonProperties(root, nameWithoutExtension, dictionary);
                         }
                         catch
@@ -88,7 +88,7 @@ public class JsonMarkdownLangPlugin : ILangPlugin
                     }
                     case ".md":
                     {
-                        dictionary[nameWithoutExtension] = File.ReadAllText(file.FullName);
+                        dictionary[nameWithoutExtension + ".Markdown"] = File.ReadAllText(file.FullName);
                         break;
                     }
                 }
@@ -114,13 +114,10 @@ public class JsonMarkdownLangPlugin : ILangPlugin
             }
             .Distinct(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var candidatePath in candidatePaths)
-        {
-            if (Directory.Exists(candidatePath))
-                return new DirectoryInfo(candidatePath);
-        }
-
-        return null;
+        return candidatePaths
+            .Where(Directory.Exists)
+            .Select(candidatePath => new DirectoryInfo(candidatePath))
+            .FirstOrDefault();
     }
 
     /// <summary>

@@ -46,7 +46,7 @@ namespace Pixeval
                     using var doc = JsonDocument.Parse(File.ReadAllText(file.FullName));
                     var root = doc.RootElement;
 
-                    // 递归收集所有键值对（排除根节点的三个元数据属性）
+                    // 递归收集所有键值对
                     CollectJsonProperties(root, nameWithoutExtension, languages);
                 }
                 catch
@@ -58,7 +58,7 @@ namespace Pixeval
             }
             case ".md":
             {
-                languages.Add(nameWithoutExtension + ".Text");
+                languages.Add(nameWithoutExtension + ".Markdown");
                 break;
             }
         }

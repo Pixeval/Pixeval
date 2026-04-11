@@ -1,0 +1,14 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL-3.0 License.
+
+using Avalonia.Controls;
+
+namespace Pixeval.Views;
+
+public partial class HelpPage : UserControl
+{
+    public HelpPage()
+    {
+        InitializeComponent();
+    }
+}

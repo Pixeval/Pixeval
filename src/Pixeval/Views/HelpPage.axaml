@@ -1,0 +1,66 @@
+<UserControl
+    x:Class="Pixeval.Views.HelpPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.Avalonia.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Pixeval.Controls"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
+    d:DesignHeight="800"
+    d:DesignWidth="600"
+    mc:Ignorable="d">
+    <ScrollViewer>
+        <StackPanel Margin="20" Spacing="10">
+            <TextBlock
+                Margin="0,20,0,10"
+                Text="{I18N {x:Static pixeval:HelpPageResources.TitleTextBlockText}}"
+                Theme="{StaticResource TitleTextBlockStyle}" />
+            <!--  TODO 支持app protocol或删除该帮助  -->
+            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.AppLinkHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Symbol=Link}">
+                <controls:SettingsExpander.Items>
+                    <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
+                        <TextBlock Text="{I18N {x:Static pixeval:HelpPageResources.AppLinkHelpText}}" TextWrapping="Wrap" />
+                    </controls:SettingsCard>
+                </controls:SettingsExpander.Items>
+            </controls:SettingsExpander>
+            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.DownloadMacroHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Symbol=Rename}">
+                <controls:SettingsExpander.Items>
+                    <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
+                        <local:MarkdownBox Markdown="{I18N {x:Static pixeval:DownloadMacroHelpResources.Markdown}}" />
+                    </controls:SettingsCard>
+                </controls:SettingsExpander.Items>
+            </controls:SettingsExpander>
+            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.QueryFilterHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Symbol=Filter}">
+                <controls:SettingsExpander.Items>
+                    <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Vertical">
+                        <controls:SettingsCard.Header>
+                            <TextBlock
+                                Margin="0,10"
+                                Text="{I18N {x:Static pixeval:HelpPageResources.QueryFilterSimpleHelpHeaderText}}"
+                                Theme="{StaticResource SubtitleTextBlockStyle}" />
+                        </controls:SettingsCard.Header>
+                        <local:MarkdownBox Markdown="{I18N {x:Static pixeval:QueryFilterSimpleHelpResources.Markdown}}" />
+                    </controls:SettingsCard>
+                    <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Vertical">
+                        <controls:SettingsCard.Header>
+                            <TextBlock
+                                Margin="0,10"
+                                Text="{I18N {x:Static pixeval:HelpPageResources.QueryFilterHelpHeaderText}}"
+                                Theme="{StaticResource SubtitleTextBlockStyle}" />
+                        </controls:SettingsCard.Header>
+                        <local:MarkdownBox Markdown="{I18N {x:Static pixeval:QueryFilterHelpResources.Markdown}}" />
+                    </controls:SettingsCard>
+                </controls:SettingsExpander.Items>
+            </controls:SettingsExpander>
+            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.ExtensionsHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Symbol=PuzzlePiece}">
+                <controls:SettingsExpander.Items>
+                    <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
+                        <local:MarkdownBox Markdown="{I18N {x:Static pixeval:ExtensionsHelpResources.Markdown}}" />
+                    </controls:SettingsCard>
+                </controls:SettingsExpander.Items>
+            </controls:SettingsExpander>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

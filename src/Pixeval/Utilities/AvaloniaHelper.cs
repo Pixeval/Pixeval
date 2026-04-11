@@ -17,6 +17,7 @@ using Avalonia.Platform.Storage;
 using FluentIcons.Avalonia;
 using FluentIcons.Common;
 using Pixeval.I18N;
+using Pixeval.Views;
 using Pixeval.Views.Capability;
 using Pixeval.Views.Settings;
 using Pixeval.Views.ViewContainers;
@@ -94,7 +95,7 @@ public static class AvaloniaHelper
         // [typeof(BrowsingHistoryPage)] = (Symbol.History, I18NManager.GetResource(MainPageResources.HistoriesTabContent)),
         [typeof(DownloadPage)] = (Symbol.ArrowSquareDown, I18NManager.GetResource(MainPageResources.DownloadListTabContent)),
         // [typeof(ExtensionsPage)] = (Symbol.PuzzlePiece, I18NManager.GetResource(MainPageResources.ExtensionsTabContent))
-        // [typeof(HelpPage)] = (Symbol.ChatBubblesQuestion, I18NManager.GetResource(MainPageResources.HelpTabContent)),
+        [typeof(HelpPage)] = (Symbol.ChatBubblesQuestion, I18NManager.GetResource(MainPageResources.HelpTabContent)),
         // [typeof(AboutPage)] = (Symbol.PersonStarburst, I18NManager.GetResource(MainPageResources.AboutTabContent)),
         [typeof(SettingsPage)] = (Symbol.Settings, I18NManager.GetResource(MainPageResources.SettingsTabContent)),
     }.ToFrozenDictionary();
@@ -116,20 +117,23 @@ public static class AvaloniaHelper
             return new NavigationInfo(t, value.Icon, value.Header);
         })];
 
-    public static IReadOnlyList<NavigationInfo> FooterItems { get; } = [.. new[]
-        {
-            // typeof(BrowsingHistoryPage),
-            typeof(DownloadPage),
-            // typeof(ExtensionsPage),
-            // typeof(HelpPage),
-            // typeof(AboutPage),
-            typeof(SettingsPage)
-        }
-        .Select(t =>
-        {
-            var value = _PageIconMapping[t];
-            return new NavigationInfo(t, value.Icon, value.Header);
-        })];
+    public static IReadOnlyList<NavigationInfo> FooterItems { get; } =
+    [
+        .. new[]
+            {
+                // typeof(BrowsingHistoryPage),
+                typeof(DownloadPage),
+                // typeof(ExtensionsPage),
+                typeof(HelpPage),
+                // typeof(AboutPage),
+                typeof(SettingsPage)
+            }
+            .Select(t =>
+            {
+                var value = _PageIconMapping[t];
+                return new NavigationInfo(t, value.Icon, value.Header);
+            })
+    ];
 
     public static EventHandler<RoutedEventArgs>? LaunchUriTagInWebBrowser { get; }
         = (sender, e) =>
