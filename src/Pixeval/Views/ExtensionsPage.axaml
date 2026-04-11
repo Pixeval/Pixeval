@@ -9,10 +9,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
     xmlns:views="using:Pixeval.Views"
-    x:Name="Root"
     d:DesignHeight="800"
     d:DesignWidth="600"
-    x:DataType="views:ExtensionsPage"
     mc:Ignorable="d">
     <DockPanel>
         <TextBlock
@@ -76,7 +74,7 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
         <ScrollViewer Margin="20,10,20,20">
-            <ItemsControl ItemsSource="{Binding #Root.Models}">
+            <ItemsControl ItemsSource="{Binding $parent[views:ExtensionsPage].Models}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="{x:Type extensions:ExtensionsHostModel}">
                         <controls:SettingsCard Description="{Binding Description}" HeaderIcon="{Binding Icon}">

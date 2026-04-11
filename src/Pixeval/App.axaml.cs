@@ -11,9 +11,9 @@ using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
 using Pixeval.Views.Capability;
+using Pixeval.Views.Login;
 using Pixeval.Views.ViewContainers;
 using Pixeval.Views.Viewers;
-using LoginPage = Pixeval.Views.Login.LoginPage;
 
 namespace Pixeval;
 
@@ -27,10 +27,10 @@ public class App : Application
     public override void Initialize()
     {
         RegisterUnhandledExceptionHandler();
+        I18NManager.Register(new JsonMarkdownLangPlugin(), LanguageHelper.DefaultLanguage);
         AppViewModel = new AppViewModel(this, Logger);
         CultureInfo.CurrentUICulture = CultureInfo.CurrentCulture = LanguageHelper.FindClosest(AppViewModel.AppSettings.CultureName);
-        I18NManager.Register(new JsonMarkdownLangPlugin(), LanguageHelper.DefaultLanguage);
-        AppViewModel.Initialize();
+        I18NManager.Initialize();
         AppViewModel.InitializeProvider();
         
         AvaloniaXamlLoader.Load(this);

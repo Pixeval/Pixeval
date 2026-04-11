@@ -14,7 +14,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Misaki;
 using Pixeval.Caching;
 using Pixeval.Download;
-using Pixeval.I18N;
 using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Download;
 using Pixeval.Models.Extensions;
@@ -41,15 +40,6 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
     public LoginContext LoginContext { get; } = AppInfo.LoadLoginContext(logger) ?? new LoginContext();
 
     public long PixivUid => MakoClient.Me!.Id;
-
-    public void Initialize()
-    {
-        var fontFamily = I18NManager.GetResource(AppSettingsResources.AppDefaultFontFamilyName);
-        if (AppSettings.AppFontFamily == null!)
-            AppSettings.AppFontFamily = fontFamily;
-        if (AppSettings.NovelFontFamily == null!)
-            AppSettings.NovelFontFamily = fontFamily;
-    }
 
     public void InitializeProvider()
     {

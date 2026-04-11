@@ -12,6 +12,7 @@ using Pixeval.Models.Options;
 using Pixeval.Models.Settings;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
+using Pixeval.Views.Login;
 
 namespace Pixeval.Views.Settings;
 
@@ -30,10 +31,8 @@ public partial class SettingsMainView : ContentPage
 
     private async void PerformSignOutButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        //if (await this.CreateOkCancelAsync(SettingsPageResources.ResetSettingConfirmationDialogTitle,
-        //        SettingsPageResources.ResetSettingConfirmationDialogContent) is ContentDialogResult.Primary)
-        // 关闭除此之外所有窗口
-        TopLevel.GetTopLevel(this)?.ViewContainer?.NavigateTo<Login.LoginPage>();
+        // TODO 切换账号
+        TopLevel.GetTopLevel(this)?.ViewContainer?.NavigateTo<LoginPage>();
     }
 
     private async void ResetDefaultSettings_OnClicked(object sender, RoutedEventArgs e)
@@ -155,5 +154,11 @@ public partial class SettingsMainView : ContentPage
         if (TopLevel.GetTopLevel(this) is not { ViewContainer: { } viewContainer })
             return;
         viewContainer.ShowSuccess(I18NManager.GetResource(kind));
+    }
+
+    private async void AboutPageButton_OnClicked(object? sender, RoutedEventArgs e)
+    {
+        if (IsInNavigationPage && Parent is NavigationPage frame)
+            await frame.PushAsync(new AboutPage());
     }
 }

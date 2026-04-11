@@ -7,6 +7,7 @@ using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Navigation;
 using Pixeval.Utilities;
 using Pixeval.Views.Capability;
+using Pixeval.Views.Login;
 using Tabalonia.Controls;
 using Tabalonia.InterTab;
 using NavigationEventArgs = FluentAvalonia.UI.Navigation.NavigationEventArgs;
@@ -111,6 +112,6 @@ public partial class TabViewContainer : ViewContainerBase
 
     private void Logout_OnClicked(object? sender, RoutedEventArgs e)
     {
-        TopLevel.GetTopLevel(this)?.ViewContainer?.NavigateTo<Login.LoginPage>();
+        TopLevel.GetTopLevel(this)?.ViewContainer?.NavigateTo<LoginPage>();
     }
 }    

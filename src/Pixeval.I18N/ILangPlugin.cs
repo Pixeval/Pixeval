@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.IO;
 
 namespace Pixeval.I18N;
 
@@ -11,11 +12,9 @@ public interface ILangPlugin
 
     internal Dictionary<string, string>? CurrentCultureResources { get; }
 
-    IReadOnlyList<CultureInfo> AvailableCultures { get; }
+    void Load(CultureInfo culture, DirectoryInfo resourceDirectory, bool isDefaultCulture);
 
-    void Load(CultureInfo currentCulture, CultureInfo defaultCulture);
-
-    CultureInfo CurrentCulture { get; }
+    CultureInfo? CurrentCulture { get; }
 
     CultureInfo DefaultCulture { get; }
 
@@ -28,10 +27,10 @@ public interface ILangPlugin
             : DefaultCultureResources.GetValueOrDefault(key, "");
     }
 
-    [MemberNotNull(nameof(CurrentCulture))]
+    [MemberNotNull(nameof(DefaultCulture))]
     internal void EnsureLoaded()
     {
-        if (CurrentCulture is null)
+        if (DefaultCulture is null)
             throw new InvalidOperationException($"Please call {nameof(Load)} method before using the plugin.");
     }
 }

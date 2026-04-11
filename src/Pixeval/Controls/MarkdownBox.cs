@@ -11,7 +11,7 @@ public class MarkdownBox : MarkdownScrollViewer
 {
     public MarkdownBox()
     {
-        // 或MarkdownStyleFluentAvalonia
+        // 或 MarkdownStyleFluentAvalonia
         MarkdownStyle = new MarkdownStyleFluentTheme();
         Plugins.Plugins.Add(new HtmlPlugin());
     }

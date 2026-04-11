@@ -278,6 +278,13 @@
                         IsClickEnabled="True" />
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
+            <!--  TODO i18n  -->
+            <controls:SettingsCard
+                ActionIcon="{markup:SymbolIcon ChevronRight}"
+                Click="AboutPageButton_OnClicked"
+                Header="关于"
+                HeaderIcon="{markup:SymbolIcon PersonStarburst}"
+                IsClickEnabled="True" />
             <ItemsControl ItemsSource="{Binding Groups}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>

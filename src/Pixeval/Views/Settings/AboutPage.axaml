@@ -1,0 +1,139 @@
+<ContentPage
+    x:Class="Pixeval.Views.Settings.AboutPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.Avalonia.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Pixeval.Controls"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
+    xmlns:settings="using:Pixeval.Views.Settings"
+    xmlns:utilities="using:Pixeval.Utilities"
+    d:DesignHeight="800"
+    d:DesignWidth="600"
+    Header="{I18N {x:Static pixeval:AboutPageResources.TitleTextBlockText}}"
+    mc:Ignorable="d">
+    <ScrollViewer>
+        <StackPanel Margin="20" Spacing="20">
+            <!--  Special Thanks  -->
+            <StackPanel Spacing="10">
+                <TextBlock Text="{I18N {x:Static pixeval:AboutPageResources.SpecialThanksSubtitleTextBlockText}}" Theme="{StaticResource SubtitleTextBlockStyle}" />
+                <TextBlock
+                    Text="{I18N {x:Static pixeval:AboutPageResources.SpecialThanksContentTextBlockText}}"
+                    TextWrapping="Wrap"
+                    Theme="{StaticResource CaptionTextBlockStyle}" />
+                <ItemsControl ItemsSource="{Binding $parent[settings:AboutPage].Supporters}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel ItemSpacing="10" LineSpacing="10" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type settings:Supporter}">
+                            <Border
+                                Width="140"
+                                Height="160"
+                                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                CornerRadius="8"
+                                Cursor="Hand"
+                                Tag="{Binding ProfileUri}"
+                                Tapped="SupporterCard_OnTapped">
+                                <StackPanel
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Spacing="8">
+                                    <Ellipse
+                                        Width="64"
+                                        Height="64"
+                                        HorizontalAlignment="Center">
+                                        <Ellipse.Fill>
+                                            <ImageBrush Source="{Binding ProfileImage}" Stretch="UniformToFill" />
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        FontWeight="SemiBold"
+                                        Text="{Binding Nickname}" />
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                        Text="{Binding AtName}" />
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <!--  Dependencies  -->
+            <StackPanel>
+                <TextBlock Text="{I18N {x:Static pixeval:AboutPageResources.DependenciesSubtitleTextBlockText}}" Theme="{StaticResource SubtitleTextBlockStyle}" />
+                <TextBlock
+                    Margin="0,10"
+                    Text="{I18N {x:Static pixeval:AboutPageResources.DependenciesContentTextBlockText}}"
+                    TextWrapping="Wrap"
+                    Theme="{StaticResource CaptionTextBlockStyle}" />
+                <ItemsControl ItemsSource="{x:Static settings:DependencyViewModel.DependencyViewModels}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type settings:DependencyViewModel}">
+                            <controls:SettingsExpander
+                                Description="{Binding Author}"
+                                Header="{Binding Name}"
+                                HeaderIcon="{markup:SymbolIcon Symbol=Box}">
+                                <Button
+                                    Width="40"
+                                    Height="35"
+                                    HorizontalContentAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
+                                    Content="{markup:SymbolIcon Symbol=Open,
+                                                                FontSize=14}"
+                                    Tag="{Binding Url}" />
+                                <controls:SettingsExpander.Items>
+                                    <controls:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Vertical">
+                                        <local:MarkdownBox Markdown="{Binding License}" />
+                                    </controls:SettingsCard>
+                                </controls:SettingsExpander.Items>
+                            </controls:SettingsExpander>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <!--  Support Me  -->
+            <StackPanel Spacing="10">
+                <TextBlock Text="{I18N {x:Static pixeval:AboutPageResources.SupportMeSubtitleTextBlockText}}" Theme="{StaticResource SubtitleTextBlockStyle}" />
+                <TextBlock TextWrapping="Wrap" Theme="{StaticResource CaptionTextBlockStyle}">
+                    <Run Text="{I18N {x:Static pixeval:AboutPageResources.SupportMeContentPartIText}}" />
+                    <InlineUIContainer>
+                        <HyperlinkButton
+                            Padding="0"
+                            Content="{I18N {x:Static pixeval:AboutPageResources.SupportMeHyperlinkContentText}}"
+                            NavigateUri="https://afdian.net/@dylech30th" />
+                    </InlineUIContainer>
+                    <Run Text="{I18N {x:Static pixeval:AboutPageResources.SupportMeContentPartIIText}}" />
+                </TextBlock>
+            </StackPanel>
+
+            <!--  Open Source License  -->
+            <StackPanel Spacing="10">
+                <TextBlock Text="{I18N {x:Static pixeval:AboutPageResources.OpenSourceLicenseSubtitleTextBlockText}}" Theme="{StaticResource SubtitleTextBlockStyle}" />
+                <TextBlock TextWrapping="Wrap" Theme="{StaticResource CaptionTextBlockStyle}">
+                    <Run Text="{I18N {x:Static pixeval:AboutPageResources.OpenSourceLicenseContentPartIText}}" />
+                    <InlineUIContainer>
+                        <HyperlinkButton
+                            Padding="0"
+                            Content="{I18N {x:Static pixeval:AboutPageResources.OpenSourceLicenseHyperlinkContentText}}"
+                            NavigateUri="https://www.gnu.org/licenses/gpl-3.0.en.html" />
+                    </InlineUIContainer>
+                    <Run Text="{I18N {x:Static pixeval:AboutPageResources.OpenSourceLicenseContentPartIIText}}" />
+                </TextBlock>
+                <!--  TODO 可能缺资源，导致此处代码块崩溃，通过重写主题修复  -->
+                <local:MarkdownBox x:Name="LicenseTextBlock" />
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</ContentPage>

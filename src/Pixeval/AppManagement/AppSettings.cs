@@ -17,6 +17,7 @@ using Mako;
 using Mako.Global.Enum;
 using Mako.Net;
 using Pixeval.Attributes;
+using Pixeval.I18N;
 using Pixeval.Models.Options;
 using static Pixeval.SettingsPageResources;
 
@@ -24,6 +25,11 @@ namespace Pixeval.AppManagement;
 
 public record AppSettings
 {
+    public AppSettings()
+    {
+        AppFontFamily =  NovelFontFamily = I18NManager.GetResource(AppSettingsResources.AppDefaultFontFamilyName);
+    }
+
     [SettingsEntry(Symbol.Communication, DownloadUpdateAutomaticallyEntryHeader, DownloadUpdateAutomaticallyEntryDescription)]
     public bool DownloadUpdateAutomatically { get; set; }
 

@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 
 namespace Pixeval.I18N;
@@ -14,110 +11,54 @@ public class JsonMarkdownLangPlugin : ILangPlugin
 
     public Dictionary<string, string>? CurrentCultureResources { get; private set; }
 
-    public IReadOnlyList<CultureInfo> AvailableCultures { get; private set; } = null!;
-
-    public string ResourceFolder { get; set; } = AppDomain.CurrentDomain.BaseDirectory;
-
     public CultureInfo CurrentCulture { get; private set; } = null!;
 
     public CultureInfo DefaultCulture { get; private set; } = null!;
 
-    [MemberNotNull(nameof(DefaultCulture), nameof(AvailableCultures))]
-    public void Load(CultureInfo currentCulture, CultureInfo defaultCulture)
+    public void Load(CultureInfo c, DirectoryInfo resourceDirectory, bool isDefaultCulture)
     {
-        CurrentCulture = currentCulture;
-        DefaultCulture = defaultCulture;
-        DefaultCultureResources.Clear();
-        CurrentCultureResources = null;
-
-        var directory = ResolveResourceDirectory();
-        if (directory is null)
+        Dictionary<string, string> dictionary;
+        if (isDefaultCulture)
         {
-            AvailableCultures = [];
-            return;
+            DefaultCulture = c;
+            dictionary = DefaultCultureResources;
+        }
+        else
+        {
+            CurrentCulture = c;
+            dictionary = CurrentCultureResources = new();
         }
 
-        var cultures = new List<CultureInfo>();
-        AvailableCultures = cultures;
-
-        foreach (var languageFolder in directory.EnumerateDirectories())
+        foreach (var file in resourceDirectory.GetFiles())
         {
-            CultureInfo culture;
-            try
+            var nameWithoutExtension = Path.GetFileNameWithoutExtension(file.Name);
+            var extension = file.Extension.ToLowerInvariant();
+            switch (extension)
             {
-                culture = new CultureInfo(languageFolder.Name);
-            }
-            catch (CultureNotFoundException)
-            {
-                continue;
-            }
-
-            cultures.Add(culture);
-
-            Dictionary<string, string> dictionary;
-
-            if (DefaultCulture.Equals(culture))
-                dictionary = DefaultCultureResources;
-            else if (CurrentCulture.Equals(culture))
-                dictionary = CurrentCultureResources ??= [];
-            else
-                continue;
-
-            foreach (var file in languageFolder.GetFiles())
-            {
-                var nameWithoutExtension = Path.GetFileNameWithoutExtension(file.Name);
-                var extension = file.Extension.ToLowerInvariant();
-                switch (extension)
+                case ".json":
                 {
-                    case ".json":
+                    try
                     {
-                        try
-                        {
-                            using var doc = JsonDocument.Parse(File.ReadAllText(file.FullName));
-                            var root = doc.RootElement;
+                        using var doc = JsonDocument.Parse(File.ReadAllText(file.FullName));
+                        var root = doc.RootElement;
 
-                            // 递归收集所有键值对
-                            CollectJsonProperties(root, nameWithoutExtension, dictionary);
-                        }
-                        catch
-                        {
-                            // ignored
-                        }
-
-                        break;
+                        // 递归收集所有键值对
+                        CollectJsonProperties(root, nameWithoutExtension, dictionary);
                     }
-                    case ".md":
+                    catch
                     {
-                        dictionary[nameWithoutExtension + ".Markdown"] = File.ReadAllText(file.FullName);
-                        break;
+                        // ignored
                     }
+
+                    break;
+                }
+                case ".md":
+                {
+                    dictionary[nameWithoutExtension + ".Markdown"] = File.ReadAllText(file.FullName);
+                    break;
                 }
             }
         }
-
-        if (DefaultCultureResources.Count is 0 && CurrentCultureResources is { Count: > 0 })
-        {
-            foreach (var (key, value) in CurrentCultureResources)
-                DefaultCultureResources[key] = value;
-        }
-    }
-
-    private DirectoryInfo? ResolveResourceDirectory()
-    {
-        var candidatePaths = new[]
-            {
-                Path.Combine(ResourceFolder, "i18n"),
-                Path.Combine(AppContext.BaseDirectory, "i18n"),
-                Path.Combine(Environment.CurrentDirectory, "i18n"),
-                Path.GetFullPath(Path.Combine(ResourceFolder, "..", "i18n")),
-                Path.GetFullPath(Path.Combine(ResourceFolder, "..", "Resources", "i18n"))
-            }
-            .Distinct(StringComparer.OrdinalIgnoreCase);
-
-        return candidatePaths
-            .Where(Directory.Exists)
-            .Select(candidatePath => new DirectoryInfo(candidatePath))
-            .FirstOrDefault();
     }
 
     /// <summary>
