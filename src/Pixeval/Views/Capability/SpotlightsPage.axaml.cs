@@ -2,7 +2,7 @@ using Avalonia.Controls;
 using FluentAvalonia.UI.Controls;
 using Pixeval.ViewModels;
 
-namespace Pixeval;
+namespace Pixeval.Views.Capability;
 
 public partial class SpotlightsPage : UserControl
 {
@@ -14,6 +14,6 @@ public partial class SpotlightsPage : UserControl
 
     private void ChangeSource()
     {
-        (SpotlightView.DataContext as SpotlightViewViewModel)?.ResetEngine(App.AppViewModel.MakoClient.Spotlights());
+        (SpotlightView.DataContext as SpotlightViewViewModel)?.ResetEngine(App.AppViewModel.MakoClient.Spotlights(), (spotlight, _) => new(spotlight));
     }
 }

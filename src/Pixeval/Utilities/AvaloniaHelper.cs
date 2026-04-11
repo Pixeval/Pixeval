@@ -92,12 +92,12 @@ public static class AvaloniaHelper
         [typeof(SearchWorksPage)] = (Symbol.SearchSparkle, I18NManager.GetResource(MainPageResources.SearchWorksResult)),
         [typeof(UserWorkPostsPage)] = (default, I18NManager.GetResource(MainPageResources.NewWorksTabContent)),
         // [typeof(FeedsPage)] = (Symbol.Molecule, I18NManager.GetResource(MainPageResources.FeedTabContent)),
-        // [typeof(BrowsingHistoryPage)] = (Symbol.History, I18NManager.GetResource(MainPageResources.HistoriesTabContent)),
+        [typeof(BrowsingHistoryPage)] = (Symbol.History, I18NManager.GetResource(MainPageResources.HistoriesTabContent)),
         [typeof(DownloadPage)] = (Symbol.ArrowSquareDown, I18NManager.GetResource(MainPageResources.DownloadListTabContent)),
         // [typeof(ExtensionsPage)] = (Symbol.PuzzlePiece, I18NManager.GetResource(MainPageResources.ExtensionsTabContent))
         [typeof(HelpPage)] = (Symbol.ChatBubblesQuestion, I18NManager.GetResource(MainPageResources.HelpTabContent)),
         // [typeof(AboutPage)] = (Symbol.PersonStarburst, I18NManager.GetResource(MainPageResources.AboutTabContent)),
-        [typeof(SettingsPage)] = (Symbol.Settings, I18NManager.GetResource(MainPageResources.SettingsTabContent)),
+        [typeof(SettingsPage)] = (Symbol.Settings, I18NManager.GetResource(MainPageResources.SettingsTabContent))
     }.ToFrozenDictionary();
 
     public static IReadOnlyList<NavigationInfo> HeaderItems { get; } = [.. new[]
@@ -121,7 +121,7 @@ public static class AvaloniaHelper
     [
         .. new[]
             {
-                // typeof(BrowsingHistoryPage),
+                typeof(BrowsingHistoryPage),
                 typeof(DownloadPage),
                 // typeof(ExtensionsPage),
                 typeof(HelpPage),

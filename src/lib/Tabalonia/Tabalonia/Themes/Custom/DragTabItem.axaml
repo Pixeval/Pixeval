@@ -11,9 +11,7 @@
         <x:Double x:Key="TabItemHeaderSpacing">8</x:Double>
         <converters:ShowDefaultCloseButtonConverter x:Key="ShowDefaultCloseButtonConverter" />
 
-        <ControlTheme
-            x:Key="{x:Type local:DragTabItem}"
-            TargetType="{x:Type local:DragTabItem}">
+        <ControlTheme x:Key="{x:Type local:DragTabItem}" TargetType="{x:Type local:DragTabItem}">
             <Setter Property="FontSize" Value="12" />
             <Setter Property="FontWeight" Value="{DynamicResource TabItemHeaderThemeFontWeight}" />
             <Setter Property="Background" Value="{DynamicResource TabItemBackgroundBrush}" />
@@ -120,8 +118,8 @@
                                     </Button.Theme>
                                     <Button.IsVisible>
                                         <MultiBinding Converter="{StaticResource ShowDefaultCloseButtonConverter}">
-                                            <Binding Path="ShowDefaultCloseButton" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type local:TabsControl}}" />
-                                            <Binding Path="FixedHeaderCount" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type local:TabsControl}}" />
+                                            <Binding Path="$parent[local:TabsControl].ShowDefaultCloseButton" />
+                                            <Binding Path="$parent[local:TabsControl].FixedHeaderCount" />
                                             <Binding Path="LogicalIndex" RelativeSource="{RelativeSource TemplatedParent}" />
                                         </MultiBinding>
                                     </Button.IsVisible>

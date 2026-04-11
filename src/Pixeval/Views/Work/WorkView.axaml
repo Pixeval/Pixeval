@@ -18,12 +18,12 @@
         IsLoadingMore="{Binding #ListBox.(controls:IncrementalLoadingBehavior.IsLoadingMore)}">
         <ListBox
             x:Name="ListBox"
-            UseLayoutRounding="False"
             controls:IncrementalLoadingBehavior.IsEnabled="True"
             controls:IncrementalLoadingBehavior.Threshold="200"
             ContainerPrepared="ListBox_OnContainerPrepared"
             SelectionChanged="WorkView_OnSelectionChanged"
-            SelectionMode="{Binding IsSelecting, Converter={x:Static local:WorkView.SelectionModeConverter}}">
+            SelectionMode="{Binding IsSelecting, Converter={x:Static local:WorkView.SelectionModeConverter}}"
+            UseLayoutRounding="False">
             <ListBox.Styles>
                 <controls:ItemsViewListBoxStyles />
             </ListBox.Styles>

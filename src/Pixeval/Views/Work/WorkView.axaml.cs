@@ -127,7 +127,7 @@ public partial class WorkView : UserControl, IStructuralDisposalCompleter//, IEn
     /// <summary>
     /// 在调用<see cref="ResetEngine"/>前<see cref="StyledElement.DataContext"/>为<see langword="null"/>
     /// </summary>
-    public void ResetEngine(IFetchEngine<IArtworkInfo> newEngine, int itemsPerPage = 20, int itemLimit = -1)
+    public void ResetEngine(IFetchEngine<IArtworkInfo> newEngine, bool isBookmarkEnabled = true, int itemsPerPage = 20, int itemLimit = -1)
     {
         var type = newEngine.GetType().GetInterfaces()[0].GenericTypeArguments.SingleOrDefault();
         var viewModel = DataContext as ISortableEntryViewViewModel;
@@ -135,7 +135,7 @@ public partial class WorkView : UserControl, IStructuralDisposalCompleter//, IEn
         {
             case NovelViewViewModel when type == typeof(Novel):
             case IllustrationViewViewModel when type != typeof(Novel):
-                viewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
+                viewModel.ResetEngine(newEngine, isBookmarkEnabled, itemsPerPage, itemLimit);
                 break;
             default:
                 if (type == typeof(Novel))
@@ -153,7 +153,7 @@ public partial class WorkView : UserControl, IStructuralDisposalCompleter//, IEn
                     viewModel = new IllustrationViewViewModel();
                 }
 
-                viewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
+                viewModel.ResetEngine(newEngine, isBookmarkEnabled, itemsPerPage, itemLimit);
                 DataContext = viewModel;
                 ListBox.ItemsSource = viewModel.View;
 

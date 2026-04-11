@@ -12,6 +12,7 @@ using Mako.Engine;
 using Misaki;
 using Pixeval.Collections;
 using Pixeval.Controls;
+using Pixeval.Utilities;
 
 namespace Pixeval.ViewModels;
 
@@ -64,10 +65,10 @@ public abstract partial class SortableEntryViewViewModel<T, [DynamicallyAccessed
         set => DataProvider.View.Range = value;
     }
 
-    public void ResetEngine(IFetchEngine<IArtworkInfo>? newEngine, int itemsPerPage = 20, int itemLimit = -1)
+    public void ResetEngine(IFetchEngine<IArtworkInfo>? newEngine, bool isBookmarkEnabled = true, int itemsPerPage = 20, int itemLimit = -1)
     {
         BlockedTags = [.. App.AppViewModel.AppSettings.BlockedTags];
-        DataProvider.ResetEngine((IFetchEngine<T>?) newEngine, itemsPerPage, itemLimit);
+        DataProvider.ResetEngine((IFetchEngine<T>?) newEngine, (info, _) => TViewModel.CreateInstance(info).Apply(t => t.IsBookmarkEnabled = isBookmarkEnabled), itemsPerPage, itemLimit);
     }
 
     public void ResetSource(ObservableCollection<IArtworkInfo>? source) => throw new NotSupportedException();

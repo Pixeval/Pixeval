@@ -8,7 +8,7 @@ using Mako.Model;
 using Pixeval.Controls;
 using Frame = FluentAvalonia.UI.Controls.Frame;
 
-namespace Pixeval;
+namespace Pixeval.Views.Capability;
 
 public partial class SearchWorksPage : UserControl
 {

@@ -25,7 +25,7 @@ public abstract partial class SimpleUsersPage : UserControl
 
     private void ChangeSource()
     {
-        (UserContainer.UserView.DataContext as UserViewViewModel)?.ResetEngine(GetFetchEngine(App.AppViewModel.MakoClient));
+        (UserContainer.UserView.DataContext as UserViewViewModel)?.ResetEngine(GetFetchEngine(App.AppViewModel.MakoClient), (user, _) => new(user));
     }
 
     protected abstract IFetchEngine<User> GetFetchEngine(MakoClient makoClient);

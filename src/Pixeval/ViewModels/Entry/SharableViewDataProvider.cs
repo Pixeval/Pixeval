@@ -67,10 +67,10 @@ public class SharableViewDataProvider<T, [DynamicallyAccessedMembers(Dynamically
         FetchEngineRef = null;
     }
 
-    public void ResetEngine(IFetchEngine<T>? fetchEngine, int itemsPerPage = 20, int limit = -1)
+    public void ResetEngine(IFetchEngine<T>? fetchEngine, Func<T, int, TViewModel> factory, int itemsPerPage = 20, int limit = -1)
     {
-        FetchEngineRef = new SharedRef<IFetchEngine<T>?>(fetchEngine, this);
-        EntrySourceRef = new SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel>>(new IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel>(FetchEngineIncrementalSource<T, TViewModel>.CreateInstance(FetchEngine!, limit), itemsPerPage), this);
+        FetchEngineRef = new(fetchEngine, this);
+        EntrySourceRef = new(new(new(FetchEngine!, factory, limit), itemsPerPage), this);
     }
 
     public SharableViewDataProvider<T, TViewModel> CloneRef()

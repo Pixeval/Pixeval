@@ -29,7 +29,7 @@ public interface ISortableEntryViewViewModel : INotifyPropertyChanged, IDisposab
 
     Range ViewRange { get; set; }
 
-    void ResetEngine(IFetchEngine<IArtworkInfo>? newEngine, int itemsPerPage = 20, int itemLimit = -1);
+    void ResetEngine(IFetchEngine<IArtworkInfo>? newEngine, bool isBookmarkEnabled = true, int itemsPerPage = 20, int itemLimit = -1);
 
     void ResetSource(ObservableCollection<IArtworkInfo>? source);
 }

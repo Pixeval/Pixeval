@@ -26,5 +26,5 @@ public abstract class EntryViewViewModel<T, [DynamicallyAccessedMembers(Dynamica
         DataProvider.Dispose();
     }
 
-    public void ResetEngine(IFetchEngine<T>? newEngine, int itemsPerPage = 20, int itemLimit = -1) => DataProvider.ResetEngine(newEngine, itemsPerPage, itemLimit);
+    public void ResetEngine(IFetchEngine<T>? newEngine, Func<T, int, TViewModel> factory, int itemsPerPage = 20, int itemLimit = -1) => DataProvider.ResetEngine(newEngine, factory, itemsPerPage, itemLimit);
 }

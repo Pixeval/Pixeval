@@ -46,11 +46,11 @@ public class SimpleViewDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAc
         FetchEngine = null;
     }
 
-    public void ResetEngine(IFetchEngine<T>? fetchEngine, int itemsPerPage = 20, int limit = -1)
+    public void ResetEngine(IFetchEngine<T>? fetchEngine, Func<T, int, TViewModel> factory, int itemsPerPage = 20, int limit = -1)
     {
         Dispose();
         FetchEngine = fetchEngine;
 
-        Source = new IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel>(FetchEngineIncrementalSource<T, TViewModel>.CreateInstance(FetchEngine!, limit), itemsPerPage);
+        Source = new(new(FetchEngine!, factory, limit), itemsPerPage);
     }
 }

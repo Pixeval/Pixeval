@@ -15,7 +15,9 @@ public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>
         IsBookmarkedDisplay = IsFavorite ? HeartButtonState.Checked : HeartButtonState.Unchecked;
     }
 
-    public abstract bool IsBookmarkSupported { get; }
+    public bool IsBookmarkEnabled { get; set; }
+
+    public bool IsBookmarkSupported => IsBookmarkEnabled && Entry.Platform is IPlatformInfo.Pixiv;
 
     IArtworkInfo IWorkViewModel.Entry => Entry;
 

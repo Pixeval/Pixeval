@@ -22,5 +22,5 @@ public interface IDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAccesse
 
     IFetchEngine<T>? FetchEngine { get; }
 
-    void ResetEngine(IFetchEngine<T>? fetchEngine, int itemsPerPage = 20, int limit = -1);
+    void ResetEngine(IFetchEngine<T>? fetchEngine, Func<T, int, TViewModel> factory, int itemsPerPage = 20, int limit = -1);
 }

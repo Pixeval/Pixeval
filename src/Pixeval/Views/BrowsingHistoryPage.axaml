@@ -1,5 +1,5 @@
 <UserControl
-    x:Class="Pixeval.Views.Capability.SearchWorksPage"
+    x:Class="Pixeval.Views.BrowsingHistoryPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
@@ -17,7 +17,7 @@
                 x:Name="SimpleWorkTypeComboBox"
                 ItemsSource="{x:Static utilities:SimpleWorkTypeExtension.Items}"
                 SelectedIndex="{x:Static views:PixevalSettings.SimpleWorkTypeIndex}"
-                SelectionChanged="WorkTypeComboBox_OnSelectionChanged" />
+                SelectionChanged="SimpleWorkTypeComboBox_OnSelectionChanged" />
         </work:WorkContainer.CommandBarElements>
     </work:WorkContainer>
 </UserControl>

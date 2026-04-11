@@ -4,7 +4,6 @@
 using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Mako.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
 using Pixeval.I18N;
@@ -16,9 +15,6 @@ namespace Pixeval.ViewModels;
 
 public partial class IllustrationItemViewModel
 {
-    /// <inheritdoc />
-    public override bool IsBookmarkSupported => Entry is Illustration;
-
     /// <inheritdoc />
     protected override async Task SaveAsync(Control? parameter)
     {

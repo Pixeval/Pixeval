@@ -14,17 +14,19 @@ namespace Pixeval.ViewModels;
 
 public interface IWorkViewModel
 {
+    bool IsBookmarkEnabled { get; set; }
+
     bool IsBookmarkSupported { get; }
 
     IArtworkInfo Entry { get; }
 
-    /// <inheritdoc cref="Work.WorkEntryViewModel{T}.AddToBookmarkCommand"/>
+    /// <inheritdoc cref="WorkEntryViewModel{T}.AddToBookmarkCommand"/>
     IAsyncRelayCommand<(IEnumerable<string> UserTags, bool IsPrivate, Control? Control)> AddToBookmarkCommand { get; }
 
-    /// <inheritdoc cref="Work.WorkEntryViewModel{T}.BookmarkCommand"/>
+    /// <inheritdoc cref="WorkEntryViewModel{T}.BookmarkCommand"/>
     IAsyncRelayCommand<Control?> BookmarkCommand { get; }
 
-    /// <inheritdoc cref="Work.WorkEntryViewModel{T}.SaveCommand"/>
+    /// <inheritdoc cref="WorkEntryViewModel{T}.SaveCommand"/>
     IAsyncRelayCommand<Control?> SaveCommand { get; }
 
     /// <inheritdoc cref="WorkEntryViewModel{T}.TryLoadThumbnailAsync"/>

@@ -39,6 +39,6 @@ public partial class FollowingsPage : UserControl
 
     private void ChangeSource()
     {
-        (UserContainer.UserView.DataContext as UserViewViewModel)?.ResetEngine(App.AppViewModel.MakoClient.Following(_userId, PrivacyPolicyComboBox.GetSelectedValue<PrivacyPolicy>()));
+        (UserContainer.UserView.DataContext as UserViewViewModel)?.ResetEngine(App.AppViewModel.MakoClient.Following(_userId, PrivacyPolicyComboBox.GetSelectedValue<PrivacyPolicy>()), (user, _) => new(user));
     }
 }

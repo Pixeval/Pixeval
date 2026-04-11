@@ -1,23 +1,19 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Mako.Engine;
 using Misaki;
 using Pixeval.Collections;
-using Pixeval.Controls;
 
 namespace Pixeval.ViewModels;
 
-public class FetchEngineIncrementalSource<T, TViewModel>(IAsyncEnumerable<T?> asyncEnumerator, int limit = -1)
-    : IIncrementalSource<TViewModel>, IIncrementalSourceFactory<T, FetchEngineIncrementalSource<T, TViewModel>>
+public class FetchEngineIncrementalSource<T, TViewModel>(IAsyncEnumerable<T?> asyncEnumerator, Func<T, int, TViewModel> factory, int limit = -1)
+    : IIncrementalSource<TViewModel>
     where T : IIdentityInfo
-    where TViewModel : IFactory<T, TViewModel>
 {
-    public static FetchEngineIncrementalSource<T, TViewModel> CreateInstance(IFetchEngine<T> fetchEngine, int limit = -1) => new(fetchEngine, limit);
-
     /// <summary>
     /// 当为null时暂时不报错
     /// </summary>
@@ -42,7 +38,7 @@ public class FetchEngineIncrementalSource<T, TViewModel>(IAsyncEnumerable<T?> as
             {
                 if (_asyncEnumerator.Current is { } obj && !_yieldedItems.Contains(Identifier(obj)))
                 {
-                    result.Add(Select(obj, _yieldedCounter));
+                    result.Add(factory(obj, _yieldedCounter));
                     _ = _yieldedItems.Add(Identifier(obj));
                     ++i;
                     _yieldedCounter++;
@@ -58,6 +54,4 @@ public class FetchEngineIncrementalSource<T, TViewModel>(IAsyncEnumerable<T?> as
     }
 
     protected virtual string Identifier(T entity) => entity.Id;
-
-    protected TViewModel Select(T entity, int index) => TViewModel.CreateInstance(entity);
 }

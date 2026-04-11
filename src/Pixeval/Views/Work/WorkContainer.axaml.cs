@@ -198,10 +198,10 @@ public partial class WorkContainer : UserControl
         }
     }
 
-    public void ResetEngine(IFetchEngine<IArtworkInfo> newEngine, int itemsPerPage = 20, int itemLimit = -1)
+    public void ResetEngine(IFetchEngine<IArtworkInfo> newEngine, bool isBookmarkEnabled = true, int itemsPerPage = 20, int itemLimit = -1)
     {
         TagSelector.IsVisible = false;
-        WorkView.ResetEngine(newEngine, itemsPerPage, itemLimit);
+        WorkView.ResetEngine(newEngine, isBookmarkEnabled, itemsPerPage, itemLimit);
     }
 
     public static readonly FuncValueConverter<int, string> CancelSelectionButtonConverter = new(i => i > 0

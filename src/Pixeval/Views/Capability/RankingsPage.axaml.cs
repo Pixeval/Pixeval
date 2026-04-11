@@ -7,7 +7,7 @@ using Mako.Global.Enum;
 using Pixeval.Controls;
 using Pixeval.Utilities;
 
-namespace Pixeval;
+namespace Pixeval.Views.Capability;
 
 public partial class RankingsPage : UserControl
 {
