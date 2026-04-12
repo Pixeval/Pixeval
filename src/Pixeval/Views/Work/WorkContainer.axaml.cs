@@ -85,25 +85,33 @@ public partial class WorkContainer : UserControl
              scrollView.Offset = new(0, 0);
     }
 
-    private IWorkViewModel? _currentBookmarkItem;
-
     private void AddAllToBookmarkButton_OnClicked(object? sender, RoutedEventArgs e)
     {
-        _currentBookmarkItem = null;
-        OpenBookmarkTagSelector();
+        OpenBookmarkTagSelector(null);
     }
 
     private void WorkView_OnRequestAddToBookmark(WorkView sender, IWorkViewModel e)
     {
-        _currentBookmarkItem = e;
-        OpenBookmarkTagSelector();
+        OpenBookmarkTagSelector(e);
     }
 
-    private async void OpenBookmarkTagSelector()
+    private IWorkViewModel? _currentBookmarkItem;
+
+    private async void OpenBookmarkTagSelector(IWorkViewModel? viewModel)
     {
-        TagSelector.IsVisible = false;
-        await TagSelector.ResetSourceAsync();
-        TagSelector.IsVisible = true;
+        if (_currentBookmarkItem == viewModel)
+        {
+            if (!TagSelector.IsVisible)
+                await TagSelector.ResetSourceAsync();
+            TagSelector.IsVisible = !TagSelector.IsVisible;
+        }
+        else
+        {
+            _currentBookmarkItem = viewModel;
+            TagSelector.IsVisible = false;
+            await TagSelector.ResetSourceAsync();
+            TagSelector.IsVisible = true;
+        }
     }
 
     private async void SaveAllButton_OnClicked(object? sender, RoutedEventArgs e)

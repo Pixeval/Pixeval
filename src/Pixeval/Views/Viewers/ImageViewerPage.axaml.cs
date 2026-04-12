@@ -2,13 +2,29 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using Avalonia;
 using Avalonia.Controls;
 
 namespace Pixeval.Views.Viewers;
 
 public partial class ImageViewerPage : UserControl
 {
-    public ImageViewerPage() => InitializeComponent();
+    public double ZoomFactor
+    {
+        get;
+        set => SetAndRaise(ZoomFactorProperty, ref field, value);
+    }
+
+    public static readonly DirectProperty<ImageViewerPage, double> ZoomFactorProperty =
+        AvaloniaProperty.RegisterDirect<ImageViewerPage, double>(
+            nameof(ZoomFactor),
+            o => o.ZoomFactor,
+            (o, v) => o.ZoomFactor = v);
+
+    public ImageViewerPage()
+    {
+        InitializeComponent();
+    }
 
     /// <summary>
     /// 默认缩放到适应窗口大小（Uniform）

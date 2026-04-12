@@ -1,0 +1,204 @@
+<ContentPage
+    x:Class="Pixeval.Views.Viewers.WorkInfoPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animatedImage="using:Avalonia.AnimatedImage"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:converters="using:Pixeval.Views.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:misaki="using:Misaki"
+    xmlns:pixeval="using:Pixeval"
+    d:DesignHeight="600"
+    d:DesignWidth="350"
+    x:DataType="{x:Type misaki:IArtworkInfo}"
+    Header="{I18N {x:Static pixeval:EntryViewerPageResources.InfoTabContent}}"
+    mc:Ignorable="d">
+    <ContentPage.Resources>
+        <DataTemplate x:Key="UserCardDataTemplate" x:DataType="{x:Type misaki:IUser}">
+            <Button
+                Padding="8"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Left"
+                Background="Transparent"
+                BorderThickness="0"
+                Click="AuthorButton_OnClick"
+                Tag="{Binding}">
+                <DockPanel HorizontalSpacing="12" LastChildFill="False">
+                    <animatedImage:AnimatedImage
+                        Width="50"
+                        Height="50"
+                        controls:Source.AnimatedBitmap="{Binding Avatar, Converter={x:Static converters:PixevalConverters.ImagePickClosestConverter}}"
+                        DockPanel.Dock="Left"
+                        Stretch="UniformToFill">
+                        <animatedImage:AnimatedImage.Clip>
+                            <EllipseGeometry
+                                Center="25,25"
+                                RadiusX="25"
+                                RadiusY="25" />
+                        </animatedImage:AnimatedImage.Clip>
+                    </animatedImage:AnimatedImage>
+                    <StackPanel DockPanel.Dock="Top" Spacing="2">
+                        <TextBlock
+                            Text="{Binding Name}"
+                            TextWrapping="Wrap"
+                            Theme="{StaticResource SubtitleTextBlockStyle}" />
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Text="{Binding Id}" />
+                            <Button
+                                Padding="2"
+                                VerticalAlignment="Center"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Click="CopyUserIdButton_OnClick"
+                                Tag="{Binding Id}">
+                                <markup:SymbolIcon FontSize="12" Symbol="Copy" />
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </DockPanel>
+            </Button>
+        </DataTemplate>
+        <ItemsPanelTemplate x:Key="StackLayout">
+            <StackPanel Spacing="5" />
+        </ItemsPanelTemplate>
+    </ContentPage.Resources>
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20,15" Spacing="5">
+            <!--  Title  -->
+            <TextBlock
+                HorizontalAlignment="Left"
+                IsVisible="{Binding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                Text="{Binding Title}"
+                TextWrapping="Wrap"
+                Theme="{StaticResource TitleTextBlockStyle}" />
+
+            <!--  Description  -->
+            <controls:MarkdownBox
+                Margin="0,5,0,0"
+                IsVisible="{Binding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                Markdown="{Binding Description}" />
+
+            <!--  ID + Copy  -->
+            <StackPanel Orientation="Horizontal" Spacing="5">
+                <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorSecondaryBrush}">
+                    <Run Text="ID " />
+                    <Run Text="{Binding Id}" />
+                </TextBlock>
+                <Button
+                    Padding="2"
+                    VerticalAlignment="Center"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Click="CopyIdButton_OnClick">
+                    <markup:SymbolIcon FontSize="12" Symbol="Copy" />
+                </Button>
+            </StackPanel>
+
+            <!--  View / Favorite counts  -->
+            <StackPanel
+                x:Name="CountsPanel"
+                Orientation="Horizontal"
+                Spacing="20">
+                <controls:IconText
+                    x:Name="ViewCountIconText"
+                    Symbol="Eye"
+                    Text="{Binding TotalView, Converter={x:Static converters:PixevalConverters.IntToString}}" />
+                <controls:IconText
+                    x:Name="FavoriteCountIconText"
+                    Symbol="Heart"
+                    Text="{Binding TotalFavorite, Converter={x:Static converters:PixevalConverters.IntToString}}" />
+            </StackPanel>
+
+            <!--  Create date  -->
+            <controls:IconText
+                x:Name="CreateDateIconText"
+                Symbol="Clock"
+                Text="{Binding CreateDate, Converter={x:Static converters:PixevalConverters.DateTimeShortDate}}" />
+
+            <!--#region Author Info-->
+            <ItemsControl
+                x:Name="AuthorsRepeater"
+                ItemTemplate="{StaticResource UserCardDataTemplate}"
+                ItemsPanel="{StaticResource StackLayout}"
+                ItemsSource="{Binding Authors}" />
+            <ItemsControl
+                x:Name="UploadersRepeater"
+                ItemTemplate="{StaticResource UserCardDataTemplate}"
+                ItemsPanel="{StaticResource StackLayout}"
+                ItemsSource="{Binding Uploaders}" />
+            <!--#endregion-->
+
+            <!--#region Tags-->
+            <ItemsControl ItemsPanel="{StaticResource StackLayout}" ItemsSource="{Binding Tags}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock
+                                Margin="10"
+                                HorizontalAlignment="Left"
+                                IsVisible="{Binding Key.Name, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                Text="{Binding Key.Name}"
+                                Theme="{StaticResource BodyStrongTextBlockStyle}" />
+                            <ItemsControl ItemsSource="{Binding}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel ItemSpacing="8" LineSpacing="8" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="{x:Type misaki:ITag}">
+                                        <Button Click="WorkTagButton_OnClicked" Tag="{Binding}">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="{Binding Name}" TextWrapping="NoWrap" />
+                                                <TextBlock
+                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                    IsVisible="{Binding TranslatedName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                    Text="{Binding TranslatedName}"
+                                                    TextWrapping="NoWrap" />
+                                            </StackPanel>
+                                            <Button.ContextFlyout>
+                                                <MenuFlyout>
+                                                    <MenuItem
+                                                        Click="CopyTagName_OnClick"
+                                                        Header="Copy Tag"
+                                                        Tag="{Binding Name}">
+                                                        <MenuItem.Icon>
+                                                            <markup:SymbolIcon Symbol="Copy" />
+                                                        </MenuItem.Icon>
+                                                    </MenuItem>
+                                                    <MenuItem
+                                                        Click="CopyTagName_OnClick"
+                                                        Header="Copy Translation"
+                                                        IsVisible="{Binding TranslatedName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                        Tag="{Binding TranslatedName}">
+                                                        <MenuItem.Icon>
+                                                            <markup:SymbolIcon Symbol="CopyAdd" />
+                                                        </MenuItem.Icon>
+                                                    </MenuItem>
+                                                    <MenuItem
+                                                        Click="BlockTag_OnClick"
+                                                        Header="Block Tag"
+                                                        Tag="{Binding}">
+                                                        <MenuItem.Icon>
+                                                            <markup:SymbolIcon Symbol="TagDismiss" />
+                                                        </MenuItem.Icon>
+                                                    </MenuItem>
+                                                </MenuFlyout>
+                                            </Button.ContextFlyout>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <!--#endregion-->
+        </StackPanel>
+    </ScrollViewer>
+</ContentPage>

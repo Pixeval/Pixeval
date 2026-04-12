@@ -1,18 +1,17 @@
 <ResourceDictionary
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:Pixeval"
-    xmlns:controls1="clr-namespace:Pixeval.Controls">
+    xmlns:controls="using:Pixeval.Controls">
 
     <Design.PreviewWith>
         <StackPanel Width="400" Spacing="10">
             <StackPanel Background="{DynamicResource SystemRegionBrush}">
-                <controls1:DigitalSignalItem />
+                <controls:DigitalSignalItem />
             </StackPanel>
         </StackPanel>
     </Design.PreviewWith>
 
-    <ControlTheme x:Key="{x:Type controls1:DigitalSignalItem}" TargetType="{x:Type controls1:DigitalSignalItem}">
+    <ControlTheme x:Key="{x:Type controls:DigitalSignalItem}" TargetType="{x:Type controls:DigitalSignalItem}">
         <Setter Property="Template">
             <ControlTemplate>
                 <DockPanel HorizontalSpacing="5">

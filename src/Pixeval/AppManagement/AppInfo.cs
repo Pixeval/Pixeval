@@ -2,6 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -47,6 +48,8 @@ public static class AppInfo
 
     static AppInfo()
     {
+        if (Directory.Exists(TempFolder))
+            Directory.Delete(TempFolder, true);
         // Ensure directories exist
         Directory.CreateDirectory(ApplicationFolderPath);
         Directory.CreateDirectory(SettingsFolder);

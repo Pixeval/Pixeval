@@ -93,7 +93,8 @@ public class TagSelector : TemplatedControl
                     new Setter(TemplateProperty, new FuncControlTemplate<ListBoxItem>((item, _) =>
                         new ContentPresenter
                         {
-                            [~ContentPresenter.ContentProperty] = item[~ContentControl.ContentProperty]
+                            [~ContentPresenter.ContentProperty] = item[~ContentControl.ContentProperty],
+                            [~ContentPresenter.ContentTemplateProperty] = item[~ContentControl.ContentTemplateProperty]
                         }))
                 }
             };

@@ -137,9 +137,7 @@ public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo
             or nameof(IDownloadTaskBase.ProgressPercentage)
             or nameof(IDownloadTaskBase.ErrorCause))
         {
-            OnPropertyChanged(nameof(IsItemEnabled));
-            OnPropertyChanged(nameof(IsRedownloadItemEnabled));
-            OnPropertyChanged(nameof(IsCancelItemEnabled));
+            OnPropertyChanged(nameof(ProgressMessage));
         }
     }
 }

@@ -1,0 +1,31 @@
+<UserControl
+    x:Class="Pixeval.Views.Comment.PixivReplyBar"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
+    d:DesignHeight="40"
+    d:DesignWidth="350"
+    mc:Ignorable="d">
+    <DockPanel LastChildFill="True">
+        <Button
+            Margin="0,0,5,0"
+            Padding="8"
+            VerticalAlignment="Center"
+            Background="Transparent"
+            BorderThickness="0"
+            Click="SendButton_OnClicked"
+            DockPanel.Dock="Right"
+            ToolTip.Tip="{I18N {x:Static pixeval:PixivReplyBarResources.SendButtonToolTipServiceToolTip}}">
+            <markup:SymbolIcon FontSize="16" Symbol="Send" />
+        </Button>
+        <TextBox
+            x:Name="ReplyContentTextBox"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Center"
+            MaxLength="140"
+            PlaceholderText="{I18N {x:Static pixeval:PixivReplyBarResources.ReplyContentRichEditBoxPlaceholderText}}" />
+    </DockPanel>
+</UserControl>

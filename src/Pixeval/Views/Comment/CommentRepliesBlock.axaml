@@ -1,0 +1,27 @@
+<UserControl
+    x:Class="Pixeval.Views.Comment.CommentRepliesBlock"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewers="using:Pixeval.ViewModels.Viewers"
+    xmlns:comment="using:Pixeval.Views.Comment"
+    d:DesignHeight="300"
+    d:DesignWidth="350"
+    x:DataType="{x:Type viewers:CommentItemViewModel}"
+    mc:Ignorable="d">
+    <DockPanel LastChildFill="True">
+        <comment:PixivReplyBar
+            x:Name="ReplyBar"
+            Margin="10"
+            DockPanel.Dock="Bottom"
+            SendButtonClick="ReplyBar_OnSendButtonClick" />
+        <comment:CommentView
+            x:Name="CommentView"
+            DeleteButtonClick="CommentView_OnDeleteButtonClick"
+            DataContext="{Binding Replies}"
+            OpenRepliesButtonClick="CommentView_OnOpenRepliesButtonClick"
+            RequireEntryType="CommentView_OnRequireEntryType" />
+    </DockPanel>
+</UserControl>

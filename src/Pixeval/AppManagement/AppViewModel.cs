@@ -43,7 +43,6 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
 
     public void InitializeProvider()
     {
-        Directory.Delete(AppInfo.TempFolder, true);
         AppServiceProvider = CreateServiceProvider();
         SetNameResolvers();
         DownloadManager = new DownloadManager(MakoClient.GetImageDownloadClient(), AppSettings.MaxDownloadTaskConcurrencyLevel);

@@ -3,13 +3,14 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ai="using:Avalonia.AnimatedImage"
-    xmlns:controls="clr-namespace:SmoothScroll.Avalonia.Controls;assembly=SmoothScroll.Avalonia.Controls"
+    xmlns:controls="using:SmoothScroll.Avalonia.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
     xmlns:utilities="using:Pixeval.Utilities"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
+    xmlns:viewers1="using:Pixeval.Views.Viewers"
     d:DesignHeight="450"
     d:DesignWidth="800"
     x:DataType="{x:Type viewers:ImageViewerPageViewModel}"
@@ -27,7 +28,8 @@
             HorizontalScrollBarVisibility="Hidden"
             IsVisible="{Binding LoadSuccessfully}"
             IsZoomEnabled="True"
-            VerticalScrollBarVisibility="Hidden">
+            VerticalScrollBarVisibility="Hidden"
+            ZoomFactor="{Binding $parent[viewers1:ImageViewerPage].ZoomFactor, Mode=TwoWay}">
             <ai:AnimatedImage
                 x:Name="ImageViewer"
                 HorizontalAlignment="Stretch"

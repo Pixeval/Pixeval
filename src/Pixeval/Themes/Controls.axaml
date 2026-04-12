@@ -6,6 +6,7 @@
         <MergeResourceInclude Source="/Controls/WaveProgressHeart.axaml" />
         <MergeResourceInclude Source="/Controls/PixevalBadge.axaml" />
         <MergeResourceInclude Source="/Controls/DigitalSignalItem.axaml" />
+        <MergeResourceInclude Source="/Controls/PageButton.axaml" />
         <MergeResourceInclude Source="/Views/Entry/EntryView.axaml" />
         <MergeResourceInclude Source="/Views/Work/TagSelector.axaml" />
         <MergeResourceInclude Source="/Views/Work/AddNewBookmarkTagItem.axaml" />

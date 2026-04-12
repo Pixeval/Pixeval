@@ -1,0 +1,80 @@
+<UserControl
+    x:Class="Pixeval.Views.Comment.CommentItem"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewers="using:Pixeval.ViewModels.Viewers"
+    d:DesignHeight="120"
+    d:DesignWidth="350"
+    x:DataType="{x:Type viewers:CommentItemViewModel}"
+    mc:Ignorable="d">
+    <DockPanel Margin="8" LastChildFill="True">
+        <!--  Bottom: Comment content or stamp  -->
+        <Panel Margin="57,5,0,0" DockPanel.Dock="Bottom">
+            <controls:MarkdownBox
+                x:Name="CommentContentMarkdown"
+                IsVisible="{Binding !IsStamp}"
+                Markdown="{Binding CommentContent}" />
+            <Image
+                x:Name="StickerImage"
+                MaxHeight="100"
+                HorizontalAlignment="Left"
+                IsVisible="{Binding IsStamp}"
+                Stretch="Uniform" />
+        </Panel>
+
+        <!--  Right: Action buttons  -->
+        <StackPanel
+            Margin="5,0,0,0"
+            VerticalAlignment="Center"
+            DockPanel.Dock="Right"
+            Orientation="Horizontal"
+            Spacing="3">
+            <Button
+                x:Name="DeleteButton"
+                Padding="6"
+                Background="Transparent"
+                BorderThickness="0"
+                Click="DeleteReplyButton_OnClicked"
+                Content="{markup:SymbolIcon Delete}"
+                IsVisible="{Binding IsMe}" />
+            <Button
+                x:Name="OpenRepliesButton"
+                Padding="6"
+                Background="Transparent"
+                BorderThickness="0"
+                Click="OpenRepliesButton_OnClicked">
+                <controls:IconText
+                    IsVisible="{Binding Replies, Converter={x:Static ObjectConverters.IsNotNull}}"
+                    Symbol="Chat"
+                    Text="{Binding RepliesCount}" />
+            </Button>
+        </StackPanel>
+
+        <!--  Poster info  -->
+        <Button
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Left"
+            Background="Transparent"
+            BorderThickness="0"
+            Click="PosterButton_OnClicked">
+            <DockPanel LastChildFill="False">
+                <Image
+                    Width="35"
+                    Height="35"
+                    DockPanel.Dock="Left"
+                    Source="{Binding AvatarSource}" />
+                <StackPanel Margin="10,0,0,0" Spacing="2">
+                    <TextBlock Text="{Binding Poster}" Theme="{StaticResource CaptionStrongTextBlockStyle}" />
+                    <TextBlock
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="{Binding PostDate}"
+                        Theme="{StaticResource CaptionStrongTextBlockStyle}" />
+                </StackPanel>
+            </DockPanel>
+        </Button>
+    </DockPanel>
+</UserControl>

@@ -4,12 +4,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Mako.Global.Enum;
+using Mako.Model;
 using Pixeval.Utilities;
+using Pixeval.Views.Viewers;
 
 namespace Pixeval.ViewModels.Viewers;
 
-public partial class IllustrationViewerPageViewModel : DetailedViewModelBase, IDisposable
+public partial class IllustrationViewerPageViewModel : ViewModelBase, IDisposable
 {
     [ObservableProperty]
     public partial bool IsBottomListOpen { get; set; }
@@ -55,17 +60,8 @@ public partial class IllustrationViewerPageViewModel : DetailedViewModelBase, ID
         ViewModelSource?.Dispose();
     }
 
-    //public NavigationViewTag<WorkInfoPage, IArtworkInfo> IllustrationInfoTag { get; } =
-    //    new(EntryViewerPageResources.InfoTabContent, null!);
-
-    //public NavigationViewTag<CommentsPage, (SimpleWorkType, long Id)> CommentsTag { get; } =
-    //    new(EntryViewerPageResources.CommentsTabContent, default);
-
-    //public NavigationViewTag<RelatedWorksPage, long> RelatedWorksTag { get; } =
-    //    new(EntryViewerPageResources.RelatedWorksTabContent, 0);
-
-    //[ObservableProperty]
-    //public partial IReadOnlyList<NavigationViewTag>? Tags { get; set; }
+    [ObservableProperty]
+    public partial IReadOnlyList<ContentPage>? PanePages { get; private set; }
 
     #region Current相关
 
@@ -97,27 +93,24 @@ public partial class IllustrationViewerPageViewModel : DetailedViewModelBase, ID
             if (value == field)
                 return;
 
-            var oldValue = field;
-            // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
-            var oldTag = "0";// Pages?[CurrentPageIndex].Id ?? 0;
-
             field = value;
             // 这里可以触发总页数的更新
             Pages = [.. CurrentIllustration.GetMangaIllustrationViewModels()];
             // 保证_pages里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
             Images = [.. Pages.Select(p => new ImageViewerPageViewModel(p, CurrentIllustration))];
 
-            //IllustrationInfoTag.Parameter = CurrentIllustration.Entry;
-            //if (CurrentIllustration.Entry is Illustration illustration)
-            //{
-            //    CommentsTag.Parameter = (SimpleWorkType.IllustAndManga, illustration.Id);
-            //    RelatedWorksTag.Parameter = illustration.Id;
-            //    Tags = [IllustrationInfoTag, CommentsTag, RelatedWorksTag];
-            //}
-            //else
-            //{
-            //    Tags = [IllustrationInfoTag];
-            //}
+            var list = new List<ContentPage>(3) { new WorkInfoPage { DataContext = CurrentIllustration.Entry } };
+            if (CurrentIllustration.Entry is Illustration { Id: var id })
+            {
+                var engine = App.AppViewModel.MakoClient.IllustrationComments(id);
+                list.Add(new CommentsPage
+                {
+                    DataContext = new CommentsViewViewModel(engine, SimpleWorkType.IllustrationAndManga, id)
+                });
+                list.Add(new RelatedWorksPage { IllustrationId = id });
+            }
+
+            PanePages = list;
 
             // 此处不要触发CurrentPageIndex的OnDetailedPropertyChanged，否则会导航两次
             _currentPageIndex = 0;
@@ -127,7 +120,7 @@ public partial class IllustrationViewerPageViewModel : DetailedViewModelBase, ID
             OnPropertyChanged(nameof(CurrentPage));
             OnPropertyChanged(nameof(CurrentImage));
 
-            OnDetailedPropertyChanged(oldValue, value, oldTag, CurrentPage.Id);
+            OnPropertyChanged();
             OnPropertyChanged(nameof(CurrentIllustration));
         }
         // 第一次赋值属性时会判断 value == field，如果是0则无法进入get方法体
@@ -149,7 +142,7 @@ public partial class IllustrationViewerPageViewModel : DetailedViewModelBase, ID
             OnButtonPropertiesChanged();
             OnPropertyChanged(nameof(CurrentPage));
             OnPropertyChanged(nameof(CurrentImage));
-            OnDetailedPropertyChanged(oldValue, value);
+            OnPropertyChanged();
         }
     }
 
@@ -157,6 +150,10 @@ public partial class IllustrationViewerPageViewModel : DetailedViewModelBase, ID
     {
         OnPropertyChanged(nameof(NextButtonText));
         OnPropertyChanged(nameof(PrevButtonText));
+        NextCommand.NotifyCanExecuteChanged();
+        PrevCommand.NotifyCanExecuteChanged();
+        NextIllustrationCommand.NotifyCanExecuteChanged();
+        PrevIllustrationCommand.NotifyCanExecuteChanged();
     }
 
     public int PageCount => Pages.Length;
@@ -255,6 +252,44 @@ public partial class IllustrationViewerPageViewModel : DetailedViewModelBase, ID
             return null;
         }
     }
+
+    #endregion
+
+    #region Commands
+
+    private bool CanNext() => NextButtonAction is not null;
+
+    [RelayCommand(CanExecute = nameof(CanNext))]
+    private void Next()
+    {
+        switch (NextButtonAction)
+        {
+            case true: CurrentPageIndex++; break;
+            case false: CurrentIllustrationIndex++; break;
+        }
+    }
+
+    private bool CanPrev() => PrevButtonAction is not null;
+
+    [RelayCommand(CanExecute = nameof(CanPrev))]
+    private void Prev()
+    {
+        switch (PrevButtonAction)
+        {
+            case true: CurrentPageIndex--; break;
+            case false: CurrentIllustrationIndex--; break;
+        }
+    }
+
+    private bool CanNextIllustration() => CurrentIllustrationIndex < Illustrations.Count - 1;
+
+    [RelayCommand(CanExecute = nameof(CanNextIllustration))]
+    private void NextIllustration() => CurrentIllustrationIndex++;
+
+    private bool CanPrevIllustration() => CurrentIllustrationIndex > 0;
+
+    [RelayCommand(CanExecute = nameof(CanPrevIllustration))]
+    private void PrevIllustration() => CurrentIllustrationIndex--;
 
     #endregion
 }

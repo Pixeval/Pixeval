@@ -1,14 +1,20 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoSettingsPage.Avalonia;
 using AutoSettingsPage.Models;
+using Avalonia.AnimatedImage;
 using Avalonia.Controls;
 using Avalonia.Data.Converters;
+using FluentAvalonia.UI.Controls;
 using FluentIcons.Common;
 using Mako.Model;
 using Misaki;
 using Pixeval.Controls;
+using Pixeval.Utilities.IO.Caching;
+using Semi.Avalonia.Tokens.Palette;
 
 namespace Pixeval.Views.Converters;
 
@@ -51,4 +57,6 @@ public static class PixevalConverters
             XRestrict.R18 => BadgeMode.R18,
             _ => BadgeMode.None
         });
+
+    public static readonly FuncValueConverter<IReadOnlyCollection<IImageFrame>, string?> ImagePickClosestConverter = new(value => value?.PickClosest(50, 50)?.ImageUri.OriginalString);
 }

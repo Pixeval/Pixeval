@@ -1,0 +1,34 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:markup="using:Pixeval.Views.Markup">
+    <ControlTheme x:Key="{x:Type controls:PageButton}" TargetType="{x:Type controls:PageButton}">
+        <Setter Property="Width" Value="50" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Opacity" Value="0" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
+            </Transitions>
+        </Setter>
+        <Setter Property="Template">
+            <ControlTemplate TargetType="{x:Type controls:PageButton}">
+                <Button
+                    x:Name="PART_Button"
+                    Width="{TemplateBinding Width}"
+                    HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                    VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                    Background="Transparent"
+                    Content="{markup:SymbolIconEx Symbol={TemplateBinding Symbol},
+                                                  FontSize=24}"
+                    IsVisible="{TemplateBinding ToolTipText,
+                                                Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                    ToolTip.Tip="{TemplateBinding ToolTipText}" />
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Opacity" Value="0.6" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
