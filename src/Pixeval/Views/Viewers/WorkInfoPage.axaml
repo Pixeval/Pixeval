@@ -160,28 +160,19 @@
                                                     <MenuItem
                                                         Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
                                                         Header="Copy Tag"
-                                                        Tag="{Binding Name}">
-                                                        <MenuItem.Icon>
-                                                            <markup:SymbolIcon Symbol="Copy" />
-                                                        </MenuItem.Icon>
-                                                    </MenuItem>
+                                                        Icon="{markup:SymbolIcon Copy}"
+                                                        Tag="{Binding Name}" />
                                                     <MenuItem
                                                         Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
                                                         Header="Copy Translation"
+                                                        Icon="{markup:SymbolIcon CopyAdd}"
                                                         IsVisible="{Binding TranslatedName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                                                        Tag="{Binding TranslatedName}">
-                                                        <MenuItem.Icon>
-                                                            <markup:SymbolIcon Symbol="CopyAdd" />
-                                                        </MenuItem.Icon>
-                                                    </MenuItem>
+                                                        Tag="{Binding TranslatedName}" />
                                                     <MenuItem
                                                         Click="BlockTag_OnClick"
                                                         Header="Block Tag"
-                                                        Tag="{Binding}">
-                                                        <MenuItem.Icon>
-                                                            <markup:SymbolIcon Symbol="TagDismiss" />
-                                                        </MenuItem.Icon>
-                                                    </MenuItem>
+                                                        Icon="{markup:SymbolIcon TagDismiss}"
+                                                        Tag="{Binding}" />
                                                 </MenuFlyout>
                                             </Button.ContextFlyout>
                                         </Button>

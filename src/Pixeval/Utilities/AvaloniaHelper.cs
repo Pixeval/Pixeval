@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,7 +13,6 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
-using FluentIcons.Avalonia;
 using FluentIcons.Common;
 using Pixeval.I18N;
 using Pixeval.Views;
@@ -50,31 +48,12 @@ public static class AvaloniaHelper
 
     extension(ViewContainerBase control)
     {
-        public void NavigateTo<TParameter>(
-            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type pageType, 
-            TParameter parameter,
-            bool removeCurrent = false)
+        public void NavigateTo<TPage>(
+            TPage page, 
+            bool removeCurrent = false) where TPage : ContentPage
         {
-            var (icon, header) = _PageIconMapping[pageType];
-            control.NavigateTo(pageType, new SymbolIcon
-            {
-                Symbol = icon,
-                FontSize = 16,
-                IconVariant = IconVariant.Color
-            }, header, parameter, removeCurrent);
+            control.NavigateTo(page, removeCurrent);
         }
-
-        public void NavigateTo(
-            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
-            Type pageType,
-            bool removeCurrent = false)
-            => control.NavigateTo<object?>(pageType, null, removeCurrent);
-
-        public void NavigateTo<TPage, TParameter>(TParameter parameter, bool removeCurrent = false) where TPage : Control, new() =>
-            control.NavigateTo(typeof(TPage), parameter, removeCurrent);
-
-        public void NavigateTo<TPage>(bool removeCurrent = false) where TPage : Control, new()
-            => control.NavigateTo<TPage, object?>(null, removeCurrent);
     }
 
     private static readonly FrozenDictionary<Type, (Symbol Icon, string Header)> _PageIconMapping = new Dictionary<Type, (Symbol Icon, string Header)>

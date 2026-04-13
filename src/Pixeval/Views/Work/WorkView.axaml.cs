@@ -13,6 +13,7 @@ using Misaki;
 using Pixeval.AppManagement;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
+using Pixeval.Views.Viewers;
 
 namespace Pixeval.Views.Work;
 
@@ -167,7 +168,8 @@ public partial class WorkView : UserControl, IStructuralDisposalCompleter//, IEn
     {
         if (e is { IsBookmarkSupported: false, Entry: WorkBase { User.Id: var id } })
         {
-            // await TopLevel.GetTopLevel(this)?.ViewContainer.CreateIllustratorPageAsync(id);
+            if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer)
+                await viewContainer.CreateUserPageAsync(id);
         }
     }
 

@@ -43,40 +43,40 @@
                         <MenuItem
                             Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
                             Header="{Binding IdText, StringFormat='ID: {0}'}"
-                            Icon="{markup:SymbolIcon Symbol=Guest}"
+                            Icon="{markup:SymbolIcon Guest}"
                             Tag="{Binding IdText}" />
                         <MenuItem
                             Click="OpenMyPage_OnClick"
                             Header="{I18N {x:Static pixeval:MainPageResources.OpenMyPageItemText}}"
-                            Icon="{markup:SymbolIcon Symbol=Open}" />
+                            Icon="{markup:SymbolIcon Open}" />
                         <MenuItem
                             Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                             Header="{I18N {x:Static pixeval:MainPageResources.OpenMyPageInBrowserItemText}}"
-                            Icon="{markup:SymbolIcon Symbol=GlobeArrowUp}"
+                            Icon="{markup:SymbolIcon GlobeArrowUp}"
                             Tag="{Binding Url}" />
                         <MenuItem Header="-" />
                         <!--<MenuItem
                             Command="{Binding ToggleRestrictedModeCommand, Mode=OneTime}"
                             Header="{I18N {x:Static pixeval:MainPageResources.RestrictedModeItemText}}"
-                            Icon="{markup:SymbolIcon Symbol=PersonProhibited}"
+                            Icon="{markup:SymbolIcon PersonProhibited}"
                             IsChecked="{Binding RestrictedCache}"
                             ToggleType="CheckBox" />-->
                         <MenuItem
                             Command="{Binding ToggleAiShowCommand, Mode=OneTime}"
                             Header="{I18N {x:Static pixeval:MainPageResources.AiShowItemText}}"
-                            Icon="{markup:SymbolIcon Symbol=Bot}"
+                            Icon="{markup:SymbolIcon Bot}"
                             IsChecked="{Binding AiShowCache}"
                             ToggleType="CheckBox" />
                         <MenuItem
                             Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                             Header="{I18N {x:Static pixeval:MainPageResources.MoreViewingSettingsItemText}}"
-                            Icon="{markup:SymbolIcon Symbol=MoreHorizontal}"
+                            Icon="{markup:SymbolIcon MoreHorizontal}"
                             Tag="https://www.pixiv.net/settings/viewing" />
                         <MenuItem Header="-" />
                         <MenuItem
                             Click="Logout_OnClicked"
                             Header="{I18N {x:Static pixeval:MainPageResources.LogoutItemText}}"
-                            Icon="{markup:SymbolIcon Symbol=SignOut}" />
+                            Icon="{markup:SymbolIcon SignOut}" />
                     </MenuFlyout>
                 </Button.Flyout>
             </Button>

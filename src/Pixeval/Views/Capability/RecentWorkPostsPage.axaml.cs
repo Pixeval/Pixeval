@@ -1,18 +1,17 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using FluentAvalonia.UI.Controls;
 using Mako.Global.Enum;
 using Pixeval.Controls;
 
 namespace Pixeval.Views.Capability;
 
-public partial class RecentWorkPostsPage : UserControl
+public partial class RecentWorkPostsPage : ContentPage
 {
     public RecentWorkPostsPage()
     {
         InitializeComponent();
-        AddHandler(Frame.NavigatedToEvent, (sender, e) => ChangeSource());
+        ChangeSource();
     }
 
     private void WorkTypeComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e)

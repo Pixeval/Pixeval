@@ -10,7 +10,7 @@ using Pixeval.Views.Capability;
 
 namespace Pixeval.Views.Login;
 
-public partial class LoginPage : UserControl
+public partial class LoginPage : ContentPage
 {
     public LoginPage()
     {
@@ -79,6 +79,6 @@ public partial class LoginPage : UserControl
     public void LoginNavigate()
     {
         var viewContainer = TopLevel.GetTopLevel(this)?.ViewContainer;
-        viewContainer?.NavigateTo<RecommendWorksPage>(true);
+        viewContainer?.NavigateTo(new RecommendWorksPage(), true);
     }
 }

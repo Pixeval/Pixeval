@@ -80,7 +80,7 @@
                             <controls:SettingsExpander
                                 Description="{Binding Author}"
                                 Header="{Binding Name}"
-                                HeaderIcon="{markup:SymbolIcon Symbol=Box}">
+                                HeaderIcon="{markup:SymbolIcon Box}">
                                 <Button
                                     Width="40"
                                     Height="35"
@@ -89,7 +89,7 @@
                                     Background="Transparent"
                                     BorderThickness="0"
                                     Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
-                                    Content="{markup:SymbolIcon Symbol=Open,
+                                    Content="{markup:SymbolIcon Open,
                                                                 FontSize=14}"
                                     Tag="{Binding Url}" />
                                 <controls:SettingsExpander.Items>

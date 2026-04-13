@@ -5,7 +5,7 @@ using Avalonia.Controls;
 
 namespace Pixeval.Views;
 
-public partial class HelpPage : UserControl
+public partial class HelpPage : ContentPage
 {
     public HelpPage()
     {

@@ -5,7 +5,6 @@
     <Styles.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <MergeResourceInclude Source="/UI/Themes/FrameStyles.axaml" />
                 <MergeResourceInclude Source="/UI/Themes/TextBlockStyles.axaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

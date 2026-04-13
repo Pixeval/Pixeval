@@ -32,7 +32,7 @@ public partial class SettingsMainView : ContentPage
     private async void PerformSignOutButton_OnClicked(object sender, RoutedEventArgs e)
     {
         // TODO 切换账号
-        TopLevel.GetTopLevel(this)?.ViewContainer?.NavigateTo<LoginPage>();
+        TopLevel.GetTopLevel(this)?.ViewContainer?.NavigateTo(new LoginPage());
     }
 
     private async void ResetDefaultSettings_OnClicked(object sender, RoutedEventArgs e)

@@ -4,12 +4,12 @@ using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Settings;
 
-public partial class SettingsPage : UserControl
+public partial class SettingsPage : NavigationPage
 {
     public SettingsPage()
     {
         InitializeComponent();
-        _ = NavigationPage.PushAsync(new SettingsMainView());
+        _ = PushAsync(new SettingsMainView());
     }
 
     /// <inheritdoc />

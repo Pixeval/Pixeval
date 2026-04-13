@@ -12,17 +12,15 @@ using Misaki;
 using Pixeval.Controls;
 using Pixeval.Models.Database.Managers;
 using Pixeval.Utilities;
-using Frame = FluentAvalonia.UI.Controls.Frame;
 
 namespace Pixeval.Views;
 
-public partial class BrowsingHistoryPage : UserControl
+public partial class BrowsingHistoryPage : ContentPage
 {
     public BrowsingHistoryPage()
     {
         InitializeComponent();
-
-        AddHandler(Frame.NavigatedToEvent, (_, _) => ChangeSource());
+        ChangeSource();
     }
 
     private void SimpleWorkTypeComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e) => ChangeSource();

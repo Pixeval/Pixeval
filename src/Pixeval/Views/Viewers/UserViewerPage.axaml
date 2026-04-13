@@ -1,0 +1,129 @@
+<ContentPage
+    x:Class="Pixeval.Views.Viewers.UserViewerPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
+    xmlns:utilities="using:Pixeval.Utilities"
+    xmlns:viewers="using:Pixeval.ViewModels.Viewers"
+    d:DesignHeight="600"
+    d:DesignWidth="800"
+    x:DataType="{x:Type viewers:UserViewerPageViewModel}"
+    Header="{Binding Name}"
+    mc:Ignorable="d">
+    <DockPanel>
+        <!--  顶部信息区域  -->
+        <Border DockPanel.Dock="Top">
+            <Border.Background>
+                <ImageBrush Source="{Binding BackgroundSource}" Stretch="UniformToFill" />
+            </Border.Background>
+            <Grid Background="{DynamicResource AcrylicInAppFillColorDefaultBrush}" RowDefinitions="Auto,Auto">
+
+                <!--  用户信息  -->
+                <StackPanel
+                    Grid.Row="0"
+                    Margin="40,20"
+                    Orientation="Horizontal"
+                    Spacing="30">
+                    <!--  头像  -->
+                    <Border
+                        Width="80"
+                        Height="80"
+                        ClipToBounds="True"
+                        CornerRadius="40">
+                        <Image Source="{Binding AvatarSource}" Stretch="UniformToFill" />
+                    </Border>
+
+                    <!--  用户名、ID、简介  -->
+                    <StackPanel
+                        MaxWidth="400"
+                        VerticalAlignment="Center"
+                        Spacing="6">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="{Binding Name}" Theme="{StaticResource TitleTextBlockStyle}" />
+                            <controls:PixevalBadge IsVisible="{Binding IsPremium}" Mode="Premium" />
+                        </StackPanel>
+                        <TextBlock
+                            FontSize="13"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Text="{Binding Id}" />
+                        <ScrollViewer MaxHeight="60">
+                            <controls:MarkdownBox MaxHeight="60" Markdown="{Binding Description}" />
+                        </ScrollViewer>
+                    </StackPanel>
+                </StackPanel>
+
+                <!--  指标 + 操作栏  -->
+                <DockPanel Grid.Row="1" Margin="20,0,20,8">
+                    <!--  操作按钮（右侧）  -->
+                    <CommandBar DefaultLabelPosition="Right" DockPanel.Dock="Right">
+                        <CommandBarButton
+                            Command="{Binding FollowCommand}"
+                            Icon="{markup:SymbolIcon PersonAdd}"
+                            IsVisible="{Binding !IsFollowed}"
+                            Label="{I18N {x:Static pixeval:IllustratorViewerPageResources.Follow}}" />
+                        <CommandBarButton
+                            Command="{Binding FollowPrivatelyCommand}"
+                            Icon="{markup:SymbolIcon PersonLock}"
+                            IsVisible="{Binding !IsFollowed}"
+                            Label="{I18N {x:Static pixeval:IllustratorViewerPageResources.PrivateFollow}}" />
+                        <CommandBarButton
+                            Command="{Binding UnfollowCommand}"
+                            Icon="{markup:SymbolIcon PersonDelete}"
+                            IsVisible="{Binding IsFollowed}"
+                            Label="{I18N {x:Static pixeval:IllustratorViewerPageResources.Unfollow}}" />
+                        <CommandBarSeparator />
+                        <CommandBarButton
+                            Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
+                            Icon="{markup:SymbolIcon Link}"
+                            Label="{I18N {x:Static pixeval:EntryItemResources.GenerateLink}}"
+                            Tag="{Binding AppUri}" />
+                        <CommandBarButton
+                            Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
+                            Icon="{markup:SymbolIcon LinkMultiple}"
+                            Label="{I18N {x:Static pixeval:EntryItemResources.GenerateWebLink}}"
+                            Tag="{Binding WebsiteUri}" />
+                        <CommandBarButton
+                            Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
+                            Icon="{markup:SymbolIcon GlobeArrowUp}"
+                            Label="{I18N {x:Static pixeval:EntryItemResources.OpenInWebBrowser}}"
+                            Tag="{Binding WebsiteUri}" />
+                    </CommandBar>
+
+                    <!--  指标数据（左侧）  -->
+                    <StackPanel
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal"
+                        Spacing="16">
+                        <controls:IconText
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Symbol="PersonHeart"
+                            Text="{Binding Metrics.TotalFollowUsers}" />
+                        <controls:IconText
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Symbol="People"
+                            Text="{Binding Metrics.TotalMyPixivUsers}" />
+                        <controls:IconText
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Symbol="Image"
+                            Text="{Binding Metrics.TotalIllustrations}" />
+                        <controls:IconText
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Symbol="ImageMultiple"
+                            Text="{Binding Metrics.TotalManga}" />
+                        <controls:IconText
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Symbol="BookOpen"
+                            Text="{Binding Metrics.TotalNovelSeries}" />
+                    </StackPanel>
+                </DockPanel>
+            </Grid>
+        </Border>
+
+        <!--  标签页内容区域  -->
+        <TabbedPage Pages="{Binding TabPages}" />
+    </DockPanel>
+</ContentPage>

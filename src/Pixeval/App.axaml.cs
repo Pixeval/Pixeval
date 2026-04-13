@@ -94,11 +94,11 @@ public class App : Application
             AppViewModel.MakoClient.SetToken(token);
             if (await AppViewModel.MakoClient.IdentifyTokenAsync())
             {
-                viewContainer.NavigateTo<RecommendWorksPage>();
+                viewContainer.NavigateTo(new RecommendWorksPage());
                 return;
             }
         }
-        viewContainer.NavigateTo<LoginPage>();
+        viewContainer.NavigateTo(new LoginPage());
     }
 
     private void RegisterUnhandledExceptionHandler()

@@ -6,32 +6,30 @@ using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.Controls;
 using Pixeval.Utilities;
-using Frame = FluentAvalonia.UI.Controls.Frame;
 
 namespace Pixeval.Views.Capability;
 
-public partial class BookmarksPage : UserControl
+public partial class BookmarksPage : ContentPage
 {
-    private long _userId;
+    private readonly long _userId;
     private bool _suppressChangeSource;
 
-    public static IReadOnlyList<BookmarkTag> DefaultTags { get; }= [AllBookmarkTag.Instance];
+    public static IReadOnlyList<BookmarkTag> DefaultTags { get; } = [AllBookmarkTag.Instance];
 
-    public BookmarksPage()
+    public BookmarksPage() : this(App.AppViewModel.PixivUid)
+    {
+    }
+
+    public BookmarksPage(long id)
     {
         InitializeComponent();
 
-        AddHandler(Frame.NavigatedToEvent, (sender, e) =>
-        {
-            if (e.Parameter is not long uid)
-                uid = App.AppViewModel.PixivUid;
-            else if (uid != App.AppViewModel.PixivUid)
-                PrivacyPolicyComboBox.IsEnabled =  PrivacyPolicyComboBox.IsVisible = false;
+        _userId = id;
+        if (id != App.AppViewModel.PixivUid)
+            PrivacyPolicyComboBox.IsEnabled = PrivacyPolicyComboBox.IsVisible = false;
 
-            _userId = uid;
-            FetchTags();
-            ChangeSource();
-        });
+        FetchTags();
+        ChangeSource();
     }
 
     private void WorkTypeComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e)

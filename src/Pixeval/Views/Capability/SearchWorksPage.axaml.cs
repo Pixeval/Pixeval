@@ -6,25 +6,23 @@ using Mako.Engine;
 using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.Controls;
-using Frame = FluentAvalonia.UI.Controls.Frame;
 
 namespace Pixeval.Views.Capability;
 
-public partial class SearchWorksPage : UserControl
+public partial class SearchWorksPage : ContentPage
 {
-    private string? _searchText;
+    private readonly string? _searchText;
 
-    public SearchWorksPage()
+    public SearchWorksPage() : this(default, null)
+    {
+    }
+
+    public SearchWorksPage(SimpleWorkType type, string? s)
     {
         InitializeComponent();
-        AddHandler(Frame.NavigatedToEvent, (sender, e) =>
-        {
-            if (e.Parameter is not (SimpleWorkType type, string s))
-                return;
-            _searchText = s;
-            SimpleWorkTypeComboBox.SelectedIndex = (int) type;
-            ChangeSource();
-        });
+        _searchText = s;
+        SimpleWorkTypeComboBox.SelectedIndex = (int) type;
+        ChangeSource();
     }
 
     private void WorkTypeComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e)

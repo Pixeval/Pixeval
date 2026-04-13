@@ -4,14 +4,13 @@ using Avalonia.Controls;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using FluentAvalonia.UI.Controls;
 using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Capability;
 
-public partial class DownloadPage : UserControl
+public partial class DownloadPage : ContentPage
 {
     private DownloadViewViewModel? ViewModel => DataContext as DownloadViewViewModel;
 
@@ -34,8 +33,7 @@ public partial class DownloadPage : UserControl
     {
         InitializeComponent();
         DataContext = new DownloadViewViewModel(App.AppViewModel.DownloadManager.QueuedTasks);
-
-        AddHandler(Frame.NavigatedToEvent, (sender, e) => ViewModel?.ResetFilter());
+        ViewModel?.ResetFilter();
     }
 
     private void ModeFilterComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)

@@ -1,12 +1,12 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
-using System;
 using Avalonia.Controls;
-using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
+using Mako.Model;
 using Misaki;
 using Pixeval.AppManagement;
+using Pixeval.Utilities;
 
 namespace Pixeval.Views.Viewers;
 
@@ -14,9 +14,12 @@ public partial class WorkInfoPage : ContentPage
 {
     public WorkInfoPage() => InitializeComponent();
 
-    private void AuthorButton_OnClick(object? sender, RoutedEventArgs e)
+    private async void AuthorButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        // TODO: Navigate to user page
+        if (sender is not Control { Tag: IIdEntry { Id: var id } })
+            return;
+        if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer)
+            await viewContainer.CreateUserPageAsync(id);
     }
 
     private void WorkTagButton_OnClicked(object? sender, RoutedEventArgs e)

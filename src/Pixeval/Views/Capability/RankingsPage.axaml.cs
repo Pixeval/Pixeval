@@ -1,7 +1,6 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using FluentAvalonia.UI.Controls;
 using Mako;
 using Mako.Global.Enum;
 using Pixeval.Controls;
@@ -9,18 +8,15 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Views.Capability;
 
-public partial class RankingsPage : UserControl
+public partial class RankingsPage : ContentPage
 {
     private bool _suppressChangeSource;
 
     public RankingsPage()
     {
         InitializeComponent();
-        AddHandler(Frame.NavigatedToEvent, (sender, e) =>
-        {
-            ChangeEnumSource();
-            ChangeSource();
-        });
+        ChangeEnumSource();
+        ChangeSource();
     }
 
     public static DateTime MaxDate => MakoClient.RankingMaxDate.LocalDateTime;

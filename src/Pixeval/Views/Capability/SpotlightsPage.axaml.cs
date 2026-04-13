@@ -1,15 +1,14 @@
 using Avalonia.Controls;
-using FluentAvalonia.UI.Controls;
 using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Capability;
 
-public partial class SpotlightsPage : UserControl
+public partial class SpotlightsPage : ContentPage
 {
     public SpotlightsPage()
     {
         InitializeComponent();
-        AddHandler(Frame.NavigatedToEvent, (sender, e) => ChangeSource());
+        ChangeSource();
     }
 
     private void ChangeSource()

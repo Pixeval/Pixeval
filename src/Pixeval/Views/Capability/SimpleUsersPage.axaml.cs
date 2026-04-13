@@ -1,21 +1,22 @@
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using FluentIcons.Avalonia;
+using FluentIcons.Common;
 using Mako;
 using Mako.Engine;
 using Mako.Model;
+using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
-using Frame = FluentAvalonia.UI.Controls.Frame;
 
 namespace Pixeval.Views.Capability;
 
-public abstract partial class SimpleUsersPage : UserControl
+public abstract partial class SimpleUsersPage : ContentPage
 {
     public SimpleUsersPage()
     {
         InitializeComponent();
-        AddHandler(Frame.NavigatedToEvent, (sender, e) => ChangeSource());
     }
 
     private void UserContainer_OnRefreshRequested(object? sender, RoutedEventArgs e)
@@ -23,7 +24,7 @@ public abstract partial class SimpleUsersPage : UserControl
         ChangeSource();
     }
 
-    private void ChangeSource()
+    protected void ChangeSource()
     {
         (UserContainer.UserView.DataContext as UserViewViewModel)?.ResetEngine(GetFetchEngine(App.AppViewModel.MakoClient), (user, _) => new(user));
     }
@@ -33,6 +34,13 @@ public abstract partial class SimpleUsersPage : UserControl
 
 public class RecommendUsersPage : SimpleUsersPage
 {
+    public RecommendUsersPage()
+    {
+        Header = I18NManager.GetResource(MainPageResources.RecommendUsersTabContent);
+        Icon = new SymbolIcon { Symbol = Symbol.PeopleCommunity, FontSize = 16, IconVariant = IconVariant.Color };
+        ChangeSource();
+    }
+
     protected override IFetchEngine<User> GetFetchEngine(MakoClient makoClient)
     {
         return makoClient.RecommendedUsers(PixevalSettings.TargetFilter);
@@ -41,15 +49,18 @@ public class RecommendUsersPage : SimpleUsersPage
 
 public class SearchUsersPage : SimpleUsersPage
 {
-    private string? _searchText;
+    private readonly string? _searchText;
 
-    public SearchUsersPage()
+    public SearchUsersPage() : this(null)
     {
-        AddHandler(Frame.NavigatedToEvent, (sender, e) =>
-        {
-            if (e.Parameter is string s)
-                _searchText = s;
-        });
+    }
+
+    public SearchUsersPage(string? searchText)
+    {
+        _searchText = searchText;
+        Header = I18NManager.GetResource(MainPageResources.SearchUsersResult + " " + _searchText);
+        Icon = new SymbolIcon { Symbol = Symbol.Person, FontSize = 16, IconVariant = IconVariant.Color };
+        ChangeSource();
     }
 
     protected override IFetchEngine<User> GetFetchEngine(MakoClient makoClient)
@@ -64,17 +75,18 @@ public class SearchUsersPage : SimpleUsersPage
 
 public class MyPixivUsersPage : SimpleUsersPage
 {
-    private long _userId;
+    private readonly long _userId;
 
-    public MyPixivUsersPage()
+    public MyPixivUsersPage() : this(App.AppViewModel.PixivUid)
     {
-        AddHandler(Frame.NavigatedToEvent, (sender, e) =>
-        {
-            if (e.Parameter is not long uid)
-                uid = App.AppViewModel.PixivUid;
+    }
 
-            _userId = uid;
-        });
+    public MyPixivUsersPage(long id)
+    {
+        _userId = id;
+        Header = I18NManager.GetResource(EntryViewerPageResources.MyPixivUserNavigationViewItemContent);
+        Icon = new SymbolIcon { Symbol = Symbol.People, FontSize = 16, IconVariant = IconVariant.Color };
+        ChangeSource();
     }
 
     /// <inheritdoc />
@@ -86,17 +98,18 @@ public class MyPixivUsersPage : SimpleUsersPage
 
 public class RelatedUsersPage : SimpleUsersPage
 {
-    private long _userId;
+    private readonly long _userId;
 
-    public RelatedUsersPage()
+    public RelatedUsersPage() : this(App.AppViewModel.PixivUid)
     {
-        AddHandler(Frame.NavigatedToEvent, (sender, e) =>
-        {
-            if (e.Parameter is not long uid)
-                uid = App.AppViewModel.PixivUid;
+    }
 
-            _userId = uid;
-        });
+    public RelatedUsersPage(long id)
+    {
+        _userId = id;
+        Header = I18NManager.GetResource(EntryViewerPageResources.RelatedUserNavigationViewItemContent);
+        Icon = new SymbolIcon { Symbol = Symbol.PeopleCommunity, FontSize = 16, IconVariant = IconVariant.Color };
+        ChangeSource();
     }
 
     /// <inheritdoc />

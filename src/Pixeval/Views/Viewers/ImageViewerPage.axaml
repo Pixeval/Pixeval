@@ -16,7 +16,9 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     x:DataType="{x:Type viewers:ImageViewerPageViewModel}"
+    DataContext="{x:Null}"
     mc:Ignorable="d">
+    <!--  DataContext设为null防止父DataContext传入导致bug  -->
     <Grid>
         <!--  图片查看器（缩放/平移）  -->
         <controls:ScrollView

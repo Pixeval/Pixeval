@@ -1,4 +1,4 @@
-<UserControl
+<ContentPage
     x:Class="Pixeval.Views.Viewers.IllustrationViewerPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -18,14 +18,15 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     x:DataType="{x:Type viewers:IllustrationViewerPageViewModel}"
+    Header="{Binding CurrentIllustration.Entry.Title}"
     mc:Ignorable="d">
 
-    <UserControl.KeyBindings>
+    <ContentPage.KeyBindings>
         <KeyBinding Command="{Binding PrevCommand}" Gesture="Left" />
         <KeyBinding Command="{Binding NextCommand}" Gesture="Right" />
         <KeyBinding Command="{Binding PrevIllustrationCommand}" Gesture="Up" />
         <KeyBinding Command="{Binding NextIllustrationCommand}" Gesture="Down" />
-    </UserControl.KeyBindings>
+    </ContentPage.KeyBindings>
 
     <Grid>
         <Grid RowDefinitions="*,Auto,Auto">
@@ -196,11 +197,11 @@
                         Spacing="20">
                         <CommandBar DefaultLabelPosition="Collapsed">
                             <CommandBarToggleButton
-                                Icon="{markup:SymbolIcon Symbol=Info}"
+                                Icon="{markup:SymbolIcon Info}"
                                 IsChecked="{Binding #EntryViewerSplitView.IsPaneOpen}"
                                 Label="{I18N {x:Static pixeval:EntryViewerPageResources.InfoAndComments}}" />
                             <CommandBarToggleButton
-                                Icon="{markup:SymbolIcon Symbol=PanelBottomExpand}"
+                                Icon="{markup:SymbolIcon PanelBottomExpand}"
                                 IsChecked="{Binding IsBottomListOpen}"
                                 Label="{I18N {x:Static pixeval:MiscResources.OpenBottomList}}" />
                         </CommandBar>
@@ -271,4 +272,4 @@
             </Border>
         </Grid>
     </Grid>
-</UserControl>
+</ContentPage>

@@ -1,16 +1,12 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Interactivity;
-using FluentAvalonia.UI.Controls;
-using FluentAvalonia.UI.Navigation;
 using Pixeval.Utilities;
-using Pixeval.Views.Capability;
 using Pixeval.Views.Login;
+using Pixeval.Views.Viewers;
 using Tabalonia.Controls;
 using Tabalonia.InterTab;
-using NavigationEventArgs = FluentAvalonia.UI.Navigation.NavigationEventArgs;
 
 namespace Pixeval.Views.ViewContainers;
 
@@ -38,31 +34,14 @@ public partial class TabViewContainer : ViewContainerBase
     }
 
     /// <inheritdoc />
-    public override void NavigateTo<TParameter>(
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type pageType,
-        object? icon,
-        string header,
-        TParameter parameter,
+    public override void NavigateTo(
+        Page page,
         bool removeCurrentPage = false)
     {
-        var page = (Control) Activator.CreateInstance(pageType)!;
-
-        var navEa = new NavigationEventArgs(
-            page,
-            NavigationMode.New,
-            null,
-            parameter,
-            pageType)
-        {
-            RoutedEvent = Frame.NavigatedToEvent
-        };
-
-        page.RaiseEvent(navEa);
-
         var dragTabItem = new DragTabItem
         {
-            Icon = icon,
-            Header = header,
+            Icon = page.Icon,
+            Header = page.Header,
             Content = page
         };
 
@@ -101,17 +80,17 @@ public partial class TabViewContainer : ViewContainerBase
 
         // 默认参数是自己的Uid，无需指定
 #pragma warning disable IL2072 // Target parameter argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method. The return value of the source method does not have matching annotations.
-        this.NavigateTo(type);
+        NavigateTo((Page) Activator.CreateInstance(type)!);
 #pragma warning restore IL2072
     }
 
-    private void OpenMyPage_OnClick(object? sender, RoutedEventArgs e)
+    private async void OpenMyPage_OnClick(object? sender, RoutedEventArgs e)
     {
-        this.NavigateTo<UserWorkPostsPage>();
+        await this.CreateUserPageAsync(App.AppViewModel.PixivUid);
     }
 
     private void Logout_OnClicked(object? sender, RoutedEventArgs e)
     {
-        TopLevel.GetTopLevel(this)?.ViewContainer?.NavigateTo<LoginPage>();
+        TopLevel.GetTopLevel(this)?.ViewContainer?.NavigateTo(new LoginPage());
     }
 }    

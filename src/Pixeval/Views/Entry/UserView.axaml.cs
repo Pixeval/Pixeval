@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Pixeval.Utilities;
 using Pixeval.ViewModels;
+using Pixeval.Views.Viewers;
 using UserItemViewModel = Pixeval.ViewModels.UserItemViewModel;
 
 namespace Pixeval.Views.Entry;
@@ -23,7 +25,8 @@ public partial class UserView : UserControl, IStructuralDisposalCompleter
     {
         if (sender is not Control { DataContext: UserItemViewModel vm })
             return;
-        // await this.CreateUserPageAsync(vm.Entry.Id);
+        if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer)
+            await viewContainer.CreateUserPageAsync(vm.UserId);
     }
 
     public void CompleteDisposal()

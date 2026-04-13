@@ -1,5 +1,3 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Interactivity;
@@ -25,16 +23,9 @@ public partial class SingleViewContainer : ViewContainerBase
     }
 
     /// <inheritdoc />
-    public override void NavigateTo<TParameter>(
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type pageType,
-        object? icon,
-        string header,
-        TParameter parameter,
-        bool removeCurrentPage = false)
+    public override async void NavigateTo(Page page, bool removeCurrentPage = false)
     {
-        _ = Frame.Navigate(pageType, parameter);
-        if (removeCurrentPage)
-            if (Frame.BackStack.Count > 0)
-                Frame.BackStack.RemoveAt(0);
+        await Frame.PopAsync();
+        await Frame.PushAsync(page);
     }
 }

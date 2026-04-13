@@ -20,7 +20,7 @@
                 <CommandBarButton
                     x:Name="RefreshButton"
                     Click="RefreshButton_OnClick"
-                    Icon="{markup:SymbolIcon Symbol=ArrowClockwise}" />
+                    Icon="{markup:SymbolIcon ArrowClockwise}" />
             </CommandBar>
 
             <StackPanel

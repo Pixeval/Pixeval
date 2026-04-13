@@ -1,10 +1,8 @@
-<UserControl
+<ContentPage
     x:Class="Pixeval.Views.Capability.DownloadPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:local="using:Pixeval.Views.Capability"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -14,6 +12,10 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     x:DataType="{x:Type viewModels:DownloadViewViewModel}"
+    Header="{I18N {x:Static pixeval:MainPageResources.DownloadListTabContent}}"
+    Icon="{markup:SymbolIcon ArrowSquareDown,
+                             FontSize=16,
+                             IconVariant=Color}"
     mc:Ignorable="d">
     <DockPanel>
         <DockPanel DockPanel.Dock="Top" LastChildFill="True">
@@ -75,4 +77,4 @@
 
         <views:DownloadView x:Name="DownloadView" />
     </DockPanel>
-</UserControl>
+</ContentPage>

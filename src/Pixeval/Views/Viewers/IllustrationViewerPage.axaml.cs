@@ -6,7 +6,6 @@ using Avalonia.Controls;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using FluentAvalonia.UI.Controls;
 using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.ViewModels.Viewers;
@@ -14,21 +13,20 @@ using Pixeval.Views.Work;
 
 namespace Pixeval.Views.Viewers;
 
-public partial class IllustrationViewerPage : UserControl
+public partial class IllustrationViewerPage : ContentPage
 {
     private IllustrationViewerPageViewModel ViewModel => (IllustrationViewerPageViewModel) DataContext!;
 
     public static readonly FuncValueConverter<int, string> PlusOneConverter = new(i => (i + 1).ToString());
 
-    public IllustrationViewerPage()
+    public IllustrationViewerPage() : this(null)
     {
-        InitializeComponent();
+    }
 
-        AddHandler(Frame.NavigatedToEvent, (_, e) =>
-        {
-            if (e.Parameter is IllustrationViewerPageViewModel viewModel)
-                DataContext = viewModel;
-        });
+    public IllustrationViewerPage(IllustrationViewerPageViewModel? viewModel)
+    {
+        DataContext = viewModel;
+        InitializeComponent();
     }
 
     private void PrevButton_OnClick(object? sender, RoutedEventArgs e)

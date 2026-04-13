@@ -101,7 +101,7 @@ public static class IllustrationViewerHelper
 
     private static void CreateIllustrationPage(ViewContainerBase control, IArtworkInfo illustration, IllustrationViewerPageViewModel param)
     {
-        control.NavigateTo<IllustrationViewerPage, IllustrationViewerPageViewModel>(null, illustration.Title, param);
+        control.NavigateTo(new IllustrationViewerPage(param));
     }
 
     public static async Task<IArtworkInfo?> TryGetIArtworkInfoAsync(this string id, string platform)

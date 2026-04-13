@@ -1,30 +1,27 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using FluentAvalonia.UI.Controls;
 using Mako.Global.Enum;
 using Pixeval.Controls;
 using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Capability;
 
-public partial class FollowingsPage : UserControl
+public partial class FollowingsPage : ContentPage
 {
-    private long _userId;
+    private readonly long _userId;
 
-    public FollowingsPage()
+    public FollowingsPage() : this(App.AppViewModel.PixivUid)
+    {
+    }
+
+    public FollowingsPage(long id)
     {
         InitializeComponent();
-        AddHandler(Frame.NavigatedToEvent, (sender, e) =>
-        {
-            if (e.Parameter is not long uid)
-                uid = App.AppViewModel.PixivUid;
-            else if (uid != App.AppViewModel.PixivUid)
-                PrivacyPolicyComboBox.IsEnabled = PrivacyPolicyComboBox.IsVisible = false;
-
-            _userId = uid;
-            ChangeSource();
-        });
+        _userId = id;
+        if (id != App.AppViewModel.PixivUid)
+            PrivacyPolicyComboBox.IsEnabled = PrivacyPolicyComboBox.IsVisible = false;
+        ChangeSource();
     }
 
     private void WorkTypeComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e)
