@@ -13,7 +13,6 @@ using Pixeval.ViewModels;
 using Pixeval.Views.Capability;
 using Pixeval.Views.Login;
 using Pixeval.Views.ViewContainers;
-using Pixeval.Views.Viewers;
 
 namespace Pixeval;
 

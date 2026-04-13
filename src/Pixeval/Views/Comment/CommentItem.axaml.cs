@@ -28,7 +28,6 @@ public partial class CommentItem : UserControl
             return;
         if (RequireEntryType is { } requireEntryType)
             _ = viewModel.LoadRepliesAsync(requireEntryType());
-        _ = viewModel.LoadAvatarSource();
         if (viewModel.IsStamp)
             StickerImage.Source = await CacheHelper.GetBitmapFromCacheAsync(viewModel.StampSource);
     }

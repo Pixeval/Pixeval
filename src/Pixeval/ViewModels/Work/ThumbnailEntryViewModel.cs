@@ -32,7 +32,7 @@ public abstract partial class ThumbnailEntryViewModel<T>(T entry) : EntryViewMod
     /// <summary>
     /// 是否正在加载缩略图
     /// </summary>
-    protected bool LoadingThumbnail { get; set; }
+    protected bool ThumbnailLoaded { get; set; }
 
     /// <summary>
     /// 当控件需要显示图片时，调用此方法加载缩略图
@@ -43,12 +43,11 @@ public abstract partial class ThumbnailEntryViewModel<T>(T entry) : EntryViewMod
         _ = References.Add(key.GetHashCode());
         if (Thumbnail is null)
         {
-            LoadingThumbnail = true;
             Thumbnail = await CacheHelper.GetBitmapFromCacheAsync(
                 ThumbnailUrl,
                 cancellationToken: _loadingThumbnailCts.Token);
 
-            LoadingThumbnail = false;
+            ThumbnailLoaded = true;
         }
 
         return true;
@@ -62,10 +61,10 @@ public abstract partial class ThumbnailEntryViewModel<T>(T entry) : EntryViewMod
         _ = References.Remove(key.GetHashCode());
         if (References.Count is not 0)
             return;
-        if (LoadingThumbnail)
+        if (ThumbnailLoaded)
         {
             _loadingThumbnailCts.Cancel();
-            LoadingThumbnail = false;
+            ThumbnailLoaded = true;
         }
 
         Thumbnail = null;
@@ -77,6 +76,7 @@ public abstract partial class ThumbnailEntryViewModel<T>(T entry) : EntryViewMod
     public void Dispose()
     {
         GC.SuppressFinalize(this);
+        ThumbnailLoaded = false;
         _loadingThumbnailCts.Cancel();
         Thumbnail?.Dispose();
         Thumbnail = null;

@@ -7,11 +7,14 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.AnimatedImage;
+using Avalonia.Controls;
+using Avalonia.Input.Platform;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Pixeval.I18N;
 using Pixeval.Models.Database.Managers;
+using Pixeval.Utilities;
 
 namespace Pixeval.ViewModels.Viewers;
 
@@ -53,9 +56,15 @@ public partial class ImageViewerPageViewModel : ViewModelBase, IDisposable
     public partial int RotationDegree { get; set; }
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(CopyCommand))]
+    [NotifyCanExecuteChangedFor(nameof(PlayPauseCommand))]
     [NotifyCanExecuteChangedFor(nameof(RotateClockwiseCommand))]
     [NotifyCanExecuteChangedFor(nameof(RotateCounterclockwiseCommand))]
     public partial bool LoadSuccessfully { get; private set; }
+
+    private bool LoadSuccessfullyIsGif => LoadSuccessfully && IllustrationViewModel.IsPicGif;
+
+    private bool LoadSuccessfullyNotGif => LoadSuccessfully && !IllustrationViewModel.IsPicGif;
 
     /// <summary>
     /// 镜像时为-1，否则为1
@@ -93,6 +102,8 @@ public partial class ImageViewerPageViewModel : ViewModelBase, IDisposable
 
         _ = LoadThumbnailAsync();
         BrowseHistoryPersistentManager.AddHistory(IllustrationViewModel.Entry);
+        // TODO i18n:加载图片而不是解码图片
+        AdvancePhase(LoadingPhase.LoadingImage);
 
         var source = await IllustrationViewModel.LoadOriginalImageAsync(
             AdvancePhase, ImageLoadingCancellationTokenSource.Token);
@@ -125,13 +136,26 @@ public partial class ImageViewerPageViewModel : ViewModelBase, IDisposable
         _ => null
     };
 
-    private bool CanExecuteWhenLoaded() => LoadSuccessfully;
-
-    [RelayCommand(CanExecute = nameof(CanExecuteWhenLoaded))]
+    [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
     private void RotateClockwise() => RotationDegree = (RotationDegree + 90) % 360;
 
-    [RelayCommand(CanExecute = nameof(CanExecuteWhenLoaded))]
+    [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
     private void RotateCounterclockwise() => RotationDegree = (RotationDegree - 90 + 360) % 360;
+
+    [RelayCommand(CanExecute = nameof(LoadSuccessfullyNotGif))]
+    private async Task CopyAsync(Control? parameter)
+    {
+        if (!IllustrationViewModel.IsPicGif)
+            return;
+        if (TopLevel.GetTopLevel(parameter) is not
+            { ViewContainer: { } viewContainer, Clipboard: { } clipboard })
+            return;
+        await clipboard.SetBitmapAsync(OriginalSource?.Frames[0]);
+        viewContainer?.ShowSuccess(I18NManager.GetResource(EntryItemResources.ImageSetToClipBoard));
+    }
+
+    [RelayCommand(CanExecute = nameof(LoadSuccessfullyIsGif))]
+    private void PlayPause() => IsPlaying = !IsPlaying;
 
     /// <inheritdoc />
     public void Dispose()
@@ -147,9 +171,9 @@ public partial class ImageViewerPageViewModel : ViewModelBase, IDisposable
     {
         ImageLoadingCancellationTokenSource.Cancel();
         ImageLoadingCancellationTokenSource.Dispose();
+        LoadSuccessfully = false;
         IllustrationViewModel.UnloadThumbnail(this);
         OriginalSource?.Dispose();
         OriginalSource = null;
-        LoadSuccessfully = false;
     }
 }

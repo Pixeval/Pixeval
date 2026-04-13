@@ -2,10 +2,13 @@
     x:Class="Pixeval.Views.Viewers.IllustrationViewerPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:common="using:FluentIcons.Common"
     xmlns:controls="using:Pixeval.Controls"
+    xmlns:converters="using:Pixeval.Views.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Views.Viewers"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
     xmlns:utilities="using:Pixeval.Utilities"
@@ -41,19 +44,34 @@
                         HorizontalAlignment="Center"
                         DefaultLabelPosition="Collapsed"
                         DockPanel.Dock="Top">
+
                         <CommandBarButton
-                            Command="{Binding CurrentImage.RotateCounterclockwiseCommand}"
-                            Icon="{markup:SymbolIcon ArrowRotateCounterclockwise}"
-                            Label="{I18N {x:Static pixeval:EntryViewerPageResources.RotateCounterclockwise}}" />
-                        <CommandBarToggleButton
-                            Icon="{markup:SymbolIcon FlipHorizontal}"
-                            IsChecked="{Binding CurrentImage.IsMirrored}"
-                            Label="{I18N {x:Static pixeval:EntryViewerPageResources.Mirror}}" />
+                            Command="{Binding CurrentImage.PlayPauseCommand}"
+                            CommandParameter="{Binding $self, Mode=OneTime}"
+                            Icon="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding CurrentImage.IsPlaying},
+                                                                                      Pause,
+                                                                                      Play,
+                                                                                      x:TypeArguments=common:Symbol}}"
+                            IsEnabled="{Binding CurrentImage.LoadSuccessfully}"
+                            IsVisible="{Binding CurrentIllustration.IsPicGif}"
+                            Label="{I18N {x:Static pixeval:MiscResources.Play}}" />
                         <CommandBarButton
-                            Command="{Binding CurrentImage.RotateClockwiseCommand}"
-                            Icon="{markup:SymbolIcon ArrowRotateClockwise}"
-                            Label="{I18N {x:Static pixeval:EntryViewerPageResources.RotateClockwise}}" />
+                            Command="{Binding CurrentIllustration.BookmarkCommand}"
+                            CommandParameter="{Binding $self, Mode=OneTime}"
+                            Icon="{markup1:SymbolIconEx Heart,
+                                                        IconVariant={Binding CurrentIllustration.IsBookmarkedDisplay,
+                                                                             Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
+                            IsEnabled="{Binding CurrentImage.LoadSuccessfully}"
+                            IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
+                            Label="{I18N {x:Static pixeval:EntryViewerPageResources.Copy}}" />
                         <CommandBarSeparator />
+                        <CommandBarButton
+                            Command="{Binding CurrentImage.CopyCommand}"
+                            CommandParameter="{Binding $self, Mode=OneTime}"
+                            Icon="{markup:SymbolIcon Copy}"
+                            IsEnabled="{Binding CurrentImage.LoadSuccessfully}"
+                            IsVisible="{Binding !CurrentIllustration.IsPicGif}"
+                            Label="{I18N {x:Static pixeval:EntryViewerPageResources.Copy}}" />
                         <CommandBarButton
                             Command="{Binding CurrentPage.SaveCommand}"
                             CommandParameter="{Binding $self, Mode=OneTime}"
@@ -72,12 +90,21 @@
                             Icon="{markup:SymbolIcon SaveMultiple}"
                             IsVisible="{Binding CurrentIllustration.IsPicSet}"
                             Label="{I18N {x:Static pixeval:EntryItemResources.MangaSave}}" />
+                        <CommandBarButton
+                            Command="{Binding CurrentIllustration.SaveAsCommand}"
+                            CommandParameter="{Binding $self, Mode=OneTime}"
+                            Icon="{markup:SymbolIcon SaveEdit}"
+                            IsVisible="{Binding CurrentIllustration.IsPicSet}"
+                            Label="{I18N {x:Static pixeval:EntryItemResources.MangaSaveAs}}" />
                         <CommandBarSeparator />
                         <CommandBarButton
                             x:Name="AddToBookmarkButton"
                             Click="AddToBookmarkButton_OnClick"
-                            Icon="{markup:SymbolIcon Bookmark}"
-                            Label="{I18N {x:Static pixeval:MiscResources.AddBookmark}}" />
+                            Icon="{markup1:SymbolIconEx Bookmark,
+                                                        IconVariant={Binding CurrentIllustration.IsBookmarkedDisplay,
+                                                                             Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
+                            IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
+                            Label="{I18N {x:Static pixeval:EntryItemResources.AddToBookmark}}" />
                         <CommandBarButton
                             Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
                             Icon="{markup:SymbolIcon LinkMultiple}"
@@ -90,7 +117,7 @@
                             Tag="{Binding CurrentIllustration.WebsiteUri}" />
                     </CommandBar>
 
-                    <!--  BookmarkTagSelector（参考WorkContainer，另开一行显示）  -->
+                    <!--  BookmarkTagSelector  -->
                     <work:TagSelector
                         x:Name="BookmarkTagSelector"
                         Margin="5"
@@ -103,54 +130,24 @@
                         <local:ImageViewerPage x:Name="ImageViewerPage" DataContext="{Binding CurrentImage}" />
 
                         <!--  左翻页按钮  -->
-                        <Button
-                            Width="50"
+                        <controls:PageButton
                             HorizontalAlignment="Left"
                             VerticalAlignment="Stretch"
                             Click="PrevButton_OnClick"
                             IsVisible="{Binding PrevButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                            Opacity="0"
-                            ToolTip.Tip="{Binding PrevButtonText}">
-                            <Button.Styles>
-                                <Style Selector="Button">
-                                    <Setter Property="Background" Value="Transparent" />
-                                    <Setter Property="Transitions">
-                                        <Transitions>
-                                            <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
-                                        </Transitions>
-                                    </Setter>
-                                </Style>
-                                <Style Selector="Button:pointerover">
-                                    <Setter Property="Opacity" Value="0.6" />
-                                </Style>
-                            </Button.Styles>
-                            <markup:SymbolIcon FontSize="24" Symbol="ChevronLeft" />
-                        </Button>
+                            RightTapped="PrevButton_OnRightClick"
+                            Symbol="ChevronLeft"
+                            ToolTipText="{Binding PrevButtonText}" />
 
                         <!--  右翻页按钮  -->
-                        <Button
-                            Width="50"
+                        <controls:PageButton
                             HorizontalAlignment="Right"
                             VerticalAlignment="Stretch"
                             Click="NextButton_OnClick"
                             IsVisible="{Binding NextButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                            Opacity="0"
-                            ToolTip.Tip="{Binding NextButtonText}">
-                            <Button.Styles>
-                                <Style Selector="Button">
-                                    <Setter Property="Background" Value="Transparent" />
-                                    <Setter Property="Transitions">
-                                        <Transitions>
-                                            <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
-                                        </Transitions>
-                                    </Setter>
-                                </Style>
-                                <Style Selector="Button:pointerover">
-                                    <Setter Property="Opacity" Value="0.6" />
-                                </Style>
-                            </Button.Styles>
-                            <markup:SymbolIcon FontSize="24" Symbol="ChevronRight" />
-                        </Button>
+                            RightTapped="NextButton_OnRightClick"
+                            Symbol="ChevronRight"
+                            ToolTipText="{Binding NextButtonText}" />
                     </Panel>
                 </DockPanel>
             </SplitView>
@@ -237,6 +234,18 @@
                             <Run Text="{Binding PageCount}" />
                         </TextBlock>
                         <CommandBar DefaultLabelPosition="Collapsed">
+                            <CommandBarButton
+                                Command="{Binding CurrentImage.RotateCounterclockwiseCommand}"
+                                Icon="{markup:SymbolIcon ArrowRotateCounterclockwise}"
+                                Label="{I18N {x:Static pixeval:EntryViewerPageResources.RotateCounterclockwise}}" />
+                            <CommandBarToggleButton
+                                Icon="{markup:SymbolIcon FlipHorizontal}"
+                                IsChecked="{Binding CurrentImage.IsMirrored}"
+                                Label="{I18N {x:Static pixeval:EntryViewerPageResources.Mirror}}" />
+                            <CommandBarButton
+                                Command="{Binding CurrentImage.RotateClockwiseCommand}"
+                                Icon="{markup:SymbolIcon ArrowRotateClockwise}"
+                                Label="{I18N {x:Static pixeval:EntryViewerPageResources.RotateClockwise}}" />
                             <CommandBarButton
                                 Click="ZoomOutButton_OnClick"
                                 Icon="{markup:SymbolIcon ZoomOut}"

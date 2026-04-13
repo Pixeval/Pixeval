@@ -1,0 +1,26 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animatedImage="using:Avalonia.AnimatedImage"
+    xmlns:controls="using:Pixeval.Controls">
+    <ControlTheme x:Key="{x:Type controls:AvatarImage}" TargetType="{x:Type controls:AvatarImage}">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="{x:Type controls:AvatarImage}">
+                <controls:ConstrainedBox
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    AspectRatio="1:1">
+                    <Border ClipToBounds="True" CornerRadius="1000">
+                        <animatedImage:AnimatedImage
+                            IsPlaying="{TemplateBinding IsPlaying}"
+                            Source="{TemplateBinding Source}"
+                            Stretch="{TemplateBinding Stretch}"
+                            StretchDirection="{TemplateBinding StretchDirection}" />
+                    </Border>
+                </controls:ConstrainedBox>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

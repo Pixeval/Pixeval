@@ -2,11 +2,14 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
-    xmlns:markup="using:Pixeval.Views.Markup">
-    <ControlTheme x:Key="{x:Type controls:PageButton}" TargetType="{x:Type controls:PageButton}">
-        <Setter Property="Width" Value="50" />
-        <Setter Property="VerticalAlignment" Value="Stretch" />
+    xmlns:icons="using:FluentIcons.Avalonia">
+    <ControlTheme
+        x:Key="{x:Type controls:PageButton}"
+        BasedOn="{StaticResource {x:Type Button}}"
+        TargetType="{x:Type controls:PageButton}">
+        <Setter Property="Width" Value="100" />
         <Setter Property="Opacity" Value="0" />
+        <Setter Property="FontSize" Value="48" />
         <Setter Property="Transitions">
             <Transitions>
                 <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
@@ -14,17 +17,15 @@
         </Setter>
         <Setter Property="Template">
             <ControlTemplate TargetType="{x:Type controls:PageButton}">
-                <Button
-                    x:Name="PART_Button"
-                    Width="{TemplateBinding Width}"
-                    HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                    VerticalAlignment="{TemplateBinding VerticalAlignment}"
-                    Background="Transparent"
-                    Content="{markup:SymbolIconEx Symbol={TemplateBinding Symbol},
-                                                  FontSize=24}"
+                <Border
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Background="{TemplateBinding Background}"
                     IsVisible="{TemplateBinding ToolTipText,
                                                 Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                    ToolTip.Tip="{TemplateBinding ToolTipText}" />
+                    ToolTip.Tip="{TemplateBinding ToolTipText}">
+                    <icons:SymbolIcon FontSize="{TemplateBinding FontSize}" Symbol="{TemplateBinding Symbol}" />
+                </Border>
             </ControlTemplate>
         </Setter>
         <Style Selector="^:pointerover">

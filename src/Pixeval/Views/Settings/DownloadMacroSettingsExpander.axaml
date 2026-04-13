@@ -10,6 +10,7 @@
     xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
+    xmlns:utilities="using:Pixeval.Utilities"
     d:DesignHeight="450"
     d:DesignWidth="800"
     x:DataType="{x:Type entries:DownloadMacroAppSettingsEntry}"
@@ -30,18 +31,20 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="{x:Type controls2:SymbolComboBoxItem}">
-                            <Button Click="PathMacroTokenInputBox_OnTokenClick">
-                                <TextBlock Text="{Binding Description}" ToolTip.Tip="{Binding Value}" />
-                            </Button>
+                            <Button
+                                Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
+                                Content="{Binding Description}"
+                                Tag="{Binding Description}"
+                                ToolTip.Tip="{Binding Value}" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
                 <TextBox
                     x:Name="DownloadPathMacroTextBox"
                     AcceptsReturn="False"
+                    PlaceholderText="{I18N {x:Static pixeval:SettingsPageResources.DownloadPathMacroTextBoxPlaceholderText}}"
                     Text="{Binding Value, Mode=OneTime}"
-                    TextChanged="DownloadPathMacroTextBox_OnTextChanged"
-                    PlaceholderText="{I18N {x:Static pixeval:SettingsPageResources.DownloadPathMacroTextBoxPlaceholderText}}" />
+                    TextChanged="DownloadPathMacroTextBox_OnTextChanged" />
                 <TextBlock>
                     <Run Text="{I18N {x:Static pixeval:SettingsPageResources.SinglePathBlockText}}" />
                     <Run x:Name="SinglePathBlock" />

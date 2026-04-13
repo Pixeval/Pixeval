@@ -3,9 +3,11 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ai="using:Avalonia.AnimatedImage"
+    xmlns:common="using:FluentIcons.Common"
     xmlns:controls="using:SmoothScroll.Avalonia.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
     xmlns:utilities="using:Pixeval.Utilities"
@@ -34,6 +36,7 @@
                 x:Name="ImageViewer"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
+                IsPlaying="{Binding IsPlaying}"
                 RenderTransformOrigin="50%,50%"
                 SizeChanged="ImageViewer_OnSizeChanged"
                 Source="{Binding DisplaySource}"
@@ -49,12 +52,14 @@
                 <MenuFlyout>
                     <!--  播放/暂停（仅动图可见）  -->
                     <MenuItem
+                        Command="{Binding PlayPauseCommand}"
                         Header="{I18N {x:Static pixeval:MiscResources.Play}}"
-                        Icon="{markup:SymbolIcon Pause}"
-                        IsChecked="{Binding IsPlaying, Mode=TwoWay}"
+                        Icon="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding IsPlaying},
+                                                                                  Pause,
+                                                                                  Play,
+                                                                                  x:TypeArguments=common:Symbol}}"
                         IsEnabled="{Binding LoadSuccessfully}"
-                        IsVisible="{Binding IllustrationViewModel.IsPicGif}"
-                        ToggleType="CheckBox" />
+                        IsVisible="{Binding IllustrationViewModel.IsPicGif}" />
                     <!--  收藏  -->
                     <MenuItem
                         Command="{Binding OriginalIllustrationViewModel.BookmarkCommand}"

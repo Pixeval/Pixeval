@@ -2,7 +2,6 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using Avalonia;
 using Avalonia.Controls;
 using Mako.Global.Enum;
 using Pixeval.ViewModels.Viewers;

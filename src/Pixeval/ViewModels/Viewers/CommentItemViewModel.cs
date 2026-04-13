@@ -6,13 +6,11 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.Controls;
 using Pixeval.Utilities;
-using Pixeval.Utilities.IO.Caching;
 
 namespace Pixeval.ViewModels.Viewers;
 
@@ -40,9 +38,6 @@ public partial class CommentItemViewModel(Comment comment) : ObservableObject, I
     public long Id => Comment.Id;
 
     [ObservableProperty]
-    public partial IImage? AvatarSource { get; set; }
-
-    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(RepliesCount))]
     public partial ObservableCollection<CommentItemViewModel>? Replies { get; set; }
 
@@ -60,11 +55,6 @@ public partial class CommentItemViewModel(Comment comment) : ObservableObject, I
                 }).Select(c => new CommentItemViewModel(c)).ToListAsync());
         else
             Replies = null;
-    }
-
-    public async Task LoadAvatarSource()
-    {
-        AvatarSource = await CacheHelper.GetBitmapFromCacheAsync(Comment.CommentPoster.ProfileImageUrls.Medium);
     }
 
     public void AddComment(Comment comment)

@@ -3,6 +3,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
+    xmlns:converters="using:Pixeval.Views.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -61,17 +62,16 @@
             Background="Transparent"
             BorderThickness="0"
             Click="PosterButton_OnClicked">
-            <DockPanel LastChildFill="False">
-                <Image
+            <DockPanel HorizontalSpacing="10" LastChildFill="False">
+                <controls:AvatarImage
                     Width="35"
-                    Height="35"
-                    DockPanel.Dock="Left"
-                    Source="{Binding AvatarSource}" />
-                <StackPanel Margin="10,0,0,0" Spacing="2">
+                    controls:Source.AvatarImage="{Binding Comment.CommentPoster.ProfileImageUrls.Medium}"
+                    DockPanel.Dock="Left" />
+                <StackPanel Spacing="2">
                     <TextBlock Text="{Binding Poster}" Theme="{StaticResource CaptionStrongTextBlockStyle}" />
                     <TextBlock
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="{Binding PostDate}"
+                        Text="{Binding PostDate, Converter={x:Static converters:PixevalConverters.DateTimeShortDate}}"
                         Theme="{StaticResource CaptionStrongTextBlockStyle}" />
                 </StackPanel>
             </DockPanel>

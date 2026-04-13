@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mako.Global.Enum;
 using Mako.Model;
+using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.Views.Viewers;
 
@@ -201,8 +202,8 @@ public partial class IllustrationViewerPageViewModel : ViewModelBase, IDisposabl
 
     public string? NextButtonText => NextButtonAction switch
     {
-        true => EntryViewerPageResources.NextPageOrIllustration,
-        false => EntryViewerPageResources.NextIllustration,
+        true => I18NManager.GetResource(EntryViewerPageResources.NextPageOrIllustration),
+        false => I18NManager.GetResource(EntryViewerPageResources.NextIllustration),
         _ => null
     };
 
@@ -228,8 +229,8 @@ public partial class IllustrationViewerPageViewModel : ViewModelBase, IDisposabl
 
     public string? PrevButtonText => PrevButtonAction switch
     {
-        true => EntryViewerPageResources.PrevPageOrIllustration,
-        false => EntryViewerPageResources.PrevIllustration,
+        true => I18NManager.GetResource(EntryViewerPageResources.PrevPageOrIllustration),
+        false => I18NManager.GetResource(EntryViewerPageResources.PrevIllustration),
         _ => null
     };
 

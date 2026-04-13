@@ -2,7 +2,6 @@
     x:Class="Pixeval.Views.Viewers.WorkInfoPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:animatedImage="using:Avalonia.AnimatedImage"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:Pixeval.Views.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -10,6 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:misaki="using:Misaki"
     xmlns:pixeval="using:Pixeval"
+    xmlns:utilities="using:Pixeval.Utilities"
     d:DesignHeight="600"
     d:DesignWidth="350"
     x:DataType="{x:Type misaki:IArtworkInfo}"
@@ -26,19 +26,10 @@
                 Click="AuthorButton_OnClick"
                 Tag="{Binding}">
                 <DockPanel HorizontalSpacing="12" LastChildFill="False">
-                    <animatedImage:AnimatedImage
+                    <controls:AvatarImage
                         Width="50"
-                        Height="50"
-                        controls:Source.AnimatedBitmap="{Binding Avatar, Converter={x:Static converters:PixevalConverters.ImagePickClosestConverter}}"
-                        DockPanel.Dock="Left"
-                        Stretch="UniformToFill">
-                        <animatedImage:AnimatedImage.Clip>
-                            <EllipseGeometry
-                                Center="25,25"
-                                RadiusX="25"
-                                RadiusY="25" />
-                        </animatedImage:AnimatedImage.Clip>
-                    </animatedImage:AnimatedImage>
+                        controls:Source.AvatarImage="{Binding Avatar, Converter={x:Static converters:PixevalConverters.ImagePickClosestConverter}}"
+                        DockPanel.Dock="Left" />
                     <StackPanel DockPanel.Dock="Top" Spacing="2">
                         <TextBlock
                             Text="{Binding Name}"
@@ -54,7 +45,7 @@
                                 VerticalAlignment="Center"
                                 Background="Transparent"
                                 BorderThickness="0"
-                                Click="CopyUserIdButton_OnClick"
+                                Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
                                 Tag="{Binding Id}">
                                 <markup:SymbolIcon FontSize="12" Symbol="Copy" />
                             </Button>
@@ -94,9 +85,10 @@
                     VerticalAlignment="Center"
                     Background="Transparent"
                     BorderThickness="0"
-                    Click="CopyIdButton_OnClick">
-                    <markup:SymbolIcon FontSize="12" Symbol="Copy" />
-                </Button>
+                    Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
+                    Content="{markup:SymbolIcon Copy,
+                                                FontSize=12}"
+                    Tag="{Binding Id}" />
             </StackPanel>
 
             <!--  View / Favorite counts  -->
@@ -123,11 +115,13 @@
             <!--#region Author Info-->
             <ItemsControl
                 x:Name="AuthorsRepeater"
+                IsVisible="{Binding !!Authors.Count}"
                 ItemTemplate="{StaticResource UserCardDataTemplate}"
                 ItemsPanel="{StaticResource StackLayout}"
                 ItemsSource="{Binding Authors}" />
             <ItemsControl
                 x:Name="UploadersRepeater"
+                IsVisible="{Binding !!Uploaders.Count}"
                 ItemTemplate="{StaticResource UserCardDataTemplate}"
                 ItemsPanel="{StaticResource StackLayout}"
                 ItemsSource="{Binding Uploaders}" />
@@ -164,7 +158,7 @@
                                             <Button.ContextFlyout>
                                                 <MenuFlyout>
                                                     <MenuItem
-                                                        Click="CopyTagName_OnClick"
+                                                        Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
                                                         Header="Copy Tag"
                                                         Tag="{Binding Name}">
                                                         <MenuItem.Icon>
@@ -172,7 +166,7 @@
                                                         </MenuItem.Icon>
                                                     </MenuItem>
                                                     <MenuItem
-                                                        Click="CopyTagName_OnClick"
+                                                        Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
                                                         Header="Copy Translation"
                                                         IsVisible="{Binding TranslatedName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                                                         Tag="{Binding TranslatedName}">

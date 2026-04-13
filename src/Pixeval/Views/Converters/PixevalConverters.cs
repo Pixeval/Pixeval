@@ -2,19 +2,14 @@
 // Licensed under the GPL-3.0 License.
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using AutoSettingsPage.Avalonia;
 using AutoSettingsPage.Models;
-using Avalonia.AnimatedImage;
 using Avalonia.Controls;
 using Avalonia.Data.Converters;
-using FluentAvalonia.UI.Controls;
 using FluentIcons.Common;
 using Mako.Model;
 using Misaki;
 using Pixeval.Controls;
-using Pixeval.Utilities.IO.Caching;
-using Semi.Avalonia.Tokens.Palette;
 
 namespace Pixeval.Views.Converters;
 
@@ -32,9 +27,6 @@ public static class PixevalConverters
         HeartButtonState.Checked => IconVariant.Color,
         _ => IconVariant.Regular
     });
-
-    // public static readonly FuncValueConverter<Control, ViewContainerBase> ToViewContainer = new(value => 
-    //     TopLevel.GetTopLevel(value)?.ViewContainer ?? throw new ArgumentNullException(nameof(value)));
 
     public static readonly FuncValueConverter<double, AspectRatio> ToAspectRatio = new(value => value);
 

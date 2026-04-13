@@ -10,24 +10,37 @@ namespace Pixeval.Controls;
 
 public static class Source
 {
-    public static readonly AttachedProperty<string?> AnimatedBitmapProperty =
+    public static readonly AttachedProperty<string?> AnimatedImageProperty =
         AvaloniaProperty.RegisterAttached<AnimatedImage, string?>(
-            "AnimatedBitmap",
+            "AnimatedImage",
+            typeof(Source),
+            defaultValue: null);
+
+    public static readonly AttachedProperty<string?> AvatarImageProperty =
+        AvaloniaProperty.RegisterAttached<AvatarImage, string?>(
+            "AvatarImage",
             typeof(Source),
             defaultValue: null);
 
     static Source()
     {
-        AnimatedBitmapProperty.Changed.AddClassHandler<AnimatedImage>(OnAnimatedBitmapChanged);
+        AnimatedImageProperty.Changed.AddClassHandler<AnimatedImage>(OnAnimatedImageChanged);
+        AvatarImageProperty.Changed.AddClassHandler<AvatarImage>(OnAvatarImageChanged);
     }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static string? GetAnimatedBitmap(AnimatedImage element) => element.GetValue(AnimatedBitmapProperty);
+    public static string? GetAnimatedImage(AnimatedImage element) => element.GetValue(AnimatedImageProperty);
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void SetAnimatedBitmap(AnimatedImage element, string? value) => element.SetValue(AnimatedBitmapProperty, value);
+    public static string? GetAvatarImage(AvatarImage element) => element.GetValue(AvatarImageProperty);
 
-    private static async void OnAnimatedBitmapChanged(AnimatedImage element, AvaloniaPropertyChangedEventArgs e)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static void SetAnimatedImage(AnimatedImage element, string? value) => element.SetValue(AnimatedImageProperty, value);
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static void SetAvatarImage(AvatarImage element, string? value) => element.SetValue(AvatarImageProperty, value);
+
+    private static async void OnAnimatedImageChanged(AnimatedImage element, AvaloniaPropertyChangedEventArgs e)
     {
         if (e.NewValue is not string value)
         {
@@ -37,7 +50,21 @@ public static class Source
 
         var bitmap = await CacheHelper.GetAnimatedBitmapFromCacheAsync(value);
 
-        if (element.GetValue(AnimatedBitmapProperty) == value)
+        if (element.GetValue(AnimatedImageProperty) == value)
+            element.Source = bitmap;
+    }
+
+    private static async void OnAvatarImageChanged(AvatarImage element, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.NewValue is not string value)
+        {
+            element.Source = null;
+            return;
+        }
+
+        var bitmap = await CacheHelper.GetAnimatedBitmapFromCacheAsync(value);
+
+        if (element.GetValue(AvatarImageProperty) == value)
             element.Source = bitmap;
     }
 }

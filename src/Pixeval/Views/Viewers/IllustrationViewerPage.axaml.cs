@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Data.Converters;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using FluentAvalonia.UI.Controls;
 using Pixeval.I18N;
@@ -32,28 +33,28 @@ public partial class IllustrationViewerPage : UserControl
 
     private void PrevButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        switch (ViewModel.PrevButtonAction)
-        {
-            case true:
-                ViewModel.CurrentPageIndex--;
-                break;
-            case false:
-                ViewModel.CurrentIllustrationIndex--;
-                break;
-        }
+        if (ViewModel.PrevButtonAction is true)
+            ViewModel.CurrentPageIndex--;
+        else
+            ViewModel.CurrentIllustrationIndex--;
+    }
+
+    private void PrevButton_OnRightClick(object? sender, TappedEventArgs e)
+    {
+        ViewModel.CurrentIllustrationIndex--;
     }
 
     private void NextButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        switch (ViewModel.NextButtonAction)
-        {
-            case true:
-                ViewModel.CurrentPageIndex++;
-                break;
-            case false:
-                ViewModel.CurrentIllustrationIndex++;
-                break;
-        }
+        if (ViewModel.NextButtonAction is true)
+            ViewModel.CurrentPageIndex++;
+        else
+            ViewModel.CurrentIllustrationIndex++;
+    }
+
+    private void NextButton_OnRightClick(object? sender, TappedEventArgs e)
+    {
+        ViewModel.CurrentIllustrationIndex++;
     }
 
     private async void AddToBookmarkButton_OnClick(object? sender, RoutedEventArgs e)

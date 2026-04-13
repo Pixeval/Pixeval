@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animatedImage="using:Avalonia.AnimatedImage"
     xmlns:controls="using:Tabalonia.Controls"
+    xmlns:controls1="clr-namespace:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:local="using:Pixeval.Views.ViewContainers"
@@ -36,9 +37,7 @@
                 Padding="1"
                 Background="Transparent"
                 CornerRadius="100">
-                <Border ClipToBounds="True" CornerRadius="100">
-                    <animatedImage:AnimatedImage Source="{Binding Avatar}" />
-                </Border>
+                <controls1:AvatarImage Source="{Binding Avatar}" />
                 <Button.Flyout>
                     <MenuFlyout>
                         <MenuItem

@@ -77,16 +77,6 @@ public partial class DownloadMacroSettingsExpander : SettingsExpander, IEntryCon
         }
     }
 
-    private async void PathMacroTokenInputBox_OnTokenClick(object? sender, RoutedEventArgs e)
-    {
-        if (sender is Control { DataContext: SymbolComboBoxItem vm } control
-            && TopLevel.GetTopLevel(control) is { Clipboard: { } clipboard } topLevel)
-        {
-            await clipboard.SetTextAsync(vm.Description);
-            topLevel.ViewContainer?.ShowSuccess(I18NManager.GetResource(SettingsPageResources.MacroCopiedToClipboard));
-        }
-    }
-
     private void SetExamplePaths(string text)
     {
         SinglePathBlock.Text = GetPath(_SingleImage);
