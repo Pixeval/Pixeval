@@ -58,20 +58,12 @@ public sealed class BindingDynamicResourceExtension : MarkupExtension
 /// Lightweight proxy used to resolve a key binding outside the visual tree.
 /// DataContext is manually synced from the real target element.
 /// </summary>
-internal sealed class ResourceKeyProxy : StyledElement
+internal sealed class ResourceKeyProxy(StyledElement target, AvaloniaProperty targetProperty) : StyledElement
 {
     public static readonly StyledProperty<object?> ResolvedKeyProperty =
         AvaloniaProperty.Register<ResourceKeyProxy, object?>(nameof(ResolvedKey));
 
-    private readonly StyledElement _target;
-    private readonly AvaloniaProperty _targetProperty;
     private IDisposable? _currentResourceBinding;
-
-    public ResourceKeyProxy(StyledElement target, AvaloniaProperty targetProperty)
-    {
-        _target = target;
-        _targetProperty = targetProperty;
-    }
 
     public object? ResolvedKey
     {
@@ -86,7 +78,7 @@ internal sealed class ResourceKeyProxy : StyledElement
         {
             _currentResourceBinding?.Dispose();
             _currentResourceBinding = change.NewValue is { } key
-                ? _target.Bind(_targetProperty, _target.GetResourceObservable(key).ToBinding())
+                ? target.Bind(targetProperty, target.GetResourceObservable(key).ToBinding())
                 : null;
         }
     }

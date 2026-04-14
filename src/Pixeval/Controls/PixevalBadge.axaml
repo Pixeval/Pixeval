@@ -16,7 +16,7 @@
                                 FontSize="16"
                                 FontWeight="Bold"
                                 Text="Light Theme" />
-                            <ItemsControl ItemsSource="{markup:EnumValues {x:Type local:BadgeMode}}">
+                            <ItemsControl ItemsSource="{markup:EnumValues x:TypeArguments=local:BadgeMode}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal" Spacing="10" />
@@ -42,7 +42,7 @@
                                 FontSize="16"
                                 FontWeight="Bold"
                                 Text="Dark Theme" />
-                            <ItemsControl ItemsSource="{markup:EnumValues {x:Type local:BadgeMode}}">
+                            <ItemsControl ItemsSource="{markup:EnumValues x:TypeArguments=local:BadgeMode}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal" Spacing="10" />

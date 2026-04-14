@@ -2,10 +2,9 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using System.Collections.Frozen;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -17,7 +16,6 @@ using FluentIcons.Common;
 using Pixeval.I18N;
 using Pixeval.Views;
 using Pixeval.Views.Capability;
-using Pixeval.Views.Login;
 using Pixeval.Views.Settings;
 using Pixeval.Views.ViewContainers;
 using DownloadPage = Pixeval.Views.Download.DownloadPage;
@@ -47,70 +45,26 @@ public static class AvaloniaHelper
         }
     }
 
-    extension(ViewContainerBase control)
-    {
-        public void NavigateTo<TPage>(
-            TPage page, 
-            bool removeCurrent = false) where TPage : ContentPage
-        {
-            control.NavigateTo(page, removeCurrent);
-        }
-    }
-
-    private static readonly FrozenDictionary<Type, (Symbol Icon, string Header)> _PageIconMapping = new Dictionary<Type, (Symbol Icon, string Header)>
-    {
-        [typeof(LoginPage)] = (Symbol.PersonKey, I18NManager.GetResource(MainPageResources.LoginTabContent)),
-        [typeof(RecommendWorksPage)] = (Symbol.Calendar, I18NManager.GetResource(MainPageResources.RecommendationsTabContent)),
-        [typeof(RankingsPage)] = (Symbol.ArrowTrendingLines, I18NManager.GetResource(MainPageResources.RankingsTabContent)),
-        [typeof(BookmarksPage)] = (Symbol.Library, I18NManager.GetResource(MainPageResources.BookmarksTabContent)),
-        [typeof(FollowingsPage)] = (Symbol.PersonHeart, I18NManager.GetResource(MainPageResources.FollowingsTabContent)),
-        [typeof(SpotlightsPage)] = (Symbol.SlideTextSparkle, I18NManager.GetResource(MainPageResources.SpotlightsTabContent)),
-        [typeof(RecommendUsersPage)] = (Symbol.PeopleCommunity, I18NManager.GetResource(MainPageResources.RecommendUsersTabContent)),
-        [typeof(RecentWorkPostsPage)] = (Symbol.AlertUrgent, I18NManager.GetResource(MainPageResources.RecentPostsTabContent)),
-        [typeof(NewWorksPage)] = (Symbol.ArrowSync, I18NManager.GetResource(MainPageResources.NewWorksTabContent)),
-        [typeof(SearchUsersPage)] = (Symbol.Person, I18NManager.GetResource(MainPageResources.SearchUsersResult)),
-        [typeof(SearchWorksPage)] = (Symbol.SearchSparkle, I18NManager.GetResource(MainPageResources.SearchWorksResult)),
-        [typeof(UserWorkPostsPage)] = (default, I18NManager.GetResource(MainPageResources.NewWorksTabContent)),
-        // [typeof(FeedsPage)] = (Symbol.Molecule, I18NManager.GetResource(MainPageResources.FeedTabContent)),
-        [typeof(BrowsingHistoryPage)] = (Symbol.History, I18NManager.GetResource(MainPageResources.HistoriesTabContent)),
-        [typeof(DownloadPage)] = (Symbol.ArrowSquareDown, I18NManager.GetResource(MainPageResources.DownloadListTabContent)),
-        [typeof(ExtensionsPage)] = (Symbol.PuzzlePiece, I18NManager.GetResource(MainPageResources.ExtensionsTabContent)),
-        [typeof(HelpPage)] = (Symbol.ChatBubblesQuestion, I18NManager.GetResource(MainPageResources.HelpTabContent)),
-        [typeof(SettingsPage)] = (Symbol.Settings, I18NManager.GetResource(MainPageResources.SettingsTabContent))
-    }.ToFrozenDictionary();
-
-    public static IReadOnlyList<NavigationInfo> HeaderItems { get; } = [.. new[]
-        {
-            typeof(RecommendWorksPage),
-            typeof(RankingsPage),
-            typeof(BookmarksPage),
-            typeof(FollowingsPage),
-            typeof(SpotlightsPage),
-            typeof(RecommendUsersPage),
-            typeof(RecentWorkPostsPage),
-            typeof(NewWorksPage)
-        }
-        .Select(t =>
-        {
-            var value = _PageIconMapping[t];
-            return new NavigationInfo(t, value.Icon, value.Header);
-        })];
+    public static IReadOnlyList<NavigationInfo> HeaderItems { get; } =
+    [
+        new(typeof(RecommendWorksPage), Symbol.Calendar, I18NManager.GetResource(MainPageResources.RecommendationsTabContent)),
+        new(typeof(RankingsPage), Symbol.ArrowTrendingLines, I18NManager.GetResource(MainPageResources.RankingsTabContent)),
+        new(typeof(BookmarksPage), Symbol.Library, I18NManager.GetResource(MainPageResources.BookmarksTabContent)),
+        new(typeof(FollowingsPage), Symbol.PersonHeart, I18NManager.GetResource(MainPageResources.FollowingsTabContent)),
+        new(typeof(SpotlightsPage), Symbol.SlideTextSparkle, I18NManager.GetResource(MainPageResources.SpotlightsTabContent)),
+        new(typeof(RecommendUsersPage), Symbol.PeopleCommunity, I18NManager.GetResource(MainPageResources.RecommendUsersTabContent)),
+        new(typeof(RecentWorkPostsPage), Symbol.AlertUrgent, I18NManager.GetResource(MainPageResources.RecentPostsTabContent)),
+        new(typeof(NewWorksPage), Symbol.ArrowSync, I18NManager.GetResource(MainPageResources.NewWorksTabContent)),
+        // new (typeof(FeedsPage), Symbol.Molecule, I18NManager.GetResource(MainPageResources.FeedTabContent)),
+    ];
 
     public static IReadOnlyList<NavigationInfo> FooterItems { get; } =
     [
-        .. new[]
-            {
-                typeof(BrowsingHistoryPage),
-                typeof(DownloadPage),
-                typeof(ExtensionsPage),
-                typeof(HelpPage),
-                typeof(SettingsPage)
-            }
-            .Select(t =>
-            {
-                var value = _PageIconMapping[t];
-                return new NavigationInfo(t, value.Icon, value.Header);
-            })
+        new (typeof(BrowsingHistoryPage), Symbol.History, I18NManager.GetResource(MainPageResources.HistoriesTabContent)),
+        new (typeof(DownloadPage), Symbol.ArrowSquareDown, I18NManager.GetResource(MainPageResources.DownloadListTabContent)),
+        new (typeof(ExtensionsPage), Symbol.PuzzlePiece, I18NManager.GetResource(MainPageResources.ExtensionsTabContent)),
+        new (typeof(HelpPage), Symbol.ChatBubblesQuestion, I18NManager.GetResource(MainPageResources.HelpTabContent)),
+        new (typeof(SettingsPage), Symbol.Settings, I18NManager.GetResource(MainPageResources.SettingsTabContent))
     ];
 
     public static EventHandler<RoutedEventArgs>? LaunchUriTagInWebBrowser { get; }
@@ -163,6 +117,9 @@ public static class AvaloniaHelper
         };
 }
 
-public record NavigationInfo(Type PageType, Symbol Icon, string Header);
-
-public record NavigationInfo<T>(Type PageType, Symbol Icon, string Header, T Parameter) : NavigationInfo(PageType, Icon, Header);
+public record NavigationInfo(
+    [param: DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
+    [property: DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
+    Type PageType,
+    Symbol Icon,
+    string Header);

@@ -72,6 +72,12 @@
                     <MenuItem Header="-" />
                     <!--  保存  -->
                     <MenuItem
+                        Command="{Binding CopyCommand}"
+                        CommandParameter="{Binding $self, Mode=OneTime}"
+                        Header="{I18N {x:Static pixeval:EntryViewerPageResources.Copy}}"
+                        Icon="{markup:SymbolIcon Copy}"
+                        IsVisible="{Binding !IllustrationViewModel.IsPicGif}" />
+                    <MenuItem
                         Command="{Binding IllustrationViewModel.SaveCommand}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
                         Header="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}"

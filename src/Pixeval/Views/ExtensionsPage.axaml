@@ -22,7 +22,10 @@
             DockPanel.Dock="Top"
             Text="{I18N {x:Static pixeval:ExtensionsPageResources.TitleTextBlockText}}"
             Theme="{StaticResource TitleTextBlockStyle}" />
-        <CommandBar DockPanel.Dock="Top" IsDynamicOverflowEnabled="True">
+        <CommandBar
+            DefaultLabelPosition="Right"
+            DockPanel.Dock="Top"
+            IsDynamicOverflowEnabled="True">
             <CommandBarButton
                 Click="AddExtensionsOnClick"
                 Icon="{markup:SymbolIcon PlugConnectedAdd}"

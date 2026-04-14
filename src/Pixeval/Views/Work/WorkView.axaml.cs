@@ -129,16 +129,16 @@ public partial class WorkView : UserControl, IStructuralDisposalCompleter//, IEn
     /// </summary>
     public void ResetEngine(IFetchEngine<IArtworkInfo> newEngine, bool isBookmarkEnabled = true, int itemsPerPage = 20, int itemLimit = -1)
     {
-        var type = newEngine.GetType().GetInterfaces()[0].GenericTypeArguments.SingleOrDefault();
+        var isNovelEngine = newEngine is IFetchEngine<Novel>;
         var viewModel = DataContext as ISortableEntryViewViewModel;
         switch (viewModel)
         {
-            case NovelViewViewModel when type == typeof(Novel):
-            case IllustrationViewViewModel when type != typeof(Novel):
+            case NovelViewViewModel when isNovelEngine:
+            case IllustrationViewViewModel when !isNovelEngine:
                 viewModel.ResetEngine(newEngine, isBookmarkEnabled, itemsPerPage, itemLimit);
                 break;
             default:
-                if (type == typeof(Novel))
+                if (isNovelEngine)
                 {
                     Type = SimpleWorkType.Novel;
                     viewModel?.Dispose();

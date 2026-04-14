@@ -75,13 +75,11 @@ public partial class TabViewContainer : ViewContainerBase
 
     private void NavigationButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (sender is not Control { Tag: Type type })
+        if (sender is not Control { DataContext: NavigationInfo { PageType: { } type } })
             return;
 
         // 默认参数是自己的Uid，无需指定
-#pragma warning disable IL2072 // Target parameter argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method. The return value of the source method does not have matching annotations.
         NavigateTo((Page) Activator.CreateInstance(type)!);
-#pragma warning restore IL2072
     }
 
     private async void OpenMyPage_OnClick(object? sender, RoutedEventArgs e)

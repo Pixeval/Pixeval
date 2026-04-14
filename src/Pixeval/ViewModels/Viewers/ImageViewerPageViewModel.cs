@@ -123,7 +123,7 @@ public partial class ImageViewerPageViewModel : ViewModelBase, IDisposable
     }
 
     /// <summary>
-    /// 将 <see cref="Illustration.IllustrationItemViewModelImageAsync"/> 返回的原始对象
+    /// 将 <see cref="IllustrationViewModel.LoadOriginalImageAsync"/> 返回的原始对象
     /// 转换为 <see cref="AnimatedImage"/> 可用的 <see cref="IAnimatedBitmap"/>
     /// </summary>
     private static IAnimatedBitmap? ConvertToAnimatedBitmap(object? source) => source switch
@@ -145,12 +145,12 @@ public partial class ImageViewerPageViewModel : ViewModelBase, IDisposable
     [RelayCommand(CanExecute = nameof(LoadSuccessfullyNotGif))]
     private async Task CopyAsync(Control? parameter)
     {
-        if (!IllustrationViewModel.IsPicGif)
+        if (IllustrationViewModel.IsPicGif)
             return;
         if (TopLevel.GetTopLevel(parameter) is not
             { ViewContainer: { } viewContainer, Clipboard: { } clipboard })
             return;
-        await clipboard.SetBitmapAsync(OriginalSource?.Frames[0]);
+        await clipboard.SetBitmapAsync(DisplaySource?.Frames[0]);
         viewContainer?.ShowSuccess(I18NManager.GetResource(EntryItemResources.ImageSetToClipBoard));
     }
 

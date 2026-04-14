@@ -45,6 +45,12 @@
                     Icon="{markup:SymbolIcon Person}" />
                 <MenuItem Header="-" />
                 <MenuItem
+                    Command="{Binding CopyCommand}"
+                    CommandParameter="{Binding $self, Mode=OneTime}"
+                    Header="{I18N {x:Static pixeval:EntryViewerPageResources.Copy}}"
+                    Icon="{markup:SymbolIcon Copy}"
+                    IsVisible="{Binding !IsPicGif}" />
+                <MenuItem
                     Command="{Binding SaveCommand}"
                     CommandParameter="{Binding $self, Mode=OneTime}"
                     Header="{I18N {x:Static pixeval:EntryItemResources.Save}}"
