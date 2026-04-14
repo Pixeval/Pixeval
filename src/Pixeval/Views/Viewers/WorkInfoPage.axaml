@@ -23,8 +23,7 @@
                 HorizontalContentAlignment="Left"
                 Background="Transparent"
                 BorderThickness="0"
-                Click="AuthorButton_OnClick"
-                Tag="{Binding}">
+                Click="AuthorButton_OnClick">
                 <DockPanel HorizontalSpacing="12" LastChildFill="False">
                     <controls:AvatarImage
                         Width="50"
@@ -146,7 +145,7 @@
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate x:DataType="{x:Type misaki:ITag}">
-                                        <Button Click="WorkTagButton_OnClicked" Tag="{Binding}">
+                                        <Button Click="WorkTagButton_OnClicked">
                                             <StackPanel Orientation="Horizontal" Spacing="4">
                                                 <TextBlock Text="{Binding Name}" TextWrapping="NoWrap" />
                                                 <TextBlock
@@ -171,8 +170,7 @@
                                                     <MenuItem
                                                         Click="BlockTag_OnClick"
                                                         Header="Block Tag"
-                                                        Icon="{markup:SymbolIcon TagDismiss}"
-                                                        Tag="{Binding}" />
+                                                        Icon="{markup:SymbolIcon TagDismiss}" />
                                                 </MenuFlyout>
                                             </Button.ContextFlyout>
                                         </Button>

@@ -146,7 +146,7 @@ public partial class ExtensionsPage : ContentPage
 
     private void UnloadHostOnClick(object? sender, RoutedEventArgs e)
     {
-        if (sender is Control { Tag: ExtensionsHostModel model })
+        if (sender is Control { DataContext: ExtensionsHostModel model })
             ExtensionService.UnloadHost(model);
     }
 

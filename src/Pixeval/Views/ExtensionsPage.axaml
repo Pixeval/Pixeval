@@ -110,8 +110,7 @@
                                         <CommandBarButton
                                             Click="UnloadHostOnClick"
                                             Icon="{markup:SymbolIcon PlugDisconnected}"
-                                            Label="{I18N {x:Static pixeval:ExtensionsPageResources.UnloadExtensionsButtonLabel}}"
-                                            Tag="{Binding}" />
+                                            Label="{I18N {x:Static pixeval:ExtensionsPageResources.UnloadExtensionsButtonLabel}}" />
                                     </CommandBar.SecondaryCommands>
                                 </CommandBar>
                             </StackPanel>
