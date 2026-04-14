@@ -130,6 +130,7 @@
         <Style Selector="^[Mode=None]">
             <Setter Property="Background" Value="{DynamicResource BadgeBackgroundBrushNone}" />
             <Setter Property="Foreground" Value="{DynamicResource BadgeForegroundBrushNone}" />
+            <Setter Property="IsVisible" Value="False" />
         </Style>
 
         <Style Selector="^[Mode=Premium]">
@@ -160,42 +161,6 @@
         <Style Selector="^[Mode=Ai]">
             <Setter Property="Background" Value="{DynamicResource BadgeBackgroundBrushAi}" />
             <Setter Property="Foreground" Value="{DynamicResource BadgeForegroundBrushAi}" />
-        </Style>
-
-        <!--  Dark Theme Styles  -->
-        <Style Selector="^[Mode=None]:dark">
-            <Setter Property="Background" Value="{DynamicResource BadgeBackgroundBrushNoneDark}" />
-            <Setter Property="Foreground" Value="{DynamicResource BadgeForegroundBrushNoneDark}" />
-        </Style>
-
-        <Style Selector="^[Mode=Premium]:dark">
-            <Setter Property="Background" Value="{DynamicResource BadgeBackgroundBrushPremiumDark}" />
-            <Setter Property="Foreground" Value="{DynamicResource BadgeForegroundBrushPremiumDark}" />
-        </Style>
-
-        <Style Selector="^[Mode=Following]:dark">
-            <Setter Property="Background" Value="{DynamicResource BadgeBackgroundBrushFollowingDark}" />
-            <Setter Property="Foreground" Value="{DynamicResource BadgeForegroundBrushFollowingDark}" />
-        </Style>
-
-        <Style Selector="^[Mode=Gif]:dark">
-            <Setter Property="Background" Value="{DynamicResource BadgeBackgroundBrushGifDark}" />
-            <Setter Property="Foreground" Value="{DynamicResource BadgeForegroundBrushGifDark}" />
-        </Style>
-
-        <Style Selector="^[Mode=R18]:dark">
-            <Setter Property="Background" Value="{DynamicResource BadgeBackgroundBrushR18Dark}" />
-            <Setter Property="Foreground" Value="{DynamicResource BadgeForegroundBrushR18Dark}" />
-        </Style>
-
-        <Style Selector="^[Mode=R18G]:dark">
-            <Setter Property="Background" Value="{DynamicResource BadgeBackgroundBrushR18GDark}" />
-            <Setter Property="Foreground" Value="{DynamicResource BadgeForegroundBrushR18GDark}" />
-        </Style>
-
-        <Style Selector="^[Mode=Ai]:dark">
-            <Setter Property="Background" Value="{DynamicResource BadgeBackgroundBrushAiDark}" />
-            <Setter Property="Foreground" Value="{DynamicResource BadgeForegroundBrushAiDark}" />
         </Style>
     </ControlTheme>
 </ResourceDictionary>

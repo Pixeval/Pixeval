@@ -12,7 +12,9 @@
     d:DesignHeight="800"
     d:DesignWidth="600"
     Header="{I18N {x:Static pixeval:MainPageResources.ExtensionsTabContent}}"
-    Icon="{markup:SymbolIcon PuzzlePiece, FontSize=16, IconVariant=Color}"
+    Icon="{markup:SymbolIcon PuzzlePiece,
+                             FontSize=16,
+                             IconVariant=Color}"
     mc:Ignorable="d">
     <DockPanel>
         <TextBlock
@@ -20,7 +22,7 @@
             DockPanel.Dock="Top"
             Text="{I18N {x:Static pixeval:ExtensionsPageResources.TitleTextBlockText}}"
             Theme="{StaticResource TitleTextBlockStyle}" />
-        <CommandBar DockPanel.Dock="Top">
+        <CommandBar DockPanel.Dock="Top" IsDynamicOverflowEnabled="True">
             <CommandBarButton
                 Click="AddExtensionsOnClick"
                 Icon="{markup:SymbolIcon PlugConnectedAdd}"
@@ -97,7 +99,7 @@
                             </controls:SettingsCard.Header>
                             <StackPanel Orientation="Horizontal" Spacing="10">
                                 <ToggleSwitch IsChecked="{Binding IsActive, Mode=TwoWay}" />
-                                <CommandBar>
+                                <CommandBar IsDynamicOverflowEnabled="True">
                                     <CommandBar.SecondaryCommands>
                                         <CommandBarButton
                                             Click="ExtensionsHelpOnClick"

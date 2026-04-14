@@ -7,10 +7,10 @@ using System.Runtime.InteropServices;
 using System.Text.Json;
 using Avalonia.Controls;
 using Avalonia.Media.Imaging;
+using FluentIcons.Avalonia;
+using FluentIcons.Common;
 using Pixeval.Extensions.Common;
 using Pixeval.Utilities;
-using Symbol = FluentIcons.Common.Symbol;
-using SymbolIcon = FluentIcons.Avalonia.SymbolIcon;
 
 namespace Pixeval.Models.Extensions;
 

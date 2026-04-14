@@ -6,7 +6,6 @@ using Avalonia.Interactivity;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
 using Pixeval.Views.Viewers;
-using UserItemViewModel = Pixeval.ViewModels.UserItemViewModel;
 
 namespace Pixeval.Views.Entry;
 

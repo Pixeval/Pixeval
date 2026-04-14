@@ -45,7 +45,8 @@
             Grid.Row="0"
             Grid.Column="2"
             VerticalAlignment="Center"
-            DefaultLabelPosition="Right">
+            DefaultLabelPosition="Right"
+            IsDynamicOverflowEnabled="True">
             <CommandBarButton
                 Click="ActionButton_OnClicked"
                 Icon="{markup1:SymbolIconEx Symbol={Binding ActionButtonSymbol}}"

@@ -118,7 +118,10 @@
                         Description="{I18N {x:Static pixeval:SettingsPageResources.BugReportChannelsEntryDescription}}"
                         Header="{I18N {x:Static pixeval:SettingsPageResources.BugReportChannelsEntryHeader}}"
                         HeaderIcon="{markup:SymbolIcon Symbol=Send}">
-                        <CommandBar Background="Transparent" DefaultLabelPosition="Collapsed">
+                        <CommandBar
+                            Background="Transparent"
+                            DefaultLabelPosition="Collapsed"
+                            IsDynamicOverflowEnabled="True">
                             <CommandBarButton
                                 Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                                 Tag="https://github.com/Pixeval/Pixeval/issues/new/choose"

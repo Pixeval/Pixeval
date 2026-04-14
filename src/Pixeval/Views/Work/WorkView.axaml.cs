@@ -77,11 +77,10 @@ public partial class WorkView : UserControl, IStructuralDisposalCompleter//, IEn
         switch (vm, DataContext)
         {
             case (NovelItemViewModel { IsBookmarkSupported: false, Entry.Id: var id }, _):
-                var novel = await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id);
-                // await viewContainer.CreateNovelPageAsync(novel);
+                await viewContainer.CreateNovelPageAsync(id);
                 break;
             case (NovelItemViewModel viewModel, NovelViewViewModel viewViewModel):
-                // viewContainer.CreateNovelPage(viewModel, viewViewModel);
+                viewContainer.CreateNovelPage(viewModel, viewViewModel);
                 break;
             case (IllustrationItemViewModel { IsBookmarkSupported: false, Entry: Illustration { Id: var id } }, _):
                 var illustration = await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id);

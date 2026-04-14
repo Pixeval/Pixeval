@@ -71,6 +71,16 @@ public class PixivNovelMdParser<T>(StringBuilder sb, int pageIndex) : PixivNovel
 
 public class PixivNovelMdDisplayParser(StringBuilder sb, int pageIndex) : PixivNovelMdParser<Bitmap>(sb, pageIndex)
 {
+    protected override void NewPage(StringBuilder currentText)
+    {
+    }
+
+    protected override void AddRuby(StringBuilder currentText, string kanji, string ruby)
+    {
+        // TODO?
+        base.AddRuby(currentText, kanji, ruby);
+    }
+
     protected override void AddUploadedImage(StringBuilder currentText, INovelContext<Bitmap> viewModel, long imageId)
     {
         _ = currentText

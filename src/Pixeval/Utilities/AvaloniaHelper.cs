@@ -20,6 +20,7 @@ using Pixeval.Views.Capability;
 using Pixeval.Views.Login;
 using Pixeval.Views.Settings;
 using Pixeval.Views.ViewContainers;
+using DownloadPage = Pixeval.Views.Download.DownloadPage;
 
 namespace Pixeval.Utilities;
 

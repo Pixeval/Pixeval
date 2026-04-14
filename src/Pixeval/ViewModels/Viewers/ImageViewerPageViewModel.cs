@@ -123,7 +123,7 @@ public partial class ImageViewerPageViewModel : ViewModelBase, IDisposable
     }
 
     /// <summary>
-    /// 将 <see cref="IllustrationItemViewModel.LoadOriginalImageAsync"/> 返回的原始对象
+    /// 将 <see cref="Illustration.IllustrationItemViewModelImageAsync"/> 返回的原始对象
     /// 转换为 <see cref="AnimatedImage"/> 可用的 <see cref="IAnimatedBitmap"/>
     /// </summary>
     private static IAnimatedBitmap? ConvertToAnimatedBitmap(object? source) => source switch

@@ -16,7 +16,8 @@
             <CommandBar
                 x:Name="RightToolBar"
                 DefaultLabelPosition="Collapsed"
-                DockPanel.Dock="Right">
+                DockPanel.Dock="Right"
+                IsDynamicOverflowEnabled="True">
                 <CommandBarButton
                     x:Name="RefreshButton"
                     Click="RefreshButton_OnClick"

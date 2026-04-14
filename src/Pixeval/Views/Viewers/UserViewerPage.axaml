@@ -14,6 +14,12 @@
     x:DataType="{x:Type viewers:UserViewerPageViewModel}"
     Header="{Binding Name}"
     mc:Ignorable="d">
+    <ContentPage.Icon>
+        <Image
+            Width="16"
+            Height="16"
+            Source="avares://Pixeval/Assets/Platforms/pixiv.png" />
+    </ContentPage.Icon>
     <DockPanel>
         <!--  顶部信息区域  -->
         <Border DockPanel.Dock="Top">
@@ -59,7 +65,10 @@
                 <!--  指标 + 操作栏  -->
                 <DockPanel Grid.Row="1" Margin="20,0,20,8">
                     <!--  操作按钮（右侧）  -->
-                    <CommandBar DefaultLabelPosition="Right" DockPanel.Dock="Right">
+                    <CommandBar
+                        DefaultLabelPosition="Right"
+                        DockPanel.Dock="Right"
+                        IsDynamicOverflowEnabled="True">
                         <CommandBarButton
                             Command="{Binding FollowCommand}"
                             Icon="{markup:SymbolIcon PersonAdd}"

@@ -1,42 +1,34 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
-using System;
 using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using Pixeval.I18N;
 using Pixeval.Utilities;
+using Pixeval.ViewModels;
 using Pixeval.ViewModels.Viewers;
 using Pixeval.Views.Work;
 
 namespace Pixeval.Views.Viewers;
 
-public partial class IllustrationViewerPage : ContentPage
+public partial class NovelViewerPage : ContentPage
 {
-    private IllustrationViewerPageViewModel ViewModel => (IllustrationViewerPageViewModel) DataContext!;
+    private NovelViewerPageViewModel ViewModel => (NovelViewerPageViewModel) DataContext!;
 
     public static readonly FuncValueConverter<int, string> PlusOneConverter = new(i => (i + 1).ToString());
 
-    public IllustrationViewerPage() : this(null)
+    public NovelViewerPage() : this(null)
     {
     }
 
-    public IllustrationViewerPage(IllustrationViewerPageViewModel? viewModel)
+    public NovelViewerPage(NovelViewerPageViewModel? viewModel)
     {
         DataContext = viewModel;
         InitializeComponent();
-        if (viewModel?.CurrentIllustration.Entry.Platform is { } platform)
-        {
-            using var stream = AssetLoader.Open(new Uri($"avares://Pixeval/Assets/Platforms/{platform}.png"));
-            LogoImage.Source = new Bitmap(stream);
-        }
     }
-
     private void PrevButton_OnRightClick(object? sender, TappedEventArgs e)
     {
         ViewModel.CurrentWorkIndex--;
@@ -56,7 +48,7 @@ public partial class IllustrationViewerPage : ContentPage
 
     private void BookmarkTagSelector_OnTagsSelected(TagSelector sender, (bool IsPrivate, IReadOnlyList<string> Tags) e)
     {
-        if (ViewModel.CurrentIllustration.AddToBookmarkCommand is { } command)
+        if (ViewModel.CurrentNovel.AddToBookmarkCommand is { } command)
         {
             command.Execute((e.Tags, e.IsPrivate, this));
             TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(
@@ -66,13 +58,11 @@ public partial class IllustrationViewerPage : ContentPage
         BookmarkTagSelector.IsVisible = false;
     }
 
-    private void ZoomInButton_OnClick(object? sender, RoutedEventArgs e)
+    private async void Thumbnail_OnDataContextChanged(object? sender, System.EventArgs e)
     {
-        ImageViewerPage.ZoomBorder.ZoomBy(0.1);
-    }
+        if (sender is not Control { DataContext: NovelItemViewModel viewModel })
+            return;
 
-    private void ZoomOutButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        ImageViewerPage.ZoomBorder.ZoomBy(-0.1);
+        _ = await viewModel.TryLoadThumbnailAsync(ViewModel);
     }
 }

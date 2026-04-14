@@ -115,7 +115,7 @@ public record Supporter(string Nickname, string Name, Uri ProfilePicture, Uri Pr
         if (await client.DownloadStreamAsync(file, supporter.ProfilePicture) is not null)
         {
             await file.DisposeAsync();
-            System.IO.File.Delete(path);
+            File.Delete(path);
         }
         else
             await file.DisposeAsync();

@@ -11,6 +11,7 @@ public class MarkdownBox : MarkdownScrollViewer
 {
     public MarkdownBox()
     {
+        SelectionEnabled = true;
         // 或 MarkdownStyleFluentAvalonia
         MarkdownStyle = new MarkdownStyleFluentTheme();
         Plugins.Plugins.Add(new HtmlPlugin());

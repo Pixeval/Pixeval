@@ -8,7 +8,7 @@ using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
 
-namespace Pixeval.Views.Capability;
+namespace Pixeval.Views.Download;
 
 public partial class DownloadPage : ContentPage
 {

@@ -2,9 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
@@ -12,9 +10,9 @@ using Pixeval.Utilities;
 using Pixeval.ViewModels;
 using Pixeval.ViewModels.Viewers;
 using Pixeval.Views.ViewContainers;
-using Pixeval.Views.Viewers;
+using Pixeval.Views.Work;
 
-namespace Pixeval.Views.Work;
+namespace Pixeval.Views.Viewers;
 
 public static class IllustrationViewerHelper
 {
@@ -72,7 +70,7 @@ public static class IllustrationViewerHelper
         public void CreateIllustrationPage<T>(T illustrationViewModel, IList<T> illustrationViewModels) where T : IllustrationItemViewModel
         {
             var index = illustrationViewModels.IndexOf(illustrationViewModel);
-            CreateIllustrationPage(control, illustrationViewModel.Entry, new IllustrationViewerPageViewModel(illustrationViewModels, index));
+            CreateIllustrationPage(control, new IllustrationViewerPageViewModel(illustrationViewModels, index));
         }
 
         /// <summary>
@@ -83,23 +81,11 @@ public static class IllustrationViewerHelper
         public void CreateIllustrationPage(IllustrationItemViewModel illustrationViewModel, IllustrationViewViewModel illustrationViewViewModel)
         {
             var index = illustrationViewViewModel.DataProvider.View.IndexOf(illustrationViewModel);
-            CreateIllustrationPage(control, illustrationViewModel.Entry, new IllustrationViewerPageViewModel(illustrationViewViewModel, index));
+            CreateIllustrationPage(control, new IllustrationViewerPageViewModel(illustrationViewViewModel, index));
         }
     }
 
-    public static IllustrationViewerPageViewModel GetViewModelFromParameter(object? param)
-    {
-        return param switch
-        {
-            (IllustrationViewViewModel illustrationViewViewModel, int index) => new IllustrationViewerPageViewModel(
-                illustrationViewViewModel, index),
-            (IEnumerable illustrationViewModels, int index) => new IllustrationViewerPageViewModel(
-                illustrationViewModels.Cast<IllustrationItemViewModel>(), index),
-            _ => throw new ArgumentException("Invalid parameter type.", nameof(param))
-        };
-    }
-
-    private static void CreateIllustrationPage(ViewContainerBase control, IArtworkInfo illustration, IllustrationViewerPageViewModel param)
+    private static void CreateIllustrationPage(ViewContainerBase control, IllustrationViewerPageViewModel param)
     {
         control.NavigateTo(new IllustrationViewerPage(param));
     }

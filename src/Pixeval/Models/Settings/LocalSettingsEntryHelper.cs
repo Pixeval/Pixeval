@@ -22,6 +22,10 @@ namespace Pixeval.Models.Settings;
 
 public static class LocalSettingsEntryHelper
 {
+    public static void Initialize()
+    {
+    }
+
     public static readonly SettingsEntryAttribute AutoUpdate = new(Symbol.Communication,
         nameof(SettingsPageResources.DownloadUpdateAutomaticallyEntryHeader),
         nameof(SettingsPageResources.DownloadUpdateAutomaticallyEntryDescription));

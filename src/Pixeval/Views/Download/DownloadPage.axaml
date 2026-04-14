@@ -1,9 +1,8 @@
 <ContentPage
-    x:Class="Pixeval.Views.Capability.DownloadPage"
+    x:Class="Pixeval.Views.Download.DownloadPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:Pixeval.Views.Capability"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
@@ -19,12 +18,36 @@
     mc:Ignorable="d">
     <DockPanel>
         <DockPanel DockPanel.Dock="Top" LastChildFill="True">
-            <CommandBar x:Name="TopToolBar" DockPanel.Dock="Right">
+            <StackPanel
+                VerticalAlignment="Center"
+                DockPanel.Dock="Left"
+                Orientation="Horizontal"
+                Spacing="5">
+                <ComboBox
+                    x:Name="ModeFilterComboBox"
+                    MinWidth="150"
+                    DisplayMemberBinding="{Binding Text}"
+                    ItemsSource="{x:Static views:DownloadPage.Options}"
+                    SelectedIndex="0"
+                    SelectionChanged="ModeFilterComboBox_OnSelectionChanged" />
+                <TextBox
+                    x:Name="FilterTextBox"
+                    Width="260"
+                    KeyDown="FilterTextBox_OnKeyDown"
+                    PlaceholderText="{I18N {x:Static pixeval:DownloadPageResources.FilterAutoSuggestBoxPlaceholderText}}"
+                    TextChanged="FilterTextBox_OnTextChanged" />
+                <CheckBox
+                    x:Name="DeleteLocalFilesCheckBox"
+                    VerticalAlignment="Center"
+                    Content="{I18N {x:Static pixeval:DownloadPageDeleteTasksDialogResources.DeleteLocalFilesContent}}" />
+            </StackPanel>
+
+            <CommandBar x:Name="TopToolBar" IsDynamicOverflowEnabled="True">
                 <CommandBarButton
                     Click="CancelSelectButton_OnClicked"
                     Icon="{markup:SymbolIcon SelectAllOff}"
                     IsEnabled="{Binding !!SelectedEntries.Count}"
-                    Label="{Binding SelectedEntries.Count, Converter={x:Static local:DownloadPage.SelectionCountLabelConverter}}" />
+                    Label="{Binding SelectedEntries.Count, Converter={x:Static views:DownloadPage.SelectionCountLabelConverter}}" />
                 <CommandBarButton
                     Click="SelectAllButton_OnClicked"
                     Icon="{markup:SymbolIcon SelectAllOn}"
@@ -50,29 +73,6 @@
                     IsEnabled="{Binding !!SelectedEntries.Count}"
                     Label="{I18N {x:Static pixeval:DownloadPageResources.DeleteButtonLabel}}" />
             </CommandBar>
-
-            <StackPanel
-                VerticalAlignment="Center"
-                Orientation="Horizontal"
-                Spacing="5">
-                <ComboBox
-                    x:Name="ModeFilterComboBox"
-                    MinWidth="150"
-                    DisplayMemberBinding="{Binding Text}"
-                    ItemsSource="{x:Static local:DownloadPage.Options}"
-                    SelectedIndex="0"
-                    SelectionChanged="ModeFilterComboBox_OnSelectionChanged" />
-                <TextBox
-                    x:Name="FilterTextBox"
-                    Width="260"
-                    KeyDown="FilterTextBox_OnKeyDown"
-                    PlaceholderText="{I18N {x:Static pixeval:DownloadPageResources.FilterAutoSuggestBoxPlaceholderText}}"
-                    TextChanged="FilterTextBox_OnTextChanged" />
-                <CheckBox
-                    x:Name="DeleteLocalFilesCheckBox"
-                    VerticalAlignment="Center"
-                    Content="{I18N {x:Static pixeval:DownloadPageDeleteTasksDialogResources.DeleteLocalFilesContent}}" />
-            </StackPanel>
         </DockPanel>
 
         <views:DownloadView x:Name="DownloadView" />

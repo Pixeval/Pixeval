@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls.Primitives;
-using Avalonia.Media;
 using Pixeval.I18N;
 
 namespace Pixeval.Controls;
@@ -70,15 +69,5 @@ public class PixevalBadge : TemplatedControl
         }
 
         Text = definition;
-        IsVisible = mode != BadgeMode.None;
-    }
-
-    private readonly struct BadgeDefinition(string text, Color background, Color foreground)
-    {
-        public string Text { get; } = text;
-
-        public IBrush Background { get; } = new SolidColorBrush(background);
-
-        public IBrush Foreground { get; } = new SolidColorBrush(foreground);
     }
 }

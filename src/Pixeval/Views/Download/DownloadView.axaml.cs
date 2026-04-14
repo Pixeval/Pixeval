@@ -5,7 +5,7 @@ using Avalonia.Interactivity;
 using Mako.Model;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
-using Pixeval.Views.Work;
+using Pixeval.Views.Viewers;
 
 namespace Pixeval.Views.Download;
 
@@ -18,8 +18,8 @@ public partial class DownloadView : UserControl, IStructuralDisposalCompleter
         if (TopLevel.GetTopLevel(this)?.ViewContainer is not { } viewContainer)
             return;
 
-        if (viewModel.Entry is Novel)
-            ;// todo _ = await TopLevel.GetTopLevel(this)!.Launcher.LaunchUriAsync(viewModel.Entry.WebsiteUri);
+        if (viewModel.Entry is Novel novel)
+            await viewContainer.CreateNovelPageAsync(novel.Id);
         else
             await viewContainer.CreateIllustrationPageAsync(viewModel.Entry);
     }

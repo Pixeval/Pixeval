@@ -10,7 +10,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mako.Global.Enum;
 using Mako.Net.Response;
-using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.Utilities.IO.Caching;
 using Pixeval.Views.Capability;

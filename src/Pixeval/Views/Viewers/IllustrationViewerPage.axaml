@@ -20,12 +20,18 @@
     x:DataType="{x:Type viewers:IllustrationViewerPageViewModel}"
     Header="{Binding CurrentIllustration.Entry.Title}"
     mc:Ignorable="d">
+    <ContentPage.Icon>
+        <Image
+            x:Name="LogoImage"
+            Width="16"
+            Height="16" />
+    </ContentPage.Icon>
 
     <ContentPage.KeyBindings>
         <KeyBinding Command="{Binding PrevCommand}" Gesture="Left" />
         <KeyBinding Command="{Binding NextCommand}" Gesture="Right" />
-        <KeyBinding Command="{Binding PrevIllustrationCommand}" Gesture="Up" />
-        <KeyBinding Command="{Binding NextIllustrationCommand}" Gesture="Down" />
+        <KeyBinding Command="{Binding PrevWorkCommand}" Gesture="Up" />
+        <KeyBinding Command="{Binding NextWorkCommand}" Gesture="Down" />
     </ContentPage.KeyBindings>
 
     <Grid>
@@ -44,7 +50,8 @@
                         x:Name="TopBar"
                         HorizontalAlignment="Center"
                         DefaultLabelPosition="Collapsed"
-                        DockPanel.Dock="Top">
+                        DockPanel.Dock="Top"
+                        IsDynamicOverflowEnabled="True">
 
                         <CommandBarButton
                             Command="{Binding CurrentImage.PlayPauseCommand}"
@@ -53,7 +60,6 @@
                                                                                       Pause,
                                                                                       Play,
                                                                                       x:TypeArguments=common:Symbol}}"
-                            IsEnabled="{Binding CurrentImage.LoadSuccessfully}"
                             IsVisible="{Binding CurrentIllustration.IsPicGif}"
                             Label="{I18N {x:Static pixeval:MiscResources.Play}}" />
                         <CommandBarButton
@@ -62,28 +68,24 @@
                             Icon="{markup1:SymbolIconEx Heart,
                                                         IconVariant={Binding CurrentIllustration.IsBookmarkedDisplay,
                                                                              Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
-                            IsEnabled="{Binding CurrentImage.LoadSuccessfully}"
                             IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
-                            Label="{I18N {x:Static pixeval:EntryViewerPageResources.Copy}}" />
+                            Label="{I18N {x:Static pixeval:MiscResources.AddBookmark}}" />
                         <CommandBarSeparator />
                         <CommandBarButton
                             Command="{Binding CurrentImage.CopyCommand}"
                             CommandParameter="{Binding $self, Mode=OneTime}"
                             Icon="{markup:SymbolIcon Copy}"
-                            IsEnabled="{Binding CurrentImage.LoadSuccessfully}"
                             IsVisible="{Binding !CurrentIllustration.IsPicGif}"
                             Label="{I18N {x:Static pixeval:EntryViewerPageResources.Copy}}" />
                         <CommandBarButton
                             Command="{Binding CurrentPage.SaveCommand}"
                             CommandParameter="{Binding $self, Mode=OneTime}"
                             Icon="{markup:SymbolIcon Save}"
-                            IsEnabled="{Binding CurrentImage.LoadSuccessfully}"
                             Label="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}" />
                         <CommandBarButton
                             Command="{Binding CurrentPage.SaveAsCommand}"
                             CommandParameter="{Binding $self, Mode=OneTime}"
                             Icon="{markup:SymbolIcon SaveEdit}"
-                            IsEnabled="{Binding CurrentImage.LoadSuccessfully}"
                             Label="{I18N {x:Static pixeval:EntryViewerPageResources.SaveAs}}" />
                         <CommandBarButton
                             Command="{Binding CurrentIllustration.SaveCommand}"
@@ -106,6 +108,11 @@
                                                                              Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
                             IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
                             Label="{I18N {x:Static pixeval:EntryItemResources.AddToBookmark}}" />
+                        <!--<CommandBarButton
+                            Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
+                            Icon="{markup:SymbolIcon Link}"
+                            Label="{I18N {x:Static pixeval:EntryItemResources.GenerateLink}}"
+                            Tag="{Binding CurrentIllustration.AppUri}" />-->
                         <CommandBarButton
                             Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
                             Icon="{markup:SymbolIcon LinkMultiple}"
@@ -134,7 +141,7 @@
                         <controls:PageButton
                             HorizontalAlignment="Left"
                             VerticalAlignment="Stretch"
-                            Click="PrevButton_OnClick"
+                            Command="{Binding PrevCommand}"
                             IsVisible="{Binding PrevButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                             RightTapped="PrevButton_OnRightClick"
                             Symbol="ChevronLeft"
@@ -144,7 +151,7 @@
                         <controls:PageButton
                             HorizontalAlignment="Right"
                             VerticalAlignment="Stretch"
-                            Click="NextButton_OnClick"
+                            Command="{Binding NextCommand}"
                             IsVisible="{Binding NextButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                             RightTapped="NextButton_OnRightClick"
                             Symbol="ChevronRight"
@@ -163,7 +170,7 @@
                 HorizontalAlignment="Stretch"
                 IsVisible="{Binding IsBottomListOpen}"
                 ItemsSource="{Binding Illustrations}"
-                SelectedIndex="{Binding CurrentIllustrationIndex}"
+                SelectedIndex="{Binding CurrentWorkIndex}"
                 SelectionMode="Single">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -195,7 +202,7 @@
                         Grid.Column="0"
                         Orientation="Horizontal"
                         Spacing="20">
-                        <CommandBar DefaultLabelPosition="Collapsed">
+                        <CommandBar DefaultLabelPosition="Collapsed" IsDynamicOverflowEnabled="True">
                             <CommandBarToggleButton
                                 Icon="{markup:SymbolIcon Info}"
                                 IsChecked="{Binding #EntryViewerSplitView.IsPaneOpen}"
@@ -234,7 +241,7 @@
                             <Run Text="/" />
                             <Run Text="{Binding PageCount}" />
                         </TextBlock>
-                        <CommandBar DefaultLabelPosition="Collapsed">
+                        <CommandBar DefaultLabelPosition="Collapsed" IsDynamicOverflowEnabled="True">
                             <CommandBarButton
                                 Command="{Binding CurrentImage.RotateCounterclockwiseCommand}"
                                 Icon="{markup:SymbolIcon ArrowRotateCounterclockwise}"
