@@ -59,7 +59,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
     ~IllustrationViewerPageViewModel() => Dispose();
 
     [ObservableProperty]
-    public partial IReadOnlyList<ContentPage>? PanePages { get; private set; }
+    public partial IReadOnlyList<Page>? PanePages { get; private set; }
 
     #region Current相关
 
@@ -97,14 +97,10 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
             // 保证_pages里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
             Images = [.. Pages.Select(p => new ImageViewerPageViewModel(p, CurrentIllustration))];
 
-            var list = new List<ContentPage>(3) { new WorkInfoPage { DataContext = CurrentIllustration.Entry } };
+            var list = new List<Page>(3) { new WorkInfoPage(CurrentIllustration.Entry) };
             if (CurrentIllustration.Entry is Illustration { Id: var id })
             {
-                var engine = App.AppViewModel.MakoClient.IllustrationComments(id);
-                list.Add(new CommentsPage
-                {
-                    DataContext = new CommentsViewViewModel(engine, SimpleWorkType.IllustrationAndManga, id)
-                });
+                list.Add(new CommentsPage(new CommentsViewViewModel(SimpleWorkType.IllustrationAndManga, id)));
                 list.Add(new RelatedWorksPage { IllustrationId = id });
             }
 

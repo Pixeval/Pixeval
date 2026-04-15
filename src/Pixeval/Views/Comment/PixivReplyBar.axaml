@@ -1,17 +1,95 @@
 <UserControl
-    x:Class="Pixeval.Views.Comment.PixivReplyBar"
+    x:Class="Pixeval.Views.PixivReplyBar"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:comment="using:Pixeval.Views.Comment"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:converters="using:Pixeval.Views.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
+    xmlns:utilities="using:Pixeval.Utilities"
     d:DesignHeight="40"
     d:DesignWidth="350"
     mc:Ignorable="d">
-    <DockPanel LastChildFill="True">
+    <DockPanel HorizontalSpacing="5" LastChildFill="True">
         <Button
-            Margin="0,0,5,0"
+            x:Name="EmojiButton"
+            Padding="8"
+            VerticalAlignment="Center"
+            Background="Transparent"
+            BorderThickness="0"
+            DockPanel.Dock="Left">
+            <markup:SymbolIcon FontSize="16" Symbol="Emoji" />
+            <Button.Flyout>
+                <Flyout Placement="TopEdgeAlignedLeft">
+                    <TabbedPage SelectedIndex="0">
+                        <ContentPage Header="{I18N {x:Static pixeval:CommentRepliesBlockResources.EmojiButtonFlyoutEmojiSectionNavigationViewItemContent}}">
+                            <ScrollViewer
+                                Width="350"
+                                Height="150"
+                                HorizontalScrollBarVisibility="Disabled">
+                                <ItemsControl ItemsSource="{x:Static utilities:CommentImageHelper.EmojiIds}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel ItemSpacing="4" LineSpacing="4" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="{x:Type x:Int32}">
+                                            <Button Padding="0" Click="EmojiImage_OnClick">
+                                                <Image
+                                                    Width="35"
+                                                    Height="35"
+                                                    controls:Source.Image="{Binding Converter={x:Static converters:PixevalConverters.StringFormatConverter}, ConverterParameter={x:Static utilities:CommentImageHelper.EmojiDownloadUrl}}"
+                                                    Stretch="UniformToFill" /> 
+                                                <Button.Styles>
+                                                    <Style Selector="Image">
+                                                        <Setter Property="Cursor" Value="Hand" />
+                                                    </Style>
+                                                </Button.Styles>
+                                            </Button>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </ContentPage>
+                        <ContentPage Header="{I18N {x:Static pixeval:CommentRepliesBlockResources.EmojiButtonFlyoutStickersSectionNavigationViewItemContent}}">
+                            <ScrollViewer
+                                Width="350"
+                                Height="150"
+                                HorizontalScrollBarVisibility="Disabled">
+                                <ItemsControl ItemsSource="{x:Static utilities:CommentImageHelper.StickerIds}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel ItemSpacing="4" LineSpacing="4" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="{x:Type x:Int32}">
+                                            <Button Padding="0" Click="StickerImage_OnClick">
+                                                <Image
+                                                    Width="83"
+                                                    Height="83"
+                                                    controls:Source.Image="{Binding Converter={x:Static converters:PixevalConverters.StringFormatConverter}, ConverterParameter={x:Static utilities:CommentImageHelper.StickerDownloadUrl}}"
+                                                    Stretch="UniformToFill" />
+                                                <Button.Styles>
+                                                    <Style Selector="Image">
+                                                        <Setter Property="Cursor" Value="Hand" />
+                                                    </Style>
+                                                </Button.Styles>
+                                            </Button>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </ContentPage>
+                    </TabbedPage>
+                </Flyout>
+            </Button.Flyout>
+        </Button>
+        <Button
             Padding="8"
             VerticalAlignment="Center"
             Background="Transparent"

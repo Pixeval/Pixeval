@@ -28,7 +28,7 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
     public partial bool IsLoading { get; private set; }
 
     [ObservableProperty]
-    public partial IReadOnlyList<ContentPage>? PanePages { get; private set; }
+    public partial IReadOnlyList<Page>? PanePages { get; private set; }
 
     public NovelViewerPageViewModel(IEnumerable<NovelItemViewModel> novelViewModels, int currentNovelIndex)
     {
@@ -214,18 +214,11 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
 
     private void BuildPanePages()
     {
-        var pages = new List<ContentPage>(2)
-        {
-            new WorkInfoPage { DataContext = CurrentNovel.Entry }
-        };
-
-        var engine = App.AppViewModel.MakoClient.NovelComments(NovelId);
-        pages.Add(new CommentsPage
-        {
-            DataContext = new CommentsViewViewModel(engine, SimpleWorkType.Novel, NovelId)
-        });
-
-        PanePages = pages;
+        PanePages =
+        [
+            new WorkInfoPage(CurrentNovel.Entry),
+            new CommentsPage(new CommentsViewViewModel(SimpleWorkType.Novel, NovelId))
+        ];
     }
 
     private sealed class NovelDisplayContext(NovelContent novelContent) : INovelContext<Bitmap>

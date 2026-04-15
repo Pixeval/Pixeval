@@ -1,0 +1,23 @@
+<ContentPage
+    x:Class="Pixeval.Views.CommentContainer"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:comment="using:Pixeval.Views.Comment"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewers="using:Pixeval.ViewModels.Viewers"
+    xmlns:views="clr-namespace:Pixeval.Views"
+    d:DesignHeight="600"
+    d:DesignWidth="350"
+    x:DataType="{x:Type viewers:CommentsViewViewModel}"
+    mc:Ignorable="d">
+    <DockPanel>
+        <views:PixivReplyBar
+            x:Name="ReplyBar"
+            Margin="10"
+            DockPanel.Dock="Top"
+            SendButtonClick="ReplyBar_OnSendButtonClick"
+            StickerClick="ReplyBar_OnStickerClick" />
+        <views:CommentView HorizontalAlignment="Stretch" OpenRepliesButtonClick="CommentView_OnOpenRepliesButtonClick" />
+    </DockPanel>
+</ContentPage>

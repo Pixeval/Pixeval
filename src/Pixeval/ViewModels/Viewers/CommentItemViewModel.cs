@@ -2,79 +2,79 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Mako.Global.Enum;
 using Mako.Model;
-using Pixeval.Controls;
 using Pixeval.Utilities;
 
 namespace Pixeval.ViewModels.Viewers;
 
-public partial class CommentItemViewModel(Comment comment) : ObservableObject, IFactory<Comment, CommentItemViewModel>, IDisposable
+public sealed class CommentItemViewModel(Comment comment, SimpleWorkType parentType, long parentId, bool isTopComment)
+    : CommentsViewViewModel(parentType, parentId)
 {
+    /// <summary>
+    /// 若为<see langword="true"/>，表示这个评论是作品下面的评论；
+    /// 否则表示这个评论是另一个评论下面的回复。
+    /// Pixiv目前只支持两层评论
+    /// </summary>
+    public bool IsTopComment { get; } = isTopComment;
+
     public Comment Comment { get; } = comment;
 
     public bool HasReplies => Comment.HasReplies;
 
-    [MemberNotNullWhen(true, nameof(StampSource))]
-    public bool IsStamp => Comment.CommentStamp is not null;
+    [MemberNotNullWhen(true, nameof(StampUrl))]
+    public bool IsStamp => Comment.Stamp is not null;
 
-    public string? StampSource => Comment.CommentStamp?.StampUrl;
+    public string? StampUrl => Comment.Stamp?.StampUrl;
 
-    public DateTimeOffset PostDate => Comment.Date;
+    public DateTimeOffset Date => Comment.Date;
 
-    public string Poster => Comment.CommentPoster.Name;
+    public string User => Comment.User.Name;
 
-    public long PosterId => Comment.CommentPoster.Id;
+    public long UserId => Comment.User.Id;
 
-    public string CommentContent => Comment.CommentContent;
+    public string CommentContent => CommentImageHelper.GetContents(Comment.Content);
 
-    public bool IsMe => PosterId == App.AppViewModel.PixivUid;
+    public bool IsMe => UserId == App.AppViewModel.PixivUid;
 
     public long Id => Comment.Id;
 
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(RepliesCount))]
-    public partial ObservableCollection<CommentItemViewModel>? Replies { get; set; }
-
-    public string? RepliesCount => Replies?.Count.ToString();
-
-    public async Task LoadRepliesAsync(SimpleWorkType entryType)
+    public override async Task<Comment> AddCommentAsync(string content)
     {
-        if (HasReplies)
-            Replies = new ObservableCollection<CommentItemViewModel>(
-                await (entryType switch
-                {
-                    SimpleWorkType.IllustrationAndManga => App.AppViewModel.MakoClient.IllustrationCommentReplies(Id),
-                    SimpleWorkType.Novel => App.AppViewModel.MakoClient.NovelCommentReplies(Id),
-                    _ => throw new ArgumentOutOfRangeException(nameof(entryType))
-                }).Select(c => new CommentItemViewModel(c)).ToListAsync());
-        else
-            Replies = null;
+        if (!IsTopComment)
+            return Comment.CreateDefault();
+        return await (ParentType is SimpleWorkType.Novel
+            ? App.AppViewModel.MakoClient.AddNovelCommentAsync(ParentId, Id, content)
+            : App.AppViewModel.MakoClient.AddIllustrationCommentAsync(ParentId, Id, content));
     }
 
-    public void AddComment(Comment comment)
+    public override async Task<Comment> AddStickerAsync(int stampId)
     {
-        Replies ??= [];
-        Replies.Insert(0, new CommentItemViewModel(comment));
+        if (!IsTopComment)
+            return Comment.CreateDefault();
+        return await (ParentType is SimpleWorkType.Novel
+            ? App.AppViewModel.MakoClient.AddNovelCommentAsync(ParentId, Id, stampId)
+            : App.AppViewModel.MakoClient.AddIllustrationCommentAsync(ParentId, Id, stampId));
     }
 
-    public void DeleteComment(CommentItemViewModel viewModel)
+    public Task<bool> DeleteAsync()
     {
-        _ = Replies?.Remove(viewModel);
-        if (Replies is { Count: 0 })
-            Replies = null;
+        if (!IsMe)
+            return Task.FromResult(false);
+        return ParentType is SimpleWorkType.Novel
+            ? App.AppViewModel.MakoClient.DeleteNovelCommentAsync(Id)
+            : App.AppViewModel.MakoClient.DeleteIllustrationCommentAsync(Id);
     }
 
-    public void Dispose()
-    {
-        GC.SuppressFinalize(this);
-        Replies?.ForEach(r => r.Dispose());
-    }
+    public override void AddComment(Comment comment) => DataProvider.Source.Insert(0, new CommentItemViewModel(comment, ParentType, ParentId, false));
 
-    public static CommentItemViewModel CreateInstance(Comment entry) => new(entry);
+    public override void RefreshEngine()
+    {
+        DataProvider.ResetEngine(ParentType is SimpleWorkType.Novel
+            ? App.AppViewModel.MakoClient.NovelCommentReplies(Id)
+            : App.AppViewModel.MakoClient.IllustrationCommentReplies(Id),
+            (comment, _) => new(comment, ParentType, ParentId, false));
+    }
 }

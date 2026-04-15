@@ -2,6 +2,7 @@
 	<Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=viewmodels_005Cillustration/@EntryIndexedValue" xmlns="clr-namespace:System;assembly=mscorlib">True</Boolean>
 	<Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=viewmodels_005Cnovel/@EntryIndexedValue" xmlns="clr-namespace:System;assembly=mscorlib">True</Boolean>
 	<Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=viewmodels_005Cuser/@EntryIndexedValue" xmlns="clr-namespace:System;assembly=mscorlib">True</Boolean>
+	<Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=views_005Ccomment/@EntryIndexedValue" xmlns="clr-namespace:System;assembly=mscorlib">True</Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=viewmodels_005Centry/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=viewmodels_005Cillustration/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=viewmodels_005Cnovel/@EntryIndexedValue">True</s:Boolean>

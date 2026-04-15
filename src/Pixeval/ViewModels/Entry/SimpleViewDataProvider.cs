@@ -7,13 +7,12 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Mako.Engine;
 using Mako.Model;
 using Pixeval.Collections;
-using Pixeval.Controls;
 
 namespace Pixeval.ViewModels;
 
 public class SimpleViewDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel> : ObservableObject, IDataProvider<T, TViewModel>
     where T : class, IIdEntry
-    where TViewModel : class, IFactory<T, TViewModel>, IDisposable
+    where TViewModel : class, IDisposable
 {
     public AdvancedObservableCollection<TViewModel> View { get; } = [];
 

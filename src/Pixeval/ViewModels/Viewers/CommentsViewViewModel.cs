@@ -2,29 +2,46 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Mako.Engine;
 using Mako.Global.Enum;
 using Mako.Model;
 
 namespace Pixeval.ViewModels.Viewers;
 
-public class CommentsViewViewModel : ObservableObject, IDisposable
+public class CommentsViewViewModel(SimpleWorkType parentType, long parentId) : ObservableObject, IDisposable
 {
-    public CommentsViewViewModel(IFetchEngine<Comment> engine, SimpleWorkType type, long entryId)
-    {
-        EntryId = entryId;
-        EntryType = type;
-        DataProvider.ResetEngine(engine, (comment, _) => CommentItemViewModel.CreateInstance(comment));
-    }
+    public long ParentId { get; } = parentId;
+
+    public SimpleWorkType ParentType { get; } = parentType;
 
     public SimpleViewDataProvider<Comment, CommentItemViewModel> DataProvider { get; } = new();
 
-    public long EntryId { get; }
+    public virtual async Task<Comment> AddCommentAsync(string content)
+    {
+        return await (ParentType is SimpleWorkType.Novel
+            ? App.AppViewModel.MakoClient.AddNovelCommentAsync(ParentId, content)
+            : App.AppViewModel.MakoClient.AddIllustrationCommentAsync(ParentId, content));
+    }
 
-    public SimpleWorkType EntryType { get; }
+    public virtual async Task<Comment> AddStickerAsync(int stampId)
+    {
+        return await (ParentType is SimpleWorkType.Novel
+            ? App.AppViewModel.MakoClient.AddNovelCommentAsync(ParentId, stampId)
+            : App.AppViewModel.MakoClient.AddIllustrationCommentAsync(ParentId, stampId));
+    }
+
+    public virtual void AddComment(Comment comment) => DataProvider.Source.Insert(0, new CommentItemViewModel(comment, ParentType, ParentId, true));
 
     public void DeleteComment(CommentItemViewModel viewModel) => DataProvider.Source.Remove(viewModel);
+
+    public virtual void RefreshEngine()
+    {
+        DataProvider.ResetEngine(ParentType is SimpleWorkType.Novel
+                ? App.AppViewModel.MakoClient.NovelComments(ParentId)
+                : App.AppViewModel.MakoClient.IllustrationComments(ParentId),
+            (comment, _) => new(comment, ParentType, ParentId, true));
+    }
 
     public void Dispose()
     {

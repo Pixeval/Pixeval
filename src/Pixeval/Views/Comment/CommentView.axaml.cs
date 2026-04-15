@@ -3,10 +3,9 @@
 
 using System;
 using Avalonia.Controls;
-using Mako.Global.Enum;
 using Pixeval.ViewModels.Viewers;
 
-namespace Pixeval.Views.Comment;
+namespace Pixeval.Views;
 
 public partial class CommentView : UserControl
 {
@@ -14,13 +13,9 @@ public partial class CommentView : UserControl
 
     public event Action<CommentItemViewModel>? OpenRepliesButtonClick;
 
-    public event Action<CommentItemViewModel>? DeleteButtonClick;
-
-    public event Func<SimpleWorkType>? RequireEntryType;
-
     private void CommentItem_OnOpenRepliesButtonClick(CommentItemViewModel viewModel) => OpenRepliesButtonClick?.Invoke(viewModel);
 
-    private void CommentItem_OnDeleteButtonClick(CommentItemViewModel viewModel) => DeleteButtonClick?.Invoke(viewModel);
+    private void CommentItem_OnDeleteButtonClick(CommentItemViewModel viewModel) => (DataContext as CommentsViewViewModel)?.DeleteComment(viewModel);
 
-    private SimpleWorkType CommentItem_OnRequireEntryType() => RequireEntryType?.Invoke() ?? SimpleWorkType.IllustrationAndManga;
+    private void CommentView_OnDataContextChanged(object? sender, EventArgs e) => (DataContext as CommentsViewViewModel)?.RefreshEngine();
 }

@@ -82,7 +82,7 @@ public partial class UserViewerPageViewModel : ViewModelBase, IDisposable
     private async Task FollowAsync()
     {
         var result = await App.AppViewModel.MakoClient.PostFollowUserAsync(Id, PrivacyPolicy.Public);
-        if (result.IsSuccessStatusCode)
+        if (result)
         {
             UserDetail.UserEntity.IsFollowed = true;
             IsFollowed = true;
@@ -93,7 +93,7 @@ public partial class UserViewerPageViewModel : ViewModelBase, IDisposable
     private async Task FollowPrivatelyAsync()
     {
         var result = await App.AppViewModel.MakoClient.PostFollowUserAsync(Id, PrivacyPolicy.Private);
-        if (result.IsSuccessStatusCode)
+        if (result)
         {
             UserDetail.UserEntity.IsFollowed = true;
             IsFollowed = true;
@@ -104,7 +104,7 @@ public partial class UserViewerPageViewModel : ViewModelBase, IDisposable
     private async Task UnfollowAsync()
     {
         var result = await App.AppViewModel.MakoClient.RemoveFollowUserAsync(Id);
-        if (result.IsSuccessStatusCode)
+        if (result)
         {
             UserDetail.UserEntity.IsFollowed = false;
             IsFollowed = false;

@@ -1,5 +1,5 @@
 <UserControl
-    x:Class="Pixeval.Views.Comment.CommentView"
+    x:Class="Pixeval.Views.CommentView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:comment="using:Pixeval.Views.Comment"
@@ -7,26 +7,30 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:entry="using:Pixeval.Views.Entry"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:scg="using:System.Collections.Generic"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
+    xmlns:views="clr-namespace:Pixeval.Views"
     d:DesignHeight="400"
     d:DesignWidth="350"
-    x:DataType="{x:Type scg:IList,
-                        x:TypeArguments=viewers:CommentItemViewModel}"
+    x:DataType="{x:Type viewers:CommentsViewViewModel}"
+    DataContextChanged="CommentView_OnDataContextChanged"
     mc:Ignorable="d">
-    <entry:EntryView HasNoItem="{Binding !Count}" IsLoadingMore="{Binding #CommentsList.(controls:IncrementalLoadingBehavior.IsLoadingMore)}">
+    <entry:EntryView HasNoItem="{Binding !DataProvider.View.Count}" IsLoadingMore="{Binding #ListBox.(controls:IncrementalLoadingBehavior.IsLoadingMore)}">
         <ListBox
-            x:Name="CommentsList"
+            x:Name="ListBox"
             controls:IncrementalLoadingBehavior.IsEnabled="True"
             controls:IncrementalLoadingBehavior.Threshold="200"
-            ItemsSource="{Binding}">
+            ItemsSource="{Binding DataProvider.View}">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Spacing="5" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type viewers:CommentItemViewModel}">
-                    <comment:CommentItem
+                    <views:CommentItem
                         DataContext="{Binding}"
                         DeleteButtonClick="CommentItem_OnDeleteButtonClick"
-                        OpenRepliesButtonClick="CommentItem_OnOpenRepliesButtonClick"
-                        RequireEntryType="CommentItem_OnRequireEntryType" />
+                        OpenRepliesButtonClick="CommentItem_OnOpenRepliesButtonClick" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

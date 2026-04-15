@@ -15,7 +15,15 @@ namespace Pixeval.Views.Viewers;
 
 public partial class WorkInfoPage : ContentPage
 {
-    public WorkInfoPage() => InitializeComponent();
+    public WorkInfoPage() : this(null)
+    {
+    }
+
+    public WorkInfoPage(IArtworkInfo? viewModel)
+    {
+        DataContext = viewModel;
+        InitializeComponent();
+    }
 
     private async void AuthorButton_OnClick(object? sender, RoutedEventArgs e)
     {

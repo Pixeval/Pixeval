@@ -18,14 +18,6 @@ namespace Pixeval.Utilities;
 
 public static class MakoHelper
 {
-    public static readonly IReadOnlyList<int> StickerIds =
-    [
-        .. Enumerable.Range(301, 10),
-        .. Enumerable.Range(401, 10),
-        .. Enumerable.Range(201, 10),
-        .. Enumerable.Range(101, 10)
-    ];
-
     public static async Task<List<BookmarkTag>> GetBookmarkTagsAsync(long uid, SimpleWorkType type, PrivacyPolicy policy)
     {
         var tags = await App.AppViewModel.MakoClient.WorkBookmarkTag(uid, type, policy).ToListAsync();
@@ -80,17 +72,12 @@ public static class MakoHelper
         };
     }
 
-    public static string GenerateStickerDownloadUrl(int id)
-    {
-        return $"https://s.pximg.net/common/images/stamp/generated-stamps/{id}_s.jpg";
-    }
-
     public static async Task<bool> SetFollowAsync(User id, bool isFollowed, bool privately = false)
     {
         var result = await (isFollowed
             ? App.AppViewModel.MakoClient.PostFollowUserAsync(id.Id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public)
             : App.AppViewModel.MakoClient.RemoveFollowUserAsync(id.Id));
-        if (result.IsSuccessStatusCode)
+        if (result)
             id.UserInfo.IsFollowed = isFollowed;
         return id.UserInfo.IsFollowed;
     }
@@ -102,7 +89,7 @@ public static class MakoHelper
             var result = await (favorite
                 ? App.AppViewModel.MakoClient.PostIllustrationBookmarkAsync(id.Id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public, tags)
                 : App.AppViewModel.MakoClient.RemoveIllustrationBookmarkAsync(id.Id));
-            if (result.IsSuccessStatusCode)
+            if (result)
                 id.IsFavorite = favorite;
             return id.IsFavorite;
         }
@@ -118,7 +105,7 @@ public static class MakoHelper
         var result = await (favorite
             ? App.AppViewModel.MakoClient.PostNovelBookmarkAsync(id.Id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public, tags)
             : App.AppViewModel.MakoClient.RemoveNovelBookmarkAsync(id.Id));
-        if (result.IsSuccessStatusCode)
+        if (result)
             id.IsFavorite = favorite;
         return id.IsFavorite;
     }

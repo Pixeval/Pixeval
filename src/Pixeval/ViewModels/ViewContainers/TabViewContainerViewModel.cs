@@ -66,8 +66,12 @@ public partial class TabViewContainerViewModel : ObservableObject
         try
         {
             if (!skipPost)
-                _ = await App.AppViewModel.MakoClient.PostRestrictedModeSettingsAsync(!RestrictedCache);
-            RestrictedCache = await App.AppViewModel.MakoClient.GetRestrictedModeSettingsAsync();
+            {
+                if (await App.AppViewModel.MakoClient.PostRestrictedModeSettingsAsync(!RestrictedCache))
+                    RestrictedCache = !RestrictedCache;
+            }
+            else
+                RestrictedCache = await App.AppViewModel.MakoClient.GetRestrictedModeSettingsAsync();
         }
         finally
         {
@@ -83,8 +87,12 @@ public partial class TabViewContainerViewModel : ObservableObject
         try
         {
             if (!skipPost)
-                _ = await App.AppViewModel.MakoClient.PostAiShowSettingsAsync(!AiShowCache);
-            AiShowCache = await App.AppViewModel.MakoClient.GetAiShowSettingsAsync();
+            {
+                if (await App.AppViewModel.MakoClient.PostAiShowSettingsAsync(!AiShowCache))
+                    AiShowCache = !AiShowCache;
+            }
+            else
+                AiShowCache = await App.AppViewModel.MakoClient.GetAiShowSettingsAsync();
         }
         finally
         {

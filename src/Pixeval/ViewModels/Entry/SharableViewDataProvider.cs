@@ -7,7 +7,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Mako.Engine;
 using Misaki;
 using Pixeval.Collections;
-using Pixeval.Controls;
 using Pixeval.Utilities;
 
 namespace Pixeval.ViewModels;
@@ -19,7 +18,7 @@ namespace Pixeval.ViewModels;
 public class SharableViewDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>
     : ObservableObject, IDataProvider<T, TViewModel>
     where T : class, IIdentityInfo
-    where TViewModel : EntryViewModel<T>, IFactory<T, TViewModel>, IDisposable
+    where TViewModel : EntryViewModel<T>, IDisposable
 {
     public SharedRef<IFetchEngine<T>?>? FetchEngineRef
     {
