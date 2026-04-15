@@ -2,7 +2,7 @@
     x:Class="Pixeval.Views.Viewers.ImageViewerPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:ai="using:Avalonia.AnimatedImage"
+    xmlns:ai="using:AnimatedControls.Avalonia"
     xmlns:common="using:FluentIcons.Common"
     xmlns:controls="using:SmoothScroll.Avalonia.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"

@@ -39,7 +39,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\lib\AutoSettingsPage\AutoSettingsPage.Avalonia\AutoSettingsPage.Avalonia.csproj" />
 	  <ProjectReference Include="..\lib\AutoSettingsPage\AutoSettingsPage\AutoSettingsPage.csproj" />
-	  <ProjectReference Include="..\lib\Avalonia.AnimatedImage\Avalonia.AnimatedImage\Avalonia.AnimatedImage.csproj" />
+	  <ProjectReference Include="..\lib\AnimatedControls.Avalonia\AnimatedControls.Avalonia\AnimatedControls.Avalonia.csproj" />
 	  <ProjectReference Include="..\lib\FluentAvalonia\FluentAvalonia.csproj" />
 	  <ProjectReference Include="..\lib\Imouto\Imouto.BooruParser\Imouto.BooruParser.csproj" />
 	  <ProjectReference Include="..\lib\Mako\Mako\Mako.csproj" />

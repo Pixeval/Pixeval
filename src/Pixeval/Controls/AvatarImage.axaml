@@ -1,7 +1,7 @@
 <ResourceDictionary
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:animatedImage="using:Avalonia.AnimatedImage"
+    xmlns:animatedImage="using:AnimatedControls.Avalonia"
     xmlns:controls="using:Pixeval.Controls">
     <ControlTheme x:Key="{x:Type controls:AvatarImage}" TargetType="{x:Type controls:AvatarImage}">
         <Setter Property="HorizontalAlignment" Value="Stretch" />

@@ -2,7 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using Avalonia;
-using Avalonia.AnimatedImage;
+using AnimatedControls.Avalonia;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using Avalonia.Metadata;

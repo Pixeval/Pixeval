@@ -3,7 +3,7 @@
     <Project Path="src/lib/AutoSettingsPage/AutoSettingsPage.Avalonia/AutoSettingsPage.Avalonia.csproj" />
     <Project Path="src/lib/AutoSettingsPage/AutoSettingsPage/AutoSettingsPage.csproj" />
     <Project Path="src/lib/AutoSettingsPage/SettingsControls.Avalonia/SettingsControls.Avalonia.csproj" />
-    <Project Path="src/lib/Avalonia.AnimatedImage/Avalonia.AnimatedImage/Avalonia.AnimatedImage.csproj" />
+    <Project Path="src/lib/AnimatedControls.Avalonia/AnimatedControls.Avalonia/AnimatedControls.Avalonia.csproj" />
     <Project Path="src/lib/FluentAvalonia/FluentAvalonia.csproj" Id="e43f67a8-7d47-4a4f-8631-2fa7e7c7b171" />
     <Project Path="src/lib/Imouto/Imouto.BooruParser/Imouto.BooruParser.csproj" />
     <Project Path="src/lib/Mako/Mako.SourceGen/Mako.SourceGen.csproj" />

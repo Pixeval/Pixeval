@@ -7,6 +7,6 @@
 [submodule "src/lib/Mako"]
 	path = src/lib/Mako
 	url = https://github.com/Pixeval/Mako.git
-[submodule "src/lib/Avalonia.AnimatedImage"]
-	path = src/lib/Avalonia.AnimatedImage
-	url = https://github.com/Pixeval/Avalonia.AnimatedImage.git
+[submodule "src/lib/AnimatedControls.Avalonia"]
+	path = src/lib/AnimatedControls.Avalonia
+	url = https://github.com/Pixeval/AnimatedControls.Avalonia.git

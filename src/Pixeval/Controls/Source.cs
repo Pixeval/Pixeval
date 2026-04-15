@@ -3,7 +3,7 @@
 
 using System.ComponentModel;
 using Avalonia;
-using Avalonia.AnimatedImage;
+using AnimatedControls.Avalonia;
 using Pixeval.Utilities.IO.Caching;
 
 namespace Pixeval.Controls;

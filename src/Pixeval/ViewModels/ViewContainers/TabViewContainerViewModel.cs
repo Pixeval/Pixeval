@@ -3,7 +3,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Avalonia.AnimatedImage;
+using AnimatedControls.Avalonia;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mako;
