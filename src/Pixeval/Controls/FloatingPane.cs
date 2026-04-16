@@ -88,7 +88,8 @@ public static class FloatingPane
     public static TimeSpan GetCloseProximityExitDelay(Control element) => element.GetValue(CloseProximityExitDelayProperty);
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void SetCloseProximityExitDelay(Control element, TimeSpan value) => element.SetValue(CloseProximityExitDelayProperty, value);
+    public static void SetCloseProximityExitDelay(Control element, TimeSpan value) =>
+        element.SetValue(CloseProximityExitDelayProperty, value);
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static TimeSpan GetTemporaryVisibleDuration(Control element) => element.GetValue(TemporaryVisibleDurationProperty);
@@ -169,7 +170,9 @@ public static class FloatingPane
     {
         var state = element.GetValue(StateProperty);
         state?.CloseProximityDelayTask?.Dispose();
+        state?.CloseProximityDelayTask = null;
         state?.TemporaryVisibleDelayTask?.Dispose();
+        state?.TemporaryVisibleDelayTask = null;
 
         ResetState(element);
         element.Classes.Set(TemporaryVisibleClass, false);
@@ -187,16 +190,22 @@ public static class FloatingPane
     {
         var state = GetState(element);
 
-        if (!isInCloseProximity && element.Classes.Contains(CloseProximityClass))
+        if (state.CloseProximityDelayTask is null)
         {
-            state.CloseProximityDelayTask?.Dispose();
-            state.CloseProximityDelayTask = DispatcherTimer.RunOnce(
-                () => element.Classes.Set(CloseProximityClass, false),
-                GetCloseProximityExitDelay(element));
-            return;
-        }
+            if (!isInCloseProximity && element.Classes.Contains(CloseProximityClass))
+            {
+                state.CloseProximityDelayTask = DispatcherTimer.RunOnce(
+                    () =>
+                    {
+                        element.Classes.Set(CloseProximityClass, false);
+                        state.CloseProximityDelayTask = null;
+                    },
+                    GetCloseProximityExitDelay(element));
+                return;
+            }
 
-        element.Classes.Set(CloseProximityClass, isInCloseProximity);
+            element.Classes.Set(CloseProximityClass, isInCloseProximity);
+        }
     }
 
     private static FloatingPaneState GetState(Control element)
