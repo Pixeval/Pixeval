@@ -27,7 +27,7 @@
                 <DockPanel HorizontalSpacing="12" LastChildFill="False">
                     <controls:AvatarImage
                         Width="50"
-                        controls:Source.AvatarImage="{Binding Avatar, Converter={x:Static converters:PixevalConverters.ImagePickClosestConverter}}"
+                        controls:Source.Cache="{Binding Avatar, Converter={x:Static converters:PixevalConverters.ImagePickClosestConverter}}"
                         DockPanel.Dock="Left" />
                     <StackPanel DockPanel.Dock="Top" Spacing="2">
                         <TextBlock

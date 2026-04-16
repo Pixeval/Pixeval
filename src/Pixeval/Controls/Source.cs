@@ -1,89 +1,111 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
+using System;
 using System.ComponentModel;
 using Avalonia;
 using AnimatedControls.Avalonia;
 using Avalonia.Controls;
+using Pixeval.Utilities;
 using Pixeval.Utilities.IO.Caching;
 
 namespace Pixeval.Controls;
 
 public static class Source
 {
-    public static readonly AttachedProperty<string?> AnimatedImageProperty =
-        AvaloniaProperty.RegisterAttached<AnimatedImage, string?>(
-            "AnimatedImage",
+    public static readonly AttachedProperty<string?> CacheProperty =
+        AvaloniaProperty.RegisterAttached<Control, string?>(
+            "Cache",
             typeof(Source),
             defaultValue: null);
 
-    public static readonly AttachedProperty<string?> AvatarImageProperty =
-        AvaloniaProperty.RegisterAttached<AvatarImage, string?>(
-            "AvatarImage",
+    public static readonly AttachedProperty<bool> LoadedProperty =
+        AvaloniaProperty.RegisterAttached<Control, bool>(
+            "Loaded",
             typeof(Source),
-            defaultValue: null);
-
-    public static readonly AttachedProperty<string?> ImageProperty =
-        AvaloniaProperty.RegisterAttached<Image, string?>(
-            "Image",
-            typeof(Source),
-            defaultValue: null);
+            defaultValue: false);
 
     static Source()
     {
-        AnimatedImageProperty.Changed.AddClassHandler<AnimatedImage>(OnAnimatedImageChanged);
-        AvatarImageProperty.Changed.AddClassHandler<AvatarImage>(OnAvatarImageChanged);
-        ImageProperty.Changed.AddClassHandler<Image>(OnImageChanged);
+        CacheProperty.Changed.AddClassHandler<AnimatedImage>(OnAnimatedImageChanged);
+        CacheProperty.Changed.AddClassHandler<AvatarImage>(OnAvatarImageChanged);
+        CacheProperty.Changed.AddClassHandler<Image>(OnImageChanged);
     }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static string? GetAnimatedImage(AnimatedImage element) => element.GetValue(AnimatedImageProperty);
+    public static string? GetCache(Control element) => element.GetValue(CacheProperty);
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static string? GetAvatarImage(AvatarImage element) => element.GetValue(AvatarImageProperty);
+    public static void SetCache(Control element, string? value) => element.SetValue(CacheProperty, value);
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static string? GetImage(Image element) => element.GetValue(ImageProperty);
+    public static bool GetLoaded(Control element) => element.GetValue(LoadedProperty);
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void SetAnimatedImage(AnimatedImage element, string? value) => element.SetValue(AnimatedImageProperty, value);
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void SetAvatarImage(AvatarImage element, string? value) => element.SetValue(AvatarImageProperty, value);
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void SetImage(Image element, string? value) => element.SetValue(ImageProperty, value);
+    public static void SetLoaded(Control element, bool value) => element.SetValue(LoadedProperty, value);
 
     private static async void OnAnimatedImageChanged(AnimatedImage element, AvaloniaPropertyChangedEventArgs e)
     {
-        if (e.NewValue is not string value)
+        if (e.GetNewValue<string>() is not { } value)
+        {
+            SetLoaded(element, false);
             return;
+        }
 
         var bitmap = await CacheHelper.GetAnimatedBitmapFromCacheAsync(value);
-
-        if (element.GetValue(AnimatedImageProperty) == value)
+        
+        if (GetCache(element) == value)
+        {
+            var source = element.Source;
             element.Source = bitmap;
+            SetLoaded(element, true);
+            // Bitmap 可以多次 Dispose
+            source?.Dispose();
+        }
+
+        element.RaiseEvent(new ViewModelDisposalEventArgs(ViewModelDisposal.ViewModelDisposalEvent, bitmap));
     }
 
     private static async void OnAvatarImageChanged(AvatarImage element, AvaloniaPropertyChangedEventArgs e)
     {
-        if (e.NewValue is not string value)
+        if (e.GetNewValue<string>() is not { } value)
+        {
+            SetLoaded(element, false);
             return;
+        }
 
         var bitmap = await CacheHelper.GetAnimatedBitmapFromCacheAsync(value);
 
-        if (element.GetValue(AvatarImageProperty) == value)
+        if (GetCache(element) == value)
+        {
+            var source = element.Source;
             element.Source = bitmap;
+            SetLoaded(element, true);
+            source?.Dispose();
+        }
+
+        element.RaiseEvent(new ViewModelDisposalEventArgs(ViewModelDisposal.ViewModelDisposalEvent, bitmap));
     }
 
     private static async void OnImageChanged(Image element, AvaloniaPropertyChangedEventArgs e)
     {
-        if (e.NewValue is not string value)
+        if (e.GetNewValue<string>() is not { } value)
+        {
+            SetLoaded(element, false);
             return;
+        }
 
         var bitmap = await CacheHelper.GetBitmapFromCacheAsync(value);
 
-        if (element.GetValue(ImageProperty) == value)
+        if (GetCache(element) == value)
+        {
+            var source = element.Source;
             element.Source = bitmap;
+            SetLoaded(element, true);
+            if (source is IDisposable disposable)
+                disposable.Dispose();
+        }
+
+        element.RaiseEvent(new ViewModelDisposalEventArgs(ViewModelDisposal.ViewModelDisposalEvent, bitmap));
     }
 }

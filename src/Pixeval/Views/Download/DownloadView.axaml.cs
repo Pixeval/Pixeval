@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Mako.Model;
@@ -9,7 +7,7 @@ using Pixeval.Views.Viewers;
 
 namespace Pixeval.Views.Download;
 
-public partial class DownloadView : UserControl, IStructuralDisposalCompleter
+public partial class DownloadView : UserControl
 {
     public DownloadView() => InitializeComponent();
 
@@ -24,31 +22,16 @@ public partial class DownloadView : UserControl, IStructuralDisposalCompleter
             await viewContainer.CreateIllustrationPageAsync(viewModel.Entry);
     }
 
-    private async void DownloadItem_OnDataContextChanged(object? sender, EventArgs e)
-    {
-        if (DataContext is not DownloadViewViewModel viewModel)
-            return;
-        if (sender is not Control { DataContext: DownloadItemViewModel vm })
-            return;
+    #region Disposal
 
-        _ = await vm.TryLoadThumbnailAsync(viewModel);
-    }
-
-    public void CompleteDisposal()
-    {
-        if (DataContext is DownloadViewViewModel viewModel)
-            viewModel.Dispose();
-    }
-
-    public List<Action<IStructuralDisposalCompleter?>> ChildrenCompletes { get; } = [];
-
-    public bool CompleterRegistered { get; set; }
-
-    public bool CompleterDisposed { get; set; }
-
+    /// <inheritdoc />
     protected override void OnLoaded(RoutedEventArgs e)
     {
         base.OnLoaded(e);
-        ((IStructuralDisposalCompleter)this).Hook();
+
+        if (DataContext is DownloadViewViewModel vm)
+            RaiseEvent(new ViewModelDisposalEventArgs(ViewModelDisposal.ViewModelDisposalEvent, vm));
     }
+
+    #endregion
 }

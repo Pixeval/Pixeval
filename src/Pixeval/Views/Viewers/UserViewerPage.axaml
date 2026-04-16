@@ -56,9 +56,7 @@
                             FontSize="13"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="{Binding Id}" />
-                        <ScrollViewer MaxHeight="60">
-                            <controls:MarkdownBox MaxHeight="60" Markdown="{Binding Description}" />
-                        </ScrollViewer>
+                        <controls:MarkdownBox MaxHeight="60" Markdown="{Binding Description}" />
                     </StackPanel>
                 </StackPanel>
 

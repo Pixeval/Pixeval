@@ -3,12 +3,10 @@
 
 using System.Collections.Generic;
 using Avalonia.Controls;
-using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Pixeval.I18N;
 using Pixeval.Utilities;
-using Pixeval.ViewModels;
 using Pixeval.ViewModels.Viewers;
 using Pixeval.Views.Work;
 
@@ -17,8 +15,6 @@ namespace Pixeval.Views.Viewers;
 public partial class NovelViewerPage : ContentPage
 {
     private NovelViewerPageViewModel ViewModel => (NovelViewerPageViewModel) DataContext!;
-
-    public static readonly FuncValueConverter<int, string> PlusOneConverter = new(i => (i + 1).ToString());
 
     public NovelViewerPage() : this(null)
     {
@@ -58,11 +54,15 @@ public partial class NovelViewerPage : ContentPage
         BookmarkTagSelector.IsVisible = false;
     }
 
-    private async void Thumbnail_OnDataContextChanged(object? sender, System.EventArgs e)
-    {
-        if (sender is not Control { DataContext: NovelItemViewModel viewModel })
-            return;
+    #region Disposal
 
-        _ = await viewModel.TryLoadThumbnailAsync(ViewModel);
+    /// <inheritdoc />
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+
+        RaiseEvent(new ViewModelDisposalEventArgs(ViewModelDisposal.ViewModelDisposalEvent, ViewModel));
     }
+
+    #endregion
 }

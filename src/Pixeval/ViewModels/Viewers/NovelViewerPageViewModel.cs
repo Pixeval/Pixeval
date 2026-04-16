@@ -16,6 +16,7 @@ using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.AppManagement;
 using Pixeval.I18N;
+using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Settings;
 using Pixeval.Utilities;
 using Pixeval.Views.Settings;
@@ -149,8 +150,6 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
     {
         GC.SuppressFinalize(this);
         _loadingCts.Cancel();
-        foreach (var novelViewModel in Novels)
-            novelViewModel.UnloadThumbnail(this);
         ViewModelSource?.Dispose();
     }
 
@@ -172,6 +171,7 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
             var content = await CurrentNovel.ContentAsync;
             token.ThrowIfCancellationRequested();
 
+            BrowseHistoryPersistentManager.AddHistory(CurrentNovel.Entry);
             var markdowns = await Task.Run(() => BuildPageMarkdowns(content), token);
             token.ThrowIfCancellationRequested();
 

@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input.Platform;
+using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
@@ -17,13 +18,15 @@ namespace Pixeval.ViewModels;
 
 public partial class IllustrationItemViewModel
 {
-    [RelayCommand(CanExecute = nameof(ThumbnailLoaded))]
-    private async Task CopyAsync(Control? parameter)
+    [RelayCommand]
+    private static async Task CopyAsync(Image? parameter)
     {
+        if (parameter is not { Source: Bitmap bitmap })
+            return;
         if (TopLevel.GetTopLevel(parameter) is not
             { ViewContainer: { } viewContainer, Clipboard: { } clipboard })
             return;
-        await clipboard.SetBitmapAsync(Thumbnail);
+        await clipboard.SetBitmapAsync(bitmap);
         viewContainer?.ShowSuccess(I18NManager.GetResource(EntryItemResources.ImageSetToClipBoard));
     }
 

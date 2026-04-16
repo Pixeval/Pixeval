@@ -46,8 +46,6 @@ public partial class WorkContainer : UserControl
         };
     }
 
-    public SimpleWorkType Type => WorkView.Type;
-
     private void SelectAllToggleButton_OnClicked(object? sender, RoutedEventArgs e)
     {
         WorkView.ListBox.SelectAll();

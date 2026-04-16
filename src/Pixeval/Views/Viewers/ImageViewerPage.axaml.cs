@@ -21,10 +21,7 @@ public partial class ImageViewerPage : UserControl
             o => o.ZoomFactor,
             (o, v) => o.ZoomFactor = v);
 
-    public ImageViewerPage()
-    {
-        InitializeComponent();
-    }
+    public ImageViewerPage() => InitializeComponent();
 
     /// <summary>
     /// 默认缩放到适应窗口大小（Uniform）

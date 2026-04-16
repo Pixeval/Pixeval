@@ -131,7 +131,6 @@
                     </InlineUIContainer>
                     <Run Text="{I18N {x:Static pixeval:AboutPageResources.OpenSourceLicenseContentPartIIText}}" />
                 </TextBlock>
-                <!--  TODO 可能缺资源，导致此处代码块崩溃，通过重写主题修复  -->
                 <local:MarkdownBox x:Name="LicenseTextBlock" />
             </StackPanel>
         </StackPanel>

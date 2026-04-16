@@ -1,13 +1,13 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using Mako.Engine;
-using Mako.Global.Enum;
 using Mako.Model;
 using Misaki;
 using Pixeval.AppManagement;
@@ -17,7 +17,7 @@ using Pixeval.Views.Viewers;
 
 namespace Pixeval.Views.Work;
 
-public partial class WorkView : UserControl, IStructuralDisposalCompleter//, IEntryView<ISortableEntryViewViewModel>
+public partial class WorkView : UserControl, IDisposable
 {
     public event EventHandler<WorkView, IWorkViewModel>? RequestAddToBookmark;
 
@@ -37,30 +37,6 @@ public partial class WorkView : UserControl, IStructuralDisposalCompleter//, IEn
 
     public WorkView() => InitializeComponent();
 
-    public static readonly DirectProperty<WorkView, SimpleWorkType> TypeProperty =
-        AvaloniaProperty.RegisterDirect<WorkView, SimpleWorkType>(nameof(Type),
-            t => t.Type,
-            (t, v) => t.Type = v);
-
-    public SimpleWorkType Type
-    {
-        get;
-        private set => SetAndRaise(TypeProperty, ref field, value);
-    }
-
-    private async void WorkItem_OnDataContextChanged(object? sender, EventArgs e)
-    {
-        if (DataContext is not { } viewModel
-            || sender is not Control { DataContext: IWorkViewModel vm } control
-            || sender is not IWorkAnimatable animatable)
-            return;
-        if (await vm.TryLoadThumbnailAsync(viewModel))
-            if (control.IsEffectivelyVisible)
-                animatable.StartAnimation();
-            else
-                control.Opacity = 1;
-    }
-
     private async void WorkItem_OnTapped(object? sender, TappedEventArgs tappedEventArgs)
     {
         if (sender is not ListBoxItem { DataContext: IWorkViewModel vm } lbi)
@@ -72,8 +48,25 @@ public partial class WorkView : UserControl, IStructuralDisposalCompleter//, IEn
             return;
         }
 
+        await CreateWorkViewerPage(vm);
+    }
+
+    private async void WorkItem_OnDoubleTapped(object? sender, TappedEventArgs e)
+    {
+        if (sender is not ListBoxItem { DataContext: IWorkViewModel vm })
+            return;
+
+        if (ListBox.SelectionMode.HasFlag(SelectionMode.Single))
+            return;
+
+        await CreateWorkViewerPage(vm);
+    }
+
+    private async Task CreateWorkViewerPage(IWorkViewModel vm)
+    {
         if (TopLevel.GetTopLevel(this) is not { ViewContainer: { } viewContainer })
             return;
+
         switch (vm, DataContext)
         {
             case (NovelItemViewModel { IsBookmarkSupported: false, Entry.Id: var id }, _):
@@ -90,15 +83,6 @@ public partial class WorkView : UserControl, IStructuralDisposalCompleter//, IEn
                 viewContainer.CreateIllustrationPage(viewModel, viewViewModel);
                 break;
         }
-    }
-
-    private void WorkItem_OnDoubleTapped(object? sender, TappedEventArgs e)
-    {
-        if (sender is not ListBoxItem { DataContext: IWorkViewModel vm })
-            return;
-
-        if (ListBox.SelectionMode.HasFlag(SelectionMode.Single))
-            return;
     }
 
     private void WorkView_OnSelectionChanged(object? o, SelectionChangedEventArgs selectionChangedEventArgs)
@@ -138,25 +122,21 @@ public partial class WorkView : UserControl, IStructuralDisposalCompleter//, IEn
                 viewModel.ResetEngine(newEngine, isBookmarkEnabled, itemsPerPage, itemLimit);
                 break;
             default:
+                ISortableEntryViewViewModel? newViewModel;
                 if (isNovelEngine)
                 {
-                    Type = SimpleWorkType.Novel;
-                    viewModel?.Dispose();
                     ItemWidth = 350;
-                    viewModel = new NovelViewViewModel();
+                    newViewModel = new NovelViewViewModel();
                 }
                 else
                 {
-                    Type = SimpleWorkType.IllustrationAndManga;
-                    viewModel?.Dispose();
                     ItemWidth = LayoutType is ItemsViewLayoutType.Grid ? 240 : double.NaN;
-                    viewModel = new IllustrationViewViewModel();
+                    newViewModel = new IllustrationViewViewModel();
                 }
-
-                viewModel.ResetEngine(newEngine, isBookmarkEnabled, itemsPerPage, itemLimit);
-                DataContext = viewModel;
-                ListBox.ItemsSource = viewModel.View;
-
+                newViewModel.ResetEngine(newEngine, isBookmarkEnabled, itemsPerPage, itemLimit);
+                DataContext = newViewModel;
+                ListBox.ItemsSource = newViewModel.View;
+                viewModel?.Dispose();
                 break;
         }
     }
@@ -172,30 +152,6 @@ public partial class WorkView : UserControl, IStructuralDisposalCompleter//, IEn
         }
     }
 
-    public void CompleteDisposal()
-    {
-        var d = DataContext;
-        DataContext = null!;
-        if (d is not ISortableEntryViewViewModel viewModel)
-            return;
-        foreach (var vm in viewModel.Source)
-            vm.UnloadThumbnail(viewModel);
-        viewModel.Dispose();
-    }
-
-    public List<Action<IStructuralDisposalCompleter?>> ChildrenCompletes { get; } = [];
-
-    public bool CompleterRegistered { get; set; }
-
-    public bool CompleterDisposed { get; set; }
-
-    /// <inheritdoc />
-    protected override void OnLoaded(RoutedEventArgs e)
-    {
-        base.OnLoaded(e);
-        ((IStructuralDisposalCompleter) this).Hook();
-    }
-
     private void ListBox_OnContainerPrepared(object? sender, ContainerPreparedEventArgs e)
     {
         if (e.Container is not ListBoxItem lbi)
@@ -203,4 +159,27 @@ public partial class WorkView : UserControl, IStructuralDisposalCompleter//, IEn
         lbi.Tapped += WorkItem_OnTapped;
         lbi.DoubleTapped += WorkItem_OnDoubleTapped;
     }
+
+    #region Disposal
+
+    /// <inheritdoc />
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+
+        RaiseEvent(new ViewModelDisposalEventArgs(ViewModelDisposal.ViewModelDisposalEvent, this));
+    }
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        var d = DataContext;
+        DataContext = null!;
+        if (d is ISortableEntryViewViewModel viewModel)
+            viewModel.Dispose();
+    }
+
+    ~WorkView() => Dispatcher.UIThread.InvokeAsync(Dispose);
+
+    #endregion
 }

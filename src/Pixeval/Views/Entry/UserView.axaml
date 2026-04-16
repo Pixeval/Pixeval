@@ -35,7 +35,7 @@
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type viewModels:UserItemViewModel}">
-                    <entry:UserItem DataContextChanged="UserItem_OnDataContextChanged" />
+                    <entry:UserItem />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

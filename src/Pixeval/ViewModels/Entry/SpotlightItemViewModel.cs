@@ -13,7 +13,7 @@ public class SpotlightItemViewModel(Spotlight spotlight) : ThumbnailEntryViewMod
 {
     public static SpotlightItemViewModel CreateInstance(Spotlight entry) => new(entry);
 
-    protected override string ThumbnailUrl => Entry.Thumbnail;
+    public override string ThumbnailUrl => Entry.Thumbnail;
 
     public override Uri AppUri => MakoHelper.GenerateSpotlightAppUri(Entry.Id);
 

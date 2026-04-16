@@ -2,7 +2,6 @@
     x:Class="Pixeval.Views.ViewContainers.TabViewContainer"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:animatedImage="using:AnimatedControls.Avalonia"
     xmlns:controls="using:Tabalonia.Controls"
     xmlns:controls1="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -20,7 +19,10 @@
     <local:ViewContainerBase.DataContext>
         <viewModels:TabViewContainerViewModel />
     </local:ViewContainerBase.DataContext>
-    <controls:TabsControl x:Name="TabsControl" LeftHeaderContentDraggable="True">
+    <controls:TabsControl
+        x:Name="TabsControl"
+        LeftHeaderContentDraggable="True"
+        TabClosing="TabsControl_OnTabClosing">
         <controls:TabsControl.LeftHeaderContent>
             <Image
                 Width="20"

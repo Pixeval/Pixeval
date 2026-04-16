@@ -3,6 +3,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Mako.Engine;
 using Misaki;
@@ -18,7 +19,7 @@ namespace Pixeval.ViewModels;
 public class SharableViewDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>
     : ObservableObject, IDataProvider<T, TViewModel>
     where T : class, IIdentityInfo
-    where TViewModel : EntryViewModel<T>, IDisposable
+    where TViewModel : EntryViewModel<T>
 {
     public SharedRef<IFetchEngine<T>?>? FetchEngineRef
     {
@@ -86,7 +87,7 @@ public class SharableViewDataProvider<T, [DynamicallyAccessedMembers(Dynamically
     private void DisposeEntrySourceRef()
     {
         if (EntrySourceRef?.TryDispose(this) is true)
-            foreach (var entryViewModel in Source)
-                entryViewModel.Dispose();
+            foreach (var entry in Source.OfType<IDisposable>())
+                entry.Dispose();
     }
 }

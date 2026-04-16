@@ -56,6 +56,7 @@
                     <MenuItem
                         Command="{Binding PlayPauseCommand}"
                         Header="{I18N {x:Static pixeval:MiscResources.Play}}"
+                        HotKey="Space"
                         Icon="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding IsPlaying},
                                                                                   Pause,
                                                                                   Play,
@@ -75,12 +76,14 @@
                         Command="{Binding CopyCommand}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
                         Header="{I18N {x:Static pixeval:EntryViewerPageResources.Copy}}"
+                        HotKey="Ctrl+C"
                         Icon="{markup:SymbolIcon Copy}"
                         IsVisible="{Binding !IllustrationViewModel.IsPicGif}" />
                     <MenuItem
                         Command="{Binding IllustrationViewModel.SaveCommand}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
                         Header="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}"
+                        HotKey="Ctrl+S"
                         Icon="{markup:SymbolIcon Save}" />
                     <MenuItem
                         Command="{Binding IllustrationViewModel.SaveAsCommand}"
@@ -121,30 +124,24 @@
 
 
         <!--  加载中遮罩  -->
-        <Grid IsVisible="{Binding !LoadSuccessfully}">
-            <Image
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                Source="{Binding ThumbnailSource}"
-                Stretch="Uniform" />
-            <Border
-                Padding="20"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Background="Gray"
-                CornerRadius="{StaticResource ControlCornerRadius}">
-                <StackPanel Spacing="10">
-                    <ProgressBar
-                        Width="200"
-                        IsIndeterminate="{Binding LoadingProgress, Converter={x:Static ObjectConverters.IsNull}}"
-                        Maximum="100"
-                        Value="{Binding LoadingProgress}" />
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                        Text="{Binding LoadingText}" />
-                </StackPanel>
-            </Border>
-        </Grid>
+        <Border
+            Padding="20"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Background="Gray"
+            CornerRadius="{StaticResource ControlCornerRadius}"
+            IsVisible="{Binding !LoadSuccessfully}">
+            <StackPanel Spacing="10">
+                <ProgressBar
+                    Width="200"
+                    IsIndeterminate="{Binding LoadingProgress, Converter={x:Static ObjectConverters.IsNull}}"
+                    Maximum="100"
+                    Value="{Binding LoadingProgress}" />
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                    Text="{Binding LoadingText}" />
+            </StackPanel>
+        </Border>
     </Grid>
 </UserControl>

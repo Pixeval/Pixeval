@@ -3,6 +3,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Mako.Engine;
 using Mako.Model;
@@ -12,7 +13,7 @@ namespace Pixeval.ViewModels;
 
 public class SimpleViewDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel> : ObservableObject, IDataProvider<T, TViewModel>
     where T : class, IIdEntry
-    where TViewModel : class, IDisposable
+    where TViewModel : class
 {
     public AdvancedObservableCollection<TViewModel> View { get; } = [];
 
@@ -39,7 +40,7 @@ public class SimpleViewDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAc
         GC.SuppressFinalize(this);
         View.Dispose();
         if (Source is { } source)
-            foreach (var entry in source)
+            foreach (var entry in source.OfType<IDisposable>())
                 entry.Dispose();
 
         FetchEngine = null;

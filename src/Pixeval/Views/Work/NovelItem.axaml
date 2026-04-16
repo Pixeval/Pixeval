@@ -76,7 +76,7 @@
                 <Panel>
                     <Image
                         x:Name="CoverImage"
-                        Source="{Binding Thumbnail}"
+                        controls:Source.Cache="{Binding ThumbnailUrl}"
                         Stretch="UniformToFill">
                         <Image.Transitions>
                             <Transitions>

@@ -5,7 +5,6 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:Pixeval.Views.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:Pixeval.Views.Viewers"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -98,13 +97,11 @@
                     TagsSelected="BookmarkTagSelector_OnTagsSelected" />
 
                 <Border Background="{Binding NovelBackgroundBrush}">
-                    <Grid>
-                        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                            <controls:MarkdownBox
-                                MaxWidth="{Binding NovelMaxWidth}"
-                                Margin="30,20"
-                                Markdown="{Binding CurrentMarkdown}" />
-                        </ScrollViewer>
+                    <Panel>
+                        <controls:MarkdownBox
+                            MaxWidth="{Binding NovelMaxWidth}"
+                            Margin="30,20"
+                            Markdown="{Binding CurrentMarkdown}" />
 
                         <Grid Background="#7F000000" IsVisible="{Binding IsLoading}">
                             <StackPanel
@@ -132,7 +129,7 @@
                             RightTapped="NextButton_OnRightClick"
                             Symbol="ChevronRight"
                             ToolTipText="{Binding NextButtonText}" />
-                    </Grid>
+                    </Panel>
                 </Border>
             </DockPanel>
         </SplitView>
@@ -157,8 +154,7 @@
                     <Image
                         Width="80"
                         Height="80"
-                        DataContextChanged="Thumbnail_OnDataContextChanged"
-                        Source="{Binding Thumbnail}"
+                        controls:Source.Cache="{Binding ThumbnailUrl}"
                         Stretch="UniformToFill" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
@@ -203,7 +199,7 @@
                         VerticalAlignment="Center"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                         IsVisible="{Binding IsMultiPage}">
-                        <Run Text="{Binding CurrentPageIndex, Mode=OneWay, Converter={x:Static local:NovelViewerPage.PlusOneConverter}}" />
+                        <Run Text="{Binding CurrentPageIndex, Mode=OneWay, Converter={x:Static converters:PixevalConverters.PlusOne}}" />
                         <Run Text="/" />
                         <Run Text="{Binding PageCount}" />
                     </TextBlock>

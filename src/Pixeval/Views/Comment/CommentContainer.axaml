@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
-    xmlns:views="clr-namespace:Pixeval.Views"
+    xmlns:views="using:Pixeval.Views"
     d:DesignHeight="600"
     d:DesignWidth="350"
     x:DataType="{x:Type viewers:CommentsViewViewModel}"

@@ -28,15 +28,15 @@
                     <!--<labs:Shimmer Grid.Column="0" Grid.ColumnSpan="3" />-->
                     <Image
                         Grid.Column="0"
-                        Source="{Binding Banner0}"
+                        controls:Source.Cache="{Binding Banner0Url}"
                         Stretch="UniformToFill" />
                     <Image
                         Grid.Column="1"
-                        Source="{Binding Banner1}"
+                        controls:Source.Cache="{Binding Banner1Url}"
                         Stretch="UniformToFill" />
                     <Image
                         Grid.Column="2"
-                        Source="{Binding Banner2}"
+                        controls:Source.Cache="{Binding Banner2Url}"
                         Stretch="UniformToFill" />
                 </Grid>
             </controls:ConstrainedBox>
@@ -82,7 +82,7 @@
                 CornerRadius="100"
                 Tapped="AvatarButton_OnTapped">
                 <Border ClipToBounds="True" CornerRadius="100">
-                    <animatedImage:AnimatedImage Source="{Binding Avatar}" />
+                    <animatedImage:AnimatedImage controls:Source.Cache="{Binding AvatarUrl}" />
                 </Border>
                 <Button.Flyout>
                     <MenuFlyout>

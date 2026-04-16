@@ -8,7 +8,7 @@
     xmlns:entry="using:Pixeval.Views.Entry"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
-    xmlns:views="clr-namespace:Pixeval.Views"
+    xmlns:views="using:Pixeval.Views"
     d:DesignHeight="400"
     d:DesignWidth="350"
     x:DataType="{x:Type viewers:CommentsViewViewModel}"
@@ -27,10 +27,7 @@
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type viewers:CommentItemViewModel}">
-                    <views:CommentItem
-                        DataContext="{Binding}"
-                        DeleteButtonClick="CommentItem_OnDeleteButtonClick"
-                        OpenRepliesButtonClick="CommentItem_OnOpenRepliesButtonClick" />
+                    <views:CommentItem DeleteButtonClick="CommentItem_OnDeleteButtonClick" OpenRepliesButtonClick="CommentItem_OnOpenRepliesButtonClick" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

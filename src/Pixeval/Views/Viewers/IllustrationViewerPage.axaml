@@ -71,6 +71,7 @@
                             IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
                             Label="{I18N {x:Static pixeval:MiscResources.AddBookmark}}" />
                         <CommandBarSeparator />
+                        <!--  HotKey="Ctrl+C" 不知道为什么这个快捷键会被导到其他页面去，导致无法找到$self的TopLevel  -->
                         <CommandBarButton
                             Command="{Binding CurrentImage.CopyCommand}"
                             CommandParameter="{Binding $self, Mode=OneTime}"
@@ -182,7 +183,7 @@
                         <Image
                             Width="80"
                             Height="80"
-                            Source="{Binding Thumbnail}"
+                            controls:Source.Cache="{Binding ThumbnailUrl}"
                             Stretch="UniformToFill" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>

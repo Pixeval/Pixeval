@@ -31,8 +31,6 @@ public partial class DownloadViewViewModel : ObservableObject, IDisposable
 
     public AdvancedObservableCollection<DownloadItemViewModel> View { get; }
 
-    public bool HasNoItem => View.Count is 0;
-
     public ObservableCollection<DownloadItemViewModel> SelectedEntries { get; } = [];
 
     partial void OnCurrentOptionChanged(DownloadListOption value) => ResetFilter();
@@ -41,8 +39,6 @@ public partial class DownloadViewViewModel : ObservableObject, IDisposable
     {
         _source = source;
         View = new AdvancedObservableCollection<DownloadItemViewModel>(_viewSource, true);
-        View.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNoItem));
-
         foreach (var task in _source)
             AddTask(task);
 
@@ -130,11 +126,6 @@ public partial class DownloadViewViewModel : ObservableObject, IDisposable
     {
         GC.SuppressFinalize(this);
         _source.CollectionChanged -= SourceOnCollectionChanged;
-        foreach (var vm in _viewSource)
-        {
-            vm.UnloadThumbnail(this);
-            vm.Dispose();
-        }
     }
 
     private void AddTask(IDownloadTaskGroupBase task)
@@ -152,12 +143,8 @@ public partial class DownloadViewViewModel : ObservableObject, IDisposable
 
     private void RemoveTask(IDownloadTaskGroupBase task)
     {
-        if (!_lookup.Remove(task.Destination, out var vm))
-            return;
-
-        _ = _viewSource.Remove(vm);
-        vm.UnloadThumbnail(this);
-        vm.Dispose();
+        if (_lookup.Remove(task.Destination, out var vm))
+            _ = _viewSource.Remove(vm);
     }
 
     private void SourceOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -173,11 +160,6 @@ public partial class DownloadViewViewModel : ObservableObject, IDisposable
                     RemoveTask(item);
                 break;
             case NotifyCollectionChangedAction.Reset:
-                foreach (var vm in _viewSource.ToArray())
-                {
-                    vm.UnloadThumbnail(this);
-                    vm.Dispose();
-                }
                 _viewSource.Clear();
                 _lookup.Clear();
                 foreach (var task in _source)

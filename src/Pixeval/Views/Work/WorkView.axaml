@@ -21,6 +21,7 @@
             controls:IncrementalLoadingBehavior.IsEnabled="True"
             controls:IncrementalLoadingBehavior.Threshold="200"
             ContainerPrepared="ListBox_OnContainerPrepared"
+            ItemsSource="{Binding View}"
             SelectionChanged="WorkView_OnSelectionChanged"
             SelectionMode="{Binding IsSelecting, Converter={x:Static local:WorkView.SelectionModeConverter}}"
             UseLayoutRounding="False">
@@ -39,18 +40,10 @@
             </ListBox.ItemsPanel>
             <ListBox.DataTemplates>
                 <DataTemplate x:DataType="{x:Type novel:NovelItemViewModel}">
-                    <local:NovelItem
-                        DataContext="{Binding Mode=OneTime}"
-                        DataContextChanged="WorkItem_OnDataContextChanged"
-                        RequestAddToBookmark="WorkItem_OnRequestAddToBookmark"
-                        RequestOpenUserInfoPage="WorkItem_OnRequestOpenUserInfoPage" />
+                    <local:NovelItem RequestAddToBookmark="WorkItem_OnRequestAddToBookmark" RequestOpenUserInfoPage="WorkItem_OnRequestOpenUserInfoPage" />
                 </DataTemplate>
                 <DataTemplate x:DataType="{x:Type novel:IllustrationItemViewModel}">
-                    <local:IllustrationItem
-                        DataContext="{Binding Mode=OneTime}"
-                        DataContextChanged="WorkItem_OnDataContextChanged"
-                        RequestAddToBookmark="WorkItem_OnRequestAddToBookmark"
-                        RequestOpenUserInfoPage="WorkItem_OnRequestOpenUserInfoPage" />
+                    <local:IllustrationItem RequestAddToBookmark="WorkItem_OnRequestAddToBookmark" RequestOpenUserInfoPage="WorkItem_OnRequestOpenUserInfoPage" />
                 </DataTemplate>
             </ListBox.DataTemplates>
         </ListBox>

@@ -16,7 +16,7 @@
     mc:Ignorable="d">
     <DockPanel LastChildFill="False">
         <controls:ConstrainedBox AspectRatio="40:21" DockPanel.Dock="Top">
-            <Image Source="{Binding Thumbnail}" Stretch="Uniform" />
+            <Image controls:Source.Cache="{Binding ThumbnailUrl}" Stretch="Uniform" />
         </controls:ConstrainedBox>
         <Grid
             Margin="20"

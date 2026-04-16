@@ -105,13 +105,7 @@ public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo
         }
     }
 
-    protected override string ThumbnailUrl => Entry.Thumbnails.PickMax()?.ImageUri.OriginalString ?? string.Empty;
-
-    protected override void DisposeOverride()
-    {
-        DownloadTask.PropertyChanged -= DownloadTaskOnPropertyChanged;
-        base.DisposeOverride();
-    }
+    public override string ThumbnailUrl => Entry.Thumbnails.PickMax()?.ImageUri.OriginalString ?? string.Empty;
 
     private void DownloadTaskOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {

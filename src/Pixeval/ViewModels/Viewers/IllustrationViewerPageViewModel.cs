@@ -49,8 +49,6 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
     public void Dispose()
     {
         GC.SuppressFinalize(this);
-        foreach (var illustrationViewModel in Illustrations)
-            illustrationViewModel.UnloadThumbnail(this);
         Pages = null!;
         Images = null!;
         ViewModelSource?.Dispose();
@@ -156,7 +154,6 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
         {
             if (field == value)
                 return;
-            field?.ForEach(i => i.Dispose());
             field = value;
             if (field != null!)
                 OnPropertyChanged(nameof(PageCount));

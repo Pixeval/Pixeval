@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.Input;
 using Misaki;
@@ -28,12 +27,6 @@ public interface IWorkViewModel
 
     /// <inheritdoc cref="WorkEntryViewModel{T}.SaveCommand"/>
     IAsyncRelayCommand<Control?> SaveCommand { get; }
-
-    /// <inheritdoc cref="WorkEntryViewModel{T}.TryLoadThumbnailAsync"/>
-    ValueTask<bool> TryLoadThumbnailAsync(object key);
-
-    /// <inheritdoc cref="WorkEntryViewModel{T}.UnloadThumbnail"/>
-    void UnloadThumbnail(object key);
 
     bool Filter(TreeNodeBase node) => node switch
     {

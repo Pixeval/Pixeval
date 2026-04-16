@@ -19,6 +19,8 @@ public static class PixevalConverters
 
     public static readonly DateTimeShortDateConverter DateTimeShortDate = DateTimeShortDateConverter.Instance;
 
+    public static readonly FuncValueConverter<int, int> PlusOne = new(i => i + 1);
+
     public static readonly FuncValueConverter<int, string> IntToString = new(value => value.ToString());
 
     public static readonly FuncValueConverter<HeartButtonState, IconVariant> StateToIconVariant = new(value => value switch

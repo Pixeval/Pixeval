@@ -42,8 +42,8 @@
                                                 <Image
                                                     Width="35"
                                                     Height="35"
-                                                    controls:Source.Image="{Binding Converter={x:Static converters:PixevalConverters.StringFormatConverter}, ConverterParameter={x:Static utilities:CommentImageHelper.EmojiDownloadUrl}}"
-                                                    Stretch="UniformToFill" /> 
+                                                    controls:Source.Cache="{Binding Converter={x:Static converters:PixevalConverters.StringFormatConverter}, ConverterParameter={x:Static utilities:CommentImageHelper.EmojiDownloadUrl}}"
+                                                    Stretch="UniformToFill" />
                                                 <Button.Styles>
                                                     <Style Selector="Image">
                                                         <Setter Property="Cursor" Value="Hand" />
@@ -72,7 +72,7 @@
                                                 <Image
                                                     Width="83"
                                                     Height="83"
-                                                    controls:Source.Image="{Binding Converter={x:Static converters:PixevalConverters.StringFormatConverter}, ConverterParameter={x:Static utilities:CommentImageHelper.StickerDownloadUrl}}"
+                                                    controls:Source.Cache="{Binding Converter={x:Static converters:PixevalConverters.StringFormatConverter}, ConverterParameter={x:Static utilities:CommentImageHelper.StickerDownloadUrl}}"
                                                     Stretch="UniformToFill" />
                                                 <Button.Styles>
                                                     <Style Selector="Image">

@@ -1,19 +1,33 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Mako.Model;
 using Pixeval.Controls;
+using Pixeval.Utilities;
 
 namespace Pixeval.ViewModels;
 
-public partial class UserItemViewModel : EntryViewModel<Mako.Model.User>, IFactory<Mako.Model.User, UserItemViewModel>, IDisposable
+public partial class UserItemViewModel : EntryViewModel<User>, IFactory<User, UserItemViewModel>
 {
-    public static UserItemViewModel CreateInstance(Mako.Model.User entry) => new(entry);
+    public static UserItemViewModel CreateInstance(User entry) => new(entry);
 
-    public UserItemViewModel(Mako.Model.User user) : base(user)
+    public UserItemViewModel(User user) : base(user)
     {
         IsFollowedDisplay = IsFollowed ? HeartButtonState.Checked : HeartButtonState.Unchecked;
+
+        var workEntries = Entry.Illustrations.Concat<IWorkEntry>(Entry.Novels).ToArray();
+        if (workEntries.ElementAtOrDefault(0) is { } t0)
+        {
+            Banner0Url = t0.GetThumbnailUrl();
+            if (workEntries.ElementAtOrDefault(1) is { } t1)
+            {
+                Banner1Url = t1.GetThumbnailUrl();
+                if (workEntries.ElementAtOrDefault(2) is { } t2)
+                    Banner2Url = t2.GetThumbnailUrl();
+            }
+        }
     }
 
     public bool IsFollowed => Entry.UserInfo.IsFollowed;
@@ -27,4 +41,10 @@ public partial class UserItemViewModel : EntryViewModel<Mako.Model.User>, IFacto
     public long UserId => Entry.Id;
 
     public string AvatarUrl => Entry.UserInfo.ProfileImageUrls.Medium;
+
+    public string? Banner0Url { get; }
+
+    public string? Banner1Url { get; }
+
+    public string? Banner2Url { get; }
 }

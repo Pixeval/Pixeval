@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using AnimatedControls.Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input.Platform;
-using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Pixeval.I18N;
@@ -46,11 +45,6 @@ public partial class ImageViewerPageViewModel : ViewModelBase, IDisposable
     /// 显示用图源
     /// </summary>
     public IAnimatedBitmap? DisplaySource => OriginalSource;
-
-    /// <summary>
-    /// 缩略图
-    /// </summary>
-    public Bitmap? ThumbnailSource => IllustrationViewModel.Thumbnail;
 
     [ObservableProperty]
     public partial int RotationDegree { get; set; }
@@ -100,7 +94,6 @@ public partial class ImageViewerPageViewModel : ViewModelBase, IDisposable
             return;
         _disposed = false;
 
-        _ = LoadThumbnailAsync();
         BrowseHistoryPersistentManager.AddHistory(IllustrationViewModel.Entry);
         // TODO i18n:加载图片而不是解码图片
         AdvancePhase(LoadingPhase.LoadingImage);
@@ -112,14 +105,6 @@ public partial class ImageViewerPageViewModel : ViewModelBase, IDisposable
             OriginalSource = ConvertToAnimatedBitmap(source);
 
         LoadSuccessfully = true;
-
-        return;
-
-        async Task LoadThumbnailAsync()
-        {
-            _ = await IllustrationViewModel.TryLoadThumbnailAsync(this);
-            OnPropertyChanged(nameof(ThumbnailSource));
-        }
     }
 
     /// <summary>
@@ -172,7 +157,6 @@ public partial class ImageViewerPageViewModel : ViewModelBase, IDisposable
         ImageLoadingCancellationTokenSource.Cancel();
         ImageLoadingCancellationTokenSource.Dispose();
         LoadSuccessfully = false;
-        IllustrationViewModel.UnloadThumbnail(this);
         OriginalSource?.Dispose();
         OriginalSource = null;
     }

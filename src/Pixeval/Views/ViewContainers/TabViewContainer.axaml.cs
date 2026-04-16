@@ -6,6 +6,7 @@ using Pixeval.Utilities;
 using Pixeval.Views.Login;
 using Pixeval.Views.Viewers;
 using Tabalonia.Controls;
+using Tabalonia.Events;
 using Tabalonia.InterTab;
 
 namespace Pixeval.Views.ViewContainers;
@@ -16,10 +17,19 @@ public partial class TabViewContainer : ViewContainerBase
     {
         InitializeComponent();
 
-        TabsControl.InterTabController = new InterTabController
-        {
-            InterTabClient = new PixevalInterTabClient()
-        };
+        TabsControl.InterTabController = new InterTabController { InterTabClient = new PixevalInterTabClient() };
+
+        AddHandler(
+            ViewModelDisposal.ViewModelDisposalEvent,
+            OnViewModelDisposal,
+            RoutingStrategies.Bubble,
+            handledEventsToo: true);
+
+        AddHandler(
+            ViewModelDisposal.RequestDisposeEvent,
+            OnRequestDispose,
+            RoutingStrategies.Bubble,
+            handledEventsToo: true);
     }
 
     /// <inheritdoc />
@@ -64,10 +74,14 @@ public partial class TabViewContainer : ViewContainerBase
         public TabHost GetNewHost(InterTabController controller, TabHost host)
         {
             var container = new TabViewContainer();
-            var window = new Window
+            var window = new Window { Content = container }.Fork(host.Window);
+            window.Closed += static (sender, args) =>
             {
-                Content = container
-            }.Fork(host.Window);
+                if (sender is TopLevel { ViewContainer: TabViewContainer container })
+                    foreach (var item in container.TabsControl.Items)
+                        if (item is DragTabItem tabItem)
+                            DisposeTab(tabItem);
+            };
 
             return new TabHost(window, container.TabsControl);
         }
@@ -91,4 +105,37 @@ public partial class TabViewContainer : ViewContainerBase
     {
         TopLevel.GetTopLevel(this)?.ViewContainer?.NavigateTo(new LoginPage());
     }
-}    
+
+    private void TabsControl_OnTabClosing(TabsControl sender, TabClosingEventArgs e)
+    {
+        e.Tab.RaiseEvent(new RoutedEventArgs(ViewModelDisposal.RequestDisposeEvent, e.Tab));
+    }
+
+    private void OnViewModelDisposal(object? sender, ViewModelDisposalEventArgs e)
+    {
+        if (TabsControl.SelectedItem is not DragTabItem item)
+            return;
+        var set = ViewModelDisposal.DisposableMap.GetValueOrAddNew(item);
+        set.Add(new(e.Disposable));
+        e.Handled = true;
+    }
+
+    private static void OnRequestDispose(object? sender, RoutedEventArgs e)
+    {
+        if (e.Source is not DragTabItem control)
+            return;
+        DisposeTab(control);
+        e.Handled = true;
+    }
+
+    private static void DisposeTab(DragTabItem tabItem)
+    {
+        if (ViewModelDisposal.DisposableMap.Remove(tabItem, out var set))
+        {
+            foreach (var disposable in set)
+                if (disposable.TryGetTarget(out var target))
+                    target.Dispose();
+            set.Clear();
+        }
+    }
+}

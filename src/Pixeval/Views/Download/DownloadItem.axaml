@@ -23,7 +23,7 @@
             Width="56"
             Height="56"
             VerticalAlignment="Center"
-            Source="{Binding Thumbnail}"
+            controls:Source.Cache="{Binding ThumbnailUrl}"
             Stretch="UniformToFill" />
 
         <StackPanel

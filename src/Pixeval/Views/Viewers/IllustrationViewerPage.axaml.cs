@@ -75,4 +75,16 @@ public partial class IllustrationViewerPage : ContentPage
     {
         ImageViewerPage.ZoomBorder.ZoomBy(-0.1);
     }
+
+    #region Disposal
+
+    /// <inheritdoc />
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+
+        RaiseEvent(new ViewModelDisposalEventArgs(ViewModelDisposal.ViewModelDisposalEvent, ViewModel));
+    }
+
+    #endregion
 }

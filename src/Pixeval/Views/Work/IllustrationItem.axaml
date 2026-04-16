@@ -46,9 +46,10 @@
                 <MenuItem Header="-" />
                 <MenuItem
                     Command="{Binding CopyCommand}"
-                    CommandParameter="{Binding $self, Mode=OneTime}"
+                    CommandParameter="{Binding #ThumbnailImage, Mode=OneTime}"
                     Header="{I18N {x:Static pixeval:EntryViewerPageResources.Copy}}"
                     Icon="{markup:SymbolIcon Copy}"
+                    IsEnabled="{Binding #ThumbnailImage.(controls:Source.Loaded)}"
                     IsVisible="{Binding !IsPicGif}" />
                 <MenuItem
                     Command="{Binding SaveCommand}"
@@ -76,7 +77,10 @@
         <Border HorizontalAlignment="Stretch">
             <Panel>
                 <controls:ConstrainedBox AspectRatio="{Binding AspectRatio, Converter={x:Static converters:PixevalConverters.ToAspectRatio}}" RestrictArrange="False">
-                    <Image Source="{Binding Thumbnail}" Stretch="UniformToFill" />
+                    <Image
+                        x:Name="ThumbnailImage"
+                        controls:Source.Cache="{Binding ThumbnailUrl}"
+                        Stretch="UniformToFill" />
                 </controls:ConstrainedBox>
                 <!--<u:Skeleton IsVisible="{Binding ThumbnailSource, Converter={x:Static ObjectConverters.IsNull}}" />-->
                 <controls:HeartButton

@@ -15,30 +15,13 @@ public static class DesignHelper
         get
         {
             field ??= new(DesignUser);
-            _ = field.LoadAvatarAsync();
             return field;
         }
     }
 
-    public static IllustrationItemViewModel DesignIllustrationViewModel
-    {
-        get
-        {
-            field ??= new(DesignIllustration);
-            _ = field.TryLoadThumbnailAsync(0);
-            return field;
-        }
-    }
+    public static IllustrationItemViewModel DesignIllustrationViewModel => field ??= new(DesignIllustration);
 
-    public static NovelItemViewModel DesignNovelViewModel
-    {
-        get
-        {
-            field ??= new(DesignNovel);
-            _ = field.TryLoadThumbnailAsync(0);
-            return field;
-        }
-    }
+    public static NovelItemViewModel DesignNovelViewModel => field ??= new(DesignNovel);
 
     public static User DesignUser => field ??= new()
     {

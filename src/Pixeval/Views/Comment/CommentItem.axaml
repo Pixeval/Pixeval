@@ -22,7 +22,7 @@
                 x:Name="StickerImage"
                 MaxHeight="100"
                 HorizontalAlignment="Left"
-                controls:Source.Image="{Binding StampUrl}"
+                controls:Source.Cache="{Binding StampUrl}"
                 IsVisible="{Binding IsStamp}"
                 Stretch="Uniform" />
         </Panel>
@@ -64,7 +64,7 @@
             <DockPanel HorizontalSpacing="10" LastChildFill="False">
                 <controls:AvatarImage
                     Width="35"
-                    controls:Source.AvatarImage="{Binding Comment.User.ProfileImageUrls.Medium}"
+                    controls:Source.Cache="{Binding Comment.User.ProfileImageUrls.Medium}"
                     DockPanel.Dock="Left" />
                 <StackPanel Spacing="2">
                     <TextBlock Text="{Binding User}" Theme="{StaticResource CaptionStrongTextBlockStyle}" />
