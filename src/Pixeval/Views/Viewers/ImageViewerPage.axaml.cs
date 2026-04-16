@@ -4,24 +4,36 @@
 using System;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.LogicalTree;
+using SmoothScroll.Avalonia.Controls;
 
 namespace Pixeval.Views.Viewers;
 
 public partial class ImageViewerPage : UserControl
 {
-    public double ZoomFactor
+    public ImageViewerPage() => InitializeComponent();
+
+    public event EventHandler? ZoomChanged;
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
-        get;
-        set => SetAndRaise(ZoomFactorProperty, ref field, value);
+        base.OnAttachedToVisualTree(e);
+        
+        ZoomBorder.PropertyChanged += ZoomBorderOnPropertyChanged;
     }
 
-    public static readonly DirectProperty<ImageViewerPage, double> ZoomFactorProperty =
-        AvaloniaProperty.RegisterDirect<ImageViewerPage, double>(
-            nameof(ZoomFactor),
-            o => o.ZoomFactor,
-            (o, v) => o.ZoomFactor = v);
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        
+        ZoomBorder.PropertyChanged -= ZoomBorderOnPropertyChanged;
+    }
 
-    public ImageViewerPage() => InitializeComponent();
+    private void ZoomBorderOnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if(e.Property == ScrollView.ZoomFactorProperty)
+            ZoomChanged?.Invoke(sender, e);
+    }
 
     /// <summary>
     /// 默认缩放到适应窗口大小（Uniform）

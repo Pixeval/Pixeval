@@ -48,12 +48,17 @@ public partial class ImageViewerPageViewModel : ViewModelBase, IDisposable
 
     [ObservableProperty]
     public partial int RotationDegree { get; set; }
+    
+    [ObservableProperty]
+    public partial double ZoomFactor { get; set; } = 1;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CopyCommand))]
     [NotifyCanExecuteChangedFor(nameof(PlayPauseCommand))]
     [NotifyCanExecuteChangedFor(nameof(RotateClockwiseCommand))]
     [NotifyCanExecuteChangedFor(nameof(RotateCounterclockwiseCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ZoomInCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ZoomOutCommand))]
     public partial bool LoadSuccessfully { get; private set; }
 
     private bool LoadSuccessfullyIsGif => LoadSuccessfully && IllustrationViewModel.IsPicGif;
@@ -126,6 +131,12 @@ public partial class ImageViewerPageViewModel : ViewModelBase, IDisposable
 
     [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
     private void RotateCounterclockwise() => RotationDegree = (RotationDegree - 90 + 360) % 360;
+    
+    [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
+    private void ZoomIn() => ZoomFactor = Math.Min(10, ZoomFactor + 0.1);
+    
+    [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
+    private void ZoomOut() => ZoomFactor = Math.Max(0.1, ZoomFactor - 0.1);
 
     [RelayCommand(CanExecute = nameof(LoadSuccessfullyNotGif))]
     private async Task CopyAsync(Control? parameter)

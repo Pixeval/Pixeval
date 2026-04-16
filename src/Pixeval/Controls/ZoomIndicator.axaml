@@ -1,0 +1,115 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:Pixeval.Controls"
+             xmlns:markup="clr-namespace:FluentIcons.Avalonia.Markup;assembly=FluentIcons.Avalonia"
+             xmlns:pixeval="clr-namespace:Pixeval"
+             xmlns:viewers="clr-namespace:Pixeval.ViewModels.Viewers"
+             x:DataType="{x:Type viewers:IllustrationViewerPageViewModel}"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Name="Root"
+             x:Class="Pixeval.Controls.ZoomIndicator">
+    <UserControl.Styles>
+        <Style Selector="controls|ZoomIndicator">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="Transitions">
+                <Setter.Value>
+                    <Transitions>
+                        <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
+                    </Transitions>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style Selector="controls|ZoomIndicator.proximity">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+
+        <Style Selector="controls|ZoomIndicator.close-proximity">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+
+        <Style Selector="controls|ZoomIndicator.temporary-visible">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+
+        <Style Selector="#ZoomPane>StackPanel>Button">
+            <Setter Property="Theme" Value="{StaticResource TransparentButtonStyle}" />
+        </Style>
+
+        <Style Selector="#ZoomPane>StackPanel>ToggleButton">
+            <Setter Property="Theme" Value="{StaticResource TransparentToggleButtonStyle}" />
+        </Style>
+    </UserControl.Styles>
+    
+    
+    <Border
+        x:Name="ZoomPane"
+        Height="40"
+        Margin="0 32 40 0"
+        Padding="16 10"
+        Background="{DynamicResource SystemAltMediumHighColor}"
+        CornerRadius="20">
+        <StackPanel
+            Orientation="Horizontal"
+            Spacing="20">
+            <TextBlock
+                VerticalAlignment="Center"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                IsVisible="{Binding CurrentIllustration.IsPicSet}">
+                <!--  不加OneWay会调用ConvertBack，不知道为什么  -->
+                <Run
+                    Text="{Binding CurrentPageIndex, Mode=OneWay, Converter={x:Static controls:ZoomIndicator.PlusOneConverter}}" />
+                <Run Text="/" />
+                <Run Text="{Binding PageCount}" />
+            </TextBlock>
+            <Button
+                Command="{Binding CurrentImage.RotateCounterclockwiseCommand}"
+                Content="{markup:SymbolIcon ArrowRotateCounterclockwise, FontSize=16}"
+                ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.RotateCounterclockwise}}" />
+            <ToggleButton
+                Content="{markup:SymbolIcon FlipHorizontal, FontSize=16}"
+                IsChecked="{Binding CurrentImage.IsMirrored}"
+                ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.Mirror}}" />
+            <Button
+                Command="{Binding CurrentImage.RotateClockwiseCommand}"
+                Content="{markup:SymbolIcon ArrowRotateClockwise, FontSize=16}"
+                ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.RotateClockwise}}" />
+
+            <Separator>
+                <Separator.Theme>
+                    <ControlTheme TargetType="{x:Type Separator}">
+                        <Setter Property="VerticalAlignment" Value="Stretch" />
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                        <Setter Property="Width" Value="{DynamicResource MenuFlyoutSeparatorThemeHeight}" />
+                        <Setter Property="Height" Value="20" />
+                        <Setter Property="Background" Value="{DynamicResource SystemBaseMediumHighColor}" />
+
+                    </ControlTheme>
+                </Separator.Theme>
+            </Separator>
+
+            <Button
+                Command="{Binding CurrentImage.ZoomOutCommand}"
+                Content="{markup:SymbolIcon ZoomOut, FontSize=16}"
+                ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomOut}}" />
+            <TextBlock MinWidth="60" Text="{Binding CurrentImage.ZoomFactor, StringFormat=P2, Mode=OneWay}">
+                <TextBlock.Theme>
+                    <ControlTheme BasedOn="{StaticResource CaptionStrongTextBlockStyle}"
+                                  TargetType="{x:Type TextBlock}">
+                        <Setter Property="FontSize" Value="14" />
+                        <Setter Property="Margin" Value="4,0" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="TextAlignment" Value="Center" />
+                        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                    </ControlTheme>
+                </TextBlock.Theme>
+            </TextBlock>
+            <Button
+                Command="{Binding CurrentImage.ZoomInCommand}"
+                Content="{markup:SymbolIcon ZoomIn, FontSize=16}"
+                ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomIn}}" />
+        </StackPanel>
+    </Border>
+</UserControl>
