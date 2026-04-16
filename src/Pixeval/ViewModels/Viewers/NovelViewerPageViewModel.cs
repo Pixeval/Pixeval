@@ -15,6 +15,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.AppManagement;
+using Pixeval.I18N;
 using Pixeval.Models.Settings;
 using Pixeval.Utilities;
 using Pixeval.Views.Settings;
@@ -103,7 +104,7 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
 
     #region Settings
 
-    public SettingsSubView SettingsPage
+    private SettingsSubView SettingsPage
     {
         get
         {
@@ -112,14 +113,17 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
                 SettingsBuilder.CreateGroupList(App.AppViewModel.AppSettings)
                     .NewGroup("")
                     .Config(group => group
-                        .Color(t => t.NovelBackground, _ => OnPropertyChanged(nameof(NovelBackgroundBrush)))
-                        .Color(t => t.NovelFontColor, _ => OnPropertyChanged(nameof(NovelForegroundBrush)))
-                        .Font(t => t.NovelFontFamily, _ => OnPropertyChanged(nameof(NovelFontFamilyObject)))
-                        .Enum(t => t.NovelFontWeight, FontWeightExtension.Items, _ => OnPropertyChanged(nameof(NovelFontWeight)))
-                        .Int(t => t.NovelFontSize, 100, 5, 1, _ => OnPropertyChanged(nameof(NovelFontSize)))
-                        .Int(t => t.NovelLineHeight, 150, 0, 1, _ => OnPropertyChanged(nameof(NovelLineHeight)))
-                        .Int(t => t.NovelMaxWidth, 10000, 50, 50, _ => OnPropertyChanged(nameof(NovelMaxWidth))))
-                    .Build()[0]);
+                        .Color(t => t.NovelBackground, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelBackgroundBrush)))
+                        .Color(t => t.NovelFontColor, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelForegroundBrush)))
+                        .Font(t => t.NovelFontFamily, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelFontFamilyObject)))
+                        .Enum(t => t.NovelFontWeight, FontWeightExtension.Items, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelFontWeight)))
+                        .Int(t => t.NovelFontSize, 5, 100, 1, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelFontSize)))
+                        .Int(t => t.NovelLineHeight, 0, 150, 1, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelLineHeight)))
+                        .Int(t => t.NovelMaxWidth, 50, 10000, 50, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelMaxWidth))))
+                    .Build()[0])
+            {
+                Header = I18NManager.GetResource(EntryViewerPageResources.NovelSettings)
+            };
         }
     }
 
@@ -217,7 +221,8 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
         PanePages =
         [
             new WorkInfoPage(CurrentNovel.Entry),
-            new CommentsPage(new CommentsViewViewModel(SimpleWorkType.Novel, NovelId))
+            new CommentsPage(new CommentsViewViewModel(SimpleWorkType.Novel, NovelId)),
+            SettingsPage
         ];
     }
 

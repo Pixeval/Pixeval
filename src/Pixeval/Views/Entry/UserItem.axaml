@@ -79,7 +79,8 @@
                 VerticalAlignment="Bottom"
                 Background="Transparent"
                 Click="AvatarButton_OnClicked"
-                CornerRadius="100">
+                CornerRadius="100"
+                Tapped="AvatarButton_OnTapped">
                 <Border ClipToBounds="True" CornerRadius="100">
                     <animatedImage:AnimatedImage Source="{Binding Avatar}" />
                 </Border>

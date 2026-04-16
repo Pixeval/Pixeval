@@ -26,7 +26,7 @@
 		
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
 		<PackageReference Include="FluentIcons.Avalonia" Version="2.1.323" />
-		<PackageReference Include="Markdown.Avalonia" Version="12.0.0-a2" />
+		<PackageReference Include="Markdown.Avalonia" Version="12.0.0-a3" />
 		<PackageReference Include="SmoothScroll.Avalonia" Version="12.0.0.4" />
 		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.10.196-beta" />

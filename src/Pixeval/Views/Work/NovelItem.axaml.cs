@@ -13,7 +13,7 @@ public partial class NovelItem : WorkItem
 {
     public NovelItem() => InitializeComponent();
 
-    private void UIElement_OnClicked(object? sender, RoutedEventArgs e)
+    private void TagButton_OnClicked(object? sender, RoutedEventArgs e)
     {
         if (sender is not Control { DataContext: Tag tag })
             return;

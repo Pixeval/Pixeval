@@ -41,107 +41,100 @@
                 <TabbedPage Pages="{Binding PanePages}" />
             </SplitView.Pane>
 
-            <SplitView
-                x:Name="SettingsSplitView"
-                DisplayMode="Inline"
-                Pane="{Binding SettingsPage}"
-                PanePlacement="Right">
-
-                <DockPanel>
-                    <CommandBar
-                        HorizontalAlignment="Center"
-                        DefaultLabelPosition="Collapsed"
-                        DockPanel.Dock="Top"
-                        IsDynamicOverflowEnabled="True">
-                        <CommandBarButton
-                            Command="{Binding CurrentNovel.BookmarkCommand}"
-                            CommandParameter="{Binding $self, Mode=OneTime}"
-                            Icon="{markup1:SymbolIconEx Heart,
-                                                        IconVariant={Binding CurrentNovel.IsBookmarkedDisplay,
-                                                                             Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
-                            IsVisible="{Binding CurrentNovel.IsBookmarkSupported}"
-                            Label="{I18N {x:Static pixeval:MiscResources.AddBookmark}}" />
-                        <CommandBarSeparator />
-                        <CommandBarButton
-                            Command="{Binding CurrentNovel.SaveCommand}"
-                            CommandParameter="{Binding $self, Mode=OneTime}"
-                            Icon="{markup:SymbolIcon Save}"
-                            Label="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}" />
-                        <CommandBarButton
-                            Command="{Binding CurrentNovel.SaveAsCommand}"
-                            CommandParameter="{Binding $self, Mode=OneTime}"
-                            Icon="{markup:SymbolIcon SaveEdit}"
-                            Label="{I18N {x:Static pixeval:EntryViewerPageResources.SaveAs}}" />
-                        <CommandBarSeparator />
-                        <CommandBarButton
-                            x:Name="AddToBookmarkButton"
-                            Click="AddToBookmarkButton_OnClick"
-                            Icon="{markup:SymbolIcon Bookmark}"
-                            IsVisible="{Binding CurrentNovel.IsBookmarkSupported}"
-                            Label="{I18N {x:Static pixeval:EntryItemResources.AddToBookmark}}" />
-                        <!--<CommandBarButton
+            <DockPanel>
+                <CommandBar
+                    HorizontalAlignment="Center"
+                    DefaultLabelPosition="Collapsed"
+                    DockPanel.Dock="Top"
+                    IsDynamicOverflowEnabled="True">
+                    <CommandBarButton
+                        Command="{Binding CurrentNovel.BookmarkCommand}"
+                        CommandParameter="{Binding $self, Mode=OneTime}"
+                        Icon="{markup1:SymbolIconEx Heart,
+                                                    IconVariant={Binding CurrentNovel.IsBookmarkedDisplay,
+                                                                         Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
+                        IsVisible="{Binding CurrentNovel.IsBookmarkSupported}"
+                        Label="{I18N {x:Static pixeval:MiscResources.AddBookmark}}" />
+                    <CommandBarSeparator />
+                    <CommandBarButton
+                        Command="{Binding CurrentNovel.SaveCommand}"
+                        CommandParameter="{Binding $self, Mode=OneTime}"
+                        Icon="{markup:SymbolIcon Save}"
+                        Label="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}" />
+                    <CommandBarButton
+                        Command="{Binding CurrentNovel.SaveAsCommand}"
+                        CommandParameter="{Binding $self, Mode=OneTime}"
+                        Icon="{markup:SymbolIcon SaveEdit}"
+                        Label="{I18N {x:Static pixeval:EntryViewerPageResources.SaveAs}}" />
+                    <CommandBarSeparator />
+                    <CommandBarButton
+                        x:Name="AddToBookmarkButton"
+                        Click="AddToBookmarkButton_OnClick"
+                        Icon="{markup:SymbolIcon Bookmark}"
+                        IsVisible="{Binding CurrentNovel.IsBookmarkSupported}"
+                        Label="{I18N {x:Static pixeval:EntryItemResources.AddToBookmark}}" />
+                    <!--<CommandBarButton
                             Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
                             Icon="{markup:SymbolIcon Link}"
                             Label="{I18N {x:Static pixeval:EntryItemResources.GenerateLink}}"
                             Tag="{Binding CurrentNovel.AppUri}" />-->
-                        <CommandBarButton
-                            Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
-                            Icon="{markup:SymbolIcon LinkMultiple}"
-                            Label="{I18N {x:Static pixeval:EntryItemResources.GenerateWebLink}}"
-                            Tag="{Binding CurrentNovel.WebsiteUri}" />
-                        <CommandBarButton
-                            Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
-                            Icon="{markup:SymbolIcon GlobeArrowUp}"
-                            Label="{I18N {x:Static pixeval:EntryItemResources.OpenInWebBrowser}}"
-                            Tag="{Binding CurrentNovel.WebsiteUri}" />
-                    </CommandBar>
+                    <CommandBarButton
+                        Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
+                        Icon="{markup:SymbolIcon LinkMultiple}"
+                        Label="{I18N {x:Static pixeval:EntryItemResources.GenerateWebLink}}"
+                        Tag="{Binding CurrentNovel.WebsiteUri}" />
+                    <CommandBarButton
+                        Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
+                        Icon="{markup:SymbolIcon GlobeArrowUp}"
+                        Label="{I18N {x:Static pixeval:EntryItemResources.OpenInWebBrowser}}"
+                        Tag="{Binding CurrentNovel.WebsiteUri}" />
+                </CommandBar>
 
-                    <work:TagSelector
-                        x:Name="BookmarkTagSelector"
-                        Margin="5"
-                        DockPanel.Dock="Top"
-                        IsVisible="False"
-                        TagsSelected="BookmarkTagSelector_OnTagsSelected" />
+                <work:TagSelector
+                    x:Name="BookmarkTagSelector"
+                    Margin="5"
+                    DockPanel.Dock="Top"
+                    IsVisible="False"
+                    TagsSelected="BookmarkTagSelector_OnTagsSelected" />
 
-                    <Border Background="{Binding NovelBackgroundBrush}">
-                        <Grid>
-                            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                                <controls:MarkdownBox
-                                    MaxWidth="{Binding NovelMaxWidth}"
-                                    Margin="30,20"
-                                    Markdown="{Binding CurrentMarkdown}" />
-                            </ScrollViewer>
+                <Border Background="{Binding NovelBackgroundBrush}">
+                    <Grid>
+                        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                            <controls:MarkdownBox
+                                MaxWidth="{Binding NovelMaxWidth}"
+                                Margin="30,20"
+                                Markdown="{Binding CurrentMarkdown}" />
+                        </ScrollViewer>
 
-                            <Grid Background="#7F000000" IsVisible="{Binding IsLoading}">
-                                <StackPanel
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Spacing="10">
-                                    <ProgressBar Width="160" IsIndeterminate="True" />
-                                    <TextBlock Foreground="White" Text="{I18N {x:Static pixeval:EntryViewerPageResources.LoadingNovelTextBlockText}}" />
-                                </StackPanel>
-                            </Grid>
-
-                            <controls:PageButton
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Stretch"
-                                Command="{Binding PrevCommand}"
-                                IsVisible="{Binding PrevButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                                RightTapped="PrevButton_OnRightClick"
-                                Symbol="ChevronLeft"
-                                ToolTipText="{Binding PrevButtonText}" />
-                            <controls:PageButton
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Stretch"
-                                Command="{Binding NextCommand}"
-                                IsVisible="{Binding NextButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                                RightTapped="NextButton_OnRightClick"
-                                Symbol="ChevronRight"
-                                ToolTipText="{Binding NextButtonText}" />
+                        <Grid Background="#7F000000" IsVisible="{Binding IsLoading}">
+                            <StackPanel
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Spacing="10">
+                                <ProgressBar Width="160" IsIndeterminate="True" />
+                                <TextBlock Foreground="White" Text="{I18N {x:Static pixeval:EntryViewerPageResources.LoadingNovelTextBlockText}}" />
+                            </StackPanel>
                         </Grid>
-                    </Border>
-                </DockPanel>
-            </SplitView>
+
+                        <controls:PageButton
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Stretch"
+                            Command="{Binding PrevCommand}"
+                            IsVisible="{Binding PrevButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                            RightTapped="PrevButton_OnRightClick"
+                            Symbol="ChevronLeft"
+                            ToolTipText="{Binding PrevButtonText}" />
+                        <controls:PageButton
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Stretch"
+                            Command="{Binding NextCommand}"
+                            IsVisible="{Binding NextButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                            RightTapped="NextButton_OnRightClick"
+                            Symbol="ChevronRight"
+                            ToolTipText="{Binding NextButtonText}" />
+                    </Grid>
+                </Border>
+            </DockPanel>
         </SplitView>
 
         <ListBox
@@ -214,12 +207,6 @@
                         <Run Text="/" />
                         <Run Text="{Binding PageCount}" />
                     </TextBlock>
-                    <CommandBar DefaultLabelPosition="Collapsed" IsDynamicOverflowEnabled="True">
-                        <CommandBarToggleButton
-                            Icon="{markup:SymbolIcon Settings}"
-                            IsChecked="{Binding #SettingsSplitView.IsPaneOpen}"
-                            Label="{I18N {x:Static pixeval:EntryViewerPageResources.NovelSettings}}" />
-                    </CommandBar>
                 </StackPanel>
             </Grid>
         </Border>

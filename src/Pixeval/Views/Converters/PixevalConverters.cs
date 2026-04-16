@@ -1,9 +1,7 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using AutoSettingsPage.Avalonia;
 using AutoSettingsPage.Models;
 using Avalonia.Controls;
@@ -55,23 +53,4 @@ public static class PixevalConverters
     public static readonly StringFormatConverter StringFormatConverter = StringFormatConverter.Instance;
 
     public static readonly FuncValueConverter<IReadOnlyCollection<IImageFrame>, string?> ImagePickClosestConverter = new(value => value?.PickClosest(50, 50)?.ImageUri.OriginalString);
-}
-
-/// <summary>
-/// ，
-/// </summary>
-public class StringFormatConverter : IValueConverter
-{
-    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        // 和BindingBase区别在于这里返回null
-        if (value is null)
-            return null;
-        if (parameter is not string format)
-            return value?.ToString();
-        return string.Format(culture, format, value);
-    }
-    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) => throw new NotSupportedException();
-
-    public static StringFormatConverter Instance { get; } = new();
 }

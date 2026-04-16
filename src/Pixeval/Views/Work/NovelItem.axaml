@@ -87,10 +87,10 @@
                             </Transitions>
                         </Image.Transitions>
                     </Image>
-                    <!--  TODO Padding="10,0"  -->
                     <controls:MarkdownBox
                         x:Name="DescriptionBlock"
                         Margin="0,30,0,10"
+                        Padding="10,0"
                         Markdown="{Binding Entry.Description}"
                         Opacity="0">
                         <controls:MarkdownBox.Transitions>
@@ -186,7 +186,7 @@
                             <Button
                                 Padding="2"
                                 Background="#7F7F7F7F"
-                                Click="UIElement_OnClicked"
+                                Click="TagButton_OnClicked"
                                 CornerRadius="{StaticResource ControlCornerRadius}">
                                 <TextBlock
                                     Text="{Binding ToolTip, Mode=OneTime}"
