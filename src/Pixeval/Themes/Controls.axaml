@@ -59,14 +59,14 @@
         <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderBrush" Value="Transparent" />
-            <Setter Property="Opacity" Value="0.9" />
+            <Setter Property="Opacity" Value="0.85" />
         </Style>
 
         <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="RenderTransform" Value="scale(0.96)" />
-            <Setter Property="Opacity" Value="0.8" />
+            <Setter Property="Opacity" Value="0.7" />
         </Style>
 
         <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
@@ -79,6 +79,7 @@
     <ControlTheme x:Key="TransparentToggleButtonStyle" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource TransparentButtonStyle}">
         <Style Selector="^:checked /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{DynamicResource SystemAccentColor}" />
         </Style>
         <Style Selector="^:checked:pointerover /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background" Value="Transparent" />

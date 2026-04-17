@@ -42,8 +42,8 @@
             <Setter Property="Theme" Value="{StaticResource TransparentToggleButtonStyle}" />
         </Style>
     </UserControl.Styles>
-    
-    
+
+
     <Border
         x:Name="ZoomPane"
         Height="40"
