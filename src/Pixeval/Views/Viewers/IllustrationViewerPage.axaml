@@ -16,6 +16,7 @@
     xmlns:viewModels="using:Pixeval.ViewModels"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
     xmlns:work="using:Pixeval.Views.Work"
+    xmlns:ss="clr-namespace:SmoothScroll.Avalonia.Controls;assembly=SmoothScroll.Avalonia.Controls"
     d:DesignHeight="450"
     d:DesignWidth="800"
     x:DataType="{x:Type viewers:IllustrationViewerPageViewModel}"
@@ -44,6 +45,19 @@
                 </Style>
             </Style>
         </Style>
+
+        <Style Selector="local|ImageViewerPage#ImageViewerPage">
+            <Setter Property="ClipToBounds" Value="False" />
+
+            <Style Selector="^ ss|ScrollView#ZoomBorder">
+                <Setter Property="ClipToBounds" Value="False" />
+
+                <Style Selector="^ /template/ ss|ScrollPresenter#PART_ContentPresenter">
+                    <Setter Property="ClipToBounds" Value="False" />
+                </Style>
+            </Style>
+        </Style>
+
 
     </ContentPage.Styles>
 
@@ -78,17 +92,33 @@
                 <controls:FloatingPaneView.Pane>
                     <Border Name="FloatingPaneBorder">
                         <DockPanel>
+                            <StackPanel Name="InfoZone" DockPanel.Dock="Top">
+                                <Grid ColumnDefinitions="* Auto">
+                                    <Button Grid.Column="1"
+                                            Content="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding #EntryViewerFloatingPaneView.IsDocked},
+                                                                                                        ChevronDown,
+                                                                                                        ChevronUp,
+                                                                                                        x:TypeArguments=common:Symbol}}"
+                                            Click="ChevronButtonClicked"
+                                            ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.InfoAndComments}}" />
+                                </Grid>
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                    IsVisible="{Binding CurrentIllustration.IsPicSet}">
+                                    <!--  不加OneWay会调用ConvertBack，不知道为什么  -->
+                                    <Run
+                                        Text="{Binding CurrentPageIndex, Mode=OneWay, Converter={x:Static controls:ZoomIndicator.PlusOneConverter}}" />
+                                    <Run Text="/" />
+                                    <Run Text="{Binding PageCount}" />
+                                </TextBlock>
+                            </StackPanel>
                             <CommandBar
                                 x:Name="BottomActionBar"
                                 HorizontalAlignment="Center"
                                 DefaultLabelPosition="Collapsed"
                                 DockPanel.Dock="Bottom"
                                 IsDynamicOverflowEnabled="False">
-                                
-                                <CommandBarToggleButton
-                                    Icon="{markup:SymbolIcon Info}"
-                                    IsChecked="{Binding #EntryViewerFloatingPaneView.IsDocked}"
-                                    Label="{I18N {x:Static pixeval:EntryViewerPageResources.InfoAndComments}}" />
                                 <CommandBarButton
                                     Command="{Binding CurrentImage.PlayPauseCommand}"
                                     CommandParameter="{Binding $self, Mode=OneTime}"
@@ -160,7 +190,7 @@
                                     Label="{I18N {x:Static pixeval:EntryItemResources.OpenInWebBrowser}}"
                                     Tag="{Binding CurrentIllustration.WebsiteUri}" />
                             </CommandBar>
-                            <TabbedPage Pages="{Binding PanePages}" />
+                            <TabbedPage Pages="{Binding PanePages}" Background="Transparent"/>
                         </DockPanel>
                     </Border>
                 </controls:FloatingPaneView.Pane>

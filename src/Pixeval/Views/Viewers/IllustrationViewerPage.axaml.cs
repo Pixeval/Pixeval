@@ -83,4 +83,9 @@ public partial class IllustrationViewerPage : ContentPage
     }
 
     #endregion
+
+    private void ChevronButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        EntryViewerFloatingPaneView.IsDocked = !EntryViewerFloatingPaneView.IsDocked;
+    }
 }

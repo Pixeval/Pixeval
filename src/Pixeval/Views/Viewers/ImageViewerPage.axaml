@@ -27,7 +27,6 @@
             VerticalAlignment="Stretch"
             HorizontalContentAlignment="Stretch"
             VerticalContentAlignment="Stretch"
-            ClipToBounds="True"
             Focusable="True"
             HorizontalScrollBarVisibility="Hidden"
             IsVisible="{Binding LoadSuccessfully}"

@@ -54,16 +54,6 @@
         <StackPanel
             Orientation="Horizontal"
             Spacing="20">
-            <TextBlock
-                VerticalAlignment="Center"
-                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                IsVisible="{Binding CurrentIllustration.IsPicSet}">
-                <!--  不加OneWay会调用ConvertBack，不知道为什么  -->
-                <Run
-                    Text="{Binding CurrentPageIndex, Mode=OneWay, Converter={x:Static controls:ZoomIndicator.PlusOneConverter}}" />
-                <Run Text="/" />
-                <Run Text="{Binding PageCount}" />
-            </TextBlock>
             <Button
                 Command="{Binding CurrentImage.RotateCounterclockwiseCommand}"
                 Content="{markup:SymbolIcon ArrowRotateCounterclockwise, FontSize=16}"
@@ -85,7 +75,6 @@
                         <Setter Property="Width" Value="{DynamicResource MenuFlyoutSeparatorThemeHeight}" />
                         <Setter Property="Height" Value="20" />
                         <Setter Property="Background" Value="{DynamicResource SystemBaseMediumHighColor}" />
-
                     </ControlTheme>
                 </Separator.Theme>
             </Separator>
