@@ -1,6 +1,7 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
+using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Pixeval.Utilities;
 using Pixeval.Views.Login;
@@ -54,6 +55,9 @@ public partial class TabViewContainer : ViewContainerBase
             Header = page.Header,
             Content = page
         };
+        
+        dragTabItem[!HeaderedContentControl.HeaderProperty] = page[!Page.HeaderProperty];
+        dragTabItem[!DragTabItem.IconProperty] = page[!Page.IconProperty];
 
         _ = TabsControl.Items.Add(dragTabItem);
 
