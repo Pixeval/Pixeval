@@ -11,7 +11,9 @@
     d:DesignHeight="800"
     d:DesignWidth="600"
     Header="{I18N {x:Static pixeval:MainPageResources.HelpTabContent}}"
-    Icon="{markup:SymbolIcon ChatBubblesQuestion, FontSize=16, IconVariant=Color}"
+    Icon="{markup:SymbolIcon ChatBubblesQuestion,
+                             FontSize=16,
+                             IconVariant=Color}"
     mc:Ignorable="d">
     <ScrollViewer>
         <StackPanel Margin="20" Spacing="10">
@@ -20,7 +22,7 @@
                 Text="{I18N {x:Static pixeval:HelpPageResources.TitleTextBlockText}}"
                 Theme="{StaticResource TitleTextBlockStyle}" />
             <!--  TODO 支持app protocol或删除该帮助  -->
-            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.AppLinkHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Symbol=Link}">
+            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.AppProtocolLinkHelpExpander}}" HeaderIcon="{markup:SymbolIcon Symbol=Link}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
                         <TextBlock Text="{I18N {x:Static pixeval:HelpPageResources.AppLinkHelpText}}" TextWrapping="Wrap" />

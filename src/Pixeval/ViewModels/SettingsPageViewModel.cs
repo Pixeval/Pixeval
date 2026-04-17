@@ -67,7 +67,6 @@ public class SettingsPageViewModel : ViewModelBase
                 .Enum(t => t.ItemsViewLayoutType, ItemsViewLayoutTypeExtension.Items)
                 .Enum(t => t.TargetFilter, TargetFilterExtension.Items)
                 .Collection(t => t.BlockedTags)
-                .Bool(t => t.BrowseOriginalImage)
                 .Bool(t => t.OpenWorkInfoByDefault))
             .NewGroup(SettingsEntryCategory.Search)
             .Config(group => group

@@ -125,7 +125,7 @@
                             <CommandBarButton
                                 Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                                 Tag="https://github.com/Pixeval/Pixeval/issues/new/choose"
-                                ToolTip.Tip="{I18N {x:Static pixeval:SettingsPageResources.GitHubBugReportEntryToolTipServiceToolTip}}">
+                                ToolTip.Tip="{I18N {x:Static pixeval:SettingsPageResources.GitHubBugReportEntryToolTip}}">
                                 <CommandBarButton.Icon>
                                     <Image MaxWidth="20" Source="{SvgImage avares://Pixeval/Assets/GitHub.svg}" />
                                 </CommandBarButton.Icon>
@@ -134,11 +134,11 @@
                                 Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                                 Icon="{markup:SymbolIcon Symbol=Mail}"
                                 Tag="mailto:decem0730@hotmail.com"
-                                ToolTip.Tip="{I18N {x:Static pixeval:SettingsPageResources.EMailBugReportEntryToolTipServiceToolTip}}" />
+                                ToolTip.Tip="{I18N {x:Static pixeval:SettingsPageResources.EMailBugReportEntryToolTip}}" />
                             <CommandBarButton
                                 Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                                 Tag="https://jq.qq.com/?_wv=1027&amp;k=trDeCrog"
-                                ToolTip.Tip="{I18N {x:Static pixeval:SettingsPageResources.QQBugReportEntryToolTipServiceToolTip}}">
+                                ToolTip.Tip="{I18N {x:Static pixeval:SettingsPageResources.QQBugReportEntryToolTip}}">
                                 <CommandBarButton.Icon>
                                     <Image MaxWidth="20" Source="{SvgImage avares://Pixeval/Assets/QQ.svg}" />
                                 </CommandBarButton.Icon>

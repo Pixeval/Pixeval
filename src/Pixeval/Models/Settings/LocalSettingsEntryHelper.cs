@@ -26,10 +26,6 @@ public static class LocalSettingsEntryHelper
     {
     }
 
-    public static readonly SettingsEntryAttribute AutoUpdate = new(Symbol.Communication,
-        nameof(SettingsPageResources.DownloadUpdateAutomaticallyEntryHeader),
-        nameof(SettingsPageResources.DownloadUpdateAutomaticallyEntryDescription));
-
     public static readonly SettingsEntryAttribute SignOut = new(Symbol.SignOut,
         nameof(SettingsPageResources.SignOutEntryHeader),
         nameof(SettingsPageResources.SignOutEntryDescription));

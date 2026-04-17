@@ -31,7 +31,8 @@ public partial class IllustrationItemViewModel(IArtworkInfo entry)
     public virtual async Task<object?> LoadOriginalImageAsync(Action<LoadingPhase, double> advancePhase,
         CancellationToken token)
     {
-        var isOriginal = App.AppViewModel.AppSettings.BrowseOriginalImage;
+        // TODO isOriginal
+        var isOriginal = false;
         switch (Entry)
         {
             // 当下载图集的其中一张图片时，ImageType会为ImageSet

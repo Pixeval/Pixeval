@@ -19,7 +19,7 @@ using Mako.Net;
 using Pixeval.Attributes;
 using Pixeval.I18N;
 using Pixeval.Models.Options;
-using static Pixeval.SettingsPageResources;
+using static Pixeval.AppSettingsResources;
 
 namespace Pixeval.AppManagement;
 
@@ -27,16 +27,23 @@ public record AppSettings
 {
     public AppSettings()
     {
-        AppFontFamily =  NovelFontFamily = I18NManager.GetResource(AppSettingsResources.AppDefaultFontFamilyName);
+        AppFontFamily =  NovelFontFamily = I18NManager.GetResource(CultureDefaultSettingsResources.AppDefaultFontFamilyName);
     }
 
+    [Obsolete]
     [SettingsEntry(Symbol.Communication, DownloadUpdateAutomaticallyEntryHeader, DownloadUpdateAutomaticallyEntryDescription)]
     public bool DownloadUpdateAutomatically { get; set; }
 
     /// <summary>
+    /// "" 表示使用系统默认语言
+    /// </summary>
+    [SettingsEntry(Symbol.LocalLanguage, AppLanguageEntryHeader, AppLanguageEntryDescription, AppLanguageEntryPlaceholder)]
+    public string CultureName { get; set; } = "";
+
+    /// <summary>
     /// The Application Theme
     /// </summary>
-    [SettingsEntry(Symbol.DarkTheme, ThemeEntryHeader, ThemeEntryDescriptionHyperlinkButtonContent)]
+    [SettingsEntry(Symbol.DarkTheme, ThemeEntryHeader, ThemeEntryDescription)]
     public ApplicationTheme Theme { get; set; }
 
     [SettingsEntry(Symbol.ShieldTask, EnableDomainFrontingEntryHeader, EnableDomainFrontingEntryDescription)]
@@ -45,7 +52,7 @@ public record AppSettings
     [SettingsEntry(Symbol.Database, UseFileCacheEntryHeader, UseFileCacheEntryDescription)]
     public bool UseFileCache { get; set; } = true;
 
-    [SettingsEntry(Symbol.TextFont, AppFontFamilyEntryHeader, OpenFontSettingsHyperlinkButtonContent)]
+    [SettingsEntry(Symbol.TextFont, AppFontFamilyEntryHeader, AppFontFamilyEntryDescription, AppFontFamilyEntryPlaceholder)]
     public string AppFontFamily { get; set; } = null!;
 
     [SettingsEntry(Symbol.Checkmark, DefaultSelectedTabEntryHeader, DefaultSelectedTabEntryDescription)]
@@ -108,10 +115,10 @@ public record AppSettings
     [SettingsEntry(Symbol.History, MaximumSearchHistoryRecordsEntryHeader, MaximumSearchHistoryRecordsEntryDescription)]
     public int MaximumSearchHistoryRecords { get; set; } = 50;
 
-    [SettingsEntry(Symbol.Key, ReverseSearchApiKeyEntryHeader, ReverseSearchApiKeyEntryDescriptionHyperlinkButtonContent, ReverseSearchApiKeyTextBoxPlaceholderText)]
+    [SettingsEntry(Symbol.Key, ReverseSearchApiKeyEntryHeader, ReverseSearchApiKeyEntryDescription, ReverseSearchApiKeyEntryPlaceholder)]
     public string ReverseSearchApiKey { get; set; } = "";
 
-    [SettingsEntry(Symbol.Cookies, WebCookieEntryHeader, WebCookieEntryDescription, WebCookieTextBoxPlaceholderText)]
+    [SettingsEntry(Symbol.Cookies, WebCookieEntryHeader, WebCookieEntryDescription, WebCookieEntryPlaceholder)]
     public string WebCookie { get; set; } = "";
 
     [SettingsEntry(Symbol.TargetArrow, ReverseSearchResultSimilarityThresholdEntryHeader, ReverseSearchResultSimilarityThresholdEntryDescription)]
@@ -132,7 +139,7 @@ public record AppSettings
     [SettingsEntry(Symbol.GlanceHorizontal, ItemsViewLayoutTypeEntryHeader, ItemsViewLayoutTypeEntryDescription)]
     public ItemsViewLayoutType ItemsViewLayoutType { get; set; } = ItemsViewLayoutType.LinedFlow;
 
-    [SettingsEntry(Symbol.TagDismiss, BlockedTagsEntryHeader, BlockedTagsEntryDescription, BlockedTagsTokenizingTextBoxPlaceholderText)]
+    [SettingsEntry(Symbol.TagDismiss, BlockedTagsEntryHeader, BlockedTagsEntryDescription, BlockedTagsEntryPlaceholder)]
     public ObservableCollection<string> BlockedTags { get; set; } = [];
 
     [SettingsEntry(Symbol.Router, ProxyTypeEntryHeader, ProxyTypeEntryDescription)]
@@ -145,10 +152,10 @@ public record AppSettings
     /// The mirror host for image server, Pixeval will do a simple substitution that
     /// changes the host of the original url(i.pximg.net) to this one.
     /// </summary>
-    [SettingsEntry(Symbol.HardDrive, ImageMirrorServerEntryHeader, ImageMirrorServerEntryDescription, ImageMirrorServerTextBoxPlaceholderText)]
+    [SettingsEntry(Symbol.HardDrive, ImageMirrorServerEntryHeader, ImageMirrorServerEntryDescription, ImageMirrorServerEntryPlaceholder)]
     public string MirrorHost { get; set; } = "";
 
-    [SettingsEntry(Symbol.History, MaximumBrowseHistoryRecordsEntryHeader, MaximumBrowseHistoryRecordsEntryDescription, MaximumBrowseHistoryRecordsNumerBoxPlaceholderText)]
+    [SettingsEntry(Symbol.History, MaximumBrowseHistoryRecordsEntryHeader, MaximumBrowseHistoryRecordsEntryDescription, MaximumBrowseHistoryRecordsEntryPlaceholder)]
     public int MaximumBrowseHistoryRecords { get; set; } = 100;
 
     [SettingsEntry(Symbol.ArrowCircleLeft, UseSearchStartDateEntryHeader, UseSearchStartDateEntryDescription)]
@@ -161,21 +168,12 @@ public record AppSettings
 
     public DateTime SearchEndDate { get; set; } = DateTime.UtcNow;
 
-    [SettingsEntry(Symbol.ImageSparkle, BrowseOriginalImageEntryHeader, BrowseOriginalImageEntryDescription)]
-    public bool BrowseOriginalImage { get; set; }
-
     [SettingsEntry(Symbol.Info, OpenWorkInfoByDefaultEntryHeader, OpenWorkInfoByDefaultEntryDescription)]
     public bool OpenWorkInfoByDefault { get; set; }
 
     public DateTime LastCheckedUpdate { get; set; } = DateTime.MinValue;
 
-    [SettingsEntry(Symbol.TopSpeed, ScrollRateEntryHeader, ScrollRateEntryDescription)]
-    public double ScrollRate { get; set; }
-
-    [SettingsEntry(Symbol.PanelLeftExpand, NavigationViewOpenPaneWidthEntryHeader, NavigationViewOpenPaneWidthEntryDescription)]
-    public int NavigationViewOpenPaneWidth { get; set; } = 280;
-
-    [SettingsEntry(Symbol.Box, PixivNameResolverHeaderText, PixivNameResolverDescriptionText, Placeholder = MakoHttpOptions.AppApiHost)]
+    [SettingsEntry(Symbol.Box, PixivNameResolverEntryHeader, PixivNameResolverEntryDescription, Placeholder = MakoHttpOptions.AppApiHost)]
     public ObservableCollection<string> PixivAppApiNameResolver { get; set; } =
     [
         "210.140.139.155",
@@ -235,10 +233,10 @@ public record AppSettings
 
     public uint NovelBackgroundInLightMode { get; set; }
 
-    [SettingsEntry(Symbol.LineThickness, NovelSettingsFontWeightEntryHeader, NovelSettingsFontWeightEntryDescription)]
+    [SettingsEntry(Symbol.LineThickness, NovelSettingsFontWeightEntryHeader, NovelSettingsFontWeightEntryDescription, NovelSettingsFontWeightEntryPlaceholder)]
     public FontWeight NovelFontWeight { get; set; } = FontWeight.Normal;
 
-    [SettingsEntry(Symbol.TextFont, NovelSettingsFontFamilyEntryHeader, OpenFontSettingsHyperlinkButtonContent)]
+    [SettingsEntry(Symbol.TextFont, NovelSettingsFontFamilyEntryHeader, AppFontFamilyEntryDescription, AppFontFamilyEntryPlaceholder)]
     public string NovelFontFamily { get; set; } = null!;
 
     [SettingsEntry(Symbol.TextFontSize, NovelSettingsFontSizeEntryHeader, NovelSettingsFontSizeEntryDescription)]
@@ -287,12 +285,6 @@ public record AppSettings
                 NovelFontColorInDarkMode = value;
         }
     }
-
-    /// <summary>
-    /// "" 表示使用系统默认语言
-    /// </summary>
-    [SettingsEntry(Symbol.LocalLanguage, AppLanguageEntryHeader, OpenLanguageSettingsHyperlinkButtonContent)]
-    public string CultureName { get; set; } = "";
 
     public Dictionary<string, Dictionary<string, JsonElement>> ExtensionSettings { get; set; } = [];
 
