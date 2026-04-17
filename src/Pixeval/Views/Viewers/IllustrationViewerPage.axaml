@@ -83,7 +83,7 @@
                                 HorizontalAlignment="Center"
                                 DefaultLabelPosition="Collapsed"
                                 DockPanel.Dock="Bottom"
-                                IsDynamicOverflowEnabled="True">
+                                IsDynamicOverflowEnabled="False">
                                 
                                 <CommandBarToggleButton
                                     Icon="{markup:SymbolIcon Info}"

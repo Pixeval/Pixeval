@@ -31,13 +31,13 @@ public static class FloatingPane
         AvaloniaProperty.RegisterAttached<Control, Thickness>(
             "ProximityRange",
             typeof(FloatingPane),
-            defaultValue: new Thickness(100));
+            defaultValue: new Thickness(250));
 
     public static readonly AttachedProperty<Thickness> CloseProximityRangeProperty =
         AvaloniaProperty.RegisterAttached<Control, Thickness>(
             "CloseProximityRange",
             typeof(FloatingPane),
-            defaultValue: new Thickness(30));
+            defaultValue: new Thickness(60));
 
     public static readonly AttachedProperty<TimeSpan> CloseProximityExitDelayProperty =
         AvaloniaProperty.RegisterAttached<Control, TimeSpan>(
