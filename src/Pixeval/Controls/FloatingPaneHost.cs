@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
@@ -63,7 +64,6 @@ public static class FloatingPaneHost
         {
             host.PointerMoved += OnPointerMoved;
             host.PointerExited += OnPointerExited;
-            RegisterDescendantPanes(host);
         }
         else
         {
@@ -72,6 +72,9 @@ public static class FloatingPaneHost
             ResetPanes(host);
             host.ClearValue(RegisteredPanesProperty);
         }
+
+        foreach (var pane in host.GetVisualDescendants().OfType<Control>().Where(FloatingPane.GetIsEnabled))
+            FloatingPane.RefreshHostRegistration(pane);
     }
 
     private static void OnPointerMoved(object? sender, PointerEventArgs e)
@@ -92,11 +95,12 @@ public static class FloatingPaneHost
 
                     var isInProximity = targetBounds.Inflate(FloatingPane.GetProximityRange(pane)).Contains(pointerPosition);
                     var isInCloseProximity = targetBounds.Inflate(FloatingPane.GetCloseProximityRange(pane)).Contains(pointerPosition);
+                    Debug.WriteLine($"判定结果: proximity={isInProximity}, close={isInCloseProximity}; 鼠标位置: {pointerPosition}; target范围: {targetBounds}");
                     FloatingPane.UpdateState(pane, isInProximity, isInCloseProximity);
                 }
                 else
                 {
-                    FloatingPane.ResetState(pane);
+                    FloatingPane.SetPointerAway(pane);
                     continue;
                 }
             }
@@ -106,13 +110,7 @@ public static class FloatingPaneHost
     private static void OnPointerExited(object? sender, PointerEventArgs e)
     {
         if (sender is Panel host)
-            ResetPanes(host);
-    }
-
-    private static void RegisterDescendantPanes(Panel host)
-    {
-        foreach (var pane in host.GetVisualDescendants().OfType<Control>().Where(FloatingPane.GetIsEnabled))
-            RegisterPane(host, pane);
+            SetPanesPointerAway(host);
     }
 
     private static void ResetPanes(Panel host)
@@ -122,5 +120,14 @@ public static class FloatingPaneHost
 
         foreach (var pane in panes)
             FloatingPane.ResetState(pane);
+    }
+
+    private static void SetPanesPointerAway(Panel host)
+    {
+        if (host.GetValue(RegisteredPanesProperty) is not { } panes)
+            return;
+
+        foreach (var pane in panes)
+            FloatingPane.SetPointerAway(pane);
     }
 }

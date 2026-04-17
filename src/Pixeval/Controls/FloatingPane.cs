@@ -13,6 +13,7 @@ public static class FloatingPane
 {
     private const string ProximityClass = "proximity";
     private const string CloseProximityClass = "close-proximity";
+    private const string NotProximityClass = "not-proximity";
     private const string TemporaryVisibleClass = "temporary-visible";
 
     public static readonly AttachedProperty<bool> IsEnabledProperty =
@@ -50,9 +51,9 @@ public static class FloatingPane
             typeof(FloatingPane),
             defaultValue: TimeSpan.FromSeconds(1));
 
-    static readonly AttachedProperty<FloatingPaneState?> StateProperty =
-        AvaloniaProperty.RegisterAttached<Control, FloatingPaneState?>(
-            "State",
+    static readonly AttachedProperty<FloatingPaneDelayTask?> DelayTasksProperty =
+        AvaloniaProperty.RegisterAttached<Control, FloatingPaneDelayTask?>(
+            "DelayTasks",
             typeof(FloatingPane));
 
     static FloatingPane()
@@ -100,13 +101,23 @@ public static class FloatingPane
 
     public static void ShowTemporarily(Control element, TimeSpan? duration = null)
     {
-        var state = GetState(element);
+        var state = GetDelayTasks(element);
         state.TemporaryVisibleDelayTask?.Dispose();
 
         element.Classes.Set(TemporaryVisibleClass, true);
         state.TemporaryVisibleDelayTask = DispatcherTimer.RunOnce(
-            () => element.Classes.Set(TemporaryVisibleClass, false),
+            () =>
+            {
+                element.Classes.Set(TemporaryVisibleClass, false);
+                state.TemporaryVisibleDelayTask = null;
+            },
             duration ?? GetTemporaryVisibleDuration(element));
+    }
+
+    internal static void RefreshHostRegistration(Control element)
+    {
+        var host = element.GetVisualAncestors().OfType<Panel>().FirstOrDefault(FloatingPaneHost.GetIsEnabled);
+        FloatingPaneHost.RegisterPane(host, element);
     }
 
     private static void AttachToHost(Control element)
@@ -114,27 +125,52 @@ public static class FloatingPane
         if (!GetIsEnabled(element))
             return;
 
-        var host = element.GetVisualAncestors().OfType<Panel>().FirstOrDefault(FloatingPaneHost.GetIsEnabled);
-        FloatingPaneHost.RegisterPane(host, element);
+        RefreshHostRegistration(element);
     }
 
     private static void DetachFromHost(Control element)
     {
         FloatingPaneHost.UnregisterPane(element);
     }
+    
+    private static void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    {
+        if (sender is Control element)
+            AttachToHost(element);
+    }
+
+    private static void OnDetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    {
+        if (sender is Control element)
+            DetachFromHost(element);
+    }
 
     internal static void ResetState(Control element)
     {
-        element.Classes.Set(ProximityClass, false);
-        element.Classes.Set(CloseProximityClass, false);
+        ClearProximityState(element, isPointerAway: false);
     }
 
+    internal static void SetPointerAway(Control element)
+    {
+        ClearProximityState(element, isPointerAway: true);
+    }
+    
     internal static void UpdateState(Control element, bool isInProximity, bool isInCloseProximity)
     {
         SetProximity(element, isInProximity);
         SetCloseProximity(element, isInCloseProximity);
     }
+    
+    private static FloatingPaneDelayTask GetDelayTasks(Control element)
+    {
+        if (element.GetValue(DelayTasksProperty) is { } state)
+            return state;
 
+        state = new FloatingPaneDelayTask();
+        element.SetValue(DelayTasksProperty, state);
+        return state;
+    }
+    
     private static void OnIsEnabledChanged(Control element, AvaloniaPropertyChangedEventArgs e)
     {
         if (e.GetNewValue<bool>() != e.GetOldValue<bool>())
@@ -149,79 +185,75 @@ public static class FloatingPane
             {
                 element.AttachedToVisualTree -= OnAttachedToVisualTree;
                 element.DetachedFromVisualTree -= OnDetachedFromVisualTree;
-                Cleanup(element);
+                
+                var state = element.GetValue(DelayTasksProperty);
+                state?.CloseProximityDelayTask?.Dispose();
+                state?.CloseProximityDelayTask = null;
+                ClearTemporaryVisible(element);
+
+                ResetState(element);
+
+                DetachFromHost(element);
+                element.ClearValue(DelayTasksProperty);
             }
         }
     }
-
-    private static void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    
+    internal static void ClearTemporaryVisible(Control element)
     {
-        if (sender is Control element)
-            AttachToHost(element);
-    }
-
-    private static void OnDetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
-    {
-        if (sender is Control element)
-            DetachFromHost(element);
-    }
-
-    private static void Cleanup(Control element)
-    {
-        var state = element.GetValue(StateProperty);
-        state?.CloseProximityDelayTask?.Dispose();
-        state?.CloseProximityDelayTask = null;
+        var state = element.GetValue(DelayTasksProperty);
         state?.TemporaryVisibleDelayTask?.Dispose();
-        state?.TemporaryVisibleDelayTask = null;
+        if (state is not null)
+            state.TemporaryVisibleDelayTask = null;
 
-        ResetState(element);
         element.Classes.Set(TemporaryVisibleClass, false);
-
-        DetachFromHost(element);
-        element.ClearValue(StateProperty);
     }
 
     private static void SetProximity(Control element, bool isInProximity)
     {
         element.Classes.Set(ProximityClass, isInProximity);
+        element.Classes.Set(NotProximityClass, !isInProximity);
     }
 
     private static void SetCloseProximity(Control element, bool isInCloseProximity)
     {
-        var state = GetState(element);
+        var state = GetDelayTasks(element);
 
-        if (state.CloseProximityDelayTask is null)
+        if (isInCloseProximity)
         {
-            if (!isInCloseProximity && element.Classes.Contains(CloseProximityClass))
-            {
-                state.CloseProximityDelayTask = DispatcherTimer.RunOnce(
-                    () =>
-                    {
-                        element.Classes.Set(CloseProximityClass, false);
-                        state.CloseProximityDelayTask = null;
-                    },
-                    GetCloseProximityExitDelay(element));
-                return;
-            }
-
-            element.Classes.Set(CloseProximityClass, isInCloseProximity);
+            state.CloseProximityDelayTask?.Dispose();
+            state.CloseProximityDelayTask = null;
+            element.Classes.Set(CloseProximityClass, true);
+            return;
         }
+
+        if (!element.Classes.Contains(CloseProximityClass) || state.CloseProximityDelayTask is not null)
+            return;
+
+        state.CloseProximityDelayTask = DispatcherTimer.RunOnce(
+            () =>
+            {
+                element.Classes.Set(CloseProximityClass, false);
+                state.CloseProximityDelayTask = null;
+            },
+            GetCloseProximityExitDelay(element));
     }
 
-    private static FloatingPaneState GetState(Control element)
+    private static void ClearProximityState(Control element, bool isPointerAway)
     {
-        if (element.GetValue(StateProperty) is { } state)
-            return state;
+        var state = element.GetValue(DelayTasksProperty);
+        state?.CloseProximityDelayTask?.Dispose();
+        state?.CloseProximityDelayTask = null;
 
-        state = new FloatingPaneState();
-        element.SetValue(StateProperty, state);
-        return state;
+        element.Classes.Set(ProximityClass, false);
+        element.Classes.Set(CloseProximityClass, false);
+        element.Classes.Set(NotProximityClass, isPointerAway);
     }
-}
+    
+    sealed class FloatingPaneDelayTask
+    {
+        public IDisposable? CloseProximityDelayTask { get; set; }
 
-internal sealed class FloatingPaneState
-{
-    public IDisposable? CloseProximityDelayTask { get; set; }
-
-    public IDisposable? TemporaryVisibleDelayTask { get; set; }
+        public IDisposable? TemporaryVisibleDelayTask { get; set; }
+    }
 }
