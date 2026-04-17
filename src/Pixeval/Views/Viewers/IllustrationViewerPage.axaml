@@ -21,6 +21,32 @@
     x:DataType="{x:Type viewers:IllustrationViewerPageViewModel}"
     Header="{Binding CurrentIllustration.Entry.Title}"
     mc:Ignorable="d">
+
+    <ContentPage.Styles>
+        <Style Selector="controls|FloatingPaneView#EntryViewerFloatingPaneView">
+            <Setter Property="PaneVerticalAlignment" Value="Bottom"></Setter>
+
+            <Style Selector="^ Border#FloatingPaneBorder">
+                <Setter Property="VerticalAlignment" Value="Bottom" />
+                <Setter Property="Margin" Value="20" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="Width" Value="400" />
+            </Style>
+
+            <Style Selector="^:docked">
+                <Setter Property="PaneVerticalAlignment" Value="Stretch"></Setter>
+
+                <Style Selector="^ Border#FloatingPaneBorder">
+                    <Setter Property="VerticalAlignment" Value="Stretch" />
+                    <Setter Property="Margin" Value="0" />
+                    <Setter Property="CornerRadius" Value="0" />
+                    <Setter Property="Width" Value="440" />
+                </Style>
+            </Style>
+        </Style>
+
+    </ContentPage.Styles>
+
     <ContentPage.Icon>
         <Image
             x:Name="LogoImage"
@@ -37,101 +63,108 @@
                 需要等Avalonia行为改了，或者用其它workaround修复
                 因为是局部的KeyBindings，目前快捷键需要焦点在该ContentPage内部才会激活 -->
         <KeyBinding Command="{Binding CurrentImage.PlayPauseCommand}" Gesture="Space" />
-        <KeyBinding Command="{Binding CurrentImage.CopyCommand}" CommandParameter="{Binding #IllustrationViewerPageRoot, Mode=OneTime}" Gesture="Ctrl+C" />
-        <KeyBinding Command="{Binding CurrentPage.SaveCommand}" CommandParameter="{Binding #IllustrationViewerPageRoot, Mode=OneTime}" Gesture="Ctrl+S" />
+        <KeyBinding Command="{Binding CurrentImage.CopyCommand}"
+                    CommandParameter="{Binding #IllustrationViewerPageRoot, Mode=OneTime}" Gesture="Ctrl+C" />
+        <KeyBinding Command="{Binding CurrentPage.SaveCommand}"
+                    CommandParameter="{Binding #IllustrationViewerPageRoot, Mode=OneTime}" Gesture="Ctrl+S" />
     </ContentPage.KeyBindings>
 
     <Grid>
         <Grid RowDefinitions="*,Auto,Auto">
-            <!--  主体区域：SplitView + 图片查看器  -->
-            <SplitView
-                x:Name="EntryViewerSplitView"
-                Grid.Row="0"
-                DisplayMode="Inline">
-                <SplitView.Pane>
-                    <TabbedPage Pages="{Binding PanePages}" />
-                </SplitView.Pane>
-                <DockPanel>
-                    <!--  顶部工具栏  -->
-                    <CommandBar
-                        x:Name="TopBar"
-                        HorizontalAlignment="Center"
-                        DefaultLabelPosition="Collapsed"
-                        DockPanel.Dock="Top"
-                        IsDynamicOverflowEnabled="True">
-
-                        <CommandBarButton
-                            Command="{Binding CurrentImage.PlayPauseCommand}"
-                            CommandParameter="{Binding $self, Mode=OneTime}"
-                            Icon="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding CurrentImage.IsPlaying},
+            <!--  主体区域：FloatingPaneView + 图片查看器  -->
+            <controls:FloatingPaneView
+                x:Name="EntryViewerFloatingPaneView"
+                Grid.Row="0">
+                <controls:FloatingPaneView.Pane>
+                    <Border Name="FloatingPaneBorder">
+                        <DockPanel>
+                            <CommandBar
+                                x:Name="BottomActionBar"
+                                HorizontalAlignment="Center"
+                                DefaultLabelPosition="Collapsed"
+                                DockPanel.Dock="Bottom"
+                                IsDynamicOverflowEnabled="True">
+                                
+                                <CommandBarToggleButton
+                                    Icon="{markup:SymbolIcon Info}"
+                                    IsChecked="{Binding #EntryViewerFloatingPaneView.IsDocked}"
+                                    Label="{I18N {x:Static pixeval:EntryViewerPageResources.InfoAndComments}}" />
+                                <CommandBarButton
+                                    Command="{Binding CurrentImage.PlayPauseCommand}"
+                                    CommandParameter="{Binding $self, Mode=OneTime}"
+                                    Icon="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding CurrentImage.IsPlaying},
                                                                                       Pause,
                                                                                       Play,
                                                                                       x:TypeArguments=common:Symbol}}"
-                            IsVisible="{Binding CurrentIllustration.IsPicGif}"
-                            Label="{I18N {x:Static pixeval:MiscResources.Play}}" />
-                        <CommandBarButton
-                            Command="{Binding CurrentIllustration.BookmarkCommand}"
-                            CommandParameter="{Binding $self, Mode=OneTime}"
-                            Icon="{markup1:SymbolIconEx Heart,
+                                    IsVisible="{Binding CurrentIllustration.IsPicGif}"
+                                    Label="{I18N {x:Static pixeval:MiscResources.Play}}" />
+                                <CommandBarButton
+                                    Command="{Binding CurrentIllustration.BookmarkCommand}"
+                                    CommandParameter="{Binding $self, Mode=OneTime}"
+                                    Icon="{markup1:SymbolIconEx Heart,
                                                         IconVariant={Binding CurrentIllustration.IsBookmarkedDisplay,
                                                                              Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
-                            IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
-                            Label="{I18N {x:Static pixeval:MiscResources.AddBookmark}}" />
-                        <CommandBarSeparator />
-                        <CommandBarButton
-                            Command="{Binding CurrentImage.CopyCommand}"
-                            CommandParameter="{Binding $self, Mode=OneTime}"
-                            Icon="{markup:SymbolIcon Copy}"
-                            IsVisible="{Binding !CurrentIllustration.IsPicGif}"
-                            Label="{I18N {x:Static pixeval:EntryViewerPageResources.Copy}}" />
-                        <CommandBarButton
-                            Command="{Binding CurrentPage.SaveCommand}"
-                            CommandParameter="{Binding $self, Mode=OneTime}"
-                            Icon="{markup:SymbolIcon Save}"
-                            Label="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}" />
-                        <CommandBarButton
-                            Command="{Binding CurrentPage.SaveAsCommand}"
-                            CommandParameter="{Binding $self, Mode=OneTime}"
-                            Icon="{markup:SymbolIcon SaveEdit}"
-                            Label="{I18N {x:Static pixeval:EntryViewerPageResources.SaveAs}}" />
-                        <CommandBarButton
-                            Command="{Binding CurrentIllustration.SaveCommand}"
-                            CommandParameter="{Binding $self, Mode=OneTime}"
-                            Icon="{markup:SymbolIcon SaveMultiple}"
-                            IsVisible="{Binding CurrentIllustration.IsPicSet}"
-                            Label="{I18N {x:Static pixeval:EntryItemResources.MangaSave}}" />
-                        <CommandBarButton
-                            Command="{Binding CurrentIllustration.SaveAsCommand}"
-                            CommandParameter="{Binding $self, Mode=OneTime}"
-                            Icon="{markup:SymbolIcon SaveEdit}"
-                            IsVisible="{Binding CurrentIllustration.IsPicSet}"
-                            Label="{I18N {x:Static pixeval:EntryItemResources.MangaSaveAs}}" />
-                        <CommandBarSeparator />
-                        <CommandBarButton
-                            x:Name="AddToBookmarkButton"
-                            Click="AddToBookmarkButton_OnClick"
-                            Icon="{markup1:SymbolIconEx Bookmark,
+                                    IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
+                                    Label="{I18N {x:Static pixeval:MiscResources.AddBookmark}}" />
+                                <CommandBarSeparator />
+                                <CommandBarButton
+                                    Command="{Binding CurrentImage.CopyCommand}"
+                                    CommandParameter="{Binding $self, Mode=OneTime}"
+                                    Icon="{markup:SymbolIcon Copy}"
+                                    IsVisible="{Binding !CurrentIllustration.IsPicGif}"
+                                    Label="{I18N {x:Static pixeval:EntryViewerPageResources.Copy}}" />
+                                <CommandBarButton
+                                    Command="{Binding CurrentPage.SaveCommand}"
+                                    CommandParameter="{Binding $self, Mode=OneTime}"
+                                    Icon="{markup:SymbolIcon Save}"
+                                    Label="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}" />
+                                <CommandBarButton
+                                    Command="{Binding CurrentPage.SaveAsCommand}"
+                                    CommandParameter="{Binding $self, Mode=OneTime}"
+                                    Icon="{markup:SymbolIcon SaveEdit}"
+                                    Label="{I18N {x:Static pixeval:EntryViewerPageResources.SaveAs}}" />
+                                <CommandBarButton
+                                    Command="{Binding CurrentIllustration.SaveCommand}"
+                                    CommandParameter="{Binding $self, Mode=OneTime}"
+                                    Icon="{markup:SymbolIcon SaveMultiple}"
+                                    IsVisible="{Binding CurrentIllustration.IsPicSet}"
+                                    Label="{I18N {x:Static pixeval:EntryItemResources.MangaSave}}" />
+                                <CommandBarButton
+                                    Command="{Binding CurrentIllustration.SaveAsCommand}"
+                                    CommandParameter="{Binding $self, Mode=OneTime}"
+                                    Icon="{markup:SymbolIcon SaveEdit}"
+                                    IsVisible="{Binding CurrentIllustration.IsPicSet}"
+                                    Label="{I18N {x:Static pixeval:EntryItemResources.MangaSaveAs}}" />
+                                <CommandBarSeparator />
+                                <CommandBarButton
+                                    x:Name="AddToBookmarkButton"
+                                    Click="AddToBookmarkButton_OnClick"
+                                    Icon="{markup1:SymbolIconEx Bookmark,
                                                         IconVariant={Binding CurrentIllustration.IsBookmarkedDisplay,
                                                                              Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
-                            IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
-                            Label="{I18N {x:Static pixeval:EntryItemResources.AddToBookmark}}" />
-                        <!--<CommandBarButton
+                                    IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
+                                    Label="{I18N {x:Static pixeval:EntryItemResources.AddToBookmark}}" />
+                                <!--<CommandBarButton
                             Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
                             Icon="{markup:SymbolIcon Link}"
                             Label="{I18N {x:Static pixeval:EntryItemResources.GenerateLink}}"
                             Tag="{Binding CurrentIllustration.AppUri}" />-->
-                        <CommandBarButton
-                            Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
-                            Icon="{markup:SymbolIcon LinkMultiple}"
-                            Label="{I18N {x:Static pixeval:EntryItemResources.GenerateWebLink}}"
-                            Tag="{Binding CurrentIllustration.WebsiteUri}" />
-                        <CommandBarButton
-                            Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
-                            Icon="{markup:SymbolIcon GlobeArrowUp}"
-                            Label="{I18N {x:Static pixeval:EntryItemResources.OpenInWebBrowser}}"
-                            Tag="{Binding CurrentIllustration.WebsiteUri}" />
-                    </CommandBar>
-
+                                <CommandBarButton
+                                    Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
+                                    Icon="{markup:SymbolIcon LinkMultiple}"
+                                    Label="{I18N {x:Static pixeval:EntryItemResources.GenerateWebLink}}"
+                                    Tag="{Binding CurrentIllustration.WebsiteUri}" />
+                                <CommandBarButton
+                                    Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
+                                    Icon="{markup:SymbolIcon GlobeArrowUp}"
+                                    Label="{I18N {x:Static pixeval:EntryItemResources.OpenInWebBrowser}}"
+                                    Tag="{Binding CurrentIllustration.WebsiteUri}" />
+                            </CommandBar>
+                            <TabbedPage Pages="{Binding PanePages}" />
+                        </DockPanel>
+                    </Border>
+                </controls:FloatingPaneView.Pane>
+                <DockPanel>
                     <!--  BookmarkTagSelector  -->
                     <work:TagSelector
                         x:Name="BookmarkTagSelector"
@@ -140,10 +173,10 @@
                         IsVisible="False"
                         TagsSelected="BookmarkTagSelector_OnTagsSelected" />
 
-					<Panel Background="Transparent" controls:FloatingPaneHost.IsEnabled="True">
-						<!--  图片查看器  -->
-						<local:ImageViewerPage x:Name="ImageViewerPage" DataContext="{Binding CurrentImage}"
-						                       ZoomChanged="ImageViewerPage_OnZoomChanged"/>
+                    <Panel Background="Transparent" controls:FloatingPaneHost.IsEnabled="True">
+                        <!--  图片查看器  -->
+                        <local:ImageViewerPage x:Name="ImageViewerPage" DataContext="{Binding CurrentImage}"
+                                               ZoomChanged="ImageViewerPage_OnZoomChanged" />
 
                         <!--  左翻页按钮  -->
                         <controls:PageButton
@@ -155,24 +188,24 @@
                             Symbol="ChevronLeft"
                             ToolTipText="{Binding PrevButtonText}" />
 
-						<!--  右翻页按钮  -->
-						<controls:PageButton
-						    HorizontalAlignment="Right"
-						    VerticalAlignment="Stretch"
-						    Command="{Binding NextCommand}"
-						    IsVisible="{Binding NextButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-						    RightTapped="NextButton_OnRightClick"
-						    Symbol="ChevronRight"
-						    ToolTipText="{Binding NextButtonText}" />
-						
-						<controls:ZoomIndicator
-						    VerticalAlignment="Top"
-						    HorizontalAlignment="Right"
-						    x:Name="ZoomPane"
-						    controls:FloatingPane.IsEnabled="True" />
-					</Panel>
-				</DockPanel>
-			</SplitView>
+                        <!--  右翻页按钮  -->
+                        <controls:PageButton
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Stretch"
+                            Command="{Binding NextCommand}"
+                            IsVisible="{Binding NextButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                            RightTapped="NextButton_OnRightClick"
+                            Symbol="ChevronRight"
+                            ToolTipText="{Binding NextButtonText}" />
+
+                        <controls:ZoomIndicator
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Right"
+                            x:Name="ZoomPane"
+                            controls:FloatingPane.IsEnabled="True" />
+                    </Panel>
+                </DockPanel>
+            </controls:FloatingPaneView>
 
             <!--  缩略图列表  -->
             <ListBox
@@ -202,47 +235,48 @@
                 </ListBox.ItemTemplate>
             </ListBox>
 
-			<!--  底部状态栏  -->
-			<Border
-				Grid.Row="2"
-				Height="48"
-				Padding="5,0"
-				HorizontalAlignment="Stretch"
-				VerticalAlignment="Stretch"
-				Background="{DynamicResource LayerOnMicaBaseAltFillColorDefaultBrush}">
-				<Grid ColumnDefinitions="Auto,*,Auto">
-					<!--  左侧：信息面板/列表开关 + 标题  -->
-					<StackPanel
-						Grid.Column="0"
-						Orientation="Horizontal"
-						Spacing="20">
-						<CommandBar DefaultLabelPosition="Collapsed" IsDynamicOverflowEnabled="True">
-							<CommandBarToggleButton
-								Icon="{markup:SymbolIcon Info}"
-								IsChecked="{Binding #EntryViewerSplitView.IsPaneOpen}"
-								Label="{I18N {x:Static pixeval:EntryViewerPageResources.InfoAndComments}}" />
-							<CommandBarToggleButton
-								Icon="{markup:SymbolIcon PanelBottomExpand}"
-								IsChecked="{Binding IsBottomListOpen}"
-								Label="{I18N {x:Static pixeval:MiscResources.OpenBottomList}}" />
-						</CommandBar>
-						<controls:IconText
-							VerticalAlignment="Center"
-							Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-							IsVisible="{Binding CurrentIllustration.SizeText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-							Symbol="SlideSize"
-							Text="{Binding CurrentIllustration.SizeText}" />
-						<controls:IconText
-							MaxWidth="200"
-							VerticalAlignment="Center"
-							Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-							IsVisible="{Binding CurrentIllustration.Entry.Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-							Symbol="AppTitle"
-							Text="{Binding CurrentIllustration.Entry.Title}" />
-					</StackPanel>
+            <!--  底部状态栏  -->
+            <Border
+                IsVisible="False"
+                Grid.Row="2"
+                Height="48"
+                Padding="5,0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Background="{DynamicResource LayerOnMicaBaseAltFillColorDefaultBrush}">
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <!--  左侧：信息面板/列表开关 + 标题  -->
+                    <StackPanel
+                        Grid.Column="0"
+                        Orientation="Horizontal"
+                        Spacing="20">
+                        <CommandBar DefaultLabelPosition="Collapsed" IsDynamicOverflowEnabled="True">
+                            <CommandBarToggleButton
+                                Icon="{markup:SymbolIcon Info}"
+                                IsChecked="{Binding #EntryViewerFloatingPaneView.IsDocked}"
+                                Label="{I18N {x:Static pixeval:EntryViewerPageResources.InfoAndComments}}" />
+                            <CommandBarToggleButton
+                                Icon="{markup:SymbolIcon PanelBottomExpand}"
+                                IsChecked="{Binding IsBottomListOpen}"
+                                Label="{I18N {x:Static pixeval:MiscResources.OpenBottomList}}" />
+                        </CommandBar>
+                        <controls:IconText
+                            VerticalAlignment="Center"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            IsVisible="{Binding CurrentIllustration.SizeText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                            Symbol="SlideSize"
+                            Text="{Binding CurrentIllustration.SizeText}" />
+                        <controls:IconText
+                            MaxWidth="200"
+                            VerticalAlignment="Center"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            IsVisible="{Binding CurrentIllustration.Entry.Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                            Symbol="AppTitle"
+                            Text="{Binding CurrentIllustration.Entry.Title}" />
+                    </StackPanel>
 
-				</Grid>
-			</Border>
-		</Grid>
-	</Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
 </ContentPage>

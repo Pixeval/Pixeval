@@ -10,13 +10,12 @@ namespace Pixeval.Controls;
 [PseudoClasses(pcDocked, pcLocked)]
 public class FloatingPaneView : ContentControl
 {
-       const string pcDocked = ":docked";
+    const string pcDocked = ":docked";
     const string pcLocked = ":locked";
 
     const string partFloatingPaneBorder = "PART_FloatingPaneBorder";
 
     private Border? _floatingPaneBorder;
-    private bool? _isAutoHideEnabled;
 
     public static readonly StyledProperty<object?> PaneProperty =
         AvaloniaProperty.Register<FloatingPaneView, object?>(nameof(Pane));
@@ -30,29 +29,9 @@ public class FloatingPaneView : ContentControl
     public static readonly StyledProperty<bool> IsLockedProperty =
         AvaloniaProperty.Register<FloatingPaneView, bool>(nameof(IsLocked));
 
-    public static readonly StyledProperty<VerticalAlignment> PaneVerticalAlignmentProperty = AvaloniaProperty.Register<FloatingPaneView, VerticalAlignment>(
-        nameof(PaneVerticalAlignment));
-
-    static FloatingPaneView()
-    {
-        IsDockedProperty.Changed.AddClassHandler<FloatingPaneView>((x, e) =>
-        {
-            x.UpdatePseudoClasses();
-            if (x._floatingPaneBorder is { } border)
-            {
-                if (!e.GetNewValue<bool>())
-                {
-                    FloatingPane.ShowTemporarily(border);
-                }
-                else
-                {
-                    FloatingPane.ResetState(border);
-                    FloatingPane.ClearTemporaryVisible(border);
-                }
-            }
-        });
-        IsLockedProperty.Changed.AddClassHandler<FloatingPaneView>((x, e) => x.UpdatePseudoClasses());
-    }
+    public static readonly StyledProperty<VerticalAlignment> PaneVerticalAlignmentProperty =
+        AvaloniaProperty.Register<FloatingPaneView, VerticalAlignment>(
+            nameof(PaneVerticalAlignment));
 
     public object? Pane
     {
@@ -77,11 +56,32 @@ public class FloatingPaneView : ContentControl
         get => GetValue(IsLockedProperty);
         set => SetValue(IsLockedProperty, value);
     }
-    
+
     public VerticalAlignment PaneVerticalAlignment
     {
         get => GetValue(PaneVerticalAlignmentProperty);
         set => SetValue(PaneVerticalAlignmentProperty, value);
+    }
+    
+    static FloatingPaneView()
+    {
+        IsDockedProperty.Changed.AddClassHandler<FloatingPaneView>((x, e) =>
+        {
+            x.UpdatePseudoClasses();
+            if (x._floatingPaneBorder is { } border)
+            {
+                if (!e.GetNewValue<bool>())
+                {
+                    FloatingPane.ShowTemporarily(border);
+                }
+                else
+                {
+                    FloatingPane.ResetState(border);
+                    FloatingPane.ClearTemporaryVisible(border);
+                }
+            }
+        });
+        IsLockedProperty.Changed.AddClassHandler<FloatingPaneView>((x, e) => x.UpdatePseudoClasses());
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -89,8 +89,6 @@ public class FloatingPaneView : ContentControl
         base.OnApplyTemplate(e);
 
         _floatingPaneBorder = e.NameScope.Find<Border>(partFloatingPaneBorder);
-        _isAutoHideEnabled = null;
-
         UpdatePseudoClasses();
     }
 
