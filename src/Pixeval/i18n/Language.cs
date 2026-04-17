@@ -52,15 +52,6 @@ namespace Pixeval
         public const string DefaultSearchTagMatchOptionEntryHeader = "AppSettings.DefaultSearchTagMatchOptionEntry.Header";
         public const string DefaultSelectedTabEntryDescription = "AppSettings.DefaultSelectedTabEntry.Description";
         public const string DefaultSelectedTabEntryHeader = "AppSettings.DefaultSelectedTabEntry.Header";
-        public const string DeleteBrowseHistoriesEntryDescription = "AppSettings.DeleteBrowseHistoriesEntry.Description";
-        public const string DeleteBrowseHistoriesEntryHeader = "AppSettings.DeleteBrowseHistoriesEntry.Header";
-        public const string DeleteDownloadHistoriesEntryDescription = "AppSettings.DeleteDownloadHistoriesEntry.Description";
-        public const string DeleteDownloadHistoriesEntryHeader = "AppSettings.DeleteDownloadHistoriesEntry.Header";
-        public const string DeleteFileCacheEntryDescription = "AppSettings.DeleteFileCacheEntry.Description";
-        public const string DeleteFileCacheEntryHeader = "AppSettings.DeleteFileCacheEntry.Header";
-        public const string DeleteHistoriesEntryHeader = "AppSettings.DeleteHistoriesEntry.Header";
-        public const string DeleteSearchHistoriesEntryDescription = "AppSettings.DeleteSearchHistoriesEntry.Description";
-        public const string DeleteSearchHistoriesEntryHeader = "AppSettings.DeleteSearchHistoriesEntry.Header";
         public const string DownloadPathMacroEntryDescription = "AppSettings.DownloadPathMacroEntry.Description";
         public const string DownloadPathMacroEntryHeader = "AppSettings.DownloadPathMacroEntry.Header";
         public const string DownloadUpdateAutomaticallyEntryDescription = "AppSettings.DownloadUpdateAutomaticallyEntry.Description";
@@ -353,7 +344,7 @@ namespace Pixeval
     public static class HelpPageResources
     {
         public const string AppLinkHelpText = "HelpPage.AppLinkHelp.Text";
-        public const string AppLinkHelpExpanderHeader = "HelpPage.AppLinkHelpExpander.Header";
+        public const string AppProtocolLinkHelpExpanderHeader = "HelpPage.AppProtocolLinkHelpExpander.Header";
         public const string DownloadMacroHelpExpanderHeader = "HelpPage.DownloadMacroHelpExpander.Header";
         public const string ExtensionsHelpExpanderHeader = "HelpPage.ExtensionsHelpExpander.Header";
         public const string QueryFilterHelpExpanderHeader = "HelpPage.QueryFilterHelpExpander.Header";
