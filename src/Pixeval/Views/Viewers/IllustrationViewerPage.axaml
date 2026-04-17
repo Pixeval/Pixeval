@@ -1,5 +1,6 @@
 <ContentPage
     x:Class="Pixeval.Views.Viewers.IllustrationViewerPage"
+    x:Name="IllustrationViewerPageRoot"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:common="using:FluentIcons.Common"
@@ -32,6 +33,12 @@
         <KeyBinding Command="{Binding NextCommand}" Gesture="Right" />
         <KeyBinding Command="{Binding PrevWorkCommand}" Gesture="Up" />
         <KeyBinding Command="{Binding NextWorkCommand}" Gesture="Down" />
+        <!-- TODO: Avalonia的HotKeyManager监听的是逻辑树，在多Tab的时候会出问题，所以先用局部的KeyBinding顶一下
+                需要等Avalonia行为改了，或者用其它workaround修复
+                因为是局部的KeyBindings，目前快捷键需要焦点在该ContentPage内部才会激活 -->
+        <KeyBinding Command="{Binding CurrentImage.PlayPauseCommand}" Gesture="Space" />
+        <KeyBinding Command="{Binding CurrentImage.CopyCommand}" CommandParameter="{Binding #IllustrationViewerPageRoot, Mode=OneTime}" Gesture="Ctrl+C" />
+        <KeyBinding Command="{Binding CurrentPage.SaveCommand}" CommandParameter="{Binding #IllustrationViewerPageRoot, Mode=OneTime}" Gesture="Ctrl+S" />
     </ContentPage.KeyBindings>
 
     <Grid>
@@ -71,7 +78,6 @@
                             IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
                             Label="{I18N {x:Static pixeval:MiscResources.AddBookmark}}" />
                         <CommandBarSeparator />
-                        <!--  HotKey="Ctrl+C" 不知道为什么这个快捷键会被导到其他页面去，导致无法找到$self的TopLevel  -->
                         <CommandBarButton
                             Command="{Binding CurrentImage.CopyCommand}"
                             CommandParameter="{Binding $self, Mode=OneTime}"

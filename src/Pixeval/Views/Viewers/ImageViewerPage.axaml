@@ -56,7 +56,7 @@
                     <MenuItem
                         Command="{Binding PlayPauseCommand}"
                         Header="{I18N {x:Static pixeval:MiscResources.Play}}"
-                        HotKey="Space"
+                        InputGesture="Space"
                         Icon="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding IsPlaying},
                                                                                   Pause,
                                                                                   Play,
@@ -76,14 +76,14 @@
                         Command="{Binding CopyCommand}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
                         Header="{I18N {x:Static pixeval:EntryViewerPageResources.Copy}}"
-                        HotKey="Ctrl+C"
+                        InputGesture="Ctrl+C"
                         Icon="{markup:SymbolIcon Copy}"
                         IsVisible="{Binding !IllustrationViewModel.IsPicGif}" />
                     <MenuItem
                         Command="{Binding IllustrationViewModel.SaveCommand}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
                         Header="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}"
-                        HotKey="Ctrl+S"
+                        InputGesture="Ctrl+S"
                         Icon="{markup:SymbolIcon Save}" />
                     <MenuItem
                         Command="{Binding IllustrationViewModel.SaveAsCommand}"
