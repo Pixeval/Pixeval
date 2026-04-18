@@ -56,8 +56,8 @@ public partial class TabViewContainer : ViewContainerBase
             Content = page
         };
         
-        dragTabItem[!HeaderedContentControl.HeaderProperty] = page[!Page.HeaderProperty];
-        dragTabItem[!DragTabItem.IconProperty] = page[!Page.IconProperty];
+        dragTabItem[~HeaderedContentControl.HeaderProperty] = page[~Page.HeaderProperty];
+        dragTabItem[~DragTabItem.IconProperty] = page[~Page.IconProperty];
 
         _ = TabsControl.Items.Add(dragTabItem);
 
