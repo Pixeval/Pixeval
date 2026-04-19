@@ -18,7 +18,6 @@
     xmlns:ss="clr-namespace:SmoothScroll.Avalonia.Controls;assembly=SmoothScroll.Avalonia.Controls"
     mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
     x:DataType="{x:Type viewers:IllustrationViewerPageViewModel}"
-    Background="#DDFFFFFF"
     x:Class="Pixeval.Views.Viewers.IllustrationViewerInfoPane">
 
     <UserControl.Styles>
@@ -49,15 +48,6 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0">
-            <Grid ColumnDefinitions="* Auto">
-                <Button Grid.Column="1"
-                        Content="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding $parent[local:IllustrationViewerInfoPane].IsDocked},
-                                                                                                        ChevronDown,
-                                                                                                        ChevronUp,
-                                                                                                        x:TypeArguments=common:Symbol}}"
-                        Click="ChevronButtonClicked"
-                        ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.InfoAndComments}}" />
-            </Grid>
             <TextBlock
                 VerticalAlignment="Center"
                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -68,7 +58,19 @@
                 <Run Text="/" />
                 <Run Text="{Binding PageCount}" />
             </TextBlock>
-            <local:WorkInfoPane Name="InfoPaneSection" />
+            <local:WorkInfoPane
+                Name="InfoPaneSection"
+                ArtworkInfo="{Binding CurrentIllustration.Entry}">
+               <local:WorkInfoPane.ActionZone>
+                   <Button Theme="{StaticResource TransparentButtonStyle}"
+                       Content="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding $parent[local:IllustrationViewerInfoPane].IsDocked},
+                                                                                                    ChevronDown,
+                                                                                                    ChevronUp,
+                                                                                                    x:TypeArguments=common:Symbol}}"
+                       Click="ChevronButtonClicked"
+                       ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.InfoAndComments}}" />
+               </local:WorkInfoPane.ActionZone> 
+            </local:WorkInfoPane>
         </StackPanel>
         <TabbedPage Name="TabbedPageSection" Grid.Row="1" Pages="{Binding PanePages}" Background="Transparent" />
         <CommandBar Grid.Row="2"
