@@ -1,0 +1,153 @@
+﻿<UserControl
+    Name="InfoPaneRoot"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:common="using:FluentIcons.Common"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:converters="using:Pixeval.Views.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Pixeval.Views.Viewers"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:markup1="using:Pixeval.Views.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
+    xmlns:utilities="using:Pixeval.Utilities"
+    xmlns:viewModels="using:Pixeval.ViewModels"
+    xmlns:viewers="using:Pixeval.ViewModels.Viewers"
+    xmlns:work="using:Pixeval.Views.Work"
+    xmlns:ss="clr-namespace:SmoothScroll.Avalonia.Controls;assembly=SmoothScroll.Avalonia.Controls"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:DataType="{x:Type viewers:IllustrationViewerPageViewModel}"
+    Background="#DDFFFFFF"
+    x:Class="Pixeval.Views.Viewers.IllustrationViewerInfoPane">
+
+    <UserControl.Styles>
+        <Style Selector="local|IllustrationViewerInfoPane#InfoPaneRoot">
+            <Style Selector="^ local|WorkInfoPane#InfoPaneSection">
+                <Setter Property="Theme" Value="{StaticResource LiteWorkInfoPaneStyle}" />
+            </Style>
+            <Style Selector="^ TabbedPage#TabbedPageSection">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            
+            <Style Selector="^:docked">
+                <Style Selector="^ local|WorkInfoPane#InfoPaneSection">
+                    <Setter Property="Theme" Value="{StaticResource {x:Type local:WorkInfoPane}}" />
+                </Style>
+                <Style Selector="^ TabbedPage#TabbedPageSection">
+                    <Setter Property="IsVisible" Value="True" />
+                </Style>
+            </Style>
+        </Style>
+
+    </UserControl.Styles>
+
+    <Grid VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0">
+            <Grid ColumnDefinitions="* Auto">
+                <Button Grid.Column="1"
+                        Content="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding $parent[local:IllustrationViewerInfoPane].IsDocked},
+                                                                                                        ChevronDown,
+                                                                                                        ChevronUp,
+                                                                                                        x:TypeArguments=common:Symbol}}"
+                        Click="ChevronButtonClicked"
+                        ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.InfoAndComments}}" />
+            </Grid>
+            <TextBlock
+                VerticalAlignment="Center"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                IsVisible="{Binding CurrentIllustration.IsPicSet}">
+                <!--  不加OneWay会调用ConvertBack，不知道为什么  -->
+                <Run
+                    Text="{Binding CurrentPageIndex, Mode=OneWay, Converter={x:Static controls:ZoomIndicator.PlusOneConverter}}" />
+                <Run Text="/" />
+                <Run Text="{Binding PageCount}" />
+            </TextBlock>
+            <local:WorkInfoPane Name="InfoPaneSection" />
+        </StackPanel>
+        <TabbedPage Name="TabbedPageSection" Grid.Row="1" Pages="{Binding PanePages}" Background="Transparent" />
+        <CommandBar Grid.Row="2"
+                    Background="Transparent"
+                    x:Name="BottomActionBar"
+                    HorizontalAlignment="Center"
+                    DefaultLabelPosition="Collapsed"
+                    DockPanel.Dock="Bottom"
+                    IsDynamicOverflowEnabled="False">
+            <CommandBarButton
+                Command="{Binding CurrentImage.PlayPauseCommand}"
+                CommandParameter="{Binding $self, Mode=OneTime}"
+                Icon="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding CurrentImage.IsPlaying},
+                                                                                      Pause,
+                                                                                      Play,
+                                                                                      x:TypeArguments=common:Symbol}}"
+                IsVisible="{Binding CurrentIllustration.IsPicGif}"
+                Label="{I18N {x:Static pixeval:MiscResources.Play}}" />
+            <CommandBarButton
+                Command="{Binding CurrentIllustration.BookmarkCommand}"
+                CommandParameter="{Binding $self, Mode=OneTime}"
+                Icon="{markup1:SymbolIconEx Heart,
+                                IconVariant={Binding CurrentIllustration.IsBookmarkedDisplay,
+                                Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
+                IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
+                Label="{I18N {x:Static pixeval:MiscResources.AddBookmark}}" />
+            <CommandBarSeparator />
+            <CommandBarButton
+                Command="{Binding CurrentImage.CopyCommand}"
+                CommandParameter="{Binding $self, Mode=OneTime}"
+                Icon="{markup:SymbolIcon Copy}"
+                IsVisible="{Binding !CurrentIllustration.IsPicGif}"
+                Label="{I18N {x:Static pixeval:EntryViewerPageResources.Copy}}" />
+            <CommandBarButton
+                Command="{Binding CurrentPage.SaveCommand}"
+                CommandParameter="{Binding $self, Mode=OneTime}"
+                Icon="{markup:SymbolIcon Save}"
+                Label="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}" />
+            <CommandBarButton
+                Command="{Binding CurrentPage.SaveAsCommand}"
+                CommandParameter="{Binding $self, Mode=OneTime}"
+                Icon="{markup:SymbolIcon SaveEdit}"
+                Label="{I18N {x:Static pixeval:EntryViewerPageResources.SaveAs}}" />
+            <CommandBarButton
+                Command="{Binding CurrentIllustration.SaveCommand}"
+                CommandParameter="{Binding $self, Mode=OneTime}"
+                Icon="{markup:SymbolIcon SaveMultiple}"
+                IsVisible="{Binding CurrentIllustration.IsPicSet}"
+                Label="{I18N {x:Static pixeval:EntryItemResources.MangaSave}}" />
+            <CommandBarButton
+                Command="{Binding CurrentIllustration.SaveAsCommand}"
+                CommandParameter="{Binding $self, Mode=OneTime}"
+                Icon="{markup:SymbolIcon SaveEdit}"
+                IsVisible="{Binding CurrentIllustration.IsPicSet}"
+                Label="{I18N {x:Static pixeval:EntryItemResources.MangaSaveAs}}" />
+            <CommandBarSeparator />
+            <CommandBarButton
+                x:Name="AddToBookmarkButton"
+                Click="AddToBookmarkButton_OnClick"
+                Icon="{markup1:SymbolIconEx Bookmark,
+                                IconVariant={Binding CurrentIllustration.IsBookmarkedDisplay,
+                                Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
+                IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
+                Label="{I18N {x:Static pixeval:EntryItemResources.AddToBookmark}}" />
+            <!--<CommandBarButton
+                            Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
+                            Icon="{markup:SymbolIcon Link}"
+                            Label="{I18N {x:Static pixeval:EntryItemResources.GenerateLink}}"
+                            Tag="{Binding CurrentIllustration.AppUri}" />-->
+            <CommandBarButton
+                Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
+                Icon="{markup:SymbolIcon LinkMultiple}"
+                Label="{I18N {x:Static pixeval:EntryItemResources.GenerateWebLink}}"
+                Tag="{Binding CurrentIllustration.WebsiteUri}" />
+            <CommandBarButton
+                Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
+                Icon="{markup:SymbolIcon GlobeArrowUp}"
+                Label="{I18N {x:Static pixeval:EntryItemResources.OpenInWebBrowser}}"
+                Tag="{Binding CurrentIllustration.WebsiteUri}" />
+        </CommandBar>
+    </Grid>
+</UserControl>

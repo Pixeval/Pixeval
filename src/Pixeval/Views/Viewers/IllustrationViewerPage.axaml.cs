@@ -48,12 +48,6 @@ public partial class IllustrationViewerPage : ContentPage
         ViewModel.CurrentWorkIndex++;
     }
 
-    private async void AddToBookmarkButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        if (!BookmarkTagSelector.IsVisible)
-            await BookmarkTagSelector.ResetSourceAsync();
-        BookmarkTagSelector.IsVisible = !BookmarkTagSelector.IsVisible;
-    }
 
     private void BookmarkTagSelector_OnTagsSelected(TagSelector sender, (bool IsPrivate, IReadOnlyList<string> Tags) e)
     {
@@ -83,9 +77,4 @@ public partial class IllustrationViewerPage : ContentPage
     }
 
     #endregion
-
-    private void ChevronButtonClicked(object? sender, RoutedEventArgs e)
-    {
-        EntryViewerFloatingPaneView.IsDocked = !EntryViewerFloatingPaneView.IsDocked;
-    }
 }

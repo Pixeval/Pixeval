@@ -12,6 +12,7 @@
         <MergeResourceInclude Source="/Views/Entry/EntryView.axaml" />
         <MergeResourceInclude Source="/Views/Work/TagSelector.axaml" />
         <MergeResourceInclude Source="/Views/Work/AddNewBookmarkTagItem.axaml" />
+        <MergeResourceInclude Source="/Views/Viewers/WorkInfoPane.axaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <CornerRadius x:Key="ControlTopCornerRadius">4,4,0,0</CornerRadius>

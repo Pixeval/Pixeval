@@ -1,0 +1,27 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Pixeval.Views.Viewers">
+    <Design.PreviewWith>
+        <controls:WorkInfoPane />
+    </Design.PreviewWith>
+
+    <ControlTheme 
+        x:Key="{x:Type controls:WorkInfoPane}"
+        TargetType="{x:Type controls:WorkInfoPane}">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <TextBlock Text="WorkInfoPane" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+    
+    <ControlTheme 
+        x:Key="LiteWorkInfoPaneStyle"
+        TargetType="{x:Type controls:WorkInfoPane}">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <TextBlock Text="Lite WorkInfoPane" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>
