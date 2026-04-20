@@ -63,7 +63,12 @@ public partial class IllustrationViewerPage : ContentPage
 
     private void ImageViewerPage_OnZoomChanged(object? sender, EventArgs e)
     {
-        FloatingPane.ShowTemporarily(ZoomPane);
+        EntryViewerFloatingPaneView.ShowPaneTemporarily();
+    }
+    
+    private void ImageViewerPage_OnImageChanged(object? sender, EventArgs e)
+    {
+        EntryViewerFloatingPaneView.ShowPaneTemporarily();
     }
 
     #region Disposal

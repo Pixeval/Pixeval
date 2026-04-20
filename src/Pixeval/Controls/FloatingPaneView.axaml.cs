@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
@@ -63,6 +64,22 @@ public class FloatingPaneView : ContentControl
         set => SetValue(PaneVerticalAlignmentProperty, value);
     }
     
+    public void ShowPaneTemporarily(TimeSpan? duration = null)
+    {
+        if (IsDocked || _floatingPaneBorder is null)
+            return;
+
+        FloatingPane.ShowTemporarily(_floatingPaneBorder, duration);
+    }
+
+    public void ClearTemporaryPaneVisibility()
+    {
+        if (_floatingPaneBorder is null)
+            return;
+
+        FloatingPane.ClearTemporaryVisible(_floatingPaneBorder);
+    }
+
     static FloatingPaneView()
     {
         IsDockedProperty.Changed.AddClassHandler<FloatingPaneView>((x, e) =>
@@ -72,12 +89,12 @@ public class FloatingPaneView : ContentControl
             {
                 if (!e.GetNewValue<bool>())
                 {
-                    FloatingPane.ShowTemporarily(border);
+                    x.ShowPaneTemporarily();
                 }
                 else
                 {
                     FloatingPane.ResetState(border);
-                    FloatingPane.ClearTemporaryVisible(border);
+                    x.ClearTemporaryPaneVisibility();
                 }
             }
         });

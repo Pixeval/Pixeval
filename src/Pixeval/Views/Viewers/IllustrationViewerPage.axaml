@@ -107,7 +107,8 @@
                     <Panel Background="Transparent" controls:FloatingPaneHost.IsEnabled="True">
                         <!--  图片查看器  -->
                         <local:ImageViewerPage x:Name="ImageViewerPage" DataContext="{Binding CurrentImage}"
-                                               ZoomChanged="ImageViewerPage_OnZoomChanged" />
+                                               ZoomChanged="ImageViewerPage_OnZoomChanged"
+                                               ImageChanged="ImageViewerPage_OnImageChanged"/>
 
                         <!--  左翻页按钮  -->
                         <controls:PageButton

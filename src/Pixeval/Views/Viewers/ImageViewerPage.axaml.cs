@@ -2,6 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using AnimatedControls.Avalonia;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.LogicalTree;
@@ -14,12 +15,14 @@ public partial class ImageViewerPage : UserControl
     public ImageViewerPage() => InitializeComponent();
 
     public event EventHandler? ZoomChanged;
+    public event EventHandler? ImageChanged;
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
         
         ZoomBorder.PropertyChanged += ZoomBorderOnPropertyChanged;
+        ImageViewer.PropertyChanged += ImageViewerOnPropertyChanged;
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
@@ -27,12 +30,19 @@ public partial class ImageViewerPage : UserControl
         base.OnDetachedFromVisualTree(e);
         
         ZoomBorder.PropertyChanged -= ZoomBorderOnPropertyChanged;
+        ImageViewer.PropertyChanged -= ImageViewerOnPropertyChanged;
     }
 
     private void ZoomBorderOnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
         if(e.Property == ScrollView.ZoomFactorProperty)
             ZoomChanged?.Invoke(sender, e);
+    }
+    
+    private void ImageViewerOnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if(e.Property == AnimatedImage.SourceProperty)
+            ImageChanged?.Invoke(sender, e);
     }
 
     /// <summary>

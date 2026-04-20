@@ -46,6 +46,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0">
             <TextBlock
@@ -72,8 +73,41 @@
                </local:WorkInfoPane.ActionZone> 
             </local:WorkInfoPane>
         </StackPanel>
-        <TabbedPage Name="TabbedPageSection" Grid.Row="1" Pages="{Binding PanePages}" Background="Transparent" />
-        <CommandBar Grid.Row="2"
+        <TabbedPage 
+            Name="TabbedPageSection" 
+            Grid.Row="1"
+            IsVisible="{Binding IsInfoPaneDocked}"
+            Pages="{Binding PanePages}"
+            Background="Transparent" />
+
+        <ListBox
+            x:Name="ThumbnailListBox"
+            Grid.Row="2"
+            IsVisible="{Binding IsInfoPaneDocked}"
+            Height="90"
+            Margin="5,0"
+            Padding="0,0,0,5"
+            HorizontalAlignment="Stretch"
+            ItemsSource="{Binding Illustrations}"
+            SelectedIndex="{Binding CurrentWorkIndex}"
+            SelectionMode="Single">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" Spacing="5" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type viewModels:IllustrationItemViewModel}">
+                    <Image
+                        Width="80"
+                        Height="80"
+                        controls:Source.Cache="{Binding ThumbnailUrl}"
+                        Stretch="UniformToFill" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        
+        <CommandBar Grid.Row="3"
                     Background="Transparent"
                     x:Name="BottomActionBar"
                     HorizontalAlignment="Center"
