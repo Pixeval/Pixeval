@@ -64,7 +64,7 @@
                 ArtworkInfo="{Binding CurrentIllustration.Entry}">
                <local:WorkInfoPane.ActionZone>
                    <Button Theme="{StaticResource TransparentButtonStyle}"
-                       Content="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding $parent[local:IllustrationViewerInfoPane].IsDocked},
+                       Content="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding #InfoPaneRoot.IsDocked},
                                                                                                     ChevronDown,
                                                                                                     ChevronUp,
                                                                                                     x:TypeArguments=common:Symbol}}"
@@ -76,14 +76,14 @@
         <TabbedPage 
             Name="TabbedPageSection" 
             Grid.Row="1"
-            IsVisible="{Binding IsInfoPaneDocked}"
+            IsVisible="{Binding #InfoPaneRoot.IsDocked}"
             Pages="{Binding PanePages}"
             Background="Transparent" />
 
         <ListBox
             x:Name="ThumbnailListBox"
             Grid.Row="2"
-            IsVisible="{Binding IsInfoPaneDocked}"
+            IsVisible="{Binding #InfoPaneRoot.IsDocked}"
             Height="90"
             Margin="5,0"
             Padding="0,0,0,5"
