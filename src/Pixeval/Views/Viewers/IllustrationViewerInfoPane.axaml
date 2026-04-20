@@ -88,6 +88,8 @@
             Margin="5,0"
             Padding="0,0,0,5"
             HorizontalAlignment="Stretch"
+            ScrollViewer.HorizontalScrollBarVisibility="Visible"
+            ScrollViewer.VerticalScrollBarVisibility="Disabled"
             ItemsSource="{Binding Illustrations}"
             SelectedIndex="{Binding CurrentWorkIndex}"
             SelectionMode="Single">
