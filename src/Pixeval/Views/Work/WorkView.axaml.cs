@@ -21,28 +21,37 @@ public partial class WorkView : UserControl, IDisposable
 {
     public event EventHandler<WorkView, IWorkViewModel>? RequestAddToBookmark;
 
-    public static readonly DirectProperty<WorkView, double> ItemWidthProperty =
-        AvaloniaProperty.RegisterDirect<WorkView, double>(nameof(ItemWidth), t => t.ItemWidth, (t, v) => t.ItemWidth = v);
-
-    public double ItemWidth
+    public ItemsViewLayoutType LayoutType
     {
         get;
-        set => SetAndRaise(ItemWidthProperty, ref field, value);
+        set
+        {
+            field = value;
+            UpdateLayoutPseudoClasses();
+        }
     }
 
     public static FuncValueConverter<bool, SelectionMode> SelectionModeConverter { get; } =
         new(b => b ? SelectionMode.Multiple : SelectionMode.Single);
 
-    public ItemsViewLayoutType LayoutType { get; set; }
+    private void StyledElement_OnDataContextChanged(object? sender, EventArgs e) => UpdateLayoutPseudoClasses();
 
     public WorkView() => InitializeComponent();
+
+    private void UpdateLayoutPseudoClasses()
+    {
+        var actualLayoutType = DataContext is NovelViewViewModel ? ItemsViewLayoutType.Grid : LayoutType;
+        PseudoClasses.Set(":linedFlow", actualLayoutType is ItemsViewLayoutType.LinedFlow);
+        PseudoClasses.Set(":verticalStack", actualLayoutType is ItemsViewLayoutType.VerticalStack);
+        PseudoClasses.Set(":grid", actualLayoutType is ItemsViewLayoutType.Grid);
+    }
 
     private async void WorkItem_OnTapped(object? sender, TappedEventArgs tappedEventArgs)
     {
         if (sender is not ListBoxItem { DataContext: IWorkViewModel vm } lbi)
             return;
 
-        if (ListBox.SelectionMode.HasFlag(SelectionMode.Multiple))
+        if (WorkListBox.SelectionMode.HasFlag(SelectionMode.Multiple))
         {
             lbi.IsSelected = !lbi.IsSelected;
             return;
@@ -56,7 +65,7 @@ public partial class WorkView : UserControl, IDisposable
         if (sender is not ListBoxItem { DataContext: IWorkViewModel vm })
             return;
 
-        if (ListBox.SelectionMode.HasFlag(SelectionMode.Single))
+        if (WorkListBox.SelectionMode.HasFlag(SelectionMode.Single))
             return;
 
         await CreateWorkViewerPage(vm);
@@ -125,17 +134,15 @@ public partial class WorkView : UserControl, IDisposable
                 ISortableEntryViewViewModel? newViewModel;
                 if (isNovelEngine)
                 {
-                    ItemWidth = 350;
                     newViewModel = new NovelViewViewModel();
                 }
                 else
                 {
-                    ItemWidth = LayoutType is ItemsViewLayoutType.Grid ? 240 : double.NaN;
                     newViewModel = new IllustrationViewViewModel();
                 }
                 newViewModel.ResetEngine(newEngine, isBookmarkEnabled, itemsPerPage, itemLimit);
                 DataContext = newViewModel;
-                ListBox.ItemsSource = newViewModel.View;
+                WorkListBox.ItemsSource = newViewModel.View;
                 viewModel?.Dispose();
                 break;
         }

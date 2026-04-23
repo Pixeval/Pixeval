@@ -48,7 +48,7 @@ public partial class WorkContainer : UserControl
 
     private void SelectAllToggleButton_OnClicked(object? sender, RoutedEventArgs e)
     {
-        WorkView.ListBox.SelectAll();
+        WorkView.WorkListBox.SelectAll();
     }
 
     private void SortOptionComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e) => SetSortOption();
@@ -79,7 +79,7 @@ public partial class WorkContainer : UserControl
 
     private void ScrollToTop()
     {
-         if (WorkView.ListBox.Scroll is { } scrollView)
+         if (WorkView.WorkListBox.Scroll is { } scrollView)
              scrollView.Offset = new(0, 0);
     }
 
@@ -165,7 +165,7 @@ public partial class WorkContainer : UserControl
 
     private void CancelSelectionButton_OnClicked(object? sender, RoutedEventArgs e)
     {
-        WorkView.ListBox.UnselectAll();
+        WorkView.WorkListBox.UnselectAll();
     }
 
     private void FilterAutoSuggestBox_OnKeyDown(object? sender, KeyEventArgs e)

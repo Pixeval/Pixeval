@@ -84,12 +84,19 @@ public class ExtensionService : IDisposable
 
     public void UnloadHost(ExtensionsHostModel model)
     {
-        _ = HostModels.Remove(model);
-        if (_settingsGroups.FirstOrDefault(t => t.Model == model) is { } group)
-            _ = _settingsGroups.Remove(group);
-        foreach (var extension in model.Extensions)
-            extension.OnExtensionUnloaded();
-        model.Dispose();
+        try
+        {
+            _ = HostModels.Remove(model);
+            if (_settingsGroups.FirstOrDefault(t => t.Model == model) is { } group)
+                _ = _settingsGroups.Remove(group);
+            foreach (var extension in model.Extensions)
+                extension.OnExtensionUnloaded();
+            model.Dispose();
+        }
+        catch
+        {
+            // ignored
+        }
     }
 
     private static ExtensionsHostModel? LoadHost(string path, ILogger logger, out bool isOutdated)
@@ -122,7 +129,14 @@ public class ExtensionService : IDisposable
             }
             catch
             {
-                NativeLibrary.Free(dllHandle);
+                try
+                {
+                    NativeLibrary.Free(dllHandle);
+                }
+                catch
+                {
+                    // ignored
+                }
                 return null;
             }
         }

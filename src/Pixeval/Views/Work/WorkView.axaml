@@ -8,16 +8,17 @@
     xmlns:local="using:Pixeval.Views.Work"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:novel="using:Pixeval.ViewModels"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
     x:DataType="{x:Type novel:ISortableEntryViewViewModel}"
-    mc:Ignorable="d">
+    DataContextChanged="StyledElement_OnDataContextChanged"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
     <entry:EntryView
         x:Name="EntryView"
         HasNoItem="{Binding !View.Count}"
-        IsLoadingMore="{Binding #ListBox.(controls:IncrementalLoadingBehavior.IsLoadingMore)}">
+        IsLoadingMore="{Binding #WorkListBox.(controls:IncrementalLoadingBehavior.IsLoadingMore)}">
         <ListBox
-            x:Name="ListBox"
+            x:Name="WorkListBox"
             controls:IncrementalLoadingBehavior.IsEnabled="True"
             controls:IncrementalLoadingBehavior.Threshold="200"
             ContainerPrepared="ListBox_OnContainerPrepared"
@@ -28,16 +29,6 @@
             <ListBox.Styles>
                 <controls:ItemsViewListBoxStyles />
             </ListBox.Styles>
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <controls:WrapPanel
-                        ItemHeight="200"
-                        ItemSpacing="5"
-                        ItemWidth="{Binding $parent[local:WorkView].ItemWidth}"
-                        ItemsAlignment="Stretch"
-                        LineSpacing="5" />
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
             <ListBox.DataTemplates>
                 <DataTemplate x:DataType="{x:Type novel:NovelItemViewModel}">
                     <local:NovelItem RequestAddToBookmark="WorkItem_OnRequestAddToBookmark" RequestOpenUserInfoPage="WorkItem_OnRequestOpenUserInfoPage" />
@@ -48,4 +39,43 @@
             </ListBox.DataTemplates>
         </ListBox>
     </entry:EntryView>
+    <UserControl.Styles>
+        <Style Selector="local|WorkView:linedFlow ListBox">
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <controls:WrapPanel
+                            ItemHeight="200"
+                            ItemSpacing="5"
+                            ItemsAlignment="Stretch"
+                            LineSpacing="5" />
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style Selector="local|WorkView:verticalStack ListBox">
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <StackPanel Spacing="5" />
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style Selector="local|WorkView:grid ListBox">
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <!--  TODO: GridPanel  -->
+                        <controls:WrapPanel
+                            ItemHeight="200"
+                            ItemSpacing="5"
+                            ItemWidth="350"
+                            ItemsAlignment="Stretch"
+                            LineSpacing="5" />
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Styles>
 </UserControl>
