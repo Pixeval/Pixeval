@@ -95,7 +95,10 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
             // 保证_pages里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
             Images = [.. Pages.Select(p => new ImageViewerPageViewModel(p, CurrentIllustration))];
 
-            var list = new List<Page>(3) { new WorkInfoPage(CurrentIllustration.Entry) };
+            
+            // TODO: I would suggest use ViewLocator here, to keep the ViewModel separated from the View.
+            // new WorkInfoPage(CurrentIllustration.Entry)
+            var list = new List<Page>(2) {  };
             if (CurrentIllustration.Entry is Illustration { Id: var id })
             {
                 list.Add(new CommentsPage(new CommentsViewViewModel(SimpleWorkType.IllustrationAndManga, id)));

@@ -8,9 +8,11 @@
         <MergeResourceInclude Source="/Controls/PixevalBadge.axaml" />
         <MergeResourceInclude Source="/Controls/DigitalSignalItem.axaml" />
         <MergeResourceInclude Source="/Controls/PageButton.axaml" />
+        <MergeResourceInclude Source="/Controls/FloatingPaneView.axaml" />
         <MergeResourceInclude Source="/Views/Entry/EntryView.axaml" />
         <MergeResourceInclude Source="/Views/Work/TagSelector.axaml" />
         <MergeResourceInclude Source="/Views/Work/AddNewBookmarkTagItem.axaml" />
+        <MergeResourceInclude Source="/Views/Viewers/WorkInfoPane.axaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <CornerRadius x:Key="ControlTopCornerRadius">4,4,0,0</CornerRadius>
@@ -48,6 +50,42 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </ControlTheme>
+
+    <ControlTheme x:Key="TransparentButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+
+        <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Opacity" Value="0.85" />
+        </Style>
+
+        <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="RenderTransform" Value="scale(0.96)" />
+            <Setter Property="Opacity" Value="0.7" />
+        </Style>
+
+        <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="TransparentToggleButtonStyle" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource TransparentButtonStyle}">
+        <Style Selector="^:checked /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{DynamicResource SystemAccentColor}" />
+        </Style>
+        <Style Selector="^:checked:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
     </ControlTheme>
 
     <ControlTheme

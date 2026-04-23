@@ -27,13 +27,12 @@
             VerticalAlignment="Stretch"
             HorizontalContentAlignment="Stretch"
             VerticalContentAlignment="Stretch"
-            ClipToBounds="True"
             Focusable="True"
             HorizontalScrollBarVisibility="Hidden"
             IsVisible="{Binding LoadSuccessfully}"
             IsZoomEnabled="True"
             VerticalScrollBarVisibility="Hidden"
-            ZoomFactor="{Binding $parent[viewers1:ImageViewerPage].ZoomFactor, Mode=TwoWay}">
+            ZoomFactor="{Binding ZoomFactor, Mode=TwoWay}">
             <ai:AnimatedImage
                 x:Name="ImageViewer"
                 HorizontalAlignment="Stretch"

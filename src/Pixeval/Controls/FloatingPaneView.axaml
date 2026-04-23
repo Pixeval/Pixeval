@@ -1,0 +1,89 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Pixeval.Controls">
+
+    <ControlTheme x:Key="{x:Type controls:FloatingPaneView}" TargetType="controls:FloatingPaneView">
+        <Setter Property="Template">
+            <ControlTemplate>
+
+                <Border Background="{TemplateBinding Background}">
+                    <Grid x:Name="PART_RootHost"
+                          ColumnDefinitions="Auto,*"
+                          ClipToBounds="True"
+                          controls:FloatingPaneHost.IsEnabled="True">
+                        <ContentPresenter x:Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
+
+                        <Border x:Name="PART_FloatingPaneBorder"
+                                ClipToBounds="True"
+                                Grid.Column="0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="{TemplateBinding PaneVerticalAlignment}"
+                                controls:FloatingPane.IsEnabled="True"
+                                ZIndex="1">
+                            <ContentPresenter x:Name="PART_FloatingPanePresenter"
+                                              Content="{TemplateBinding Pane}"
+                                              ContentTemplate="{TemplateBinding FloatingPaneTemplate}" />
+                        </Border>
+                    </Grid>
+                </Border>
+
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Width" Duration="0:0:0.2"></DoubleTransition>
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <Style Selector="^:docked /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Grid.ColumnSpan" Value="1" />
+            <Setter Property="Grid.Column" Value="1" />
+        </Style>
+
+        <Style Selector="^ /template/ Border#PART_FloatingPaneBorder">
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:2" Easing="0.1,0.9,0.2,1.0"/>
+                </Transitions>
+            </Setter>
+        </Style>
+        
+        <Style Selector="^ /template/ Border#PART_FloatingPaneBorder.not-proximity">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+
+        <Style Selector="^ /template/ Border#PART_FloatingPaneBorder.proximity">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+
+        <Style Selector="^:locked /template/ Border#PART_FloatingPaneBorder">
+            <Setter Property="Opacity" Value="0.9" />
+        </Style>
+
+        <Style Selector="^ /template/ Border#PART_FloatingPaneBorder.close-proximity">
+            <Setter Property="Opacity" Value="1" />
+        </Style>  
+        
+        <Style Selector="^ /template/ Border#PART_FloatingPaneBorder.temporary-visible">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+
+        <Style Selector="^:docked /template/ Border#PART_FloatingPaneBorder">
+            <Setter Property="Grid.ColumnSpan" Value="1" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="controls:FloatingPane.IsEnabled" Value="False"></Setter>
+        </Style>
+
+    </ControlTheme>
+</ResourceDictionary>

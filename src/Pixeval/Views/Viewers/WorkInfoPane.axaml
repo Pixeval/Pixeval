@@ -1,0 +1,271 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:converters="using:Pixeval.Views.Converters"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:misaki="using:Misaki"
+    xmlns:pixeval="using:Pixeval"
+    xmlns:utilities="using:Pixeval.Utilities"
+    xmlns:viewers="using:Pixeval.Views.Viewers">
+
+    <Design.PreviewWith>
+        <viewers:WorkInfoPane />
+    </Design.PreviewWith>
+
+    <DataTemplate x:Key="UserCardDataTemplate" x:DataType="{x:Type misaki:IUser}">
+        <Button
+            Padding="8"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Left"
+            Background="Transparent"
+            BorderThickness="0"
+            Command="{Binding $parent[viewers:WorkInfoPane].OpenAuthorCommand}"
+            CommandParameter="{Binding}">
+            <DockPanel HorizontalSpacing="12" LastChildFill="False">
+                <controls:AvatarImage
+                    Width="50"
+                    controls:Source.Cache="{Binding Avatar, Converter={x:Static converters:PixevalConverters.ImagePickClosestConverter}}"
+                    DockPanel.Dock="Left" />
+                <StackPanel DockPanel.Dock="Top" Spacing="2">
+                    <TextBlock
+                        Text="{Binding Name}"
+                        TextWrapping="Wrap"
+                        Theme="{StaticResource SubtitleTextBlockStyle}" />
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Text="{Binding Id}" />
+                        <Button
+                            Padding="2"
+                            VerticalAlignment="Center"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
+                            Tag="{Binding Id}">
+                            <markup:SymbolIcon FontSize="12" Symbol="Copy" />
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </DockPanel>
+        </Button>
+    </DataTemplate>
+
+    <DataTemplate x:Key="LiteUserCardDataTemplate" x:DataType="{x:Type misaki:IUser}">
+        <Button
+            Padding="8"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Left"
+            Background="Transparent"
+            BorderThickness="0"
+            Command="{Binding $parent[viewers:WorkInfoPane].OpenAuthorCommand}"
+            CommandParameter="{Binding}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <controls:AvatarImage
+                    Width="28"
+                    controls:Source.Cache="{Binding Avatar, Converter={x:Static converters:PixevalConverters.ImagePickClosestConverter}}"
+                    DockPanel.Dock="Left" />
+                <StackPanel DockPanel.Dock="Top" Spacing="2">
+                    <TextBlock
+                        Text="{Binding Name}"
+                        TextWrapping="Wrap"
+                        Theme="{StaticResource SubtitleTextBlockStyle}" />
+                </StackPanel>
+            </StackPanel>
+        </Button>
+    </DataTemplate>
+
+    <ItemsPanelTemplate x:Key="StackLayout">
+        <StackPanel Spacing="5" />
+    </ItemsPanelTemplate>
+
+    <ControlTheme
+        x:Key="{x:Type viewers:WorkInfoPane}"
+        TargetType="{x:Type viewers:WorkInfoPane}">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                    <StackPanel
+                        Margin="20,15"
+                        Spacing="5"
+                        DataContext="{TemplateBinding ArtworkInfo}"
+                        x:DataType="{x:Type misaki:IArtworkInfo}">
+                        <Grid ColumnDefinitions="* Auto">
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                IsVisible="{Binding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                Text="{Binding Title}"
+                                TextWrapping="Wrap"
+                                Theme="{StaticResource TitleTextBlockStyle}" />
+                            <ContentPresenter
+                                Grid.Column="1"
+                                ContentTemplate="{TemplateBinding ActionZoneTemplate}"
+                                Content="{TemplateBinding ActionZone}" />
+                        </Grid>
+
+                        <controls:MarkdownBox
+                            Margin="0,5,0,0"
+                            IsVisible="{Binding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                            Markdown="{Binding Description}" />
+
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <TextBlock VerticalAlignment="Center"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}">
+                                <Run Text="ID " />
+                                <Run Text="{Binding Id}" />
+                            </TextBlock>
+                            <Button
+                                Padding="2"
+                                VerticalAlignment="Center"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
+                                Content="{markup:SymbolIcon Copy,
+                                                            FontSize=12}"
+                                Tag="{Binding Id}" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Spacing="20">
+                            <controls:IconText
+                                Symbol="Eye"
+                                Text="{Binding TotalView, Converter={x:Static converters:PixevalConverters.IntToString}}" />
+                            <controls:IconText
+                                Symbol="Heart"
+                                Text="{Binding TotalFavorite, Converter={x:Static converters:PixevalConverters.IntToString}}" />
+                            <controls:IconText
+                                Symbol="Clock"
+                                Text="{Binding CreateDate, Converter={x:Static converters:PixevalConverters.DateTimeShortDate}}" />
+                        </StackPanel>
+
+                        <ItemsControl
+                            IsVisible="{Binding !!Authors.Count}"
+                            ItemTemplate="{StaticResource UserCardDataTemplate}"
+                            ItemsPanel="{StaticResource StackLayout}"
+                            ItemsSource="{Binding Authors}" />
+                        <ItemsControl
+                            IsVisible="{Binding !!Uploaders.Count}"
+                            ItemTemplate="{StaticResource UserCardDataTemplate}"
+                            ItemsPanel="{StaticResource StackLayout}"
+                            ItemsSource="{Binding Uploaders}" />
+
+                        <ItemsControl ItemsPanel="{StaticResource StackLayout}" ItemsSource="{Binding Tags}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock
+                                            Margin="10"
+                                            HorizontalAlignment="Left"
+                                            IsVisible="{Binding Key.Name, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                            Text="{Binding Key.Name}"
+                                            Theme="{StaticResource BodyStrongTextBlockStyle}" />
+                                        <ItemsControl ItemsSource="{Binding}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel ItemSpacing="8" LineSpacing="8" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="{x:Type misaki:ITag}">
+                                                    <Button
+                                                        Command="{Binding $parent[viewers:WorkInfoPane].OpenTagCommand}"
+                                                        CommandParameter="{Binding}">
+                                                        <StackPanel Orientation="Horizontal" Spacing="4">
+                                                            <TextBlock Text="{Binding Name}" TextWrapping="NoWrap" />
+                                                            <TextBlock
+                                                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                IsVisible="{Binding TranslatedName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                                Text="{Binding TranslatedName}"
+                                                                TextWrapping="NoWrap" />
+                                                        </StackPanel>
+                                                        <Button.ContextFlyout>
+                                                            <MenuFlyout>
+                                                                <MenuItem
+                                                                    Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
+                                                                    Header="{I18N {x:Static pixeval:WorkInfoPageResources.CopyOriginalTagMenuItemText}}"
+                                                                    Icon="{markup:SymbolIcon Copy}"
+                                                                    Tag="{Binding Name}" />
+                                                                <MenuItem
+                                                                    Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
+                                                                    Header="{I18N {x:Static pixeval:WorkInfoPageResources.CopyTranslatedTagMenuItemText}}"
+                                                                    Icon="{markup:SymbolIcon CopyAdd}"
+                                                                    IsVisible="{Binding TranslatedName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                                    Tag="{Binding TranslatedName}" />
+                                                                <MenuItem
+                                                                    Command="{Binding $parent[viewers:WorkInfoPane].BlockTagCommand}"
+                                                                    CommandParameter="{Binding}"
+                                                                    Header="{I18N {x:Static pixeval:WorkInfoPageResources.BlockTagMenuItemText}}"
+                                                                    Icon="{markup:SymbolIcon TagDismiss}" />
+                                                            </MenuFlyout>
+                                                        </Button.ContextFlyout>
+                                                    </Button>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </ScrollViewer>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <ControlTheme
+        x:Key="LiteWorkInfoPaneStyle"
+        TargetType="{x:Type viewers:WorkInfoPane}">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                    <StackPanel
+                        Margin="16,12"
+                        Spacing="5"
+                        DataContext="{TemplateBinding ArtworkInfo}"
+                        x:DataType="{x:Type misaki:IArtworkInfo}">
+                        <Grid ColumnDefinitions="* Auto">
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                IsVisible="{Binding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                Text="{Binding Title}"
+                                TextWrapping="Wrap"
+                                Theme="{StaticResource TitleTextBlockStyle}" />
+                            <ContentPresenter
+                                Grid.Column="1"
+                                ContentTemplate="{TemplateBinding ActionZoneTemplate}"
+                                Content="{TemplateBinding ActionZone}" />
+                        </Grid>
+
+                        <controls:MarkdownBox
+                            Margin="0,5,0,0"
+                            IsVisible="{Binding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                            Markdown="{Binding Description}" />
+
+                        <StackPanel Orientation="Horizontal" Spacing="20">
+                            <controls:IconText
+                                Symbol="Eye"
+                                Text="{Binding TotalView, Converter={x:Static converters:PixevalConverters.IntToString}}" />
+                            <controls:IconText
+                                Symbol="Heart"
+                                Text="{Binding TotalFavorite, Converter={x:Static converters:PixevalConverters.IntToString}}" />
+                            <controls:IconText
+                                Symbol="Clock"
+                                Text="{Binding CreateDate, Converter={x:Static converters:PixevalConverters.DateTimeShortDate}}" />
+                        </StackPanel>
+
+                        <ItemsControl
+                            IsVisible="{Binding !!Authors.Count}"
+                            ItemTemplate="{StaticResource LiteUserCardDataTemplate}"
+                            ItemsPanel="{StaticResource StackLayout}"
+                            ItemsSource="{Binding Authors}" />
+                        <ItemsControl
+                            IsVisible="{Binding !!Uploaders.Count}"
+                            ItemTemplate="{StaticResource LiteUserCardDataTemplate}"
+                            ItemsPanel="{StaticResource StackLayout}"
+                            ItemsSource="{Binding Uploaders}" />
+                    </StackPanel>
+                </ScrollViewer>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

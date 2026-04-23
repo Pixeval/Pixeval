@@ -1,26 +1,75 @@
 <ContentPage
     x:Class="Pixeval.Views.Viewers.IllustrationViewerPage"
-    x:Name="IllustrationViewerPageRoot"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:common="using:FluentIcons.Common"
     xmlns:controls="using:Pixeval.Controls"
-    xmlns:converters="using:Pixeval.Views.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Views.Viewers"
-    xmlns:markup="using:FluentIcons.Avalonia.Markup"
-    xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:pixeval="using:Pixeval"
-    xmlns:utilities="using:Pixeval.Utilities"
-    xmlns:viewModels="using:Pixeval.ViewModels"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
     xmlns:work="using:Pixeval.Views.Work"
+    xmlns:ss="clr-namespace:SmoothScroll.Avalonia.Controls;assembly=SmoothScroll.Avalonia.Controls"
     d:DesignHeight="450"
     d:DesignWidth="800"
     x:DataType="{x:Type viewers:IllustrationViewerPageViewModel}"
     Header="{Binding CurrentIllustration.Entry.Title}"
     mc:Ignorable="d">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="IllustrationViewerFloatingPaneBackgroundBrush">#DDFFFFFF</SolidColorBrush>
+                    <SolidColorBrush x:Key="IllustrationViewerFloatingPaneDockedBackgroundBrush">#EEFFFFFF</SolidColorBrush>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="IllustrationViewerFloatingPaneBackgroundBrush">#DD1E1E1E</SolidColorBrush>
+                    <SolidColorBrush x:Key="IllustrationViewerFloatingPaneDockedBackgroundBrush">#EE1E1E1E</SolidColorBrush>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Styles>
+        <Style Selector="controls|FloatingPaneView#EntryViewerFloatingPaneView">
+            <Setter Property="PaneVerticalAlignment" Value="Bottom" />
+
+            <Style Selector="^ Border#FloatingPaneBorder">
+                <Setter Property="VerticalAlignment" Value="Bottom" />
+                <Setter Property="Margin" Value="16" />
+                <Setter Property="CornerRadius" Value="4" />
+                <Setter Property="Width" Value="360" />
+                <Setter Property="Background" Value="{DynamicResource IllustrationViewerFloatingPaneBackgroundBrush}" />
+            </Style>
+
+            <Style Selector="^:docked">
+                <Setter Property="PaneVerticalAlignment" Value="Stretch" />
+
+                <Style Selector="^ Border#FloatingPaneBorder">
+                    <Setter Property="VerticalAlignment" Value="Stretch" />
+                    <Setter Property="Margin" Value="0" />
+                    <Setter Property="CornerRadius" Value="0" />
+                    <Setter Property="Width" Value="360" />
+                    <Setter Property="Background" Value="{DynamicResource IllustrationViewerFloatingPaneDockedBackgroundBrush}" />
+                </Style>
+            </Style>
+        </Style>
+
+        <Style Selector="local|ImageViewerPage#ImageViewerPage">
+            <Setter Property="ClipToBounds" Value="False" />
+
+            <Style Selector="^ ss|ScrollView#ZoomBorder">
+                <Setter Property="ClipToBounds" Value="False" />
+
+                <Style Selector="^ /template/ ss|ScrollPresenter#PART_ContentPresenter">
+                    <Setter Property="ClipToBounds" Value="False" />
+                </Style>
+            </Style>
+        </Style>
+
+
+    </ContentPage.Styles>
+
     <ContentPage.Icon>
         <Image
             x:Name="LogoImage"
@@ -34,256 +83,69 @@
         <KeyBinding Command="{Binding PrevWorkCommand}" Gesture="Up" />
         <KeyBinding Command="{Binding NextWorkCommand}" Gesture="Down" />
         <!-- TODO: Avalonia的HotKeyManager监听的是逻辑树，在多Tab的时候会出问题，所以先用局部的KeyBinding顶一下
-                需要等Avalonia行为改了，或者用其它workaround修复
-                因为是局部的KeyBindings，目前快捷键需要焦点在该ContentPage内部才会激活 -->
+		需要等Avalonia行为改了，或者用其它workaround修复
+		因为是局部的KeyBindings，目前快捷键需要焦点在该ContentPage内部才会激活 -->
         <KeyBinding Command="{Binding CurrentImage.PlayPauseCommand}" Gesture="Space" />
-        <KeyBinding Command="{Binding CurrentImage.CopyCommand}" CommandParameter="{Binding #IllustrationViewerPageRoot, Mode=OneTime}" Gesture="Ctrl+C" />
-        <KeyBinding Command="{Binding CurrentPage.SaveCommand}" CommandParameter="{Binding #IllustrationViewerPageRoot, Mode=OneTime}" Gesture="Ctrl+S" />
+        <KeyBinding Command="{Binding CurrentImage.CopyCommand}"
+                    CommandParameter="{Binding $parent[local:IllustrationViewerPage], Mode=OneTime}" Gesture="Ctrl+C" />
+        <KeyBinding Command="{Binding CurrentPage.SaveCommand}"
+                    CommandParameter="{Binding $parent[local:IllustrationViewerPage], Mode=OneTime}" Gesture="Ctrl+S" />
     </ContentPage.KeyBindings>
 
     <Grid>
-        <Grid RowDefinitions="*,Auto,Auto">
-            <!--  主体区域：SplitView + 图片查看器  -->
-            <SplitView
-                x:Name="EntryViewerSplitView"
-                Grid.Row="0"
-                DisplayMode="Inline">
-                <SplitView.Pane>
-                    <TabbedPage Pages="{Binding PanePages}" />
-                </SplitView.Pane>
-                <DockPanel>
-                    <!--  顶部工具栏  -->
-                    <CommandBar
-                        x:Name="TopBar"
-                        HorizontalAlignment="Center"
-                        DefaultLabelPosition="Collapsed"
-                        DockPanel.Dock="Top"
-                        IsDynamicOverflowEnabled="True">
+        <!--  主体区域：FloatingPaneView + 图片查看器  -->
+        <controls:FloatingPaneView
+            x:Name="EntryViewerFloatingPaneView"
+            Grid.Row="0">
+            <controls:FloatingPaneView.Pane>
+                <Border Name="FloatingPaneBorder">
+                    <local:IllustrationViewerInfoPane
+                        IsDocked="{Binding #EntryViewerFloatingPaneView.IsDocked, Mode=TwoWay}" />
+                </Border>
+            </controls:FloatingPaneView.Pane>
+            <DockPanel>
+                <!--  BookmarkTagSelector  -->
+                <work:TagSelector
+                    x:Name="BookmarkTagSelector"
+                    Margin="5"
+                    DockPanel.Dock="Top"
+                    IsVisible="True"
+                    TagsSelected="BookmarkTagSelector_OnTagsSelected" />
 
-                        <CommandBarButton
-                            Command="{Binding CurrentImage.PlayPauseCommand}"
-                            CommandParameter="{Binding $self, Mode=OneTime}"
-                            Icon="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding CurrentImage.IsPlaying},
-                                                                                      Pause,
-                                                                                      Play,
-                                                                                      x:TypeArguments=common:Symbol}}"
-                            IsVisible="{Binding CurrentIllustration.IsPicGif}"
-                            Label="{I18N {x:Static pixeval:MiscResources.Play}}" />
-                        <CommandBarButton
-                            Command="{Binding CurrentIllustration.BookmarkCommand}"
-                            CommandParameter="{Binding $self, Mode=OneTime}"
-                            Icon="{markup1:SymbolIconEx Heart,
-                                                        IconVariant={Binding CurrentIllustration.IsBookmarkedDisplay,
-                                                                             Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
-                            IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
-                            Label="{I18N {x:Static pixeval:MiscResources.AddBookmark}}" />
-                        <CommandBarSeparator />
-                        <CommandBarButton
-                            Command="{Binding CurrentImage.CopyCommand}"
-                            CommandParameter="{Binding $self, Mode=OneTime}"
-                            Icon="{markup:SymbolIcon Copy}"
-                            IsVisible="{Binding !CurrentIllustration.IsPicGif}"
-                            Label="{I18N {x:Static pixeval:EntryViewerPageResources.Copy}}" />
-                        <CommandBarButton
-                            Command="{Binding CurrentPage.SaveCommand}"
-                            CommandParameter="{Binding $self, Mode=OneTime}"
-                            Icon="{markup:SymbolIcon Save}"
-                            Label="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}" />
-                        <CommandBarButton
-                            Command="{Binding CurrentPage.SaveAsCommand}"
-                            CommandParameter="{Binding $self, Mode=OneTime}"
-                            Icon="{markup:SymbolIcon SaveEdit}"
-                            Label="{I18N {x:Static pixeval:EntryViewerPageResources.SaveAs}}" />
-                        <CommandBarButton
-                            Command="{Binding CurrentIllustration.SaveCommand}"
-                            CommandParameter="{Binding $self, Mode=OneTime}"
-                            Icon="{markup:SymbolIcon SaveMultiple}"
-                            IsVisible="{Binding CurrentIllustration.IsPicSet}"
-                            Label="{I18N {x:Static pixeval:EntryItemResources.MangaSave}}" />
-                        <CommandBarButton
-                            Command="{Binding CurrentIllustration.SaveAsCommand}"
-                            CommandParameter="{Binding $self, Mode=OneTime}"
-                            Icon="{markup:SymbolIcon SaveEdit}"
-                            IsVisible="{Binding CurrentIllustration.IsPicSet}"
-                            Label="{I18N {x:Static pixeval:EntryItemResources.MangaSaveAs}}" />
-                        <CommandBarSeparator />
-                        <CommandBarButton
-                            x:Name="AddToBookmarkButton"
-                            Click="AddToBookmarkButton_OnClick"
-                            Icon="{markup1:SymbolIconEx Bookmark,
-                                                        IconVariant={Binding CurrentIllustration.IsBookmarkedDisplay,
-                                                                             Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
-                            IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
-                            Label="{I18N {x:Static pixeval:EntryItemResources.AddToBookmark}}" />
-                        <!--<CommandBarButton
-                            Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
-                            Icon="{markup:SymbolIcon Link}"
-                            Label="{I18N {x:Static pixeval:EntryItemResources.GenerateLink}}"
-                            Tag="{Binding CurrentIllustration.AppUri}" />-->
-                        <CommandBarButton
-                            Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
-                            Icon="{markup:SymbolIcon LinkMultiple}"
-                            Label="{I18N {x:Static pixeval:EntryItemResources.GenerateWebLink}}"
-                            Tag="{Binding CurrentIllustration.WebsiteUri}" />
-                        <CommandBarButton
-                            Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
-                            Icon="{markup:SymbolIcon GlobeArrowUp}"
-                            Label="{I18N {x:Static pixeval:EntryItemResources.OpenInWebBrowser}}"
-                            Tag="{Binding CurrentIllustration.WebsiteUri}" />
-                    </CommandBar>
+                <Panel Background="Transparent">
+                    <!--  图片查看器  -->
+                    <local:ImageViewerPage x:Name="ImageViewerPage" DataContext="{Binding CurrentImage}"
+                                           ZoomChanged="ImageViewerPage_OnZoomChanged"
+                                           ImageChanged="ImageViewerPage_OnImageChanged" />
 
-                    <!--  BookmarkTagSelector  -->
-                    <work:TagSelector
-                        x:Name="BookmarkTagSelector"
-                        Margin="5"
-                        DockPanel.Dock="Top"
-                        IsVisible="False"
-                        TagsSelected="BookmarkTagSelector_OnTagsSelected" />
+                    <!--  左翻页按钮  -->
+                    <controls:PageButton
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Stretch"
+                        Command="{Binding PrevCommand}"
+                        IsVisible="{Binding PrevButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                        RightTapped="PrevButton_OnRightClick"
+                        Symbol="ChevronLeft"
+                        ToolTipText="{Binding PrevButtonText}" />
 
-                    <Panel Background="Transparent">
-                        <!--  图片查看器  -->
-                        <local:ImageViewerPage x:Name="ImageViewerPage" DataContext="{Binding CurrentImage}" />
+                    <!--  右翻页按钮  -->
+                    <controls:PageButton
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Stretch"
+                        Command="{Binding NextCommand}"
+                        IsVisible="{Binding NextButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                        RightTapped="NextButton_OnRightClick"
+                        Symbol="ChevronRight"
+                        ToolTipText="{Binding NextButtonText}" />
 
-                        <!--  左翻页按钮  -->
-                        <controls:PageButton
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Stretch"
-                            Command="{Binding PrevCommand}"
-                            IsVisible="{Binding PrevButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                            RightTapped="PrevButton_OnRightClick"
-                            Symbol="ChevronLeft"
-                            ToolTipText="{Binding PrevButtonText}" />
+                    <controls:ZoomIndicator
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Right"
+                        x:Name="ZoomPane"
+                        controls:FloatingPane.IsEnabled="True" />
+                </Panel>
+            </DockPanel>
+        </controls:FloatingPaneView>
 
-                        <!--  右翻页按钮  -->
-                        <controls:PageButton
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Stretch"
-                            Command="{Binding NextCommand}"
-                            IsVisible="{Binding NextButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                            RightTapped="NextButton_OnRightClick"
-                            Symbol="ChevronRight"
-                            ToolTipText="{Binding NextButtonText}" />
-                    </Panel>
-                </DockPanel>
-            </SplitView>
-
-            <!--  缩略图列表  -->
-            <ListBox
-                x:Name="ThumbnailListBox"
-                Grid.Row="1"
-                Height="90"
-                Margin="5,0"
-                Padding="0,0,0,5"
-                HorizontalAlignment="Stretch"
-                IsVisible="{Binding IsBottomListOpen}"
-                ItemsSource="{Binding Illustrations}"
-                SelectedIndex="{Binding CurrentWorkIndex}"
-                SelectionMode="Single">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal" Spacing="5" />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-                <ListBox.ItemTemplate>
-                    <DataTemplate x:DataType="{x:Type viewModels:IllustrationItemViewModel}">
-                        <Image
-                            Width="80"
-                            Height="80"
-                            controls:Source.Cache="{Binding ThumbnailUrl}"
-                            Stretch="UniformToFill" />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-
-            <!--  底部状态栏  -->
-            <Border
-                Grid.Row="2"
-                Height="48"
-                Padding="5,0"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                Background="{DynamicResource LayerOnMicaBaseAltFillColorDefaultBrush}">
-                <Grid ColumnDefinitions="Auto,*,Auto">
-                    <!--  左侧：信息面板/列表开关 + 标题  -->
-                    <StackPanel
-                        Grid.Column="0"
-                        Orientation="Horizontal"
-                        Spacing="20">
-                        <CommandBar DefaultLabelPosition="Collapsed" IsDynamicOverflowEnabled="True">
-                            <CommandBarToggleButton
-                                Icon="{markup:SymbolIcon Info}"
-                                IsChecked="{Binding #EntryViewerSplitView.IsPaneOpen}"
-                                Label="{I18N {x:Static pixeval:EntryViewerPageResources.InfoAndComments}}" />
-                            <CommandBarToggleButton
-                                Icon="{markup:SymbolIcon PanelBottomExpand}"
-                                IsChecked="{Binding IsBottomListOpen}"
-                                Label="{I18N {x:Static pixeval:MiscResources.OpenBottomList}}" />
-                        </CommandBar>
-                        <controls:IconText
-                            VerticalAlignment="Center"
-                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            IsVisible="{Binding CurrentIllustration.SizeText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                            Symbol="SlideSize"
-                            Text="{Binding CurrentIllustration.SizeText}" />
-                        <controls:IconText
-                            MaxWidth="200"
-                            VerticalAlignment="Center"
-                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            IsVisible="{Binding CurrentIllustration.Entry.Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                            Symbol="AppTitle"
-                            Text="{Binding CurrentIllustration.Entry.Title}" />
-                    </StackPanel>
-
-                    <!--  右侧：页码 + 缩放  -->
-                    <StackPanel
-                        Grid.Column="2"
-                        Orientation="Horizontal"
-                        Spacing="20">
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            IsVisible="{Binding CurrentIllustration.IsPicSet}">
-                            <!--  不加OneWay会调用ConvertBack，不知道为什么  -->
-                            <Run Text="{Binding CurrentPageIndex, Mode=OneWay, Converter={x:Static local:IllustrationViewerPage.PlusOneConverter}}" />
-                            <Run Text="/" />
-                            <Run Text="{Binding PageCount}" />
-                        </TextBlock>
-                        <CommandBar DefaultLabelPosition="Collapsed" IsDynamicOverflowEnabled="True">
-                            <CommandBarButton
-                                Command="{Binding CurrentImage.RotateCounterclockwiseCommand}"
-                                Icon="{markup:SymbolIcon ArrowRotateCounterclockwise}"
-                                Label="{I18N {x:Static pixeval:EntryViewerPageResources.RotateCounterclockwise}}" />
-                            <CommandBarToggleButton
-                                Icon="{markup:SymbolIcon FlipHorizontal}"
-                                IsChecked="{Binding CurrentImage.IsMirrored}"
-                                Label="{I18N {x:Static pixeval:EntryViewerPageResources.Mirror}}" />
-                            <CommandBarButton
-                                Command="{Binding CurrentImage.RotateClockwiseCommand}"
-                                Icon="{markup:SymbolIcon ArrowRotateClockwise}"
-                                Label="{I18N {x:Static pixeval:EntryViewerPageResources.RotateClockwise}}" />
-                            <CommandBarButton
-                                Click="ZoomOutButton_OnClick"
-                                Icon="{markup:SymbolIcon ZoomOut}"
-                                Label="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomOut}}" />
-                            <CommandBarButton
-                                Click="ZoomInButton_OnClick"
-                                Icon="{markup:SymbolIcon ZoomIn}"
-                                Label="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomIn}}" />
-                        </CommandBar>
-                        <TextBlock MinWidth="60" Text="{Binding #ImageViewerPage.ZoomFactor, StringFormat=P2, Mode=OneWay}">
-                            <TextBlock.Theme>
-                                <ControlTheme BasedOn="{StaticResource CaptionStrongTextBlockStyle}" TargetType="{x:Type TextBlock}">
-                                    <Setter Property="FontSize" Value="15" />
-                                    <Setter Property="Margin" Value="10,0" />
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="TextAlignment" Value="Center" />
-                                    <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-                                </ControlTheme>
-                            </TextBlock.Theme>
-                        </TextBlock>
-                    </StackPanel>
-                </Grid>
-            </Border>
-        </Grid>
     </Grid>
 </ContentPage>

@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
+    Background="Transparent"
     d:DesignHeight="600"
     d:DesignWidth="350"
     x:DataType="{x:Type viewers:CommentsViewViewModel}"

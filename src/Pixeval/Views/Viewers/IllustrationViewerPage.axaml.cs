@@ -3,12 +3,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using Pixeval.Controls;
 using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.ViewModels.Viewers;
@@ -19,8 +22,6 @@ namespace Pixeval.Views.Viewers;
 public partial class IllustrationViewerPage : ContentPage
 {
     private IllustrationViewerPageViewModel ViewModel => (IllustrationViewerPageViewModel) DataContext!;
-
-    public static readonly FuncValueConverter<int, string> PlusOneConverter = new(i => (i + 1).ToString());
 
     public IllustrationViewerPage() : this(null)
     {
@@ -47,12 +48,6 @@ public partial class IllustrationViewerPage : ContentPage
         ViewModel.CurrentWorkIndex++;
     }
 
-    private async void AddToBookmarkButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        if (!BookmarkTagSelector.IsVisible)
-            await BookmarkTagSelector.ResetSourceAsync();
-        BookmarkTagSelector.IsVisible = !BookmarkTagSelector.IsVisible;
-    }
 
     private void BookmarkTagSelector_OnTagsSelected(TagSelector sender, (bool IsPrivate, IReadOnlyList<string> Tags) e)
     {
@@ -66,14 +61,14 @@ public partial class IllustrationViewerPage : ContentPage
         BookmarkTagSelector.IsVisible = false;
     }
 
-    private void ZoomInButton_OnClick(object? sender, RoutedEventArgs e)
+    private void ImageViewerPage_OnZoomChanged(object? sender, EventArgs e)
     {
-        ImageViewerPage.ZoomBorder.ZoomBy(0.1);
+        EntryViewerFloatingPaneView.ShowPaneTemporarily();
     }
-
-    private void ZoomOutButton_OnClick(object? sender, RoutedEventArgs e)
+    
+    private void ImageViewerPage_OnImageChanged(object? sender, EventArgs e)
     {
-        ImageViewerPage.ZoomBorder.ZoomBy(-0.1);
+        EntryViewerFloatingPaneView.ShowPaneTemporarily();
     }
 
     #region Disposal
