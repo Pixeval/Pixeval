@@ -11,7 +11,20 @@
     <Project Path="src/lib/Tabalonia/Tabalonia/Tabalonia.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".github/CONTRIBUTING.md" />
+    <File Path=".github/README.md" />
+    <File Path=".github/SECURITY.md" />
+    <File Path=".gitignore" />
+    <File Path=".gitmodules" />
     <File Path="Directory.Build.props" />
+    <File Path="global.json" />
+    <File Path="LICENSE" />
+    <File Path="Settings.XamlStyler" />
+  </Folder>
+  <Folder Name="/Solution Items/ISSUE_TEMPLATE/">
+    <File Path=".github/ISSUE_TEMPLATE/bug_report.yaml" />
+    <File Path=".github/ISSUE_TEMPLATE/feature_request.yaml" />
   </Folder>
   <Project Path="src/Pixeval.Android/Pixeval.Android.csproj" />
   <Project Path="src/Pixeval.Browser/Pixeval.Browser.csproj" />
