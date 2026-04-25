@@ -78,7 +78,10 @@
         </Style>
     </ControlTheme>
 
-    <ControlTheme x:Key="TransparentToggleButtonStyle" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource TransparentButtonStyle}">
+    <ControlTheme
+        x:Key="TransparentToggleButtonStyle"
+        BasedOn="{StaticResource TransparentButtonStyle}"
+        TargetType="{x:Type ToggleButton}">
         <Style Selector="^:checked /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Foreground" Value="{DynamicResource SystemAccentColor}" />

@@ -5,14 +5,13 @@ using System;
 using AnimatedControls.Avalonia;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.LogicalTree;
 using SmoothScroll.Avalonia.Controls;
 
 namespace Pixeval.Views.Viewers;
 
-public partial class ImageViewerPage : UserControl
+public partial class SingleImageViewerPage : UserControl
 {
-    public ImageViewerPage() => InitializeComponent();
+    public SingleImageViewerPage() => InitializeComponent();
 
     public event EventHandler? ZoomChanged;
     public event EventHandler? ImageChanged;

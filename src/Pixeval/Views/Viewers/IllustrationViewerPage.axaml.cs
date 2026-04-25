@@ -3,10 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
@@ -61,12 +58,7 @@ public partial class IllustrationViewerPage : ContentPage
         BookmarkTagSelector.IsVisible = false;
     }
 
-    private void ImageViewerPage_OnZoomChanged(object? sender, EventArgs e)
-    {
-        EntryViewerFloatingPaneView.ShowPaneTemporarily();
-    }
-    
-    private void ImageViewerPage_OnImageChanged(object? sender, EventArgs e)
+    private void ImageViewerPage_OnSelectionChanged(SwipeControl sender, SwipeControlSelectionChangedEventArgs e)
     {
         EntryViewerFloatingPaneView.ShowPaneTemporarily();
     }

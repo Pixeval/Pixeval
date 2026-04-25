@@ -36,7 +36,7 @@ public static class CacheHelper
     /// 保证<see cref="Stream.Position"/>为0
     /// </summary>
     public static ValueTask<Stream> GetSingleImageAsync(
-        IPlatformInfo image,
+        string platform,
         IAnimatedImageFrame frame,
         IProgress<double>? progress = null,
         CancellationToken cancellationToken = default)
@@ -44,21 +44,21 @@ public static class CacheHelper
         if (frame.PreferredAnimatedImageType is not SingleAnimatedImageType.SingleZipFile and not  SingleAnimatedImageType.SingleFile)
             throw new InvalidOperationException($"{nameof(IAnimatedImageFrame.PreferredAnimatedImageType)} should be {nameof(SingleAnimatedImageType.SingleZipFile)} or {nameof(SingleAnimatedImageType.SingleFile)}");
 
-        return GetSingleImageAsync(image, frame.SingleImageUri!, progress, cancellationToken);
+        return GetSingleImageAsync(platform, frame.SingleImageUri!, progress, cancellationToken);
     }
 
     /// <summary>
     /// 保证<see cref="Stream.Position"/>为0
     /// </summary>
     public static ValueTask<Stream> GetSingleImageAsync(
-        IPlatformInfo image,
+        string platform,
         IImageFrame frame,
         IProgress<double>? progress = null,
         CancellationToken cancellationToken = default)
-        => GetSingleImageAsync(image, frame.ImageUri, progress, cancellationToken);
+        => GetSingleImageAsync(platform, frame.ImageUri, progress, cancellationToken);
 
     private static async ValueTask<Stream> GetSingleImageAsync(
-        IPlatformInfo image,
+        string platform,
         Uri frameUri,
         IProgress<double>? progress = null,
         CancellationToken cancellationToken = default)
@@ -70,7 +70,7 @@ public static class CacheHelper
                 return stream;
             var useFileCache = App.AppViewModel.AppSettings.UseFileCache;
 
-            var client = App.AppViewModel.GetRequiredPlatformService<IDownloadHttpClientService>(image.Platform)
+            var client = App.AppViewModel.GetRequiredPlatformService<IDownloadHttpClientService>(platform)
                 .GetImageDownloadClient();
             if (await client.DownloadMemoryStreamAsync(frameUri, progress, cancellationToken: cancellationToken) is Result<Stream>.Success(var s))
             {
@@ -93,15 +93,15 @@ public static class CacheHelper
     }
 
     public static async Task<IReadOnlyList<(Stream Image, int MsDelay)>> GetAnimatedImageSeparatedAsync(
-        IPlatformInfo image,
+        string platform,
         IAnimatedImageFrame frame,
         IProgress<double>? progress = null,
         CancellationToken token = default)
     {
         if (frame.PreferredAnimatedImageType is not SingleAnimatedImageType.MultiFiles)
             throw new InvalidOperationException($"{nameof(IAnimatedImageFrame.PreferredAnimatedImageType)} should be {nameof(SingleAnimatedImageType.MultiFiles)}");
-        await frame.MultiImageUris!.TryPreloadListAsync(image);
-        var client = App.AppViewModel.AppServiceProvider.GetRequiredKeyedService<IDownloadHttpClientService>(image.Platform)
+        await frame.MultiImageUris!.TryPreloadListAsync(platform);
+        var client = App.AppViewModel.AppServiceProvider.GetRequiredKeyedService<IDownloadHttpClientService>(platform)
             .GetImageDownloadClient();
         var count = frame.MultiImageUris!.Count;
         var list = new List<(Stream Image, int MsDelay)>(count);

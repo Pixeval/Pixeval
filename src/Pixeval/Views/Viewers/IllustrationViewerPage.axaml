@@ -6,14 +6,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Views.Viewers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ss="clr-namespace:SmoothScroll.Avalonia.Controls;assembly=SmoothScroll.Avalonia.Controls"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
     xmlns:work="using:Pixeval.Views.Work"
-    xmlns:ss="clr-namespace:SmoothScroll.Avalonia.Controls;assembly=SmoothScroll.Avalonia.Controls"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
     x:DataType="{x:Type viewers:IllustrationViewerPageViewModel}"
     Header="{Binding CurrentIllustration.Entry.Title}"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -55,7 +55,7 @@
             </Style>
         </Style>
 
-        <Style Selector="local|ImageViewerPage#ImageViewerPage">
+        <Style Selector="local|SingleImageViewerPage#ImageViewerPage">
             <Setter Property="ClipToBounds" Value="False" />
 
             <Style Selector="^ ss|ScrollView#ZoomBorder">
@@ -82,25 +82,22 @@
         <KeyBinding Command="{Binding NextCommand}" Gesture="Right" />
         <KeyBinding Command="{Binding PrevWorkCommand}" Gesture="Up" />
         <KeyBinding Command="{Binding NextWorkCommand}" Gesture="Down" />
-        <!-- TODO: Avalonia的HotKeyManager监听的是逻辑树，在多Tab的时候会出问题，所以先用局部的KeyBinding顶一下
-		需要等Avalonia行为改了，或者用其它workaround修复
-		因为是局部的KeyBindings，目前快捷键需要焦点在该ContentPage内部才会激活 -->
-        <KeyBinding Command="{Binding CurrentImage.PlayPauseCommand}" Gesture="Space" />
-        <KeyBinding Command="{Binding CurrentImage.CopyCommand}"
-                    CommandParameter="{Binding $parent[local:IllustrationViewerPage], Mode=OneTime}" Gesture="Ctrl+C" />
-        <KeyBinding Command="{Binding CurrentPage.SaveCommand}"
-                    CommandParameter="{Binding $parent[local:IllustrationViewerPage], Mode=OneTime}" Gesture="Ctrl+S" />
+        <!--
+            TODO: Avalonia的HotKeyManager监听的是逻辑树，在多Tab的时候会出问题，所以先用局部的KeyBinding顶一下
+            需要等Avalonia行为改了，或者用其它workaround修复
+            因为是局部的KeyBindings，目前快捷键需要焦点在该ContentPage内部才会激活
+        -->
+        <KeyBinding Command="{Binding #ImageViewerPage.CurrentPage.PlayPauseCommand}" Gesture="Space" />
+        <KeyBinding Command="{Binding #ImageViewerPage.CurrentPage.CopyCommand}" Gesture="Ctrl+C" />
+        <KeyBinding Command="{Binding #ImageViewerPage.CurrentPage.SaveCommand}" Gesture="Ctrl+S" />
     </ContentPage.KeyBindings>
 
     <Grid>
         <!--  主体区域：FloatingPaneView + 图片查看器  -->
-        <controls:FloatingPaneView
-            x:Name="EntryViewerFloatingPaneView"
-            Grid.Row="0">
+        <controls:FloatingPaneView x:Name="EntryViewerFloatingPaneView" Grid.Row="0">
             <controls:FloatingPaneView.Pane>
                 <Border Name="FloatingPaneBorder">
-                    <local:IllustrationViewerInfoPane
-                        IsDocked="{Binding #EntryViewerFloatingPaneView.IsDocked, Mode=TwoWay}" />
+                    <local:IllustrationViewerInfoPane IsDocked="{Binding #EntryViewerFloatingPaneView.IsDocked, Mode=TwoWay}" />
                 </Border>
             </controls:FloatingPaneView.Pane>
             <DockPanel>
@@ -114,9 +111,10 @@
 
                 <Panel Background="Transparent">
                     <!--  图片查看器  -->
-                    <local:ImageViewerPage x:Name="ImageViewerPage" DataContext="{Binding CurrentImage}"
-                                           ZoomChanged="ImageViewerPage_OnZoomChanged"
-                                           ImageChanged="ImageViewerPage_OnImageChanged" />
+                    <local:SwipeImageViewer
+                        x:Name="ImageViewerPage"
+                        DataContext="{Binding CurrentImage}"
+                        SelectionChanged="ImageViewerPage_OnSelectionChanged" />
 
                     <!--  左翻页按钮  -->
                     <controls:PageButton
@@ -139,9 +137,9 @@
                         ToolTipText="{Binding NextButtonText}" />
 
                     <controls:ZoomIndicator
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Right"
                         x:Name="ZoomPane"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
                         controls:FloatingPane.IsEnabled="True" />
                 </Panel>
             </DockPanel>

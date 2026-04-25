@@ -42,7 +42,7 @@ public partial class IllustrationItemViewModel(IArtworkInfo entry)
                 if (f is null)
                     return null;
                 var stream = await CacheHelper.GetSingleImageAsync(
-                    singleImage, 
+                    singleImage.Platform, 
                     f,
                     new Progress<double>(d => advancePhase(LoadingPhase.DownloadingImage, d)),
                     token);
@@ -61,7 +61,7 @@ public partial class IllustrationItemViewModel(IArtworkInfo entry)
                     case SingleAnimatedImageType.MultiFiles:
                     {
                         var list = await CacheHelper.GetAnimatedImageSeparatedAsync(
-                            singleAnimatedImage,
+                            singleAnimatedImage.Platform,
                             f,
                             new Progress<double>(d => advancePhase(LoadingPhase.DownloadingImage, d)),
                             token);
@@ -74,7 +74,7 @@ public partial class IllustrationItemViewModel(IArtworkInfo entry)
                     case SingleAnimatedImageType.SingleZipFile or SingleAnimatedImageType.SingleFile:
                     {
                         var stream = await CacheHelper.GetSingleImageAsync(
-                            singleAnimatedImage,
+                            singleAnimatedImage.Platform,
                             f,
                             new Progress<double>(d => advancePhase(LoadingPhase.DownloadingImage, d)),
                             token);

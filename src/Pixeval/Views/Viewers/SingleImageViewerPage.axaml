@@ -1,5 +1,5 @@
 <UserControl
-    x:Class="Pixeval.Views.Viewers.ImageViewerPage"
+    x:Class="Pixeval.Views.Viewers.SingleImageViewerPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ai="using:AnimatedControls.Avalonia"
@@ -13,11 +13,11 @@
     xmlns:utilities="using:Pixeval.Utilities"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
     xmlns:viewers1="using:Pixeval.Views.Viewers"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
     x:DataType="{x:Type viewers:ImageViewerPageViewModel}"
     DataContext="{x:Null}"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
     <!--  DataContext设为null防止父DataContext传入导致bug  -->
     <Grid>
         <!--  图片查看器（缩放/平移）  -->
@@ -55,11 +55,11 @@
                     <MenuItem
                         Command="{Binding PlayPauseCommand}"
                         Header="{I18N {x:Static pixeval:MiscResources.Play}}"
-                        InputGesture="Space"
                         Icon="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding IsPlaying},
                                                                                   Pause,
                                                                                   Play,
                                                                                   x:TypeArguments=common:Symbol}}"
+                        InputGesture="Space"
                         IsEnabled="{Binding LoadSuccessfully}"
                         IsVisible="{Binding IllustrationViewModel.IsPicGif}" />
                     <!--  收藏  -->
@@ -75,15 +75,15 @@
                         Command="{Binding CopyCommand}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
                         Header="{I18N {x:Static pixeval:EntryViewerPageResources.Copy}}"
-                        InputGesture="Ctrl+C"
                         Icon="{markup:SymbolIcon Copy}"
+                        InputGesture="Ctrl+C"
                         IsVisible="{Binding !IllustrationViewModel.IsPicGif}" />
                     <MenuItem
                         Command="{Binding IllustrationViewModel.SaveCommand}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
                         Header="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}"
-                        InputGesture="Ctrl+S"
-                        Icon="{markup:SymbolIcon Save}" />
+                        Icon="{markup:SymbolIcon Save}"
+                        InputGesture="Ctrl+S" />
                     <MenuItem
                         Command="{Binding IllustrationViewModel.SaveAsCommand}"
                         CommandParameter="{Binding $self, Mode=OneTime}"

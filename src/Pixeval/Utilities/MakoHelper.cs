@@ -117,6 +117,12 @@ public static class MakoHelper
             if (!list.IsPreloaded)
                 await list.PreloadListAsync(App.AppViewModel.GetRequiredPlatformService<IGetArtworkService>(platform.Platform));
         }
+
+        public async ValueTask TryPreloadListAsync(string platform)
+        {
+            if (!list.IsPreloaded)
+                await list.PreloadListAsync(App.AppViewModel.GetRequiredPlatformService<IGetArtworkService>(platform));
+        }
     }
 
     extension<T>(Task<IReadOnlyList<T>> task)

@@ -3,12 +3,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Mako.Global.Enum;
 using Mako.Model;
-using Pixeval.Utilities;
 using Pixeval.Views.Viewers;
 
 namespace Pixeval.ViewModels.Viewers;
@@ -49,8 +47,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
     public void Dispose()
     {
         GC.SuppressFinalize(this);
-        Pages = null!;
-        Images = null!;
+        CurrentImage = null!;
         ViewModelSource?.Dispose();
     }
 
@@ -67,14 +64,20 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
     public IllustrationItemViewModel CurrentIllustration => Illustrations[CurrentWorkIndex];
 
     /// <summary>
-    /// 当前插画的页面
+    /// 当前插画图片的ViewModel
     /// </summary>
-    public IllustrationItemViewModel CurrentPage => Pages[CurrentPageIndex];
-
-    /// <summary>
-    /// 当前图片的ViewModel
-    /// </summary>
-    public ImageViewerPageViewModel CurrentImage => Images[CurrentPageIndex];
+    public ImageViewerViewModel CurrentImage
+    {
+        get;
+        set
+        {
+            if (field == value)
+                return;
+            field?.Dispose();
+            field = value;
+            OnPropertyChanged();
+        }
+    } = null!;
 
     /// <summary>
     /// 当前插画的索引
@@ -90,15 +93,12 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
                 return;
 
             field = value;
-            // 这里可以触发总页数的更新
-            Pages = [.. CurrentIllustration.GetMangaIllustrationViewModels()];
-            // 保证_pages里所有的IllustrationViewModel都是生成的，从而删除的时候一律DisposeForce
-            Images = [.. Pages.Select(p => new ImageViewerPageViewModel(p, CurrentIllustration))];
 
+            CurrentImage = new ImageViewerViewModel(CurrentIllustration);
             
             // TODO: I would suggest use ViewLocator here, to keep the ViewModel separated from the View.
             // new WorkInfoPage(CurrentIllustration.Entry)
-            var list = new List<Page>(2) {  };
+            var list = new List<Page>(2);
             if (CurrentIllustration.Entry is Illustration { Id: var id })
             {
                 list.Add(new CommentsPage(new CommentsViewViewModel(SimpleWorkType.IllustrationAndManga, id)));
@@ -121,14 +121,12 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
     /// </summary>
     public override int CurrentPageIndex
     {
-        get;
+        get => CurrentImage.SelectedPageIndex;
         set
         {
             // 不检查值是否变化，强制触发更新事件
-            field = value;
+            CurrentImage.SelectedPageIndex = value;
             OnPropertyChanged();
-            OnPropertyChanged(nameof(CurrentPage));
-            OnPropertyChanged(nameof(CurrentImage));
             OnPropertyChanged(nameof(PrevButtonText));
             OnPropertyChanged(nameof(NextButtonText));
             PrevCommand.NotifyCanExecuteChanged();
@@ -138,7 +136,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
         }
     }
 
-    public override int PageCount => Pages.Length;
+    public override int PageCount => CurrentImage.PageCount;
 
     public override int WorkCount => Illustrations.Count;
 
@@ -146,34 +144,6 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
     /// 插画列表
     /// </summary>
     public IList<IllustrationItemViewModel> Illustrations => ViewModelSource?.DataProvider.View ?? (IList<IllustrationItemViewModel>) IllustrationsSource!;
-
-    /// <summary>
-    /// 一个插画所有的页面
-    /// </summary>
-    public IllustrationItemViewModel[] Pages
-    {
-        get;
-        set
-        {
-            if (field == value)
-                return;
-            field = value;
-            if (field != null!)
-                OnPropertyChanged(nameof(PageCount));
-        }
-    } = null!;
-
-    public ImageViewerPageViewModel[] Images
-    {
-        get;
-        set
-        {
-            if (field == value)
-                return;
-            field?.ForEach(i => i.Dispose());
-            field = value;
-        }
-    } = null!;
 
     #endregion
 }
