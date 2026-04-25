@@ -6,6 +6,7 @@ using System.ComponentModel;
 using Avalonia;
 using AnimatedControls.Avalonia;
 using Avalonia.Controls;
+using Misaki;
 using Pixeval.Utilities;
 using Pixeval.Utilities.IO.Caching;
 
@@ -24,6 +25,13 @@ public static class Source
             "Loaded",
             typeof(Source),
             defaultValue: false);
+
+    // TODO: 如何确保Platform顺序高于Cache
+    public static readonly AttachedProperty<string> PlatformProperty =
+        AvaloniaProperty.RegisterAttached<Control, string>(
+            "Platform",
+            typeof(Source),
+            defaultValue: IPlatformInfo.Pixiv);
 
     static Source()
     {
@@ -44,6 +52,12 @@ public static class Source
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static void SetLoaded(Control element, bool value) => element.SetValue(LoadedProperty, value);
 
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static string GetPlatform(Control element) => element.GetValue(PlatformProperty);
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static void SetPlatform(Control element, string value) => element.SetValue(PlatformProperty, value);
+
     private static async void OnAnimatedImageChanged(AnimatedImage element, AvaloniaPropertyChangedEventArgs e)
     {
         if (e.GetNewValue<string>() is not { } value)
@@ -52,7 +66,7 @@ public static class Source
             return;
         }
 
-        var bitmap = await CacheHelper.GetAnimatedBitmapFromCacheAsync(value);
+        var bitmap = await CacheHelper.GetAnimatedBitmapAsync(GetPlatform(element), value);
         
         if (GetCache(element) == value)
         {
@@ -74,7 +88,7 @@ public static class Source
             return;
         }
 
-        var bitmap = await CacheHelper.GetAnimatedBitmapFromCacheAsync(value);
+        var bitmap = await CacheHelper.GetAnimatedBitmapAsync(GetPlatform(element), value);
 
         if (GetCache(element) == value)
         {
@@ -95,7 +109,7 @@ public static class Source
             return;
         }
 
-        var bitmap = await CacheHelper.GetBitmapFromCacheAsync(value);
+        var bitmap = await CacheHelper.GetBitmapAsync(GetPlatform(element), value);
 
         if (GetCache(element) == value)
         {

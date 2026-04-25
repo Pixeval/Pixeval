@@ -38,15 +38,15 @@ public static partial class IoHelper
             IProgress<double>? progress = null,
             long startPosition = 0,
             int bufferSize = 4096,
-            CancellationToken cancellationToken = default) =>
-            httpClient.DownloadMemoryStreamAsync(new Uri(url), progress, startPosition, bufferSize, cancellationToken);
+            CancellationToken token = default) =>
+            httpClient.DownloadMemoryStreamAsync(new Uri(url), progress, startPosition, bufferSize, token);
 
         /// <inheritdoc cref="DownloadStreamAsync"/>
         public async Task<Result<Stream>> DownloadMemoryStreamAsync(Uri uri,
             IProgress<double>? progress = null,
             long startPosition = 0,
             int bufferSize = 4096,
-            CancellationToken cancellationToken = default)
+            CancellationToken token = default)
         {
             if (uri.IsFile)
             {
@@ -59,7 +59,7 @@ public static partial class IoHelper
                 return Result<Stream>.AsSuccess(AssetLoader.Open(uri));
             }
             var stream = Streams.RentStream();
-            var result = await httpClient.DownloadStreamAsync(stream, uri, progress, startPosition, bufferSize, cancellationToken);
+            var result = await httpClient.DownloadStreamAsync(stream, uri, progress, startPosition, bufferSize, token);
             if (result is null)
             {
                 stream.Position = 0;
@@ -79,7 +79,7 @@ public static partial class IoHelper
             IProgress<double>? progress = null,
             long startPosition = 0,
             int bufferSize = 1 << 15,
-            CancellationToken cancellationToken = default)
+            CancellationToken token = default)
         {
             try
             {
@@ -91,7 +91,7 @@ public static partial class IoHelper
                 if (startPosition is not 0)
                     request.Headers.Range = new(startPosition, null);
 
-                using var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+                using var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, token);
 
                 var responseLength = null as long?;
                 switch (response.StatusCode)
@@ -114,7 +114,7 @@ public static partial class IoHelper
 
                 _ = response.EnsureSuccessStatusCode();
 
-                await using var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken);
+                await using var contentStream = await response.Content.ReadAsStreamAsync(token);
 
                 var buffer = ArrayPool<byte>.Shared.Rent(bufferSize);
                 try
@@ -122,9 +122,9 @@ public static partial class IoHelper
                     var bytesRead = 0;
                     var totalRead = destination.Position;
                     var lastReported = DateTime.MinValue;
-                    while ((bytesRead = await contentStream.ReadAsync(new(buffer), cancellationToken).ConfigureAwait(false)) is not 0)
+                    while ((bytesRead = await contentStream.ReadAsync(new(buffer), token).ConfigureAwait(false)) is not 0)
                     {
-                        await destination.WriteAsync(new(buffer, 0, bytesRead), cancellationToken).ConfigureAwait(false);
+                        await destination.WriteAsync(new(buffer, 0, bytesRead), token).ConfigureAwait(false);
                         totalRead += bytesRead;
                         // reduce the frequency of the invocation of the callback, otherwise it will draw a severe performance impact
 

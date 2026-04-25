@@ -4,14 +4,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ai="using:AnimatedControls.Avalonia"
     xmlns:common="using:FluentIcons.Common"
-    xmlns:controls="using:Pixeval.Controls"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:pixeval="using:Pixeval"
     xmlns:scroll="using:SmoothScroll.Avalonia.Controls"
-    xmlns:viewers="using:Pixeval.ViewModels.Viewers"
-    xmlns:controls1="clr-namespace:Pixeval.Views.Viewers"
-    x:DataType="{x:Type viewers:SingleViewerViewModelBase}">
+    xmlns:viewers="using:Pixeval.Views.Viewers"
+    xmlns:vm="using:Pixeval.ViewModels.Viewers"
+    x:DataType="{x:Type vm:SingleViewerViewModel}">
     <Panel>
         <!--  图片查看器（缩放/平移）  -->
         <scroll:ScrollView
@@ -25,20 +24,20 @@
             IsVisible="{Binding LoadSuccessfully}"
             IsZoomEnabled="True"
             VerticalScrollBarVisibility="Hidden"
-            ZoomFactor="{Binding $parent[controls1:SingleImageViewer].ZoomFactor, Mode=OneWayToSource}">
+            ZoomFactor="{Binding $parent[viewers:SingleImageViewer].ZoomFactor, Mode=OneWayToSource}">
             <ai:AnimatedImage
                 x:Name="ImageViewer"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                IsPlaying="{Binding $parent[controls1:SingleImageViewer].IsPlaying}"
+                IsPlaying="{Binding $parent[viewers:SingleImageViewer].IsPlaying}"
                 RenderTransformOrigin="50%,50%"
                 SizeChanged="ImageViewerOnSizeChanged"
                 Source="{Binding DisplaySource}"
                 Stretch="Uniform">
                 <ai:AnimatedImage.RenderTransform>
                     <TransformGroup>
-                        <ScaleTransform ScaleX="{Binding $parent[controls1:SingleImageViewer].MirrorScaleX}" />
-                        <RotateTransform Angle="{Binding $parent[controls1:SingleImageViewer].RotationDegree}" />
+                        <ScaleTransform ScaleX="{Binding $parent[viewers:SingleImageViewer].MirrorScaleX}" />
+                        <RotateTransform Angle="{Binding $parent[viewers:SingleImageViewer].RotationDegree}" />
                     </TransformGroup>
                 </ai:AnimatedImage.RenderTransform>
             </ai:AnimatedImage>
@@ -46,9 +45,9 @@
                 <MenuFlyout>
                     <!--  播放/暂停（仅动图可见）  -->
                     <MenuItem
-                        Command="{Binding $parent[controls1:SingleImageViewer].PlayPauseCommand}"
+                        Command="{Binding $parent[viewers:SingleImageViewer].PlayPauseCommand}"
                         Header="{I18N {x:Static pixeval:MiscResources.Play}}"
-                        Icon="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding $parent[controls1:SingleImageViewer].IsPlaying},
+                        Icon="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding $parent[viewers:SingleImageViewer].IsPlaying},
                                                                                   Pause,
                                                                                   Play,
                                                                                   x:TypeArguments=common:Symbol}}"
@@ -57,34 +56,34 @@
                         IsVisible="{Binding IsPicGif}" />
                     <!--  保存  -->
                     <MenuItem
-                        Command="{Binding $parent[controls1:SingleImageViewer].CopyCommand}"
+                        Command="{Binding $parent[viewers:SingleImageViewer].CopyCommand}"
                         Header="{I18N {x:Static pixeval:EntryViewerPageResources.Copy}}"
                         Icon="{markup:SymbolIcon Copy}"
                         InputGesture="Ctrl+C"
                         IsVisible="{Binding IsPicGif, Converter={x:Static BoolConverters.Not}}" />
                     <MenuItem
-                        Command="{Binding $parent[controls1:SingleImageViewer].SaveCommand}"
+                        Command="{Binding $parent[viewers:SingleImageViewer].SaveCommand}"
                         Header="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}"
                         Icon="{markup:SymbolIcon Save}"
                         InputGesture="Ctrl+S" />
                     <MenuItem
-                        Command="{Binding $parent[controls1:SingleImageViewer].SaveAsCommand}"
+                        Command="{Binding $parent[viewers:SingleImageViewer].SaveAsCommand}"
                         Header="{I18N {x:Static pixeval:EntryViewerPageResources.SaveAs}}"
                         Icon="{markup:SymbolIcon SaveEdit}" />
                     <MenuItem Header="-" />
                     <!--  旋转/镜像  -->
                     <MenuItem
-                        Command="{Binding $parent[controls1:SingleImageViewer].RotateClockwiseCommand}"
+                        Command="{Binding $parent[viewers:SingleImageViewer].RotateClockwiseCommand}"
                         Header="{I18N {x:Static pixeval:EntryViewerPageResources.RotateClockwise}}"
                         Icon="{markup:SymbolIcon ArrowRotateClockwise}" />
                     <MenuItem
-                        Command="{Binding $parent[controls1:SingleImageViewer].RotateCounterclockwiseCommand}"
+                        Command="{Binding $parent[viewers:SingleImageViewer].RotateCounterclockwiseCommand}"
                         Header="{I18N {x:Static pixeval:EntryViewerPageResources.RotateCounterclockwise}}"
                         Icon="{markup:SymbolIcon ArrowRotateCounterclockwise}" />
                     <MenuItem
                         Header="{I18N {x:Static pixeval:EntryViewerPageResources.Mirror}}"
                         Icon="{markup:SymbolIcon FlipHorizontal}"
-                        IsChecked="{Binding $parent[controls1:SingleImageViewer].IsMirrored, Mode=TwoWay}"
+                        IsChecked="{Binding $parent[viewers:SingleImageViewer].IsMirrored, Mode=TwoWay}"
                         IsEnabled="{Binding LoadSuccessfully}"
                         ToggleType="CheckBox" />
                 </MenuFlyout>

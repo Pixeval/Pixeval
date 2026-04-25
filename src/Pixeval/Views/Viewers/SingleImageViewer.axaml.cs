@@ -42,7 +42,7 @@ public partial class SingleImageViewer : UserControl
             o => o.ZoomFactor,
             (o, v) => o.ZoomFactor = v);
 
-    private SingleViewerViewModelBase? _subscribedViewModel;
+    private SingleViewerViewModel? _subscribedViewModel;
 
     public SingleImageViewer()
     {
@@ -71,7 +71,7 @@ public partial class SingleImageViewer : UserControl
 
     private void UpdateViewModelSubscription()
     {
-        var viewModel = DataContext as SingleViewerViewModelBase;
+        var viewModel = DataContext as SingleViewerViewModel;
         if (ReferenceEquals(_subscribedViewModel, viewModel))
             return;
 
@@ -94,16 +94,17 @@ public partial class SingleImageViewer : UserControl
 
     private void ViewModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName is nameof(SingleViewerViewModelBase.LoadSuccessfully)
-            or nameof(SingleViewerViewModelBase.OriginalSource)
-            or nameof(SingleViewerViewModelBase.DisplaySource)
-            or nameof(SingleViewerViewModelBase.IsGifLoadSuccessfully)
-            or nameof(SingleViewerViewModelBase.IsPicGif))
+        if (e.PropertyName is nameof(SingleViewerViewModel.LoadSuccessfully)
+            or nameof(SingleViewerViewModel.OriginalSource)
+            or nameof(SingleViewerViewModel.DisplaySource)
+            or nameof(SingleViewerViewModel.IsGifLoadSuccessfully)
+            or nameof(SingleViewerViewModel.IsPicGif))
             NotifyCommandCanExecuteChanged();
     }
 
     private void NotifyCommandCanExecuteChanged()
     {
+        MirrorCommand.NotifyCanExecuteChanged();
         RotateClockwiseCommand.NotifyCanExecuteChanged();
         RotateCounterclockwiseCommand.NotifyCanExecuteChanged();
         ZoomInCommand.NotifyCanExecuteChanged();
@@ -114,9 +115,15 @@ public partial class SingleImageViewer : UserControl
         SaveAsCommand.NotifyCanExecuteChanged();
     }
 
-    private bool CanManipulateImage => (DataContext as SingleViewerViewModelBase)?.LoadSuccessfully == true;
+    private bool CanManipulateImage => (DataContext as SingleViewerViewModel)?.LoadSuccessfully == true;
 
-    private bool CanPlayGif => (DataContext as SingleViewerViewModelBase)?.IsGifLoadSuccessfully == true;
+    private bool CanPlayGif => (DataContext as SingleViewerViewModel)?.IsGifLoadSuccessfully == true;
+
+    [RelayCommand(CanExecute = nameof(CanManipulateImage))]
+    private void Mirror()
+    {
+        // 仅做IsEnabled绑定，实际逻辑修改IsMirrored属性
+    }
 
     [RelayCommand(CanExecute = nameof(CanManipulateImage))]
     private void RotateClockwise() => RotationDegree = (RotationDegree + 90) % 360;
@@ -136,7 +143,7 @@ public partial class SingleImageViewer : UserControl
     [RelayCommand(CanExecute = nameof(CanManipulateImage))]
     private async Task CopyAsync()
     {
-        if ((DataContext as SingleViewerViewModelBase)?.DisplaySource?.Frames is not [var singleFrame])
+        if ((DataContext as SingleViewerViewModel)?.DisplaySource?.Frames is not [var singleFrame])
             return;
         if (TopLevel.GetTopLevel(this) is not
             { ViewContainer: { } viewContainer, Clipboard: { } clipboard })
@@ -148,7 +155,7 @@ public partial class SingleImageViewer : UserControl
     [RelayCommand(CanExecute = nameof(CanManipulateImage))]
     private async Task SaveAsync()
     {
-        if ((DataContext as SingleViewerViewModelBase)?.DisplaySource?.Frames is not [var singleFrame])
+        if ((DataContext as SingleViewerViewModel)?.DisplaySource?.Frames is not [var singleFrame])
             return;
         if (TopLevel.GetTopLevel(this) is not
             { ViewContainer: { } viewContainer, Clipboard: { } clipboard })
@@ -160,7 +167,7 @@ public partial class SingleImageViewer : UserControl
     [RelayCommand(CanExecute = nameof(CanManipulateImage))]
     private async Task SaveAsAsync()
     {
-        if ((DataContext as SingleViewerViewModelBase)?.DisplaySource?.Frames is not [var singleFrame])
+        if ((DataContext as SingleViewerViewModel)?.DisplaySource?.Frames is not [var singleFrame])
             return;
         if (TopLevel.GetTopLevel(this) is not
             { ViewContainer: { } viewContainer, Clipboard: { } clipboard })

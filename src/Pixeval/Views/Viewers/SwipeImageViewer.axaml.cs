@@ -7,10 +7,7 @@ namespace Pixeval.Views.Viewers;
 
 public partial class SwipeImageViewer : SwipeControl
 {
-    public SwipeImageViewer()
-    {
-        InitializeComponent();
-    }
+    public SwipeImageViewer() => InitializeComponent();
 
     public static readonly DirectProperty<SwipeImageViewer, SingleImageViewer?> CurrentPageProperty =
         AvaloniaProperty.RegisterDirect<SwipeImageViewer, SingleImageViewer?>(

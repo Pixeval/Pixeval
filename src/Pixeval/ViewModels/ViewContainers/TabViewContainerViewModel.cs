@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mako;
 using Mako.Model;
+using Misaki;
 using Pixeval.Utilities;
 using Pixeval.Utilities.IO.Caching;
 
@@ -23,7 +24,7 @@ public partial class TabViewContainerViewModel : ObservableObject
     private async void OnTokenRefreshed(MakoClient sender, TokenResponse? e)
     {
         User = e?.User;
-        Avatar = e is null ? null : await CacheHelper.GetAnimatedBitmapFromCacheAsync(e.User.ProfileImageUrls.Px50X50);
+        Avatar = e is null ? null : await CacheHelper.GetAnimatedBitmapAsync(IPlatformInfo.Pixiv, e.User.ProfileImageUrls.Px50X50);
         // await ToggleRestrictedModeAsync(true);
         await ToggleAiShowAsync(true);
     }

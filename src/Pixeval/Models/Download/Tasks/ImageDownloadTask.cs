@@ -129,7 +129,7 @@ public partial class ImageDownloadTask : ObservableObject, ISingleDownloadTaskBa
         {
             CurrentState = DownloadState.Running;
             await SetRunningAsync(true);
-            if (CacheHelper.TryGetStreamFromCache(Uri.OriginalString) is { } stream)
+            if (CacheHelper.TryGetStream(Uri.OriginalString) is { } stream)
             {
                 await using (var fs = FileHelper.OpenAsyncWriteCreateParent(DownloadTempDestination))
                     await stream.CopyToAsync(fs, CancellationTokenSource.Token);
@@ -160,7 +160,7 @@ public partial class ImageDownloadTask : ObservableObject, ISingleDownloadTaskBa
                 await using (var fileStream = FileHelper.OpenAsyncWriteCreateParent(DownloadTempDestination))
                 {
                     ex = await httpClient.DownloadStreamAsync(fileStream, Uri, this, fileStream.Length,
-                        cancellationToken: CancellationTokenSource.Token);
+                        token: CancellationTokenSource.Token);
                 }
 
                 switch (ex)

@@ -150,6 +150,7 @@
                                                             FontSize=16}"
                                 ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.RotateCounterclockwise}}" />
                             <CommandBarToggleButton
+                                Command="{Binding #ImageViewerPage.CurrentPage.MirrorCommand}"
                                 Content="{markup:SymbolIcon FlipHorizontal,
                                                             FontSize=16}"
                                 IsChecked="{Binding #ImageViewerPage.CurrentPage.IsMirrored, Mode=TwoWay}"

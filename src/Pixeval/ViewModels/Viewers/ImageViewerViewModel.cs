@@ -3,16 +3,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AnimatedControls.Avalonia;
+using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Misaki;
 using Pixeval.I18N;
 using Pixeval.Models.Database.Managers;
 using Pixeval.Utilities;
-using Pixeval.Utilities.IO;
 using Pixeval.Utilities.IO.Caching;
 
 namespace Pixeval.ViewModels.Viewers;
@@ -37,7 +36,7 @@ public partial class ImageViewerViewModel : ViewModelBase, IDisposable
 
     public IllustrationItemViewModel ThumbnailViewModel { get; set; }
 
-    public IReadOnlyList<SingleViewerViewModelBase> Images { get; }
+    public IReadOnlyList<SingleViewerViewModel> Images { get; }
 
     [ObservableProperty]
     public partial int SelectedPageIndex { get; set; }
@@ -52,7 +51,7 @@ public partial class ImageViewerViewModel : ViewModelBase, IDisposable
     }
 }
 
-public abstract partial class SingleViewerViewModelBase : ViewModelBase, IDisposable
+public partial class SingleViewerViewModel(string platform, IArtworkInfo entry) : ViewModelBase, IDisposable
 {
     [ObservableProperty]
     public partial double LoadingProgress { get; private set; }
@@ -67,7 +66,7 @@ public abstract partial class SingleViewerViewModelBase : ViewModelBase, IDispos
     /// <summary>
     /// 显示用图源
     /// </summary>
-    public IAnimatedBitmap? DisplaySource => OriginalSource;
+    public IAnimatedBitmap? DisplaySource => OriginalSource; // TODO: 扩展用
 
     /// <summary>
     /// 原图源（处理前的图片）
@@ -78,11 +77,16 @@ public abstract partial class SingleViewerViewModelBase : ViewModelBase, IDispos
     [NotifyPropertyChangedFor(nameof(IsGifLoadSuccessfully))]
     public partial IAnimatedBitmap? OriginalSource { get; private set; }
 
+    [ObservableProperty]
+    public partial Bitmap? ThumbnailSource { get; private set; }
+
     public bool IsPicGif => DisplaySource is { IsFailed: false, IsInitialized: true, Frames.Count: > 1 };
 
     public bool IsGifLoadSuccessfully => LoadSuccessfully && IsPicGif;
 
     private bool _disposed;
+
+    private bool _thumbnailLoaded;
 
     /// <inheritdoc />
     public void Dispose()
@@ -91,6 +95,17 @@ public abstract partial class SingleViewerViewModelBase : ViewModelBase, IDispos
             return;
         _disposed = true;
         OriginalSource?.Dispose();
+        ThumbnailSource?.Dispose();
+    }
+
+    public async Task LoadThumbnailImageAsync()
+    {
+        if (!_disposed && _thumbnailLoaded)
+            return;
+
+        _thumbnailLoaded = true;
+
+        ThumbnailSource = await LoadThumbnailImageOverrideAsync();
     }
 
     public async Task LoadOriginalImageAsync()
@@ -109,8 +124,6 @@ public abstract partial class SingleViewerViewModelBase : ViewModelBase, IDispos
         }
     }
 
-    public abstract Task<IAnimatedBitmap?> LoadOriginalImageOverrideAsync();
-
     protected void AdvancePhase(LoadingPhase phase, double progress = 0)
     {
         LoadingProgress = progress;
@@ -118,18 +131,23 @@ public abstract partial class SingleViewerViewModelBase : ViewModelBase, IDispos
             ? I18NManager.GetResource(ImageViewerPageResources.DownloadingImageFormatted, (int) progress)
             : I18NManager.GetResource(phase);
     }
-}
 
-public partial class SingleViewerViewModel(string platform, IArtworkInfo entry) : SingleViewerViewModelBase, IPlatformInfo
-{
-    public string Platform { get; } = platform;
-
-    public IArtworkInfo Entry { get; } = entry;
-
-    public override async Task<IAnimatedBitmap?> LoadOriginalImageOverrideAsync()
+    public async Task<Bitmap?> LoadThumbnailImageOverrideAsync()
     {
-        var isOriginal = false;
-        switch (Entry)
+        var f = entry.Thumbnails.PickMax();
+        if (f is null)
+            return null;
+        return await CacheHelper.GetBitmapAsync(
+            platform,
+            f.ImageUri.OriginalString,
+            null,
+            100);
+    }
+
+    public async Task<IAnimatedBitmap?> LoadOriginalImageOverrideAsync()
+    {
+        var isOriginal = false; // TODO: 设置项
+        switch (entry)
         {
             // 当下载图集的其中一张图片时，ImageType会为ImageSet
             case ISingleImage { ImageType: ImageType.SingleImage or ImageType.ImageSet } singleImage:
@@ -137,11 +155,10 @@ public partial class SingleViewerViewModel(string platform, IArtworkInfo entry) 
                 var f = isOriginal ? singleImage : singleImage.Thumbnails.PickMax();
                 if (f is null)
                     return null;
-                var stream = await CacheHelper.GetSingleImageAsync(
-                    Platform,
+                return await CacheHelper.GetSingleImageAsync(
+                    platform,
                     f,
                     new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, d)));
-                return IAnimatedBitmap.Load(stream, true);
             }
             case ISingleAnimatedImage { ImageType: ImageType.SingleAnimatedImage } singleAnimatedImage:
             {
@@ -155,32 +172,17 @@ public partial class SingleViewerViewModel(string platform, IArtworkInfo entry) 
                 {
                     case SingleAnimatedImageType.MultiFiles:
                     {
-                        var list = await CacheHelper.GetAnimatedImageSeparatedAsync(
-                            Platform,
+                        return await CacheHelper.GetAnimatedImageSeparatedAsync(
+                            platform,
                             f,
                             new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, d)));
-                        var arr1 = new Stream[list.Count];
-                        var arr2 = new int[list.Count];
-                        for (var i = 0; i < list.Count; ++i)
-                            (arr1[i], arr2[i]) = list[i];
-                        return IAnimatedBitmap.Load(arr1, arr2, true);
                     }
                     case SingleAnimatedImageType.SingleZipFile or SingleAnimatedImageType.SingleFile:
                     {
-                        var stream = await CacheHelper.GetSingleImageAsync(
-                            Platform,
+                        return await CacheHelper.GetSingleAnimatedImageAsync(
+                            platform,
                             f,
                             new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, d)));
-                        if (f.PreferredAnimatedImageType is not SingleAnimatedImageType.SingleZipFile)
-                        {
-                            var (streams, delays) = await IoHelper.SplitAnimatedImageStreamAsync(stream);
-                            return IAnimatedBitmap.Load(streams, delays, true);
-                        }
-
-                        var zipImageDelays = f.ZipImageDelays!;
-                        await zipImageDelays.TryPreloadListAsync(Platform);
-                        var zip = await Streams.ReadZipAsync(stream, true);
-                        return IAnimatedBitmap.Load(zip, zipImageDelays, true);
                     }
                 }
 

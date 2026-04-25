@@ -21,6 +21,7 @@ namespace Pixeval.Utilities.IO.Caching;
 
 public static class CacheHelper
 {
+    // TODO: 此处可能被dispose，做池化或者每次都新建一个
     public static readonly Lazy<Task<Bitmap>> ImageNotAvailableTask = new(() => AppInfo.GetImageNotAvailableStream().DecodeBitmapImageAsync(true));
     public static readonly Lazy<Task<IAnimatedBitmap>> AnimatedImageNotAvailableTask = new(async () => IAnimatedBitmap.Load([await ImageNotAvailableTask.Value], [100]));
 
@@ -35,64 +36,78 @@ public static class CacheHelper
     /// <summary>
     /// 保证<see cref="Stream.Position"/>为0
     /// </summary>
-    public static ValueTask<Stream> GetSingleImageAsync(
+    public static async ValueTask<IAnimatedBitmap> GetSingleAnimatedImageAsync(
         string platform,
         IAnimatedImageFrame frame,
         IProgress<double>? progress = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken token = default)
     {
-        if (frame.PreferredAnimatedImageType is not SingleAnimatedImageType.SingleZipFile and not  SingleAnimatedImageType.SingleFile)
+        var key = frame.SingleImageUri;
+        ArgumentNullException.ThrowIfNull(key);
+        if (frame.PreferredAnimatedImageType is not SingleAnimatedImageType.SingleZipFile and not SingleAnimatedImageType.SingleFile)
             throw new InvalidOperationException($"{nameof(IAnimatedImageFrame.PreferredAnimatedImageType)} should be {nameof(SingleAnimatedImageType.SingleZipFile)} or {nameof(SingleAnimatedImageType.SingleFile)}");
 
-        return GetSingleImageAsync(platform, frame.SingleImageUri!, progress, cancellationToken);
+        if (frame.PreferredAnimatedImageType is SingleAnimatedImageType.SingleZipFile)
+        {
+            if (await GetStreamAsync(platform, key.OriginalString, progress, token) is not { } stream)
+                return await AnimatedImageNotAvailableTask.Value;
+            ArgumentNullException.ThrowIfNull(frame.ZipImageDelays);
+            await frame.ZipImageDelays.TryPreloadListAsync(platform);
+            var zip = await Streams.ReadZipAsync(stream, true);
+            IAnimatedBitmap.Load(zip, frame.ZipImageDelays, true);
+        }
+        // SingleAnimatedImageType.SingleFile
+        else if (await GetSingleImageAsync(platform, key, progress, token) is { } bitmap)
+            return bitmap;
+        return await AnimatedImageNotAvailableTask.Value;
     }
 
     /// <summary>
     /// 保证<see cref="Stream.Position"/>为0
     /// </summary>
-    public static ValueTask<Stream> GetSingleImageAsync(
+    public static ValueTask<IAnimatedBitmap> GetSingleImageAsync(
         string platform,
         IImageFrame frame,
         IProgress<double>? progress = null,
-        CancellationToken cancellationToken = default)
-        => GetSingleImageAsync(platform, frame.ImageUri, progress, cancellationToken);
+        CancellationToken token = default)
+        => GetSingleImageAsync(platform, frame.ImageUri, progress, token);
 
-    private static async ValueTask<Stream> GetSingleImageAsync(
+    private static async ValueTask<IAnimatedBitmap> GetSingleImageAsync(
         string platform,
         Uri frameUri,
         IProgress<double>? progress = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken token = default)
     {
         try
         {
             var key = frameUri.OriginalString;
-            if (TryGetStreamFromCache(key) is { } stream)
-                return stream;
+            if (TryGetStream(key) is { } stream)
+                return IAnimatedBitmap.Load(stream, true);
             var useFileCache = App.AppViewModel.AppSettings.UseFileCache;
 
             var client = App.AppViewModel.GetRequiredPlatformService<IDownloadHttpClientService>(platform)
                 .GetImageDownloadClient();
-            if (await client.DownloadMemoryStreamAsync(frameUri, progress, cancellationToken: cancellationToken) is Result<Stream>.Success(var s))
+            if (await client.DownloadMemoryStreamAsync(frameUri, progress, token: token) is Result<Stream>.Success(var s))
             {
                 if (useFileCache)
                 {
                     _ = TryCacheStream(key, s);
                     s.Position = 0;
                 }
-                return s;
+                return IAnimatedBitmap.Load(s, true);
             }
 
-            return AppInfo.GetImageNotAvailableStream();
+            return await AnimatedImageNotAvailableTask.Value;
         }
         catch (Exception e)
         {
             App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
-                .LogError(nameof(GetStreamFromCacheAsync), e);
+                .LogError(nameof(GetImageStreamAsync), e);
         }
-        return AppInfo.GetImageNotAvailableStream();
+        return await AnimatedImageNotAvailableTask.Value;
     }
 
-    public static async Task<IReadOnlyList<(Stream Image, int MsDelay)>> GetAnimatedImageSeparatedAsync(
+    public static async Task<IAnimatedBitmap> GetAnimatedImageSeparatedAsync(
         string platform,
         IAnimatedImageFrame frame,
         IProgress<double>? progress = null,
@@ -104,7 +119,8 @@ public static class CacheHelper
         var client = App.AppViewModel.AppServiceProvider.GetRequiredKeyedService<IDownloadHttpClientService>(platform)
             .GetImageDownloadClient();
         var count = frame.MultiImageUris!.Count;
-        var list = new List<(Stream Image, int MsDelay)>(count);
+        var imageList = new List<Stream>(count);
+        var delayList = new List<int>(count);
         var ratio = 1d / count;
         var startProgress = 0d;
         foreach (var (uri, msDelay) in frame.MultiImageUris)
@@ -113,7 +129,7 @@ public static class CacheHelper
             try
             {
                 var key = uri.OriginalString;
-                if (TryGetStreamFromCache(key) is { } s)
+                if (TryGetStream(key) is { } s)
                     stream = s;
                 else
                 {
@@ -121,8 +137,8 @@ public static class CacheHelper
                     var sp = startProgress;
                     if (await client.DownloadMemoryStreamAsync(
                             uri,
-                            progress?.Let(t => new Progress<double>(d => t.Report(sp + ratio * d))),
-                            cancellationToken: token) is Result<Stream>.Success(var s2))
+                            progress?.Let(t => new Progress<double>(d => t.Report(sp + (ratio * d)))),
+                            token: token) is Result<Stream>.Success(var s2))
                     {
                         if (useFileCache)
                         {
@@ -139,79 +155,68 @@ public static class CacheHelper
             catch (Exception e)
             {
                 App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
-                    .LogError(nameof(GetStreamFromCacheAsync), e);
+                    .LogError(nameof(GetImageStreamAsync), e);
                 stream = AppInfo.GetImageNotAvailableStream();
             }
-            list.Add((stream, msDelay));
+            imageList.Add(stream);
+            delayList.Add(msDelay);
             startProgress += 100 * ratio;
         }
 
-        return list;
+        return IAnimatedBitmap.Load(imageList, delayList, true);
     }
 
     /// <summary>
     /// 保证<see cref="Stream.Position"/>为0
     /// </summary>
-    public static async ValueTask<Stream> GetStreamFromCacheAsync(
+    public static async ValueTask<Stream> GetImageStreamAsync(
+        string platform,
         string key,
         IProgress<double>? progress = null,
         CancellationToken cancellationToken = default)
     {
         try
         {
-            return await GetFromFileCacheAsync(key, progress, cancellationToken) ??
+            return await GetStreamAsync(platform, key, progress, cancellationToken) ??
                    AppInfo.GetImageNotAvailableStream();
         }
         catch (Exception e)
         {
             App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
-                .LogError(nameof(GetStreamFromCacheAsync), e);
+                .LogError(nameof(GetImageStreamAsync), e);
         }
         return AppInfo.GetImageNotAvailableStream();
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="key"></param>
-    /// <param name="progress"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    public static async Task<IAnimatedBitmap> GetAnimatedBitmapFromCacheAsync(
+    public static async Task<IAnimatedBitmap> GetAnimatedBitmapAsync(
+        string platform,
         string key,
         IProgress<double>? progress = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken token = default)
     {
         try
         {
-            var stream = await GetStreamFromCacheAsync(key, progress, cancellationToken);
+            var stream = await GetImageStreamAsync(platform, key, progress, token);
             return IAnimatedBitmap.Load(stream, true);
         }
         catch (Exception e)
         {
             App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
-                .LogError(nameof(GetStreamFromCacheAsync), e);
+                .LogError(nameof(GetImageStreamAsync), e);
         }
         return await AnimatedImageNotAvailableTask.Value;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="key"></param>
-    /// <param name="progress"></param>
-    /// <param name="desiredWidth"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    public static async ValueTask<Bitmap> GetBitmapFromCacheAsync(
+    public static async ValueTask<Bitmap> GetBitmapAsync(
+        string platform,
         string key,
         IProgress<double>? progress = null,
         int? desiredWidth = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken token = default)
     {
         try
         {
-            return await GetFromFileCacheAsync(key, progress, cancellationToken) is { } stream
+            return await GetStreamAsync(platform, key, progress, token) is { } stream
                 ? await stream.DecodeBitmapImageAsync(true, desiredWidth)
                 : await ImageNotAvailableTask.Value;
         }
@@ -222,7 +227,7 @@ public static class CacheHelper
         catch (Exception e)
         {
             App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
-                .LogError(nameof(GetBitmapFromCacheAsync), e);
+                .LogError(nameof(GetBitmapAsync), e);
         }
 
         return await ImageNotAvailableTask.Value;
@@ -232,23 +237,26 @@ public static class CacheHelper
     /// 本方法会根据<see cref="AppSettings.UseFileCache"/>判断是否使用文件缓存
     /// </summary>
     /// <returns><see langword="null"/>表示下载失败</returns>
-    private static async ValueTask<Stream?> GetFromFileCacheAsync(
+    private static async ValueTask<Stream?> GetStreamAsync(
+        string platform,
         string key,
         IProgress<double>? progress = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken token = default)
     {
-        if (TryGetStreamFromCache(key) is { } stream)
+        if (TryGetStream(key) is { } stream)
             return stream;
         var useFileCache = App.AppViewModel.AppSettings.UseFileCache;
 
-        if (await App.AppViewModel.MakoClient.GetImageDownloadClient()
-                .DownloadMemoryStreamAsync(key, progress, cancellationToken: cancellationToken) is Result<Stream>.Success(var s))
+        if (await App.AppViewModel.AppServiceProvider.GetRequiredKeyedService<IDownloadHttpClientService>(platform)
+                .GetImageDownloadClient()
+                .DownloadMemoryStreamAsync(key, progress, token: token) is Result<Stream>.Success(var s))
         {
             if (useFileCache)
             {
                 _ = TryCacheStream(key, s);
                 s.Position = 0;
             }
+
             return s;
         }
 
@@ -260,7 +268,7 @@ public static class CacheHelper
     /// </summary>
     /// <param name="key"></param>
     /// <returns></returns>
-    public static Stream? TryGetStreamFromCache(string key)
+    public static Stream? TryGetStream(string key)
     {
         try
         {

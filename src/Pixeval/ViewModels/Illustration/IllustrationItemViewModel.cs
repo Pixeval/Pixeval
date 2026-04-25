@@ -60,29 +60,19 @@ public partial class IllustrationItemViewModel(IArtworkInfo entry)
                 {
                     case SingleAnimatedImageType.MultiFiles:
                     {
-                        var list = await CacheHelper.GetAnimatedImageSeparatedAsync(
+                        return await CacheHelper.GetAnimatedImageSeparatedAsync(
                             singleAnimatedImage.Platform,
                             f,
                             new Progress<double>(d => advancePhase(LoadingPhase.DownloadingImage, d)),
                             token);
-                        var arr1 = new Stream[list.Count];
-                        var arr2 = new int[list.Count];
-                        for (var i = 0; i < list.Count; ++i)
-                            (arr1[i], arr2[i]) = list[i];
-                        return (arr1, arr2);
                     }
                     case SingleAnimatedImageType.SingleZipFile or SingleAnimatedImageType.SingleFile:
                     {
-                        var stream = await CacheHelper.GetSingleImageAsync(
+                        return await CacheHelper.GetSingleAnimatedImageAsync(
                             singleAnimatedImage.Platform,
                             f,
                             new Progress<double>(d => advancePhase(LoadingPhase.DownloadingImage, d)),
                             token);
-                        if (f.PreferredAnimatedImageType is not SingleAnimatedImageType.SingleZipFile)
-                            return await IoHelper.SplitAnimatedImageStreamAsync(stream);
-                        await f.ZipImageDelays!.TryPreloadListAsync(singleAnimatedImage);
-                        var zip = await Streams.ReadZipAsync(stream, true);
-                        return (zip, f.ZipImageDelays);
                     }
                 }
 

@@ -19,7 +19,7 @@
         <PageSlide Orientation="Horizontal" Duration="0:0:0.3" />
     </controls:SwipeControl.PageTransition>
     <controls:SwipeControl.ItemTemplate>
-        <DataTemplate DataType="{x:Type viewers:SingleViewerViewModelBase}">
+        <DataTemplate DataType="{x:Type viewers:SingleViewerViewModel}">
             <viewers1:SingleImageViewer />
         </DataTemplate>
     </controls:SwipeControl.ItemTemplate>

@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mako.Global.Enum;
 using Mako.Net.Response;
+using Misaki;
 using Pixeval.Utilities;
 using Pixeval.Utilities.IO.Caching;
 using Pixeval.Views.Capability;
@@ -70,9 +71,9 @@ public partial class UserViewerPageViewModel : ViewModelBase, IDisposable
 
     private async Task SetAvatarAndBackgroundAsync()
     {
-        AvatarSource = await CacheHelper.GetBitmapFromCacheAsync(AvatarUrl);
+        AvatarSource = await CacheHelper.GetBitmapAsync(IPlatformInfo.Pixiv, AvatarUrl);
         BackgroundSource = BackgroundUrl is not null
-            ? await CacheHelper.GetBitmapFromCacheAsync(BackgroundUrl)
+            ? await CacheHelper.GetBitmapAsync(IPlatformInfo.Pixiv, BackgroundUrl)
             : AvatarSource;
     }
 
