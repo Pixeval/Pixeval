@@ -1,0 +1,79 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls">
+
+    <ControlTheme x:Key="{x:Type controls:PagePreviewSlider}" TargetType="{x:Type controls:PagePreviewSlider}">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="MinWidth" Value="160" />
+        <Setter Property="MinHeight" Value="14" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border
+                    Background="Transparent"
+                    Padding="{TemplateBinding Padding}">
+                    <Grid Height="14">
+                        <Border
+                            x:Name="PART_Track"
+                            Height="10"
+                            VerticalAlignment="Center"
+                            Background="{DynamicResource SystemBaseLowColor}"
+                            CornerRadius="999" />
+                        <Border
+                            x:Name="PART_SelectedTrack"
+                            Width="0"
+                            Height="10"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Background="{DynamicResource SystemBaseMediumHighColor}"
+                            CornerRadius="999" />
+                        <Canvas x:Name="PART_ThumbCanvas" Height="14">
+                            <Border
+                                x:Name="PART_Thumb"
+                                Width="12"
+                                Height="12"
+                                Background="{DynamicResource SystemBaseHighColor}"
+                                BorderBrush="{DynamicResource SystemChromeBlackHighColor}"
+                                BorderThickness="1"
+                                CornerRadius="999" />
+                        </Canvas>
+
+                        <Popup
+                            x:Name="PART_PreviewPopup"
+                            IsLightDismissEnabled="False"
+                            Placement="Top"
+                            PlacementTarget="{Binding #PART_Track}"
+                            VerticalOffset="-8"
+                            WindowManagerAddShadowHint="True">
+                            <Border
+                                Padding="4"
+                                Background="{DynamicResource SystemChromeMediumColor}"
+                                BorderBrush="{DynamicResource SystemBaseMediumHighColor}"
+                                BorderThickness="1"
+                                CornerRadius="{DynamicResource OverlayCornerRadius}">
+                                <StackPanel Spacing="6">
+                                    <ContentControl x:Name="PART_PreviewContent" />
+                                    <TextBlock
+                                        x:Name="PART_PreviewLabel"
+                                        HorizontalAlignment="Center"
+                                        FontWeight="SemiBold"
+                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                </StackPanel>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:pointerover /template/ Border#PART_Thumb">
+            <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+        </Style>
+
+        <Style Selector="^:pointerover /template/ Border#PART_SelectedTrack">
+            <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

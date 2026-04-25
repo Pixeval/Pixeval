@@ -8,7 +8,7 @@
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
-    xmlns:ss="clr-namespace:SmoothScroll.Avalonia.Controls;assembly=SmoothScroll.Avalonia.Controls"
+    xmlns:ss="using:SmoothScroll.Avalonia.Controls"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
     xmlns:work="using:Pixeval.Views.Work"
     x:DataType="{x:Type viewers:IllustrationViewerPageViewModel}"
@@ -34,7 +34,7 @@
 
     <ContentPage.Styles>
         <Style Selector="controls|FloatingPaneView#EntryViewerFloatingPaneView">
-            <Setter Property="PaneVerticalAlignment" Value="Bottom" />
+            <Setter Property="PaneVerticalAlignment" Value="Top" />
 
             <Style Selector="^ Border#FloatingPaneBorder">
                 <Setter Property="VerticalAlignment" Value="Bottom" />
@@ -57,16 +57,41 @@
             </Style>
         </Style>
 
-        <Style Selector="local|SingleImageViewerPage#ImageViewerPage">
+        <Style Selector="TransitioningContentControl#ImageViewerPage">
             <Setter Property="ClipToBounds" Value="False" />
 
-            <Style Selector="^ ss|ScrollView#ZoomBorder">
+            <Style Selector="^ local|SingleImageViewer">
                 <Setter Property="ClipToBounds" Value="False" />
 
-                <Style Selector="^ /template/ ss|ScrollPresenter#PART_ContentPresenter">
+                <Style Selector="^ ss|ScrollView#ViewerScrollView">
                     <Setter Property="ClipToBounds" Value="False" />
+
+                    <Style Selector="^ /template/ ss|ScrollPresenter#PART_ContentPresenter">
+                        <Setter Property="ClipToBounds" Value="False" />
+                    </Style>
                 </Style>
             </Style>
+        </Style>
+
+        <Style Selector="Border#FloatingToolbarPane">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <Style Selector="Border#FloatingToolbarPane.proximity">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+
+        <Style Selector="Border#FloatingToolbarPane.close-proximity">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+
+        <Style Selector="Border#FloatingToolbarPane.temporary-visible">
+            <Setter Property="Opacity" Value="1" />
         </Style>
     </ContentPage.Styles>
 
@@ -136,61 +161,94 @@
                         Symbol="ChevronRight"
                         ToolTipText="{Binding NextButtonText}" />
 
-                    <CommandBar
-                        x:Name="ZoomPane"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Top"
+                    <Border
+                        x:Name="FloatingToolbarPane"
+                        Margin="32"
+                        Padding="10"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Bottom"
                         controls:FloatingPane.IsEnabled="True"
-                        Classes="floating-command-bar"
-                        Theme="{StaticResource FloatingCommandBarTheme}">
-                        <CommandBar.PrimaryCommands>
-                            <CommandBarButton
-                                Command="{Binding #ImageViewerPage.CurrentPage.RotateCounterclockwiseCommand}"
-                                Content="{markup:SymbolIcon ArrowRotateCounterclockwise,
-                                                            FontSize=16}"
-                                ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.RotateCounterclockwise}}" />
-                            <CommandBarToggleButton
-                                Command="{Binding #ImageViewerPage.CurrentPage.MirrorCommand}"
-                                Content="{markup:SymbolIcon FlipHorizontal,
-                                                            FontSize=16}"
-                                IsChecked="{Binding #ImageViewerPage.CurrentPage.IsMirrored, Mode=TwoWay}"
-                                ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.Mirror}}" />
-                            <CommandBarButton
-                                Command="{Binding #ImageViewerPage.CurrentPage.RotateClockwiseCommand}"
-                                Content="{markup:SymbolIcon ArrowRotateClockwise,
-                                                            FontSize=16}"
-                                ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.RotateClockwise}}" />
-                            <CommandBarSeparator />
-                            <CommandBarButton
-                                Command="{Binding #ImageViewerPage.CurrentPage.ZoomOutCommand}"
-                                Content="{markup:SymbolIcon ZoomOut,
-                                                            FontSize=16}"
-                                ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomOut}}" />
-                            <controls:CommandBarElementContainer>
-                                <TextBlock Text="{Binding #ImageViewerPage.CurrentPage.ZoomFactor, StringFormat='{}{0:P0}'}" />
-                            </controls:CommandBarElementContainer>
-                            <CommandBarButton
-                                Command="{Binding #ImageViewerPage.CurrentPage.ZoomInCommand}"
-                                Content="{markup:SymbolIcon ZoomIn,
-                                                            FontSize=16}"
-                                ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomIn}}" />
-                            <CommandBarSeparator />
-                            <CommandBarButton
-                                Command="{Binding PrevCommand}"
-                                Content="{markup:SymbolIcon ChevronLeft,
-                                                            FontSize=16}"
-                                IsEnabled="{Binding PrevButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                                RightTapped="PrevButton_OnRightClick"
-                                ToolTip.Tip="{Binding PrevButtonText}" />
-                            <CommandBarButton
-                                Command="{Binding NextCommand}"
-                                Content="{markup:SymbolIcon ChevronRight,
-                                                            FontSize=16}"
-                                IsEnabled="{Binding NextButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                                RightTapped="NextButton_OnRightClick"
-                                ToolTip.Tip="{Binding NextButtonText}" />
-                        </CommandBar.PrimaryCommands>
-                    </CommandBar>
+                        Background="{DynamicResource SystemAltMediumHighColor}"
+                        ClipToBounds="False"
+                        CornerRadius="20">
+                        <StackPanel Spacing="8">
+                            <controls:PagePreviewSlider
+                                Padding="5"
+                                HorizontalAlignment="Stretch"
+                                ItemsSource="{Binding CurrentImage.Images}"
+                                SelectedIndex="{Binding CurrentPageIndex, Mode=TwoWay}">
+                                <controls:PagePreviewSlider.ItemTemplate>
+                                    <DataTemplate x:DataType="{x:Type viewers:SingleViewerViewModel}">
+                                        <Border
+                                            MaxWidth="100"
+                                            MaxHeight="96"
+                                            ClipToBounds="True"
+                                            CornerRadius="{StaticResource ControlCornerRadius}">
+                                            <Image Source="{Binding ThumbnailSource}" Stretch="Uniform" />
+                                        </Border>
+                                    </DataTemplate>
+                                </controls:PagePreviewSlider.ItemTemplate>
+                            </controls:PagePreviewSlider>
+
+                            <CommandBar
+                                x:Name="ZoomPane"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Top"
+                                BorderBrush="Transparent"
+                                BorderThickness="0"
+                                Classes="floating-command-bar"
+                                CornerRadius="0"
+                                Theme="{StaticResource FloatingCommandBarTheme}">
+                                <CommandBar.PrimaryCommands>
+                                    <CommandBarButton
+                                        Command="{Binding #ImageViewerPage.CurrentPage.RotateCounterclockwiseCommand}"
+                                        Content="{markup:SymbolIcon ArrowRotateCounterclockwise,
+                                                                    FontSize=16}"
+                                        ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.RotateCounterclockwise}}" />
+                                    <CommandBarToggleButton
+                                        Command="{Binding #ImageViewerPage.CurrentPage.MirrorCommand}"
+                                        Content="{markup:SymbolIcon FlipHorizontal,
+                                                                    FontSize=16}"
+                                        IsChecked="{Binding #ImageViewerPage.CurrentPage.IsMirrored, Mode=TwoWay}"
+                                        ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.Mirror}}" />
+                                    <CommandBarButton
+                                        Command="{Binding #ImageViewerPage.CurrentPage.RotateClockwiseCommand}"
+                                        Content="{markup:SymbolIcon ArrowRotateClockwise,
+                                                                    FontSize=16}"
+                                        ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.RotateClockwise}}" />
+                                    <CommandBarSeparator />
+                                    <CommandBarButton
+                                        Command="{Binding #ImageViewerPage.CurrentPage.ZoomOutCommand}"
+                                        Content="{markup:SymbolIcon ZoomOut,
+                                                                    FontSize=16}"
+                                        ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomOut}}" />
+                                    <controls:CommandBarElementContainer>
+                                        <TextBlock Text="{Binding #ImageViewerPage.CurrentPage.ZoomFactor, StringFormat='{}{0:P0}'}" />
+                                    </controls:CommandBarElementContainer>
+                                    <CommandBarButton
+                                        Command="{Binding #ImageViewerPage.CurrentPage.ZoomInCommand}"
+                                        Content="{markup:SymbolIcon ZoomIn,
+                                                                    FontSize=16}"
+                                        ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomIn}}" />
+                                    <CommandBarSeparator />
+                                    <CommandBarButton
+                                        Command="{Binding PrevCommand}"
+                                        Content="{markup:SymbolIcon ChevronLeft,
+                                                                    FontSize=16}"
+                                        IsEnabled="{Binding PrevButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                        RightTapped="PrevButton_OnRightClick"
+                                        ToolTip.Tip="{Binding PrevButtonText}" />
+                                    <CommandBarButton
+                                        Command="{Binding NextCommand}"
+                                        Content="{markup:SymbolIcon ChevronRight,
+                                                                    FontSize=16}"
+                                        IsEnabled="{Binding NextButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                        RightTapped="NextButton_OnRightClick"
+                                        ToolTip.Tip="{Binding NextButtonText}" />
+                                </CommandBar.PrimaryCommands>
+                            </CommandBar>
+                        </StackPanel>
+                    </Border>
                 </Panel>
             </DockPanel>
         </controls:FloatingPaneView>

@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
-    xmlns:viewers1="clr-namespace:Pixeval.Views.Viewers"
+    xmlns:viewers1="using:Pixeval.Views.Viewers"
     x:DataType="{x:Type viewers:ImageViewerViewModel}"
     DataContext="{x:Null}"
     ItemsSource="{Binding Images}"

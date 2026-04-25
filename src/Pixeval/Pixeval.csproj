@@ -69,9 +69,5 @@
 			<AutoGen>True</AutoGen>
 			<DependentUpon>Language.tt</DependentUpon>
 		</Compile>
-
-		<Compile Update="Views\Viewers\SingleImageViewerPage.axaml.cs">
-		  <DependentUpon>SingleImageViewerPage.axaml</DependentUpon>
-		</Compile>
 	</ItemGroup>
 </Project>

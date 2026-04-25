@@ -11,11 +11,9 @@
     xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
-    xmlns:ss="clr-namespace:SmoothScroll.Avalonia.Controls;assembly=SmoothScroll.Avalonia.Controls"
     xmlns:utilities="using:Pixeval.Utilities"
     xmlns:viewModels="using:Pixeval.ViewModels"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
-    xmlns:work="using:Pixeval.Views.Work"
     x:DataType="{x:Type viewers:IllustrationViewerPageViewModel}"
     Name="InfoPaneRoot"
     mc:Ignorable="d"
@@ -44,29 +42,21 @@
     </UserControl.Styles>
 
     <Grid VerticalAlignment="Stretch" RowDefinitions="Auto,*,Auto,Auto">
-        <StackPanel Grid.Row="0">
-            <TextBlock
-                VerticalAlignment="Center"
-                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                IsVisible="{Binding CurrentIllustration.IsPicSet}">
-                <!--  不加OneWay会调用ConvertBack，不知道为什么  -->
-                <Run Text="{Binding CurrentPageIndex, Mode=OneWay, Converter={x:Static converters:PixevalConverters.PlusOne}}" />
-                <Run Text="/" />
-                <Run Text="{Binding PageCount}" />
-            </TextBlock>
-            <local:WorkInfoPane Name="InfoPaneSection" ArtworkInfo="{Binding CurrentIllustration.Entry}">
-                <local:WorkInfoPane.ActionZone>
-                    <Button
-                        Click="ChevronButtonClicked"
-                        Content="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding #InfoPaneRoot.IsDocked},
-                                                                                     ChevronDown,
-                                                                                     ChevronUp,
-                                                                                     x:TypeArguments=common:Symbol}}"
-                        Theme="{StaticResource TransparentButtonStyle}"
-                        ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.InfoAndComments}}" />
-                </local:WorkInfoPane.ActionZone>
-            </local:WorkInfoPane>
-        </StackPanel>
+        <local:WorkInfoPane
+            Name="InfoPaneSection"
+            Grid.Row="0"
+            ArtworkInfo="{Binding CurrentIllustration.Entry}">
+            <local:WorkInfoPane.ActionZone>
+                <Button
+                    Click="ChevronButtonClicked"
+                    Content="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding #InfoPaneRoot.IsDocked},
+                                                                                 ChevronDown,
+                                                                                 ChevronUp,
+                                                                                 x:TypeArguments=common:Symbol}}"
+                    Theme="{StaticResource TransparentButtonStyle}"
+                    ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.InfoAndComments}}" />
+            </local:WorkInfoPane.ActionZone>
+        </local:WorkInfoPane>
         <TabbedPage
             Name="TabbedPageSection"
             Grid.Row="1"
@@ -119,7 +109,6 @@
                                                                  Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
                 IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
                 Label="{I18N {x:Static pixeval:MiscResources.AddBookmark}}" />
-            <CommandBarSeparator />
             <CommandBarButton
                 Command="{Binding CurrentIllustration.SaveCommand}"
                 CommandParameter="{Binding $self, Mode=OneTime}"

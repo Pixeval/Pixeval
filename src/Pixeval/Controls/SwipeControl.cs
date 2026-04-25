@@ -43,6 +43,7 @@ public class SwipeControl : TransitioningContentControl
         base.OnPropertyChanged(change);
         if (change.Property != SelectedIndexProperty && change.Property != ItemsSourceProperty && change.Property != ItemTemplateProperty)
             return;
+
         if (ItemsSource is not { } items || items.Count == 0 || SelectedIndex < 0 || SelectedIndex >= items.Count)
         {
             Content = null;
@@ -58,7 +59,7 @@ public class SwipeControl : TransitioningContentControl
             IsTransitionReversed = oldItem > newItem;
         }
 
-        if (ItemTemplate is null)
+        if (ItemTemplate is null || !ItemTemplate.Match(item))
             Content = item;
         else
         {

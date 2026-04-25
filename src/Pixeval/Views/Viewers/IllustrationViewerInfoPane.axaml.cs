@@ -1,9 +1,7 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using Pixeval.ViewModels.Viewers;
 
 namespace Pixeval.Views.Viewers;
 
