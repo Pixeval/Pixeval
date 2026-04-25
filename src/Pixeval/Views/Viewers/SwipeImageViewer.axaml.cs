@@ -17,17 +17,13 @@ public partial class SwipeImageViewer : SwipeControl
             nameof(CurrentPage),
             o => o.CurrentPage);
 
-    public SingleImageViewer? CurrentPage
-    {
-        get => Content as SingleImageViewer;
-        private set => Content = value;
-    }
+    public SingleImageViewer? CurrentPage => Content as SingleImageViewer;
 
     /// <inheritdoc />
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == CurrentPageProperty)
+        if (change.Property == ContentProperty)
             RaisePropertyChanged(CurrentPageProperty, null, CurrentPage);
     }
 

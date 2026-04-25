@@ -50,7 +50,7 @@
                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                 IsVisible="{Binding CurrentIllustration.IsPicSet}">
                 <!--  不加OneWay会调用ConvertBack，不知道为什么  -->
-                <Run Text="{Binding CurrentPageIndex, Mode=OneWay, Converter={x:Static controls:ZoomIndicator.PlusOneConverter}}" />
+                <Run Text="{Binding CurrentPageIndex, Mode=OneWay, Converter={x:Static converters:PixevalConverters.PlusOne}}" />
                 <Run Text="/" />
                 <Run Text="{Binding PageCount}" />
             </TextBlock>

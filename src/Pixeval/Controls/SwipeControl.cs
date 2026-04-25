@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Templates;
 
 namespace Pixeval.Controls;
 
@@ -28,11 +29,19 @@ public class SwipeControl : TransitioningContentControl
         set => SetValue(SelectedIndexProperty, value);
     }
 
+    public static readonly StyledProperty<IDataTemplate?> ItemTemplateProperty = AvaloniaProperty.Register<SwipeControl, IDataTemplate?>(nameof(ItemTemplate));
+
+    public IDataTemplate? ItemTemplate
+    {
+        get => GetValue(ItemTemplateProperty);
+        set => SetValue(ItemTemplateProperty, value);
+    }
+
     /// <inheritdoc />
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property != SelectedIndexProperty && change.Property != ItemsSourceProperty)
+        if (change.Property != SelectedIndexProperty && change.Property != ItemsSourceProperty && change.Property != ItemTemplateProperty)
             return;
         if (ItemsSource is not { } items || items.Count == 0 || SelectedIndex < 0 || SelectedIndex >= items.Count)
         {
@@ -49,7 +58,14 @@ public class SwipeControl : TransitioningContentControl
             IsTransitionReversed = oldItem > newItem;
         }
 
-        Content = item;
+        if (ItemTemplate is null)
+            Content = item;
+        else
+        {
+            var content = ItemTemplate.Build(item);
+            content?.DataContext = item;
+            Content = content;
+        }
 
         SelectionChanged?.Invoke(this, new SwipeControlSelectionChangedEventArgs(SelectedIndex, item));
     }

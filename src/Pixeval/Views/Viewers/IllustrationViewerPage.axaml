@@ -5,7 +5,9 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Views.Viewers"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
     xmlns:ss="clr-namespace:SmoothScroll.Avalonia.Controls;assembly=SmoothScroll.Avalonia.Controls"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
     xmlns:work="using:Pixeval.Views.Work"
@@ -19,12 +21,12 @@
         <ResourceDictionary>
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Light">
-                    <SolidColorBrush x:Key="IllustrationViewerFloatingPaneBackgroundBrush">#DDFFFFFF</SolidColorBrush>
-                    <SolidColorBrush x:Key="IllustrationViewerFloatingPaneDockedBackgroundBrush">#EEFFFFFF</SolidColorBrush>
+                    <SolidColorBrush x:Key="FloatingPaneBackgroundBrush">#DDFFFFFF</SolidColorBrush>
+                    <SolidColorBrush x:Key="FloatingPaneDockedBackgroundBrush">#EEFFFFFF</SolidColorBrush>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
-                    <SolidColorBrush x:Key="IllustrationViewerFloatingPaneBackgroundBrush">#DD1E1E1E</SolidColorBrush>
-                    <SolidColorBrush x:Key="IllustrationViewerFloatingPaneDockedBackgroundBrush">#EE1E1E1E</SolidColorBrush>
+                    <SolidColorBrush x:Key="FloatingPaneBackgroundBrush">#DD1E1E1E</SolidColorBrush>
+                    <SolidColorBrush x:Key="FloatingPaneDockedBackgroundBrush">#EE1E1E1E</SolidColorBrush>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
@@ -39,7 +41,7 @@
                 <Setter Property="Margin" Value="16" />
                 <Setter Property="CornerRadius" Value="4" />
                 <Setter Property="Width" Value="360" />
-                <Setter Property="Background" Value="{DynamicResource IllustrationViewerFloatingPaneBackgroundBrush}" />
+                <Setter Property="Background" Value="{DynamicResource FloatingPaneBackgroundBrush}" />
             </Style>
 
             <Style Selector="^:docked">
@@ -50,7 +52,7 @@
                     <Setter Property="Margin" Value="0" />
                     <Setter Property="CornerRadius" Value="0" />
                     <Setter Property="Width" Value="360" />
-                    <Setter Property="Background" Value="{DynamicResource IllustrationViewerFloatingPaneDockedBackgroundBrush}" />
+                    <Setter Property="Background" Value="{DynamicResource FloatingPaneDockedBackgroundBrush}" />
                 </Style>
             </Style>
         </Style>
@@ -66,8 +68,6 @@
                 </Style>
             </Style>
         </Style>
-
-
     </ContentPage.Styles>
 
     <ContentPage.Icon>
@@ -136,11 +136,60 @@
                         Symbol="ChevronRight"
                         ToolTipText="{Binding NextButtonText}" />
 
-                    <controls:ZoomIndicator
+                    <CommandBar
                         x:Name="ZoomPane"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top"
-                        controls:FloatingPane.IsEnabled="True" />
+                        controls:FloatingPane.IsEnabled="True"
+                        Classes="floating-command-bar"
+                        Theme="{StaticResource FloatingCommandBarTheme}">
+                        <CommandBar.PrimaryCommands>
+                            <CommandBarButton
+                                Command="{Binding #ImageViewerPage.CurrentPage.RotateCounterclockwiseCommand}"
+                                Content="{markup:SymbolIcon ArrowRotateCounterclockwise,
+                                                            FontSize=16}"
+                                ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.RotateCounterclockwise}}" />
+                            <CommandBarToggleButton
+                                Content="{markup:SymbolIcon FlipHorizontal,
+                                                            FontSize=16}"
+                                IsChecked="{Binding #ImageViewerPage.CurrentPage.IsMirrored, Mode=TwoWay}"
+                                ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.Mirror}}" />
+                            <CommandBarButton
+                                Command="{Binding #ImageViewerPage.CurrentPage.RotateClockwiseCommand}"
+                                Content="{markup:SymbolIcon ArrowRotateClockwise,
+                                                            FontSize=16}"
+                                ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.RotateClockwise}}" />
+                            <CommandBarSeparator />
+                            <CommandBarButton
+                                Command="{Binding #ImageViewerPage.CurrentPage.ZoomOutCommand}"
+                                Content="{markup:SymbolIcon ZoomOut,
+                                                            FontSize=16}"
+                                ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomOut}}" />
+                            <controls:CommandBarElementContainer>
+                                <TextBlock Text="{Binding #ImageViewerPage.CurrentPage.ZoomFactor, StringFormat='{}{0:P0}'}" />
+                            </controls:CommandBarElementContainer>
+                            <CommandBarButton
+                                Command="{Binding #ImageViewerPage.CurrentPage.ZoomInCommand}"
+                                Content="{markup:SymbolIcon ZoomIn,
+                                                            FontSize=16}"
+                                ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomIn}}" />
+                            <CommandBarSeparator />
+                            <CommandBarButton
+                                Command="{Binding PrevCommand}"
+                                Content="{markup:SymbolIcon ChevronLeft,
+                                                            FontSize=16}"
+                                IsEnabled="{Binding PrevButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                RightTapped="PrevButton_OnRightClick"
+                                ToolTip.Tip="{Binding PrevButtonText}" />
+                            <CommandBarButton
+                                Command="{Binding NextCommand}"
+                                Content="{markup:SymbolIcon ChevronRight,
+                                                            FontSize=16}"
+                                IsEnabled="{Binding NextButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                RightTapped="NextButton_OnRightClick"
+                                ToolTip.Tip="{Binding NextButtonText}" />
+                        </CommandBar.PrimaryCommands>
+                    </CommandBar>
                 </Panel>
             </DockPanel>
         </controls:FloatingPaneView>

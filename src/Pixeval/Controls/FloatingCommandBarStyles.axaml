@@ -1,0 +1,238 @@
+<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls">
+
+    <Styles.Resources>
+        <ControlTheme x:Key="FloatingCommandBarTheme" TargetType="{x:Type CommandBar}">
+            <Setter Property="Background" Value="{DynamicResource SystemAltMediumHighColor}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="20" />
+            <Setter Property="Height" Value="40" />
+            <Setter Property="MinHeight" Value="40" />
+            <Setter Property="Margin" Value="0,32,40,0" />
+            <Setter Property="Padding" Value="16,10" />
+            <Setter Property="OverflowButtonVisibility" Value="Collapsed" />
+            <Setter Property="IsDynamicOverflowEnabled" Value="False" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border
+                        MinHeight="{TemplateBinding MinHeight}"
+                        Padding="{TemplateBinding Padding}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                        <ItemsControl
+                            x:Name="PART_PrimaryCommands"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Stretch"
+                            ItemsSource="{Binding VisiblePrimaryCommands, RelativeSource={RelativeSource TemplatedParent}}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" Spacing="20" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+
+            <Style Selector="^">
+                <Setter Property="Opacity" Value="0" />
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
+                    </Transitions>
+                </Setter>
+            </Style>
+
+            <Style Selector="^.proximity">
+                <Setter Property="Opacity" Value="0.5" />
+            </Style>
+
+            <Style Selector="^.close-proximity">
+                <Setter Property="Opacity" Value="1" />
+            </Style>
+
+            <Style Selector="^.temporary-visible">
+                <Setter Property="Opacity" Value="1" />
+            </Style>
+        </ControlTheme>
+
+        <ControlTheme x:Key="FloatingCommandBarButtonTheme" TargetType="{x:Type CommandBarButton}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border
+                        Padding="{TemplateBinding Padding}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                        <ContentPresenter
+                            Name="PART_ContentPresenter"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+
+            <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="Opacity" Value="0.85" />
+            </Style>
+
+            <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="Opacity" Value="0.7" />
+                <Setter Property="RenderTransform" Value="scale(0.96)" />
+            </Style>
+
+            <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="Opacity" Value="0.5" />
+            </Style>
+        </ControlTheme>
+
+        <ControlTheme x:Key="FloatingCommandBarToggleButtonTheme" TargetType="{x:Type CommandBarToggleButton}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border
+                        Padding="{TemplateBinding Padding}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                        <ContentPresenter
+                            Name="PART_ContentPresenter"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+
+            <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="Opacity" Value="0.85" />
+            </Style>
+
+            <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="Opacity" Value="0.7" />
+                <Setter Property="RenderTransform" Value="scale(0.96)" />
+            </Style>
+
+            <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="Opacity" Value="0.5" />
+            </Style>
+
+            <Style Selector="^:checked">
+                <Setter Property="Foreground" Value="{DynamicResource SystemAccentColor}" />
+            </Style>
+
+            <Style Selector="^:checked:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
+        </ControlTheme>
+
+        <ControlTheme x:Key="FloatingCommandBarSeparatorTheme" TargetType="{x:Type CommandBarSeparator}">
+            <Setter Property="Width" Value="{DynamicResource MenuFlyoutSeparatorThemeHeight}" />
+            <Setter Property="Height" Value="20" />
+            <Setter Property="MinHeight" Value="20" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Background" Value="{DynamicResource SystemBaseMediumHighColor}" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border
+                        Width="{TemplateBinding Width}"
+                        Height="{TemplateBinding Height}"
+                        MinHeight="{TemplateBinding MinHeight}"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Background="{TemplateBinding Background}" />
+                </ControlTemplate>
+            </Setter>
+        </ControlTheme>
+
+        <ControlTheme x:Key="FloatingCommandBarElementContainerTheme" TargetType="{x:Type controls:CommandBarElementContainer}">
+            <Setter Property="MinWidth" Value="60" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <ContentPresenter
+                        Name="PART_ContentPresenter"
+                        HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                        Content="{TemplateBinding Content}"
+                        ContentTemplate="{TemplateBinding ContentTemplate}" />
+                </ControlTemplate>
+            </Setter>
+        </ControlTheme>
+
+        <ControlTheme
+            x:Key="FloatingCommandBarTextTheme"
+            BasedOn="{StaticResource CaptionTextBlockStyle}"
+            TargetType="{x:Type TextBlock}">
+            <Setter Property="Margin" Value="4,0" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </ControlTheme>
+    </Styles.Resources>
+
+    <Style Selector="CommandBar.floating-command-bar CommandBarButton">
+        <Setter Property="Theme" Value="{StaticResource FloatingCommandBarButtonTheme}" />
+    </Style>
+
+    <Style Selector="CommandBar.floating-command-bar CommandBarToggleButton">
+        <Setter Property="Theme" Value="{StaticResource FloatingCommandBarToggleButtonTheme}" />
+    </Style>
+
+    <Style Selector="CommandBar.floating-command-bar CommandBarSeparator">
+        <Setter Property="Theme" Value="{StaticResource FloatingCommandBarSeparatorTheme}" />
+    </Style>
+
+    <Style Selector="CommandBar.floating-command-bar controls|CommandBarElementContainer">
+        <Setter Property="Theme" Value="{StaticResource FloatingCommandBarElementContainerTheme}" />
+    </Style>
+
+    <Style Selector="CommandBar.floating-command-bar controls|CommandBarElementContainer TextBlock">
+        <Setter Property="Theme" Value="{StaticResource FloatingCommandBarTextTheme}" />
+    </Style>
+</Styles>

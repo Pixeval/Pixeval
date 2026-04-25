@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using AnimatedControls.Avalonia;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input.Platform;
@@ -10,7 +9,7 @@ using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.ViewModels.Viewers;
 
-namespace Pixeval.Controls;
+namespace Pixeval.Views.Viewers;
 
 public partial class SingleImageViewer : UserControl
 {

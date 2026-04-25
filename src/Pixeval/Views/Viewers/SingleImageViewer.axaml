@@ -1,5 +1,5 @@
 <UserControl
-    x:Class="Pixeval.Controls.SingleImageViewer"
+    x:Class="Pixeval.Views.Viewers.SingleImageViewer"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ai="using:AnimatedControls.Avalonia"
@@ -10,6 +10,7 @@
     xmlns:pixeval="using:Pixeval"
     xmlns:scroll="using:SmoothScroll.Avalonia.Controls"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
+    xmlns:controls1="clr-namespace:Pixeval.Views.Viewers"
     x:DataType="{x:Type viewers:SingleViewerViewModelBase}">
     <Panel>
         <!--  图片查看器（缩放/平移）  -->
@@ -24,20 +25,20 @@
             IsVisible="{Binding LoadSuccessfully}"
             IsZoomEnabled="True"
             VerticalScrollBarVisibility="Hidden"
-            ZoomFactor="{Binding $parent[controls:SingleImageViewer].ZoomFactor, Mode=OneWayToSource}">
+            ZoomFactor="{Binding $parent[controls1:SingleImageViewer].ZoomFactor, Mode=OneWayToSource}">
             <ai:AnimatedImage
                 x:Name="ImageViewer"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                IsPlaying="{Binding $parent[controls:SingleImageViewer].IsPlaying}"
+                IsPlaying="{Binding $parent[controls1:SingleImageViewer].IsPlaying}"
                 RenderTransformOrigin="50%,50%"
                 SizeChanged="ImageViewerOnSizeChanged"
                 Source="{Binding DisplaySource}"
                 Stretch="Uniform">
                 <ai:AnimatedImage.RenderTransform>
                     <TransformGroup>
-                        <ScaleTransform ScaleX="{Binding $parent[controls:SingleImageViewer].MirrorScaleX}" />
-                        <RotateTransform Angle="{Binding $parent[controls:SingleImageViewer].RotationDegree}" />
+                        <ScaleTransform ScaleX="{Binding $parent[controls1:SingleImageViewer].MirrorScaleX}" />
+                        <RotateTransform Angle="{Binding $parent[controls1:SingleImageViewer].RotationDegree}" />
                     </TransformGroup>
                 </ai:AnimatedImage.RenderTransform>
             </ai:AnimatedImage>
@@ -45,9 +46,9 @@
                 <MenuFlyout>
                     <!--  播放/暂停（仅动图可见）  -->
                     <MenuItem
-                        Command="{Binding $parent[controls:SingleImageViewer].PlayPauseCommand}"
+                        Command="{Binding $parent[controls1:SingleImageViewer].PlayPauseCommand}"
                         Header="{I18N {x:Static pixeval:MiscResources.Play}}"
-                        Icon="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding $parent[controls:SingleImageViewer].IsPlaying},
+                        Icon="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding $parent[controls1:SingleImageViewer].IsPlaying},
                                                                                   Pause,
                                                                                   Play,
                                                                                   x:TypeArguments=common:Symbol}}"
@@ -56,34 +57,34 @@
                         IsVisible="{Binding IsPicGif}" />
                     <!--  保存  -->
                     <MenuItem
-                        Command="{Binding $parent[controls:SingleImageViewer].CopyCommand}"
+                        Command="{Binding $parent[controls1:SingleImageViewer].CopyCommand}"
                         Header="{I18N {x:Static pixeval:EntryViewerPageResources.Copy}}"
                         Icon="{markup:SymbolIcon Copy}"
                         InputGesture="Ctrl+C"
                         IsVisible="{Binding IsPicGif, Converter={x:Static BoolConverters.Not}}" />
                     <MenuItem
-                        Command="{Binding $parent[controls:SingleImageViewer].SaveCommand}"
+                        Command="{Binding $parent[controls1:SingleImageViewer].SaveCommand}"
                         Header="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}"
                         Icon="{markup:SymbolIcon Save}"
                         InputGesture="Ctrl+S" />
                     <MenuItem
-                        Command="{Binding $parent[controls:SingleImageViewer].SaveAsCommand}"
+                        Command="{Binding $parent[controls1:SingleImageViewer].SaveAsCommand}"
                         Header="{I18N {x:Static pixeval:EntryViewerPageResources.SaveAs}}"
                         Icon="{markup:SymbolIcon SaveEdit}" />
                     <MenuItem Header="-" />
                     <!--  旋转/镜像  -->
                     <MenuItem
-                        Command="{Binding $parent[controls:SingleImageViewer].RotateClockwiseCommand}"
+                        Command="{Binding $parent[controls1:SingleImageViewer].RotateClockwiseCommand}"
                         Header="{I18N {x:Static pixeval:EntryViewerPageResources.RotateClockwise}}"
                         Icon="{markup:SymbolIcon ArrowRotateClockwise}" />
                     <MenuItem
-                        Command="{Binding $parent[controls:SingleImageViewer].RotateCounterclockwiseCommand}"
+                        Command="{Binding $parent[controls1:SingleImageViewer].RotateCounterclockwiseCommand}"
                         Header="{I18N {x:Static pixeval:EntryViewerPageResources.RotateCounterclockwise}}"
                         Icon="{markup:SymbolIcon ArrowRotateCounterclockwise}" />
                     <MenuItem
                         Header="{I18N {x:Static pixeval:EntryViewerPageResources.Mirror}}"
                         Icon="{markup:SymbolIcon FlipHorizontal}"
-                        IsChecked="{Binding $parent[controls:SingleImageViewer].IsMirrored, Mode=TwoWay}"
+                        IsChecked="{Binding $parent[controls1:SingleImageViewer].IsMirrored, Mode=TwoWay}"
                         IsEnabled="{Binding LoadSuccessfully}"
                         ToggleType="CheckBox" />
                 </MenuFlyout>
