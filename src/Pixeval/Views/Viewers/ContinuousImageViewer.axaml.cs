@@ -6,7 +6,6 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Threading;
-using Pixeval.AppManagement;
 using Pixeval.Models.Options;
 using Pixeval.ViewModels.Viewers;
 
@@ -18,12 +17,6 @@ public partial class ContinuousImageViewer : ImageViewerBase
         AvaloniaProperty.RegisterDirect<ContinuousImageViewer, SingleViewerViewModel?>(
             nameof(CurrentPage),
             o => o.CurrentPage);
-
-    public static readonly DirectProperty<ContinuousImageViewer, BrowseDirection> BrowseDirectionProperty =
-        AvaloniaProperty.RegisterDirect<ContinuousImageViewer, BrowseDirection>(
-            nameof(BrowseDirection),
-            o => o.BrowseDirection,
-            (o, v) => o.BrowseDirection = v);
 
     public static readonly DirectProperty<ContinuousImageViewer, Orientation> StackOrientationProperty =
         AvaloniaProperty.RegisterDirect<ContinuousImageViewer, Orientation>(
@@ -71,22 +64,17 @@ public partial class ContinuousImageViewer : ImageViewerBase
 
     private ImageViewerViewModel? ViewModel => DataContext as ImageViewerViewModel;
 
-    public BrowseDirection BrowseDirection
+    /// <inheritdoc />
+    protected override void OnBrowseDirectionChanged(BrowseDirection oldValue, BrowseDirection newValue)
     {
-        get;
-        set
-        {
-            if (field == value)
-                return;
-
-            var oldOrientation = StackOrientation;
-            SetAndRaise(BrowseDirectionProperty, ref field, value);
-            RaisePropertyChanged(StackOrientationProperty, oldOrientation, StackOrientation);
-            UpdateScrollBarVisibility();
-            QueueScrollToSelectedPage();
-            QueueViewportUpdate();
-        }
-    } = BrowseDirection.LeftRight;
+        RaisePropertyChanged(StackOrientationProperty,
+            oldValue is BrowseDirection.LeftRight or BrowseDirection.RightLeft
+                ? Orientation.Horizontal
+                : Orientation.Vertical, StackOrientation);
+        UpdateScrollBarVisibility();
+        QueueScrollToSelectedPage();
+        QueueViewportUpdate();
+    }
 
     public Orientation StackOrientation =>
         IsHorizontal ? Orientation.Horizontal : Orientation.Vertical;

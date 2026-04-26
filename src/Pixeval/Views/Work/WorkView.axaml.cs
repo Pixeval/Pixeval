@@ -10,7 +10,6 @@ using Avalonia.Threading;
 using Mako.Engine;
 using Mako.Model;
 using Misaki;
-using Pixeval.AppManagement;
 using Pixeval.Models.Options;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;

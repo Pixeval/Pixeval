@@ -4,7 +4,6 @@ using Avalonia;
 using Avalonia.Animation;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.Input;
-using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Models.Options;
 using Pixeval.ViewModels.Viewers;
@@ -13,10 +12,7 @@ namespace Pixeval.Views.Viewers;
 
 public partial class SwipeImageViewer : ImageViewerBase
 {
-    public SwipeImageViewer()
-    {
-        InitializeComponent();
-    }
+    public SwipeImageViewer() => InitializeComponent();
 
     public static readonly DirectProperty<SwipeImageViewer, SingleImageViewer?> CurrentPageProperty =
         AvaloniaProperty.RegisterDirect<SwipeImageViewer, SingleImageViewer?>(
@@ -40,12 +36,6 @@ public partial class SwipeImageViewer : ImageViewerBase
             o => o.RotationDegree,
             (o, v) => o.RotationDegree = v);
 
-    public static readonly DirectProperty<SwipeImageViewer, BrowseDirection> BrowseDirectionProperty =
-        AvaloniaProperty.RegisterDirect<SwipeImageViewer, BrowseDirection>(
-            nameof(BrowseDirection),
-            o => o.BrowseDirection,
-            (o, v) => o.BrowseDirection = v);
-
     public SingleImageViewer? CurrentPage
     {
         get;
@@ -61,18 +51,11 @@ public partial class SwipeImageViewer : ImageViewerBase
         }
     }
 
-    public BrowseDirection BrowseDirection
+    /// <inheritdoc />
+    protected override void OnBrowseDirectionChanged(BrowseDirection oldValue, BrowseDirection newValue)
     {
-        get;
-        set
-        {
-            if (field == value)
-                return;
-
-            SetAndRaise(BrowseDirectionProperty, ref field, value);
-            UpdatePageTransition();
-        }
-    } = BrowseDirection.LeftRight;
+        UpdatePageTransition();
+    }
 
     private void UpdatePageTransition()
     {

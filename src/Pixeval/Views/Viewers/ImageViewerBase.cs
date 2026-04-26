@@ -7,6 +7,7 @@ using Avalonia.Input.Platform;
 using CommunityToolkit.Mvvm.Input;
 using Pixeval.Controls;
 using Pixeval.I18N;
+using Pixeval.Models.Options;
 using Pixeval.Utilities;
 using Pixeval.ViewModels.Viewers;
 
@@ -28,7 +29,11 @@ public abstract partial class ImageViewerBase : UserControl
             o => o.ZoomFactor,
             (o, v) => o.ZoomFactor = v);
 
-    private SingleViewerViewModel? _currentPage;
+    public static readonly DirectProperty<SwipeImageViewer, BrowseDirection> BrowseDirectionProperty =
+        AvaloniaProperty.RegisterDirect<SwipeImageViewer, BrowseDirection>(
+            nameof(BrowseDirection),
+            o => o.BrowseDirection,
+            (o, v) => o.BrowseDirection = v);
 
     public bool IsPlaying
     {
@@ -50,7 +55,21 @@ public abstract partial class ImageViewerBase : UserControl
         }
     } = 1;
 
-    protected SingleViewerViewModel? CurrentPageViewModel => _currentPage;
+    public BrowseDirection BrowseDirection
+    {
+        get;
+        set
+        {
+            var old = field;
+            if (old == value)
+                return;
+
+            SetAndRaise(BrowseDirectionProperty, ref field, value);
+            OnBrowseDirectionChanged(old, value);
+        }
+    }
+
+    protected SingleViewerViewModel? CurrentPageViewModel { get; private set; }
 
     protected bool CanManipulateCurrentImage => CurrentPageViewModel?.LoadSuccessfully == true;
 
@@ -58,12 +77,12 @@ public abstract partial class ImageViewerBase : UserControl
 
     protected void SetCurrentPageViewModel(SingleViewerViewModel? currentPage)
     {
-        if (ReferenceEquals(_currentPage, currentPage))
+        if (ReferenceEquals(CurrentPageViewModel, currentPage))
             return;
 
-        _currentPage?.PropertyChanged -= CurrentPageOnPropertyChanged;
-        _currentPage = currentPage;
-        _currentPage?.PropertyChanged += CurrentPageOnPropertyChanged;
+        CurrentPageViewModel?.PropertyChanged -= CurrentPageOnPropertyChanged;
+        CurrentPageViewModel = currentPage;
+        CurrentPageViewModel?.PropertyChanged += CurrentPageOnPropertyChanged;
 
         NotifyCommandCanExecuteChanged();
     }
@@ -82,6 +101,10 @@ public abstract partial class ImageViewerBase : UserControl
     }
 
     protected virtual void OnZoomFactorChanged(double oldValue, double newValue)
+    {
+    }
+
+    protected virtual void OnBrowseDirectionChanged(BrowseDirection oldValue, BrowseDirection newValue)
     {
     }
 

@@ -127,6 +127,9 @@
             需要等Avalonia行为改了，或者用其它workaround修复
             因为是局部的KeyBindings，目前快捷键需要焦点在该ContentPage内部才会激活
         -->
+        <KeyBinding Command="{Binding #I.ImageViewer.PlayPauseCommand}" Gesture="Space" />
+        <KeyBinding Command="{Binding #I.ImageViewer.CopyCommand}" Gesture="Ctrl+C" />
+        <KeyBinding Command="{Binding #I.ImageViewer.SaveCommand}" Gesture="Ctrl+S" />
     </ContentPage.KeyBindings>
 
     <Grid>
@@ -149,30 +152,44 @@
                 <Panel Background="Transparent">
                     <!--  图片查看器  -->
 
-                    <ContentControl
-                        x:Name="ImageViewerPageHost"
+                    <local:ImageViewerWrapper
+                        x:Name="I"
                         HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch" />
+                        VerticalAlignment="Stretch"
+                        DataContext="{Binding CurrentImage}"
+                        SelectionChanged="ImageViewerPage_OnSelectionChanged" />
 
                     <!--  左翻页按钮  -->
                     <controls:PageButton
                         HorizontalAlignment="Left"
                         VerticalAlignment="Stretch"
                         Command="{Binding PrevCommand}"
-                        IsVisible="{Binding PrevButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                         RightTapped="PrevButton_OnRightClick"
                         Symbol="ChevronLeft"
-                        ToolTipText="{Binding PrevButtonText}" />
+                        ToolTipText="{Binding PrevButtonText}">
+                        <controls:PageButton.IsVisible>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding Converter="{x:Static StringConverters.IsNotNullOrEmpty}" Path="PrevButtonText" />
+                                <Binding Path="#I.IsSwipeMode" />
+                            </MultiBinding>
+                        </controls:PageButton.IsVisible>
+                    </controls:PageButton>
 
                     <!--  右翻页按钮  -->
                     <controls:PageButton
                         HorizontalAlignment="Right"
                         VerticalAlignment="Stretch"
                         Command="{Binding NextCommand}"
-                        IsVisible="{Binding NextButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                         RightTapped="NextButton_OnRightClick"
                         Symbol="ChevronRight"
-                        ToolTipText="{Binding NextButtonText}" />
+                        ToolTipText="{Binding NextButtonText}">
+                        <controls:PageButton.IsVisible>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding Converter="{x:Static StringConverters.IsNotNullOrEmpty}" Path="NextButtonText" />
+                                <Binding Path="#I.IsSwipeMode" />
+                            </MultiBinding>
+                        </controls:PageButton.IsVisible>
+                    </controls:PageButton>
 
                     <Border
                         x:Name="FloatingToolbarPane"
@@ -214,31 +231,35 @@
                                 Theme="{StaticResource FloatingCommandBarTheme}">
                                 <CommandBar.PrimaryCommands>
                                     <CommandBarButton
-                                        x:Name="RotateCounterclockwiseButton"
+                                        Command="{Binding #I.SwipeImageViewer.RotateCounterclockwiseCommand, FallbackValue={x:Null}}"
                                         Content="{markup:SymbolIcon ArrowRotateCounterclockwise,
                                                                     FontSize=16}"
+                                        IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}"
                                         ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.RotateCounterclockwise}}" />
                                     <CommandBarToggleButton
-                                        x:Name="MirrorButton"
+                                        Command="{Binding #I.SwipeImageViewer.MirrorCommand, FallbackValue={x:Null}}"
                                         Content="{markup:SymbolIcon FlipHorizontal,
                                                                     FontSize=16}"
+                                        IsChecked="{Binding #I.SwipeImageViewer.IsMirrored, Mode=TwoWay, FallbackValue={x:False}}"
+                                        IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}"
                                         ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.Mirror}}" />
                                     <CommandBarButton
-                                        x:Name="RotateClockwiseButton"
+                                        Command="{Binding #I.SwipeImageViewer.RotateClockwiseCommand, FallbackValue={x:Null}}"
                                         Content="{markup:SymbolIcon ArrowRotateClockwise,
                                                                     FontSize=16}"
+                                        IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}"
                                         ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.RotateClockwise}}" />
-                                    <CommandBarSeparator x:Name="SwipeTransformSeparator" />
+                                    <CommandBarSeparator x:Name="SwipeTransformSeparator" IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}" />
                                     <CommandBarButton
-                                        x:Name="ZoomOutButton"
+                                        Command="{Binding #I.ImageViewer.ZoomOutCommand}"
                                         Content="{markup:SymbolIcon ZoomOut,
                                                                     FontSize=16}"
                                         ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomOut}}" />
                                     <controls:CommandBarElementContainer>
-                                        <TextBlock x:Name="ZoomFactorTextBlock" />
+                                        <TextBlock x:Name="ZoomFactorTextBlock" Text="{Binding #I.ImageViewer.ZoomFactor, StringFormat={}{0:P0}}" />
                                     </controls:CommandBarElementContainer>
                                     <CommandBarButton
-                                        x:Name="ZoomInButton"
+                                        Command="{Binding #I.ImageViewer.ZoomInCommand}"
                                         Content="{markup:SymbolIcon ZoomIn,
                                                                     FontSize=16}"
                                         ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomIn}}" />
@@ -264,6 +285,5 @@
                 </Panel>
             </DockPanel>
         </controls:FloatingPaneView>
-
     </Grid>
 </ContentPage>
