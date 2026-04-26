@@ -25,12 +25,12 @@ public partial class WorkEntryViewModel<T>
     }
 
     [RelayCommand(CanExecute = nameof(IsBookmarkSupported))]
-    private async Task AddToBookmarkAsync((IEnumerable<string> UserTags, bool IsPrivate, Control? Control) parameter)
+    private async Task AddToBookmarkAsync((IReadOnlyList<string> Tags, bool IsPrivate, Control? Control) parameter)
     {
         if ((IsBookmarkedDisplay & HeartButtonState.Pending) is not 0)
             return;
         IsBookmarkedDisplay |= HeartButtonState.Pending; // pre-update
-        var result = await SetBookmarkAsync(true, parameter.IsPrivate, parameter.UserTags);
+        var result = await SetBookmarkAsync(true, parameter.IsPrivate, parameter.Tags);
         IsBookmarkedDisplay = result ? HeartButtonState.Checked : HeartButtonState.Unchecked;
         if (App.AppViewModel.AppSettings.DownloadWhenBookmarked)
             await SaveAsync(parameter.Control);

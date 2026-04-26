@@ -19,7 +19,7 @@ namespace Pixeval.Views.Work;
 
 public partial class WorkView : UserControl, IDisposable
 {
-    public event EventHandler<WorkView, IWorkViewModel>? RequestAddToBookmark;
+    public event EventHandler<Control, IWorkViewModel>? RequestAddToBookmark;
 
     public ThumbnailLayoutType LayoutType
     {
@@ -148,7 +148,7 @@ public partial class WorkView : UserControl, IDisposable
         }
     }
 
-    private void WorkItem_OnRequestAddToBookmark(Control sender, IWorkViewModel e) => RequestAddToBookmark?.Invoke(this, e);
+    private void WorkItem_OnRequestAddToBookmark(Control sender, IWorkViewModel e) => RequestAddToBookmark?.Invoke(sender, e);
 
     public async void WorkItem_OnRequestOpenUserInfoPage(Control sender, IWorkViewModel e)
     {

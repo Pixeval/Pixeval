@@ -2,11 +2,13 @@
 // Licensed under the GPL-3.0 License.
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Pixeval.I18N;
 using Pixeval.Utilities;
+using Pixeval.ViewModels;
 using Pixeval.ViewModels.Viewers;
 using Pixeval.Views.Work;
 
@@ -37,16 +39,21 @@ public partial class NovelViewerPage : ContentPage
 
     private async void AddToBookmarkButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (!BookmarkTagSelector.IsVisible)
-            await BookmarkTagSelector.ResetSourceAsync();
-        BookmarkTagSelector.IsVisible = !BookmarkTagSelector.IsVisible;
+        if (BookmarkTagSelector.IsVisible)
+        {
+            BookmarkTagSelector.IsVisible = false;
+            return;
+        }
+
+        BookmarkTagSelector.IsVisible = true;
+        await BookmarkTagSelector.ResetSourceAsync();
     }
 
-    private void BookmarkTagSelector_OnTagsSelected(TagSelector sender, (bool IsPrivate, IReadOnlyList<string> Tags) e)
+    private async void BookmarkTagSelector_OnTagsSelected(TagSelector sender, (bool isPrivate, IReadOnlyList<string> tags) e)
     {
-        if (ViewModel.CurrentNovel.AddToBookmarkCommand is { } command)
+        if (ViewModel.CurrentNovel is IWorkViewModel current)
         {
-            command.Execute((e.Tags, e.IsPrivate, this));
+            await current.AddToBookmarkCommand.ExecuteAsync((e.tags, e.isPrivate, this));
             TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(
                 I18NManager.GetResource(EntryViewerPageResources.AddedToBookmark));
         }

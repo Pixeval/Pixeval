@@ -2,15 +2,21 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.ComponentModel;
+using System.Globalization;
+using Avalonia;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Pixeval.Controls;
+using Pixeval.Models.Options;
 using Pixeval.I18N;
 using Pixeval.Utilities;
+using Pixeval.ViewModels;
 using Pixeval.ViewModels.Viewers;
 using Pixeval.Views.Work;
 
@@ -45,19 +51,7 @@ public partial class IllustrationViewerPage : ContentPage
     {
         ViewModel.CurrentWorkIndex++;
     }
-
-    private void BookmarkTagSelector_OnTagsSelected(TagSelector sender, (bool IsPrivate, IReadOnlyList<string> Tags) e)
-    {
-        if (ViewModel.CurrentIllustration.AddToBookmarkCommand is { } command)
-        {
-            command.Execute((e.Tags, e.IsPrivate, this));
-            TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(
-                I18NManager.GetResource(EntryViewerPageResources.AddedToBookmark));
-        }
-
-        BookmarkTagSelector.IsVisible = false;
-    }
-
+    
     private void ImageViewerPage_OnSelectionChanged(Control sender, ImageViewerSelectionChangedEventArgs e)
     {
         EntryViewerFloatingPaneView.ShowPaneTemporarily();

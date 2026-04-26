@@ -1,72 +1,69 @@
-<ResourceDictionary
+<UserControl
+    x:Class="Pixeval.Views.Work.TagSelector"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
-    xmlns:model="using:Mako.Model"
     xmlns:utilities="using:Pixeval.Utilities"
-    xmlns:work="using:Pixeval.Views.Work">
+    xmlns:work="using:Pixeval.Views.Work"
+    x:Name="Root">
 
-    <Design.PreviewWith>
-        <StackPanel Width="400" Spacing="10">
-            <StackPanel Background="{DynamicResource SystemRegionBrush}">
-                <work:TagSelector>
-                    <work:TagSelector.TagsSource>
-                        <model:BookmarkTag Name="A" />
-                        <model:BookmarkTag Name="B" Count="2" />
-                        <model:BookmarkTag Name="C" Count="1" />
-                        <utilities:AddNewBookmarkTag />
-                    </work:TagSelector.TagsSource>
-                </work:TagSelector>
-            </StackPanel>
-        </StackPanel>
-    </Design.PreviewWith>
+    <UserControl.Styles>
+        <Style Selector="ListBox.bookmark-tag-list ListBoxItem:nth-last-child(1)">
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <ContentPresenter
+                        Content="{TemplateBinding Content}"
+                        ContentTemplate="{TemplateBinding ContentTemplate}" />
+                </ControlTemplate>
+            </Setter>
+        </Style>
+    </UserControl.Styles>
 
-    <ControlTheme x:Key="{x:Type work:TagSelector}" TargetType="{x:Type work:TagSelector}">
-        <Setter Property="Template">
-            <ControlTemplate>
-                <DockPanel
-                    HorizontalSpacing="5"
-                    LastChildFill="False"
-                    VerticalSpacing="5">
-                    <ListBox
-                        Name="PART_ListBox"
-                        DockPanel.Dock="Top"
-                        ItemsSource="{TemplateBinding TagsSource}"
-                        SelectedItems="{TemplateBinding SelectedTags}"
-                        SelectionMode="Multiple,Toggle">
-                        <ListBox.ItemContainerTheme>
-                            <ControlTheme BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="{x:Type ListBoxItem}">
-                                <Setter Property="Padding" Value="12" />
-                                <Setter Property="CornerRadius" Value="{StaticResource ControlCornerRadius}" />
-                            </ControlTheme>
-                        </ListBox.ItemContainerTheme>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate x:DataType="{x:Type utilities:AddNewBookmarkTag}">
-                                <work:AddNewBookmarkTagItem Source="{Binding}" />
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                        <ListBox.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel ItemSpacing="5" LineSpacing="5" />
-                            </ItemsPanelTemplate>
-                        </ListBox.ItemsPanel>
-                    </ListBox>
-                    <CheckBox
-                        Content="{I18N {x:Static controls:MiscResources.BookmarkTagSelectorPrivateCheckBoxContent}}"
-                        DockPanel.Dock="Left"
-                        IsChecked="{TemplateBinding IsPrivate,
-                                                    Mode=TwoWay}" />
-                    <Button
-                        Name="PART_ConfirmButton"
-                        Content="{markup:SymbolIcon Checkmark}"
-                        DockPanel.Dock="Left" />
-                    <Button
-                        Name="PART_CancelButton"
-                        Content="{markup:SymbolIcon Dismiss}"
-                        DockPanel.Dock="Left" />
-                </DockPanel>
-            </ControlTemplate>
-        </Setter>
-    </ControlTheme>
-</ResourceDictionary>
+    <Grid RowDefinitions="*,Auto" ColumnDefinitions="*,Auto" RowSpacing="10">
+        <ListBox
+            Grid.ColumnSpan="2" Grid.Row="1"
+            Classes="bookmark-tag-list"
+            IsVisible="{Binding #Root.IsLoading, Converter={x:Static BoolConverters.Not}}"
+            ItemsSource="{Binding #Root.CurrentTagsSource}"
+            SelectedItems="{Binding #Root.CurrentSelectedTags}"
+            SelectionChanged="OnListBoxSelectionChanged"
+            SelectionMode="Multiple,Toggle">
+            <ListBox.ItemContainerTheme>
+                <ControlTheme BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="Padding" Value="12" />
+                    <Setter Property="CornerRadius" Value="{StaticResource ControlCornerRadius}" />
+                </ControlTheme>
+            </ListBox.ItemContainerTheme>
+            <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type utilities:AddNewBookmarkTag}">
+                    <work:AddNewBookmarkTagItem Source="{Binding}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel ItemSpacing="5" LineSpacing="5" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox>
+        <Button
+            x:Name="ConfirmButton"
+            Grid.Column="1" Grid.Row="0"
+            HorizontalAlignment="Right"
+            Click="OnConfirmClick"
+            Content="{markup:SymbolIcon Checkmark}"
+            IsEnabled="{Binding #Root.IsLoading, Converter={x:Static BoolConverters.Not}}" />
+        <CheckBox 
+            Grid.Column="0" Grid.Row="0"
+            HorizontalAlignment="Left"
+            IsChecked="{Binding #Root.IsPrivate, Mode=TwoWay}"
+            Content="Private"/>
+        <ProgressBar
+            Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
+            Width="160"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            IsIndeterminate="True"
+            IsVisible="{Binding #Root.IsLoading}" />
+    </Grid>
+</UserControl>

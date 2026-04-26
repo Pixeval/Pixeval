@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -83,34 +85,53 @@ public partial class WorkContainer : UserControl
              scrollView.Offset = new(0, 0);
     }
 
-    private void AddAllToBookmarkButton_OnClicked(object? sender, RoutedEventArgs e)
+    private async void AddAllToBookmarkButton_OnClicked(object? sender, RoutedEventArgs e)
     {
-        OpenBookmarkTagSelector(null);
+        await ShowBookmarkTagSelectorAsync(AddAllToBookmarkButton, null).ConfigureAwait(false);
     }
 
-    private void WorkView_OnRequestAddToBookmark(WorkView sender, IWorkViewModel e)
+    private async void WorkView_OnRequestAddToBookmark(Control sender, IWorkViewModel e)
     {
-        OpenBookmarkTagSelector(e);
+        await ShowBookmarkTagSelectorAsync(sender, e).ConfigureAwait(false);
     }
 
-    private IWorkViewModel? _currentBookmarkItem;
-
-    private async void OpenBookmarkTagSelector(IWorkViewModel? viewModel)
+    private async Task ShowBookmarkTagSelectorAsync(Control placementTarget, IWorkViewModel? target)
     {
-        if (_currentBookmarkItem == viewModel)
+        if (target is null && DataContext is not ISortableEntryViewViewModel { SelectedEntries.Count: > 0 })
+            return;
+
+        await BookmarkTagSelectorFlyoutHelper.ShowAsync(
+            placementTarget,
+            GetTagSelectorWorkType(target),
+            async e =>
+            {
+                await AddToBookmarkAsync(target, e);
+            },
+            PlacementMode.Bottom);
+    }
+
+    private async Task AddToBookmarkAsync(IWorkViewModel? target, (bool isPrivate, IReadOnlyList<string> tags) e)
+    {
+        if (target is { } current)
         {
-            if (!TagSelector.IsVisible)
-                await TagSelector.ResetSourceAsync();
-            TagSelector.IsVisible = !TagSelector.IsVisible;
+            await current.AddToBookmarkCommand.ExecuteAsync((e.tags, e.isPrivate, this));
+            TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(I18NManager.GetResource(EntryViewResources.AddedToBookmark));
+            return;
         }
-        else
-        {
-            _currentBookmarkItem = viewModel;
-            TagSelector.IsVisible = false;
-            await TagSelector.ResetSourceAsync();
-            TagSelector.IsVisible = true;
-        }
+
+        if (DataContext is not ISortableEntryViewViewModel viewModel)
+            return;
+
+        foreach (var i in viewModel.SelectedEntries)
+            await i.AddToBookmarkCommand.ExecuteAsync((e.tags, e.isPrivate, this));
+        if (viewModel.SelectedEntries.Count is var c and > 0)
+            TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(I18NManager.GetResource(WorkContainerResources.AddedAllToBookmarkContentFormatted, c));
     }
+
+    private SimpleWorkType GetTagSelectorWorkType(IWorkViewModel? target)
+        => target is NovelItemViewModel || DataContext is NovelViewViewModel
+            ? SimpleWorkType.Novel
+            : SimpleWorkType.IllustrationAndManga;
 
     private async void SaveAllButton_OnClicked(object? sender, RoutedEventArgs e)
     {
@@ -144,24 +165,6 @@ public partial class WorkContainer : UserControl
     }
 
     private void RefreshButton_OnClick(object? sender, RoutedEventArgs e) => RefreshRequested?.Invoke(sender, e);
-
-    private void TagSelector_OnTagsSelected(TagSelector sender, (bool IsPrivate, IReadOnlyList<string> Tags) e)
-    {
-        if (_currentBookmarkItem is { } current)
-        {
-            current.AddToBookmarkCommand.Execute((e.Tags, e.IsPrivate, this));
-            TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(I18NManager.GetResource(EntryViewResources.AddedToBookmark));
-            return;
-        }
-
-        if (DataContext is not ISortableEntryViewViewModel viewModel)
-            return;
-
-        foreach (var i in viewModel.SelectedEntries)
-            i.AddToBookmarkCommand.Execute((e.Tags, e.IsPrivate, this));
-        if (viewModel.SelectedEntries.Count is var c and > 0)
-            TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(I18NManager.GetResource(WorkContainerResources.AddedAllToBookmarkContentFormatted, c));
-    }
 
     private void CancelSelectionButton_OnClicked(object? sender, RoutedEventArgs e)
     {
@@ -206,7 +209,6 @@ public partial class WorkContainer : UserControl
 
     public void ResetEngine(IFetchEngine<IArtworkInfo> newEngine, bool isBookmarkEnabled = true, int itemsPerPage = 20, int itemLimit = -1)
     {
-        TagSelector.IsVisible = false;
         WorkView.ResetEngine(newEngine, isBookmarkEnabled, itemsPerPage, itemLimit);
     }
 

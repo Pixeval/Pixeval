@@ -20,7 +20,7 @@ public interface IWorkViewModel
     IArtworkInfo Entry { get; }
 
     /// <inheritdoc cref="WorkEntryViewModel{T}.AddToBookmarkCommand"/>
-    IAsyncRelayCommand<(IEnumerable<string> UserTags, bool IsPrivate, Control? Control)> AddToBookmarkCommand { get; }
+    IAsyncRelayCommand<(IReadOnlyList<string> Tags, bool IsPrivate, Control? Control)> AddToBookmarkCommand { get; }
 
     /// <inheritdoc cref="WorkEntryViewModel{T}.BookmarkCommand"/>
     IAsyncRelayCommand<Control?> BookmarkCommand { get; }

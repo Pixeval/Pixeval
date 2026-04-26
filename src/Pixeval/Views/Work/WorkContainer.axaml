@@ -86,13 +86,6 @@
             </CommandBar>
         </DockPanel>
 
-        <work:TagSelector
-            x:Name="TagSelector"
-            Margin="5"
-            DockPanel.Dock="Top"
-            IsVisible="False"
-            TagsSelected="TagSelector_OnTagsSelected" />
-
         <work:WorkView
             x:Name="WorkView"
             DataContextChanged="WorkView_OnDataContextChanged"

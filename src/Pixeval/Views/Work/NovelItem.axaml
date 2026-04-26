@@ -34,7 +34,6 @@
                         IsVisible="{Binding IsBookmarkSupported}" />
                     <MenuItem
                         Click="AddToBookmark_OnClicked"
-                        Command="{Binding AddToBookmarkCommand}"
                         Header="{I18N {x:Static local:EntryItemResources.AddToBookmark}}"
                         Icon="{markup1:SymbolIconEx Bookmark,
                                                     IconVariant={Binding IsBookmarkedDisplay,

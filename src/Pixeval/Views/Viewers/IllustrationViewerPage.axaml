@@ -10,7 +10,6 @@
     xmlns:pixeval="using:Pixeval"
     xmlns:ss="using:SmoothScroll.Avalonia.Controls"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
-    xmlns:work="using:Pixeval.Views.Work"
     x:DataType="{x:Type viewers:IllustrationViewerPageViewModel}"
     Header="{Binding CurrentIllustration.Entry.Title}"
     mc:Ignorable="d"
@@ -144,14 +143,6 @@
                 </Border>
             </controls:FloatingPaneView.Pane>
             <DockPanel>
-                <!--  BookmarkTagSelector  -->
-                <work:TagSelector
-                    x:Name="BookmarkTagSelector"
-                    Margin="5"
-                    DockPanel.Dock="Top"
-                    IsVisible="True"
-                    TagsSelected="BookmarkTagSelector_OnTagsSelected" />
-
                 <Panel Background="Transparent">
                     <!--  图片查看器  -->
 
