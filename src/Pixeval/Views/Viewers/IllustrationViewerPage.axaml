@@ -57,6 +57,8 @@
             </Style>
         </Style>
 
+        <!-- TODO: This is broken again, fix it later
+         
         <Style Selector="local|SwipeImageViewer#ImageViewerPage">
             <Setter Property="ClipToBounds" Value="False" />
 
@@ -75,7 +77,8 @@
                     </Style>
                 </Style>
             </Style>
-        </Style>
+        </Style>-->
+        
         <Style Selector="local|ContinuousImageViewer#ImageViewerPage">
             <Setter Property="ClipToBounds" Value="False" />
 
