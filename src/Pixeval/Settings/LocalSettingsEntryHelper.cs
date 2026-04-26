@@ -72,7 +72,7 @@ public static class LocalSettingsEntryHelper
             .Add<IPSetSettingsEntry<AppSettings>, IPListInput>()
             .Add<DomainFrontingSettingsEntry<AppSettings>, DomainFrontingSettingsExpander>()
             .Add<DownloadMacroAppSettingsEntry, DownloadMacroSettingsExpander>()
-            .Add<MultiValuesEntry<AppSettings>, MultiValuesAppSettingsExpander>()
+            .Add<MultiValuesEntry<AppSettings>, MultiValuesSettingsExpander>()
 
             .Add<ExtensionSettingsEntry<IStringSettingsExtension, string>, StringSettingsCard>()
             .Add<ExtensionDoubleSettingsEntry, DoubleSettingsCard>()
@@ -160,7 +160,7 @@ public static class LocalSettingsEntryHelper
         public ISettingsGroupBuilder<TSettings> Enum<TEnum>(
             WorkTypeEnum workType,
             Expression<Func<TSettings, TEnum>> property,
-            IReadOnlyList<IReadOnlyEnumStringPair<TEnum>> enumItems,
+            IReadOnlyList<IReadOnlyStringPair<TEnum>> enumItems,
             Action<EnumSettingsEntry<TSettings, TEnum>>? config = null)
         {
             return builder.Add(new EnumSettingsEntry<TSettings, TEnum>(builder.Settings, property, enumItems), entry =>

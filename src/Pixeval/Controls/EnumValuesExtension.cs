@@ -12,7 +12,7 @@ using WinUI3Utilities;
 
 namespace Pixeval.Controls;
 
-[MarkupExtensionReturnType(ReturnType = typeof(IReadOnlyList<IReadOnlyEnumStringPair<object>>))]
+[MarkupExtensionReturnType(ReturnType = typeof(IReadOnlyList<IReadOnlyStringPair<object>>))]
 public sealed partial class EnumValuesExtension : MarkupExtension
 {
     public EnumValuesEnum Type { get; set; }

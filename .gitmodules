@@ -1,6 +1,12 @@
 [submodule "src/Mako"]
 	path = src/Mako
 	url = https://github.com/Pixeval/Mako.git
+	branch = master
 [submodule "src/Imouto"]
 	path = src/Imouto
 	url = https://github.com/Pixeval/Imouto.git
+	branch = master
+[submodule "src/AutoSettingsPage"]
+	path = src/AutoSettingsPage
+	url = https://github.com/Pixeval/AutoSettingsPage.git
+	branch = master

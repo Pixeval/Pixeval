@@ -9,6 +9,7 @@ using AutoSettingsPage.Models;
 using Pixeval.Extensions.Common;
 using Pixeval.Extensions.Common.Settings;
 using Windows.Foundation.Collections;
+using Pixeval.Controls;
 
 namespace Pixeval.Extensions;
 
@@ -86,5 +87,5 @@ public partial class ExtensionEnumSettingsEntry(IEnumSettingsExtension extension
     : ExtensionSettingsEntry<IEnumSettingsExtension, object>(extension, value, getDefaultValue, o => onValueChanged((int) o)), IEnumSettingsEntry<object>
 {
     /// <inheritdoc />
-    public IReadOnlyList<IReadOnlyEnumStringPair<object>> EnumItems { get; } = [.. extension.GetEnumKeyValues().Select(t => new EnumStringPair<object>(t.Value, t.Key))];
+    public IReadOnlyList<IReadOnlyStringPair<object>> EnumItems { get; } = [.. extension.GetEnumKeyValues().Select(t => new StringPair(t.Value, t.Key))];
 }

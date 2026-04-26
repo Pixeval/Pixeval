@@ -19,7 +19,7 @@ public abstract class LocalizationMetadataGeneratorBase
 {
     public static ClassDeclarationSyntax GetClassDeclaration(string typeFullName, string className, string resourceTypeName, Dictionary<string, List<Son>> members, bool isPartial)
     {
-        const string enumStringPairName = "global::AutoSettingsPage.EnumStringPair<object>";
+        const string enumStringPairName = "global::Pixeval.Controls.StringPair";
         const string getLocalizationKey = "GetLocalizationKey";
         var distinctMembers = members.SelectMany(kvp => kvp.Value).Distinct().ToList();
         const string getResource = "GetResource";
@@ -78,7 +78,7 @@ public abstract class LocalizationMetadataGeneratorBase
                         .. members.Select(member =>
                             PropertyDeclaration(
                                     ParseTypeName(
-                                        $"global::System.Collections.Generic.IReadOnlyList<global::AutoSettingsPage.IReadOnlyEnumStringPair<object>>"),
+                                        $"global::System.Collections.Generic.IReadOnlyList<global::AutoSettingsPage.IReadOnlyStringPair<object>>"),
                                     member.Key + "Pairs")
                                 .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword))
                                 .WithExpressionBody(ArrowExpressionClause(CollectionExpression()

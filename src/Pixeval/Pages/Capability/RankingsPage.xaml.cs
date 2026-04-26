@@ -19,9 +19,9 @@ namespace Pixeval.Pages.Capability;
 
 public sealed partial class RankingsPage : IScrollViewHost
 {
-    private static readonly IReadOnlyList<IReadOnlyEnumStringPair<object>> _IllustrationRankOption = RankOption.IllustrationPairs;
+    private static readonly IReadOnlyList<IReadOnlyStringPair<object>> _IllustrationRankOption = RankOption.IllustrationPairs;
 
-    private static readonly IReadOnlyList<IReadOnlyEnumStringPair<object>> _NovelRankOption = RankOption.NovelPairs;
+    private static readonly IReadOnlyList<IReadOnlyStringPair<object>> _NovelRankOption = RankOption.NovelPairs;
 
     public RankingsPage()
     {
@@ -49,12 +49,12 @@ public sealed partial class RankingsPage : IScrollViewHost
         if (SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>() is SimpleWorkType.IllustAndManga)
         {
             RankOptionComboBox.ItemsSource = _IllustrationRankOption;
-            RankOptionComboBox.SelectedItem = _IllustrationRankOption.First(r => Equals(r.Enum, App.AppViewModel.AppSettings.IllustrationRankOption));
+            RankOptionComboBox.SelectedItem = _IllustrationRankOption.First(r => Equals(r.Value, App.AppViewModel.AppSettings.IllustrationRankOption));
         }
         else
         {
             RankOptionComboBox.ItemsSource = _NovelRankOption;
-            RankOptionComboBox.SelectedItem = _NovelRankOption.First(r => Equals(r.Enum, App.AppViewModel.AppSettings.NovelRankOption));
+            RankOptionComboBox.SelectedItem = _NovelRankOption.First(r => Equals(r.Value, App.AppViewModel.AppSettings.NovelRankOption));
         }
     }
 
