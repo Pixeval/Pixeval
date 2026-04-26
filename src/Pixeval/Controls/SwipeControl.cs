@@ -11,7 +11,7 @@ public class SwipeControl : TransitioningContentControl
     /// <inheritdoc />
     protected override Type StyleKeyOverride => typeof(TransitioningContentControl);
 
-    public event EventHandler<SwipeControl, SwipeControlSelectionChangedEventArgs>? SelectionChanged; 
+    public event EventHandler<Control, ImageViewerSelectionChangedEventArgs>? SelectionChanged; 
 
     public static readonly StyledProperty<IList> ItemsSourceProperty = AvaloniaProperty.Register<SwipeControl, IList>(nameof(ItemsSource));
 
@@ -27,6 +27,15 @@ public class SwipeControl : TransitioningContentControl
     {
         get => GetValue(SelectedIndexProperty);
         set => SetValue(SelectedIndexProperty, value);
+    }
+
+    public static readonly StyledProperty<bool> IsTransitionDirectionReversedProperty =
+        AvaloniaProperty.Register<SwipeControl, bool>(nameof(IsTransitionDirectionReversed));
+
+    public bool IsTransitionDirectionReversed
+    {
+        get => GetValue(IsTransitionDirectionReversedProperty);
+        set => SetValue(IsTransitionDirectionReversedProperty, value);
     }
 
     public static readonly StyledProperty<IDataTemplate?> ItemTemplateProperty = AvaloniaProperty.Register<SwipeControl, IDataTemplate?>(nameof(ItemTemplate));
@@ -56,7 +65,8 @@ public class SwipeControl : TransitioningContentControl
         {
             var oldItem = change.GetOldValue<int>();
             var newItem = change.GetNewValue<int>();
-            IsTransitionReversed = oldItem > newItem;
+            var isTransitionReversed = oldItem > newItem;
+            IsTransitionReversed = IsTransitionDirectionReversed ? !isTransitionReversed : isTransitionReversed;
         }
 
         if (ItemTemplate is null || !ItemTemplate.Match(item))
@@ -68,11 +78,11 @@ public class SwipeControl : TransitioningContentControl
             Content = content;
         }
 
-        SelectionChanged?.Invoke(this, new SwipeControlSelectionChangedEventArgs(SelectedIndex, item));
+        SelectionChanged?.Invoke(this, new ImageViewerSelectionChangedEventArgs(SelectedIndex, item));
     }
 }
 
-public class SwipeControlSelectionChangedEventArgs(int newIndex, object? newItem) : EventArgs
+public class ImageViewerSelectionChangedEventArgs(int newIndex, object? newItem) : EventArgs
 {
     public int NewIndex { get; } = newIndex;
 

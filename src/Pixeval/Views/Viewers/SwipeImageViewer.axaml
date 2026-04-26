@@ -1,4 +1,4 @@
-<controls:SwipeControl
+<UserControl
     x:Class="Pixeval.Views.Viewers.SwipeImageViewer"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,18 +9,26 @@
     xmlns:viewers1="using:Pixeval.Views.Viewers"
     x:DataType="{x:Type viewers:ImageViewerViewModel}"
     DataContext="{x:Null}"
-    ItemsSource="{Binding Images}"
-    SelectedIndex="{Binding SelectedPageIndex}"
-    SelectionChanged="SelectingMultiPage_OnSelectionChanged"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
-    <controls:SwipeControl.PageTransition>
-        <PageSlide Orientation="Horizontal" Duration="0:0:0.3" />
-    </controls:SwipeControl.PageTransition>
-    <controls:SwipeControl.ItemTemplate>
-        <DataTemplate DataType="{x:Type viewers:SingleViewerViewModel}">
-            <viewers1:SingleImageViewer />
-        </DataTemplate>
-    </controls:SwipeControl.ItemTemplate>
-</controls:SwipeControl>
+    <controls:SwipeControl
+        x:Name="SwipeContent"
+        ItemsSource="{Binding Images}"
+        PropertyChanged="SwipeContent_OnPropertyChanged"
+        SelectedIndex="{Binding SelectedPageIndex}"
+        SelectionChanged="SelectingMultiPage_OnSelectionChanged">
+        <controls:SwipeControl.PageTransition>
+            <PageSlide Orientation="Horizontal" Duration="0:0:0.3" />
+        </controls:SwipeControl.PageTransition>
+        <controls:SwipeControl.ItemTemplate>
+            <DataTemplate DataType="{x:Type viewers:SingleViewerViewModel}">
+                <viewers1:SingleImageViewer
+                    IsMirrored="{Binding $parent[viewers1:SwipeImageViewer].IsMirrored, Mode=TwoWay}"
+                    IsPlaying="{Binding $parent[viewers1:SwipeImageViewer].IsPlaying, Mode=TwoWay}"
+                    RotationDegree="{Binding $parent[viewers1:SwipeImageViewer].RotationDegree, Mode=TwoWay}"
+                    ZoomFactor="{Binding $parent[viewers1:SwipeImageViewer].ZoomFactor, Mode=TwoWay}" />
+            </DataTemplate>
+        </controls:SwipeControl.ItemTemplate>
+    </controls:SwipeControl>
+</UserControl>

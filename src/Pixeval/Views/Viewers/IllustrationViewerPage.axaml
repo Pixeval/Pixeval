@@ -57,18 +57,33 @@
             </Style>
         </Style>
 
-        <Style Selector="TransitioningContentControl#ImageViewerPage">
+        <Style Selector="local|SwipeImageViewer#ImageViewerPage">
             <Setter Property="ClipToBounds" Value="False" />
 
-            <Style Selector="^ local|SingleImageViewer">
+            <Style Selector="^ controls|SwipeControl#SwipeContent">
                 <Setter Property="ClipToBounds" Value="False" />
 
-                <Style Selector="^ ss|ScrollView#ViewerScrollView">
+                <Style Selector="^ local|SingleImageViewer">
                     <Setter Property="ClipToBounds" Value="False" />
 
-                    <Style Selector="^ /template/ ss|ScrollPresenter#PART_ContentPresenter">
+                    <Style Selector="^ ss|ScrollView#ViewerScrollView">
                         <Setter Property="ClipToBounds" Value="False" />
+
+                        <Style Selector="^ /template/ ss|ScrollPresenter#PART_ContentPresenter">
+                            <Setter Property="ClipToBounds" Value="False" />
+                        </Style>
                     </Style>
+                </Style>
+            </Style>
+        </Style>
+        <Style Selector="local|ContinuousImageViewer#ImageViewerPage">
+            <Setter Property="ClipToBounds" Value="False" />
+
+            <Style Selector="^ ss|ScrollView#ViewerScrollView">
+                <Setter Property="ClipToBounds" Value="False" />
+
+                <Style Selector="^ /template/ ss|ScrollPresenter#PART_ContentPresenter">
+                    <Setter Property="ClipToBounds" Value="False" />
                 </Style>
             </Style>
         </Style>
@@ -112,9 +127,6 @@
             需要等Avalonia行为改了，或者用其它workaround修复
             因为是局部的KeyBindings，目前快捷键需要焦点在该ContentPage内部才会激活
         -->
-        <KeyBinding Command="{Binding #ImageViewerPage.CurrentPage.PlayPauseCommand}" Gesture="Space" />
-        <KeyBinding Command="{Binding #ImageViewerPage.CurrentPage.CopyCommand}" Gesture="Ctrl+C" />
-        <KeyBinding Command="{Binding #ImageViewerPage.CurrentPage.SaveCommand}" Gesture="Ctrl+S" />
     </ContentPage.KeyBindings>
 
     <Grid>
@@ -136,10 +148,11 @@
 
                 <Panel Background="Transparent">
                     <!--  图片查看器  -->
-                    <local:SwipeImageViewer
-                        x:Name="ImageViewerPage"
-                        DataContext="{Binding CurrentImage}"
-                        SelectionChanged="ImageViewerPage_OnSelectionChanged" />
+
+                    <ContentControl
+                        x:Name="ImageViewerPageHost"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch" />
 
                     <!--  左翻页按钮  -->
                     <controls:PageButton
@@ -201,32 +214,31 @@
                                 Theme="{StaticResource FloatingCommandBarTheme}">
                                 <CommandBar.PrimaryCommands>
                                     <CommandBarButton
-                                        Command="{Binding #ImageViewerPage.CurrentPage.RotateCounterclockwiseCommand}"
+                                        x:Name="RotateCounterclockwiseButton"
                                         Content="{markup:SymbolIcon ArrowRotateCounterclockwise,
                                                                     FontSize=16}"
                                         ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.RotateCounterclockwise}}" />
                                     <CommandBarToggleButton
-                                        Command="{Binding #ImageViewerPage.CurrentPage.MirrorCommand}"
+                                        x:Name="MirrorButton"
                                         Content="{markup:SymbolIcon FlipHorizontal,
                                                                     FontSize=16}"
-                                        IsChecked="{Binding #ImageViewerPage.CurrentPage.IsMirrored, Mode=TwoWay}"
                                         ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.Mirror}}" />
                                     <CommandBarButton
-                                        Command="{Binding #ImageViewerPage.CurrentPage.RotateClockwiseCommand}"
+                                        x:Name="RotateClockwiseButton"
                                         Content="{markup:SymbolIcon ArrowRotateClockwise,
                                                                     FontSize=16}"
                                         ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.RotateClockwise}}" />
-                                    <CommandBarSeparator />
+                                    <CommandBarSeparator x:Name="SwipeTransformSeparator" />
                                     <CommandBarButton
-                                        Command="{Binding #ImageViewerPage.CurrentPage.ZoomOutCommand}"
+                                        x:Name="ZoomOutButton"
                                         Content="{markup:SymbolIcon ZoomOut,
                                                                     FontSize=16}"
                                         ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomOut}}" />
                                     <controls:CommandBarElementContainer>
-                                        <TextBlock Text="{Binding #ImageViewerPage.CurrentPage.ZoomFactor, StringFormat='{}{0:P0}'}" />
+                                        <TextBlock x:Name="ZoomFactorTextBlock" />
                                     </controls:CommandBarElementContainer>
                                     <CommandBarButton
-                                        Command="{Binding #ImageViewerPage.CurrentPage.ZoomInCommand}"
+                                        x:Name="ZoomInButton"
                                         Content="{markup:SymbolIcon ZoomIn,
                                                                     FontSize=16}"
                                         ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomIn}}" />

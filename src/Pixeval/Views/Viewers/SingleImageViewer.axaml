@@ -13,27 +13,24 @@
     x:DataType="{x:Type vm:SingleViewerViewModel}">
     <Panel>
         <!--  图片查看器（缩放/平移）  -->
+        <!--  TODO: Auto Auto ContentOrientation="Both"  -->
         <scroll:ScrollView
             x:Name="ViewerScrollView"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
-            HorizontalContentAlignment="Stretch"
-            VerticalContentAlignment="Stretch"
             Focusable="True"
             HorizontalScrollBarVisibility="Hidden"
             IsVisible="{Binding LoadSuccessfully}"
             IsZoomEnabled="True"
-            VerticalScrollBarVisibility="Hidden"
-            ZoomFactor="{Binding $parent[viewers:SingleImageViewer].ZoomFactor, Mode=OneWayToSource}">
+            PropertyChanged="ViewerScrollView_OnPropertyChanged"
+            VerticalScrollBarVisibility="Hidden">
             <ai:AnimatedImage
                 x:Name="ImageViewer"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
                 IsPlaying="{Binding $parent[viewers:SingleImageViewer].IsPlaying}"
                 RenderTransformOrigin="50%,50%"
                 SizeChanged="ImageViewerOnSizeChanged"
                 Source="{Binding DisplaySource}"
-                Stretch="Uniform">
+                Stretch="None">
                 <ai:AnimatedImage.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform ScaleX="{Binding $parent[viewers:SingleImageViewer].MirrorScaleX}" />

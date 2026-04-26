@@ -73,7 +73,7 @@ public class PagePreviewSlider : TemplatedControl
     {
         get;
         private set => SetAndRaise(IndicatorTextProperty, ref field, value);
-    } = string.Empty;
+    } = "";
 
     public int PreviewIndex
     {
@@ -229,12 +229,8 @@ public class PagePreviewSlider : TemplatedControl
 
     private void DetachTemplateHandlers()
     {
-        if (_track is not null)
-            _track.SizeChanged -= TemplatePartOnSizeChanged;
-
-        if (_thumb is not null)
-            _thumb.SizeChanged -= TemplatePartOnSizeChanged;
-
+        _track?.SizeChanged -= TemplatePartOnSizeChanged;
+        _thumb?.SizeChanged -= TemplatePartOnSizeChanged;
         _track = null;
         _selectedTrack = null;
         _thumb = null;
@@ -289,7 +285,7 @@ public class PagePreviewSlider : TemplatedControl
             return;
 
         var point = e.GetPosition(_track);
-        _previewPointerX = Clamp(point.X, 0, _track.Bounds.Width);
+        _previewPointerX = Math.Clamp(point.X, 0, _track.Bounds.Width);
         var index = GetIndexFromTrackX(_previewPointerX);
         _isHovering = true;
         PreviewIndex = index;
@@ -318,8 +314,7 @@ public class PagePreviewSlider : TemplatedControl
         if (_previewPopup is null)
             return;
 
-        if (_previewLabel is not null)
-            _previewLabel.Text = IndicatorText;
+        _previewLabel?.Text = IndicatorText;
 
         if (_previewContent is not null)
         {
@@ -346,7 +341,7 @@ public class PagePreviewSlider : TemplatedControl
         var popupX = _isHovering
             ? _previewPointerX
             : GetCenterX(CoerceIndex(SelectedIndex), trackWidth);
-        _previewPopup.HorizontalOffset = popupX - trackWidth / 2d;
+        _previewPopup.HorizontalOffset = popupX - (trackWidth / 2d);
     }
 
     private void UpdateVisualState()
@@ -365,8 +360,8 @@ public class PagePreviewSlider : TemplatedControl
 
         _selectedTrack?.Width = Math.Clamp(center, 0, trackWidth);
 
-        var thumbLeft = center - _thumb.Bounds.Width / 2d;
-        Canvas.SetLeft(_thumb, Clamp(thumbLeft, 0, Math.Max(0, _thumbCanvas.Bounds.Width - _thumb.Bounds.Width)));
+        var thumbLeft = center - (_thumb.Bounds.Width / 2d);
+        Canvas.SetLeft(_thumb, Math.Clamp(thumbLeft, 0, Math.Max(0, _thumbCanvas.Bounds.Width - _thumb.Bounds.Width)));
 
         UpdatePreviewPopupPosition();
     }
@@ -384,7 +379,7 @@ public class PagePreviewSlider : TemplatedControl
         if (ItemsCount <= 1 || _track is null || _track.Bounds.Width <= 0)
             return 0;
 
-        var normalized = Clamp(trackX / _track.Bounds.Width, 0, 1);
+        var normalized = Math.Clamp(trackX / _track.Bounds.Width, 0, 1);
         return CoerceIndex((int)Math.Round(normalized * (ItemsCount - 1), MidpointRounding.AwayFromZero));
     }
 
@@ -414,7 +409,4 @@ public class PagePreviewSlider : TemplatedControl
             : CoerceIndex(SelectedIndex);
         return $"{activeIndex + 1}/{ItemsCount}";
     }
-
-    private static double Clamp(double value, double min, double max)
-        => value < min ? min : value > max ? max : value;
 }

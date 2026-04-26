@@ -16,7 +16,6 @@ using FluentIcons.Common;
 using Mako;
 using Mako.Global.Enum;
 using Mako.Net;
-using Pixeval.Attributes;
 using Pixeval.I18N;
 using Pixeval.Models.Options;
 using static Pixeval.AppSettingsResources;
@@ -133,11 +132,14 @@ public record AppSettings
     [SettingsEntry(Symbol.CodeBlock, TargetAPIPlatformEntryHeader, TargetAPIPlatformEntryDescription)]
     public TargetFilter TargetFilter { get; set; } = TargetFilter.ForAndroid;
 
-    [SettingsEntry(Symbol.Orientation, ThumbnailDirectionEntryHeader, ThumbnailDirectionEntryDescription)]
-    public ThumbnailDirection ThumbnailDirection { get; set; } = ThumbnailDirection.Portrait;
+    [SettingsEntry(Symbol.GlanceHorizontal, ThumbnailLayoutTypeEntryHeader, ThumbnailLayoutTypeEntryDescription)]
+    public ThumbnailLayoutType ThumbnailLayoutType { get; set; } = ThumbnailLayoutType.LinedFlow;
 
-    [SettingsEntry(Symbol.GlanceHorizontal, ItemsViewLayoutTypeEntryHeader, ItemsViewLayoutTypeEntryDescription)]
-    public ItemsViewLayoutType ItemsViewLayoutType { get; set; } = ItemsViewLayoutType.LinedFlow;
+    [SettingsEntry(Symbol.CardUiPortraitFlip, BrowseModeHeader, BrowseModeDescription)]
+    public BrowseMode BrowseMode { get; set; } = BrowseMode.Swipe;
+
+    [SettingsEntry(Symbol.ArrowBetweenDown, BrowseDirectionHeader, BrowseDirectionDescription)]
+    public BrowseDirection BrowseDirection { get; set; } = BrowseDirection.LeftRight;
 
     [SettingsEntry(Symbol.TagDismiss, BlockedTagsEntryHeader, BlockedTagsEntryDescription, BlockedTagsEntryPlaceholder)]
     public ObservableCollection<string> BlockedTags { get; set; } = [];
@@ -313,23 +315,3 @@ public record AppSettings
 // MultiStringsAppSettingsEntry 使用 ObservableCollection<string>
 [JsonSerializable(typeof(ObservableCollection<string>))]
 public partial class SettingsSerializerContext : JsonSerializerContext;
-
-[LocalizationMetadata]
-public enum ItemsViewLayoutType
-{
-    [LocalizedResource(AdvancedItemsViewResources.LinedFlow)]
-    LinedFlow,
-
-    [LocalizedResource(AdvancedItemsViewResources.Grid)]
-    Grid,
-
-    VerticalUniformStack,
-
-    HorizontalUniformStack,
-
-    VerticalStack,
-
-    HorizontalStack,
-
-    Staggered
-}

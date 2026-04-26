@@ -1,8 +1,9 @@
-﻿// Copyright (c) Pixeval.
+// Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
 using Mako.Global.Enum;
 using Pixeval.AppManagement;
+using Pixeval.Models.Options;
 
 namespace Pixeval.Views;
 
@@ -18,5 +19,5 @@ public static class PixevalSettings
     
     public static TargetFilter TargetFilter => Settings.TargetFilter;
     
-    public static ItemsViewLayoutType LayoutType => Settings.ItemsViewLayoutType;
+    public static ThumbnailLayoutType LayoutType => Settings.ThumbnailLayoutType;
 }

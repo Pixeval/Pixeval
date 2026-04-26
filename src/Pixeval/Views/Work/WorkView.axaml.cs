@@ -11,6 +11,7 @@ using Mako.Engine;
 using Mako.Model;
 using Misaki;
 using Pixeval.AppManagement;
+using Pixeval.Models.Options;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
 using Pixeval.Views.Viewers;
@@ -21,7 +22,7 @@ public partial class WorkView : UserControl, IDisposable
 {
     public event EventHandler<WorkView, IWorkViewModel>? RequestAddToBookmark;
 
-    public ItemsViewLayoutType LayoutType
+    public ThumbnailLayoutType LayoutType
     {
         get;
         set
@@ -40,10 +41,10 @@ public partial class WorkView : UserControl, IDisposable
 
     private void UpdateLayoutPseudoClasses()
     {
-        var actualLayoutType = DataContext is NovelViewViewModel ? ItemsViewLayoutType.Grid : LayoutType;
-        PseudoClasses.Set(":linedFlow", actualLayoutType is ItemsViewLayoutType.LinedFlow);
-        PseudoClasses.Set(":verticalStack", actualLayoutType is ItemsViewLayoutType.VerticalStack);
-        PseudoClasses.Set(":grid", actualLayoutType is ItemsViewLayoutType.Grid);
+        var actualLayoutType = DataContext is NovelViewViewModel ? ThumbnailLayoutType.Grid : LayoutType;
+        PseudoClasses.Set(":linedFlow", actualLayoutType is ThumbnailLayoutType.LinedFlow);
+        PseudoClasses.Set(":verticalStack", actualLayoutType is ThumbnailLayoutType.VerticalStack);
+        PseudoClasses.Set(":grid", actualLayoutType is ThumbnailLayoutType.Grid);
     }
 
     private async void WorkItem_OnTapped(object? sender, TappedEventArgs tappedEventArgs)

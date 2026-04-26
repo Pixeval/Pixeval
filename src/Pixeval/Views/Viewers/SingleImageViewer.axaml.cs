@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.ViewModels.Viewers;
+using SmoothScroll.Avalonia.Controls;
 
 namespace Pixeval.Views.Viewers;
 
@@ -132,10 +133,10 @@ public partial class SingleImageViewer : UserControl
     private void RotateCounterclockwise() => RotationDegree = (RotationDegree - 90 + 360) % 360;
 
     [RelayCommand(CanExecute = nameof(CanManipulateImage))]
-    private void ZoomIn() => ZoomFactor = Math.Min(10, ZoomFactor * 1.2);
+    private void ZoomIn() => ZoomFactor *= 1.2;
 
     [RelayCommand(CanExecute = nameof(CanManipulateImage))]
-    private void ZoomOut() => ZoomFactor = Math.Max(0.1, ZoomFactor / 1.2);
+    private void ZoomOut() => ZoomFactor /= 1.2;
 
     [RelayCommand(CanExecute = nameof(CanPlayGif))]
     private void PlayPause() => IsPlaying = !IsPlaying;
@@ -220,7 +221,6 @@ public partial class SingleImageViewer : UserControl
             var old = ViewerScrollView?.ZoomFactor ?? 1;
             if (old != value)
                 ViewerScrollView?.ZoomTo(value);
-            RaisePropertyChanged(ZoomFactorProperty, old, value);
         }
     }
 
@@ -228,4 +228,10 @@ public partial class SingleImageViewer : UserControl
     /// 镜像时为-1，否则为1
     /// </summary>
     public double MirrorScaleX => IsMirrored ? -1 : 1;
+
+    private void ViewerScrollView_OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property == ScrollView.ZoomFactorProperty)
+            RaisePropertyChanged(ZoomFactorProperty, e.GetOldValue<double>(), e.GetNewValue<double>());
+    }
 }

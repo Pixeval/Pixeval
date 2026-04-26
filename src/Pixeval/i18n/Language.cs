@@ -29,12 +29,6 @@ namespace Pixeval
         public const string ActivationFailedContentFormatted = "Activations.ActivationFailedContentFormatted";
         public const string ActivationFailedTitle = "Activations.ActivationFailedTitle";
     }
-    public static class AdvancedItemsViewResources
-    {
-        public const string Grid = "AdvancedItemsView.Grid";
-        public const string LinedFlow = "AdvancedItemsView.LinedFlow";
-        public const string LoadingMore = "AdvancedItemsView.LoadingMore";
-    }
     public static class AppSettingsResources
     {
         public const string AppFontFamilyEntryDescription = "AppSettings.AppFontFamilyEntry.Description";
@@ -46,6 +40,10 @@ namespace Pixeval
         public const string BlockedTagsEntryDescription = "AppSettings.BlockedTagsEntry.Description";
         public const string BlockedTagsEntryHeader = "AppSettings.BlockedTagsEntry.Header";
         public const string BlockedTagsEntryPlaceholder = "AppSettings.BlockedTagsEntry.Placeholder";
+        public const string BrowseDirectionDescription = "AppSettings.BrowseDirection.Description";
+        public const string BrowseDirectionHeader = "AppSettings.BrowseDirection.Header";
+        public const string BrowseModeDescription = "AppSettings.BrowseMode.Description";
+        public const string BrowseModeHeader = "AppSettings.BrowseMode.Header";
         public const string DefaultSearchSortOptionEntryDescription = "AppSettings.DefaultSearchSortOptionEntry.Description";
         public const string DefaultSearchSortOptionEntryHeader = "AppSettings.DefaultSearchSortOptionEntry.Header";
         public const string DefaultSearchTagMatchOptionEntryDescription = "AppSettings.DefaultSearchTagMatchOptionEntry.Description";
@@ -63,8 +61,6 @@ namespace Pixeval
         public const string ImageMirrorServerEntryDescription = "AppSettings.ImageMirrorServerEntry.Description";
         public const string ImageMirrorServerEntryHeader = "AppSettings.ImageMirrorServerEntry.Header";
         public const string ImageMirrorServerEntryPlaceholder = "AppSettings.ImageMirrorServerEntry.Placeholder";
-        public const string ItemsViewLayoutTypeEntryDescription = "AppSettings.ItemsViewLayoutTypeEntry.Description";
-        public const string ItemsViewLayoutTypeEntryHeader = "AppSettings.ItemsViewLayoutTypeEntry.Header";
         public const string LossyImageDownloadQualityEntryDescription = "AppSettings.LossyImageDownloadQualityEntry.Description";
         public const string LossyImageDownloadQualityEntryHeader = "AppSettings.LossyImageDownloadQualityEntry.Header";
         public const string MaxDownloadConcurrencyLevelEntryDescription = "AppSettings.MaxDownloadConcurrencyLevelEntry.Description";
@@ -119,6 +115,8 @@ namespace Pixeval
         public const string ThemeEntryHeader = "AppSettings.ThemeEntry.Header";
         public const string ThumbnailDirectionEntryDescription = "AppSettings.ThumbnailDirectionEntry.Description";
         public const string ThumbnailDirectionEntryHeader = "AppSettings.ThumbnailDirectionEntry.Header";
+        public const string ThumbnailLayoutTypeEntryDescription = "AppSettings.ThumbnailLayoutTypeEntry.Description";
+        public const string ThumbnailLayoutTypeEntryHeader = "AppSettings.ThumbnailLayoutTypeEntry.Header";
         public const string UseFileCacheEntryDescription = "AppSettings.UseFileCacheEntry.Description";
         public const string UseFileCacheEntryHeader = "AppSettings.UseFileCacheEntry.Header";
         public const string UseSearchEndDateEntryDescription = "AppSettings.UseSearchEndDateEntry.Description";
@@ -134,6 +132,17 @@ namespace Pixeval
     public static class BookmarksPageResources
     {
         public const string TagComboBoxPlaceholderText = "BookmarksPage.TagComboBox.PlaceholderText";
+    }
+    public static class BrowseExperienceResources
+    {
+        public const string BottomUp = "BrowseExperience.BottomUp";
+        public const string Continuous = "BrowseExperience.Continuous";
+        public const string Grid = "BrowseExperience.Grid";
+        public const string LeftRight = "BrowseExperience.LeftRight";
+        public const string LinedFlow = "BrowseExperience.LinedFlow";
+        public const string RightLeft = "BrowseExperience.RightLeft";
+        public const string Swipe = "BrowseExperience.Swipe";
+        public const string TopDown = "BrowseExperience.TopDown";
     }
     public static class CommentRepliesBlockResources
     {
@@ -582,8 +591,6 @@ namespace Pixeval
         public const string TargetFilterForAndroid = "Misc.TargetFilterForAndroid";
         public const string TargetFilterForIOS = "Misc.TargetFilterForIOS";
         public const string Thin = "Misc.Thin";
-        public const string ThumbnailDirectionLandscape = "Misc.ThumbnailDirectionLandscape";
-        public const string ThumbnailDirectionPortrait = "Misc.ThumbnailDirectionPortrait";
         public const string Tiff = "Misc.Tiff";
         public const string UnexpectedBehavior = "Misc.UnexpectedBehavior";
         public const string Unfollow = "Misc.Unfollow";

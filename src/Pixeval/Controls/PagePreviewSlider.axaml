@@ -10,9 +10,7 @@
         <Setter Property="Padding" Value="0" />
         <Setter Property="Template">
             <ControlTemplate>
-                <Border
-                    Background="Transparent"
-                    Padding="{TemplateBinding Padding}">
+                <Border Padding="{TemplateBinding Padding}" Background="Transparent">
                     <Grid Height="14">
                         <Border
                             x:Name="PART_Track"

@@ -1,0 +1,10 @@
+{
+  "LinedFlow": "流式布局",
+  "Grid": "网格布局",
+  "Swipe": "翻页",
+  "Continuous": "连续",
+  "LeftRight": "从左到右",
+  "RightLeft": "从右到左",
+  "TopDown": "从上到下",
+  "BottomUp": "从下到上"
+}

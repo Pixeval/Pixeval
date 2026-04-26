@@ -63,8 +63,9 @@ public class SettingsPageViewModel : ViewModelBase
                     entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.Cookie = t))
             .NewGroup(SettingsEntryCategory.BrowsingExperience)
             .Config(group => group
-                .Enum(t => t.ThumbnailDirection, ThumbnailDirectionExtension.Items)
-                .Enum(t => t.ItemsViewLayoutType, ItemsViewLayoutTypeExtension.Items)
+                .Enum(t => t.ThumbnailLayoutType, ThumbnailLayoutTypeExtension.Items)
+                .Enum(t => t.BrowseMode, BrowseModeExtension.Items)
+                .Enum(t => t.BrowseDirection, BrowseDirectionExtension.Items)
                 .Enum(t => t.TargetFilter, TargetFilterExtension.Items)
                 .Collection(t => t.BlockedTags)
                 .Bool(t => t.OpenWorkInfoByDefault))

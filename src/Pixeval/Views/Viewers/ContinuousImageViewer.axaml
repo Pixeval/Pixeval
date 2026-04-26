@@ -1,0 +1,105 @@
+<UserControl
+    x:Class="Pixeval.Views.Viewers.ContinuousImageViewer"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ai="using:AnimatedControls.Avalonia"
+    xmlns:common="using:FluentIcons.Common"
+    xmlns:local="using:Pixeval.Views.Viewers"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:markup1="using:Pixeval.Views.Markup"
+    xmlns:pixeval="using:Pixeval"
+    xmlns:scroll="using:SmoothScroll.Avalonia.Controls"
+    xmlns:viewers="using:Pixeval.ViewModels.Viewers"
+    x:DataType="{x:Type viewers:ImageViewerViewModel}">
+    <scroll:ScrollView
+        x:Name="ViewerScrollView"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        Focusable="True"
+        HorizontalScrollBarVisibility="Auto"
+        IsZoomEnabled="True"
+        MaxZoomFactor="10"
+        MinZoomFactor="0.1"
+        SizeChanged="ViewerScrollView_OnSizeChanged"
+        VerticalScrollBarVisibility="Hidden"
+        ZoomFactor="{Binding $parent[local:ContinuousImageViewer].ZoomFactor, Mode=OneWayToSource}">
+        <ItemsControl x:Name="ImageItemsControl" ItemsSource="{Binding Images}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="{Binding $parent[local:ContinuousImageViewer].StackOrientation}" Spacing="8" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type viewers:SingleViewerViewModel}">
+                    <Border
+                        MinWidth="200"
+                        MinHeight="200"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Background="Transparent"
+                        PointerPressed="ImageItem_OnPointerPressed"
+                        SizeChanged="ImageItem_OnSizeChanged">
+                        <Panel>
+                            <ai:AnimatedImage
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                IsPlaying="{Binding $parent[local:ContinuousImageViewer].IsPlaying}"
+                                IsVisible="{Binding LoadSuccessfully}"
+                                Source="{Binding DisplaySource}"
+                                Stretch="Uniform" />
+
+                            <Border
+                                Padding="20"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Background="Gray"
+                                CornerRadius="{StaticResource ControlCornerRadius}"
+                                IsVisible="{Binding LoadSuccessfully, Converter={x:Static BoolConverters.Not}}">
+                                <StackPanel Spacing="10">
+                                    <ProgressBar
+                                        Width="200"
+                                        IsIndeterminate="{Binding LoadingProgress, Converter={x:Static ObjectConverters.IsNull}}"
+                                        Maximum="100"
+                                        Value="{Binding LoadingProgress}" />
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                        Text="{Binding LoadingText}" />
+                                </StackPanel>
+                            </Border>
+                        </Panel>
+                        <Border.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuItem
+                                    Command="{Binding $parent[local:ContinuousImageViewer].PlayPauseCommand}"
+                                    Header="{I18N {x:Static pixeval:MiscResources.Play}}"
+                                    Icon="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding $parent[local:ContinuousImageViewer].IsPlaying},
+                                                                                              Pause,
+                                                                                              Play,
+                                                                                              x:TypeArguments=common:Symbol}}"
+                                    InputGesture="Space"
+                                    IsEnabled="{Binding IsGifLoadSuccessfully}"
+                                    IsVisible="{Binding IsPicGif}" />
+                                <MenuItem
+                                    Command="{Binding $parent[local:ContinuousImageViewer].CopyCommand}"
+                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources.Copy}}"
+                                    Icon="{markup:SymbolIcon Copy}"
+                                    InputGesture="Ctrl+C"
+                                    IsVisible="{Binding IsPicGif, Converter={x:Static BoolConverters.Not}}" />
+                                <MenuItem
+                                    Command="{Binding $parent[local:ContinuousImageViewer].SaveCommand}"
+                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}"
+                                    Icon="{markup:SymbolIcon Save}"
+                                    InputGesture="Ctrl+S" />
+                                <MenuItem
+                                    Command="{Binding $parent[local:ContinuousImageViewer].SaveAsCommand}"
+                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources.SaveAs}}"
+                                    Icon="{markup:SymbolIcon SaveEdit}" />
+                            </MenuFlyout>
+                        </Border.ContextFlyout>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </scroll:ScrollView>
+</UserControl>
