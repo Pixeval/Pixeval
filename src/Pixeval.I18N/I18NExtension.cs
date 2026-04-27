@@ -4,8 +4,17 @@ using Avalonia.Metadata;
 
 namespace Pixeval.I18N;
 
-public class I18NExtension(string key) : AvaloniaObject
+public class I18NExtension : AvaloniaObject
 {
+    public I18NExtension()
+    {
+    }
+
+    public I18NExtension(string key)
+    {
+        Key = key;
+    }
+
     public static readonly DirectProperty<I18NExtension, string> KeyProperty = AvaloniaProperty.RegisterDirect<I18NExtension, string>(
         nameof(Key),
         o => o.Key,
@@ -16,7 +25,7 @@ public class I18NExtension(string key) : AvaloniaObject
     {
         get;
         set => SetAndRaise(KeyProperty, ref field, value);
-    } = key;
+    } = "";
 
     public string ProvideValue(IServiceProvider serviceProvider)
     {

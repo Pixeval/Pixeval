@@ -134,7 +134,7 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
 
     public IBrush NovelForegroundBrush => new SolidColorBrush(Color.FromUInt32(Settings.NovelFontColor));
 
-    public FontFamily NovelFontFamilyObject => new(Settings.NovelFontFamily);
+    public FontFamily NovelFontFamilyObject => new(string.Join(',', Settings.NovelFontFamily));
 
     public FontWeight NovelFontWeight => Settings.NovelFontWeight;
 

@@ -1,0 +1,172 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Pixeval.Controls">
+
+    <Design.PreviewWith>
+        <StackPanel
+            Width="360"
+            Margin="20"
+            Spacing="12">
+            <local:TokenizingBox
+                MaxCount="5"
+                PlaceholderText="Add token"
+                TokenSeparator="," />
+        </StackPanel>
+    </Design.PreviewWith>
+
+    <DataTemplate x:DataType="{x:Type local:TokenizingBoxToken}" x:Key="TokenizingBoxTokenTemplate">
+        <Border
+            MinHeight="22"
+            Padding="6,1,1,1"
+            Background="{DynamicResource TextControlBackground}"
+            BorderBrush="{DynamicResource TextControlBorderBrush}"
+            BorderThickness="1"
+            Classes="tokenizing-token"
+            CornerRadius="4"
+            Focusable="True">
+            <StackPanel Orientation="Horizontal" Spacing="4">
+                <ContentControl
+                    VerticalAlignment="Center"
+                    Content="{Binding Item}"
+                    ContentTemplate="{Binding ItemTemplate}"
+                    Foreground="{Binding $parent[local:TokenizingBox].Foreground}" />
+                <Button
+                    Width="18"
+                    Height="18"
+                    MinWidth="0"
+                    MinHeight="0"
+                    Padding="0"
+                    VerticalAlignment="Center"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    BorderThickness="0"
+                    Classes="tokenizing-token-remove"
+                    Command="{Binding RemoveCommand}"
+                    Content="&#x00D7;"
+                    CornerRadius="9"
+                    Focusable="False"
+                    FontSize="12"
+                    FontWeight="SemiBold"
+                    Foreground="{Binding $parent[local:TokenizingBox].Foreground}"
+                    IsTabStop="False" />
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <ControlTheme x:Key="{x:Type local:TokenizingBox}" TargetType="{x:Type local:TokenizingBox}">
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+        <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
+        <Setter Property="PlaceholderForeground" Value="{DynamicResource TextControlPlaceholderForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThickness}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+        <Setter Property="Padding" Value="3,2" />
+        <Setter Property="MaxDropDownHeight" Value="{DynamicResource AutoCompleteListMaxHeight}" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:TokenizingBox}">
+                    <Border
+                        Name="PART_Root"
+                        MinHeight="30"
+                        Padding="{TemplateBinding Padding}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                        <DockPanel HorizontalSpacing="4">
+                            <ContentPresenter
+                                VerticalAlignment="Center"
+                                Content="{TemplateBinding InnerLeftContent}"
+                                DockPanel.Dock="Left" />
+
+                            <ContentPresenter
+                                Margin="4,0,0,0"
+                                VerticalAlignment="Center"
+                                Content="{TemplateBinding InnerRightContent}"
+                                DockPanel.Dock="Right" />
+
+                            <local:TokenizingBoxPanel
+                                Name="PART_ItemsHost"
+                                VerticalAlignment="Center"
+                                ItemSpacing="4"
+                                LineSpacing="3"
+                                MinInputWidth="96">
+                                <AutoCompleteBox
+                                    Name="PART_AutoCompleteBox"
+                                    MinWidth="0"
+                                    Margin="0"
+                                    Padding="0"
+                                    VerticalAlignment="Center"
+                                    AsyncPopulator="{TemplateBinding AsyncPopulator}"
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    BorderThickness="0"
+                                    CornerRadius="0"
+                                    FilterMode="{TemplateBinding FilterMode}"
+                                    Foreground="{TemplateBinding Foreground}"
+                                    IsTextCompletionEnabled="{TemplateBinding IsTextCompletionEnabled}"
+                                    ItemFilter="{TemplateBinding ItemFilter}"
+                                    ItemSelector="{TemplateBinding ItemSelector}"
+                                    ItemTemplate="{TemplateBinding SuggestionItemTemplate}"
+                                    ItemsSource="{TemplateBinding SuggestionItemsSource}"
+                                    MaxDropDownHeight="{TemplateBinding MaxDropDownHeight}"
+                                    MinimumPopulateDelay="{TemplateBinding MinimumPopulateDelay}"
+                                    MinimumPrefixLength="{TemplateBinding MinimumPrefixLength}"
+                                    PlaceholderForeground="{TemplateBinding PlaceholderForeground}"
+                                    Text="{TemplateBinding Text,
+                                                           Mode=TwoWay}"
+                                    TextFilter="{TemplateBinding TextFilter}"
+                                    TextSelector="{TemplateBinding TextSelector}"
+                                    ValueMemberBinding="{TemplateBinding ValueMemberBinding}">
+                                    <AutoCompleteBox.Styles>
+                                        <Style Selector="TextBox#PART_TextBox">
+                                            <Setter Property="MinHeight" Value="0" />
+                                            <Setter Property="FocusAdorner" Value="{x:Null}" />
+                                        </Style>
+                                        <Style Selector="TextBox#PART_TextBox /template/ Border#PART_BorderElement">
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="BorderBrush" Value="Transparent" />
+                                            <Setter Property="BorderThickness" Value="0" />
+                                        </Style>
+                                        <Style Selector="TextBox#PART_TextBox:focus /template/ Border#PART_BorderElement">
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="BorderBrush" Value="Transparent" />
+                                            <Setter Property="BorderThickness" Value="0" />
+                                        </Style>
+                                    </AutoCompleteBox.Styles>
+                                </AutoCompleteBox>
+                                <TextBlock
+                                    Name="PART_CountTextBlock"
+                                    Margin="0"
+                                    VerticalAlignment="Center"
+                                    FontSize="12"
+                                    Foreground="{TemplateBinding PlaceholderForeground}" />
+                            </local:TokenizingBoxPanel>
+                        </DockPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style Selector="^:pointerover /template/ Border#PART_Root">
+            <Setter Property="Background" Value="{DynamicResource TextControlBackgroundPointerOver}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushPointerOver}" />
+        </Style>
+
+        <Style Selector="^:focus-within /template/ Border#PART_Root">
+            <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}" />
+            <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThickness}" />
+        </Style>
+
+        <Style Selector="^:disabled /template/ Border#PART_Root">
+            <Setter Property="Background" Value="{DynamicResource TextControlBackgroundDisabled}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushDisabled}" />
+            <Setter Property="Opacity" Value="0.6" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

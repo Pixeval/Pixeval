@@ -8,25 +8,25 @@
     xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:AutoSettingsPage.Models"
+    xmlns:pixevalControls="using:Pixeval.Controls"
     xmlns:sco="using:System.Collections.ObjectModel"
-    xmlns:u="https://irihi.tech/ursa"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
     x:DataType="{x:Type models:ISingleValueSettingsEntry,
                         x:TypeArguments=sco:ObservableCollection(x:String)}"
     Description="{Binding Converter={x:Static avalonia:SettingsEntryHelper.DescriptionConverter}}"
     Header="{Binding Header}"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
     <controls:SettingsExpander.HeaderIcon>
         <fluent:SymbolIcon Symbol="{Binding Icon}" />
     </controls:SettingsExpander.HeaderIcon>
     <controls:SettingsExpander.Items>
         <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
-            <u:TagInput
-                x:Name="TagInput"
-                AllowDuplicates="False"
-                Tags="{Binding Value}"
-                PlaceholderText="{Binding Placeholder}" />
+            <pixevalControls:TokenizingBox
+                AllowDuplicateTokens="False"
+                ItemsSource="{Binding Value}"
+                PlaceholderText="{Binding Placeholder}"
+                TokenSeparator="," />
         </controls:SettingsCard>
     </controls:SettingsExpander.Items>
 </controls:SettingsExpander>

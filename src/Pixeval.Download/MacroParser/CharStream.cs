@@ -70,7 +70,7 @@ public class CharStream : ISeekable<char>
     public static async Task<CharStream> Load(Stream stream, Encoding encoding)
     {
         using var sr = new StreamReader(stream, encoding);
-        return new CharStream(await sr.ReadToEndAsync());
+        return new(await sr.ReadToEndAsync());
     }
 
     public LineInfo GetCurrentLineInfo()
@@ -81,7 +81,7 @@ public class CharStream : ISeekable<char>
         }
 
         var lines = _text[..Forward].Split(Environment.NewLine);
-        return new LineInfo(lines.Length, lines[^1].Length);
+        return new(lines.Length, lines[^1].Length);
     }
 
     public char NextChar()
@@ -160,7 +160,7 @@ public class CharStream : ISeekable<char>
             Advance();
         }
 
-        return new string(GetWindow());
+        return new(GetWindow());
     }
 
     public void PushMarker()

@@ -1,0 +1,49 @@
+<controls:SettingsExpander
+    x:Class="Pixeval.Views.Settings.FontSettingsExpander"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avalonia="using:AutoSettingsPage.Avalonia"
+    xmlns:controls="using:CommunityToolkit.Avalonia.Controls"
+    xmlns:controls1="clr-namespace:Pixeval.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.Avalonia"
+    xmlns:local="using:AutoSettingsPage.Avalonia"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:AutoSettingsPage.Models"
+    xmlns:sco="using:System.Collections.ObjectModel"
+    x:DataType="{x:Type models:ISingleValueSettingsEntry,
+                        x:TypeArguments=sco:ObservableCollection(x:String)}"
+    Description="{Binding Converter={x:Static avalonia:SettingsEntryHelper.DescriptionConverter}}"
+    Header="{Binding Header}"
+    Tag="{Binding Token}"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
+    <controls:SettingsExpander.HeaderIcon>
+        <fluent:SymbolIcon Symbol="{Binding Icon}" />
+    </controls:SettingsExpander.HeaderIcon>
+    <controls:SettingsExpander.Items>
+        <controls:SettingsCard ContentAlignment="Left">
+            <DockPanel HorizontalAlignment="Stretch" HorizontalSpacing="5">
+                <ComboBox
+                    x:Name="ComboBox"
+                    Width="200"
+                    DockPanel.Dock="Right"
+                    ItemsSource="{x:Static local:SettingsEntryHelper.AvailableFonts}"
+                    SelectionChanged="SelectingItemsControl_OnSelectionChanged">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type FontFamily}">
+                            <TextBlock FontFamily="{Binding}" Text="{Binding Name}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <controls1:TokenizingBox
+                    x:Name="TokenizingBox"
+                    AllowDuplicateTokens="False"
+                    ItemsSource="{Binding Value}"
+                    PlaceholderText="{Binding Placeholder}"
+                    TokenSeparator="," />
+            </DockPanel>
+        </controls:SettingsCard>
+    </controls:SettingsExpander.Items>
+</controls:SettingsExpander>
