@@ -10,6 +10,7 @@
         <MergeResourceInclude Source="/Controls/PageButton.axaml" />
         <MergeResourceInclude Source="/Controls/PagePreviewSlider.axaml" />
         <MergeResourceInclude Source="/Controls/FloatingPaneView.axaml" />
+        <MergeResourceInclude Source="/Controls/TokenizingBox.axaml" />
         <MergeResourceInclude Source="/Views/Entry/EntryView.axaml" />
         <MergeResourceInclude Source="/Views/Work/TagSelector.axaml" />
         <MergeResourceInclude Source="/Views/Work/AddNewBookmarkTagItem.axaml" />

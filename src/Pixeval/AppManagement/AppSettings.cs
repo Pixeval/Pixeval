@@ -26,7 +26,8 @@ public record AppSettings
 {
     public AppSettings()
     {
-        AppFontFamily =  NovelFontFamily = I18NManager.GetResource(CultureDefaultSettingsResources.AppDefaultFontFamilyName);
+        var defaultFont = I18NManager.GetResource(CultureDefaultSettingsResources.AppDefaultFontFamilyName);
+        AppFontFamily =  NovelFontFamily = [defaultFont];
     }
 
     [Obsolete]
@@ -52,7 +53,7 @@ public record AppSettings
     public bool UseFileCache { get; set; } = true;
 
     [SettingsEntry(Symbol.TextFont, AppFontFamilyEntryHeader, AppFontFamilyEntryDescription, AppFontFamilyEntryPlaceholder)]
-    public string AppFontFamily { get; set; } = null!;
+    public ObservableCollection<string> AppFontFamily { get; set; }
 
     [SettingsEntry(Symbol.Checkmark, DefaultSelectedTabEntryHeader, DefaultSelectedTabEntryDescription)]
     public MainPageTabItem DefaultSelectedTabItem { get; set; }
@@ -239,7 +240,7 @@ public record AppSettings
     public FontWeight NovelFontWeight { get; set; } = FontWeight.Normal;
 
     [SettingsEntry(Symbol.TextFont, NovelSettingsFontFamilyEntryHeader, AppFontFamilyEntryDescription, AppFontFamilyEntryPlaceholder)]
-    public string NovelFontFamily { get; set; } = null!;
+    public ObservableCollection<string> NovelFontFamily { get; set; }
 
     [SettingsEntry(Symbol.TextFontSize, NovelSettingsFontSizeEntryHeader, NovelSettingsFontSizeEntryDescription)]
     public int NovelFontSize { get; set; } = 14;

@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -33,7 +34,7 @@ public class App : Application
         AppViewModel.InitializeProvider();
         
         AvaloniaXamlLoader.Load(this);
-        Resources["ContentControlThemeFontFamily"] = new FontFamily(AppViewModel.AppSettings.AppFontFamily);
+        Resources["ContentControlThemeFontFamily"] = new FontFamily(string.Join(',', AppViewModel.AppSettings.AppFontFamily));
 
 #if DEBUG
         this.AttachDeveloperTools();

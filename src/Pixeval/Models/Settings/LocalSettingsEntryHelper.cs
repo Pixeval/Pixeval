@@ -67,6 +67,7 @@ public static class LocalSettingsEntryHelper
             .Add<DomainFrontingSettingsEntry<AppSettings>, DomainFrontingSettingsExpander>()
             .Add<DownloadMacroAppSettingsEntry, DownloadMacroSettingsExpander>()
             .Add<MultiValuesEntry<AppSettings>, MultiValuesSettingsExpander>()
+            .Add<FontSettingsEntry<AppSettings>, FontSettingsExpander>()
 
             .Add<ExtensionSettingsEntry<IStringSettingsExtension, string>, StringSettingsCard>()
             .Add<ExtensionDoubleSettingsEntry, DoubleSettingsCard>()
@@ -162,6 +163,11 @@ public static class LocalSettingsEntryHelper
             configValues?.Invoke(simpleAddSettingsEntry);
             return builder.Add(new(builder.Settings, property, simpleAddSettingsEntry.Build()), config);
         }
+
+        public ISettingsGroupBuilder<TSettings> Font(
+            Expression<Func<TSettings, ObservableCollection<string>>> property,
+            Action<FontSettingsEntry<TSettings>>? config = null) =>
+            builder.Add(new(builder.Settings, property), config);
     }
 
     extension(ISettingsGroupBuilder<AppSettings> builder)

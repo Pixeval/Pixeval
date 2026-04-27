@@ -45,7 +45,7 @@ public class SettingsPageViewModel : ViewModelBase
                         ApplicationTheme.Dark => ThemeVariant.Dark,
                         _ => ThemeVariant.Default
                     })
-                .Font(t => t.AppFontFamily, entry => entry.ValueChanged += t => Application.Current?.Resources["ContentControlThemeFontFamily"] = new FontFamily(t))
+                .Font(t => t.AppFontFamily, entry => entry.ValueChanged += t => Application.Current?.Resources["ContentControlThemeFontFamily"] = new FontFamily(string.Join(',', t)))
                 .DomainFronting(t => t.EnableDomainFronting, entry =>
                         entry.IPSet(t => t.PixivAppApiNameResolver)
                             .IPSet(t => t.PixivImageNameResolver)
