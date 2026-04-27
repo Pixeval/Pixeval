@@ -96,7 +96,7 @@ public static class AvaloniaHelper
     public static EventHandler<RoutedEventArgs>? CopyTagToClipboard { get; }
         = (sender, e) =>
         {
-            if (sender is not MenuItem { Tag: { } parameter } s
+            if (sender is not Control { Tag: { } parameter } s
                 || TopLevel.GetTopLevel(s) is not
                 {
                     ViewContainer: { } viewContainer,

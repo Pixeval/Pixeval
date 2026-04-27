@@ -11,5 +11,5 @@ public enum TokenKind
     LBrace,
     RBrace,
     Exclamation,
-    Equal
+    Colon
 }

@@ -29,10 +29,10 @@ public partial class DownloadMacroSettingsExpander : SettingsExpander, IEntryCon
     /// </summary>
     private static readonly MacroParser<string> _TestParser = new();
 
-    private static readonly ISingleImage _SingleImage = new TestWork(ImageType.SingleImage);
-    private static readonly ISingleImage _SingleAnimatedImage = new TestWork(ImageType.SingleAnimatedImage);
-    private static readonly ISingleImage _ImageSet = new TestWork(ImageType.ImageSet);
-    private static readonly ISingleImage _Novel = new TestWork(ImageType.Other);
+    private static readonly ISingleImage _SingleImage = DesignHelper.DownloadParserSampleWork(ImageType.SingleImage);
+    private static readonly ISingleImage _SingleAnimatedImage = DesignHelper.DownloadParserSampleWork(ImageType.SingleAnimatedImage);
+    private static readonly ISingleImage _ImageSet = DesignHelper.DownloadParserSampleWork(ImageType.ImageSet);
+    private static readonly ISingleImage _Novel = DesignHelper.DownloadParserSampleWork(ImageType.Other);
 
     private void DownloadPathMacroTextBox_OnTextChanged(object sender, RoutedEventArgs e)
     {
@@ -82,11 +82,9 @@ public partial class DownloadMacroSettingsExpander : SettingsExpander, IEntryCon
         NovelPathBlock.Text = GetPath(_Novel);
         return;
 
-        string GetPath(IArtworkInfo info)
-        {
-            return IoHelper.NormalizePath(ArtworkMetaPathParser.Instance.Reduce(text, info))
+        string GetPath(IArtworkInfo info) =>
+            IoHelper.NormalizePath(ArtworkMetaPathParser.Instance.Reduce(text, info))
                 .Replace(FileExtensionMacro.NameConstToken, ".png");
-        }
     }
 
     private static string? ValidateMacro(
@@ -136,74 +134,3 @@ public partial class DownloadMacroSettingsExpander : SettingsExpander, IEntryCon
         };
     }
 }
-
-file record TestWork(ImageType ImageType) : ISingleImage, IImageSet, ISingleAnimatedImage
-{
-    public ulong ByteSize => 0;
-
-    public Uri ImageUri => null!;
-
-    public int SetIndex => 0;
-
-    public IPreloadableList<ISingleImage> Pages => null!;
-
-    public int PageCount => 0;
-
-    public SingleAnimatedImageType PreferredAnimatedImageType => SingleAnimatedImageType.SingleZipFile;
-
-    public Uri? SingleImageUri => null;
-
-    public IPreloadableList<int>? ZipImageDelays => null;
-
-    public IPreloadableList<(Uri Uri, int MsDelay)>? MultiImageUris => null;
-
-    public IPreloadableList<IAnimatedImageFrame> AnimatedThumbnails => null!;
-
-    public int Width => 0;
-
-    public int Height => 0;
-
-    public string Platform => null!;
-
-    public string Id => "12345678";
-
-    public string Title => nameof(Title);
-
-    public string Description => null!;
-
-    public Uri WebsiteUri => null!;
-
-    public Uri AppUri => null!;
-
-    public DateTimeOffset CreateDate => new(2020, 10, 12, 0, 0, 0, TimeSpan.Zero);
-
-    public IPreloadableList<IUser> Authors { get; } =
-    [
-        new UserInfo
-        {
-            Id = 7654321,
-            Name = nameof(UserInfo.Name),
-            Account = "",
-            ProfileImageUrls = null!
-        }
-    ];
-
-    public IPreloadableList<IUser> Uploaders => null!;
-
-    public SafeRating SafeRating => default;
-
-    public ILookup<ITagCategory, ITag> Tags => null!;
-
-    public IReadOnlyCollection<IImageFrame> Thumbnails => null!;
-
-    public IReadOnlyDictionary<string, object> AdditionalInfo => null!;
-
-    public int TotalFavorite => 0;
-
-    public int TotalView => 0;
-
-    public bool IsFavorite => false;
-
-    public bool IsAiGenerated => false;
-}
-

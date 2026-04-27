@@ -37,5 +37,5 @@ public class DownloadMacroAppSettingsEntry(
         ["pic_set_index"] = SettingsPageResources.PicSetIndexMacroTooltip
     }.ToFrozenDictionary();
 
-    public static ICollection<SymbolComboBoxItem> AvailableMacros { get; } = [.. MetaPathMacroAttributeHelper.GetIArtworkInfoInstances().Select(m => new SymbolComboBoxItem(_MacroTooltips[m.Name], $"@{{{(m is IPredicate ? $"{m.Name}=" : m.Name)}}}", default))];
+    public static ICollection<SymbolComboBoxItem> AvailableMacros { get; } = [.. MetaPathMacroAttributeHelper.GetIArtworkInfoInstances().Select(m => new SymbolComboBoxItem($"@{{{(m is IPredicate ? $"{m.Name}:" : m.Name)}}}", _MacroTooltips[m.Name], default))];
 }

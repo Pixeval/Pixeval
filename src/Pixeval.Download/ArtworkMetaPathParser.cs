@@ -22,7 +22,7 @@ public class ArtworkMetaPathParser : IMetaPathParser<IArtworkInfo>
 
     public string Reduce(string raw, IArtworkInfo context)
     {
-        _parser.SetupParsingEnvironment(new Lexer(raw));
+        _parser.SetupParsingEnvironment(new(raw));
         if (_parser.Parse() is { } root)
         {
             var result = root.Evaluate(MacroProvider, context);

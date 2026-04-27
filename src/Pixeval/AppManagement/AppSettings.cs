@@ -58,7 +58,7 @@ public record AppSettings
     public MainPageTabItem DefaultSelectedTabItem { get; set; }
 
     [SettingsEntry(Symbol.Rename, DownloadPathMacroEntryHeader, DownloadPathMacroEntryDescription)]
-    public string DownloadPathMacro { get; set; } = GetSpecialFolder() + @"\@{if_pic_set=[@{artist_name}] @{title}}\[@{artist_name}] @{id}@{if_pic_set=p@{pic_set_index}}@{ext}";
+    public string DownloadPathMacro { get; set; } = GetSpecialFolder() + @"\@{if_pic_set:[@{artist_name}] @{title}}\[@{artist_name}] @{id}@{if_pic_set:p@{pic_set_index}}@{ext}";
 
     [SettingsEntry(Symbol.TextPeriodAsterisk, WorkDownloadFormatEntryHeader, WorkDownloadFormatEntryDescription)]
     public IllustrationDownloadFormat IllustrationDownloadFormat { get; set; } = IllustrationDownloadFormat.Png;
@@ -302,8 +302,8 @@ public record AppSettings
         var picDirectory = Path.GetDirectoryName(picPath);
         return picDirectory == Path.GetDirectoryName(docPath)
             ? picDirectory +
-              @$"\@{{if_pic_all={Path.GetFileName(picPath)}}}@{{if_novel={Path.GetFileName(docPath)}}}"
-            : $"@{{if_pic_all={picPath}}}@{{if_novel={docPath}}}";
+              @$"\@{{if_pic_all:{Path.GetFileName(picPath)}}}@{{if_novel:{Path.GetFileName(docPath)}}}"
+            : $"@{{if_pic_all:{picPath}}}@{{if_novel:{docPath}}}";
     }
 }
 
