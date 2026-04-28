@@ -3,6 +3,7 @@
 
 using Avalonia.Media;
 using FluentIcons.Common;
+using Mako;
 using Mako.Global.Enum;
 using Pixeval.Attributes;
 
@@ -93,6 +94,12 @@ public static partial class RankOptionExtension
 [AttachedLocalizedResource(nameof(TargetFilter.ForAndroid), MiscResources.TargetFilterForAndroid)]
 [AttachedLocalizedResource(nameof(TargetFilter.ForIos), MiscResources.TargetFilterForIOS)]
 public static partial class TargetFilterExtension;
+
+[AttachedLocalizationMetadata<DomainFrontingType>]
+[AttachedLocalizedResource(nameof(DomainFrontingType.Fragmentation), MiscResources.DomainFrontingTypeFragmentation)]
+[AttachedLocalizedResource(nameof(DomainFrontingType.Ech), MiscResources.DomainFrontingTypeEch)]
+[AttachedLocalizedResource(nameof(DomainFrontingType.Desync), MiscResources.DomainFrontingTypeDesync)]
+public static partial class DomainFrontingTypeExtension;
 
 [AttachedLocalizationMetadata<SearchIllustrationTagMatchOption>]
 [AttachedLocalizedResource(nameof(SearchIllustrationTagMatchOption.PartialMatchForTags), MiscResources.SearchIllustrationTagMatchOptionPartialMatchForTags)]

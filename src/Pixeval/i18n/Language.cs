@@ -56,6 +56,8 @@ namespace Pixeval
         public const string DownloadUpdateAutomaticallyEntryHeader = "AppSettings.DownloadUpdateAutomaticallyEntry.Header";
         public const string DownloadWhenBookmarkedEntryDescription = "AppSettings.DownloadWhenBookmarkedEntry.Description";
         public const string DownloadWhenBookmarkedEntryHeader = "AppSettings.DownloadWhenBookmarkedEntry.Header";
+        public const string DomainFrontingTypeEntryDescription = "AppSettings.DomainFrontingTypeEntry.Description";
+        public const string DomainFrontingTypeEntryHeader = "AppSettings.DomainFrontingTypeEntry.Header";
         public const string EnableDomainFrontingEntryDescription = "AppSettings.EnableDomainFrontingEntry.Description";
         public const string EnableDomainFrontingEntryHeader = "AppSettings.EnableDomainFrontingEntry.Header";
         public const string ImageMirrorServerEntryDescription = "AppSettings.ImageMirrorServerEntry.Description";
@@ -538,6 +540,9 @@ namespace Pixeval
         public const string CloseBottomList = "Misc.CloseBottomList";
         public const string DownloadItemMaybeDeleted = "Misc.DownloadItemMaybeDeleted";
         public const string DownloadItemOpenFailed = "Misc.DownloadItemOpenFailed";
+        public const string DomainFrontingTypeDesync = "Misc.DomainFrontingTypeDesync";
+        public const string DomainFrontingTypeEch = "Misc.DomainFrontingTypeEch";
+        public const string DomainFrontingTypeFragmentation = "Misc.DomainFrontingTypeFragmentation";
         public const string ExceptionEncountered = "Misc.ExceptionEncountered";
         public const string ExtraBlack = "Misc.ExtraBlack";
         public const string ExtraBold = "Misc.ExtraBold";

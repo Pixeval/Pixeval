@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoSettingsPage;
-using AutoSettingsPage.Avalonia;
 using AutoSettingsPage.Models;
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Styling;
+using Mako;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
 using Pixeval.Models.Extensions;
@@ -54,6 +54,8 @@ public class SettingsPageViewModel : ViewModelBase
                             .IPSet(t => t.PixivAccountNameResolver)
                             .IPSet(t => t.PixivWebApiNameResolver),
                     entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.DomainFronting = t)
+                .Enum(t => t.DomainFrontingType, DomainFrontingTypeExtension.Items,
+                    entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.DomainFrontingType = (DomainFrontingType) t)
                 .Proxy(entry => entry.ProxyChanged += t => App.AppViewModel.MakoClient.Configuration.Proxy = t)
                 .String(t => t.MirrorHost,
                     entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.MirrorHost = t)

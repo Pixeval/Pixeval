@@ -8,6 +8,7 @@
     <Project Path="src/lib/Imouto/Imouto.BooruParser/Imouto.BooruParser.csproj" />
     <Project Path="src/lib/Mako/Mako.SourceGen/Mako.SourceGen.csproj" />
     <Project Path="src/lib/Mako/Mako/Mako.csproj" />
+    <Project Path="src/lib/Mako/Pixeval.Network.Maho/Pixeval.Network.Maho/Pixeval.Network.Maho.csproj" />
     <Project Path="src/lib/Tabalonia/Tabalonia/Tabalonia.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">

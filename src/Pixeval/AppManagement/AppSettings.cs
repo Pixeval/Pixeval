@@ -49,6 +49,9 @@ public record AppSettings
     [SettingsEntry(Symbol.ShieldTask, EnableDomainFrontingEntryHeader, EnableDomainFrontingEntryDescription)]
     public bool EnableDomainFronting { get; set; } = true;
 
+    [SettingsEntry(Symbol.ShieldSettings, DomainFrontingTypeEntryHeader, DomainFrontingTypeEntryDescription)]
+    public DomainFrontingType DomainFrontingType { get; set; } = DomainFrontingType.Fragmentation;
+
     [SettingsEntry(Symbol.Database, UseFileCacheEntryHeader, UseFileCacheEntryDescription)]
     public bool UseFileCache { get; set; } = true;
 
@@ -179,10 +182,8 @@ public record AppSettings
     [SettingsEntry(Symbol.Box, PixivNameResolverEntryHeader, PixivNameResolverEntryDescription, Placeholder = MakoHttpOptions.AppApiHost)]
     public ObservableCollection<string> PixivAppApiNameResolver { get; set; } =
     [
-        "210.140.139.155",
-        "210.140.139.156",
-        "210.140.139.157",
-        "210.140.139.158"
+        "104.18.42.239",
+        "172.64.145.17"
     ];
 
     [SettingsEntry(Placeholder = MakoHttpOptions.WebApiHost)]
@@ -204,9 +205,8 @@ public record AppSettings
     [SettingsEntry(Placeholder = MakoHttpOptions.OAuthHost)]
     public ObservableCollection<string> PixivOAuthNameResolver { get; set; } =
     [
-        "210.140.139.155",
-        "210.140.139.156",
-        "210.140.139.157"
+        "104.18.42.239",
+        "172.64.145.17"
     ];
 
     [SettingsEntry(Placeholder = MakoHttpOptions.ImageHost)]
@@ -293,7 +293,7 @@ public record AppSettings
 
     public MakoConfiguration ToMakoConfiguration()
     {
-        return new MakoConfiguration(EnableDomainFronting, Proxy, WebCookie, MirrorHost, 700, CultureInfo.CurrentCulture);
+        return new MakoConfiguration(EnableDomainFronting, DomainFrontingType, Proxy, WebCookie, MirrorHost, 700, CultureInfo.CurrentCulture);
     }
 
     private static string GetSpecialFolder()
