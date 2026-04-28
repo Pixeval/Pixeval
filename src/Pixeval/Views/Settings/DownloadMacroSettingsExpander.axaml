@@ -42,27 +42,27 @@
                 <TextBox
                     x:Name="DownloadPathMacroTextBox"
                     AcceptsReturn="False"
-                    PlaceholderText="{I18N {x:Static pixeval:SettingsPageResources.DownloadPathMacroTextBoxPlaceholderText}}"
+                    PlaceholderText="{I18N {x:Static pixeval:SettingsMainViewResources.DownloadPathMacroTextBoxPlaceholderText}}"
                     Text="{Binding Value, Mode=OneTime}"
                     TextChanged="DownloadPathMacroTextBox_OnTextChanged" />
                 <TextBlock>
-                    <Run Text="{I18N {x:Static pixeval:SettingsPageResources.SinglePathBlockText}}" />
+                    <Run Text="{I18N {x:Static pixeval:SettingsMainViewResources.SinglePathBlockText}}" />
                     <Run x:Name="SinglePathBlock" />
                     <LineBreak />
-                    <Run Text="{I18N {x:Static pixeval:SettingsPageResources.AnimatedPathBlockText}}" />
+                    <Run Text="{I18N {x:Static pixeval:SettingsMainViewResources.AnimatedPathBlockText}}" />
                     <Run x:Name="AnimatedPathBlock" />
                     <LineBreak />
-                    <Run Text="{I18N {x:Static pixeval:SettingsPageResources.SetPathBlockText}}" />
+                    <Run Text="{I18N {x:Static pixeval:SettingsMainViewResources.SetPathBlockText}}" />
                     <Run x:Name="SetPathBlock" />
                     <LineBreak />
-                    <Run Text="{I18N {x:Static pixeval:SettingsPageResources.NovelPathBlockText}}" />
+                    <Run Text="{I18N {x:Static pixeval:SettingsMainViewResources.NovelPathBlockText}}" />
                     <Run x:Name="NovelPathBlock" />
                     <LineBreak />
                 </TextBlock>
                 <TextBlock
                     Foreground="Red"
                     IsVisible="{Binding #DownloadMacroInvalidInfoBar.IsVisible}"
-                    Text="{I18N {x:Static pixeval:SettingsPageResources.DownloadMacroInvalidInfoBarTitle}}" />
+                    Text="{I18N {x:Static pixeval:SettingsMainViewResources.DownloadMacroInvalidInfoBarTitle}}" />
                 <TextBlock
                     x:Name="DownloadMacroInvalidInfoBar"
                     Foreground="Red"

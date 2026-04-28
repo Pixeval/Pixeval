@@ -163,9 +163,9 @@
     "SessionSettingsGroup": {
         "Text": "会话设置"
     },
-    "SignOutEntry": {
-        "Description": "退出登录并关闭应用程序",
-        "Header": "退出登录"
+    "SwitchAccountEntry": {
+        "Description": "在新的账号登录之后，当前账号将会自动退出登录，但已打开的页面需要手动刷新或重新打开才能正确显示当前账号的内容",
+        "Header": "切换账号"
     },
     "SpotlightSearchPageLimitNumberBox": {
         "PlaceholderText": "特辑搜索页数限制[1, 100]"

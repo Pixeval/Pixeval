@@ -30,9 +30,8 @@ public partial class SettingsMainView : ContentPage
             await frame.PushAsync(new SettingsSubView(group));
     }
 
-    private async void PerformSignOutButton_OnClicked(object sender, RoutedEventArgs e)
+    private void SwitchAccountButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        // TODO 切换账号
         TopLevel.GetTopLevel(this)?.ViewContainer?.NavigateTo(new LoginPage());
     }
 
@@ -45,8 +44,8 @@ public partial class SettingsMainView : ContentPage
             return;
 
         if (await viewContainer.CreateOkCancelAsync(
-                I18NManager.GetResource(SettingsPageResources.ResetSettingConfirmationDialogTitle),
-                I18NManager.GetResource(SettingsPageResources.ResetSettingConfirmationDialogContent))
+                I18NManager.GetResource(SettingsMainViewResources.ResetSettingConfirmationDialogTitle),
+                I18NManager.GetResource(SettingsMainViewResources.ResetSettingConfirmationDialogContent))
             is not ContentDialogResult.Primary)
             return;
 
@@ -79,7 +78,7 @@ public partial class SettingsMainView : ContentPage
             await using var stream = await file.OpenWriteAsync();
             await JsonSerializer.SerializeAsync(stream, vm.AppSettings, SettingsSerializerContext.Default.AppSettings);
 
-            viewContainer.ShowSuccess(I18NManager.GetResource(SettingsPageResources.ExportSettingsSuccess));
+            viewContainer.ShowSuccess(I18NManager.GetResource(SettingsMainViewResources.ExportSettingsSuccess));
         }
         catch (Exception exception)
         {
@@ -105,14 +104,14 @@ public partial class SettingsMainView : ContentPage
             //if (await JsonSerializer.DeserializeAsync(stream, SettingsSerializerContext.Default.LoginContext) is { } loginContext)
             //{
             //    loginContext.CopyTo(App.AppViewModel.LoginContext);
-            //    viewContainer.ShowSuccess(SettingsPageResources.ImportSessionSuccess, file.Name);
+            //    viewContainer.ShowSuccess(SettingsMainViewResources.ImportSessionSuccess, file.Name);
             //}
             if (await JsonSerializer.DeserializeAsync(stream, SettingsSerializerContext.Default.AppSettings) is { } appSettings)
             {
                 foreach (var localGroup in vm.LocalGroups)
                 foreach (var settingsEntry in localGroup)
                     settingsEntry.LocalValueReset(appSettings);
-                viewContainer.ShowSuccess(I18NManager.GetResource(SettingsPageResources.ImportSettingsSuccess), file.Name);
+                viewContainer.ShowSuccess(I18NManager.GetResource(SettingsMainViewResources.ImportSettingsSuccess), file.Name);
             }
         }
         catch (Exception exception)

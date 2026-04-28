@@ -86,7 +86,7 @@ public partial class SwipeImageViewer : ImageViewerBase
 
     private void SwipeContent_OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
-        if (e.Property == ContentControl.ContentProperty)
+        if (e.Property == ContentProperty)
             CurrentPage = SwipeContent.Content as SingleImageViewer;
     }
 

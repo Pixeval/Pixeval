@@ -105,7 +105,7 @@ public partial class TabViewContainer : ViewContainerBase
         await this.CreateUserPageAsync(App.AppViewModel.PixivUid);
     }
 
-    private void Logout_OnClicked(object? sender, RoutedEventArgs e)
+    private void SwitchAccount_OnClicked(object? sender, RoutedEventArgs e)
     {
         TopLevel.GetTopLevel(this)?.ViewContainer?.NavigateTo(new LoginPage());
     }

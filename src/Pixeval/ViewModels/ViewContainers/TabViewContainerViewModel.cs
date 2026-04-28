@@ -45,19 +45,21 @@ public partial class TabViewContainerViewModel : ObservableObject
     public partial bool RestrictedModeIdle { get; private set; } = true;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ToggleAiShowCommand))]
     public partial bool AiShowIdle { get; private set; } = true;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ToggleRestrictedModeCommand))]
     public partial bool RestrictedCache { get; private set; }
 
     [ObservableProperty]
     public partial bool AiShowCache { get; private set; }
 
-    [RelayCommand(CanExecute = nameof(RestrictedModeIdle))]
-    private Task ToggleRestrictedModeAsync() => ToggleRestrictedModeAsync(false);
-
     [RelayCommand(CanExecute = nameof(AiShowIdle))]
     private Task ToggleAiShowAsync() => ToggleAiShowAsync(false);
+
+    [RelayCommand(CanExecute = nameof(RestrictedModeIdle))]
+    private Task ToggleRestrictedModeAsync() => ToggleRestrictedModeAsync(false);
 
     private async Task ToggleRestrictedModeAsync(bool skipPost)
     {

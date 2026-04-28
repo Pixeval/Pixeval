@@ -18,23 +18,23 @@ public class DownloadMacroAppSettingsEntry(
 {
     private static readonly FrozenDictionary<string, string> _MacroTooltips = new Dictionary<string, string>
     {
-        ["ext"] = SettingsPageResources.ExtMacroTooltip,
-        ["id"] = SettingsPageResources.IdMacroTooltip,
-        ["title"] = SettingsPageResources.TitleMacroTooltip,
-        ["artist_id"] = SettingsPageResources.ArtistIdMacroTooltip,
-        ["artist_name"] = SettingsPageResources.ArtistNameMacroTooltip,
-        ["publish_year"] = SettingsPageResources.PublishYearMacroTooltip,
-        ["publish_month"] = SettingsPageResources.PublishMonthMacroTooltip,
-        ["publish_day"] = SettingsPageResources.PublishDayMacroTooltip,
-        ["if_r18"] = SettingsPageResources.IfR18MacroTooltip,
-        ["if_r18g"] = SettingsPageResources.IfR18GMacroTooltip,
-        ["if_ai"] = SettingsPageResources.IfAiMacroTooltip,
-        ["if_novel"] = SettingsPageResources.IfNovelMacroTooltip,
-        ["if_pic_one"] = SettingsPageResources.IfPicOneMacroTooltip,
-        ["if_pic_set"] = SettingsPageResources.IfPicSetMacroTooltip,
-        ["if_pic_gif"] = SettingsPageResources.IfPicGifMacroTooltip,
-        ["if_pic_all"] = SettingsPageResources.IfPicAllMacroTooltip,
-        ["pic_set_index"] = SettingsPageResources.PicSetIndexMacroTooltip
+        ["ext"] = SettingsMainViewResources.ExtMacroTooltip,
+        ["id"] = SettingsMainViewResources.IdMacroTooltip,
+        ["title"] = SettingsMainViewResources.TitleMacroTooltip,
+        ["artist_id"] = SettingsMainViewResources.ArtistIdMacroTooltip,
+        ["artist_name"] = SettingsMainViewResources.ArtistNameMacroTooltip,
+        ["publish_year"] = SettingsMainViewResources.PublishYearMacroTooltip,
+        ["publish_month"] = SettingsMainViewResources.PublishMonthMacroTooltip,
+        ["publish_day"] = SettingsMainViewResources.PublishDayMacroTooltip,
+        ["if_r18"] = SettingsMainViewResources.IfR18MacroTooltip,
+        ["if_r18g"] = SettingsMainViewResources.IfR18GMacroTooltip,
+        ["if_ai"] = SettingsMainViewResources.IfAiMacroTooltip,
+        ["if_novel"] = SettingsMainViewResources.IfNovelMacroTooltip,
+        ["if_pic_one"] = SettingsMainViewResources.IfPicOneMacroTooltip,
+        ["if_pic_set"] = SettingsMainViewResources.IfPicSetMacroTooltip,
+        ["if_pic_gif"] = SettingsMainViewResources.IfPicGifMacroTooltip,
+        ["if_pic_all"] = SettingsMainViewResources.IfPicAllMacroTooltip,
+        ["pic_set_index"] = SettingsMainViewResources.PicSetIndexMacroTooltip
     }.ToFrozenDictionary();
 
     public static ICollection<SymbolComboBoxItem> AvailableMacros { get; } = [.. MetaPathMacroAttributeHelper.GetIArtworkInfoInstances().Select(m => new SymbolComboBoxItem($"@{{{(m is IPredicate ? $"{m.Name}:" : m.Name)}}}", _MacroTooltips[m.Name], default))];

@@ -11,14 +11,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:AutoSettingsPage.Models"
     xmlns:pixeval="using:Pixeval"
-    xmlns:settings="using:Pixeval.Models.Settings"
     xmlns:utilities="using:Pixeval.Utilities"
     xmlns:viewModels="using:Pixeval.ViewModels"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
     x:DataType="{x:Type viewModels:SettingsPageViewModel}"
-    Header="{I18N {x:Static pixeval:SettingsPageResources.TitleTextBlockText}}"
-    mc:Ignorable="d">
+    Header="{I18N {x:Static pixeval:SettingsMainViewResources.TitleTextBlockText}}"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
     <ScrollViewer>
         <StackPanel Margin="20">
             <!--  region Header  -->
@@ -29,24 +28,24 @@
                 VerticalSpacing="10">
                 <TextBlock
                     DockPanel.Dock="Top"
-                    Text="{I18N {x:Static pixeval:SettingsPageResources.AppDescriptionTextBlockText}}"
+                    Text="{I18N {x:Static pixeval:SettingsMainViewResources.AppDescriptionTextBlockText}}"
                     TextWrapping="Wrap" />
                 <WrapPanel
                     DockPanel.Dock="Bottom"
                     IsTabStop="False"
                     ItemSpacing="24"
                     Orientation="Horizontal">
-                    <HyperlinkButton Content="{I18N {x:Static pixeval:SettingsPageResources.ViewPixevalWebsiteHyperlinkButtonContent}}" NavigateUri="https://pixeval.github.io/" />
-                    <HyperlinkButton Content="{I18N {x:Static pixeval:SettingsPageResources.GitHubRepositoryHyperlinkButtonContent}}" NavigateUri="https://github.com/Pixeval/Pixeval" />
-                    <HyperlinkButton Content="{I18N {x:Static pixeval:SettingsPageResources.ReportBugHyperlinkButtonContent}}" NavigateUri="https://github.com/Pixeval/Pixeval/issues/new/choose" />
-                    <HyperlinkButton Content="{I18N {x:Static pixeval:SettingsPageResources.FeedbackByEmailHyperlinkButtonContent}}" NavigateUri="mailto:decem0730@hotmail.com" />
-                    <HyperlinkButton Content="{I18N {x:Static pixeval:SettingsPageResources.DonateDeveloperHyperlinkButtonContent}}" NavigateUri="https://afdian.net/a/dylech30th" />
-                    <HyperlinkButton Content="{I18N {x:Static pixeval:SettingsPageResources.JoinFeedbackGroupHyperlinkButtonContent}}" NavigateUri="https://jq.qq.com/?_wv=1027&amp;k=trDeCrog" />
+                    <HyperlinkButton Content="{I18N {x:Static pixeval:SettingsMainViewResources.ViewPixevalWebsiteHyperlinkButtonContent}}" NavigateUri="https://pixeval.github.io/" />
+                    <HyperlinkButton Content="{I18N {x:Static pixeval:SettingsMainViewResources.GitHubRepositoryHyperlinkButtonContent}}" NavigateUri="https://github.com/Pixeval/Pixeval" />
+                    <HyperlinkButton Content="{I18N {x:Static pixeval:SettingsMainViewResources.ReportBugHyperlinkButtonContent}}" NavigateUri="https://github.com/Pixeval/Pixeval/issues/new/choose" />
+                    <HyperlinkButton Content="{I18N {x:Static pixeval:SettingsMainViewResources.FeedbackByEmailHyperlinkButtonContent}}" NavigateUri="mailto:decem0730@hotmail.com" />
+                    <HyperlinkButton Content="{I18N {x:Static pixeval:SettingsMainViewResources.DonateDeveloperHyperlinkButtonContent}}" NavigateUri="https://afdian.net/a/dylech30th" />
+                    <HyperlinkButton Content="{I18N {x:Static pixeval:SettingsMainViewResources.JoinFeedbackGroupHyperlinkButtonContent}}" NavigateUri="https://jq.qq.com/?_wv=1027&amp;k=trDeCrog" />
                 </WrapPanel>
             </DockPanel>
             <!--  endregion  -->
 
-            <controls:SettingsExpander HeaderIcon="{markup:SymbolIcon Symbol=ArrowSync}">
+            <controls:SettingsExpander HeaderIcon="{markup:SymbolIcon ArrowSync}">
                 <controls:SettingsExpander.Header>
                     <HyperlinkButton
                         Padding="0"
@@ -56,7 +55,7 @@
                 <controls:SettingsExpander.Description>
                     <StackPanel Spacing="3">
                         <TextBlock>
-                            <Run Text="{I18N {x:Static pixeval:SettingsPageResources.LastCheckedPrefix}}" />
+                            <Run Text="{I18N {x:Static pixeval:SettingsMainViewResources.LastCheckedPrefix}}" />
                             <Run Text="{Binding LastCheckedUpdate}" />
                         </TextBlock>
                     </StackPanel>
@@ -75,31 +74,31 @@
                             Text="{x:Bind _viewModel.UpdateMessage, Mode=OneWay}" />
                         <Button
                             Click="CheckForUpdateButton_OnClicked"
-                            Content="{I18N {x:Static pixeval:SettingsPageResources.CheckForUpdatesButtonContent}}"
+                            Content="{I18N {x:Static pixeval:SettingsMainViewResources.CheckForUpdatesButtonContent}}"
                             IsEnabled="{x:Bind controls1:C.Negation(_viewModel.CheckingUpdate), Mode=OneWay}" />
                     </StackPanel>-->
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard
-                        ActionIcon="{markup:SymbolIcon Symbol=Open}"
+                        ActionIcon="{markup:SymbolIcon Open}"
                         Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
-                        Description="{I18N {x:Static pixeval:SettingsPageResources.OpenTempEntryDescription}}"
-                        Header="{I18N {x:Static pixeval:SettingsPageResources.OpenTempEntryHeader}}"
-                        HeaderIcon="{markup:SymbolIcon Symbol=FolderLightning}"
+                        Description="{I18N {x:Static pixeval:SettingsMainViewResources.OpenTempEntryDescription}}"
+                        Header="{I18N {x:Static pixeval:SettingsMainViewResources.OpenTempEntryHeader}}"
+                        HeaderIcon="{markup:SymbolIcon FolderLightning}"
                         IsClickEnabled="True"
                         Tag="{x:Static appManagement:AppInfo.TempFolder}" />
                     <controls:SettingsCard
                         ActionIcon="{markup:SymbolIcon ChevronRight}"
                         Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                         Description="ms-windows-store://pdp/?ProductId=9P1RZL9Z8454"
-                        Header="{I18N {x:Static pixeval:SettingsPageResources.MsStoreCheckForUpdatesEntryHeader}}"
-                        HeaderIcon="{markup:SymbolIcon Symbol=StoreMicrosoft}"
+                        Header="{I18N {x:Static pixeval:SettingsMainViewResources.MsStoreCheckForUpdatesEntryHeader}}"
+                        HeaderIcon="{markup:SymbolIcon StoreMicrosoft}"
                         IsClickEnabled="True"
                         Tag="ms-windows-store://pdp/?ProductId=9P1RZL9Z8454" />
                     <controls:SettingsCard
                         ActionIcon="{markup:SymbolIcon ChevronRight}"
                         Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                         Description="https://github.com/Pixeval/Pixeval/releases"
-                        Header="{I18N {x:Static pixeval:SettingsPageResources.GitHubCheckForUpdatesEntryHeader}}"
+                        Header="{I18N {x:Static pixeval:SettingsMainViewResources.GitHubCheckForUpdatesEntryHeader}}"
                         IsClickEnabled="True"
                         Tag="https://github.com/Pixeval/Pixeval/releases">
                         <controls:SettingsCard.HeaderIcon>
@@ -110,14 +109,14 @@
             </controls:SettingsExpander>
 
             <controls:SettingsExpander
-                Description="{I18N {x:Static pixeval:SettingsPageResources.BugReportEntryDescription}}"
-                Header="{I18N {x:Static pixeval:SettingsPageResources.BugReportEntryHeader}}"
-                HeaderIcon="{markup:SymbolIcon Symbol=Bug}">
+                Description="{I18N {x:Static pixeval:SettingsMainViewResources.BugReportEntryDescription}}"
+                Header="{I18N {x:Static pixeval:SettingsMainViewResources.BugReportEntryHeader}}"
+                HeaderIcon="{markup:SymbolIcon Bug}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard
-                        Description="{I18N {x:Static pixeval:SettingsPageResources.BugReportChannelsEntryDescription}}"
-                        Header="{I18N {x:Static pixeval:SettingsPageResources.BugReportChannelsEntryHeader}}"
-                        HeaderIcon="{markup:SymbolIcon Symbol=Send}">
+                        Description="{I18N {x:Static pixeval:SettingsMainViewResources.BugReportChannelsEntryDescription}}"
+                        Header="{I18N {x:Static pixeval:SettingsMainViewResources.BugReportChannelsEntryHeader}}"
+                        HeaderIcon="{markup:SymbolIcon Send}">
                         <CommandBar
                             Background="Transparent"
                             DefaultLabelPosition="Collapsed"
@@ -125,20 +124,20 @@
                             <CommandBarButton
                                 Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                                 Tag="https://github.com/Pixeval/Pixeval/issues/new/choose"
-                                ToolTip.Tip="{I18N {x:Static pixeval:SettingsPageResources.GitHubBugReportEntryToolTip}}">
+                                ToolTip.Tip="{I18N {x:Static pixeval:SettingsMainViewResources.GitHubBugReportEntryToolTip}}">
                                 <CommandBarButton.Icon>
                                     <Image MaxWidth="20" Source="{SvgImage avares://Pixeval/Assets/GitHub.svg}" />
                                 </CommandBarButton.Icon>
                             </CommandBarButton>
                             <CommandBarButton
                                 Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
-                                Icon="{markup:SymbolIcon Symbol=Mail}"
+                                Icon="{markup:SymbolIcon Mail}"
                                 Tag="mailto:decem0730@hotmail.com"
-                                ToolTip.Tip="{I18N {x:Static pixeval:SettingsPageResources.EMailBugReportEntryToolTip}}" />
+                                ToolTip.Tip="{I18N {x:Static pixeval:SettingsMainViewResources.EMailBugReportEntryToolTip}}" />
                             <CommandBarButton
                                 Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                                 Tag="https://jq.qq.com/?_wv=1027&amp;k=trDeCrog"
-                                ToolTip.Tip="{I18N {x:Static pixeval:SettingsPageResources.QQBugReportEntryToolTip}}">
+                                ToolTip.Tip="{I18N {x:Static pixeval:SettingsMainViewResources.QQBugReportEntryToolTip}}">
                                 <CommandBarButton.Icon>
                                     <Image MaxWidth="20" Source="{SvgImage avares://Pixeval/Assets/QQ.svg}" />
                                 </CommandBarButton.Icon>
@@ -146,138 +145,132 @@
                         </CommandBar>
                     </controls:SettingsCard>
                     <controls:SettingsCard
-                        ActionIcon="{markup:SymbolIcon Symbol=Open}"
+                        ActionIcon="{markup:SymbolIcon Open}"
                         Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
-                        Description="{I18N {x:Static pixeval:SettingsPageResources.OpenLogEntryDescription}}"
-                        Header="{I18N {x:Static pixeval:SettingsPageResources.OpenLogEntryHeader}}"
-                        HeaderIcon="{markup:SymbolIcon Symbol=FolderList}"
+                        Description="{I18N {x:Static pixeval:SettingsMainViewResources.OpenLogEntryDescription}}"
+                        Header="{I18N {x:Static pixeval:SettingsMainViewResources.OpenLogEntryHeader}}"
+                        HeaderIcon="{markup:SymbolIcon FolderList}"
                         IsClickEnabled="True"
                         Tag="{x:Static appManagement:AppInfo.LogsFolder}" />
                     <controls:SettingsCard
-                        ActionIcon="{markup:SymbolIcon Symbol=Open}"
+                        ActionIcon="{markup:SymbolIcon Open}"
                         Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
-                        Description="{I18N {x:Static pixeval:SettingsPageResources.OpenTempEntryDescription}}"
-                        Header="{I18N {x:Static pixeval:SettingsPageResources.OpenTempEntryHeader}}"
-                        HeaderIcon="{markup:SymbolIcon Symbol=FolderLightning}"
+                        Description="{I18N {x:Static pixeval:SettingsMainViewResources.OpenTempEntryDescription}}"
+                        Header="{I18N {x:Static pixeval:SettingsMainViewResources.OpenTempEntryHeader}}"
+                        HeaderIcon="{markup:SymbolIcon FolderLightning}"
                         IsClickEnabled="True"
                         Tag="{x:Static appManagement:AppInfo.TempFolder}" />
                     <controls:SettingsCard
-                        ActionIcon="{markup:SymbolIcon Symbol=Open}"
+                        ActionIcon="{markup:SymbolIcon Open}"
                         Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
-                        Description="{I18N {x:Static pixeval:SettingsPageResources.OpenLocalEntryDescription}}"
-                        Header="{I18N {x:Static pixeval:SettingsPageResources.OpenLocalEntryHeader}}"
-                        HeaderIcon="{markup:SymbolIcon Symbol=FolderBriefcase}"
+                        Description="{I18N {x:Static pixeval:SettingsMainViewResources.OpenLocalEntryDescription}}"
+                        Header="{I18N {x:Static pixeval:SettingsMainViewResources.OpenLocalEntryHeader}}"
+                        HeaderIcon="{markup:SymbolIcon FolderBriefcase}"
                         IsClickEnabled="True"
                         Tag="{x:Static appManagement:AppInfo.ApplicationFolderPath}" />
                     <controls:SettingsCard
-                        ActionIcon="{markup:SymbolIcon Symbol=Open}"
+                        ActionIcon="{markup:SymbolIcon Open}"
                         Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
-                        Description="{I18N {x:Static pixeval:SettingsPageResources.OpenExtensionsEntryDescription}}"
-                        Header="{I18N {x:Static pixeval:SettingsPageResources.OpenExtensionsEntryHeader}}"
-                        HeaderIcon="{markup:SymbolIcon Symbol=FolderAdd}"
+                        Description="{I18N {x:Static pixeval:SettingsMainViewResources.OpenExtensionsEntryDescription}}"
+                        Header="{I18N {x:Static pixeval:SettingsMainViewResources.OpenExtensionsEntryHeader}}"
+                        HeaderIcon="{markup:SymbolIcon FolderAdd}"
                         IsClickEnabled="True"
                         Tag="{x:Static appManagement:AppInfo.ExtensionsFolder}" />
                     <controls:SettingsCard
-                        ActionIcon="{markup:SymbolIcon Symbol=Open}"
+                        ActionIcon="{markup:SymbolIcon Open}"
                         Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
-                        Description="{I18N {x:Static pixeval:SettingsPageResources.OpenSettingsEntryDescription}}"
-                        Header="{I18N {x:Static pixeval:SettingsPageResources.OpenSettingsEntryHeader}}"
-                        HeaderIcon="{markup:SymbolIcon Symbol=FolderPerson}"
+                        Description="{I18N {x:Static pixeval:SettingsMainViewResources.OpenSettingsEntryDescription}}"
+                        Header="{I18N {x:Static pixeval:SettingsMainViewResources.OpenSettingsEntryHeader}}"
+                        HeaderIcon="{markup:SymbolIcon FolderPerson}"
                         IsClickEnabled="True"
                         Tag="{x:Static appManagement:AppInfo.SettingsFolder}" />
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
 
             <controls:SettingsCard
-                ActionIcon="{markup:SymbolIcon Symbol=Open}"
+                ActionIcon="{markup:SymbolIcon Open}"
                 Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
-                Description="{I18N {x:Static pixeval:SettingsPageResources.RateEntryDescription}}"
-                Header="{I18N {x:Static pixeval:SettingsPageResources.RateEntryHeader}}"
-                HeaderIcon="{markup:SymbolIcon Symbol=Star}"
+                Description="{I18N {x:Static pixeval:SettingsMainViewResources.RateEntryDescription}}"
+                Header="{I18N {x:Static pixeval:SettingsMainViewResources.RateEntryHeader}}"
+                HeaderIcon="{markup:SymbolIcon Star}"
                 IsClickEnabled="True"
                 Tag="ms-windows-store://pdp/?ProductId=9P1RZL9Z8454" />
 
             <controls:SettingsCard
                 ActionIcon="{markup:SymbolIcon ChevronRight}"
-                Click="PerformSignOutButton_OnClicked"
-                Description="{I18N {x:Static pixeval:SettingsPageResources.SignOutEntryDescription}}"
-                Header="{I18N {x:Static pixeval:SettingsPageResources.SignOutEntryHeader}}"
-                HeaderIcon="{markup:SymbolIcon Symbol=SignOut}"
-                IsClickEnabled="True"
-                Tag="{x:Static settings:LocalSettingsEntryHelper.SignOut}" />
+                Click="SwitchAccountButton_OnClicked"
+                Description="{I18N {x:Static pixeval:SettingsMainViewResources.SwitchAccountEntryDescription}}"
+                Header="{I18N {x:Static pixeval:SettingsMainViewResources.SwitchAccountEntryHeader}}"
+                HeaderIcon="{markup:SymbolIcon PersonSwap}"
+                IsClickEnabled="True" />
 
             <controls:SettingsCard
-                ActionIcon="{markup:SymbolIcon Symbol=ArrowReset}"
+                ActionIcon="{markup:SymbolIcon ArrowReset}"
                 Click="ResetDefaultSettings_OnClicked"
-                Description="{I18N {x:Static pixeval:SettingsPageResources.ResetDefaultSettingsEntryDescription}}"
-                Header="{I18N {x:Static pixeval:SettingsPageResources.ResetDefaultSettingsEntryHeader}}"
-                HeaderIcon="{markup:SymbolIcon Symbol=Apps}"
-                IsClickEnabled="True"
-                Tag="{x:Static settings:LocalSettingsEntryHelper.ResetSettings}" />
+                Description="{I18N {x:Static pixeval:SettingsMainViewResources.ResetDefaultSettingsEntryDescription}}"
+                Header="{I18N {x:Static pixeval:SettingsMainViewResources.ResetDefaultSettingsEntryHeader}}"
+                HeaderIcon="{markup:SymbolIcon Apps}"
+                IsClickEnabled="True" />
 
             <controls:SettingsExpander
-                Description="{I18N {x:Static pixeval:SettingsPageResources.BackupSettingsEntryDescription}}"
-                Header="{I18N {x:Static pixeval:SettingsPageResources.BackupSettingsEntryHeader}}"
-                HeaderIcon="{markup:SymbolIcon Symbol=ClipboardSettings}"
-                Tag="{x:Static settings:LocalSettingsEntryHelper.ResetSettings}">
+                Description="{I18N {x:Static pixeval:SettingsMainViewResources.BackupSettingsEntryDescription}}"
+                Header="{I18N {x:Static pixeval:SettingsMainViewResources.BackupSettingsEntryHeader}}"
+                HeaderIcon="{markup:SymbolIcon ClipboardSettings}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard
-                        ActionIcon="{markup:SymbolIcon Symbol=Open}"
+                        ActionIcon="{markup:SymbolIcon Open}"
                         Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
-                        Description="{I18N {x:Static pixeval:SettingsPageResources.OpenSettingsEntryDescription}}"
-                        Header="{I18N {x:Static pixeval:SettingsPageResources.OpenSettingsEntryHeader}}"
-                        HeaderIcon="{markup:SymbolIcon Symbol=FolderPerson}"
+                        Description="{I18N {x:Static pixeval:SettingsMainViewResources.OpenSettingsEntryDescription}}"
+                        Header="{I18N {x:Static pixeval:SettingsMainViewResources.OpenSettingsEntryHeader}}"
+                        HeaderIcon="{markup:SymbolIcon FolderPerson}"
                         IsClickEnabled="True"
                         Tag="{x:Static appManagement:AppInfo.SettingsFolder}" />
                     <controls:SettingsCard
-                        ActionIcon="{markup:SymbolIcon Symbol=Open}"
+                        ActionIcon="{markup:SymbolIcon Open}"
                         Click="ExportSettingsPlainText_OnClicked"
-                        Description="{I18N {x:Static pixeval:SettingsPageResources.ExportSettingsPlaintextEntryDescription}}"
-                        Header="{I18N {x:Static pixeval:SettingsPageResources.ExportSettingsPlaintextEntryHeader}}"
-                        HeaderIcon="{markup:SymbolIcon Symbol=ArrowExport}"
+                        Description="{I18N {x:Static pixeval:SettingsMainViewResources.ExportSettingsPlaintextEntryDescription}}"
+                        Header="{I18N {x:Static pixeval:SettingsMainViewResources.ExportSettingsPlaintextEntryHeader}}"
+                        HeaderIcon="{markup:SymbolIcon ArrowExport}"
                         IsClickEnabled="True" />
                     <controls:SettingsCard
-                        ActionIcon="{markup:SymbolIcon Symbol=Open}"
+                        ActionIcon="{markup:SymbolIcon Open}"
                         Click="ImportSettingsPlaintext_OnClicked"
-                        Description="{I18N {x:Static pixeval:SettingsPageResources.ImportSettingsPlaintextEntryDescription}}"
-                        Header="{I18N {x:Static pixeval:SettingsPageResources.ImportSettingsPlaintextEntryHeader}}"
-                        HeaderIcon="{markup:SymbolIcon Symbol=ArrowImport}"
+                        Description="{I18N {x:Static pixeval:SettingsMainViewResources.ImportSettingsPlaintextEntryDescription}}"
+                        Header="{I18N {x:Static pixeval:SettingsMainViewResources.ImportSettingsPlaintextEntryHeader}}"
+                        HeaderIcon="{markup:SymbolIcon ArrowImport}"
                         IsClickEnabled="True" />
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
 
-            <controls:SettingsExpander
-                Header="{I18N {x:Static pixeval:SettingsPageResources.DeleteHistoriesEntryHeader}}"
-                HeaderIcon="{markup:SymbolIcon Symbol=HistoryDismiss}"
-                Tag="{x:Static settings:LocalSettingsEntryHelper.DeleteHistories}">
+            <controls:SettingsExpander Header="{I18N {x:Static pixeval:SettingsMainViewResources.DeleteHistoriesEntryHeader}}" HeaderIcon="{markup:SymbolIcon HistoryDismiss}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard
                         ActionIcon="{markup:SymbolIcon ChevronRight}"
                         Click="DeleteFileCacheEntryButton_OnClicked"
-                        Description="{I18N {x:Static pixeval:SettingsPageResources.DeleteFileCacheEntryDescription}}"
-                        Header="{I18N {x:Static pixeval:SettingsPageResources.DeleteFileCacheEntryHeader}}"
-                        HeaderIcon="{markup:SymbolIcon Symbol=HistoryDismiss}"
+                        Description="{I18N {x:Static pixeval:SettingsMainViewResources.DeleteFileCacheEntryDescription}}"
+                        Header="{I18N {x:Static pixeval:SettingsMainViewResources.DeleteFileCacheEntryHeader}}"
+                        HeaderIcon="{markup:SymbolIcon HistoryDismiss}"
                         IsClickEnabled="True" />
                     <controls:SettingsCard
                         ActionIcon="{markup:SymbolIcon ChevronRight}"
                         Click="DeleteSearchHistoriesButton_OnClicked"
-                        Description="{I18N {x:Static pixeval:SettingsPageResources.DeleteSearchHistoriesEntryDescription}}"
-                        Header="{I18N {x:Static pixeval:SettingsPageResources.DeleteSearchHistoriesEntryHeader}}"
-                        HeaderIcon="{markup:SymbolIcon Symbol=HistoryDismiss}"
+                        Description="{I18N {x:Static pixeval:SettingsMainViewResources.DeleteSearchHistoriesEntryDescription}}"
+                        Header="{I18N {x:Static pixeval:SettingsMainViewResources.DeleteSearchHistoriesEntryHeader}}"
+                        HeaderIcon="{markup:SymbolIcon HistoryDismiss}"
                         IsClickEnabled="True" />
                     <controls:SettingsCard
                         ActionIcon="{markup:SymbolIcon ChevronRight}"
                         Click="DeleteBrowseHistoriesButton_OnClicked"
-                        Description="{I18N {x:Static pixeval:SettingsPageResources.DeleteBrowseHistoriesEntryDescription}}"
-                        Header="{I18N {x:Static pixeval:SettingsPageResources.DeleteBrowseHistoriesEntryHeader}}"
-                        HeaderIcon="{markup:SymbolIcon Symbol=HistoryDismiss}"
+                        Description="{I18N {x:Static pixeval:SettingsMainViewResources.DeleteBrowseHistoriesEntryDescription}}"
+                        Header="{I18N {x:Static pixeval:SettingsMainViewResources.DeleteBrowseHistoriesEntryHeader}}"
+                        HeaderIcon="{markup:SymbolIcon HistoryDismiss}"
                         IsClickEnabled="True" />
                     <controls:SettingsCard
                         ActionIcon="{markup:SymbolIcon ChevronRight}"
                         Click="DeleteDownloadHistoriesButton_OnClicked"
-                        Description="{I18N {x:Static pixeval:SettingsPageResources.DeleteDownloadHistoriesEntryDescription}}"
-                        Header="{I18N {x:Static pixeval:SettingsPageResources.DeleteDownloadHistoriesEntryHeader}}"
-                        HeaderIcon="{markup:SymbolIcon Symbol=HistoryDismiss}"
+                        Description="{I18N {x:Static pixeval:SettingsMainViewResources.DeleteDownloadHistoriesEntryDescription}}"
+                        Header="{I18N {x:Static pixeval:SettingsMainViewResources.DeleteDownloadHistoriesEntryHeader}}"
+                        HeaderIcon="{markup:SymbolIcon HistoryDismiss}"
                         IsClickEnabled="True" />
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>

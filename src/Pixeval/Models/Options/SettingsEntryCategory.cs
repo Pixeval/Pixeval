@@ -9,24 +9,24 @@ namespace Pixeval.Models.Options;
 [LocalizationMetadata]
 public enum SettingsEntryCategory
 {
-    [LocalizedResource(Symbol.DesignIdeas, SettingsPageResources.VersionSettingsGroupText)]
+    [LocalizedResource(Symbol.DesignIdeas, SettingsMainViewResources.VersionSettingsGroupText)]
     Version,
 
-    [LocalizedResource(Symbol.Person, SettingsPageResources.SessionSettingsGroupText)]
+    [LocalizedResource(Symbol.Person, SettingsMainViewResources.SessionSettingsGroupText)]
     Session,
 
-    [LocalizedResource(Symbol.Apps, SettingsPageResources.ApplicationSettingsGroupText)]
+    [LocalizedResource(Symbol.Apps, SettingsMainViewResources.ApplicationSettingsGroupText)]
     Application,
 
-    [LocalizedResource(Symbol.News, SettingsPageResources.BrowsingExperienceSettingsGroupText)]
+    [LocalizedResource(Symbol.News, SettingsMainViewResources.BrowsingExperienceSettingsGroupText)]
     BrowsingExperience,
 
-    [LocalizedResource(Symbol.SearchSparkle, SettingsPageResources.SearchSettingsGroupText)]
+    [LocalizedResource(Symbol.SearchSparkle, SettingsMainViewResources.SearchSettingsGroupText)]
     Search,
 
-    [LocalizedResource(Symbol.ArrowSquareDown, SettingsPageResources.DownloadSettingsGroupText)]
+    [LocalizedResource(Symbol.ArrowSquareDown, SettingsMainViewResources.DownloadSettingsGroupText)]
     Download,
 
-    [LocalizedResource(Symbol.WrenchScrewdriver, SettingsPageResources.MiscSettingsGroupText)]
+    [LocalizedResource(Symbol.WrenchScrewdriver, SettingsMainViewResources.MiscSettingsGroupText)]
     Misc
 }

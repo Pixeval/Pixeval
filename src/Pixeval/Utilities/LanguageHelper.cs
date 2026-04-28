@@ -69,10 +69,10 @@ public class DefaultCultureInfo : CultureInfo
     public override string ToString() => "";
 
     /// <inheritdoc />
-    public override string NativeName { get; } = I18NManager.GetResource(SettingsPageResources.LanguageSystemDefault);
+    public override string NativeName { get; } = I18NManager.GetResource(SettingsMainViewResources.LanguageSystemDefault);
 
     /// <inheritdoc />
-    public override string DisplayName { get; } = I18NManager.GetResource(SettingsPageResources.LanguageSystemDefault);
+    public override string DisplayName { get; } = I18NManager.GetResource(SettingsMainViewResources.LanguageSystemDefault);
 
     /// <inheritdoc />
     public DefaultCultureInfo() : base("")

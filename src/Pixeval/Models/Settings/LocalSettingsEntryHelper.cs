@@ -26,18 +26,6 @@ public static class LocalSettingsEntryHelper
     {
     }
 
-    public static readonly SettingsEntryAttribute SignOut = new(Symbol.SignOut,
-        nameof(SettingsPageResources.SignOutEntryHeader),
-        nameof(SettingsPageResources.SignOutEntryDescription));
-
-    public static readonly SettingsEntryAttribute ResetSettings = new(Symbol.Apps,
-        nameof(SettingsPageResources.ResetDefaultSettingsEntryHeader),
-        nameof(SettingsPageResources.ResetDefaultSettingsEntryDescription));
-
-    public static readonly SettingsEntryAttribute DeleteHistories = new(Symbol.Delete,
-        nameof(SettingsPageResources.DeleteHistoriesEntryHeader),
-        null);
-
     public static readonly Lazy<IReadOnlyList<SettingsEntryAttribute>> LazyValues = new(() =>
         [.. typeof(AppSettings).GetProperties(BindingFlags.Instance | BindingFlags.Public).SelectNotNull(f => f.GetCustomAttribute<SettingsEntryAttribute>())]);
 

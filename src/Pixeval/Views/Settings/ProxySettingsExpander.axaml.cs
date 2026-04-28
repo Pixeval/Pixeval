@@ -33,7 +33,7 @@ public partial class ProxySettingsExpander : SettingsExpander, IEntryControl<Pro
 
         if (!Uri.IsWellFormedUriString(proxy, UriKind.Absolute))
         {
-            TopLevel.GetTopLevel(this)?.ViewContainer?.ShowError(I18NManager.GetResource(SettingsPageResources.ProxyTextBoxErrorUri), proxy);
+            TopLevel.GetTopLevel(this)?.ViewContainer?.ShowError(I18NManager.GetResource(SettingsMainViewResources.ProxyTextBoxErrorUri), proxy);
             entry.Proxy = null;
             return;
         }

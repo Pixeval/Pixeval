@@ -109,7 +109,7 @@
   "MoreViewingSettingsItem": {
     "Text": "更多浏览设置"
   },
-  "LogoutItem": {
-    "Text": "登出账号"
+  "SwitchAccountItem": {
+    "Text": "切换账号"
   }
 }

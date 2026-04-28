@@ -43,7 +43,7 @@ public partial class DownloadMacroSettingsExpander : SettingsExpander, IEntryCon
 
         if (string.IsNullOrWhiteSpace(text))
         {
-            DownloadMacroInvalidInfoBar.Text = SettingsPageResources.DownloadMacroInvalidInfoBarInputCannotBeBlank;
+            DownloadMacroInvalidInfoBar.Text = SettingsMainViewResources.DownloadMacroInvalidInfoBarInputCannotBeBlank;
             DownloadMacroInvalidInfoBar.IsVisible = true;
             return;
         }
@@ -69,7 +69,7 @@ public partial class DownloadMacroSettingsExpander : SettingsExpander, IEntryCon
         }
         catch (Exception exception)
         {
-            DownloadMacroInvalidInfoBar.Text = I18NManager.GetResource(SettingsPageResources.DownloadMacroInvalidInfoBarMacroInvalidFormatted, exception.Message);
+            DownloadMacroInvalidInfoBar.Text = I18NManager.GetResource(SettingsMainViewResources.DownloadMacroInvalidInfoBarMacroInvalidFormatted, exception.Message);
             DownloadMacroInvalidInfoBar.IsVisible = true;
         }
     }
