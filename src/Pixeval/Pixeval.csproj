@@ -45,8 +45,8 @@
         <PackageReference Include="LiteDB" Version="5.0.21" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.7" />
         <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7705" />
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260209005" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.1721" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260416003" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
         <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.264">
             <PrivateAssets>all</PrivateAssets>
@@ -85,7 +85,7 @@
             </TextFiles>
         </ItemGroup>
         <WriteLinesToFile Condition="%(TextFiles.Identity) != ''" File="%(TextFiles.Identity)" Overwrite="true" Lines="{}" />
-        <JsonPoke Condition="%(TextFiles.Identity) != '' AND '$(DesignTimeBuild)' != 'true'" ContentPath="%(TextFiles.Identity)" Query="$['%(TextFiles.Key)']" Value="%(TextFiles.Content)"></JsonPoke>
+        <JsonPoke Condition="%(TextFiles.Identity) != ''" ContentPath="%(TextFiles.Identity)" Query="$['%(TextFiles.Key)']" Value="%(TextFiles.Content)"></JsonPoke>
         <ItemGroup>
             <PRIResource Include="@(TextFiles)" />
             <AdditionalFiles Include="@(PRIResource)" SourceItemGroup="PRIResource" />
@@ -115,13 +115,13 @@
         <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
         <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
         <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
-        <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+        <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
         <GenerateTestArtifacts>True</GenerateTestArtifacts>
         <AppxBundle>Always</AppxBundle>
         <AppInstallerUri>%UserProfile%\Desktop</AppInstallerUri>
         <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-        <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
-        <AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
+        <GenerateTemporaryStoreCertificate>False</GenerateTemporaryStoreCertificate>
+        <AppxBundlePlatforms>x64</AppxBundlePlatforms>
         <UserSecretsId>3def7e91-e55c-4da1-b2d9-54509ccc34fd</UserSecretsId>
     </PropertyGroup>
 
