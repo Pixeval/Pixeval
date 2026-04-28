@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using FluentIcons.Common;
+using Pixeval.Controls;
 using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
@@ -58,15 +59,15 @@ public partial class DownloadItem : UserControl
         OpenIllustrationRequested?.Invoke(this, vm);
     }
 
-    private void CheckErrorMessageInDetail_OnClicked(object? sender, RoutedEventArgs e)
+    private async void CheckErrorMessageInDetail_OnClicked(object? sender, RoutedEventArgs e)
     {
         if (ViewModel is not { } vm)
             return;
 
-        // TODO: Dialog?
-        TopLevel.GetTopLevel(this)?.ViewContainer?.ShowError(
-            I18NManager.GetResource(DownloadItemResources.ErrorMessageDialogTitle),
-            vm.DownloadTask.ErrorCause?.ToString());
+        if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer)
+            _ = await viewContainer.CreateAcknowledgementAsync(
+                I18NManager.GetResource(DownloadItemResources.ErrorMessageDialogTitle),
+                vm.DownloadTask.ErrorCause?.ToString());
     }
 
     private async Task OpenPathAsync(string path)

@@ -1,0 +1,150 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls">
+
+    <Color x:Key="ContentDialogOverlayColor">#66000000</Color>
+    <SolidColorBrush x:Key="ContentDialogOverlayBrush" Color="{StaticResource ContentDialogOverlayColor}" />
+
+    <ControlTheme x:Key="{x:Type controls:ContentDialogHost}" TargetType="controls:ContentDialogHost">
+        <Setter Property="IsVisible" Value="False" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border x:Name="PART_Root" Background="{StaticResource ContentDialogOverlayBrush}">
+                    <Panel
+                        x:Name="PART_DialogPanel"
+                        Margin="24"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:compact /template/ Grid#PART_DialogPanel">
+            <Setter Property="Margin" Value="8,8,8,0" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type controls:ContentDialog}" TargetType="{x:Type controls:ContentDialog}">
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="MinWidth" Value="300" />
+        <Setter Property="MaxWidth" Value="440" />
+        <Setter Property="MaxHeight" Value="720" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border
+                    x:Name="PART_LayoutRoot"
+                    Background="{DynamicResource SolidBackgroundFillColorQuarternaryBrush}"
+                    BorderBrush="{DynamicResource SurfaceStrokeColorFlyoutBrush}"
+                    BorderThickness="1"
+                    BoxShadow="0 18 44 0 #40000000"
+                    ClipToBounds="True"
+                    CornerRadius="8">
+                    <Grid RowDefinitions="Auto,*,Auto">
+                        <ContentPresenter
+                            x:Name="PART_TitlePresenter"
+                            Margin="24,22,24,0"
+                            Content="{TemplateBinding Title}"
+                            ContentTemplate="{TemplateBinding TitleTemplate}"
+                            IsVisible="{TemplateBinding Title,
+                                                        Converter={x:Static ObjectConverters.IsNotNull}}">
+                            <ContentPresenter.DataTemplates>
+                                <DataTemplate DataType="{x:Type x:String}">
+                                    <TextBlock
+                                        FontSize="20"
+                                        FontWeight="SemiBold"
+                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                        Text="{Binding}"
+                                        TextWrapping="Wrap" />
+                                </DataTemplate>
+                            </ContentPresenter.DataTemplates>
+                        </ContentPresenter>
+
+                        <ScrollViewer
+                            Grid.Row="1"
+                            MaxHeight="420"
+                            Margin="24,12,24,20"
+                            VerticalScrollBarVisibility="Auto">
+                            <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}">
+                                <ContentPresenter.DataTemplates>
+                                    <DataTemplate x:DataType="{x:Type x:String}" DataType="{x:Type x:String}">
+                                        <TextBlock
+                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                            Text="{Binding}"
+                                            TextWrapping="Wrap" />
+                                    </DataTemplate>
+                                </ContentPresenter.DataTemplates>
+                            </ContentPresenter>
+                        </ScrollViewer>
+
+                        <StackPanel
+                            x:Name="PART_ButtonPanel"
+                            Grid.Row="2"
+                            Margin="24,0,24,24"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal"
+                            Spacing="8">
+                            <Button
+                                x:Name="PART_SecondaryButton"
+                                MinWidth="84"
+                                Content="{TemplateBinding SecondaryButtonText}"
+                                IsEnabled="{TemplateBinding IsSecondaryButtonEnabled}"
+                                IsVisible="{TemplateBinding SecondaryButtonText,
+                                                            Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                            <Button
+                                x:Name="PART_CloseButton"
+                                MinWidth="84"
+                                Content="{TemplateBinding CloseButtonText}"
+                                IsEnabled="{TemplateBinding IsCloseButtonEnabled}"
+                                IsVisible="{TemplateBinding CloseButtonText,
+                                                            Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                            <Button
+                                x:Name="PART_PrimaryButton"
+                                MinWidth="84"
+                                Content="{TemplateBinding PrimaryButtonText}"
+                                IsEnabled="{TemplateBinding IsPrimaryButtonEnabled}"
+                                IsVisible="{TemplateBinding PrimaryButtonText,
+                                                            Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Button.default">
+            <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource AccentControlElevationBorderBrush}" />
+        </Style>
+
+        <Style Selector="^ /template/ Button">
+            <Setter Property="FocusAdorner" Value="{x:Null}" />
+        </Style>
+
+        <Style Selector="^:compact">
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="MaxWidth" Value="10000" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+        </Style>
+
+        <Style Selector="^:compact /template/ Border#PART_LayoutRoot">
+            <Setter Property="CornerRadius" Value="12,12,0,0" />
+        </Style>
+
+        <Style Selector="^:compact /template/ StackPanel#PART_ButtonPanel">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Orientation" Value="Vertical" />
+        </Style>
+
+        <Style Selector="^:compact /template/ StackPanel#PART_ButtonPanel Button">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

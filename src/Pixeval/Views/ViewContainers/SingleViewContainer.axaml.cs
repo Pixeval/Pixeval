@@ -20,6 +20,7 @@ public partial class SingleViewContainer : ViewContainerBase
             MaxItems = 1,
             Position = NotificationPosition.BottomCenter
         };
+        RegisterContentDialogHost(TopLevel.GetTopLevel(this));
     }
 
     /// <inheritdoc />

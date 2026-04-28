@@ -10,9 +10,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
     xmlns:utilities="using:Pixeval.Utilities"
+    mc:Ignorable="d"
     d:DesignHeight="40"
-    d:DesignWidth="350"
-    mc:Ignorable="d">
+    d:DesignWidth="350">
     <DockPanel HorizontalSpacing="5" LastChildFill="True">
         <Button
             x:Name="EmojiButton"

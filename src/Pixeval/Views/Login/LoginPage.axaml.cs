@@ -3,6 +3,7 @@ using System.Web;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform;
+using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.Views.Capability;
 
@@ -51,9 +52,10 @@ public partial class LoginPage : ContentPage
                 App.AppViewModel.MakoClient.SetCode(code, verifier);
                 if (await App.AppViewModel.MakoClient.IdentifyTokenAsync())
                     Avalonia.Threading.Dispatcher.UIThread.Invoke(LoginNavigate);
-                // TODO else
-                //_ = await TopLevel.GetTopLevel(this)?.ViewContainer?.CreateAcknowledgementAsync(LoginPageResources.FetchingSessionFailedTitle,
-                //    LoginPageResources.FetchingSessionFailedContent);
+                else if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer)
+                    _ = await viewContainer.CreateAcknowledgementAsync(
+                        I18NManager.GetResource(LoginPageResources.FetchingSessionFailedTitle),
+                        I18NManager.GetResource(LoginPageResources.FetchingSessionFailedContent));
             }
         };
         WebView.Source = new Uri(PixivAuth.GenerateWebPageUrl(verifier));

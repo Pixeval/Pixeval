@@ -4,6 +4,7 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Pixeval.I18N;
 using Pixeval.Utilities;
 
 namespace Pixeval.Views;
@@ -39,7 +40,16 @@ public partial class PixivReplyBar : UserControl
     {
         var content = ReplyContentTextBox.Text;
         if (string.IsNullOrEmpty(content) || content.Length > 140)
+        {
+            if (TopLevel.GetTopLevel(this)?.ViewContainer is not { } viewContainer)
+                return;
+
+            _ = viewContainer.CreateAcknowledgementAsync(
+                I18NManager.GetResource(PixivReplyBarResources.CommentIsTooShortOrTooLongToastTitle),
+                I18NManager.GetResource(PixivReplyBarResources.CommentIsTooShortOrTooLongToastContentFormatted,
+                    content?.Length ?? 0));
             return;
+        }
 
         SendButtonClick?.Invoke(content);
         ReplyContentTextBox.Clear();

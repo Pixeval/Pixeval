@@ -122,6 +122,13 @@ public partial class WorkContainer : UserControl
         if (DataContext is not ISortableEntryViewViewModel viewModel)
             return;
 
+        if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer
+            && viewModel.SelectedEntries.Count >= 20
+            && await viewContainer.CreateOkCancelAsync(
+                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItemsForBookmarkTitle),
+                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItemsForBookmarkContent)) is not ContentDialogResult.Primary)
+            return;
+
         foreach (var i in viewModel.SelectedEntries)
             await i.AddToBookmarkCommand.ExecuteAsync((e.tags, e.isPrivate, this));
         if (viewModel.SelectedEntries.Count is var c and > 0)
@@ -138,9 +145,12 @@ public partial class WorkContainer : UserControl
         if (DataContext is not ISortableEntryViewViewModel viewModel)
             return;
 
-        // TODO: CreateOkCancelAsync dialog equivalent in Avalonia
-        // if (viewModel.SelectedEntries.Count >= 20 && await this.CreateOkCancelAsync(...) is not ...)
-        //     return;
+        if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer
+            && viewModel.SelectedEntries.Count >= 20
+            && await viewContainer.CreateOkCancelAsync(
+                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItemsTitle),
+                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItemsForSaveContent)) is not ContentDialogResult.Primary)
+            return;
 
         foreach (var i in viewModel.SelectedEntries)
             i.SaveCommand.Execute(null);
@@ -154,9 +164,12 @@ public partial class WorkContainer : UserControl
         if (DataContext is not ISortableEntryViewViewModel viewModel)
             return;
 
-        // TODO: CreateOkCancelAsync dialog equivalent in Avalonia
-        // if (viewModel.SelectedEntries.Count > 15 && await this.CreateOkCancelAsync(...) is not ...)
-        //     return;
+        if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer
+            && viewModel.SelectedEntries.Count > 15
+            && await viewContainer.CreateOkCancelAsync(
+                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItemsTitle),
+                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItemsForOpenInBrowserContent)) is not ContentDialogResult.Primary)
+            return;
 
         foreach (var selectedEntry in viewModel.SelectedEntries)
         {

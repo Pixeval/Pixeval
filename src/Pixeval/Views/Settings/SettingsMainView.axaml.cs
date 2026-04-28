@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
+using Pixeval.Controls;
 using Pixeval.I18N;
 using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Options;
@@ -40,17 +41,22 @@ public partial class SettingsMainView : ContentPage
         if (DataContext is not SettingsPageViewModel vm)
             return;
 
-        //if (await this.CreateOkCancelAsync(SettingsPageResources.ResetSettingConfirmationDialogTitle,
-        //        SettingsPageResources.ResetSettingConfirmationDialogContent) is ContentDialogResult.Primary)
-        {
-            var settings = new AppSettings();
-            foreach (var localGroup in vm.LocalGroups)
-            foreach (var settingsEntry in localGroup)
-                settingsEntry.LocalValueReset(settings);
-            foreach (var extensionGroup in vm.ExtensionGroups)
-            foreach (var settingsEntry in extensionGroup)
-                settingsEntry.ValueReset();
-        }
+        if (TopLevel.GetTopLevel(this)?.ViewContainer is not { } viewContainer)
+            return;
+
+        if (await viewContainer.CreateOkCancelAsync(
+                I18NManager.GetResource(SettingsPageResources.ResetSettingConfirmationDialogTitle),
+                I18NManager.GetResource(SettingsPageResources.ResetSettingConfirmationDialogContent))
+            is not ContentDialogResult.Primary)
+            return;
+
+        var settings = new AppSettings();
+        foreach (var localGroup in vm.LocalGroups)
+        foreach (var settingsEntry in localGroup)
+            settingsEntry.LocalValueReset(settings);
+        foreach (var extensionGroup in vm.ExtensionGroups)
+        foreach (var settingsEntry in extensionGroup)
+            settingsEntry.ValueReset();
     }
 
     private void ReleaseNotesHyperlink_OnClicked(object? sender, RoutedEventArgs e)

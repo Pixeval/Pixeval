@@ -42,6 +42,7 @@ public partial class TabViewContainer : ViewContainerBase
             MaxItems = 3,
             Position = NotificationPosition.BottomRight
         };
+        RegisterContentDialogHost(TopLevel.GetTopLevel(this));
     }
 
     /// <inheritdoc />
@@ -53,11 +54,10 @@ public partial class TabViewContainer : ViewContainerBase
         {
             Icon = page.Icon,
             Header = page.Header,
-            Content = page
+            Content = page,
+            [!HeaderedContentControl.HeaderProperty] = page[!Page.HeaderProperty],
+            [!DragTabItem.IconProperty] = page[!Page.IconProperty]
         };
-        
-        dragTabItem[!HeaderedContentControl.HeaderProperty] = page[!Page.HeaderProperty];
-        dragTabItem[!DragTabItem.IconProperty] = page[!Page.IconProperty];
 
         _ = TabsControl.Items.Add(dragTabItem);
 
