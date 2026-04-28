@@ -28,21 +28,25 @@ public sealed partial class SearchWorksPage : IScrollViewHost
     {
         var settings = App.AppViewModel.AppSettings;
         WorkContainer.WorkView.ResetEngine(
-            SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>() is SimpleWorkType.IllustAndManga
+            SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>() is SimpleWorkType.IllustrationAndManga
                 ? App.AppViewModel.MakoClient.SearchIllustrations(
                     _searchText,
                     settings.SearchIllustrationTagMatchOption,
                     settings.WorkSortOption,
-                    settings.TargetFilter,
                     settings.UseSearchStartDate ? settings.SearchStartDate : null,
-                    settings.UseSearchEndDate ? settings.SearchEndDate : null)
+                    settings.UseSearchEndDate ? settings.SearchEndDate : null,
+                    null,
+                    settings.TargetFilter)
                 : App.AppViewModel.MakoClient.SearchNovels(
                     _searchText,
                     settings.SearchNovelTagMatchOption,
                     settings.WorkSortOption,
-                    settings.TargetFilter,
                     settings.UseSearchStartDate ? settings.SearchStartDate : null,
-                    settings.UseSearchEndDate ? settings.SearchEndDate : null));
+                    settings.UseSearchEndDate ? settings.SearchEndDate : null,
+                    true,
+                    true,
+                    null,
+                    settings.TargetFilter));
     }
 
     public ScrollView ScrollView => WorkContainer.ScrollView;

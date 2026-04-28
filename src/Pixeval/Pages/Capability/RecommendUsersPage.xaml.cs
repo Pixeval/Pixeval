@@ -13,7 +13,7 @@ public sealed partial class RecommendUsersPage : IScrollViewHost
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
-        IllustratorView.ViewModel.ResetEngine(App.AppViewModel.MakoClient.RecommendIllustrators());
+        IllustratorView.ViewModel.ResetEngine(App.AppViewModel.MakoClient.RecommendedUsers());
     }
 
     public ScrollView ScrollView => IllustratorView.ScrollView;

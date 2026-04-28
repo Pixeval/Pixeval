@@ -40,10 +40,10 @@
         <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.251219" />
         <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.4.0" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-        <PackageReference Include="FluentIcons.WinUI" Version="2.1.323" />
+        <PackageReference Include="FluentIcons.WinUI" Version="2.1.325" />
         <PackageReference Include="JsonPoke" Version="1.2.0" />
         <PackageReference Include="LiteDB" Version="5.0.21" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.1" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.7" />
         <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7705" />
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260209005" />

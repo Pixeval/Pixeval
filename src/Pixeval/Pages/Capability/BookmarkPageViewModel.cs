@@ -39,11 +39,11 @@ public partial class BookmarksPageViewModel(long userId) : ObservableObject, IDi
         if (IsMe)
             return await MakoHelper.GetBookmarkTagsAsync(policy, type);
 
-        var lazy = new Lazy<Task<List<BookmarkTag>>>(() => App.AppViewModel.MakoClient.GetBookmarkTagAsync(UserId, type, policy));
+        var lazy = new Lazy<Task<List<BookmarkTag>>>(() => MakoHelper.GetBookmarkTagsAsync(UserId, type, policy));
         return (policy, type) switch
         {
-            (PrivacyPolicy.Private, SimpleWorkType.IllustAndManga) => IllustrationPrivateBookmarkTags ??= await lazy.Value,
-            (PrivacyPolicy.Public, SimpleWorkType.IllustAndManga) => IllustrationPublicBookmarkTags ??= await lazy.Value,
+            (PrivacyPolicy.Private, SimpleWorkType.IllustrationAndManga) => IllustrationPrivateBookmarkTags ??= await lazy.Value,
+            (PrivacyPolicy.Public, SimpleWorkType.IllustrationAndManga) => IllustrationPublicBookmarkTags ??= await lazy.Value,
             (PrivacyPolicy.Private, SimpleWorkType.Novel) => NovelPrivateBookmarkTags ??= await lazy.Value,
             (PrivacyPolicy.Public, SimpleWorkType.Novel) => NovelPublicBookmarkTags ??= await lazy.Value,
             _ => ThrowHelper.ArgumentOutOfRange<(PrivacyPolicy, SimpleWorkType), IList<BookmarkTag>>((policy, type))

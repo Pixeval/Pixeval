@@ -10,6 +10,7 @@ using AutoSettingsPage;
 using AutoSettingsPage.Models;
 using AutoSettingsPage.WinUI;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Mako;
 using Mako.Global.Enum;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -82,6 +83,8 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                             .IPSet(t => t.PixivAccountNameResolver)
                             .IPSet(t => t.PixivWebApiNameResolver),
                     entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.DomainFronting = t)
+                .Enum(t => t.DomainFrontingType, DomainFrontingType.Pairs,
+                    entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.DomainFrontingType = (DomainFrontingType) t)
                 .Proxy(entry => entry.ProxyChanged = t => App.AppViewModel.MakoClient.Configuration.Proxy = t)
                 .String(t => t.MirrorHost,
                     entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.MirrorHost = t)

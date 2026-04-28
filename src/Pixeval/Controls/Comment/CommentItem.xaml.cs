@@ -47,13 +47,13 @@ public sealed partial class CommentItem
 
     private async void DeleteReplyButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        using var result = RequireEntryType() switch
+        var result = RequireEntryType() switch
         {
-            SimpleWorkType.IllustAndManga => await App.AppViewModel.MakoClient.DeleteIllustCommentAsync(ViewModel.Id),
+            SimpleWorkType.IllustrationAndManga => await App.AppViewModel.MakoClient.DeleteIllustrationCommentAsync(ViewModel.Id),
             SimpleWorkType.Novel => await App.AppViewModel.MakoClient.DeleteNovelCommentAsync(ViewModel.Id),
-            _ => ThrowHelper.ArgumentOutOfRange<SimpleWorkType, HttpResponseMessage>(RequireEntryType())
+            _ => ThrowHelper.ArgumentOutOfRange<SimpleWorkType, bool>(RequireEntryType())
         };
-        if (result.IsSuccessStatusCode)
+        if (result)
             DeleteButtonClick?.Invoke(ViewModel);
     }
 }

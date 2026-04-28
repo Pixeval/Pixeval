@@ -1,6 +1,7 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using Mako;
 using Mako.Global.Enum;
 using Microsoft.UI.Xaml;
 using Pixeval.Attributes;
@@ -94,6 +95,12 @@ public static partial class RankOptionExtension
 [AttachedLocalizedResource(nameof(TargetFilter.ForIos), nameof(MiscResources.TargetFilterForIOS))]
 public static partial class TargetFilterExtension;
 
+[AttachedLocalizationMetadata<DomainFrontingType>(typeof(MiscResources))]
+[AttachedLocalizedResource(nameof(DomainFrontingType.Fragmentation), nameof(MiscResources.DomainFrontingTypeFragmentation))]
+[AttachedLocalizedResource(nameof(DomainFrontingType.Ech), nameof(MiscResources.DomainFrontingTypeEch))]
+[AttachedLocalizedResource(nameof(DomainFrontingType.Desync), nameof(MiscResources.DomainFrontingTypeDesync))]
+public static partial class DomainFrontingTypeExtension;
+
 [AttachedLocalizationMetadata<BackdropType>(typeof(MiscResources))]
 [AttachedLocalizedResource(nameof(BackdropType.None), nameof(MiscResources.NoneBackdrop))]
 [AttachedLocalizedResource(nameof(BackdropType.Acrylic), nameof(MiscResources.AcrylicBackdrop))]
@@ -133,13 +140,13 @@ public static partial class WorkSortOptionExtension;
 public static partial class PrivacyPolicyExtension;
 
 [AttachedLocalizationMetadata<WorkType>(typeof(MiscResources))]
-[AttachedLocalizedResource(nameof(WorkType.Illust), nameof(MiscResources.WorkTypeIllust))]
+[AttachedLocalizedResource(nameof(WorkType.Illustration), nameof(MiscResources.WorkTypeIllust))]
 [AttachedLocalizedResource(nameof(WorkType.Manga), nameof(MiscResources.WorkTypeManga))]
 [AttachedLocalizedResource(nameof(WorkType.Novel), nameof(MiscResources.WorkTypeNovel))]
 public static partial class WorkTypeExtension;
 
 [AttachedLocalizationMetadata<SimpleWorkType>(typeof(MiscResources))]
-[AttachedLocalizedResource(nameof(SimpleWorkType.IllustAndManga), nameof(MiscResources.SimpleWorkTypeIllustAndManga))]
+[AttachedLocalizedResource(nameof(SimpleWorkType.IllustrationAndManga), nameof(MiscResources.SimpleWorkTypeIllustAndManga))]
 [AttachedLocalizedResource(nameof(SimpleWorkType.Novel), nameof(MiscResources.SimpleWorkTypeNovel))]
 public static partial class SimpleWorkTypeExtension;
 

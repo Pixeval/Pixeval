@@ -140,7 +140,7 @@ public sealed partial class WorkView : IEntryView<ISortableEntryViewViewModel>, 
                 }
                 else
                 {
-                    Type = SimpleWorkType.IllustAndManga;
+                    Type = SimpleWorkType.IllustrationAndManga;
                     ViewModel?.Dispose();
                     ViewModel = null!;
                     AdvancedItemsView.MinItemWidth = DesiredWidth;

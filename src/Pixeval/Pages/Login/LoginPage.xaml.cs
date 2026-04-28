@@ -81,9 +81,9 @@ public sealed partial class LoginPage
             if (refreshToken.IsNotNullOrEmpty())
             {
                 _viewModel.AdvancePhase(LoginPhaseEnum.Refreshing);
-                App.AppViewModel.MakoClient.Build(refreshToken);
-
-                SuccessNavigating();
+                App.AppViewModel.MakoClient.SetToken(refreshToken);
+                if (await App.AppViewModel.MakoClient.IdentifyTokenAsync())
+                    SuccessNavigating();
             }
             else
             {
@@ -107,7 +107,7 @@ public sealed partial class LoginPage
 
         WindowFactory.GetWindowForElement(Current).PageContent = new MainPage();
         Current._viewModel.LogoutExit = false;
-        App.AppViewModel.MakoClient.Me.IsPremium = App.AppViewModel.LoginContext.IsPremium;
+        App.AppViewModel.MakoClient.Me!.IsPremium = App.AppViewModel.LoginContext.IsPremium;
         AppInfo.SaveContext();
     }
 

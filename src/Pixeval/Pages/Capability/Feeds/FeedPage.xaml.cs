@@ -69,7 +69,7 @@ public sealed partial class FeedPage
                 contentTextBlock?.Inlines.Add(feedNameString);
                 contentTextBlock?.Inlines.Add(new Run { Text = isSparse ? _SparseBookmarkSuffix : _CondensedBookmarkFormattedSuffix.Format(entriesLengthIfCondensed) });
                 break;
-            case FeedType.PostIllust:
+            case FeedType.PostIllustration:
                 contentTextBlock?.Inlines.Add(new Run { Text = isSparse ? _SparsePostIllustPrefix : _CondensedPostIllustPrefix });
                 contentTextBlock?.Inlines.Add(feedNameString);
                 contentTextBlock?.Inlines.Add(new Run { Text = isSparse ? _SparsePostIllustSuffix : _CondensedPostIllustFormattedSuffix.Format(entriesLengthIfCondensed) });
@@ -108,7 +108,7 @@ public sealed partial class FeedPage
             case FeedItemSparseViewModel { Entry: IFeedEntry.SparseFeedEntry svmEntry }:
                 switch (svmEntry.Entry.Type)
                 {
-                    case FeedType.AddBookmark or FeedType.PostIllust:
+                    case FeedType.AddBookmark or FeedType.PostIllustration:
                         var illustration = await _viewModel.PerformLoadAsync(() => App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(svmEntry.Id));
                         var illustrationViewer = new IllustrationViewerPage();
                         illustrationViewer.SetViewModel((new List<IllustrationItemViewModel> { IllustrationItemViewModel.CreateInstance(illustration) }, 0));
@@ -132,7 +132,7 @@ public sealed partial class FeedPage
             case FeedItemCondensedViewModel { Entry: IFeedEntry.CondensedFeedEntry(var entries) }:
                 switch (vm.GetMostSignificantEntry()!.Type)
                 {
-                    case FeedType.AddBookmark or FeedType.PostIllust:
+                    case FeedType.AddBookmark or FeedType.PostIllustration:
                         IEnumerable<IWorkEntry> illustrations = await _viewModel.PerformLoadAsync(() =>
                             Task.WhenAll(entries.Select(entry => App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(entry!.Id))));
                         _ = FeedPageFrame.Navigate(typeof(CondensedFeedPage), illustrations, new CommonNavigationTransitionInfo());

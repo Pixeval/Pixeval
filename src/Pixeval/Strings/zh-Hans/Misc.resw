@@ -180,6 +180,15 @@
   <data name="WorkSortOptionPublishDateDescending" xml:space="preserve">
     <value>发布日期降序</value>
   </data>
+  <data name="DomainFrontingTypeFragmentation" xml:space="preserve">
+    <value>TLS 分片</value>
+  </data>
+  <data name="DomainFrontingTypeEch" xml:space="preserve">
+    <value>ECH</value>
+  </data>
+  <data name="DomainFrontingTypeDesync" xml:space="preserve">
+    <value>去同步</value>
+  </data>
   <data name="NoneBackdrop" xml:space="preserve">
     <value>不使用</value>
   </data>

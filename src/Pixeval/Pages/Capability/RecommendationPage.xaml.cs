@@ -22,7 +22,7 @@ public sealed partial class RecommendationPage
 
     private void ChangeSource()
     {
-        WorkContainer.WorkView.ResetEngine(App.AppViewModel.MakoClient.RecommendationWorks(WorkTypeComboBox.GetSelectedItem<WorkType>(), App.AppViewModel.AppSettings.TargetFilter));
+        WorkContainer.WorkView.ResetEngine(App.AppViewModel.MakoClient.RecommendedWorks(WorkTypeComboBox.GetSelectedItem<WorkType>(), App.AppViewModel.AppSettings.TargetFilter));
     }
 
     private void WorkContainer_OnRefreshRequested(object sender, RoutedEventArgs e) => ChangeSource();

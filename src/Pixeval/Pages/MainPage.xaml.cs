@@ -208,7 +208,7 @@ public sealed partial class MainPage
         switch (model.SuggestionType)
         {
             case SuggestionType.IllustrationTag:
-                PerformSearchWork(SimpleWorkType.IllustAndManga, name, translatedName);
+                PerformSearchWork(SimpleWorkType.IllustrationAndManga, name, translatedName);
                 break;
             case SuggestionType.NovelTag:
                 PerformSearchWork(SimpleWorkType.Novel, name, translatedName);

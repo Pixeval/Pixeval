@@ -66,13 +66,12 @@ public static class ActivationRegistrar
                 }
                 case "pixiv":
                 {
-                    if (LoginPage.Current is null || LoginPage.CurrentVerifier is null || !App.AppViewModel.MakoClient.IsBuilt)
+                    if (LoginPage.Current is null || LoginPage.CurrentVerifier is null)
                         return;
                     var code = HttpUtility.ParseQueryString(activationUri.Query)["code"]!;
-                    var tokenResponse = await PixivAuth.AuthCodeToTokenResponseAsync(code, LoginPage.CurrentVerifier);
-                    if (tokenResponse is null)
+                    App.AppViewModel.MakoClient.SetCode(code, LoginPage.CurrentVerifier);
+                    if (!await App.AppViewModel.MakoClient.IdentifyTokenAsync())
                         return;
-                    App.AppViewModel.MakoClient.Build(tokenResponse);
                     _ = ThreadingHelper.DispatchAsync(LoginPage.SuccessNavigating);
                     break;
                 }

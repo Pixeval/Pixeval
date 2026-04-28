@@ -33,10 +33,10 @@ public sealed partial class SettingsRadioButtons : UserControl
 
     private void RadioButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        var select = sender.To<RadioButton>().GetTag<StringRepresentableItem>();
-        if (!Equals(SelectedItem, select.Item))
+        var select = sender.To<RadioButton>().GetTag<StringPair>();
+        if (!Equals(SelectedItem, select.Value))
         {
-            SelectedItem = select.Item;
+            SelectedItem = select.Value;
             SelectionChanged?.Invoke(this, new SelectionChangedEventArgs([], [select]));
         }
     }
@@ -58,10 +58,10 @@ public sealed partial class SettingsRadioButtons : UserControl
     {
         if (d is not SettingsRadioButtons { Buttons: { } buttons, ItemsSource: not null })
             return;
-        var correspondingItem = buttons.ItemsSource.To<IEnumerable<StringRepresentableItem>>().First(r => Equals(r.Item, newValue));
+        var correspondingItem = buttons.ItemsSource.To<IEnumerable<StringPair>>().First(r => Equals(r.Value, newValue));
         // set RadioButtons.SelectedItem won't work
         foreach (var button in buttons.FindDescendants().OfType<RadioButton>())
-            if (button.GetTag<StringRepresentableItem>().Equals(correspondingItem))
+            if (button.GetTag<StringPair>().Equals(correspondingItem))
                 button.IsChecked = true;
     }
 }

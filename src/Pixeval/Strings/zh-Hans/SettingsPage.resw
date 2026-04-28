@@ -300,6 +300,12 @@
   <data name="EnableDomainFrontingEntry.Header" xml:space="preserve">
     <value>启用域前置</value>
   </data>
+  <data name="DomainFrontingTypeEntry.Description" xml:space="preserve">
+    <value>选择域前置请求使用的绕过方式，不同网络环境下可尝试不同方式</value>
+  </data>
+  <data name="DomainFrontingTypeEntry.Header" xml:space="preserve">
+    <value>域前置方式</value>
+  </data>
   <data name="DonateDeveloperHyperlinkButton.Content" xml:space="preserve">
     <value>支持作者</value>
   </data>

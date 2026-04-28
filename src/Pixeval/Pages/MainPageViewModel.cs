@@ -93,7 +93,7 @@ public partial class MainPageViewModel : UiObservableObject
 
     public SuggestionStateMachine SuggestionProvider { get; } = new();
 
-    private WeakEventListener<MakoClient, object?, TokenUser> _tokenRefreshedListener = null!;
+    private WeakEventListener<MakoClient, MakoClient, TokenResponse?> _tokenRefreshedListener = null!;
 
     private WeakEventListener<MakoClient, object?, Exception> _tokenRefreshFailedListener = null!;
 
@@ -105,10 +105,12 @@ public partial class MainPageViewModel : UiObservableObject
         {
             OnEventAction = (m, changed, arg) => FrameworkElement.DispatcherQueue.TryEnqueue(async () =>
             {
-                AvatarSource = await CacheHelper.GetSourceFromCacheAsync(arg.ProfileImageUrls.Px50X50);
-                UserName = arg.Name;
-                IsPremium = arg.IsPremium;
-                Id = arg.Id;
+                if (arg is null)
+                    return;
+                AvatarSource = await CacheHelper.GetSourceFromCacheAsync(arg.User.ProfileImageUrls.Px50X50);
+                UserName = arg.User.Name;
+                IsPremium = arg.User.IsPremium;
+                Id = arg.User.Id;
             }),
             OnDetachAction = listener => makoClient.TokenRefreshed -= listener.OnEvent
         };
@@ -128,7 +130,7 @@ public partial class MainPageViewModel : UiObservableObject
 
     public async void TryLoadAvatar()
     {
-        if (AvatarSource is not null || App.AppViewModel.MakoClient.TryGetMe() is not { } me)
+        if (AvatarSource is not null || App.AppViewModel.MakoClient.Me is not { } me)
             return;
         await Task.Yield();
         try

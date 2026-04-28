@@ -20,7 +20,6 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Controls;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
-using Mako.Model;
 using Pixeval.Controls;
 using WinUI3Utilities;
 
@@ -38,8 +37,6 @@ public partial class App
     {
         SettingsValueConverter.Context = SettingsSerializeContext.Default;
         AppViewModel = new AppViewModel(this);
-        BookmarkTag.AllCountedTagString = MiscResources.AllCountedTagName;
-        AppInfo.SetNameResolvers(AppViewModel.AppSettings);
         WindowFactory.Initialize(AppViewModel.AppSettings, AppInfo.IconApplicationUri, AppInfo.SvgIconApplicationUri);
         AppInstance.GetCurrent().Activated += (_, arguments) => ActivationRegistrar.Dispatch(arguments);
         InitializeComponent();
@@ -75,6 +72,7 @@ public partial class App
         }
 
         AppViewModel.Initialize();
+        AppInfo.SetNameResolvers(AppViewModel.AppSettings);
 
         TabPage.CreatedWindowClosing += OnClosing;
         WindowFactory.Create(new LoginPage())

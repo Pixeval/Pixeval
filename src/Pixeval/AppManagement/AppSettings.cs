@@ -9,9 +9,9 @@ using System.IO;
 using System.Text.Json.Serialization;
 using AutoSettingsPage;
 using FluentIcons.Common;
+using Mako;
 using Mako.Global.Enum;
 using Mako.Net;
-using Mako.Preference;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Pixeval.Attributes;
@@ -45,6 +45,9 @@ public partial record AppSettings() : IWindowSettings
 
     [SettingsEntry(Symbol.ShieldTask, nameof(EnableDomainFrontingEntryHeader), nameof(EnableDomainFrontingEntryDescription))]
     public bool EnableDomainFronting { get; set; } = true;
+
+    [SettingsEntry(Symbol.ShieldSettings, nameof(DomainFrontingTypeEntryHeader), nameof(DomainFrontingTypeEntryDescription))]
+    public DomainFrontingType DomainFrontingType { get; set; } = DomainFrontingType.Fragmentation;
 
     [SettingsEntry(Symbol.Database, nameof(UseFileCacheEntryHeader), nameof(UseFileCacheEntryDescription))]
     public bool UseFileCache { get; set; } = true;
@@ -186,10 +189,8 @@ public partial record AppSettings() : IWindowSettings
     [SettingsEntry(Symbol.Box, nameof(PixivNameResolverHeaderText), nameof(PixivNameResolverDescriptionText), Placeholder = MakoHttpOptions.AppApiHost)]
     public ObservableCollection<string> PixivAppApiNameResolver { get; set; } =
     [
-        "210.140.139.155",
-        "210.140.139.156",
-        "210.140.139.157",
-        "210.140.139.158"
+        "104.18.42.239",
+        "172.64.145.17"
     ];
 
     [SettingsEntry(Placeholder = MakoHttpOptions.WebApiHost)]
@@ -211,9 +212,8 @@ public partial record AppSettings() : IWindowSettings
     [SettingsEntry(Placeholder = MakoHttpOptions.OAuthHost)]
     public ObservableCollection<string> PixivOAuthNameResolver { get; set; } =
     [
-        "210.140.139.155",
-        "210.140.139.156",
-        "210.140.139.157"
+        "104.18.42.239",
+        "172.64.145.17"
     ];
 
     [SettingsEntry(Placeholder = MakoHttpOptions.ImageHost)]
@@ -262,7 +262,7 @@ public partial record AppSettings() : IWindowSettings
 
     public bool IsMaximized { get; set; }
 
-    public WorkType WorkType => SimpleWorkType is SimpleWorkType.IllustAndManga ? WorkType.Illust : WorkType.Novel;
+    public WorkType WorkType => SimpleWorkType is SimpleWorkType.IllustrationAndManga ? WorkType.Illustration : WorkType.Novel;
 
     public ElementTheme ActualTheme => Theme is ElementTheme.Default
         ? AppHelper.IsDarkMode ? ElementTheme.Dark : ElementTheme.Light
@@ -298,9 +298,9 @@ public partial record AppSettings() : IWindowSettings
 
     public static CultureInfo CurrentCulture => ApplicationLanguages.PrimaryLanguageOverride.Let(language => CultureInfo.GetCultureInfo(string.IsNullOrWhiteSpace(language) ? AppSettingsResources.Bcl47 : language));
 
-    public MakoClientConfiguration ToMakoClientConfiguration()
+    public MakoConfiguration ToMakoConfiguration()
     {
-        return new MakoClientConfiguration(5000, EnableDomainFronting, Proxy, WebCookie, MirrorHost, CurrentCulture);
+        return new MakoConfiguration(EnableDomainFronting, DomainFrontingType, Proxy, WebCookie, MirrorHost, 500, CurrentCulture);
     }
 
     private static string GetSpecialFolder()

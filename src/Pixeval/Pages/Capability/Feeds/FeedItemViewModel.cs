@@ -41,7 +41,7 @@ public abstract class AbstractFeedItemViewModel(IFeedEntry entry) : EntryViewMod
     {
         FeedType.AddBookmark => FeedItemColors.AddBookmark,
         FeedType.AddFavorite => FeedItemColors.AddFavorite,
-        FeedType.PostIllust => FeedItemColors.PostIllust,
+        FeedType.PostIllustration => FeedItemColors.PostIllust,
         FeedType.AddNovelBookmark => FeedItemColors.AddNovelBookmark,
         _ => ThrowHelper.ArgumentOutOfRange<FeedType, SolidColorBrush?>(default)
     };

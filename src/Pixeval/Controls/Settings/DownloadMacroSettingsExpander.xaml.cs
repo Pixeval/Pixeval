@@ -130,7 +130,7 @@ public sealed partial class DownloadMacroSettingsExpander : IEntryControl<Downlo
 
     private void PathMacroTokenInputBox_OnTokenClick(object sender, ItemClickEventArgs e)
     {
-        UiHelper.ClipboardSetText(e.ClickedItem.To<StringRepresentableItem>().StringRepresentation);
+        UiHelper.ClipboardSetText(e.ClickedItem.To<StringPair>().Description);
         this.SuccessGrowl(SettingsPageResources.MacroCopiedToClipboard);
     }
 
@@ -323,10 +323,10 @@ file record TestWork(ImageType ImageType) : ISingleImage, IImageSet, ISingleAnim
 
     public IPreloadableList<IUser> Authors { get; } =
     [
-        new UserEntity
+        new UserInfo
         {
             Id = 7654321,
-            Name = nameof(UserEntity.Name),
+            Name = nameof(UserInfo.Name),
             Account = "",
             ProfileImageUrls = null!
         }

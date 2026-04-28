@@ -21,7 +21,7 @@ public sealed partial class CommentsPage
         var (entryType, id) = ((SimpleWorkType, long)) e.Parameter;
         var engine = entryType switch
         {
-            SimpleWorkType.IllustAndManga => App.AppViewModel.MakoClient.IllustrationComments(id),
+            SimpleWorkType.IllustrationAndManga => App.AppViewModel.MakoClient.IllustrationComments(id),
             SimpleWorkType.Novel => App.AppViewModel.MakoClient.NovelComments(id),
             _ => ThrowHelper.ArgumentOutOfRange<SimpleWorkType, IFetchEngine<Comment>>(entryType)
         };
@@ -38,7 +38,7 @@ public sealed partial class CommentsPage
     {
         _ = _viewModel.EntryType switch
         {
-            SimpleWorkType.IllustAndManga => await App.AppViewModel.MakoClient.AddIllustCommentAsync(
+            SimpleWorkType.IllustrationAndManga => await App.AppViewModel.MakoClient.AddIllustrationCommentAsync(
                 _viewModel.EntryId,
                 e.ReplyContentRichEditBoxStringContent),
             SimpleWorkType.Novel => await App.AppViewModel.MakoClient.AddNovelCommentAsync(
@@ -53,7 +53,7 @@ public sealed partial class CommentsPage
     {
         _ = _viewModel.EntryType switch
         {
-            SimpleWorkType.IllustAndManga => await App.AppViewModel.MakoClient.AddIllustCommentAsync(
+            SimpleWorkType.IllustrationAndManga => await App.AppViewModel.MakoClient.AddIllustrationCommentAsync(
                 _viewModel.EntryId,
                 e.StickerViewModel.StickerId),
             SimpleWorkType.Novel => await App.AppViewModel.MakoClient.AddNovelCommentAsync(

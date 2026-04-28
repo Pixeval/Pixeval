@@ -2,7 +2,10 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Windowing;
@@ -59,12 +62,17 @@ public static partial class AppInfo
 
     public static void SetNameResolvers(AppSettings appSetting)
     {
-        MakoHttpOptions.SetNameResolver(MakoHttpOptions.AppApiHost, appSetting.PixivAppApiNameResolver);
-        MakoHttpOptions.SetNameResolver(MakoHttpOptions.ImageHost, appSetting.PixivImageNameResolver);
-        MakoHttpOptions.SetNameResolver(MakoHttpOptions.ImageHost2, appSetting.PixivImageNameResolver2);
-        MakoHttpOptions.SetNameResolver(MakoHttpOptions.OAuthHost, appSetting.PixivOAuthNameResolver);
-        MakoHttpOptions.SetNameResolver(MakoHttpOptions.AccountHost, appSetting.PixivAccountNameResolver);
-        MakoHttpOptions.SetNameResolver(MakoHttpOptions.WebApiHost, appSetting.PixivWebApiNameResolver);
+        SetNameResolver(MakoHttpOptions.AppApiHost, appSetting.PixivAppApiNameResolver);
+        SetNameResolver(MakoHttpOptions.ImageHost, appSetting.PixivImageNameResolver);
+        SetNameResolver(MakoHttpOptions.ImageHost2, appSetting.PixivImageNameResolver2);
+        SetNameResolver(MakoHttpOptions.OAuthHost, appSetting.PixivOAuthNameResolver);
+        SetNameResolver(MakoHttpOptions.AccountHost, appSetting.PixivAccountNameResolver);
+        SetNameResolver(MakoHttpOptions.WebApiHost, appSetting.PixivWebApiNameResolver);
+    }
+
+    private static void SetNameResolver(string host, IEnumerable<string> ips)
+    {
+        App.AppViewModel.MakoClient.Configuration.NameResolvers[host] = [.. ips.Select(IPAddress.Parse)];
     }
 
     public static string ApplicationUriToPath(Uri uri)

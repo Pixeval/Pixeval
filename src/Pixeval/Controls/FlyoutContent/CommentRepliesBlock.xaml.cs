@@ -31,7 +31,7 @@ public sealed partial class CommentRepliesBlock
     {
         var comment = SimpleWorkType switch
         {
-            SimpleWorkType.IllustAndManga => await App.AppViewModel.MakoClient.AddIllustCommentAsync(
+            SimpleWorkType.IllustrationAndManga => await App.AppViewModel.MakoClient.AddIllustrationCommentAsync(
                 EntryId,
                 ViewModel.Id,
                 e.ReplyContentRichEditBoxStringContent),
@@ -48,7 +48,7 @@ public sealed partial class CommentRepliesBlock
     {
         var comment = SimpleWorkType switch
         {
-            SimpleWorkType.IllustAndManga => await App.AppViewModel.MakoClient.AddIllustCommentAsync(
+            SimpleWorkType.IllustrationAndManga => await App.AppViewModel.MakoClient.AddIllustrationCommentAsync(
                 EntryId,
                 ViewModel.Id,
                 e.StickerViewModel.StickerId),

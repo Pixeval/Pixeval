@@ -36,7 +36,7 @@ public sealed partial class BrowsingHistoryPage : IScrollViewHost
     {
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
         var type = SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>();
-        var isIllustration = type is SimpleWorkType.IllustAndManga;
+        var isIllustration = type is SimpleWorkType.IllustrationAndManga;
         var source = manager
             .Reverse()
             .SelectNotNull(t => t.Entry)
@@ -45,7 +45,7 @@ public sealed partial class BrowsingHistoryPage : IScrollViewHost
 
         WorkContainer.WorkView.ResetEngine(type switch
         {
-            SimpleWorkType.IllustAndManga => App.AppViewModel.MakoClient.Computed(source.Select(t=> new ArtworkWrapper(t))),
+            SimpleWorkType.IllustrationAndManga => App.AppViewModel.MakoClient.Computed(source.Select(t=> new ArtworkWrapper(t))),
             _ => App.AppViewModel.MakoClient.Computed(source.OfType<Novel>()),
         });
     }

@@ -43,6 +43,8 @@ public sealed partial class AdvancedItemsView : ItemsView
 
     public event Func<AdvancedItemsView, EventArgs, Task<bool>> LoadMoreRequested;
 
+    public bool IsHorizontal => LayoutType is ItemsViewLayoutType.HorizontalStack or ItemsViewLayoutType.HorizontalUniformStack;
+
     /// <summary>
     /// 判断滚动视图是否滚到底部，如果是则触发<see cref="LoadMoreRequested"/>事件，
     /// 这个事件只会使源加载最多一次
@@ -118,6 +120,9 @@ public sealed partial class AdvancedItemsView : ItemsView
 
             aiv.ScrollView.ViewChanged += aiv.ScrollView_ViewChanged;
             aiv.ScrollView.PointerWheelChanged += aiv.ScrollView_PointerWheelChanged;
+            aiv.ScrollView.ContentOrientation = aiv.IsHorizontal
+                ? ScrollingContentOrientation.Horizontal
+                : ScrollingContentOrientation.Vertical;
             aiv._itemsRepeater = aiv.ScrollView.Content.To<ItemsRepeater>();
             aiv._itemsRepeater.SizeChanged += aiv.AdvancedItemsViewOnSizeChanged;
             await aiv.TryRaiseLoadMoreRequestedAsync();
@@ -253,6 +258,10 @@ public sealed partial class AdvancedItemsView : ItemsView
             },
             _ => ThrowHelper.ArgumentOutOfRange<ItemsViewLayoutType, VirtualizingLayout>(LayoutType)
         };
+
+        ScrollView?.ContentOrientation = IsHorizontal
+            ? ScrollingContentOrientation.Horizontal
+            : ScrollingContentOrientation.Vertical;
     }
 
     partial void OnSelectedIndexPropertyChanged(DependencyPropertyChangedEventArgs e)
@@ -270,9 +279,7 @@ public sealed partial class AdvancedItemsView : ItemsView
 
     private void OnScrollRateChanged()
     {
-        if (ScrollView is not null)
-            ScrollView.IgnoredInputKinds =
-                ScrollRate >= 0.1 ? ScrollingInputKinds.MouseWheel : ScrollingInputKinds.None;
+        ScrollView?.IgnoredInputKinds = ScrollRate >= 0.1 ? ScrollingInputKinds.MouseWheel : ScrollingInputKinds.None;
     }
 
     private void ScrollView_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
