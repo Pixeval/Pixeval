@@ -2,7 +2,6 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using System.Net.Http;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Mako.Global.Enum;

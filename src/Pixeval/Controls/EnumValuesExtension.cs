@@ -1,9 +1,7 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using AutoSettingsPage;
 using Mako.Global.Enum;
 using Microsoft.UI.Xaml.Markup;

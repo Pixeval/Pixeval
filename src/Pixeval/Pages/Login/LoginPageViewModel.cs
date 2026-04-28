@@ -6,7 +6,6 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Mako.Net;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Win32;
@@ -15,7 +14,6 @@ using Pixeval.Attributes;
 using Pixeval.Controls.Windowing;
 using Pixeval.Util.ComponentModels;
 using Pixeval.Util.UI;
-using Pixeval.Utilities;
 using Windows.System;
 using WinUI3Utilities;
 using WinUI3Utilities.Attributes;
@@ -77,19 +75,8 @@ public partial class LoginPageViewModel(FrameworkElement frameworkElement) : UiO
 
     public async Task WebView2LoginAsync(EnhancedWindow window, bool useNewAccount, Action navigated)
     {
-        var arguments = "";
-        var port = NegotiatePort();
-
-        var proxyServer = null as PixivAuthenticationProxyServer;
-        if (EnableDomainFronting)
-        {
-            proxyServer = PixivAuthenticationProxyServer.Create(IPAddress.Loopback, port, t => App.AppViewModel.MakoClient.CreateConnectionAsync(t));
-            arguments += $" --ignore-certificate-errors --proxy-server=127.0.0.1:{port}";
-        }
-
         if (!await EnsureWebView2IsInstalled())
             return;
-        Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", arguments);
         WebView = new();
         await WebView.EnsureCoreWebView2Async();
         IsEnabled = IsFinished = false;
@@ -115,10 +102,6 @@ public partial class LoginPageViewModel(FrameworkElement frameworkElement) : UiO
                     _ = await FrameworkElement.CreateAcknowledgementAsync(LoginPageResources.FetchingSessionFailedTitle,
                         LoginPageResources.FetchingSessionFailedContent);
                     CloseWindow();
-                }
-                finally
-                {
-                    proxyServer?.Dispose();
                 }
             }
             else if (e.Uri.Contains("accounts.pixiv.net"))

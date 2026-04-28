@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Pixeval.Utilities;
 
+[Obsolete]
 public partial class PixivAuthenticationProxyServer : IDisposable
 {
     private readonly X509Certificate2 _certificate;
