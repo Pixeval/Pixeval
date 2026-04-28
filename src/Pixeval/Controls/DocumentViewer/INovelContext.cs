@@ -8,7 +8,7 @@ public interface INovelContext<TImage> where TImage : class
 {
     NovelContent NovelContent { get; }
 
-    Dictionary<(long, int), NovelIllustInfo> IllustrationLookup { get; }
+    Dictionary<(long, int), NovelIllustration> IllustrationLookup { get; }
 
     Dictionary<(long, int), TImage> IllustrationImages { get; }
 
@@ -26,7 +26,7 @@ public interface INovelContext<TImage> where TImage : class
 
     public void InitImages()
     {
-        foreach (var illust in NovelContent.Illusts)
+        foreach (var illust in NovelContent.Illustrations)
         {
             var key = (illust.Id, illust.Page);
             IllustrationLookup[key] = illust;

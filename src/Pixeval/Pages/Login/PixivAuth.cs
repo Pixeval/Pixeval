@@ -49,7 +49,7 @@ public static class PixivAuth
         try
         {
             var httpClient = App.AppViewModel.AppSettings.EnableDomainFronting
-                ? new HttpClient(new DelegatedHttpMessageHandler(MakoHttpOptions.CreateHttpMessageInvoker()))
+                ? new HttpClient(new DelegatedHttpMessageHandler(App.AppViewModel.MakoClient.CreateHttpMessageInvoker()))
                 : new();
             httpClient.DefaultRequestHeaders.UserAgent.Add(new("PixivAndroidApp", "6.140.2"));
             httpClient.DefaultRequestHeaders.UserAgent.Add(new("(Android 15.0)"));
@@ -67,9 +67,9 @@ public static class PixivAuth
             httpClient.Dispose();
             _ = result.EnsureSuccessStatusCode();
             var str = await result.Content.ReadAsStringAsync();
-            var tokenResponse = (TokenResponse) JsonSerializer.Deserialize(str, typeof(TokenResponse), AppJsonSerializerContext.Default)!;
+            var tokenResponse = (TokenResponse) JsonSerializer.Deserialize(str, typeof(TokenResponse), MakoJsonSerializerContext.Default)!;
             App.AppViewModel.LoginContext.RefreshToken = tokenResponse.RefreshToken;
-            App.AppViewModel.LoginContext.IsPremium = tokenResponse.Response?.User.IsPremium ?? false;
+            App.AppViewModel.LoginContext.IsPremium = tokenResponse.Response?.User.IsPremium ?? tokenResponse.User.IsPremium;
             return tokenResponse;
         }
         catch

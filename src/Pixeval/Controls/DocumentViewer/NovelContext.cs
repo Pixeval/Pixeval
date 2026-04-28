@@ -19,15 +19,15 @@ public partial class NovelContext(NovelContent novelContent) : INovelContext<Str
 {
     public string? ImageExtension { get; set; }
 
-    public int TotalImagesCount { get; } = novelContent.Images.Count + novelContent.Illusts.Count;
+    public int TotalImagesCount { get; } = novelContent.Images.Count + novelContent.Illustrations.Count;
 
     /// <summary>
     /// 所有图片的URL
     /// </summary>
     /// <returns>小说图片是内嵌的，没必要用原图</returns>
-    public string[] AllUrls { get; } = [.. novelContent.Images.Select(x => x.OriginalUrl), .. novelContent.Illusts.Select(x => x.ThumbnailUrl)];
+    public string[] AllUrls { get; } = [.. novelContent.Images.Select(x => x.OriginalUrl), .. novelContent.Illustrations.Select(x => x.ThumbnailUrl)];
 
-    public string[] AllTokens { get; } = [.. novelContent.Images.Select(x => x.NovelImageId.ToString()), .. novelContent.Illusts.Select(x => $"{x.Id}-{x.Page}")];
+    public string[] AllTokens { get; } = [.. novelContent.Images.Select(x => x.NovelImageId.ToString()), .. novelContent.Illustrations.Select(x => $"{x.Id}-{x.Page}")];
 
     public StringBuilder LoadMdContent()
     {
@@ -94,15 +94,15 @@ public partial class NovelContext(NovelContent novelContent) : INovelContext<Str
     {
         if (index < NovelContent.Images.Count)
             return null;
-        var illust = NovelContent.Illusts[index - NovelContent.Images.Count];
-        return (illust.Id, illust.Illust.Tags.Select(t => t.Tag));
+        var illust = NovelContent.Illustrations[index - NovelContent.Images.Count];
+        return (illust.Id, illust.Illustration.Tags.Select(t => t.Tag));
     }
 
     public Stream? TryGetStream(int index)
     {
         if (index < NovelContent.Images.Count)
             return UploadedImages.GetValueOrDefault(NovelContent.Images[index].NovelImageId);
-        var illust = NovelContent.Illusts[index - NovelContent.Images.Count];
+        var illust = NovelContent.Illustrations[index - NovelContent.Images.Count];
         return IllustrationImages.GetValueOrDefault((illust.Id, illust.Page));
     }
 
@@ -114,7 +114,7 @@ public partial class NovelContext(NovelContent novelContent) : INovelContext<Str
         }
         else
         {
-            var illust = NovelContent.Illusts[index - NovelContent.Images.Count];
+            var illust = NovelContent.Illustrations[index - NovelContent.Images.Count];
             IllustrationImages[(illust.Id, illust.Page)] = stream ?? AppInfo.GetImageNotAvailableStream();
         }
     }
@@ -134,7 +134,7 @@ public partial class NovelContext(NovelContent novelContent) : INovelContext<Str
 
     public NovelContent NovelContent { get; } = novelContent;
 
-    public Dictionary<(long, int), NovelIllustInfo> IllustrationLookup { get; } = [];
+    public Dictionary<(long, int), NovelIllustration> IllustrationLookup { get; } = [];
 
     public Dictionary<(long, int), Stream> IllustrationImages { get; } = [];
 

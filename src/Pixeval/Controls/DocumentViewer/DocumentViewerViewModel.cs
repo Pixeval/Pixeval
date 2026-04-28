@@ -130,7 +130,7 @@ public partial class DocumentViewerViewModel(FrameworkElement frameworkElement) 
 
         async Task LoadImagesAsync()
         {
-            foreach (var illust in NovelContent.Illusts)
+            foreach (var illust in NovelContent.Illustrations)
             {
                 if (LoadingCancellationTokenSource.IsCancellationRequested)
                     break;
@@ -232,7 +232,7 @@ public partial class DocumentViewerViewModel(FrameworkElement frameworkElement) 
     [ObservableProperty]
     public partial NovelContent NovelContent { get; private set; } = null!;
 
-    public Dictionary<(long, int), NovelIllustInfo> IllustrationLookup { get; } = [];
+    public Dictionary<(long, int), NovelIllustration> IllustrationLookup { get; } = [];
 
     public Dictionary<(long, int), ImageSource> IllustrationImages { get; } = [];
 

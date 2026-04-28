@@ -9,6 +9,7 @@ using Pixeval.AppManagement;
 using Pixeval.Caching;
 using Mako;
 using Mako.Net;
+using Mako.Model;
 using Misaki;
 using Pixeval.Database.Managers;
 using Pixeval.Download;
@@ -57,11 +58,14 @@ public partial class AppViewModel(App app) : IDisposable
         var fileLogger = new FileLogger(AppKnownFolders.Logs.FullPath);
         var extensionService = new ExtensionService();
         extensionService.LoadAllHosts(fileLogger);
+        var makoClient = new MakoClient(App.AppViewModel.AppSettings.ToMakoConfiguration(), fileLogger);
+        makoClient.TokenRefreshed += MakoClientOnTokenRefreshed;
+
         return new ServiceCollection()
             .AddSingleton(_ => fileLogger)
             .AddBooruParsers()
             .AddKeyedSingleton<IGetArtworkService, MakoClient>(IPlatformInfo.Pixiv,
-                (provider, key) => new(App.AppViewModel.AppSettings.ToMakoClientConfiguration(), provider.GetRequiredService<FileLogger>()))
+                (provider, key) => makoClient)
             .AddKeyedSingleton<IDownloadHttpClientService, MakoClient>(IPlatformInfo.Pixiv,
                 (provider, key) => (MakoClient) provider.GetRequiredKeyedService<IGetArtworkService>(IPlatformInfo.Pixiv))
             .AddKeyedSingleton<IDownloadHttpClientService, MakoClient>(IPlatformInfo.Pixiv,
@@ -78,6 +82,17 @@ public partial class AppViewModel(App app) : IDisposable
             .AddSingleton(provider => new BrowseHistoryPersistentManager(provider.GetRequiredService<LiteDatabase>(),
                 App.AppViewModel.AppSettings.MaximumBrowseHistoryRecords))
             .BuildServiceProvider();
+
+        static void MakoClientOnTokenRefreshed(MakoClient sender, TokenResponse? tokenResponse)
+        {
+            if (tokenResponse is null)
+                App.AppViewModel.LoginContext.RefreshToken = "";
+            else
+            {
+                App.AppViewModel.LoginContext.RefreshToken = tokenResponse.RefreshToken;
+                App.AppViewModel.LoginContext.IsPremium = tokenResponse.User.IsPremium;
+            }
+        }
     }
 
     public T? GetPlatformService<T>(string platformKey) where T : IMisakiService

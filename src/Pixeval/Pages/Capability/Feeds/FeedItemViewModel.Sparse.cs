@@ -61,7 +61,7 @@ public partial class FeedItemSparseViewModel(Feed entry) : AbstractFeedItemViewM
 
     public override Uri AppUri => entry.Type switch
     {
-        FeedType.AddBookmark or FeedType.PostIllust => MakoHelper.GenerateIllustrationAppUri(entry.Id),
+        FeedType.AddBookmark or FeedType.PostIllustration => MakoHelper.GenerateIllustrationAppUri(entry.Id),
         FeedType.AddFavorite => MakoHelper.GenerateUserAppUri(entry.Id),
         FeedType.AddNovelBookmark => MakoHelper.GenerateNovelAppUri(entry.Id),
         _ => ThrowHelper.ArgumentOutOfRange<FeedType?, Uri>(entry.Type)
@@ -69,7 +69,7 @@ public partial class FeedItemSparseViewModel(Feed entry) : AbstractFeedItemViewM
 
     public override Uri WebsiteUri => entry.Type switch
     {
-        FeedType.AddBookmark or FeedType.PostIllust => MakoHelper.GenerateIllustrationWebUri(entry.Id),
+        FeedType.AddBookmark or FeedType.PostIllustration => MakoHelper.GenerateIllustrationWebUri(entry.Id),
         FeedType.AddFavorite => MakoHelper.GenerateUserWebUri(entry.Id),
         FeedType.AddNovelBookmark => MakoHelper.GenerateNovelWebUri(entry.Id),
         _ => ThrowHelper.ArgumentOutOfRange<FeedType?, Uri>(entry.Type)
@@ -77,7 +77,7 @@ public partial class FeedItemSparseViewModel(Feed entry) : AbstractFeedItemViewM
 
     public override Uri PixEzUri => entry.Type switch
     {
-        FeedType.AddBookmark or FeedType.PostIllust => MakoHelper.GenerateIllustrationPixEzUri(entry.Id),
+        FeedType.AddBookmark or FeedType.PostIllustration => MakoHelper.GenerateIllustrationPixEzUri(entry.Id),
         FeedType.AddFavorite => MakoHelper.GenerateUserPixEzUri(entry.Id),
         FeedType.AddNovelBookmark => MakoHelper.GenerateNovelPixEzUri(entry.Id),
         _ => ThrowHelper.ArgumentOutOfRange<FeedType?, Uri>(entry.Type)

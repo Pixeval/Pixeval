@@ -29,8 +29,8 @@
                     ItemsSource="{x:Bind models:DownloadMacroAppSettingsEntry.AvailableMacros}"
                     SelectionMode="None">
                     <labs:TokenView.ItemTemplate>
-                        <DataTemplate x:DataType="controls2:StringRepresentableItem">
-                            <TextBlock Text="{x:Bind StringRepresentation}" ToolTipService.ToolTip="{x:Bind Item}" />
+                        <DataTemplate x:DataType="controls2:StringPair">
+                            <TextBlock Text="{x:Bind Description}" ToolTipService.ToolTip="{x:Bind Value}" />
                         </DataTemplate>
                     </labs:TokenView.ItemTemplate>
                 </labs:TokenView>

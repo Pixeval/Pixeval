@@ -17,7 +17,7 @@ namespace Pixeval.Controls.FlyoutContent;
 
 public sealed partial class BookmarkTagSelector : UserControl
 {
-    [GeneratedDependencyProperty(DefaultValue = SimpleWorkType.IllustAndManga)]
+    [GeneratedDependencyProperty(DefaultValue = SimpleWorkType.IllustrationAndManga)]
     public partial SimpleWorkType Type { get; set; }
 
     public bool IsPrivate

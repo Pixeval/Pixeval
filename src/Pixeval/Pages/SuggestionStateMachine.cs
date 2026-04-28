@@ -81,7 +81,7 @@ public class SuggestionStateMachine
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
         var histories = manager.TakeLast(count: App.AppViewModel.AppSettings.MaximumSuggestionBoxSearchHistory).SelectNotNull(SuggestionModel.FromHistory);
         newItems.AddRange(histories);
-        var prior = App.AppViewModel.AppSettings.SimpleWorkType is SimpleWorkType.IllustAndManga;
+        var prior = App.AppViewModel.AppSettings.SimpleWorkType is SimpleWorkType.IllustrationAndManga;
         if (prior)
         {
             newItems.Add(SuggestionModel.IllustrationTrendingTagHeader);

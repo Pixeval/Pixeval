@@ -37,14 +37,14 @@ public sealed partial class WorkInfoPage
     {
         if (_viewModel.Entry is IWorkEntry entry)
             _ = WeakReferenceMessenger.Default.Send(new WorkTagClickedMessage(
-                entry is Illustration ? SimpleWorkType.IllustAndManga : SimpleWorkType.Novel,
+                entry is Illustration ? SimpleWorkType.IllustrationAndManga : SimpleWorkType.Novel,
                 ((FrameworkElement) sender).GetTag<ITag>().Name));
     }
 
     private async void IllustratorPersonPicture_OnClicked(object sender, RoutedEventArgs e)
     {
         var user = sender.To<FrameworkElement>().GetTag<IUser>();
-        if (user is UserEntity entity)
+        if (user is UserInfo entity)
             await this.CreateIllustratorPageAsync(entity.Id);
         else
             await Launcher.LaunchUriAsync(user.WebsiteUri);

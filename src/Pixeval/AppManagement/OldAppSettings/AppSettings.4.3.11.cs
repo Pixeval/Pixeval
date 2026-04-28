@@ -7,11 +7,11 @@ using System.Globalization;
 using System.IO;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
+using Mako;
 using Pixeval.Attributes;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Mako.Global.Enum;
-using Mako.Preference;
 using Pixeval.Options;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
@@ -177,7 +177,7 @@ public partial record AppSettings_4_3_11() : IWindowSettings
 
     public bool IsMaximized { get; set; }
 
-    public WorkType WorkType => SimpleWorkType is SimpleWorkType.IllustAndManga ? WorkType.Illust : WorkType.Novel;
+    public WorkType WorkType => SimpleWorkType is SimpleWorkType.IllustrationAndManga ? WorkType.Illustration : WorkType.Novel;
 
     public ElementTheme ActualTheme => Theme is ElementTheme.Default
         ? AppHelper.IsDarkMode ? ElementTheme.Dark : ElementTheme.Light
@@ -211,9 +211,9 @@ public partial record AppSettings_4_3_11() : IWindowSettings
 
     public static CultureInfo CurrentCulture => ApplicationLanguages.PrimaryLanguageOverride.Let(language => CultureInfo.GetCultureInfo(string.IsNullOrWhiteSpace(language) ? AppSettingsResources.Bcl47 : language));
 
-    public MakoClientConfiguration ToMakoClientConfiguration()
+    public MakoConfiguration ToMakoClientConfiguration()
     {
-        return new MakoClientConfiguration(5000, EnableDomainFronting, Proxy, WebCookie, MirrorHost, CurrentCulture);
+        return new MakoConfiguration(EnableDomainFronting, DomainFrontingType.Fragmentation, Proxy, WebCookie, MirrorHost, 5000, CurrentCulture);
     }
 
     private static string GetSpecialFolder()

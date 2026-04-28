@@ -8,10 +8,10 @@
     mc:Ignorable="d">
     <RadioButtons Header="{x:Bind Header, Mode=OneWay}">
         <RadioButtons.ItemTemplate>
-            <DataTemplate x:DataType="local:StringRepresentableItem">
+            <DataTemplate x:DataType="local:StringPair">
                 <RadioButton
                     Click="RadioButton_OnClicked"
-                    Content="{x:Bind StringRepresentation}"
+                    Content="{x:Bind Description}"
                     Tag="{x:Bind}" />
             </DataTemplate>
         </RadioButtons.ItemTemplate>

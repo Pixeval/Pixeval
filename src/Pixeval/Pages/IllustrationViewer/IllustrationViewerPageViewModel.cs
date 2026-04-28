@@ -122,7 +122,7 @@ public partial class IllustrationViewerPageViewModel : DetailedUiObservableObjec
             IllustrationInfoTag.Parameter = CurrentIllustration.Entry;
             if (CurrentIllustration.Entry is Illustration illustration)
             {
-                CommentsTag.Parameter = (SimpleWorkType.IllustAndManga, illustration.Id);
+                CommentsTag.Parameter = (SimpleWorkType.IllustrationAndManga, illustration.Id);
                 RelatedWorksTag.Parameter = illustration.Id;
                 Tags = [IllustrationInfoTag, CommentsTag, RelatedWorksTag];
             }

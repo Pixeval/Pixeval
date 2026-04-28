@@ -18,6 +18,6 @@ public sealed partial class RelatedWorksPage
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
         _illustrationId = e.Parameter.To<long>();
-        RelatedWorksIllustrationGrid.ResetEngine(App.AppViewModel.MakoClient.RelatedWorks(_illustrationId));
+        RelatedWorksIllustrationGrid.ResetEngine(App.AppViewModel.MakoClient.RelatedIllustrations(_illustrationId));
     }
 }

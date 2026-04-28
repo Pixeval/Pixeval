@@ -9,6 +9,7 @@ using Mako.Engine;
 using Mako.Global.Enum;
 using Mako.Model;
 using Microsoft.UI.Xaml;
+using Pixeval.Util;
 
 namespace Pixeval.Pages.Capability;
 
@@ -43,7 +44,7 @@ public sealed partial class BookmarksPage : IScrollViewHost
 
     private void TagComboBox_OnSelectionChangedWhenLoaded(object? sender, SelectionChangedEventArgs e)
     {
-        if (TagComboBox.SelectedItem is BookmarkTag { Name: var name } tag && name != BookmarkTag.AllCountedTagString)
+        if (TagComboBox.SelectedItem is BookmarkTag { Name: var name } tag && tag is not AllBookmarkTag)
         {
             // fetch the bookmark IDs for tag, but do not wait for it.
             _ = _viewModel.LoadBookmarksForTagAsync(name, GetBookmarksEngine(name));
@@ -73,7 +74,7 @@ public sealed partial class BookmarksPage : IScrollViewHost
     private IFetchEngine<IWorkEntry> GetBookmarksEngine(string? tag)
     {
         var policy = GetPolicy();
-        return SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>() is SimpleWorkType.IllustAndManga
+        return SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>() is SimpleWorkType.IllustrationAndManga
             ? App.AppViewModel.MakoClient.IllustrationBookmarks(_viewModel.UserId, policy, tag, App.AppViewModel.AppSettings.TargetFilter)
             : App.AppViewModel.MakoClient.NovelBookmarks(_viewModel.UserId, policy, tag, App.AppViewModel.AppSettings.TargetFilter);
     }

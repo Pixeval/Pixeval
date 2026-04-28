@@ -64,7 +64,7 @@ public partial class NovelViewerPageViewModel : DetailedUiObservableObject, IDis
 
     public long NovelId => CurrentNovel.Entry.Id;
 
-    public UserEntity Illustrator => CurrentNovel.Entry.User;
+    public UserInfo Illustrator => CurrentNovel.Entry.User;
 
     public void Dispose()
     {

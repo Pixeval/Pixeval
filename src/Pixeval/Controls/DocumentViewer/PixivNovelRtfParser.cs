@@ -96,7 +96,7 @@ public sealed class PixivNovelRtfParser : PixivNovelParser<List<Paragraph>, Imag
         var button = new Button { Content = image, Padding = new(5) };
         button.Click += async (sender, _) => await sender.To<FrameworkElement>().CreateIllustrationPageAsync(imageId, [.. viewModel.IllustrationLookup.Keys.Select(t => t.Item1)]);
         var info = viewModel.IllustrationLookup[key];
-        ToolTipService.SetToolTip(button, $"{info.Id}: {info.Illust.Title}");
+        ToolTipService.SetToolTip(button, $"{info.Id}: {info.Illustration.Title}");
         result.Add(new()
         {
             Inlines = { new InlineUIContainer { Child = button } },

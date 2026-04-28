@@ -83,7 +83,7 @@ public partial class LoginPageViewModel(FrameworkElement frameworkElement) : UiO
         var proxyServer = null as PixivAuthenticationProxyServer;
         if (EnableDomainFronting)
         {
-            proxyServer = PixivAuthenticationProxyServer.Create(IPAddress.Loopback, port, t => MakoHttpOptions.CreateConnectionAsync(t));
+            proxyServer = PixivAuthenticationProxyServer.Create(IPAddress.Loopback, port, t => App.AppViewModel.MakoClient.CreateConnectionAsync(t));
             arguments += $" --ignore-certificate-errors --proxy-server=127.0.0.1:{port}";
         }
 
@@ -102,12 +102,12 @@ public partial class LoginPageViewModel(FrameworkElement frameworkElement) : UiO
                 var code = HttpUtility.ParseQueryString(new Uri(e.Uri).Query)["code"]!;
                 try
                 {
-                    if (await PixivAuth.AuthCodeToTokenResponseAsync(code, verifier) is not { } tokenResponse)
+                    App.AppViewModel.MakoClient.SetCode(code, verifier);
+                    if (!await App.AppViewModel.MakoClient.IdentifyTokenAsync())
                     {
                         ThrowHelper.Exception();
                         return;
                     }
-                    App.AppViewModel.MakoClient.Build(tokenResponse);
                     navigated();
                 }
                 catch

@@ -80,10 +80,7 @@ public static partial class Growl
                 break;
         }
 
-        if (panel is not null)
-        {
-            panel.ChildrenTransitions = transitions;
-        }
+        panel?.ChildrenTransitions = transitions;
     }
 
     private static InfoBar? InitGrowl(GrowlInfo growlInfo)

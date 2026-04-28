@@ -24,17 +24,17 @@ public partial class CommentItemViewModel(Comment comment) : ObservableObject, I
     public bool HasReplies => Comment.HasReplies;
 
     [MemberNotNullWhen(true, nameof(StampSource))]
-    public bool IsStamp => Comment.CommentStamp is not null;
+    public bool IsStamp => Comment.Stamp is not null;
 
-    public string? StampSource => Comment.CommentStamp?.StampUrl;
+    public string? StampSource => Comment.Stamp?.StampUrl;
 
     public DateTimeOffset PostDate => Comment.Date;
 
-    public string Poster => Comment.CommentPoster.Name;
+    public string Poster => Comment.User.Name;
 
-    public long PosterId => Comment.CommentPoster.Id;
+    public long PosterId => Comment.User.Id;
 
-    public string CommentContent => Comment.CommentContent;
+    public string CommentContent => Comment.Content;
 
     public bool IsMe => PosterId == App.AppViewModel.PixivUid;
 
@@ -57,7 +57,7 @@ public partial class CommentItemViewModel(Comment comment) : ObservableObject, I
             Replies = await
                 (entryType switch
                 {
-                    SimpleWorkType.IllustAndManga => App.AppViewModel.MakoClient.IllustrationCommentReplies(Id),
+                    SimpleWorkType.IllustrationAndManga => App.AppViewModel.MakoClient.IllustrationCommentReplies(Id),
                     SimpleWorkType.Novel => App.AppViewModel.MakoClient.NovelCommentReplies(Id),
                     _ => ThrowHelper.ArgumentOutOfRange<SimpleWorkType, IFetchEngine<Comment>>(entryType)
                 }).Select(c => new CommentItemViewModel(c))
@@ -68,7 +68,7 @@ public partial class CommentItemViewModel(Comment comment) : ObservableObject, I
 
     public async Task LoadAvatarSource()
     {
-        AvatarSource = await CacheHelper.GetSourceFromCacheAsync(Comment.CommentPoster.ProfileImageUrls.Medium);
+        AvatarSource = await CacheHelper.GetSourceFromCacheAsync(Comment.User.ProfileImageUrls.Medium);
     }
 
     public void AddComment(Comment comment)

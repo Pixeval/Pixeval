@@ -17,7 +17,7 @@
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Labs.WinUI.DependencyPropertyGenerator" Version="0.1.250129-build.2033" />
         <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.240517-build.1678" />
-        <PackageReference Include="FluentIcons.WinUI" Version="2.1.323" />
+        <PackageReference Include="FluentIcons.WinUI" Version="2.1.325" />
         <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7705" />
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260209005" />

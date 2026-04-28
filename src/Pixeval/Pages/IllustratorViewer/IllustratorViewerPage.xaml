@@ -111,7 +111,7 @@
                         <AppBarSeparator />
                         <controls:AppBarNumberItem
                             x:Uid="/EntryViewerPage/IllustrationCountItem"
-                            Number="{x:Bind _viewModel.Metrics.TotalIllusts, Mode=OneWay}"
+                            Number="{x:Bind _viewModel.Metrics.TotalIllustrations, Mode=OneWay}"
                             Symbol="Image" />
                         <AppBarSeparator />
                         <controls:AppBarNumberItem
