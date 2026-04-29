@@ -23,7 +23,7 @@ public class PixevalBadge : TemplatedControl
     {
         [BadgeMode.None] = "None",
         [BadgeMode.Premium] = "Premium",
-        [BadgeMode.Following] = I18NManager.GetResource(PixevalBadgeResources.Following),
+        [BadgeMode.Following] = I18NManager.GetResource(MiscResources.PixevalBadgeFollowing),
         [BadgeMode.Gif] = "GIF",
         [BadgeMode.R18] = "R18",
         [BadgeMode.R18G] = "R18G",

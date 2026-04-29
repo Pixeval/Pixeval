@@ -2,23 +2,14 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using System.ComponentModel;
-using System.Globalization;
-using Avalonia;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Pixeval.Controls;
-using Pixeval.Models.Options;
-using Pixeval.I18N;
 using Pixeval.Utilities;
-using Pixeval.ViewModels;
 using Pixeval.ViewModels.Viewers;
-using Pixeval.Views.Work;
 
 namespace Pixeval.Views.Viewers;
 

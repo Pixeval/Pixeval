@@ -12,16 +12,10 @@ public class DragTabItem : TabItem
     private LeftPressedThumb _thumb = null!;
     
     private int _prevZindex;
-    private int _logicalIndex;
-    private bool _isDragging;
-    private bool _isSiblingDragging;
 
     #endregion
     
     #region Avalonia Properties
-
-    public static readonly StyledProperty<object?> IconProperty =
-        AvaloniaProperty.Register<DragTabItem, object?>(nameof(Icon));
 
     public static readonly StyledProperty<double> XProperty =
         AvaloniaProperty.Register<DragTabItem, double>(nameof(X));
@@ -45,12 +39,6 @@ public class DragTabItem : TabItem
 
     #region Public Properties
 
-    public object? Icon
-    {
-        get => GetValue(IconProperty);
-        set => SetValue(IconProperty, value);
-    }
-
     public double X
     {
         get => GetValue(XProperty);
@@ -65,20 +53,20 @@ public class DragTabItem : TabItem
 
     public int LogicalIndex
     {
-        get => _logicalIndex;
-        internal set => SetAndRaise(LogicalIndexProperty, ref _logicalIndex, value);
+        get;
+        internal set => SetAndRaise(LogicalIndexProperty, ref field, value);
     }
-    
+
     public bool IsDragging
     {
-        get => _isDragging;
-        internal set => SetAndRaise(IsDraggingProperty, ref _isDragging, value);
+        get;
+        internal set => SetAndRaise(IsDraggingProperty, ref field, value);
     }
 
     public bool IsSiblingDragging
     {
-        get => _isSiblingDragging;
-        internal set => SetAndRaise(IsSiblingDraggingProperty, ref _isSiblingDragging, value);
+        get;
+        internal set => SetAndRaise(IsSiblingDraggingProperty, ref field, value);
     }
 
     #endregion

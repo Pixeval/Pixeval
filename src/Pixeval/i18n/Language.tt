@@ -30,6 +30,8 @@ namespace Pixeval
 
     if (defaultLang is null)
         return "Language folder not found, please ensure there is at least one language folder in the template directory.";
+
+    var markdownFiles = new List<string>();
     
     foreach (var file in defaultLang.EnumerateFiles())
     {
@@ -58,13 +60,16 @@ namespace Pixeval
             }
             case ".md":
             {
-                languages.Add(nameWithoutExtension + ".Markdown");
+                markdownFiles.Add(nameWithoutExtension);
                 break;
             }
         }
 
         GenerateClass(languages);
     }
+
+    if (markdownFiles.Count > 0)
+        GenerateNode("Markdown", markdownFiles);
 
     void GenerateClass(List<string> result)
     {
@@ -106,7 +111,9 @@ namespace Pixeval
         paths.Sort();
         foreach (var child in paths)
         {
-            WriteLine($"{indentStr}{indentStr}public const string {child.Replace(".", "")} = \"{name}.{child}\";");
+            Write($"{indentStr}{indentStr}public ");
+            WriteLine($"const string {child.Replace(".", "")} = \"{name}.{child}\";"); // const字段写法
+            // WriteLine($"static string {child.Replace(".", "")} => \"{name}.{child}\";"); // 只读属性写法，无法通过编译，但可以查看引用数
         }
         WriteLine($"{indentStr}}}");
     }

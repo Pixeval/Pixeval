@@ -8,15 +8,15 @@ namespace Pixeval.Models.Options;
 [LocalizationMetadata]
 public enum WorkTypeEnum
 {
-    [LocalizedResource(SettingsMainViewResources.IllustrationOptionEntryHeader)]
+    [LocalizedResource(EnumResources.WorkTypeEnumIllustration)]
     Illustration,
 
-    [LocalizedResource(SettingsMainViewResources.MangaOptionEntryHeader)]
+    [LocalizedResource(EnumResources.WorkTypeEnumManga)]
     Manga,
 
-    [LocalizedResource(SettingsMainViewResources.UgoiraOptionEntryHeader)]
+    [LocalizedResource(EnumResources.WorkTypeEnumUgoira)]
     Ugoira,
 
-    [LocalizedResource(SettingsMainViewResources.NovelOptionEntryHeader)]
+    [LocalizedResource(EnumResources.WorkTypeEnumNovel)]
     Novel
 }

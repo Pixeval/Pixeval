@@ -38,7 +38,7 @@ public class SettingsPageViewModel : ViewModelBase
             .NewGroup(SettingsEntryCategory.Application)
             .Config(group => group
                 .Language(t => t.CultureName)
-                .Enum(t => t.Theme, ApplicationThemeExtension.Items,
+                .Enum(t => t.Theme,
                     entry => entry.ValueChanged += t => Application.Current?.RequestedThemeVariant = t switch
                     {
                         ApplicationTheme.Light => ThemeVariant.Light,
@@ -54,21 +54,21 @@ public class SettingsPageViewModel : ViewModelBase
                             .IPSet(t => t.PixivAccountNameResolver)
                             .IPSet(t => t.PixivWebApiNameResolver),
                     entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.DomainFronting = t)
-                .Enum(t => t.DomainFrontingType, DomainFrontingTypeExtension.Items,
+                .Enum(t => t.DomainFrontingType,
                     entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.DomainFrontingType = (DomainFrontingType) t)
                 .Proxy(entry => entry.ProxyChanged += t => App.AppViewModel.MakoClient.Configuration.Proxy = t)
                 .String(t => t.MirrorHost,
                     entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.MirrorHost = t)
                 .Bool(t => t.UseFileCache)
-                .Enum(t => t.DefaultSelectedTabItem, MainPageTabItemExtension.Items)
+                .Enum(t => t.DefaultSelectedTabItem)
                 .String(t => t.WebCookie,
                     entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.Cookie = t))
             .NewGroup(SettingsEntryCategory.BrowsingExperience)
             .Config(group => group
-                .Enum(t => t.ThumbnailLayoutType, ThumbnailLayoutTypeExtension.Items)
-                .Enum(t => t.BrowseMode, BrowseModeExtension.Items)
-                .Enum(t => t.BrowseDirection, BrowseDirectionExtension.Items)
-                .Enum(t => t.TargetFilter, TargetFilterExtension.Items)
+                .Enum(t => t.ThumbnailLayoutType)
+                .Enum(t => t.BrowseMode)
+                .Enum(t => t.BrowseDirection)
+                .Enum(t => t.TargetFilter)
                 .Collection(t => t.BlockedTags)
                 .Bool(t => t.OpenWorkInfoByDefault))
             .NewGroup(SettingsEntryCategory.Search)
@@ -78,26 +78,24 @@ public class SettingsPageViewModel : ViewModelBase
                 .Int(t => t.ReverseSearchResultSimilarityThreshold, 1, 100, 1)
                 .Int(t => t.MaximumSearchHistoryRecords, 10, 200, 1)
                 .Int(t => t.MaximumSuggestionBoxSearchHistory, 0, 20, 1)
-                .Enum(t => t.WorkSortOption, WorkSortOptionExtension.Items)
-                .Enum(t => t.SimpleWorkType, SimpleWorkTypeExtension.Items)
+                .Enum(t => t.WorkSortOption)
+                .Enum(t => t.SimpleWorkType)
                 .MultiValues(t => t.IllustrationRankOption, entry =>
                     entry.Enum(
                             WorkTypeEnum.Illustration,
                             t => t.IllustrationRankOption,
-                            RankOptionExtension.IllustrationItems)
+                            "Illustration")
                         .Enum(
                             WorkTypeEnum.Novel,
                             t => t.NovelRankOption,
-                            RankOptionExtension.NovelItems))
+                            "Novel"))
                 .MultiValues(t => t.SearchIllustrationTagMatchOption, entry =>
                     entry.Enum(
                             WorkTypeEnum.Illustration,
-                            t => t.SearchIllustrationTagMatchOption,
-                            SearchIllustrationTagMatchOptionExtension.Items)
+                            t => t.SearchIllustrationTagMatchOption)
                         .Enum(
                             WorkTypeEnum.Novel,
-                            t => t.SearchNovelTagMatchOption,
-                            SearchNovelTagMatchOptionExtension.Items))
+                            t => t.SearchNovelTagMatchOption))
                 .DateWithSwitch(t => t.UseSearchStartDate,
                     entry => entry.DateTime(t => t.SearchStartDate, DateTime.MinValue,
                         DateTime.MaxValue))
@@ -114,16 +112,13 @@ public class SettingsPageViewModel : ViewModelBase
                 .MultiValues(t => t.IllustrationDownloadFormat, entry =>
                     entry.Enum(
                             WorkTypeEnum.Illustration,
-                            t => t.IllustrationDownloadFormat,
-                            IllustrationDownloadFormatExtension.Items)
+                            t => t.IllustrationDownloadFormat)
                         .Enum(
                             WorkTypeEnum.Ugoira,
-                            t => t.UgoiraDownloadFormat,
-                            UgoiraDownloadFormatExtension.Items)
+                            t => t.UgoiraDownloadFormat)
                         .Enum(
                             WorkTypeEnum.Novel,
-                            t => t.NovelDownloadFormat,
-                            NovelDownloadFormatExtension.Items))
+                            t => t.NovelDownloadFormat))
                 .Int(t => t.LossyImageDownloadQuality, -1, 100, 5)
                 .Bool(t => t.DownloadWhenBookmarked))
             .NewGroup(SettingsEntryCategory.Misc)

@@ -5,19 +5,20 @@
     xmlns:capability="using:Pixeval.Views.Capability"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:enum="using:Mako.Global.Enum"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
-    xmlns:utilities="using:Pixeval.Utilities"
     xmlns:views="using:Pixeval.Views"
     xmlns:work="using:Pixeval.Views.Work"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
     Header="{I18N {x:Static pixeval:MainPageResources.RankingsTabContent}}"
     Icon="{markup:SymbolIcon ArrowTrendingLines,
                              FontSize=16,
                              IconVariant=Color}"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
     <work:WorkContainer x:Name="WorkContainer" RefreshRequested="WorkContainer_OnRefreshRequested">
         <work:WorkContainer.CommandBarElements>
             <CalendarDatePicker
@@ -32,7 +33,7 @@
                 SelectionChanged="RankOptionComboBox_OnSelectionChanged" />
             <controls:SymbolComboBox
                 x:Name="SimpleWorkTypeComboBox"
-                ItemsSource="{x:Static utilities:SimpleWorkTypeExtension.Items}"
+                ItemsSource="{markup1:EnumResourceItems x:TypeArguments=enum:SimpleWorkType}"
                 SelectedIndex="{x:Static views:PixevalSettings.SimpleWorkTypeIndex}"
                 SelectionChanged="SimpleWorkTypeComboBox_OnSelectionChanged" />
         </work:WorkContainer.CommandBarElements>

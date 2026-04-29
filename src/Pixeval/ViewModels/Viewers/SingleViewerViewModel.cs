@@ -101,7 +101,14 @@ public partial class SingleViewerViewModel : ViewModelBase, IDisposable
         LoadingProgress = progress;
         LoadingText = phase is LoadingPhase.DownloadingImage
             ? I18NManager.GetResource(ImageViewerPageResources.DownloadingImageFormatted, (int) progress)
-            : I18NManager.GetResource(phase);
+            : I18NManager.GetResource(phase switch
+            {
+                LoadingPhase.CheckingCache => ImageViewerPageResources.CheckingCache,
+                LoadingPhase.LoadingFromCache => ImageViewerPageResources.LoadingFromCache,
+                LoadingPhase.MergingUgoiraFrames => ImageViewerPageResources.MergingUgoiraFrames,
+                LoadingPhase.LoadingImage => ImageViewerPageResources.LoadingImage,
+                _ => throw new ArgumentOutOfRangeException(nameof(phase), phase, null)
+            });
     }
 
     public async Task<Bitmap?> LoadThumbnailImageOverrideAsync()
@@ -164,4 +171,13 @@ public partial class SingleViewerViewModel : ViewModelBase, IDisposable
 
         return null;
     }
+}
+
+public enum LoadingPhase
+{
+    CheckingCache,
+    LoadingFromCache,
+    MergingUgoiraFrames,
+    DownloadingImage,
+    LoadingImage,
 }

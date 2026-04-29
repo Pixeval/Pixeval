@@ -54,7 +54,7 @@ public class JsonMarkdownLangPlugin : ILangPlugin
                 }
                 case ".md":
                 {
-                    dictionary[nameWithoutExtension + ".Markdown"] = File.ReadAllText(file.FullName);
+                    dictionary["Markdown." + nameWithoutExtension] = File.ReadAllText(file.FullName);
                     break;
                 }
             }

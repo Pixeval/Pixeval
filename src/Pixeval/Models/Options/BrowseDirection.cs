@@ -5,15 +5,15 @@ namespace Pixeval.Models.Options;
 [LocalizationMetadata]
 public enum BrowseDirection
 {
-    [LocalizedResource(BrowseExperienceResources.LeftRight)]
+    [LocalizedResource(EnumResources.BrowseDirectionLeftRight)]
     LeftRight,
 
-    [LocalizedResource(BrowseExperienceResources.RightLeft)]
+    [LocalizedResource(EnumResources.BrowseDirectionRightLeft)]
     RightLeft,
 
-    [LocalizedResource(BrowseExperienceResources.TopDown)]
+    [LocalizedResource(EnumResources.BrowseDirectionTopDown)]
     TopDown,
 
-    [LocalizedResource(BrowseExperienceResources.BottomUp)]
+    [LocalizedResource(EnumResources.BrowseDirectionBottomUp)]
     BottomUp
 }

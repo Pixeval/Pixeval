@@ -8,8 +8,12 @@ using System.Reflection;
 using AutoSettingsPage;
 using AutoSettingsPage.Avalonia;
 using AutoSettingsPage.Models;
+using Avalonia.Media;
 using FluentIcons.Common;
+using Mako;
+using Mako.Global.Enum;
 using Pixeval.AppManagement;
+using Pixeval.Controls;
 using Pixeval.Extensions.Common.Settings;
 using Pixeval.I18N;
 using Pixeval.Models.Extensions;
@@ -43,7 +47,6 @@ public static class LocalSettingsEntryHelper
 
     static LocalSettingsEntryHelper()
     {
-        // SettingsEntryHelper.AvailableFonts = CanvasTextFormat.GetSystemFontFamilies();
         SettingsEntryAttribute.SettingsResourceKeysProvider = new SettingsResourceKeysProviderImpl();
 
         _ = SettingsEntryHelper.FactoryDictionary.AddPredefined<AppSettings>()
@@ -65,6 +68,122 @@ public static class LocalSettingsEntryHelper
             .Add<ExtensionSettingsEntry<IDateTimeOffsetSettingsExtension, DateTime>, DateSettingsCard>()
             .Add<ExtensionSettingsEntry<IStringsArraySettingsExtension, ObservableCollection<string>>, StringCollectionSettingsExpander>()
             .Add<ExtensionSettingsEntry<IColorSettingsExtension, uint>, ColorSettingsCard>();
+
+        RegisterAttach<TargetFilter>(t =>
+        {
+            t.RegisterDirect(TargetFilter.ForAndroid, "Android");
+            t.RegisterDirect(TargetFilter.ForIos, "iOS");
+        });
+        RegisterAttach<DomainFrontingType>(t =>
+        {
+            t.Register(DomainFrontingType.Fragmentation, EnumResources.DomainFrontingTypeFragmentation);
+            t.RegisterDirect(DomainFrontingType.Ech, "ECH");
+            t.Register(DomainFrontingType.Desync, EnumResources.DomainFrontingTypeDesync);
+        });
+        RegisterAttach<SearchIllustrationTagMatchOption>(t =>
+        {
+            t.Register(SearchIllustrationTagMatchOption.PartialMatchForTags, EnumResources.SearchIllustrationTagMatchOptionPartialMatchForTags);
+            t.Register(SearchIllustrationTagMatchOption.ExactMatchForTags, EnumResources.SearchIllustrationTagMatchOptionExactMatchForTags);
+            t.Register(SearchIllustrationTagMatchOption.TitleAndCaption, EnumResources.SearchIllustrationTagMatchOptionTitleAndCaption);
+        });
+        RegisterAttach<SearchNovelTagMatchOption>(t =>
+        {
+            t.Register(SearchNovelTagMatchOption.PartialMatchForTags, EnumResources.SearchNovelTagMatchOptionPartialMatchForTags);
+            t.Register(SearchNovelTagMatchOption.ExactMatchForTags, EnumResources.SearchNovelTagMatchOptionExactMatchForTags);
+            t.Register(SearchNovelTagMatchOption.Text, EnumResources.SearchNovelTagMatchOptionText);
+            t.Register(SearchNovelTagMatchOption.Keyword, EnumResources.SearchNovelTagMatchOptionKeyword);
+        });
+        RegisterAttach<PrivacyPolicy>(t =>
+        {
+            t.Register(PrivacyPolicy.Public, Symbol.Person, EnumResources.PrivacyPolicyPublic);
+            t.Register(PrivacyPolicy.Private, Symbol.InPrivateAccount, EnumResources.PrivacyPolicyPrivate);
+        });
+        RegisterAttach<WorkSortOption>(t =>
+        {
+            t.Register(WorkSortOption.DoNotSort, Symbol.ArrowSort, EnumResources.WorkSortOptionDoNotSort);
+            t.Register(WorkSortOption.PopularityDescending, Symbol.ArrowTrendingSparkle, EnumResources.WorkSortOptionPopularityDescending);
+            t.Register(WorkSortOption.PublishDateAscending, Symbol.ArrowSortUpLines, EnumResources.WorkSortOptionPublishDateAscending);
+            t.Register(WorkSortOption.PublishDateDescending, Symbol.ArrowSortDownLines, EnumResources.WorkSortOptionPublishDateDescending);
+        });
+        RegisterAttach<FontWeight>(t =>
+        {
+            t.Register(FontWeight.Thin, Symbol.TextFont, EnumResources.FontWeightThin);
+            t.Register(FontWeight.ExtraLight, Symbol.TextFont, EnumResources.FontWeightExtraLight);
+            t.Register(FontWeight.Light, Symbol.TextFont, EnumResources.FontWeightLight);
+            t.Register(FontWeight.Normal, Symbol.TextFont, EnumResources.FontWeightNormal);
+            t.Register(FontWeight.Medium, Symbol.TextFont, EnumResources.FontWeightMedium);
+            t.Register(FontWeight.SemiBold, Symbol.TextFont, EnumResources.FontWeightSemiBold);
+            t.Register(FontWeight.Bold, Symbol.TextFont, EnumResources.FontWeightBold);
+            t.Register(FontWeight.ExtraBold, Symbol.TextFont, EnumResources.FontWeightExtraBold);
+            t.Register(FontWeight.Black, Symbol.TextFont, EnumResources.FontWeightBlack);
+        });
+        RegisterAttach<WorkType>(t =>
+        {
+            t.Register(WorkType.Illustration, Symbol.Image, EnumResources.WorkTypeIllustration);
+            t.Register(WorkType.Manga, Symbol.ImageStack, EnumResources.WorkTypeManga);
+            t.Register(WorkType.Novel, Symbol.Book, EnumResources.WorkTypeNovel);
+        });
+        RegisterAttach<SimpleWorkType>(t =>
+        {
+            t.Register(SimpleWorkType.IllustrationAndManga, Symbol.Image, EnumResources.SimpleWorkTypeIllustrationAndManga);
+            t.Register(SimpleWorkType.Novel, Symbol.Book, EnumResources.SimpleWorkTypeNovel);
+        });
+
+        RegisterAttach<RankOption>("Illustration", t =>
+        {
+            t.Register(RankOption.Day, EnumResources.RankOptionDay);
+            t.Register(RankOption.Week, EnumResources.RankOptionWeek);
+            t.Register(RankOption.Month, EnumResources.RankOptionMonth);
+            t.Register(RankOption.DayMale, EnumResources.RankOptionDayMale);
+            t.Register(RankOption.DayFemale, EnumResources.RankOptionDayFemale);
+            t.Register(RankOption.DayManga, EnumResources.RankOptionDayManga);
+            t.Register(RankOption.WeekManga, EnumResources.RankOptionWeekManga);
+            t.Register(RankOption.MonthManga, EnumResources.RankOptionMonthManga);
+            t.Register(RankOption.WeekOriginal, EnumResources.RankOptionWeekOriginal);
+            t.Register(RankOption.WeekRookie, EnumResources.RankOptionWeekRookie);
+            t.Register(RankOption.DayR18, EnumResources.RankOptionDayR18);
+            t.Register(RankOption.DayMaleR18, EnumResources.RankOptionDayMaleR18);
+            t.Register(RankOption.DayFemaleR18, EnumResources.RankOptionDayFemaleR18);
+            t.Register(RankOption.WeekR18, EnumResources.RankOptionWeekR18);
+            t.Register(RankOption.WeekR18G, EnumResources.RankOptionWeekR18G);
+            t.Register(RankOption.DayAi, EnumResources.RankOptionDayAi);
+            t.Register(RankOption.DayR18Ai, EnumResources.RankOptionDayR18Ai);
+        });
+        RegisterAttach<RankOption>("Novel", t =>
+        {
+            t.Register(RankOption.Day, EnumResources.RankOptionDay);
+            t.Register(RankOption.Week, EnumResources.RankOptionWeek);
+            t.Register(RankOption.DayMale, EnumResources.RankOptionDayMale);
+            t.Register(RankOption.DayFemale, EnumResources.RankOptionDayFemale);
+            t.Register(RankOption.WeekRookie, EnumResources.RankOptionWeekRookie);
+            t.Register(RankOption.DayR18, EnumResources.RankOptionDayR18);
+            t.Register(RankOption.DayMaleR18, EnumResources.RankOptionDayMaleR18);
+            t.Register(RankOption.DayFemaleR18, EnumResources.RankOptionDayFemaleR18);
+            t.Register(RankOption.WeekR18, EnumResources.RankOptionWeekR18);
+            t.Register(RankOption.WeekR18G, EnumResources.RankOptionWeekR18G);
+            t.Register(RankOption.WeekAi, EnumResources.RankOptionWeekAi);
+            t.Register(RankOption.WeekAiR18, EnumResources.RankOptionWeekAiR18);
+        });
+    }
+
+    public static Dictionary<object, IReadOnlyList<SymbolComboBoxItem>> RegisteredAttach { get; } = [];
+
+    public static void RegisterAttach<TEnum>(Action<RegisterAttachHelper<TEnum>> config)
+        where TEnum : struct, Enum
+    {
+        var list = new List<SymbolComboBoxItem>();
+        var helper = new RegisterAttachHelper<TEnum>(list);
+        config(helper);
+        RegisteredAttach[typeof(TEnum)] = list;
+    }
+
+    public static void RegisterAttach<TEnum>(string key, Action<RegisterAttachHelper<TEnum>> config)
+        where TEnum : struct, Enum
+    {
+        var list = new List<SymbolComboBoxItem>();
+        var helper = new RegisterAttachHelper<TEnum>(list);
+        config(helper);
+        RegisteredAttach[key] = list;
     }
 
     extension(ISettingsEntry entry)
@@ -93,13 +212,47 @@ public static class LocalSettingsEntryHelper
             string? token = null,
             Action<ISettingsGroup>? config = null)
         {
-            var item = SettingsEntryCategoryExtension.Items.First(t => Equals(t.Value, header));
+            var item = SymbolComboBoxItem.GetValues<SettingsEntryCategory>().First(t => Equals(t.Value, header));
             return builder.NewGroup(item.Description, description, item.Symbol, descriptionUri, token, config);
         }
     }
 
+    private static Expression<Func<TSettings, object>> Transform<TSettings, TEnum>(Expression<Func<TSettings, TEnum>> property)
+        where TEnum : struct, Enum =>
+        Expression.Lambda<Func<TSettings, object>>(
+            Expression.Convert(property.Body, typeof(object)),
+            property.Parameters);
+
     extension<TSettings>(ISettingsGroupBuilder<TSettings> builder)
     {
+        public ISettingsGroupBuilder<TSettings> Enum<TEnum>(
+            Expression<Func<TSettings, TEnum>> property,
+            Action<EnumSettingsEntry<TSettings, object>>? config = null)
+            where TEnum : struct, Enum =>
+            builder.Enum(Transform(property), SymbolComboBoxItem.GetValues<TEnum>(), config);
+
+        public ISettingsGroupBuilder<TSettings> Enum<TEnum>(
+            Expression<Func<TSettings, TEnum>> property,
+            string key,
+            Action<EnumSettingsEntry<TSettings, object>>? config = null)
+            where TEnum : struct, Enum =>
+            builder.Enum(Transform(property), SymbolComboBoxItem.GetValues(key), config);
+
+        public ISettingsGroupBuilder<TSettings> Enum<TEnum>(
+            WorkTypeEnum workType,
+            Expression<Func<TSettings, TEnum>> property,
+            Action<EnumSettingsEntry<TSettings, object>>? config = null)
+            where TEnum : struct, Enum =>
+            builder.Enum(workType, Transform(property), SymbolComboBoxItem.GetValues<TEnum>(), config);
+
+        public ISettingsGroupBuilder<TSettings> Enum<TEnum>(
+            WorkTypeEnum workType,
+            Expression<Func<TSettings, TEnum>> property,
+            string key,
+            Action<EnumSettingsEntry<TSettings, object>>? config = null)
+            where TEnum : struct, Enum =>
+            builder.Enum(workType, Transform(property), SymbolComboBoxItem.GetValues(key), config);
+
         public ISettingsGroupBuilder<TSettings> Enum<TEnum>(
             WorkTypeEnum workType,
             Expression<Func<TSettings, TEnum>> property,
@@ -108,16 +261,16 @@ public static class LocalSettingsEntryHelper
         {
             return builder.Add(new EnumSettingsEntry<TSettings, TEnum>(builder.Settings, property, enumItems), entry =>
             {
-                entry.Header = I18NManager.GetResource(workType) ;
                 entry.Description = "";
-                entry.Icon = workType switch
+                (entry.Icon, var header) = workType switch
                 {
-                    WorkTypeEnum.Illustration => Symbol.Image,
-                    WorkTypeEnum.Manga => Symbol.ImageMultiple,
-                    WorkTypeEnum.Ugoira => Symbol.Gif,
-                    WorkTypeEnum.Novel => Symbol.BookOpen,
+                    WorkTypeEnum.Illustration => (Symbol.Image, EnumResources.WorkTypeIllustration),
+                    WorkTypeEnum.Manga => (Symbol.ImageMultiple, EnumResources.WorkTypeManga),
+                    WorkTypeEnum.Ugoira => (Symbol.Gif, EnumResources.WorkTypeEnumUgoira),
+                    WorkTypeEnum.Novel => (Symbol.BookOpen, EnumResources.WorkTypeNovel),
                     _ => throw new ArgumentOutOfRangeException(nameof(workType))
                 };
+                entry.Header = I18NManager.GetResource(header);
                 config?.Invoke(entry);
             });
         }
@@ -174,4 +327,16 @@ public static class LocalSettingsEntryHelper
         /// <inheritdoc />
         public string this[string resourceKey] => I18NManager.GetResource(resourceKey);
     }
+}
+
+public class RegisterAttachHelper<TEnum>(IList<SymbolComboBoxItem> list)
+    where TEnum : struct, Enum
+{
+    public void RegisterDirect(TEnum value, Symbol symbol, string resource) => list.Add(new SymbolComboBoxItem(value, resource, symbol));
+
+    public void RegisterDirect(TEnum value, string resource) => RegisterDirect(value, default, resource);
+
+    public void Register(TEnum value, Symbol symbol, string key) => RegisterDirect(value, symbol, I18NManager.GetResource(key));
+
+    public void Register(TEnum value, string key) => Register(value, default, key);
 }

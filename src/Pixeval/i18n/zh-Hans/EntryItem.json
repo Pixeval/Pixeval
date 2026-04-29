@@ -2,9 +2,6 @@
   "GenerateLink": "复制应用链接",
   "GenerateWebLink": "复制网页链接",
   "OpenInWebBrowser": "打开网页",
-  "LinkCopiedToClipboard": "链接已复制到剪切板（在帮助页查看用法）",
-  "ShowPixEzQrCode": "生成PixEz二维码",
-  "ShowQRCode": "生成二维码",
   "AddToBookmark": "添加到收藏夹",
   "Save": "保存",
   "SaveAs": "另存为",
@@ -19,13 +16,15 @@
   "TheIllustrationIsAMangaFormatted": "这是一副图集，内含{0}张图片",
   "TheIllustrationIsAnUgoira": "这是一张动图",
   "OpenNovel": "阅读小说",
-  "UserMetricsFollowingsTextBlock": {
-    "Text": "正在关注"
-  },
-  "UserMetricsIllustrationCountTextBlock": {
-    "Text": "作品数"
-  },
-  "UserMetricsMyPixivUsersTextBlock": {
-    "Text": "好P友"
+  "UserMetrics": {
+    "FollowingsTextBlock": {
+      "Text": "正在关注"
+    },
+    "IllustrationCountTextBlock": {
+      "Text": "作品数"
+    },
+    "MyPixivUsersTextBlock": {
+      "Text": "好P友"
+    }
   }
 }

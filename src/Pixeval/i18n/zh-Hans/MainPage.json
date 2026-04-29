@@ -48,68 +48,66 @@
     "Content": "设置"
   },
   "OpenSearchSettingButton": {
-    "ToolTipService": {
       "ToolTip": "搜索设置"
-    }
   },
   "ReverseSearchButton": {
-    "ToolTipService": {
       "ToolTip": "以图搜图"
-    }
   },
   "MainPageAutoSuggestionBox": {
-    "PlaceholderText": "请输入作品ID/作品名/作者ID/作者名/设置项"
+    "PlaceholderText": "请输入作品ID/作品名/作者ID/作者名"
   },
-  "SearchKeywordCannotBeBlankContent": "关键字的长度不能为空",
-  "SearchKeywordCannotBeBlankTitle": "输入非法",
-  "ReverseSearchApiKeyNotPresentTitle": "未填写API Key或API Key错误",
-  "ReverseSearchClientSideErrorContent": "图片格式错误或者图片过大或者请求频率过高，请仔细检查后稍后再试",
-  "ReverseSearchStartContent": "正在进行以图搜图",
-  "ReverseSearchDropHintTextBlock": {
-    "Text": "在此释放进行以图搜图"
+  "SearchKeywordCannotBeBlank": {
+    "Title": "输入非法",
+    "Content": "关键字的长度不能为空"
   },
-  "ReverseSearchErrorTitle": "以图搜图发生错误",
-  "ReverseSearchNotFoundContent": "很遗憾，以图搜图功能未能在Pixiv数据库中找到任何对应的结果，该功能仅限于搜索Pixiv上面的作品哦",
-  "ReverseSearchNotFoundTitle": "未找到任何结果",
-  "ReverseSearchResponseContentIsEmpty": "返回结果为空",
-  "ReverseSearchServerSideErrorContent": "服务器端发生错误",
-  "IllustrationHeaderSuggestionTextBlock": {
-    "Text": "插画趋势"
-  },
-  "NovelHeaderSuggestionTextBlock": {
-    "Text": "小说趋势"
-  },
-  "SettingsEntryHeaderSuggestionTextBlock": {
-    "Text": "相关设置项"
-  },
-  "TagAutoCompletionSuggestionTextBlock": {
-    "Text": "相关标签"
-  },
-  "FeedTabCannotBeOpenedTitle": "无法使用用户动态功能",
-  "FeedTabCannotBeOpenedContent": "用户动态功能需要使用 Cookie，请先在设置页面中填写对应 Cookie 后再使用此功能",
-  "ExtensionsTab": {
-    "Content": "扩展"
-  },
-  "RefreshingSessionFailedTitle": "刷新对话失败",
-  "RefreshingSessionFailedContent": "请重新登录\n如果该问题反复出现，请联系开发者寻求解决",
-  "SearchWorksResult": "搜索作品结果",
-  "SearchUsersResult": "搜索用户结果",
-  "OpenMyPageItem": {
-    "Text": "打开个人页面"
-  },
-  "OpenMyPageInBrowserItem": {
-    "Text": "打开网页"
-  },
-  "RestrictedModeItem": {
-    "Text": "受限模式"
-  },
-  "AiShowItem": {
-    "Text": "显示AI作品"
-  },
-  "MoreViewingSettingsItem": {
-    "Text": "更多浏览设置"
-  },
-  "SwitchAccountItem": {
-    "Text": "切换账号"
+    "ReverseSearchApiKeyNotPresentTitle": "未填写API Key或API Key错误",
+    "ReverseSearchClientSideErrorContent": "图片格式错误或者图片过大或者请求频率过高，请仔细检查后稍后再试",
+    "ReverseSearchStartContent": "正在进行以图搜图",
+    "ReverseSearchDropHintTextBlock": {
+      "Text": "在此释放进行以图搜图"
+    },
+    "ReverseSearchErrorTitle": "以图搜图发生错误",
+    "ReverseSearchNotFoundContent": "很遗憾，以图搜图功能未能在Pixiv数据库中找到任何对应的结果，该功能仅限于搜索Pixiv上面的作品哦",
+    "ReverseSearchNotFoundTitle": "未找到任何结果",
+    "ReverseSearchResponseContentIsEmpty": "返回结果为空",
+    "ReverseSearchServerSideErrorContent": "服务器端发生错误",
+    "IllustrationHeaderSuggestionTextBlock": {
+      "Text": "插画趋势"
+    },
+    "NovelHeaderSuggestionTextBlock": {
+      "Text": "小说趋势"
+    },
+    "SettingsEntryHeaderSuggestionTextBlock": {
+      "Text": "相关设置项"
+    },
+    "TagAutoCompletionSuggestionTextBlock": {
+      "Text": "相关标签"
+    },
+    "FeedTabCannotBeOpenedTitle": "无法使用用户动态功能",
+    "FeedTabCannotBeOpenedContent": "用户动态功能需要使用 Cookie，请先在设置页面中填写对应 Cookie 后再使用此功能",
+    "ExtensionsTab": {
+      "Content": "扩展"
+    },
+    "RefreshingSessionFailedTitle": "刷新对话失败",
+    "RefreshingSessionFailedContent": "请重新登录\n如果该问题反复出现，请联系开发者寻求解决",
+    "SearchWorksResult": "搜索作品结果",
+    "SearchUsersResult": "搜索用户结果",
+    "OpenMyPageItem": {
+      "Text": "打开个人页面"
+    },
+    "OpenMyPageInBrowserItem": {
+      "Text": "打开网页"
+    },
+    "RestrictedModeItem": {
+      "Text": "受限模式"
+    },
+    "AiShowItem": {
+      "Text": "显示AI作品"
+    },
+    "MoreViewingSettingsItem": {
+      "Text": "更多浏览设置"
+    },
+    "SwitchAccountItem": {
+      "Text": "切换账号"
+    }
   }
-}

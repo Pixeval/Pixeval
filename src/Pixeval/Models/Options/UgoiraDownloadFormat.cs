@@ -8,21 +8,21 @@ namespace Pixeval.Models.Options;
 [LocalizationMetadata]
 public enum UgoiraDownloadFormat
 {
-    [LocalizedResource(MiscResources.Tiff)]
+    [LocalizedResource(Resource = "TIFF")]
     Tiff,
 
-    [LocalizedResource(MiscResources.Png)]
+    [LocalizedResource(Resource = "APNG")]
     APng,
 
-    [LocalizedResource(MiscResources.Gif)]
+    [LocalizedResource(Resource = "GIF")]
     Gif,
 
-    [LocalizedResource(MiscResources.WebPLossy)]
+    [LocalizedResource(EnumResources.UgoiraDownloadFormatWebPLossy)]
     WebPLossy,
 
-    [LocalizedResource(MiscResources.WebPLossless)]
+    [LocalizedResource(EnumResources.UgoiraDownloadFormatWebPLossless)]
     WebPLossless,
 
-    [LocalizedResource(MiscResources.OriginalUgoira)]
+    [LocalizedResource(EnumResources.UgoiraDownloadFormatOriginal)]
     Original
 }

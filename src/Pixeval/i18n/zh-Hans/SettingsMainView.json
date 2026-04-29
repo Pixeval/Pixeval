@@ -29,18 +29,6 @@
     "DownloadPathMacroTextBox": {
         "PlaceholderText": "下载路径宏"
     },
-    "IllustrationOptionEntry": {
-        "Header": "插画"
-    },
-    "MangaOptionEntry": {
-        "Header": "漫画"
-    },
-    "UgoiraOptionEntry": {
-        "Header": "动图"
-    },
-    "NovelOptionEntry": {
-        "Header": "小说"
-    },
     "PixivNameResolverHeader": {
         "Text": "名字解析器"
     },
@@ -69,10 +57,6 @@
     "DonateDeveloperHyperlinkButton": {
         "Content": "支持作者"
     },
-    "FileCacheCleared": "已删除所有的文件缓存",
-    "DownloadHistoriesCleared": "已删除所有的下载记录",
-    "SearchHistoriesCleared": "已删除所有的搜索记录",
-    "BrowseHistoriesCleared": "已删除所有的浏览记录",
     "DownloadMacroInvalidInfoBar": {
         "Title": "宏解析失败"
     },
@@ -166,9 +150,6 @@
     "SwitchAccountEntry": {
         "Description": "在新的账号登录之后，当前账号将会自动退出登录，但已打开的页面需要手动刷新或重新打开才能正确显示当前账号的内容",
         "Header": "切换账号"
-    },
-    "SpotlightSearchPageLimitNumberBox": {
-        "PlaceholderText": "特辑搜索页数限制[1, 100]"
     },
     "ProxyTextBoxErrorUri": "代理服务器地址输入有误，请重新输入",
     "TitleTextBlock": {

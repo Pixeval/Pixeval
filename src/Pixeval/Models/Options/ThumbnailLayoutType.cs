@@ -8,10 +8,10 @@ namespace Pixeval.Models.Options;
 [LocalizationMetadata]
 public enum ThumbnailLayoutType
 {
-    [LocalizedResource(BrowseExperienceResources.LinedFlow)]
+    [LocalizedResource(EnumResources.ThumbnailLayoutTypeLinedFlow)]
     LinedFlow,
 
-    [LocalizedResource(BrowseExperienceResources.Grid)]
+    [LocalizedResource(EnumResources.ThumbnailLayoutTypeGrid)]
     Grid,
 
     VerticalUniformStack,

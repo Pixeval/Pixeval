@@ -1,36 +1,28 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System.Collections.Generic;
-using Pixeval.Controls;
-using Pixeval.I18N;
+using Pixeval.Attributes;
 
 namespace Pixeval.Models.Options;
 
+[LocalizationMetadata]
 public enum ProxyType
 {
+    [LocalizedResource(EnumResources.ProxyOptionSystem)]
     System,
+
+    [LocalizedResource(EnumResources.ProxyOptionNone)]
     None,
+
+    [LocalizedResource(Resource = "http/https")]
     Http,
+
+    [LocalizedResource(Resource = "socks4")]
     Socks4,
+
+    [LocalizedResource(Resource = "socks4a")]
     Socks4A,
+
+    [LocalizedResource(Resource = "socks5")]
     Socks5
-}
-
-public static class ProxyTypeExtension
-{
-    public const string ProxyOptionHttp = "http/https";
-    public const string ProxyOptionSocks4 = "socks4";
-    public const string ProxyOptionSocks4A = "socks4a";
-    public const string ProxyOptionSocks5 = "socks5";
-
-    public static IReadOnlyList<SymbolComboBoxItem> Items =>
-    [
-        new(ProxyType.System, I18NManager.GetResource(MiscResources.ProxyOptionSystem), default),
-        new(ProxyType.None, I18NManager.GetResource(MiscResources.ProxyOptionNone), default),
-        new(ProxyType.Http, ProxyOptionHttp, default),
-        new(ProxyType.Socks4, ProxyOptionSocks4, default),
-        new(ProxyType.Socks4A, ProxyOptionSocks4A, default),
-        new(ProxyType.Socks5, ProxyOptionSocks5, default)
-    ];
 }

@@ -2,7 +2,6 @@
 // Licensed under the GPL-3.0 License.
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;

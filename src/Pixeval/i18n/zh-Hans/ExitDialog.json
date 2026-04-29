@@ -24,7 +24,5 @@
   },
   "ReconfirmationOfClosingWindow": {
     "Title": "关闭窗口"
-  },
-  "SignOutConfirmationDialogContent": "该操作将会无法撤销",
-  "SignOutConfirmationDialogTitle": "你确定要登出吗？"
+  }
 }

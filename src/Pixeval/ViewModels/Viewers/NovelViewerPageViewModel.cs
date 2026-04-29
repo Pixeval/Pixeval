@@ -18,7 +18,6 @@ using Pixeval.AppManagement;
 using Pixeval.I18N;
 using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Settings;
-using Pixeval.Utilities;
 using Pixeval.Views.Settings;
 using Pixeval.Views.Viewers;
 
@@ -117,7 +116,7 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
                         .Color(t => t.NovelBackground, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelBackgroundBrush)))
                         .Color(t => t.NovelFontColor, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelForegroundBrush)))
                         .Font(t => t.NovelFontFamily, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelFontFamilyObject)))
-                        .Enum(t => t.NovelFontWeight, FontWeightExtension.Items, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelFontWeight)))
+                        .Enum(t => t.NovelFontWeight, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelFontWeight)))
                         .Int(t => t.NovelFontSize, 5, 100, 1, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelFontSize)))
                         .Int(t => t.NovelLineHeight, 0, 150, 1, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelLineHeight)))
                         .Int(t => t.NovelMaxWidth, 50, 10000, 50, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelMaxWidth))))

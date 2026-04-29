@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using AutoSettingsPage;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using FluentIcons.Common;
+using Pixeval.Attributes;
+using Pixeval.Models.Settings;
 
 namespace Pixeval.Controls;
 
@@ -13,6 +16,26 @@ public record SymbolComboBoxItem(object Value, string Description, Symbol Symbol
 {
     /// <inheritdoc />
     public override string ToString() => Description;
+
+    public static IReadOnlyList<SymbolComboBoxItem> GetValues<TEnum>()
+        where TEnum : struct, Enum
+    {
+        if (LocalSettingsEntryHelper.RegisteredAttach.TryGetValue(typeof(TEnum), out var value))
+            return value;
+
+        var list = new List<SymbolComboBoxItem>();
+        var fieldInfos = typeof(TEnum).GetFields(BindingFlags.Public | BindingFlags.Static);
+        foreach (var fieldInfo in fieldInfos)
+            if (fieldInfo.GetCustomAttribute<LocalizedResourceAttribute>() is { } attribute)
+                list.Add(new SymbolComboBoxItem(fieldInfo.GetValue(null)!, attribute.Resource, attribute.Symbol));
+        LocalSettingsEntryHelper.RegisteredAttach[typeof(TEnum)] = list;
+        return list;
+    }
+
+    public static IReadOnlyList<SymbolComboBoxItem> GetValues(object key)
+    {
+        return LocalSettingsEntryHelper.RegisteredAttach[key];
+    }
 }
 
 /// <summary>

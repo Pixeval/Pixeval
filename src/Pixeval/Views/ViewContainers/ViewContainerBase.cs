@@ -30,8 +30,8 @@ public abstract class ViewContainerBase : ContentControl
         {
             Title = title,
             Content = content,
-            PrimaryButtonText = I18NManager.GetResource(MessageContentDialogResources.OkButtonContent),
-            CloseButtonText = I18NManager.GetResource(MessageContentDialogResources.CancelButtonContent),
+            PrimaryButtonText = I18NManager.GetResource(ContentDialogResources.OkButtonContent),
+            CloseButtonText = I18NManager.GetResource(ContentDialogResources.CancelButtonContent),
             DefaultButton = ContentDialogButton.Primary
         });
 
@@ -40,7 +40,7 @@ public abstract class ViewContainerBase : ContentControl
         {
             Title = title,
             Content = content,
-            PrimaryButtonText = I18NManager.GetResource(MessageContentDialogResources.OkButtonContent),
+            PrimaryButtonText = I18NManager.GetResource(ContentDialogResources.OkButtonContent),
             DefaultButton = ContentDialogButton.Primary
         });
 

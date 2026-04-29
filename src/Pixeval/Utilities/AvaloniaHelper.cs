@@ -110,9 +110,8 @@ public static class AvaloniaHelper
                 else
                     return;
 
-            // TODO i18n: not link
             _ = clipboard.SetTextAsync(str)
-                .ContinueWith(_ => viewContainer.ShowSuccess(I18NManager.GetResource(EntryItemResources.LinkCopiedToClipboard)),
+                .ContinueWith(_ => viewContainer.ShowSuccess(I18NManager.GetResource(MiscResources.Copied)),
                     TaskScheduler.FromCurrentSynchronizationContext());
         };
 }

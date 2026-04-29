@@ -9,7 +9,6 @@ using Avalonia.Interactivity;
 using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.Utilities;
-using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Work;
 

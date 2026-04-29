@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Mako.Model;
 using Misaki;
-using Pixeval.Attributes;
 using Pixeval.Controls;
 using Pixeval.I18N;
 using Pixeval.Utilities;
@@ -69,23 +68,4 @@ public partial class IllustrationItemViewModel(IArtworkInfo entry)
 
     protected override Task<bool> SetBookmarkAsync(bool favorite, bool privately = false, IEnumerable<string>? tags = null)
         => MakoHelper.SetIllustrationBookmarkAsync((Illustration) Entry, favorite, privately, tags);
-}
-
-[LocalizationMetadata]
-public enum LoadingPhase
-{
-    [LocalizedResource(ImageViewerPageResources.CheckingCache)]
-    CheckingCache,
-
-    [LocalizedResource(ImageViewerPageResources.LoadingFromCache)]
-    LoadingFromCache,
-
-    [LocalizedResource(ImageViewerPageResources.MergingUgoiraFrames)]
-    MergingUgoiraFrames,
-
-    [LocalizedResource(ImageViewerPageResources.DownloadingImageFormatted)]
-    DownloadingImage,
-
-    [LocalizedResource(ImageViewerPageResources.LoadingImage)]
-    LoadingImage,
 }

@@ -4,7 +4,6 @@ using Avalonia.Interactivity;
 using Mako;
 using Mako.Global.Enum;
 using Pixeval.Controls;
-using Pixeval.Utilities;
 
 namespace Pixeval.Views.Capability;
 
@@ -32,12 +31,12 @@ public partial class RankingsPage : ContentPage
         _suppressChangeSource = true;
         if (SimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>() is SimpleWorkType.IllustrationAndManga)
         {
-            RankOptionComboBox.ItemsSource = RankOptionExtension.IllustrationItems;
+            RankOptionComboBox.ItemsSource = SymbolComboBoxItem.GetValues("Illustration");
             RankOptionComboBox.SelectedIndex = (int) App.AppViewModel.AppSettings.IllustrationRankOption;
         }
         else
         {
-            RankOptionComboBox.ItemsSource = RankOptionExtension.NovelItems;
+            RankOptionComboBox.ItemsSource = SymbolComboBoxItem.GetValues("Novel");
             RankOptionComboBox.SelectedIndex = (int) App.AppViewModel.AppSettings.NovelRankOption;
         }
         _suppressChangeSource = false;

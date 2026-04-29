@@ -5,7 +5,6 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using FluentIcons.Common;
-using Pixeval.Controls;
 using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;

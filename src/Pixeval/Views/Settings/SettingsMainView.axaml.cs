@@ -129,8 +129,6 @@ public partial class SettingsMainView : ContentPage
 
     private void DeleteSearchHistoriesButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        if (DataContext is not SettingsPageViewModel vm)
-            return;
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
         manager.Clear();
         ShowClearData(ClearDataKind.SearchHistory);
@@ -138,8 +136,6 @@ public partial class SettingsMainView : ContentPage
 
     private void DeleteBrowseHistoriesButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        if (DataContext is not SettingsPageViewModel vm)
-            return;
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
         manager.Clear();
         ShowClearData(ClearDataKind.BrowseHistory);
@@ -147,8 +143,6 @@ public partial class SettingsMainView : ContentPage
 
     private void DeleteDownloadHistoriesButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        if (DataContext is not SettingsPageViewModel vm)
-            return;
         var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         manager.Clear();
         ShowClearData(ClearDataKind.DownloadHistory);
@@ -158,7 +152,14 @@ public partial class SettingsMainView : ContentPage
     {
         if (TopLevel.GetTopLevel(this) is not { ViewContainer: { } viewContainer })
             return;
-        viewContainer.ShowSuccess(I18NManager.GetResource(kind));
+        viewContainer.ShowSuccess(I18NManager.GetResource(kind switch
+        {
+            ClearDataKind.FileCache => EnumResources.ClearDataKindFileCache,
+            ClearDataKind.BrowseHistory => EnumResources.ClearDataKindBrowseHistory,
+            ClearDataKind.SearchHistory => EnumResources.ClearDataKindSearchHistory,
+            ClearDataKind.DownloadHistory => EnumResources.ClearDataKindDownloadHistory,
+            _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null)
+        }));
     }
 
     private async void AboutPageButton_OnClicked(object? sender, RoutedEventArgs e)

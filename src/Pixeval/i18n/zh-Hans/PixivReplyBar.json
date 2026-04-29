@@ -5,8 +5,6 @@
     "PlaceholderText": "输入评论"
   },
   "SendButton": {
-    "ToolTipService": {
-      "ToolTip": "发送"
-    }
+    "ToolTip": "发送"
   }
 }

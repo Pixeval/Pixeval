@@ -95,10 +95,10 @@
             Background="Transparent"
             BorderThickness="0"
             Click="SendButton_OnClicked"
+            Content="{markup:SymbolIcon Send,
+                                        FontSize=16}"
             DockPanel.Dock="Right"
-            ToolTip.Tip="{I18N {x:Static pixeval:PixivReplyBarResources.SendButtonToolTipServiceToolTip}}">
-            <markup:SymbolIcon FontSize="16" Symbol="Send" />
-        </Button>
+            ToolTip.Tip="{I18N {x:Static pixeval:PixivReplyBarResources.SendButtonToolTip}}" />
         <TextBox
             x:Name="ReplyContentTextBox"
             HorizontalAlignment="Stretch"

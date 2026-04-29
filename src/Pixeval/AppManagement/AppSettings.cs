@@ -77,7 +77,7 @@ public record AppSettings
     [SettingsEntry(Symbol.ImageSplit, OverwriteDownloadedFileEntryHeader, OverwriteDownloadedFileEntryDescription)]
     public bool OverwriteDownloadedFile { get; set; }
 
-    [SettingsEntry(Symbol.History, MaximumDownloadHistoryRecordsEntryHeader, MaximumDownloadHistoryRecordsEntryDescription)]
+    [SettingsEntry(Symbol.History, MaximumDownloadHistoryRecordsEntryHeader, MaximumDownloadHistoryRecordsEntryDescription, MaximumDownloadHistoryRecordsEntryPlaceholder)]
     public int MaximumDownloadHistoryRecords { get; set; } = 100;
 
     /// <summary>
@@ -115,7 +115,7 @@ public record AppSettings
     /// </summary>
     public SearchNovelTagMatchOption SearchNovelTagMatchOption { get; set; } = SearchNovelTagMatchOption.PartialMatchForTags;
 
-    [SettingsEntry(Symbol.History, MaximumSearchHistoryRecordsEntryHeader, MaximumSearchHistoryRecordsEntryDescription)]
+    [SettingsEntry(Symbol.History, MaximumSearchHistoryRecordsEntryHeader, MaximumSearchHistoryRecordsEntryDescription, MaximumSearchHistoryRecordsEntryPlaceholder)]
     public int MaximumSearchHistoryRecords { get; set; } = 50;
 
     [SettingsEntry(Symbol.Key, ReverseSearchApiKeyEntryHeader, ReverseSearchApiKeyEntryDescription, ReverseSearchApiKeyEntryPlaceholder)]

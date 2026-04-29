@@ -8,13 +8,14 @@ using AutoSettingsPage.Models;
 using Avalonia.Controls;
 using FluentIcons.Common;
 using Pixeval.AppManagement;
+using Pixeval.Controls;
 using Pixeval.Models.Options;
 
 namespace Pixeval.Models.Settings.Entries;
 
 public class ProxyAppSettingsEntry : EnumSettingsEntry<AppSettings, object>
 {
-    public ProxyAppSettingsEntry(AppSettings settings) : base(settings, t => t.ProxyType, ProxyTypeExtension.Items)
+    public ProxyAppSettingsEntry(AppSettings settings) : base(settings, t => t.ProxyType, SymbolComboBoxItem.GetValues<ProxyType>())
     {
         Token2 = nameof(AppSettings.Proxy);
         var member = typeof(AppSettings).GetProperty(Token2);

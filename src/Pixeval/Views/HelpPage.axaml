@@ -8,13 +8,13 @@
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
-    d:DesignHeight="800"
-    d:DesignWidth="600"
     Header="{I18N {x:Static pixeval:MainPageResources.HelpTabContent}}"
     Icon="{markup:SymbolIcon ChatBubblesQuestion,
                              FontSize=16,
                              IconVariant=Color}"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    d:DesignHeight="800"
+    d:DesignWidth="600">
     <ScrollViewer>
         <StackPanel Margin="20" Spacing="10">
             <TextBlock
@@ -32,7 +32,7 @@
             <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.DownloadMacroHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Symbol=Rename}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
-                        <local:MarkdownBox Markdown="{I18N {x:Static pixeval:DownloadMacroHelpResources.Markdown}}" />
+                        <local:MarkdownBox Markdown="{I18N {x:Static pixeval:MarkdownResources.DownloadMacroHelp}}" />
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
@@ -45,7 +45,7 @@
                                 Text="{I18N {x:Static pixeval:HelpPageResources.QueryFilterSimpleHelpHeaderText}}"
                                 Theme="{StaticResource SubtitleTextBlockStyle}" />
                         </controls:SettingsCard.Header>
-                        <local:MarkdownBox Markdown="{I18N {x:Static pixeval:QueryFilterSimpleHelpResources.Markdown}}" />
+                        <local:MarkdownBox Markdown="{I18N {x:Static pixeval:MarkdownResources.QueryFilterSimpleHelp}}" />
                     </controls:SettingsCard>
                     <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Vertical">
                         <controls:SettingsCard.Header>
@@ -54,14 +54,14 @@
                                 Text="{I18N {x:Static pixeval:HelpPageResources.QueryFilterHelpHeaderText}}"
                                 Theme="{StaticResource SubtitleTextBlockStyle}" />
                         </controls:SettingsCard.Header>
-                        <local:MarkdownBox Markdown="{I18N {x:Static pixeval:QueryFilterHelpResources.Markdown}}" />
+                        <local:MarkdownBox Markdown="{I18N {x:Static pixeval:MarkdownResources.QueryFilterHelp}}" />
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
             <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.ExtensionsHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Symbol=PuzzlePiece}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
-                        <local:MarkdownBox Markdown="{I18N {x:Static pixeval:ExtensionsHelpResources.Markdown}}" />
+                        <local:MarkdownBox Markdown="{I18N {x:Static pixeval:MarkdownResources.ExtensionsHelp}}" />
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>

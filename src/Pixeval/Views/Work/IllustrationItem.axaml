@@ -13,14 +13,14 @@
     xmlns:utilities="using:Pixeval.Utilities"
     xmlns:viewModels="using:Pixeval.ViewModels"
     xmlns:work="using:Pixeval.Views.Work"
-    d:DesignHeight="250"
-    d:DesignWidth="300"
     x:DataType="{x:Type viewModels:IllustrationItemViewModel}"
     Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
     Design.DataContext="{x:Static utilities:DesignHelper.DesignIllustrationViewModel}"
     RenderTransformOrigin="0.5,0.5"
     Theme="{StaticResource RoundedButtonStyle}"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    d:DesignHeight="250"
+    d:DesignWidth="300">
     <ContentControl ClipToBounds="True">
         <ContentControl.ContextFlyout>
             <MenuFlyout>
@@ -47,7 +47,7 @@
                 <MenuItem
                     Command="{Binding CopyCommand}"
                     CommandParameter="{Binding #ThumbnailImage, Mode=OneTime}"
-                    Header="{I18N {x:Static pixeval:EntryViewerPageResources.Copy}}"
+                    Header="{I18N {x:Static pixeval:EntryItemResources.Copy}}"
                     Icon="{markup:SymbolIcon Copy}"
                     IsEnabled="{Binding #ThumbnailImage.(controls:Source.Loaded)}"
                     IsVisible="{Binding !IsPicGif}" />
