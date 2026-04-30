@@ -11,7 +11,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,8 +21,6 @@ namespace Pixeval.Collections;
 public class AdvancedObservableCollection<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>
     : IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged, ISupportIncrementalLoading, IComparer<T>, IDisposable where T : class
 {
-    private readonly Dictionary<string, PropertyInfo> _sortProperties = [];
-
     private readonly bool _liveShapingEnabled;
 
     private readonly HashSet<string> _observedFilterProperties = [];
@@ -188,29 +185,9 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
     /// <inheritdoc cref="IComparer{T}.Compare"/>
     int IComparer<T>.Compare(T? x, T? y)
     {
-        if (_sortProperties.Count is 0)
-            foreach (var sd in SortDescriptions)
-                if (!string.IsNullOrEmpty(sd.PropertyName))
-                    _sortProperties[sd.PropertyName] = typeof(T).GetProperty(sd.PropertyName)!;
-
         foreach (var sd in SortDescriptions)
-        {
-            int cmp;
-
-            if (sd.PropertyMode)
-            {
-                var pi = _sortProperties[sd.PropertyName];
-
-                cmp = Comparer.Default.Compare(pi.GetValue(x), pi.GetValue(y));
-            }
-            else
-            {
-                cmp = sd.Comparer.Compare(x, y);
-            }
-
-            if (cmp is not 0)
+            if (sd.Comparison(x, y) is var cmp and not 0)
                 return sd.IsDescending ? -cmp : +cmp;
-        }
 
         return 0;
     }
@@ -291,7 +268,7 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
             }
         }
 
-        if ((filterResult ?? true) && SortDescriptions.Any(sd => sd.PropertyName == e.PropertyName))
+        if ((filterResult ?? true) && (SortDescriptions.Count is 0 || SortDescriptions.Any(sd => sd.ObservedProperties.Contains(e.PropertyName!))))
         {
             var oldIndex = _view.IndexOf(item);
 
@@ -346,13 +323,7 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
 
     private void HandleSortChanged()
     {
-        _sortProperties.Clear();
-        if (SortDescriptions.Count is not 0)
-        {
-            _view.Sort(this);
-            _sortProperties.Clear();
-        }
-        else
+        if (SortDescriptions.Count is 0)
         {
             var newIndex = 0;
             foreach (var item in Source)
@@ -369,6 +340,9 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
                     }
             }
         }
+        else
+            _view.Sort(this);
+
         OnCollectionChanged(new(NotifyCollectionChangedAction.Reset));
     }
 
@@ -407,7 +381,6 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
 
     private void HandleSourceChanged()
     {
-        _sortProperties.Clear();
         _view.Clear();
         foreach (var item in Source)
         {
@@ -428,7 +401,6 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
             }
         }
 
-        _sortProperties.Clear();
         OnCollectionChanged(EventArgsCache.ResetCollectionChanged);
         OnPropertyChanged(EventArgsCache.CountPropertyChanged);
     }
@@ -478,7 +450,6 @@ public class AdvancedObservableCollection<[DynamicallyAccessedMembers(Dynamicall
 
         if (SortDescriptions.Count is not 0)
         {
-            _sortProperties.Clear();
             newViewIndex = _view.BinarySearch(newItem, this);
             if (newViewIndex < 0)
                 newViewIndex = ~newViewIndex;

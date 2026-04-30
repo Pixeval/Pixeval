@@ -1,10 +1,10 @@
 <Solution>
   <Folder Name="/Lib/">
+    <Project Path="src/lib/AnimatedControls.Avalonia/AnimatedControls.Avalonia/AnimatedControls.Avalonia.csproj" />
     <Project Path="src/lib/AutoSettingsPage/AutoSettingsPage.Avalonia/AutoSettingsPage.Avalonia.csproj" />
     <Project Path="src/lib/AutoSettingsPage/AutoSettingsPage/AutoSettingsPage.csproj" />
     <Project Path="src/lib/AutoSettingsPage/SettingsControls.Avalonia/SettingsControls.Avalonia.csproj" />
-    <Project Path="src/lib/AnimatedControls.Avalonia/AnimatedControls.Avalonia/AnimatedControls.Avalonia.csproj" />
-    <Project Path="src/lib/FluentAvalonia/FluentAvalonia.csproj" Id="e43f67a8-7d47-4a4f-8631-2fa7e7c7b171" />
+    <Project Path="src/lib/FluentAvalonia/FluentAvalonia.csproj" />
     <Project Path="src/lib/Imouto/Imouto.BooruParser/Imouto.BooruParser.csproj" />
     <Project Path="src/lib/Mako/Mako.SourceGen/Mako.SourceGen.csproj" />
     <Project Path="src/lib/Mako/Mako/Mako.csproj" />
@@ -27,6 +27,7 @@
     <File Path=".github/ISSUE_TEMPLATE/bug_report.yaml" />
     <File Path=".github/ISSUE_TEMPLATE/feature_request.yaml" />
   </Folder>
+  <Project Path="src/Pixeval.Tests/Pixeval.Tests.csproj" />
   <Project Path="src/Pixeval.Android/Pixeval.Android.csproj" />
   <Project Path="src/Pixeval.Browser/Pixeval.Browser.csproj" />
   <Project Path="src/Pixeval.Caching/Pixeval.Caching.csproj" />

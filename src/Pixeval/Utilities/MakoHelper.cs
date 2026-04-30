@@ -60,13 +60,13 @@ public static class MakoHelper
 
     public static Uri GenerateSpotlightAppUri(long id) => new($"{AppInfo.AppProtocol}://spotlight/{id}");
 
-    public static SortDescription<IWorkViewModel>? GetSortDescription(WorkSortOption sortOption)
+    public static ISortDescription<IWorkViewModel>? GetSortDescription(WorkSortOption sortOption)
     {
         return sortOption switch
         {
-            WorkSortOption.PopularityDescending => new(WorkEntryBookmarkComparer.Instance, true),
-            WorkSortOption.PublishDateAscending => new(WorkEntryPublishDateComparer.Instance, false),
-            WorkSortOption.PublishDateDescending => new(WorkEntryPublishDateComparer.Instance, true),
+            WorkSortOption.PopularityDescending => ISortDescription<IWorkViewModel>.Create(t => t.Entry.TotalFavorite, t => t.Entry.Id, true),
+            WorkSortOption.PublishDateAscending => ISortDescription<IWorkViewModel>.Create(t => t.Entry.CreateDate, t => t.Entry.Id, false),
+            WorkSortOption.PublishDateDescending => ISortDescription<IWorkViewModel>.Create(t => t.Entry.CreateDate, t => t.Entry.Id, true),
             WorkSortOption.DoNotSort => null,
             _ => throw new ArgumentOutOfRangeException(nameof(sortOption))
         };
