@@ -95,7 +95,7 @@ public static class FloatingPaneHost
 
                     var isInProximity = targetBounds.Inflate(FloatingPane.GetProximityRange(pane)).Contains(pointerPosition);
                     var isInCloseProximity = targetBounds.Inflate(FloatingPane.GetCloseProximityRange(pane)).Contains(pointerPosition);
-                    Debug.WriteLine($"判定结果: proximity={isInProximity}, close={isInCloseProximity}; 鼠标位置: {pointerPosition}; target范围: {targetBounds}");
+                    // Debug.WriteLine($"判定结果: proximity={isInProximity}, close={isInCloseProximity}; 鼠标位置: {pointerPosition}; target范围: {targetBounds}");
                     FloatingPane.UpdateState(pane, isInProximity, isInCloseProximity);
                 }
                 else
