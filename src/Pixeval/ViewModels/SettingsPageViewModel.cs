@@ -47,15 +47,15 @@ public class SettingsPageViewModel : ViewModelBase
                     })
                 .Font(t => t.AppFontFamily, entry => entry.ValueChanged += t => Application.Current?.Resources["ContentControlThemeFontFamily"] = new FontFamily(string.Join(',', t)))
                 .DomainFronting(t => t.EnableDomainFronting, entry =>
-                        entry.IPSet(t => t.PixivAppApiNameResolver)
+                        entry.Enum(t => t.DomainFrontingType,
+                                e => e.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.DomainFrontingType = (DomainFrontingType) t)
+                            .IPSet(t => t.PixivAppApiNameResolver)
                             .IPSet(t => t.PixivImageNameResolver)
                             .IPSet(t => t.PixivImageNameResolver2)
                             .IPSet(t => t.PixivOAuthNameResolver)
                             .IPSet(t => t.PixivAccountNameResolver)
                             .IPSet(t => t.PixivWebApiNameResolver),
                     entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.DomainFronting = t)
-                .Enum(t => t.DomainFrontingType,
-                    entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.DomainFrontingType = (DomainFrontingType) t)
                 .Proxy(entry => entry.ProxyChanged += t => App.AppViewModel.MakoClient.Configuration.Proxy = t)
                 .String(t => t.MirrorHost,
                     entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.MirrorHost = t)
