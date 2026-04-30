@@ -33,25 +33,24 @@
 
     <ContentPage.Styles>
         <Style Selector="controls|FloatingPaneView#EntryViewerFloatingPaneView">
+            <Setter Property="DockedPaneWidth" Value="360" />
+            <Setter Property="FloatingPaneMargin" Value="16" />
+            <Setter Property="FloatingPaneWidth" Value="360" />
             <Setter Property="PaneVerticalAlignment" Value="Top" />
 
             <Style Selector="^ Border#FloatingPaneBorder">
-                <Setter Property="VerticalAlignment" Value="Bottom" />
-                <Setter Property="Margin" Value="16" />
-                <Setter Property="CornerRadius" Value="4" />
-                <Setter Property="Width" Value="360" />
                 <Setter Property="Background" Value="{DynamicResource FloatingPaneBackgroundBrush}" />
+                <Setter Property="CornerRadius" Value="4" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="VerticalAlignment" Value="Stretch" />
             </Style>
 
             <Style Selector="^:docked">
-                <Setter Property="PaneVerticalAlignment" Value="Stretch" />
+                <Setter Property="PaneVerticalAlignment" Value="Top" />
 
                 <Style Selector="^ Border#FloatingPaneBorder">
-                    <Setter Property="VerticalAlignment" Value="Stretch" />
-                    <Setter Property="Margin" Value="0" />
-                    <Setter Property="CornerRadius" Value="0" />
-                    <Setter Property="Width" Value="360" />
                     <Setter Property="Background" Value="{DynamicResource FloatingPaneDockedBackgroundBrush}" />
+                    <Setter Property="CornerRadius" Value="0" />
                 </Style>
             </Style>
         </Style>
@@ -136,9 +135,20 @@
 
     <Grid>
         <!--  主体区域：FloatingPaneView + 图片查看器  -->
-        <controls:FloatingPaneView x:Name="EntryViewerFloatingPaneView" Grid.Row="0">
+        <controls:FloatingPaneView
+            x:Name="EntryViewerFloatingPaneView"
+            Grid.Row="0"
+            PaneVerticalAlignment="Top">
             <controls:FloatingPaneView.Pane>
                 <Border Name="FloatingPaneBorder">
+                    <Border.Transitions>
+                        <Transitions>
+                            <CornerRadiusTransition
+                                Easing="CubicEaseOut"
+                                Property="CornerRadius"
+                                Duration="0:0:0.45" />
+                        </Transitions>
+                    </Border.Transitions>
                     <local:IllustrationViewerInfoPane IsDocked="{Binding #EntryViewerFloatingPaneView.IsDocked, Mode=TwoWay}" />
                 </Border>
             </controls:FloatingPaneView.Pane>

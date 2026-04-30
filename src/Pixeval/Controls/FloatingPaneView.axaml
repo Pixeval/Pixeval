@@ -8,11 +8,16 @@
             <ControlTemplate>
 
                 <Border Background="{TemplateBinding Background}">
-                    <Grid
+                    <controls:FloatingDockHost
                         x:Name="PART_RootHost"
                         controls:FloatingPaneHost.IsEnabled="True"
                         ClipToBounds="True"
-                        ColumnDefinitions="Auto,*">
+                        DockedPaneWidth="{TemplateBinding DockedPaneWidth}"
+                        DockProgress="{TemplateBinding DockProgress}"
+                        FloatingPaneMargin="{TemplateBinding FloatingPaneMargin}"
+                        FloatingPaneVerticalAlignment="{TemplateBinding PaneVerticalAlignment}"
+                        FloatingPaneWidth="{TemplateBinding FloatingPaneWidth}"
+                        IsDocked="{TemplateBinding IsDocked}">
                         <ContentPresenter
                             x:Name="PART_ContentPresenter"
                             Content="{TemplateBinding Content}"
@@ -20,9 +25,6 @@
 
                         <Border
                             x:Name="PART_FloatingPaneBorder"
-                            Grid.Column="0"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="{TemplateBinding PaneVerticalAlignment}"
                             controls:FloatingPane.IsEnabled="True"
                             ClipToBounds="True"
                             ZIndex="1">
@@ -31,31 +33,30 @@
                                 Content="{TemplateBinding Pane}"
                                 ContentTemplate="{TemplateBinding FloatingPaneTemplate}" />
                         </Border>
-                    </Grid>
+                    </controls:FloatingDockHost>
                 </Border>
 
             </ControlTemplate>
         </Setter>
 
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Easing="CubicEaseOut" Property="DockProgress" Duration="0:0:0.45" />
+            </Transitions>
+        </Setter>
+
         <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Grid.ColumnSpan" Value="2" />
-            <Setter Property="Grid.Column" Value="0" />
-            <Setter Property="Transitions">
-                <Transitions>
-                    <DoubleTransition Property="Width" Duration="0:0:0.2" />
-                </Transitions>
-            </Setter>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="ZIndex" Value="0" />
         </Style>
 
-        <Style Selector="^:docked /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Grid.ColumnSpan" Value="1" />
-            <Setter Property="Grid.Column" Value="1" />
+        <Style Selector="^ /template/ ContentPresenter#PART_FloatingPanePresenter">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
         </Style>
 
         <Style Selector="^ /template/ Border#PART_FloatingPaneBorder">
-            <Setter Property="Grid.Column" Value="0" />
-            <Setter Property="Grid.ColumnSpan" Value="2" />
-            <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="Transitions">
                 <Transitions>
                     <DoubleTransition
@@ -87,8 +88,6 @@
         </Style>
 
         <Style Selector="^:docked /template/ Border#PART_FloatingPaneBorder">
-            <Setter Property="Grid.ColumnSpan" Value="1" />
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="Opacity" Value="1" />
             <Setter Property="controls:FloatingPane.IsEnabled" Value="False" />
         </Style>

@@ -87,7 +87,7 @@
             <ControlTemplate>
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                     <StackPanel
-                        Margin="20,15"
+                        Margin="16,12"
                         Spacing="5"
                         DataContext="{TemplateBinding ArtworkInfo}"
                         x:DataType="{x:Type misaki:IArtworkInfo}">
