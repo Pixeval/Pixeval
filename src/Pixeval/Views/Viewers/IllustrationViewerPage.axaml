@@ -159,6 +159,10 @@
                                 Property="CornerRadius"
                                 Duration="0:0:0.3"
                                 Delay="0:0:0.1" />
+                            <BrushTransition
+                                Property="Background"
+                                Duration="0:0:0.3"
+                                Delay="0:0:0.1" />
                         </Transitions>
                     </Border.Transitions>
                     <local:IllustrationViewerInfoPane

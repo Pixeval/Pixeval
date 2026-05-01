@@ -11,6 +11,11 @@
     d:DesignWidth="350"
     x:DataType="{x:Type misaki:IArtworkInfo}"
     Header="{I18N {x:Static pixeval:EntryViewerPageResources.InfoTabContent}}"
+    Name="WorkInfoPageRoot"
+    Background="Transparent"
     mc:Ignorable="d">
-    <viewers:WorkInfoPane ArtworkInfo="{Binding}" />
+    <viewers:WorkInfoPane
+        ActionZone="{Binding #WorkInfoPageRoot.ActionZone}"
+        ActionZoneTemplate="{Binding #WorkInfoPageRoot.ActionZoneTemplate}"
+        ArtworkInfo="{Binding}" />
 </ContentPage>

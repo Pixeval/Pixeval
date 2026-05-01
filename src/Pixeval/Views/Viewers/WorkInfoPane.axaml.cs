@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
+using Avalonia.Data.Converters;
 using CommunityToolkit.Mvvm.Input;
 using Mako.Global.Enum;
 using Mako.Model;
@@ -91,5 +92,7 @@ public class WorkInfoPane : TemplatedControl
             AppInfo.SaveSettings(App.AppViewModel.AppSettings);
         }
     }
+    
+    public static IValueConverter HalfVerticalSpaceConverter { get; } = new FuncValueConverter<Rect, double>(x => x.Height / 2);
 
 }

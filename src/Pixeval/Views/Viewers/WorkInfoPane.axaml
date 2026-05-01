@@ -85,8 +85,9 @@
         TargetType="{x:Type viewers:WorkInfoPane}">
         <Setter Property="Template">
             <ControlTemplate>
-                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Name="WIPHostScroller" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                     <StackPanel
+                        MinHeight="400"
                         Margin="16,12"
                         Spacing="5"
                         DataContext="{TemplateBinding ArtworkInfo}"
@@ -105,6 +106,7 @@
                         </Grid>
 
                         <controls:MarkdownBox
+                            MaxHeight="{Binding #WIPHostScroller.Bounds, Converter={x:Static viewers:WorkInfoPane.HalfVerticalSpaceConverter}}"
                             Margin="0,5,0,0"
                             IsVisible="{Binding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                             Markdown="{Binding Description}" />
@@ -206,6 +208,7 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
+
                     </StackPanel>
                 </ScrollViewer>
             </ControlTemplate>
@@ -229,6 +232,8 @@
                                 IsVisible="{Binding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                                 Text="{Binding Title}"
                                 TextWrapping="Wrap"
+                                TextTrimming="CharacterEllipsis"
+                                MaxLines="2"
                                 Theme="{StaticResource TitleTextBlockStyle}" />
                             <ContentPresenter
                                 Grid.Column="1"
@@ -238,6 +243,7 @@
 
                         <controls:MarkdownBox
                             Margin="0,5,0,0"
+                            MaxHeight="100"
                             IsVisible="{Binding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                             Markdown="{Binding Description}" />
 

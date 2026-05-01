@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Avalonia.Controls;
+using Avalonia.Layout;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Mako.Global.Enum;
 using Mako.Model;
@@ -98,9 +99,20 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
             
             // TODO: I would suggest use ViewLocator here, to keep the ViewModel separated from the View.
             // new WorkInfoPage(CurrentIllustration.Entry)
-            var list = new List<Page>(2);
-            if (CurrentIllustration.Entry is Illustration { Id: var id })
+            var list = new List<Page>(3);
+            if (CurrentIllustration.Entry is Illustration { Id: var id } illust)
             {
+                var workInfoPage = new WorkInfoPage(illust);
+                workInfoPage.ActionZone = new Border
+                {
+                    Width = 32,
+                    Height = 32,
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    IsHitTestVisible = false
+                };
+                
+                list.Add(workInfoPage);  
                 list.Add(new CommentsPage(new CommentsViewViewModel(SimpleWorkType.IllustrationAndManga, id)));
                 list.Add(new RelatedWorksPage { IllustrationId = id });
             }
