@@ -39,16 +39,6 @@
             </ControlTemplate>
         </Setter>
 
-        <Setter Property="Transitions">
-            <Transitions>
-                <DoubleTransition 
-                    Easing="CubicEaseOut" 
-                    Property="DockProgress" 
-                    Duration="0:0:0.3" 
-                    Delay="0:0:0.1" />
-            </Transitions>
-        </Setter>
-
         <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="VerticalContentAlignment" Value="Stretch" />

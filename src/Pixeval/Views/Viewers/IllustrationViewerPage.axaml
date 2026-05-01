@@ -37,6 +37,15 @@
             <Setter Property="FloatingPaneMargin" Value="16" />
             <Setter Property="FloatingPaneWidth" Value="360" />
             <Setter Property="PaneVerticalAlignment" Value="Top" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition
+                        Easing="CubicEaseOut"
+                        Property="DockProgress"
+                        Duration="0:0:0.3"
+                        Delay="0:0:0.1" />
+                </Transitions>
+            </Setter>
 
             <Style Selector="^ Border#FloatingPaneBorder">
                 <Setter Property="Background" Value="{DynamicResource FloatingPaneBackgroundBrush}" />
