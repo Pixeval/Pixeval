@@ -124,8 +124,9 @@ public class FloatingDockHost : Panel
             content.Arrange(new Rect(
                 contentX,
                 0,
-                // Math.Max(0, finalSize.Width - contentX),
-                finalSize.Width,
+                // progress < 1-ProgressEpsilon? finalSize.Width : finalSize.Width - dockedPaneWidth, 
+                // finalSize.Width,
+                Math.Max(0, finalSize.Width - contentX),
                 finalSize.Height));
         }
 

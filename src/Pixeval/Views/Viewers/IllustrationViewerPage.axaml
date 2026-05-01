@@ -146,7 +146,8 @@
                             <CornerRadiusTransition
                                 Easing="CubicEaseOut"
                                 Property="CornerRadius"
-                                Duration="0:0:0.45" />
+                                Duration="0:0:0.3"
+                                Delay="0:0:0.1" />
                         </Transitions>
                     </Border.Transitions>
                     <local:IllustrationViewerInfoPane IsDocked="{Binding #EntryViewerFloatingPaneView.IsDocked, Mode=TwoWay}" />

@@ -20,10 +20,9 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:IconText}">
-                    <DockPanel HorizontalSpacing="5">
+                    <StackPanel Spacing="5" Orientation="Horizontal">
                         <fluent:SymbolIcon
                             VerticalAlignment="Center"
-                            DockPanel.Dock="Left"
                             FontSize="{TemplateBinding IconSize}"
                             Symbol="{TemplateBinding Symbol}" />
                         <TextBlock
@@ -31,7 +30,7 @@
                             FontSize="{TemplateBinding FontSize}"
                             Text="{TemplateBinding Text}"
                             Theme="{TemplateBinding TextTheme}" />
-                    </DockPanel>
+                    </StackPanel>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
