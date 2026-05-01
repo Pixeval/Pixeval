@@ -64,7 +64,7 @@ public class WorkInfoPane : TemplatedControl
 
         if (user is UserInfo info)
             await viewContainer.CreateUserPageAsync(info.Id);
-        else
+        else if (user is { })
             await launcher.LaunchUriAsync(user.WebsiteUri);
     }
 
