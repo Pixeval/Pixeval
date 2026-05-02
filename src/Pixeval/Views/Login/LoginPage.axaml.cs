@@ -1,9 +1,8 @@
 using System;
+using System.Threading.Tasks;
 using System.Web;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Platform;
-using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.Views.Capability;
 
@@ -27,38 +26,43 @@ public partial class LoginPage : ContentPage
             LoginNavigate();
     }
 
-    private void OpenWebView_OnClick(object? sender, RoutedEventArgs e)
+    private async void OpenWebView_OnClick(object? sender, RoutedEventArgs e)
     {
-        WebView.EnvironmentRequested += (o, args) =>
-        {
-            if (!App.AppViewModel.AppSettings.EnableDomainFronting)
-                return;
-            switch (args)
-            {
-                case WindowsWebView2EnvironmentRequestedEventArgs webView2Args:
-                case AppleWKWebViewEnvironmentRequestedEventArgs appleArgs:
-                case GtkWebViewEnvironmentRequestedEventArgs gtkArgs:
-                    break;
-            }
-        };
-        WebView.IsVisible = true;
         var verifier = PixivAuth.GetCodeVerify();
-        WebView.NavigationStarted += async (o, args) =>
+        if (TopLevel.GetTopLevel(this) is not { ViewContainer: { } viewContainer } topLevel)
+            return;
+        try
         {
-            if (args.Request is { } uri && uri.OriginalString.StartsWith("pixiv://"))
-            {
-                WebView.IsVisible = false;
-                var code = HttpUtility.ParseQueryString(uri.Query)["code"]!;
-                App.AppViewModel.MakoClient.SetCode(code, verifier);
-                if (await App.AppViewModel.MakoClient.IdentifyTokenAsync())
-                    Avalonia.Threading.Dispatcher.UIThread.Invoke(LoginNavigate);
-                else if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer)
-                    _ = await viewContainer.CreateAcknowledgementAsync(
-                        I18NManager.GetResource(LoginPageResources.FetchingSessionFailedTitle),
-                        I18NManager.GetResource(LoginPageResources.FetchingSessionFailedContent));
-            }
-        };
-        WebView.Source = new Uri(PixivAuth.GenerateWebPageUrl(verifier));
+            var result = await WebAuthenticationBroker.AuthenticateAsync(
+                topLevel,
+                new(
+                    new(PixivAuth.GenerateWebPageUrl(verifier)),
+                    new("pixiv://account/login"))
+                {
+                    PreferNativeWebDialog = true,
+                    NonPersistent = true
+                });
+
+            if (result.CallbackUri is not { } callbackUri)
+                return;
+            var code = HttpUtility.ParseQueryString(callbackUri.Query)["code"];
+            if (string.IsNullOrWhiteSpace(code))
+                return;
+            App.AppViewModel.MakoClient.SetCode(code, verifier);
+            if (await App.AppViewModel.MakoClient.IdentifyTokenAsync())
+                LoginNavigate();
+        }
+        catch (TaskCanceledException)
+        {
+            // ignored
+        }
+        catch (Exception exception)
+        {
+            viewContainer.ShowError(exception.GetType().ToString(), exception.Message);
+            //_ = await viewContainer.CreateAcknowledgementAsync(
+            //    I18NManager.GetResource(LoginPageResources.FetchingSessionFailedTitle),
+            //    I18NManager.GetResource(LoginPageResources.FetchingSessionFailedContent));
+        }
     }
 
     public void LoginNavigate()

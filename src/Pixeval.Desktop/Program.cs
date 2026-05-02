@@ -16,11 +16,6 @@ sealed class Program
     public static AppBuilder BuildAvaloniaApp() =>
         AppBuilder.Configure<App>()
             .UsePlatformDetect()
-            .With(new Win32PlatformOptions
-            {
-                CompositionMode =
-                    [Win32CompositionMode.LowLatencyDxgiSwapChain, Win32CompositionMode.RedirectionSurface],
-            })
             .With(new SkiaOptions 
             { 
                 // 提高到128M对于2K分辨率基本够用了，在瀑布流这种有巨量图片同时渲染的场景，应该能大幅提升性能

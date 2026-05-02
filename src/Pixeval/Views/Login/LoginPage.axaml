@@ -18,27 +18,23 @@
     <ContentPage.DataContext>
         <viewModels:LoginPageViewModel />
     </ContentPage.DataContext>
-    <DockPanel>
-        <StackPanel
-            Width="300"
-            Margin="50"
-            VerticalAlignment="Center"
-            DockPanel.Dock="Right"
-            IsEnabled="{Binding !#WebView.IsVisible}"
-            Spacing="10">
-            <TextBox
-                x:Name="TextBox"
-                HorizontalAlignment="Stretch"
-                PlaceholderText="{I18N {x:Static pixeval:LoginPageResources.RefreshTokenBoxPlaceholderText}}" />
-            <Button
-                HorizontalAlignment="Stretch"
-                Click="LoginButton_OnClick"
-                Content="{I18N {x:Static pixeval:LoginPageResources.RefreshTokenButtonContent}}" />
-            <Button
-                HorizontalAlignment="Stretch"
-                Click="OpenWebView_OnClick"
-                Content="{I18N {x:Static pixeval:LoginPageResources.WebViewButtonContent}}" />
-        </StackPanel>
-        <NativeWebView x:Name="WebView" IsVisible="False" />
-    </DockPanel>
+    <StackPanel
+        Width="300"
+        Margin="50"
+        VerticalAlignment="Center"
+        DockPanel.Dock="Right"
+        Spacing="10">
+        <TextBox
+            x:Name="TextBox"
+            HorizontalAlignment="Stretch"
+            PlaceholderText="{I18N {x:Static pixeval:LoginPageResources.RefreshTokenBoxPlaceholderText}}" />
+        <Button
+            HorizontalAlignment="Stretch"
+            Click="LoginButton_OnClick"
+            Content="{I18N {x:Static pixeval:LoginPageResources.RefreshTokenButtonContent}}" />
+        <Button
+            HorizontalAlignment="Stretch"
+            Click="OpenWebView_OnClick"
+            Content="{I18N {x:Static pixeval:LoginPageResources.WebViewButtonContent}}" />
+    </StackPanel>
 </ContentPage>
