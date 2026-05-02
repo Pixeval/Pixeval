@@ -46,6 +46,10 @@ public class SettingsPageViewModel : ViewModelBase
                         _ => ThemeVariant.Default
                     })
                 .Font(t => t.AppFontFamily, entry => entry.ValueChanged += t => Application.Current?.Resources["ContentControlThemeFontFamily"] = new FontFamily(string.Join(',', t)))
+                .Bool(t => t.UseFileCache)
+                .Enum(t => t.DefaultSelectedTabItem))
+            .NewGroup(SettingsEntryCategory.Network)
+            .Config(group => group
                 .DomainFronting(t => t.EnableDomainFronting, entry =>
                         entry.Enum(t => t.DomainFrontingType,
                                 e => e.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.DomainFrontingType = (DomainFrontingType) t)
@@ -59,8 +63,6 @@ public class SettingsPageViewModel : ViewModelBase
                 .Proxy(entry => entry.ProxyChanged += t => App.AppViewModel.MakoClient.Configuration.Proxy = t)
                 .String(t => t.MirrorHost,
                     entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.MirrorHost = t)
-                .Bool(t => t.UseFileCache)
-                .Enum(t => t.DefaultSelectedTabItem)
                 .String(t => t.WebCookie,
                     entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.Cookie = t))
             .NewGroup(SettingsEntryCategory.BrowsingExperience)
@@ -70,7 +72,8 @@ public class SettingsPageViewModel : ViewModelBase
                 .Enum(t => t.BrowseDirection)
                 .Enum(t => t.TargetFilter)
                 .Collection(t => t.BlockedTags)
-                .Bool(t => t.OpenWorkInfoByDefault))
+                .Bool(t => t.OpenWorkInfoByDefault)
+                .Int(t => t.MaximumBrowseHistoryRecords, 10, ushort.MaxValue, 10))
             .NewGroup(SettingsEntryCategory.Search)
             .Config(group => group
                 .String(t => t.ReverseSearchApiKey,
@@ -121,9 +124,8 @@ public class SettingsPageViewModel : ViewModelBase
                             t => t.NovelDownloadFormat))
                 .Int(t => t.LossyImageDownloadQuality, -1, 100, 5)
                 .Bool(t => t.DownloadWhenBookmarked))
-            .NewGroup(SettingsEntryCategory.Misc)
-            .Config(group => group
-                .Int(t => t.MaximumBrowseHistoryRecords, 10, ushort.MaxValue, 10))
+            //.NewGroup(SettingsEntryCategory.Misc)
+            //.Config(group => group)
             .Build();
 
     public IReadOnlyList<ExtensionSettingsGroup> ExtensionGroups { get; } =

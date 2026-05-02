@@ -630,6 +630,7 @@ namespace Pixeval
         public const string MinorUpdateAvailable = "SettingsMainView.MinorUpdateAvailable";
         public const string MiscSettingsGroupText = "SettingsMainView.MiscSettingsGroup.Text";
         public const string MsStoreCheckForUpdatesEntryHeader = "SettingsMainView.MsStoreCheckForUpdatesEntry.Header";
+        public const string NetworkSettingsGroupText = "SettingsMainView.NetworkSettingsGroup.Text";
         public const string NovelPathBlockText = "SettingsMainView.NovelPathBlock.Text";
         public const string OpenExtensionsEntryDescription = "SettingsMainView.OpenExtensionsEntry.Description";
         public const string OpenExtensionsEntryHeader = "SettingsMainView.OpenExtensionsEntry.Header";

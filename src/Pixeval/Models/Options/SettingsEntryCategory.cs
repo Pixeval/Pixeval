@@ -18,6 +18,9 @@ public enum SettingsEntryCategory
     [LocalizedResource(Symbol.Apps, SettingsMainViewResources.ApplicationSettingsGroupText)]
     Application,
 
+    [LocalizedResource(Symbol.WiFi, SettingsMainViewResources.NetworkSettingsGroupText)]
+    Network,
+
     [LocalizedResource(Symbol.News, SettingsMainViewResources.BrowsingExperienceSettingsGroupText)]
     BrowsingExperience,
 
