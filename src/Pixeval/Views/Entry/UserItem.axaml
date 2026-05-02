@@ -13,105 +13,100 @@
     xmlns:pixeval="using:Pixeval"
     xmlns:utilities="using:Pixeval.Utilities"
     xmlns:viewModels="using:Pixeval.ViewModels"
-    d:DesignHeight="160"
-    d:DesignWidth="300"
     x:DataType="{x:Type viewModels:UserItemViewModel}"
     Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
     Design.DataContext="{x:Static utilities:DesignHelper.DesignUserViewModel}"
     Theme="{StaticResource RoundedButtonStyle}"
-    mc:Ignorable="d">
-    <!--  图片长宽均为5，故为(3*5):(3+5)  -->
-    <controls:ConstrainedBox AspectRatio="15:8">
-        <Grid RowDefinitions="Auto,*">
-            <controls:ConstrainedBox Grid.Row="0" AspectRatio="3:1">
-                <Grid ColumnDefinitions="*,*,*">
-                    <!--<labs:Shimmer Grid.Column="0" Grid.ColumnSpan="3" />-->
-                    <Image
-                        Grid.Column="0"
-                        controls:Source.Cache="{Binding Banner0Url}"
-                        Stretch="UniformToFill" />
-                    <Image
-                        Grid.Column="1"
-                        controls:Source.Cache="{Binding Banner1Url}"
-                        Stretch="UniformToFill" />
-                    <Image
-                        Grid.Column="2"
-                        controls:Source.Cache="{Binding Banner2Url}"
-                        Stretch="UniformToFill" />
-                </Grid>
-            </controls:ConstrainedBox>
-            <StackPanel
-                Grid.Row="1"
-                Margin="105,0,15,0"
-                Spacing="5">
-                <TextBlock
-                    Margin="0,5,0,0"
-                    Text="{Binding Username}"
-                    TextTrimming="CharacterEllipsis"
-                    TextWrapping="NoWrap"
-                    Theme="{StaticResource SubtitleTextBlockStyle}" />
-                <StackPanel Orientation="Horizontal" Spacing="5">
-                    <ContentControl
-                        VerticalAlignment="Center"
-                        Content="{markup:SymbolIcon Symbol=Guest,
-                                                    FontSize=12}"
-                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="{Binding UserId}"
-                        Theme="{StaticResource CaptionStrongTextBlockStyle}" />
-                    <controls:PixevalBadge
-                        IsVisible="{Binding IsFollowed}"
-                        Mode="Following"
-                        UseSmall="True" />
-                </StackPanel>
-            </StackPanel>
-            <Button
-                x:Name="AvatarButton"
-                Grid.Row="0"
-                Grid.RowSpan="2"
-                Width="84"
-                Height="84"
-                Margin="10,0,0,15"
-                Padding="1"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Bottom"
-                Background="Transparent"
-                Click="AvatarButton_OnClicked"
-                CornerRadius="100"
-                Tapped="AvatarButton_OnTapped">
-                <Border ClipToBounds="True" CornerRadius="100">
-                    <animatedImage:AnimatedImage controls:Source.Cache="{Binding AvatarUrl}" />
-                </Border>
-                <Button.Flyout>
-                    <MenuFlyout>
-                        <MenuItem
-                            Command="{Binding FollowCommand, Mode=OneWay}"
-                            Header="{I18N {x:Static pixeval:MiscResources.Follow}}"
-                            Icon="{markup1:SymbolIconEx Person,
-                                                        IconVariant={Binding IsFollowedDisplay,
-                                                                             Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}" />
-                        <MenuItem Header="-" />
-                        <MenuItem
-                            Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
-                            Header="{I18N {x:Static pixeval:EntryItemResources.OpenInWebBrowser}}"
-                            Icon="{markup:SymbolIcon GlobeArrowUp}"
-                            Tag="{Binding WebsiteUri}" />
-
-                        <MenuItem
-                            Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
-                            Header="{I18N {x:Static pixeval:EntryItemResources.GenerateWebLink}}"
-                            Icon="{markup:SymbolIcon LinkMultiple}"
-                            Tag="{Binding WebsiteUri}" />
-                        <MenuItem
-                            Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
-                            Header="{I18N {x:Static pixeval:EntryItemResources.GenerateLink}}"
-                            Icon="{markup:SymbolIcon Link}"
-                            Tag="{Binding AppUri}" />
-                    </MenuFlyout>
-                </Button.Flyout>
-            </Button>
+    mc:Ignorable="d"
+    d:DesignHeight="160"
+    d:DesignWidth="300">
+    <Grid RowDefinitions="5*,3*">
+        <Grid ColumnDefinitions="*,*,*">
+            <!--<labs:Shimmer Grid.Column="0" Grid.ColumnSpan="3" />-->
+            <Image
+                Grid.Column="0"
+                controls:Source.Cache="{Binding Banner0Url}"
+                Stretch="UniformToFill" />
+            <Image
+                Grid.Column="1"
+                controls:Source.Cache="{Binding Banner1Url}"
+                Stretch="UniformToFill" />
+            <Image
+                Grid.Column="2"
+                controls:Source.Cache="{Binding Banner2Url}"
+                Stretch="UniformToFill" />
         </Grid>
-    </controls:ConstrainedBox>
+        <StackPanel
+            Grid.Row="1"
+            Margin="105,0,15,0"
+            Spacing="5">
+            <TextBlock
+                Margin="0,5,0,0"
+                Text="{Binding Username}"
+                TextTrimming="CharacterEllipsis"
+                TextWrapping="NoWrap"
+                Theme="{StaticResource SubtitleTextBlockStyle}" />
+            <StackPanel Orientation="Horizontal" Spacing="5">
+                <ContentControl
+                    VerticalAlignment="Center"
+                    Content="{markup:SymbolIcon Symbol=Guest,
+                                                FontSize=12}"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    Text="{Binding UserId}"
+                    Theme="{StaticResource CaptionStrongTextBlockStyle}" />
+                <controls:PixevalBadge
+                    IsVisible="{Binding IsFollowed}"
+                    Mode="Following"
+                    UseSmall="True" />
+            </StackPanel>
+        </StackPanel>
+        <Button
+            x:Name="AvatarButton"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Width="84"
+            Height="84"
+            Margin="10,0,0,15"
+            Padding="1"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            Background="Transparent"
+            Click="AvatarButton_OnClicked"
+            CornerRadius="100"
+            Tapped="AvatarButton_OnTapped">
+            <Border ClipToBounds="True" CornerRadius="100">
+                <animatedImage:AnimatedImage controls:Source.Cache="{Binding AvatarUrl}" />
+            </Border>
+            <Button.Flyout>
+                <MenuFlyout>
+                    <MenuItem
+                        Command="{Binding FollowCommand, Mode=OneWay}"
+                        Header="{I18N {x:Static pixeval:MiscResources.Follow}}"
+                        Icon="{markup1:SymbolIconEx Person,
+                                                    IconVariant={Binding IsFollowedDisplay,
+                                                                         Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}" />
+                    <MenuItem Header="-" />
+                    <MenuItem
+                        Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
+                        Header="{I18N {x:Static pixeval:EntryItemResources.OpenInWebBrowser}}"
+                        Icon="{markup:SymbolIcon GlobeArrowUp}"
+                        Tag="{Binding WebsiteUri}" />
+
+                    <MenuItem
+                        Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
+                        Header="{I18N {x:Static pixeval:EntryItemResources.GenerateWebLink}}"
+                        Icon="{markup:SymbolIcon LinkMultiple}"
+                        Tag="{Binding WebsiteUri}" />
+                    <MenuItem
+                        Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
+                        Header="{I18N {x:Static pixeval:EntryItemResources.GenerateLink}}"
+                        Icon="{markup:SymbolIcon Link}"
+                        Tag="{Binding AppUri}" />
+                </MenuFlyout>
+            </Button.Flyout>
+        </Button>
+    </Grid>
 </entry:EntryItem>

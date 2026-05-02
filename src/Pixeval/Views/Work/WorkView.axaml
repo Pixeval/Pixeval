@@ -66,8 +66,7 @@
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
-                        <!--  TODO: GridPanel  -->
-                        <controls:WrapPanel
+                        <controls:AdaptiveGrid
                             ItemHeight="200"
                             ItemSpacing="5"
                             ItemWidth="350"
