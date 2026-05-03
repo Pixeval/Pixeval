@@ -472,6 +472,7 @@ namespace Pixeval
         public const string FollowingsTabContent = "MainPage.FollowingsTab.Content";
         public const string HelpTabContent = "MainPage.HelpTab.Content";
         public const string HistoriesTabContent = "MainPage.HistoriesTab.Content";
+        public const string HomeTabContent = "MainPage.HomeTab.Content";
         public const string IllustrationHeaderSuggestionTextBlockText = "MainPage.IllustrationHeaderSuggestionTextBlock.Text";
         public const string LoginTabContent = "MainPage.LoginTab.Content";
         public const string MainPageAutoSuggestionBoxPlaceholderText = "MainPage.MainPageAutoSuggestionBox.PlaceholderText";
@@ -500,6 +501,7 @@ namespace Pixeval
         public const string ReverseSearchStartContent = "MainPage.ReverseSearchStartContent";
         public const string SearchKeywordCannotBeBlankContent = "MainPage.SearchKeywordCannotBeBlank.Content";
         public const string SearchKeywordCannotBeBlankTitle = "MainPage.SearchKeywordCannotBeBlank.Title";
+        public const string SearchTabContent = "MainPage.SearchTab.Content";
         public const string SearchUsersResult = "MainPage.SearchUsersResult";
         public const string SearchWorksResult = "MainPage.SearchWorksResult";
         public const string SettingsEntryHeaderSuggestionTextBlockText = "MainPage.SettingsEntryHeaderSuggestionTextBlock.Text";

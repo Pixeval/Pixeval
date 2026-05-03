@@ -1,4 +1,10 @@
 {
+  "HomeTab": {
+    "Content": "主页"
+  },
+  "SearchTab": {
+    "Content": "搜索"
+  },
   "LoginTab": {
     "Content": "Pixiv 登录"
   },

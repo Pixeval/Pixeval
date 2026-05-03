@@ -50,9 +50,7 @@ public partial class SearchWorksPage : ContentPage
                 settings.SearchNovelTagMatchOption,
                 settings.WorkSortOption,
                 settings.UseSearchStartDate ? settings.SearchStartDate : null,
-                settings.UseSearchEndDate ? settings.SearchEndDate : null,
-                null,
-                settings.TargetFilter);
+                settings.UseSearchEndDate ? settings.SearchEndDate : null);
         }
 
         WorkContainer.ResetEngine(engine);

@@ -16,7 +16,7 @@ public static class UserViewerHelper
     {
         public async Task CreateUserPageAsync(long userId)
         {
-            var userDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(userId, App.AppViewModel.AppSettings.TargetFilter);
+            var userDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(userId);
             control.CreateUserPage(userDetail);
         }
 

@@ -293,7 +293,7 @@ public record AppSettings
 
     public MakoConfiguration ToMakoConfiguration()
     {
-        return new MakoConfiguration(EnableDomainFronting, DomainFrontingType, Proxy, WebCookie, MirrorHost, 700, CultureInfo.CurrentCulture);
+        return new MakoConfiguration(EnableDomainFronting, DomainFrontingType, Proxy, WebCookie, MirrorHost, TargetFilter, 700, CultureInfo.CurrentCulture);
     }
 
     private static string GetSpecialFolder()

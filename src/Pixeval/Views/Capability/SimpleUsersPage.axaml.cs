@@ -43,7 +43,7 @@ public class RecommendUsersPage : SimpleUsersPage
 
     protected override IFetchEngine<User> GetFetchEngine(MakoClient makoClient)
     {
-        return makoClient.RecommendedUsers(PixevalSettings.TargetFilter);
+        return makoClient.RecommendedUsers();
     }
 }
 
@@ -68,8 +68,7 @@ public class SearchUsersPage : SimpleUsersPage
         if (_searchText is null)
             return makoClient.Computed(AsyncEnumerable.Empty<User>());
         return App.AppViewModel.MakoClient.SearchUser(
-            _searchText,
-            PixevalSettings.TargetFilter);
+            _searchText);
     }
 }
 
@@ -115,6 +114,6 @@ public class RelatedUsersPage : SimpleUsersPage
     /// <inheritdoc />
     protected override IFetchEngine<User> GetFetchEngine(MakoClient makoClient)
     {
-        return makoClient.Computed(makoClient.RelatedUserAsync(_userId, App.AppViewModel.AppSettings.TargetFilter).ToAsyncEnumerable());
+        return makoClient.Computed(makoClient.RelatedUserAsync(_userId).ToAsyncEnumerable());
     }
 }

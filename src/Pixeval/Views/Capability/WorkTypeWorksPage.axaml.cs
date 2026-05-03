@@ -48,7 +48,7 @@ public class RecommendWorksPage : WorkTypeWorksPage
 
     protected override IFetchEngine<IWorkEntry> GetFetchEngine(MakoClient makoClient, WorkType workType)
     {
-        return makoClient.RecommendedWorks(workType, PixevalSettings.TargetFilter);
+        return makoClient.RecommendedWorks(workType);
     }
 }
 
@@ -63,7 +63,7 @@ public class NewWorksPage : WorkTypeWorksPage
 
     protected override IFetchEngine<IWorkEntry> GetFetchEngine(MakoClient makoClient, WorkType workType)
     {
-        return makoClient.NewWorks(workType, PixevalSettings.TargetFilter);
+        return makoClient.NewWorks(workType);
     }
 }
 
@@ -85,6 +85,6 @@ public class UserWorkPostsPage : WorkTypeWorksPage
 
     protected override IFetchEngine<IWorkEntry> GetFetchEngine(MakoClient makoClient, WorkType workType)
     {
-        return makoClient.WorkPosts(_userId, workType, PixevalSettings.TargetFilter);
+        return makoClient.WorkPosts(_userId, workType);
     }
 }

@@ -47,6 +47,8 @@ public static class AvaloniaHelper
 
     public static IReadOnlyList<NavigationInfo> HeaderItems { get; } =
     [
+        new(typeof(RecommendWorksPage), Symbol.Home, I18NManager.GetResource(MainPageResources.HomeTabContent)),
+        new(typeof(SearchPage), Symbol.SearchSparkle, I18NManager.GetResource(MainPageResources.SearchTabContent)),
         new(typeof(RecommendWorksPage), Symbol.Calendar, I18NManager.GetResource(MainPageResources.RecommendationsTabContent)),
         new(typeof(RankingsPage), Symbol.ArrowTrendingLines, I18NManager.GetResource(MainPageResources.RankingsTabContent)),
         new(typeof(BookmarksPage), Symbol.Library, I18NManager.GetResource(MainPageResources.BookmarksTabContent)),

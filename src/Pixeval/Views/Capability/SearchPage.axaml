@@ -1,0 +1,53 @@
+<ContentPage
+    x:Class="Pixeval.Views.Capability.SearchPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
+    xmlns:viewModels="using:Pixeval.ViewModels"
+    DataContext="{x:Static viewModels:SearchPageViewModel.Instance}"
+    Header="{I18N {x:Static pixeval:MainPageResources.SearchTabContent}}"
+    Icon="{markup:SymbolIcon SearchSparkle,
+                             FontSize=16,
+                             IconVariant=Color}"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
+    <DockPanel
+        Margin="20"
+        HorizontalSpacing="5"
+        VerticalSpacing="5">
+        <Expander HorizontalAlignment="Stretch" DockPanel.Dock="Top">
+            <Expander.Header>
+                <AutoCompleteBox>
+                    <AutoCompleteBox.InnerRightContent>
+                        <Button Content="{markup:SymbolIcon Search, FontSize=16}" />
+                    </AutoCompleteBox.InnerRightContent>
+                </AutoCompleteBox>
+            </Expander.Header>
+            <TextBlock Text="advanced search options" />
+        </Expander>
+        <ItemsControl DockPanel.Dock="Left">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Spacing="5" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <x:String>Trending Tag1</x:String>
+            <x:String>Trending Tag2</x:String>
+            <x:String>Trending Tag3</x:String>
+        </ItemsControl>
+        <ItemsControl>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel ItemSpacing="5" LineSpacing="5" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <x:String>History Tag1</x:String>
+            <x:String>History Tag2</x:String>
+            <x:String>History Tag3</x:String>
+        </ItemsControl>
+    </DockPanel>
+</ContentPage>

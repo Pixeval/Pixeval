@@ -34,7 +34,7 @@ public partial class DownloadMacroSettingsExpander : SettingsExpander, IEntryCon
     private static readonly ISingleImage _ImageSet = DesignHelper.DownloadParserSampleWork(ImageType.ImageSet);
     private static readonly ISingleImage _Novel = DesignHelper.DownloadParserSampleWork(ImageType.Other);
 
-    private void DownloadPathMacroTextBox_OnTextChanged(object sender, RoutedEventArgs e)
+    public void DownloadPathMacroTextBox_OnTextChanged(object sender, RoutedEventArgs e)
     {
         if (DataContext is not DownloadMacroAppSettingsEntry entry)
             return;

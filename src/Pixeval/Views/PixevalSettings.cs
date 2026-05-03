@@ -1,7 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Mako.Global.Enum;
 using Pixeval.AppManagement;
 using Pixeval.Models.Options;
 
@@ -16,8 +15,6 @@ public static class PixevalSettings
     public static int WorkTypeIndex => (int) Settings.WorkType;
     
     public static int SimpleWorkTypeIndex => (int) Settings.SimpleWorkType;
-    
-    public static TargetFilter TargetFilter => Settings.TargetFilter;
     
     public static ThumbnailLayoutType LayoutType => Settings.ThumbnailLayoutType;
 }
