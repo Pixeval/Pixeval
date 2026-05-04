@@ -27,7 +27,7 @@ public partial class RelatedWorksPage : ContentPage
             var id = change.GetNewValue<long>();
             if (id is 0)
                 return;
-            RelatedWorksView.ResetEngine(App.AppViewModel.MakoClient.RelatedIllustrations(id));
+            RelatedWorksView.ResetEngine(App.AppViewModel.MakoClient.IllustrationRelated(id));
         }
     }
 }

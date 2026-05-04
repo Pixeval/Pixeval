@@ -20,7 +20,7 @@ public static class UserViewerHelper
             control.CreateUserPage(userDetail);
         }
 
-        public void CreateUserPage(PixivSingleUserResponse userDetail)
+        public void CreateUserPage(SingleUserResponse userDetail)
         {
             var viewModel = new UserViewerPageViewModel(userDetail);
             control.NavigateTo(new UserViewerPage(viewModel));
@@ -31,7 +31,7 @@ public static class UserViewerHelper
     {
         return param switch
         {
-            PixivSingleUserResponse userDetail => new UserViewerPageViewModel(userDetail),
+            SingleUserResponse userDetail => new UserViewerPageViewModel(userDetail),
             _ => throw new ArgumentException("Invalid parameter type.", nameof(param))
         };
     }

@@ -303,6 +303,10 @@ namespace Pixeval
         public const string IllustrationDownloadFormatOriginal = "Enum.IllustrationDownloadFormat.Original";
         public const string IllustrationDownloadFormatWebPLossless = "Enum.IllustrationDownloadFormat.WebPLossless";
         public const string IllustrationDownloadFormatWebPLossy = "Enum.IllustrationDownloadFormat.WebPLossy";
+        public const string LocalSortOptionDoNotSort = "Enum.LocalSortOption.DoNotSort";
+        public const string LocalSortOptionPopularityDescending = "Enum.LocalSortOption.PopularityDescending";
+        public const string LocalSortOptionPublishDateAscending = "Enum.LocalSortOption.PublishDateAscending";
+        public const string LocalSortOptionPublishDateDescending = "Enum.LocalSortOption.PublishDateDescending";
         public const string NovelDownloadFormatHtml = "Enum.NovelDownloadFormat.Html";
         public const string NovelDownloadFormatMd = "Enum.NovelDownloadFormat.Md";
         public const string NovelDownloadFormatOriginalTxt = "Enum.NovelDownloadFormat.OriginalTxt";
@@ -343,10 +347,6 @@ namespace Pixeval
         public const string UgoiraDownloadFormatOriginal = "Enum.UgoiraDownloadFormat.Original";
         public const string UgoiraDownloadFormatWebPLossless = "Enum.UgoiraDownloadFormat.WebPLossless";
         public const string UgoiraDownloadFormatWebPLossy = "Enum.UgoiraDownloadFormat.WebPLossy";
-        public const string WorkSortOptionDoNotSort = "Enum.WorkSortOption.DoNotSort";
-        public const string WorkSortOptionPopularityDescending = "Enum.WorkSortOption.PopularityDescending";
-        public const string WorkSortOptionPublishDateAscending = "Enum.WorkSortOption.PublishDateAscending";
-        public const string WorkSortOptionPublishDateDescending = "Enum.WorkSortOption.PublishDateDescending";
         public const string WorkTypeIllustration = "Enum.WorkType.Illustration";
         public const string WorkTypeManga = "Enum.WorkType.Manga";
         public const string WorkTypeNovel = "Enum.WorkType.Novel";

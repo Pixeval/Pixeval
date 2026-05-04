@@ -18,7 +18,7 @@ public partial class RankingsPage : ContentPage
         ChangeSource();
     }
 
-    public static DateTime MaxDate => MakoClient.RankingMaxDate.LocalDateTime;
+    public static DateTime MaxDate => MakoClient.RankingMaxDateTime.LocalDateTime;
 
     private void SimpleWorkTypeComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e)
     {

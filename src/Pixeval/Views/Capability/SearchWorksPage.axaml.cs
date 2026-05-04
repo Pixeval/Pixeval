@@ -43,14 +43,19 @@ public partial class SearchWorksPage : ContentPage
         else
         {
             var settings = App.AppViewModel.AppSettings;
-            engine = App.AppViewModel.MakoClient.SearchWorks(
-                _searchText,
-                SimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>(),
-                settings.SearchIllustrationTagMatchOption,
-                settings.SearchNovelTagMatchOption,
-                settings.WorkSortOption,
-                settings.UseSearchStartDate ? settings.SearchStartDate : null,
-                settings.UseSearchEndDate ? settings.SearchEndDate : null);
+            engine = SimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>() is SimpleWorkType.IllustrationAndManga
+                    ? App.AppViewModel.MakoClient.IllustrationSearch(
+                        _searchText,
+                        settings.SearchIllustrationTagMatchOption,
+                        default,
+                        settings.UseSearchStartDate ? settings.SearchStartDate : null,
+                        settings.UseSearchEndDate ? settings.SearchEndDate : null)
+                    : App.AppViewModel.MakoClient.NovelSearch(
+                        _searchText,
+                        settings.SearchNovelTagMatchOption,
+                        default,
+                        settings.UseSearchStartDate ? settings.SearchStartDate : null,
+                        settings.UseSearchEndDate ? settings.SearchEndDate : null);
         }
 
         WorkContainer.ResetEngine(engine);

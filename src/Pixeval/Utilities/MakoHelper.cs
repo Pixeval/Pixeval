@@ -20,7 +20,7 @@ public static class MakoHelper
 {
     public static async Task<List<BookmarkTag>> GetBookmarkTagsAsync(long uid, SimpleWorkType type, PrivacyPolicy policy)
     {
-        var tags = await App.AppViewModel.MakoClient.WorkBookmarkTag(uid, type, policy).ToListAsync();
+        var tags = await App.AppViewModel.MakoClient.WorkBookmarkTags(uid, type, policy).ToListAsync();
         tags.Insert(0, AllBookmarkTag.Instance);
         return tags;
     }
@@ -38,36 +38,20 @@ public static class MakoHelper
 
     public static Uri GenerateIllustrationWebUri(long id) => new($"https://www.pixiv.net/artworks/{id}");
 
-    public static Uri GenerateIllustrationPixEzUri(long id) => new($"pixez://www.pixiv.net/artworks/{id}");
-
-    public static Uri GenerateIllustrationAppUri(long id) => new($"{AppInfo.AppProtocol}://illust/{id}");
-
     public static Uri GenerateUserWebUri(long id) => new($"https://www.pixiv.net/users/{id}");
-
-    public static Uri GenerateUserPixEzUri(long id) => new($"pixez://www.pixiv.net/users/{id}");
-
-    public static Uri GenerateUserAppUri(long id) => new($"{AppInfo.AppProtocol}://user/{id}");
-
-    public static Uri GenerateNovelWebUri(long id) => new($"https://www.pixiv.net/novel/show.php?id={id}");
-
-    public static Uri GenerateNovelPixEzUri(long id) => new($"pixez://www.pixiv.net/novel/show.php?id={id}");
-
-    public static Uri GenerateNovelAppUri(long id) => new($"{AppInfo.AppProtocol}://novel/{id}");
 
     public static Uri GenerateSpotlightWebUri(long id) => new($"https://www.pixivision.net/a/{id}");
 
-    public static Uri GenerateSpotlightPixEzUri(long id) => new($"pixez://www.pixivision.net/a/{id}");
-
     public static Uri GenerateSpotlightAppUri(long id) => new($"{AppInfo.AppProtocol}://spotlight/{id}");
 
-    public static ISortDescription<IWorkViewModel>? GetSortDescription(WorkSortOption sortOption)
+    public static ISortDescription<IWorkViewModel>? GetSortDescription(LocalSortOption sortOption)
     {
         return sortOption switch
         {
-            WorkSortOption.PopularityDescending => ISortDescription<IWorkViewModel>.Create(t => t.Entry.TotalFavorite, t => t.Entry.Id, true),
-            WorkSortOption.PublishDateAscending => ISortDescription<IWorkViewModel>.Create(t => t.Entry.CreateDate, t => t.Entry.Id, false),
-            WorkSortOption.PublishDateDescending => ISortDescription<IWorkViewModel>.Create(t => t.Entry.CreateDate, t => t.Entry.Id, true),
-            WorkSortOption.DoNotSort => null,
+            LocalSortOption.PopularityDescending => ISortDescription<IWorkViewModel>.Create(t => t.Entry.TotalFavorite, t => t.Entry.Id, true),
+            LocalSortOption.PublishDateAscending => ISortDescription<IWorkViewModel>.Create(t => t.Entry.CreateDate, t => t.Entry.Id, false),
+            LocalSortOption.PublishDateDescending => ISortDescription<IWorkViewModel>.Create(t => t.Entry.CreateDate, t => t.Entry.Id, true),
+            LocalSortOption.DoNotSort => null,
             _ => throw new ArgumentOutOfRangeException(nameof(sortOption))
         };
     }

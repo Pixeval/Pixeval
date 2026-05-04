@@ -81,7 +81,7 @@ public class SettingsPageViewModel : ViewModelBase
                 .Int(t => t.ReverseSearchResultSimilarityThreshold, 1, 100, 1)
                 .Int(t => t.MaximumSearchHistoryRecords, 10, 200, 1)
                 .Int(t => t.MaximumSuggestionBoxSearchHistory, 0, 20, 1)
-                .Enum(t => t.WorkSortOption)
+                .Enum(t => t.LocalSortOption)
                 .Enum(t => t.SimpleWorkType)
                 .MultiValues(t => t.IllustrationRankOption, entry =>
                     entry.Enum(

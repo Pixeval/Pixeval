@@ -10,7 +10,7 @@ public static class PixevalSettings
 {
     public static AppSettings Settings => App.AppViewModel.AppSettings;
 
-    public static int WorkSortOptionIndex => (int) Settings.WorkSortOption;
+    public static int LocalSortOptionIndex => (int) Settings.LocalSortOption;
     
     public static int WorkTypeIndex => (int) Settings.WorkType;
     

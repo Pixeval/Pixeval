@@ -13,7 +13,7 @@
     "IllustrationAndManga": "插画和漫画",
     "Novel": "小说"
   },
-  "WorkSortOption": {
+  "LocalSortOption": {
     "DoNotSort": "不进行任何排序",
     "PopularityDescending": "收藏数降序",
     "PublishDateAscending": "发布日期升序",

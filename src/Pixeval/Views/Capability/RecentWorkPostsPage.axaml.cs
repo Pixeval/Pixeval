@@ -26,7 +26,7 @@ public partial class RecentWorkPostsPage : ContentPage
 
     private void ChangeSource()
     {
-        WorkContainer.ResetEngine(App.AppViewModel.MakoClient.RecentWorkPosts(
+        WorkContainer.ResetEngine(App.AppViewModel.MakoClient.WorkFollowing(
             SimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>(),
             PrivacyPolicyComboBox.GetSelectedValue<PrivacyPolicy>()));
     }

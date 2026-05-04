@@ -13,6 +13,6 @@ public partial class SpotlightsPage : ContentPage
 
     private void ChangeSource()
     {
-        (SpotlightView.DataContext as SpotlightViewViewModel)?.ResetEngine(App.AppViewModel.MakoClient.Spotlights(), (spotlight, _) => new(spotlight));
+        (SpotlightView.DataContext as SpotlightViewViewModel)?.ResetEngine(App.AppViewModel.MakoClient.Spotlight(), (spotlight, _) => new(spotlight));
     }
 }

@@ -16,6 +16,7 @@ using Misaki;
 using Pixeval.Controls;
 using Pixeval.Filters;
 using Pixeval.I18N;
+using Pixeval.Models.Options;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
 
@@ -62,7 +63,7 @@ public partial class WorkContainer : UserControl
 
     public void SetSortOption()
     {
-        if (DataContext is ISortableEntryViewViewModel vm && SortOptionComboBox.GetSelectedValue<WorkSortOption>() is var sortOption)
+        if (DataContext is ISortableEntryViewViewModel vm && SortOptionComboBox.GetSelectedValue<LocalSortOption>() is var sortOption)
         {
             switch (MakoHelper.GetSortDescription(sortOption))
             {

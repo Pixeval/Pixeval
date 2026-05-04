@@ -11,7 +11,6 @@ using CommunityToolkit.Mvvm.Input;
 using Mako.Global.Enum;
 using Mako.Net.Response;
 using Misaki;
-using Pixeval.Utilities;
 using Pixeval.Utilities.IO.Caching;
 using Pixeval.Views.Capability;
 
@@ -28,7 +27,7 @@ public partial class UserViewerPageViewModel : ViewModelBase, IDisposable
     [ObservableProperty]
     public partial bool IsFollowed { get; set; }
 
-    public PixivSingleUserResponse UserDetail { get; }
+    public SingleUserResponse UserDetail { get; }
 
     public string Name => UserDetail.UserEntity.Name;
 
@@ -42,9 +41,9 @@ public partial class UserViewerPageViewModel : ViewModelBase, IDisposable
 
     public string Description => UserDetail.UserEntity.Description;
 
-    public Uri WebsiteUri => MakoHelper.GenerateUserWebUri(Id);
+    public Uri WebsiteUri => UserDetail.UserEntity.WebsiteUri;
 
-    public Uri AppUri => MakoHelper.GenerateUserAppUri(Id);
+    public Uri AppUri => UserDetail.UserEntity.AppUri;
 
     private string AvatarUrl => UserDetail.UserEntity.ProfileImageUrls.Medium;
 
@@ -52,7 +51,7 @@ public partial class UserViewerPageViewModel : ViewModelBase, IDisposable
 
     public IReadOnlyList<ContentPage> TabPages { get; }
 
-    public UserViewerPageViewModel(PixivSingleUserResponse userDetail)
+    public UserViewerPageViewModel(SingleUserResponse userDetail)
     {
         UserDetail = userDetail;
         IsFollowed = userDetail.UserEntity.IsFollowed;

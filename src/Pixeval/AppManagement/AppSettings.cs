@@ -94,7 +94,7 @@ public record AppSettings
     /// different orders will use this as its default value
     /// </summary>
     [SettingsEntry(Symbol.ArrowSort, DefaultSearchSortOptionEntryHeader, DefaultSearchSortOptionEntryDescription)]
-    public WorkSortOption WorkSortOption { get; set; }
+    public LocalSortOption LocalSortOption { get; set; }
 
     [SettingsEntry(Symbol.Grid, SimpleWorkTypeEntryHeader, SimpleWorkTypeEntryDescription)]
     public SimpleWorkType SimpleWorkType { get; set; }

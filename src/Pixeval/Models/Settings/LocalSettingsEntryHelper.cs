@@ -98,13 +98,6 @@ public static class LocalSettingsEntryHelper
             t.Register(PrivacyPolicy.Public, Symbol.Person, EnumResources.PrivacyPolicyPublic);
             t.Register(PrivacyPolicy.Private, Symbol.InPrivateAccount, EnumResources.PrivacyPolicyPrivate);
         });
-        RegisterAttach<WorkSortOption>(t =>
-        {
-            t.Register(WorkSortOption.DoNotSort, Symbol.ArrowSort, EnumResources.WorkSortOptionDoNotSort);
-            t.Register(WorkSortOption.PopularityDescending, Symbol.ArrowTrendingSparkle, EnumResources.WorkSortOptionPopularityDescending);
-            t.Register(WorkSortOption.PublishDateAscending, Symbol.ArrowSortUpLines, EnumResources.WorkSortOptionPublishDateAscending);
-            t.Register(WorkSortOption.PublishDateDescending, Symbol.ArrowSortDownLines, EnumResources.WorkSortOptionPublishDateDescending);
-        });
         RegisterAttach<FontWeight>(t =>
         {
             t.Register(FontWeight.Thin, Symbol.TextFont, EnumResources.FontWeightThin);

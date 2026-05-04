@@ -48,7 +48,7 @@ public class RecommendWorksPage : WorkTypeWorksPage
 
     protected override IFetchEngine<IWorkEntry> GetFetchEngine(MakoClient makoClient, WorkType workType)
     {
-        return makoClient.RecommendedWorks(workType);
+        return makoClient.WorkRecommended(workType);
     }
 }
 
@@ -63,7 +63,7 @@ public class NewWorksPage : WorkTypeWorksPage
 
     protected override IFetchEngine<IWorkEntry> GetFetchEngine(MakoClient makoClient, WorkType workType)
     {
-        return makoClient.NewWorks(workType);
+        return makoClient.WorkNew(workType);
     }
 }
 

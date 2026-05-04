@@ -121,7 +121,8 @@ public static class DesignHelper
         ProfileImageUrls = new()
         {
             Medium = AppInfo.PixivNoProfilePath
-        }
+        },
+        IsAcceptRequest = false
     };
 
     public static ISingleImage DownloadParserSampleWork(ImageType imageType) => new DownloadParserSampleWork(imageType);
@@ -174,7 +175,8 @@ file record DownloadParserSampleWork(ImageType ImageType) : ISingleImage, IImage
             Id = 7654321,
             Name = nameof(UserInfo.Name),
             Account = "",
-            ProfileImageUrls = null!
+            ProfileImageUrls = null!,
+            IsAcceptRequest = false
         }
     ];
 

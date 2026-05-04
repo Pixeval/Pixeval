@@ -181,7 +181,7 @@ public partial class TagSelector : UserControl
 
     private async Task<AvaloniaList<BookmarkTag>> GetTagsAsync(PrivacyPolicy policy)
     {
-        var tags = await App.AppViewModel.MakoClient.WorkBookmarkTag(App.AppViewModel.PixivUid, WorkType, policy).ToListAsync();
+        var tags = await App.AppViewModel.MakoClient.WorkBookmarkTags(App.AppViewModel.PixivUid, WorkType, policy).ToListAsync();
         return new AvaloniaList<BookmarkTag>(tags)
         {
             new AddNewBookmarkTag
