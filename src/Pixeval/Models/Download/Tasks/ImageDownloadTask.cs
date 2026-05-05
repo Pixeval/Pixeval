@@ -16,13 +16,14 @@ using Pixeval.Models.Extensions;
 using Pixeval.Utilities;
 using Pixeval.Utilities.IO;
 using Pixeval.Utilities.IO.Caching;
+using Pixeval.ViewModels;
 
 namespace Pixeval.Models.Download.Tasks;
 
 /// <summary>
 /// 下载图片的任务，所有复杂的图片下载任务都会从这个类衍生
 /// </summary>
-public partial class ImageDownloadTask : ObservableObject, ISingleDownloadTaskBase, IProgress<double>, IDisposable
+public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase, IProgress<double>, IDisposable
 {
     public ImageDownloadTask(Uri uri, string destination, DownloadState initState = DownloadState.Queued)
     {

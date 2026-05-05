@@ -9,9 +9,9 @@ using IllustrationViewDataProvider = Pixeval.ViewModels.SharableViewDataProvider
 
 namespace Pixeval.ViewModels;
 
-public sealed class IllustrationViewViewModel : SortableEntryViewViewModel<IArtworkInfo, IllustrationItemViewModel>
+public sealed class IllustrationViewViewModel : WorkViewViewModelBase<IArtworkInfo, IllustrationItemViewModel>
 {
-    public IllustrationViewViewModel(IllustrationViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef(), viewModel.BlockedTags)
+    public IllustrationViewViewModel(IllustrationViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef(), viewModel.CachedBlockedTags)
     {
         Filter = viewModel.Filter;
         DataProvider.View.Range = viewModel.DataProvider.View.Range;
@@ -24,10 +24,10 @@ public sealed class IllustrationViewViewModel : SortableEntryViewViewModel<IArtw
     private IllustrationViewViewModel(IllustrationViewDataProvider dataProvider, HashSet<string>? blockedTags) : base(blockedTags)
     {
         DataProvider = dataProvider;
-        dataProvider.View.Filter = DefaultFilter;
+        dataProvider.View.Filter = ((IWorkViewViewModel) this).DefaultFilter;
     }
 
     public override IllustrationViewDataProvider DataProvider { get; }
 
-    protected override void OnFilterChanged() => DataProvider.View.RaiseFilterChanged();
+    public override bool RequireAdaptiveGrid => false;
 }

@@ -3,13 +3,12 @@
 
 using System;
 using System.Diagnostics;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Misaki;
 
 namespace Pixeval.ViewModels;
 
 [DebuggerDisplay("{Entry}")]
-public abstract class EntryViewModel<T>(T entry) : ObservableObject where T : IMisakiModel
+public abstract class EntryViewModel<T>(T entry) : ViewModelBase where T : IMisakiModel
 {
     public T Entry { get; } = entry;
 

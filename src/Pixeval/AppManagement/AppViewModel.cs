@@ -60,7 +60,6 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
             .AddBooruParsers()
             .AddKeyedSingleton<IGetArtworkService, MakoClient>(IPlatformInfo.Pixiv, (provider, key) => makoClient)
             .AddKeyedSingleton<IDownloadHttpClientService, MakoClient>(IPlatformInfo.Pixiv, (provider, key) => makoClient)
-            .AddSingleton<HistoryPersistHelper>()
             .AddSingleton<IllustrationDownloadTaskFactory>()
             .AddSingleton<NovelDownloadTaskFactory>()
             .AddSingleton(_ =>
@@ -72,12 +71,10 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
             .AddSingleton(cacheTable)
             .AddSingleton(_ => new SQLiteConnection(AppInfo.DatabaseFilePath,
                 SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex))
-            .AddScoped(provider => new DownloadHistoryPersistentManager(provider.GetRequiredService<SQLiteConnection>(),
-                App.AppViewModel.AppSettings.MaximumDownloadHistoryRecords))
-            .AddScoped(provider => new SearchHistoryPersistentManager(provider.GetRequiredService<SQLiteConnection>(),
-                App.AppViewModel.AppSettings.MaximumSearchHistoryRecords))
-            .AddScoped(provider => new BrowseHistoryPersistentManager(provider.GetRequiredService<SQLiteConnection>(),
-                App.AppViewModel.AppSettings.MaximumBrowseHistoryRecords))
+            .AddScoped<DownloadHistoryPersistentManager>()
+            .AddScoped<SearchHistoryPersistentManager>()
+            .AddScoped<BrowseHistoryPersistentManager>()
+            .AddSingleton<HistoryPersistHelper>()
             .BuildServiceProvider();
 
         void MakoClientOnTokenRefreshed(MakoClient sender, TokenResponse? tokenResponse)

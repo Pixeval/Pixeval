@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -32,18 +31,6 @@ public static class LocalSettingsEntryHelper
 
     public static readonly Lazy<IReadOnlyList<SettingsEntryAttribute>> LazyValues = new(() =>
         [.. typeof(AppSettings).GetProperties(BindingFlags.Instance | BindingFlags.Public).SelectNotNull(f => f.GetCustomAttribute<SettingsEntryAttribute>())]);
-
-    public static SettingsEntryAttribute GetFromPropertyName(string propertyName)
-    {
-        return GetFromPropertyName<AppSettings>(propertyName);
-    }
-
-    public static SettingsEntryAttribute GetFromPropertyName<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>(string propertyName)
-    {
-        return typeof(T).GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public)
-                   ?.GetCustomAttribute<SettingsEntryAttribute>() ??
-               throw new ArgumentException(propertyName);
-    }
 
     static LocalSettingsEntryHelper()
     {

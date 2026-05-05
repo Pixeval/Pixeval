@@ -21,7 +21,7 @@ using Pixeval.ViewModels;
 
 namespace Pixeval.Models.Download.Tasks;
 
-public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : ObservableObject, IDownloadTaskGroup
+public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : ViewModelBase, IDownloadTaskGroup
 {
     public DownloadHistoryEntry DatabaseEntry { get; } = entry;
 

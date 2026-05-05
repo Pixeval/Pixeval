@@ -14,7 +14,7 @@ using Pixeval.Utilities.IO.Caching;
 
 namespace Pixeval.ViewModels;
 
-public partial class TabViewContainerViewModel : ObservableObject
+public partial class TabViewContainerViewModel : ViewModelBase
 {
     public TabViewContainerViewModel()
     {

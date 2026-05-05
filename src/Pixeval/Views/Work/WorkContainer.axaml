@@ -12,7 +12,7 @@
     xmlns:viewModels="using:Pixeval.ViewModels"
     xmlns:views="using:Pixeval.Views"
     xmlns:work="using:Pixeval.Views.Work"
-    x:DataType="{x:Type viewModels:ISortableEntryViewViewModel}"
+    x:DataType="{x:Type viewModels:IOperableViewViewModel}"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">

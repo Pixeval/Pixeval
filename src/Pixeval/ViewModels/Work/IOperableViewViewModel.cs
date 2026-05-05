@@ -3,19 +3,18 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using Mako.Engine;
-using Misaki;
+using System.Linq;
+using Avalonia.Collections;
 using Pixeval.Collections;
 
 namespace Pixeval.ViewModels;
 
-public interface ISortableEntryViewViewModel : INotifyPropertyChanged, IDisposable
+public interface IOperableViewViewModel : INotifyPropertyChanged
 {
     bool IsSelecting { get; set; }
 
-    IReadOnlyCollection<IWorkViewModel> SelectedEntries { get; set; }
+    AvaloniaList<IWorkViewModel> SelectedEntries { get; }
 
     void SetSortDescription(ISortDescription<IWorkViewModel> description);
 
@@ -25,11 +24,17 @@ public interface ISortableEntryViewViewModel : INotifyPropertyChanged, IDisposab
 
     IReadOnlyCollection<IWorkViewModel> View { get; }
 
-    IReadOnlyCollection<IWorkViewModel> Source { get; }
-
     Range ViewRange { get; set; }
 
-    void ResetEngine(IFetchEngine<IArtworkInfo>? newEngine, bool isBookmarkEnabled = true, int itemsPerPage = 20, int itemLimit = -1);
+    bool RequireAdaptiveGrid { get; }
 
-    void ResetSource(ObservableCollection<IArtworkInfo>? source);
+    HashSet<string> CachedBlockedTags { get; }
+
+    bool DefaultFilter(IWorkViewModel entry)
+    {
+        if (entry.Entry.Tags.Any(t => t.Any(tag => CachedBlockedTags.Contains(tag.Name))))
+            return false;
+
+        return Filter?.Invoke(entry) is not false;
+    }
 }

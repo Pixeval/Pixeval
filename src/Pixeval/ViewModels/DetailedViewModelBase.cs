@@ -8,7 +8,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Pixeval.ViewModels;
 
-public abstract class DetailedViewModelBase : ObservableObject, INotifyDetailedPropertyChanged
+public abstract class DetailedViewModelBase : ViewModelBase, INotifyDetailedPropertyChanged
 {
     public event DetailedPropertyChangedEventHandler? DetailedPropertyChanged;
 

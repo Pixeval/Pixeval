@@ -8,8 +8,8 @@ using SQLite;
 
 namespace Pixeval.Models.Database.Managers;
 
-public class DownloadHistoryPersistentManager(SQLiteConnection db, int maximumRecords)
-    : PersistentManagerBase<DownloadHistoryEntry, IDownloadTaskGroup>(db, maximumRecords)
+public class DownloadHistoryPersistentManager(SQLiteConnection db)
+    : PersistentManagerBase<DownloadHistoryEntry, IDownloadTaskGroup>(db, App.AppViewModel.AppSettings.MaximumDownloadHistoryRecords)
 {
     protected override IDownloadTaskGroup ToModel(DownloadHistoryEntry entry)
     {

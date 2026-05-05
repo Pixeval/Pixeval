@@ -3,9 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
@@ -32,7 +32,7 @@ public partial class WorkContainer : UserControl
     /// <summary>
     /// The command elements that will appear at the left of the TopCommandBar
     /// </summary>
-    public ObservableCollection<Control> CommandBarElements { get; } = [];
+    public AvaloniaList<Control> CommandBarElements { get; } = [];
 
     public WorkContainer()
     {
@@ -63,7 +63,7 @@ public partial class WorkContainer : UserControl
 
     public void SetSortOption()
     {
-        if (DataContext is ISortableEntryViewViewModel vm && SortOptionComboBox.GetSelectedValue<LocalSortOption>() is var sortOption)
+        if (DataContext is IOperableViewViewModel vm && SortOptionComboBox.GetSelectedValue<LocalSortOption>() is var sortOption)
         {
             switch (MakoHelper.GetSortDescription(sortOption))
             {
@@ -97,7 +97,7 @@ public partial class WorkContainer : UserControl
 
     private async Task ShowBookmarkTagSelectorAsync(Control placementTarget, IWorkViewModel? target)
     {
-        if (target is null && DataContext is not ISortableEntryViewViewModel { SelectedEntries.Count: > 0 })
+        if (target is null && DataContext is not IOperableViewViewModel { SelectedEntries.Count: > 0 })
             return;
 
         await BookmarkTagSelectorFlyoutHelper.ShowAsync(
@@ -119,7 +119,7 @@ public partial class WorkContainer : UserControl
             return;
         }
 
-        if (DataContext is not ISortableEntryViewViewModel viewModel)
+        if (DataContext is not IOperableViewViewModel viewModel)
             return;
 
         if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer
@@ -142,7 +142,7 @@ public partial class WorkContainer : UserControl
 
     private async void SaveAllButton_OnClicked(object? sender, RoutedEventArgs e)
     {
-        if (DataContext is not ISortableEntryViewViewModel viewModel)
+        if (DataContext is not IOperableViewViewModel viewModel)
             return;
 
         if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer
@@ -161,7 +161,7 @@ public partial class WorkContainer : UserControl
 
     private async void OpenAllInBrowserButton_OnClicked(object? sender, RoutedEventArgs e)
     {
-        if (DataContext is not ISortableEntryViewViewModel viewModel)
+        if (DataContext is not IOperableViewViewModel viewModel)
             return;
 
         if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer
@@ -191,7 +191,7 @@ public partial class WorkContainer : UserControl
 
         if (string.IsNullOrWhiteSpace(textBox.Text))
         {
-            if (DataContext is ISortableEntryViewViewModel vm)
+            if (DataContext is IOperableViewViewModel vm)
             {
                 vm.Filter = null;
                 vm.ViewRange = Range.All;
@@ -203,7 +203,7 @@ public partial class WorkContainer : UserControl
 
     public void PerformSearch(string text)
     {
-        if (DataContext is not ISortableEntryViewViewModel viewModel)
+        if (DataContext is not IOperableViewViewModel viewModel)
             return;
 
         try
@@ -223,6 +223,11 @@ public partial class WorkContainer : UserControl
     public void ResetEngine(IFetchEngine<IArtworkInfo> newEngine, bool isBookmarkEnabled = true, int itemsPerPage = 20, int itemLimit = -1)
     {
         WorkView.ResetEngine(newEngine, isBookmarkEnabled, itemsPerPage, itemLimit);
+    }
+
+    public void SetSource(IReadOnlyCollection<IArtworkInfo> source)
+    {
+        WorkView.SetSource(source);
     }
 
     public static readonly FuncValueConverter<int, string> CancelSelectionButtonConverter = new(i => i > 0

@@ -3,13 +3,12 @@
 
 using System;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Mako.Global.Enum;
 using Mako.Model;
 
 namespace Pixeval.ViewModels.Viewers;
 
-public class CommentsViewViewModel(SimpleWorkType parentType, long parentId) : ObservableObject, IDisposable
+public class CommentsViewViewModel(SimpleWorkType parentType, long parentId) : ViewModelBase, IDisposable
 {
     public long ParentId { get; } = parentId;
 

@@ -2,16 +2,14 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Mako.Engine;
 using Misaki;
 using Pixeval.Controls;
 
 namespace Pixeval.ViewModels;
 
-public abstract class EntryViewViewModel<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>
-    : ObservableObject, IDisposable
+public abstract class EntryViewViewModel<T, TViewModel>
+    : ViewModelBase, IDisposable
     where T : class, IIdentityInfo
     where TViewModel : EntryViewModel<T>, IFactory<T, TViewModel>
 {

@@ -7,8 +7,8 @@
     xmlns:entry="using:Pixeval.Views.Entry"
     xmlns:local="using:Pixeval.Views.Work"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:novel="using:Pixeval.ViewModels"
-    x:DataType="{x:Type novel:ISortableEntryViewViewModel}"
+    xmlns:vm="using:Pixeval.ViewModels"
+    x:DataType="{x:Type vm:IOperableViewViewModel}"
     DataContextChanged="StyledElement_OnDataContextChanged"
     mc:Ignorable="d"
     d:DesignHeight="450"
@@ -23,17 +23,17 @@
             controls:IncrementalLoadingBehavior.Threshold="200"
             ContainerPrepared="ListBox_OnContainerPrepared"
             ItemsSource="{Binding View}"
-            SelectionChanged="WorkView_OnSelectionChanged"
+            SelectedItems="{Binding SelectedEntries}"
             SelectionMode="{Binding IsSelecting, Converter={x:Static local:WorkView.SelectionModeConverter}}"
             UseLayoutRounding="False">
             <ListBox.Styles>
                 <controls:ItemsViewListBoxStyles />
             </ListBox.Styles>
             <ListBox.DataTemplates>
-                <DataTemplate x:DataType="{x:Type novel:NovelItemViewModel}">
+                <DataTemplate x:DataType="{x:Type vm:NovelItemViewModel}">
                     <local:NovelItem RequestAddToBookmark="WorkItem_OnRequestAddToBookmark" RequestOpenUserInfoPage="WorkItem_OnRequestOpenUserInfoPage" />
                 </DataTemplate>
-                <DataTemplate x:DataType="{x:Type novel:IllustrationItemViewModel}">
+                <DataTemplate x:DataType="{x:Type vm:IllustrationItemViewModel}">
                     <local:IllustrationItem RequestAddToBookmark="WorkItem_OnRequestAddToBookmark" RequestOpenUserInfoPage="WorkItem_OnRequestOpenUserInfoPage" />
                 </DataTemplate>
             </ListBox.DataTemplates>

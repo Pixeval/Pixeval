@@ -5,5 +5,5 @@ using SQLite;
 
 namespace Pixeval.Models.Database.Managers;
 
-public class BrowseHistoryPersistentManager(SQLiteConnection db, int maximumRecords)
-    : SimplePersistentManager<BrowseHistoryEntry>(db, maximumRecords);
+public class BrowseHistoryPersistentManager(SQLiteConnection db)
+    : SimplePersistentManager<BrowseHistoryEntry>(db, App.AppViewModel.AppSettings.MaximumBrowseHistoryRecords);

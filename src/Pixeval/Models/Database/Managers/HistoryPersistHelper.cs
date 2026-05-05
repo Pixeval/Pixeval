@@ -2,7 +2,6 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -15,18 +14,18 @@ namespace Pixeval.Models.Database.Managers;
 
 public class HistoryPersistHelper : IDisposable
 {
-    public HistoryPersistHelper()
+    public HistoryPersistHelper(
+        [FromKeyedServices(IPlatformInfo.Pixiv)] IDownloadHttpClientService service,
+        DownloadHistoryPersistentManager downloadHistoryPersistentManager,
+        SearchHistoryPersistentManager searchHistoryPersistentManager,
+        BrowseHistoryPersistentManager browseHistoryPersistentManager)
     {
-        DownloadManager = new DownloadManager(App.AppViewModel.MakoClient.GetImageDownloadClient(), App.AppViewModel.AppSettings.MaxDownloadTaskConcurrencyLevel);
-
-        var downloadHistoryPersistentManager = AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
-        var searchHistoryPersistentManager = AppServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
-        var browseHistoryPersistentManager = AppServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
+        DownloadManager = new DownloadManager(service.GetImageDownloadClient(), App.AppViewModel.AppSettings.MaxDownloadTaskConcurrencyLevel);
 
         foreach (var downloadTaskGroup in downloadHistoryPersistentManager)
             DownloadManager.QueueTask(downloadTaskGroup);
-        SearchHistoryEntries = new(searchHistoryPersistentManager);
-        BrowseHistoryEntries = new(browseHistoryPersistentManager.Queryable.Select(t => t.Entry));
+        SearchHistoryEntries = new(searchHistoryPersistentManager.Reverse());
+        BrowseHistoryEntries = new(browseHistoryPersistentManager.Queryable.Select(t => t.Entry).Reverse());
 
         SearchHistoryEntries.CollectionChanged += (s, e) =>
             OnCollectionChangedEventHandler<SearchHistoryPersistentManager, SearchHistoryEntry, SearchHistoryEntry>(s,
@@ -69,14 +68,14 @@ public class HistoryPersistHelper : IDisposable
             TranslatedName = translatedName,
             Time = DateTime.UtcNow
         };
-        SearchHistoryEntries.Add(searchHistoryEntry);
+        SearchHistoryEntries.Insert(0, searchHistoryEntry);
     }
 
     public void AddBrowseHistory(IArtworkInfo entry)
     {
         if (entry.Id is "")
             return;
-        BrowseHistoryEntries.Add(entry);
+        BrowseHistoryEntries.Insert(0, entry);
     }
 
     private static void OnCollectionChangedEventHandler<TManager, TEntry, TItem>(

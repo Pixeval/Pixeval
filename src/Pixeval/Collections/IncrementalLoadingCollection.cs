@@ -122,10 +122,7 @@ public class IncrementalLoadingCollection<TSource, IType> : ObservableCollection
 
     public IncrementalLoadingCollection(TSource source, int itemsPerPage = 20, Action? onStartLoading = null, Action? onEndLoading = null, Action<Exception>? onError = null)
     {
-        if (source == null)
-        {
-            throw new ArgumentNullException(nameof(source));
-        }
+        ArgumentNullException.ThrowIfNull(source);
 
         Source = source;
 

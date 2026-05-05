@@ -1,5 +1,5 @@
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -40,7 +40,7 @@ public partial class WorkView : UserControl, IDisposable
 
     private void UpdateLayoutPseudoClasses()
     {
-        var actualLayoutType = DataContext is NovelViewViewModel ? ThumbnailLayoutType.Grid : LayoutType;
+        var actualLayoutType = DataContext is IWorkViewViewModel { RequireAdaptiveGrid: true } ? ThumbnailLayoutType.Grid : LayoutType;
         PseudoClasses.Set(":linedFlow", actualLayoutType is ThumbnailLayoutType.LinedFlow);
         PseudoClasses.Set(":verticalStack", actualLayoutType is ThumbnailLayoutType.VerticalStack);
         PseudoClasses.Set(":grid", actualLayoutType is ThumbnailLayoutType.Grid);
@@ -94,36 +94,13 @@ public partial class WorkView : UserControl, IDisposable
         }
     }
 
-    private void WorkView_OnSelectionChanged(object? o, SelectionChangedEventArgs selectionChangedEventArgs)
-    {
-        if (o is not ListBox listBox || DataContext is not ISortableEntryViewViewModel viewModel)
-            return;
-        if (listBox.SelectedItems is not { Count: > 0 })
-        {
-            viewModel.SelectedEntries = viewModel switch
-            {
-                NovelViewViewModel => (NovelItemViewModel[]) [],
-                IllustrationViewViewModel => (IllustrationItemViewModel[]) [],
-                _ => viewModel.SelectedEntries
-            };
-            return;
-        }
-
-        viewModel.SelectedEntries = viewModel switch
-        {
-            NovelViewViewModel => [.. listBox.SelectedItems.Cast<NovelItemViewModel>()],
-            IllustrationViewViewModel => [.. listBox.SelectedItems.Cast<IllustrationItemViewModel>()],
-            _ => viewModel.SelectedEntries
-        };
-    }
-
     /// <summary>
     /// 在调用<see cref="ResetEngine"/>前<see cref="StyledElement.DataContext"/>为<see langword="null"/>
     /// </summary>
     public void ResetEngine(IFetchEngine<IArtworkInfo> newEngine, bool isBookmarkEnabled = true, int itemsPerPage = 20, int itemLimit = -1)
     {
         var isNovelEngine = newEngine is IFetchEngine<Novel>;
-        var viewModel = DataContext as ISortableEntryViewViewModel;
+        var viewModel = DataContext as IWorkViewViewModel;
         switch (viewModel)
         {
             case NovelViewViewModel when isNovelEngine:
@@ -131,13 +108,18 @@ public partial class WorkView : UserControl, IDisposable
                 viewModel.ResetEngine(newEngine, isBookmarkEnabled, itemsPerPage, itemLimit);
                 break;
             default:
-                ISortableEntryViewViewModel newViewModel = isNovelEngine ? new NovelViewViewModel() : new IllustrationViewViewModel();
+                IWorkViewViewModel newViewModel = isNovelEngine ? new NovelViewViewModel() : new IllustrationViewViewModel();
                 newViewModel.ResetEngine(newEngine, isBookmarkEnabled, itemsPerPage, itemLimit);
                 DataContext = newViewModel;
                 WorkListBox.ItemsSource = newViewModel.View;
                 viewModel?.Dispose();
                 break;
         }
+    }
+
+    public void SetSource(IReadOnlyCollection<IArtworkInfo> source)
+    {
+        DataContext = new SimpleOperableViewViewModel(source);
     }
 
     private void WorkItem_OnRequestAddToBookmark(Control sender, IWorkViewModel e) => RequestAddToBookmark?.Invoke(sender, e);
@@ -174,7 +156,7 @@ public partial class WorkView : UserControl, IDisposable
         GC.SuppressFinalize(this);
         var d = DataContext;
         DataContext = null!;
-        if (d is ISortableEntryViewViewModel viewModel)
+        if (d is IDisposable viewModel)
             viewModel.Dispose();
     }
 

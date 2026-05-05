@@ -6,7 +6,6 @@ using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Mako.Global.Enum;
-using Mako.Model;
 using Misaki;
 using Pixeval.Controls;
 
@@ -33,10 +32,6 @@ public partial class BrowsingHistoryPage : ContentPage
             .Where(t => t.ImageType is ImageType.Other ^ isIllustration)
             .ToAsyncEnumerable();
 
-        WorkContainer.ResetEngine(type switch
-        {
-            SimpleWorkType.IllustrationAndManga => App.AppViewModel.MakoClient.Computed(source.OfType<Illustration>()),
-            _ => App.AppViewModel.MakoClient.Computed(source.OfType<Novel>())
-        }, false);
+        WorkContainer.SetSource(App.AppViewModel.HistoryPersistHelper.BrowseHistoryEntries);
     }
 }

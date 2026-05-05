@@ -2,16 +2,14 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Mako.Engine;
 using Mako.Model;
 using Pixeval.Collections;
 
 namespace Pixeval.ViewModels;
 
-public class SimpleViewDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel> : ObservableObject, IDataProvider<T, TViewModel>
+public class SimpleViewDataProvider<T, TViewModel> : ViewModelBase, IDataProvider<T, TViewModel>
     where T : class, IIdEntry
     where TViewModel : class
 {

@@ -5,5 +5,5 @@ using SQLite;
 
 namespace Pixeval.Models.Database.Managers;
 
-public class SearchHistoryPersistentManager(SQLiteConnection db, int maximumRecords)
-    : SimplePersistentManager<SearchHistoryEntry>(db, maximumRecords);
+public class SearchHistoryPersistentManager(SQLiteConnection db)
+    : SimplePersistentManager<SearchHistoryEntry>(db, App.AppViewModel.AppSettings.MaximumSearchHistoryRecords);

@@ -3,14 +3,13 @@
 
 using System;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using Mako.Engine;
 using Misaki;
 using Pixeval.Collections;
 
 namespace Pixeval.ViewModels;
 
-public interface IDataProvider<T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TViewModel>
+public interface IDataProvider<T, TViewModel>
     : INotifyPropertyChanged, INotifyPropertyChanging, IDisposable
     where T : class, IIdentityInfo
     where TViewModel : class

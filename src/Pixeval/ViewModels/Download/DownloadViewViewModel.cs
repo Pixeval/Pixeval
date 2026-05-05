@@ -13,7 +13,7 @@ using Pixeval.Models.Download.Tasks;
 
 namespace Pixeval.ViewModels;
 
-public partial class DownloadViewViewModel : ObservableObject, IDisposable
+public partial class DownloadViewViewModel : ViewModelBase, IDisposable
 {
     private readonly ObservableCollection<IDownloadTaskGroupBase> _source;
 
