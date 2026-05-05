@@ -68,7 +68,7 @@ public partial class IllustrationItemViewModel
             await animatedImage.MultiImageUris.TryPreloadListAsync(animatedImage);
         var factory = App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationDownloadTaskFactory>();
         var task = factory.Create(Entry, path);
-        App.AppViewModel.DownloadManager.QueueTask(task);
+        App.AppViewModel.HistoryPersistHelper.DownloadManager.QueueTask(task);
         viewContainerBase?.ShowSuccess(I18NManager.GetResource(EntryItemResources.DownloadTaskCreated));
     }
 }

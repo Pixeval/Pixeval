@@ -11,13 +11,6 @@ namespace Pixeval.Models.Database.Managers;
 public class DownloadHistoryPersistentManager(SQLiteConnection db, int maximumRecords)
     : PersistentManagerBase<DownloadHistoryEntry, IDownloadTaskGroup>(db, maximumRecords)
 {
-    /// <inheritdoc />
-    public override void Clear()
-    {
-        base.Clear();
-        App.AppViewModel.DownloadManager.ClearTasks();
-    }
-
     protected override IDownloadTaskGroup ToModel(DownloadHistoryEntry entry)
     {
         return entry.Entry switch

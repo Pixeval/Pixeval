@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Misaki;
-using Pixeval.Models.Database.Managers;
 
 namespace Pixeval.ViewModels.Viewers;
 
@@ -25,7 +24,7 @@ public partial class ImageViewerViewModel : ViewModelBase, IDisposable
 
         PageCount = Images.Count;
 
-        BrowseHistoryPersistentManager.AddHistory(thumbnailViewModel.Entry);
+        App.AppViewModel.HistoryPersistHelper.AddBrowseHistory(thumbnailViewModel.Entry);
     }
 
     public IllustrationItemViewModel ThumbnailViewModel { get; set; }

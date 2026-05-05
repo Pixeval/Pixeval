@@ -31,7 +31,7 @@ public partial class DownloadPage : ContentPage
 
     public DownloadPage()
     {
-        DataContext = new DownloadViewViewModel(App.AppViewModel.DownloadManager.QueuedTasks);
+        DataContext = new DownloadViewViewModel(App.AppViewModel.HistoryPersistHelper.DownloadManager.QueuedTasks);
         InitializeComponent();
         ViewModel?.ResetFilter();
     }

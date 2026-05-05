@@ -2,10 +2,8 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using Microsoft.Extensions.DependencyInjection;
 using Misaki;
 using Pixeval.Download;
-using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Download.Tasks;
 using Pixeval.Utilities.IO;
 
@@ -15,9 +13,7 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IArtworkInfo
 {
     public IDownloadTaskGroup Create(IArtworkInfo context, string rawPath, object? parameter = null)
     {
-        var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         var path = IoHelper.NormalizePath(ArtworkMetaPathParser.Instance.Reduce(rawPath, context));
-        _ = manager.Delete(entry => entry.Destination == path);
 
         IDownloadTaskGroup task = context switch
         {
@@ -40,7 +36,6 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IArtworkInfo
             _ => throw new NotSupportedException()
         };
 
-        manager.Insert(task.DatabaseEntry);
         return task;
     }
 }

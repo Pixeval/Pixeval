@@ -2,6 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
@@ -108,4 +109,10 @@ public abstract class SimplePersistentManager<[DynamicallyAccessedMembers(Dynami
 
     /// <inheritdoc />
     public virtual void Clear() => _db.DeleteAll<T>();
+
+    /// <inheritdoc />
+    public IEnumerator<T> GetEnumerator() => Queryable.GetEnumerator();
+
+    /// <inheritdoc />
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

@@ -12,7 +12,6 @@ using Mako.Net;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
 using Pixeval.Caching;
-using Pixeval.Download;
 using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Download;
 using Pixeval.Models.Extensions;
@@ -30,7 +29,7 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
 
     public App App { get; } = app;
 
-    public DownloadManager DownloadManager { get; private set; } = null!;
+    public HistoryPersistHelper HistoryPersistHelper => AppServiceProvider.GetRequiredService<HistoryPersistHelper>();
 
     public MakoClient MakoClient => (MakoClient) GetRequiredPlatformService<IGetArtworkService>(IPlatformInfo.Pixiv);
 
@@ -44,8 +43,6 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
     {
         AppServiceProvider = CreateServiceProvider();
         SetNameResolvers();
-        DownloadManager = new DownloadManager(MakoClient.GetImageDownloadClient(), AppSettings.MaxDownloadTaskConcurrencyLevel);
-        RestoreHistories();
     }
 
     private ServiceProvider CreateServiceProvider()
@@ -63,7 +60,7 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
             .AddBooruParsers()
             .AddKeyedSingleton<IGetArtworkService, MakoClient>(IPlatformInfo.Pixiv, (provider, key) => makoClient)
             .AddKeyedSingleton<IDownloadHttpClientService, MakoClient>(IPlatformInfo.Pixiv, (provider, key) => makoClient)
-            .AddSingleton(_ => new DownloadManager(makoClient.GetImageDownloadClient(), AppSettings.MaxDownloadTaskConcurrencyLevel))
+            .AddSingleton<HistoryPersistHelper>()
             .AddSingleton<IllustrationDownloadTaskFactory>()
             .AddSingleton<NovelDownloadTaskFactory>()
             .AddSingleton(_ =>
@@ -94,14 +91,6 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
                 AppInfo.SaveLoginContext(LoginContext);
             }
         }
-    }
-
-    private void RestoreHistories()
-    {
-        var downloadHistoryPersistentManager = AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
-
-        foreach (var downloadTaskGroup in downloadHistoryPersistentManager.ToArray())
-            DownloadManager.QueueTask(downloadTaskGroup);
     }
 
     public void SetNameResolvers()
@@ -168,7 +157,6 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
             return;
         _disposed = true;
         AppServiceProvider?.Dispose();
-        DownloadManager?.Dispose();
         GC.SuppressFinalize(this);
     }
 

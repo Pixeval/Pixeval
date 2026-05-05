@@ -2,9 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using Mako.Model;
-using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Download;
-using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Download.Tasks;
 using Pixeval.Utilities.IO;
 
@@ -14,16 +12,13 @@ public class NovelDownloadTaskFactory : IDownloadTaskFactory<Novel, NovelDownloa
 {
     public NovelDownloadTaskGroup Create(Novel context, string rawPath, NovelContent? parameter)
     {
-        var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
         var path = IoHelper.NormalizePath(ArtworkMetaPathParser.Instance.Reduce(rawPath, context));
         // xxx.pdf\.png
         // xxx.pdf\<ext>
         // xxx\novel.txt\.png
         // xxx\novel.md\<ext>
         path += "\\" + IoHelper.GetIllustrationExtension();
-        _ = manager.Delete(entry => entry.Destination == path);
         var task = new NovelDownloadTaskGroup(context, path, parameter);
-        manager.Insert(task.DatabaseEntry);
         return task;
     }
 }

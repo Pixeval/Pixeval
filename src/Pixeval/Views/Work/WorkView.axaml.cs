@@ -131,15 +131,7 @@ public partial class WorkView : UserControl, IDisposable
                 viewModel.ResetEngine(newEngine, isBookmarkEnabled, itemsPerPage, itemLimit);
                 break;
             default:
-                ISortableEntryViewViewModel? newViewModel;
-                if (isNovelEngine)
-                {
-                    newViewModel = new NovelViewViewModel();
-                }
-                else
-                {
-                    newViewModel = new IllustrationViewViewModel();
-                }
+                ISortableEntryViewViewModel newViewModel = isNovelEngine ? new NovelViewViewModel() : new IllustrationViewViewModel();
                 newViewModel.ResetEngine(newEngine, isBookmarkEnabled, itemsPerPage, itemLimit);
                 DataContext = newViewModel;
                 WorkListBox.ItemsSource = newViewModel.View;

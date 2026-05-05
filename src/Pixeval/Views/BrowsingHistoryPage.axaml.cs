@@ -7,11 +7,8 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Mako.Global.Enum;
 using Mako.Model;
-using Microsoft.Extensions.DependencyInjection;
 using Misaki;
 using Pixeval.Controls;
-using Pixeval.Models.Database.Managers;
-using Pixeval.Utilities;
 
 namespace Pixeval.Views;
 
@@ -29,12 +26,10 @@ public partial class BrowsingHistoryPage : ContentPage
 
     private void ChangeSource()
     {
-        var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
         var type = SimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>();
         var isIllustration = type is SimpleWorkType.IllustrationAndManga;
-        var source = manager
+        var source = App.AppViewModel.HistoryPersistHelper.BrowseHistoryEntries
             .Reverse()
-            .SelectNotNull(t => t.Entry)
             .Where(t => t.ImageType is ImageType.Other ^ isIllustration)
             .ToAsyncEnumerable();
 

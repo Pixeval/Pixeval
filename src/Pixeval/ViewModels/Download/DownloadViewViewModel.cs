@@ -7,10 +7,8 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Collections;
 using Pixeval.Download;
-using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Download.Tasks;
 
 namespace Pixeval.ViewModels;
@@ -27,7 +25,7 @@ public partial class DownloadViewViewModel : ObservableObject, IDisposable
     public partial DownloadListOption CurrentOption { get; set; } = DownloadListOption.AllQueued;
 
     [ObservableProperty]
-    public partial ObservableCollection<DownloadItemViewModel> FilteredTasks { get; set; } = [];
+    public partial ObservableCollection<DownloadItemViewModel> FilteredTasks { get; private set; } = [];
 
     public AdvancedObservableCollection<DownloadItemViewModel> View { get; }
 
@@ -66,8 +64,6 @@ public partial class DownloadViewViewModel : ObservableObject, IDisposable
 
     public void RemoveSelectedItems(bool deleteLocalFiles)
     {
-        var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
-
         foreach (var item in SelectedEntries.ToArray())
         {
             if (deleteLocalFiles)
@@ -82,9 +78,7 @@ public partial class DownloadViewViewModel : ObservableObject, IDisposable
                 }
             }
 
-            App.AppViewModel.DownloadManager.RemoveTask(item.DownloadTask);
-            var dest = item.DownloadTask.Destination;
-            _ = manager.Delete(m => m.Destination == dest);
+            App.AppViewModel.HistoryPersistHelper.DownloadManager.RemoveTask(item.DownloadTask);
         }
 
         SelectedEntries.Clear();

@@ -3,7 +3,6 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Mako.Global.Enum;
 using Mako.Model;
-using Pixeval.Models.Database.Managers;
 using Pixeval.Utilities;
 using Pixeval.Views.Capability;
 
@@ -19,7 +18,7 @@ public partial class NovelItem : WorkItem
             return;
         if (TopLevel.GetTopLevel(this)?.ViewContainer is not { } viewContainer)
             return;
-        SearchHistoryPersistentManager.AddHistory(tag.Name, tag.TranslatedName);
+        App.AppViewModel.HistoryPersistHelper.AddSearchHistory(tag.Name, tag.TranslatedName);
         viewContainer.NavigateTo(new SearchWorksPage(SimpleWorkType.Novel, tag.Name));
     }
 

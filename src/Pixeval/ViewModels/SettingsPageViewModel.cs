@@ -110,7 +110,7 @@ public class SettingsPageViewModel : ViewModelBase
                 .Int(t => t.MaximumDownloadHistoryRecords, 10, ushort.MaxValue, 1)
                 .Bool(t => t.OverwriteDownloadedFile)
                 .Int(t => t.MaxDownloadTaskConcurrencyLevel, 1, Environment.ProcessorCount, 1,
-                    entry => entry.ValueChanged += t => App.AppViewModel.DownloadManager.ConcurrencyDegree = t)
+                    entry => entry.ValueChanged += t => App.AppViewModel.HistoryPersistHelper.DownloadManager.ConcurrencyDegree = t)
                 .DownloadMacro()
                 .MultiValues(t => t.IllustrationDownloadFormat, entry =>
                     entry.Enum(

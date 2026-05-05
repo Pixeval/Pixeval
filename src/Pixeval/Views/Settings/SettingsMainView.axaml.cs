@@ -4,11 +4,9 @@ using System.Text.Json;
 using AutoSettingsPage.Models;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.I18N;
-using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Options;
 using Pixeval.Models.Settings;
 using Pixeval.Utilities;
@@ -129,22 +127,19 @@ public partial class SettingsMainView : ContentPage
 
     private void DeleteSearchHistoriesButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
-        manager.Clear();
+        App.AppViewModel.HistoryPersistHelper.SearchHistoryEntries.Clear();
         ShowClearData(ClearDataKind.SearchHistory);
     }
 
     private void DeleteBrowseHistoriesButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<BrowseHistoryPersistentManager>();
-        manager.Clear();
+        App.AppViewModel.HistoryPersistHelper.BrowseHistoryEntries.Clear();
         ShowClearData(ClearDataKind.BrowseHistory);
     }
 
     private void DeleteDownloadHistoriesButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
-        manager.Clear();
+        App.AppViewModel.HistoryPersistHelper.DownloadManager.ClearTasks();
         ShowClearData(ClearDataKind.DownloadHistory);
     }
 

@@ -9,7 +9,6 @@ using Mako.Global.Enum;
 using Mako.Model;
 using Misaki;
 using Pixeval.AppManagement;
-using Pixeval.Models.Database.Managers;
 using Pixeval.Utilities;
 using Pixeval.Views.Capability;
 
@@ -60,12 +59,13 @@ public class WorkInfoPane : TemplatedControl
 
     private async Task OpenAuthorAsync(IUser? user)
     {
-        if (TopLevel.GetTopLevel(this) is not { Launcher: { } launcher, ViewContainer: { } viewContainer })
+        if (TopLevel.GetTopLevel(this) is not { Launcher: { } launcher, ViewContainer: { } viewContainer }
+            || user is null)
             return;
 
         if (user is UserInfo info)
             await viewContainer.CreateUserPageAsync(info.Id);
-        else if (user is { })
+        else
             await launcher.LaunchUriAsync(user.WebsiteUri);
     }
 
@@ -77,7 +77,7 @@ public class WorkInfoPane : TemplatedControl
             return;
 
         var type = entry is Illustration ? SimpleWorkType.IllustrationAndManga : SimpleWorkType.Novel;
-        SearchHistoryPersistentManager.AddHistory(tag.Name, tag.TranslatedName);
+        App.AppViewModel.HistoryPersistHelper.AddSearchHistory(tag.Name, tag.TranslatedName);
         viewContainer.NavigateTo(new SearchWorksPage(type, tag.Name));
     }
     

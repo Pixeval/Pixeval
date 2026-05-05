@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -109,4 +110,10 @@ public abstract class PersistentManagerBase<[DynamicallyAccessedMembers(Dynamica
     public virtual void Clear() => _db.DeleteAll<TEntry>();
 
     protected abstract TModel ToModel(TEntry entry);
+
+    /// <inheritdoc />
+    public IEnumerator<TModel> GetEnumerator() => Queryable.Select(ToModel).GetEnumerator();
+
+    /// <inheritdoc />
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
