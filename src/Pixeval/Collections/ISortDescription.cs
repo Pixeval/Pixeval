@@ -2,6 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
@@ -16,26 +17,26 @@ public interface ISortDescription<in T>
     ISet<string> ObservedProperties { get; }
 
     /// <summary>
-    /// Gets the direction of sort
-    /// </summary>
-    bool IsDescending { get; }
-
-    /// <summary>
     /// Gets the comparer
     /// </summary>
     Comparison<T?> Comparison { get; }
 
-    static ISortDescription<T> Create(Comparison<T?> comparison, bool isDescending)
+    /// <summary>
+    /// Gets the direction of sort
+    /// </summary>
+    bool IsDescending { get; }
+
+    static ISortDescription<T> Create(Comparison<T?> comparison, bool isDescending = false)
     {
         return new SortDescription<T>(ReadOnlySet<string>.Empty, comparison, isDescending);
     }
 
-    static ISortDescription<T> Create(ISet<string> observedProperties, Comparison<T?> comparison, bool isDescending)
+    static ISortDescription<T> Create(ISet<string> observedProperties, Comparison<T?> comparison, bool isDescending = false)
     {
         return new SortDescription<T>(observedProperties, comparison, isDescending);
     }
 
-    static ISortDescription<T> Create<TProperty>(Expression<Func<T, TProperty>> propertyExpression, bool isDescending)
+    static ISortDescription<T> Create<TProperty>(Expression<Func<T, TProperty>> propertyExpression, bool isDescending = false)
     {
         if (propertyExpression.Body is not MemberExpression { NodeType: ExpressionType.MemberAccess } memberExpression)
             throw new ArgumentException("The expression must be a member expression.", nameof(propertyExpression));
@@ -53,13 +54,13 @@ public interface ISortDescription<in T>
 
             return Comparer<TProperty>.Default.Compare(propertyGetter(x), propertyGetter(y));
         });
-        return new SortDescription<T>(new HashSet<string> { propertyName }, comparison, isDescending);
+        return new SortDescription<T>(new[] { propertyName }.ToFrozenSet(), comparison, isDescending);
     }
 
     static ISortDescription<T> Create<TProperty1, TProperty2>(
         Expression<Func<T, TProperty1>> firstBy,
         Expression<Func<T, TProperty2>> thenBy,
-        bool isDescending)
+        bool isDescending = false)
     {
         if (firstBy.Body is not MemberExpression { NodeType: ExpressionType.MemberAccess } firstMemberExpression)
             throw new ArgumentException("The expression must be a member expression.", nameof(firstBy));
@@ -84,7 +85,7 @@ public interface ISortDescription<in T>
             return Comparer<TProperty2>.Default.Compare(thenPropertyGetter(x), thenPropertyGetter(y));
         });
 
-        return new SortDescription<T>(new HashSet<string> { firstMemberName, thenMemberName }, comparison, isDescending);
+        return new SortDescription<T>(new[] { firstMemberName, thenMemberName }.ToFrozenSet(), comparison, isDescending);
     }
 }
 

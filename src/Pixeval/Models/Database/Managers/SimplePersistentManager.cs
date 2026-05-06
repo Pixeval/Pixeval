@@ -69,10 +69,10 @@ public abstract class SimplePersistentManager<[DynamicallyAccessedMembers(Dynami
     }
 
     /// <inheritdoc />
-    public virtual IReadOnlyList<T> Select(Expression<Func<T, bool>> predicate)
-    {
-        return Queryable.Where(predicate).ToArray();
-    }
+    public virtual IReadOnlyList<T> Select(Expression<Func<T, bool>> predicate) => Queryable.Where(predicate).ToArray();
+
+    /// <inheritdoc />
+    public virtual bool TryDelete(T item) => _db.Delete<T>(item.HistoryEntryId) is not 0;
 
     /// <inheritdoc />
     public virtual T? TryDelete(Expression<Func<T, bool>> predicate)

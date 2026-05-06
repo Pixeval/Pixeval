@@ -1,7 +1,7 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System.Collections.Generic;
+using System.Collections.Frozen;
 using Misaki;
 using IllustrationViewDataProvider = Pixeval.ViewModels.SharableViewDataProvider<
     Misaki.IArtworkInfo,
@@ -13,7 +13,7 @@ public sealed class IllustrationViewViewModel : WorkViewViewModelBase<IArtworkIn
 {
     public IllustrationViewViewModel(IllustrationViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef(), viewModel.CachedBlockedTags)
     {
-        Filter = viewModel.Filter;
+        UserFilter = viewModel.UserFilter;
         DataProvider.View.Range = viewModel.DataProvider.View.Range;
     }
 
@@ -21,10 +21,10 @@ public sealed class IllustrationViewViewModel : WorkViewViewModelBase<IArtworkIn
     {
     }
 
-    private IllustrationViewViewModel(IllustrationViewDataProvider dataProvider, HashSet<string>? blockedTags) : base(blockedTags)
+    private IllustrationViewViewModel(IllustrationViewDataProvider dataProvider, FrozenSet<string>? blockedTags) : base(blockedTags)
     {
         DataProvider = dataProvider;
-        dataProvider.View.Filter = ((IOperableViewViewModel) this).DefaultFilter;
+        SetFilters();
     }
 
     public override IllustrationViewDataProvider DataProvider { get; }

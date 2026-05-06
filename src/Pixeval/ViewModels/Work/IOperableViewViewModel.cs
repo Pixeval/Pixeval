@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using Avalonia.Collections;
 using Pixeval.Collections;
 
@@ -16,23 +15,15 @@ public interface IOperableViewViewModel : INotifyPropertyChanged
 
     AvaloniaList<IWorkViewModel> SelectedEntries { get; }
 
-    void SetSortDescription(params IReadOnlyCollection<ISortDescription<IWorkViewModel>> descriptions);
+    void SetSortDescriptions(params IEnumerable<ISortDescription<IWorkViewModel>> descriptions);
 
-    Func<IWorkViewModel, bool>? Filter { get; set; }
+    IFilter<IWorkViewModel> BlockedTagsFilter { get; }
+
+    IFilter<IWorkViewModel>? UserFilter { get; set; }
 
     IReadOnlyCollection<IWorkViewModel> View { get; }
 
     Range ViewRange { get; set; }
 
     bool RequireAdaptiveGrid { get; }
-
-    HashSet<string> CachedBlockedTags { get; }
-
-    bool DefaultFilter(IWorkViewModel entry)
-    {
-        if (entry.Entry.Tags.Any(t => t.Any(tag => CachedBlockedTags.Contains(tag.Name))))
-            return false;
-
-        return Filter?.Invoke(entry) is not false;
-    }
 }

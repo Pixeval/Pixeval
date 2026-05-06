@@ -76,9 +76,12 @@ public class SharableViewDataProvider<T, TViewModel>
         var dataProvider = new SharableViewDataProvider<T, TViewModel>();
         dataProvider.FetchEngineRef = FetchEngineRef?.MakeShared(dataProvider);
         dataProvider.EntrySourceRef = EntrySourceRef.MakeShared(dataProvider);
-        // dataProvider.View.Filter = View.Filter;
+        dataProvider.View.FilterCombinationMode = View.FilterCombinationMode;
+        dataProvider.View.IsReversed = View.IsReversed;
         foreach (var viewSortDescription in View.SortDescriptions)
             dataProvider.View.SortDescriptions.Add(viewSortDescription);
+        foreach (var viewFilter in View.Filters)
+            dataProvider.View.Filters.Add(viewFilter);
         return dataProvider;
     }
 

@@ -17,11 +17,9 @@ namespace Pixeval.Collections;
 
 [DebuggerDisplay("Count = {Count}")]
 public class AdvancedObservableCollection<T>
-    : DeferSortDescriptions<T>, IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged, ISupportIncrementalLoading, IComparer<T>, IDisposable where T : class
+    : DeferredCollectionBase<T>, IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged, ISupportIncrementalLoading, IComparer<T>, IDisposable where T : class
 {
     private readonly bool _liveShapingEnabled;
-
-    private readonly HashSet<string> _observedFilterProperties = [];
 
     private readonly List<T> _view = [];
 
@@ -153,22 +151,6 @@ public class AdvancedObservableCollection<T>
     /// <inheritdoc cref="ISupportIncrementalLoading.HasMoreItems"/>
     public bool HasMoreItems => (Source as ISupportIncrementalLoading)?.HasMoreItems ?? false;
 
-    /// <summary>
-    /// Gets or sets the predicate used to filter the visible items
-    /// </summary>
-    public Func<T, bool>? Filter
-    {
-        get;
-        set
-        {
-            if (field == value)
-                return;
-
-            field = value;
-            RaiseFilterChanged();
-        }
-    }
-
     public Range Range
     {
         get;
@@ -185,15 +167,6 @@ public class AdvancedObservableCollection<T>
 
     /// <inheritdoc cref="IComparer{T}.Compare"/>
     int IComparer<T>.Compare(T? x, T? y) => CompareCore(x, y);
-
-    private int CompareCore(T? x, T? y)
-    {
-        foreach (var sd in SortDescriptions)
-            if (sd.Comparison(x, y) is var cmp and not 0)
-                return sd.IsDescending ? -cmp : +cmp;
-
-        return 0;
-    }
 
     private int CompareView(T? x, T? y)
     {
@@ -214,9 +187,9 @@ public class AdvancedObservableCollection<T>
     public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
     /// <summary>
-    /// Occurs when the <see cref="Filter"/> changes.
+    /// Occurs when the filters change.
     /// </summary>
-    public event EventHandler<AdvancedObservableCollection<T>, Func<T, bool>?>? FilterChanged;
+    public new event EventHandler<AdvancedObservableCollection<T>, EventArgs>? FilterChanged;
 
     /// <summary>
     /// Property changed event invoker
@@ -236,32 +209,6 @@ public class AdvancedObservableCollection<T>
     /// </summary>
     protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e) => CollectionChanged?.Invoke(this, e);
 
-    /// <summary>
-    /// Add a property to re-filter an item on when it is changed
-    /// </summary>
-    public void ObserveFilterProperty(string propertyName)
-    {
-        _ = _observedFilterProperties.Add(propertyName);
-    }
-
-    /// <summary>
-    /// Remove a property to re-filter an item on when it is changed
-    /// </summary>
-    public void UnobserveFilterProperty(string propertyName)
-    {
-        _ = _observedFilterProperties.Remove(propertyName);
-    }
-
-    /// <summary>
-    /// Clears all properties items are re-filtered on
-    /// </summary>
-    public void ClearObservedFilterProperties()
-    {
-        _observedFilterProperties.Clear();
-    }
-
-    private bool MatchesFilter(T item) => Filter?.Invoke(item) ?? true;
-
     private void ItemOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (!_liveShapingEnabled)
@@ -279,18 +226,20 @@ public class AdvancedObservableCollection<T>
             if (!ReferenceEquals(item, sender))
                 continue;
 
-            var filterResult = Filter?.Invoke(item);
+            var shouldReevaluateFilter = Filters.Count is not 0
+                && Filters.Any(filter => filter.ObservedProperties.Contains(e.PropertyName!));
 
-            if (filterResult.HasValue && _observedFilterProperties.Contains(e.PropertyName!))
+            if (shouldReevaluateFilter)
             {
+                var filterResult = MatchesFilter(item);
                 var viewIndex = _view.IndexOf(item);
-                if (viewIndex is not -1 && !filterResult.Value)
+                if (viewIndex is not -1 && !filterResult)
                     RemoveFromView(viewIndex, item);
-                else if (viewIndex is -1 && filterResult.Value)
+                else if (viewIndex is -1 && filterResult)
                     _ = HandleItemAdded(sourceIndex, item);
             }
 
-            if ((filterResult ?? true)
+            if (MatchesFilter(item)
                 && SortDescriptions.Count is not 0
                 && SortDescriptions.Any(sd => sd.ObservedProperties.Contains(e.PropertyName!)))
             {
@@ -345,14 +294,14 @@ public class AdvancedObservableCollection<T>
         ApplyOrderedView(CreateOrderedVisibleView());
     }
 
-    public void RaiseFilterChanged()
+    protected override void FilterChangedOverride()
     {
-        if (Filter is not null)
+        if (Filters.Count is not 0)
         {
             for (var index = 0; index < _view.Count; ++index)
             {
                 var item = _view[index];
-                if (Filter(item))
+                if (MatchesFilter(item))
                     continue;
 
                 RemoveFromView(index, item);
@@ -376,7 +325,7 @@ public class AdvancedObservableCollection<T>
             _ = HandleItemAdded(index, item);
         }
 
-        FilterChanged?.Invoke(this, Filter);
+        FilterChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private void HandleSourceChanged()

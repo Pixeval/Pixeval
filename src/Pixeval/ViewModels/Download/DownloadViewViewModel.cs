@@ -104,16 +104,20 @@ public partial class DownloadViewViewModel : ViewModelBase, IDisposable
     {
         var hash = customSearchResult?.ToHashSet();
 
-        View.Filter = vm => CurrentOption switch
+        using (View.DeferFiltersChange())
         {
-            DownloadListOption.AllQueued => true,
-            DownloadListOption.Running => vm.CurrentState is DownloadState.Running,
-            DownloadListOption.Completed => vm.CurrentState is DownloadState.Completed,
-            DownloadListOption.Cancelled => vm.CurrentState is DownloadState.Cancelled,
-            DownloadListOption.Error => vm.CurrentState is DownloadState.Error,
-            DownloadListOption.CustomSearch => hash?.Contains(vm) ?? true,
-            _ => true
-        };
+            View.Filters.Clear();
+            View.Filters.Add(IFilter<DownloadItemViewModel>.Create(vm => CurrentOption switch
+            {
+                DownloadListOption.AllQueued => true,
+                DownloadListOption.Running => vm.CurrentState is DownloadState.Running,
+                DownloadListOption.Completed => vm.CurrentState is DownloadState.Completed,
+                DownloadListOption.Cancelled => vm.CurrentState is DownloadState.Cancelled,
+                DownloadListOption.Error => vm.CurrentState is DownloadState.Error,
+                DownloadListOption.CustomSearch => hash?.Contains(vm) ?? true,
+                _ => true
+            }, false));
+        }
     }
 
     public void Dispose()

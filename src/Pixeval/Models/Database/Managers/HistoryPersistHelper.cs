@@ -68,13 +68,19 @@ public class HistoryPersistHelper : IDisposable
             TranslatedName = translatedName,
             Time = DateTime.UtcNow
         };
+        SearchHistoryEntries.Remove(searchHistoryEntry);
         SearchHistoryEntries.Insert(0, searchHistoryEntry);
     }
 
     public void AddBrowseHistory(IArtworkInfo entry)
     {
-        if (entry.Id is "")
+        if (string.IsNullOrEmpty(entry.Id))
             return;
+        if (BrowseHistoryEntries.FirstOrDefault(t =>
+                t.Id == entry.Id
+                && (t as ISerializable)?.SerializeKey ==
+                (entry as ISerializable)?.SerializeKey) is { } e)
+            BrowseHistoryEntries.Remove(e);
         BrowseHistoryEntries.Insert(0, entry);
     }
 
@@ -92,11 +98,7 @@ public class HistoryPersistHelper : IDisposable
             case NotifyCollectionChangedAction.Add:
                 if (args.NewItems is not null)
                     foreach (var newItem in args.NewItems.OfType<TItem>())
-                    {
-                        tryDelete(manager, newItem);
                         manager.Insert(convert(newItem));
-                    }
-
                 break;
             case NotifyCollectionChangedAction.Remove:
                 if (args.OldItems is not null)
@@ -109,10 +111,7 @@ public class HistoryPersistHelper : IDisposable
                         tryDelete(manager, oldItem);
                 if (args.NewItems is not null)
                     foreach (var newItem in args.NewItems.OfType<TItem>())
-                    {
-                        tryDelete(manager, newItem);
                         manager.Insert(convert(newItem));
-                    }
                 break;
             case NotifyCollectionChangedAction.Reset when args.NewItems is not { Count: > 0 }:
                 manager.Clear();

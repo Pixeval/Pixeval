@@ -2,6 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Collections;
@@ -14,19 +15,29 @@ using Pixeval.Utilities;
 
 namespace Pixeval.ViewModels;
 
-public abstract partial class WorkViewViewModelBase<T, TViewModel>(HashSet<string>? blockedTags)
-    : EntryViewViewModel<T, TViewModel>, IWorkViewViewModel
+public abstract partial class WorkViewViewModelBase<T, TViewModel>(FrozenSet<string>? blockedTags) : EntryViewViewModel<T, TViewModel>, IWorkViewViewModel
     where T : class, IArtworkInfo
     where TViewModel : EntryViewModel<T>, IFactory<T, TViewModel>, IWorkViewModel
 {
-    public HashSet<string> CachedBlockedTags { get; private set; } = blockedTags?.ToHashSet() ?? App.AppViewModel.AppSettings.BlockedTags.ToHashSet();
+    public FrozenSet<string> CachedBlockedTags { get; private set; } = blockedTags ?? App.AppViewModel.AppSettings.BlockedTags.ToFrozenSet();
+
+    public IFilter<IWorkViewModel> BlockedTagsFilter
+    {
+        get
+        {
+            var cachedBlockedTags = CachedBlockedTags;
+            return IFilter<IWorkViewModel>.Create(
+                entry => !entry.Entry.Tags.Any(t => t.Any(tag => cachedBlockedTags.Contains(tag.Name))),
+                false);
+        }
+    }
 
     [ObservableProperty]
     public partial bool IsSelecting { get; set; }
 
     public AvaloniaList<IWorkViewModel> SelectedEntries { get; } = [];
 
-    public void SetSortDescription(params IReadOnlyCollection<ISortDescription<IWorkViewModel>> descriptions)
+    public void SetSortDescriptions(params IEnumerable<ISortDescription<IWorkViewModel>> descriptions)
     {
         using (DataProvider.View.DeferSortDescriptionsChange())
         {
@@ -35,16 +46,27 @@ public abstract partial class WorkViewViewModelBase<T, TViewModel>(HashSet<strin
         }
     }
 
-    public Func<IWorkViewModel, bool>? Filter
+    protected void SetFilters()
+    {
+        using (DataProvider.View.DeferFiltersChange())
+        {
+            DataProvider.View.Filters.Clear();
+            DataProvider.View.Filters.Add(BlockedTagsFilter);
+            if (UserFilter is not null)
+                DataProvider.View.Filters.Add(UserFilter);
+        }
+    }
+
+    public IFilter<IWorkViewModel>? UserFilter
     {
         get;
         set
         {
-            if (Equals(value, field))
+            if (Equals(field, value))
                 return;
+
             field = value;
-            DataProvider.View.RaiseFilterChanged();
-            OnPropertyChanged();
+            SetFilters();
         }
     }
 
@@ -62,7 +84,8 @@ public abstract partial class WorkViewViewModelBase<T, TViewModel>(HashSet<strin
 
     public void ResetEngine(IFetchEngine<IArtworkInfo>? newEngine, bool isBookmarkEnabled = true, int itemsPerPage = 20, int itemLimit = -1)
     {
-        CachedBlockedTags = [.. App.AppViewModel.AppSettings.BlockedTags];
+        CachedBlockedTags = [.. App.AppViewModel.AppSettings.BlockedTags.ToFrozenSet()];
         ResetEngine((IFetchEngine<T>?) newEngine, (info, _) => TViewModel.CreateInstance(info).Apply(t => t.IsBookmarkEnabled = isBookmarkEnabled), itemsPerPage, itemLimit);
+        SetFilters();
     }
 }

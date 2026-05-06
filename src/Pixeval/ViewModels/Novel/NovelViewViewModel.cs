@@ -1,7 +1,7 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System.Collections.Generic;
+using System.Collections.Frozen;
 using Mako.Model;
 using NovelViewDataProvider = Pixeval.ViewModels.SharableViewDataProvider<
     Mako.Model.Novel,
@@ -13,7 +13,7 @@ public sealed class NovelViewViewModel : WorkViewViewModelBase<Novel, NovelItemV
 {
     public NovelViewViewModel(NovelViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef(), viewModel.CachedBlockedTags)
     {
-        Filter = viewModel.Filter;
+        UserFilter = viewModel.UserFilter;
         DataProvider.View.Range = viewModel.DataProvider.View.Range;
     }
 
@@ -21,10 +21,10 @@ public sealed class NovelViewViewModel : WorkViewViewModelBase<Novel, NovelItemV
     {
     }
 
-    private NovelViewViewModel(NovelViewDataProvider dataProvider, HashSet<string>? blockedTags) : base(blockedTags)
+    private NovelViewViewModel(NovelViewDataProvider dataProvider, FrozenSet<string>? blockedTags) : base(blockedTags)
     {
         DataProvider = dataProvider;
-        dataProvider.View.Filter = ((IOperableViewViewModel) this).DefaultFilter;
+        SetFilters();
     }
 
     public override NovelViewDataProvider DataProvider { get; }

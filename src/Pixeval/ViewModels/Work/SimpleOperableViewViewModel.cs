@@ -2,8 +2,10 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Avalonia.Collections;
 using Mako.Model;
 using Misaki;
@@ -17,12 +19,14 @@ public class SimpleOperableViewViewModel : ViewModelBase, IOperableViewViewModel
     public SimpleOperableViewViewModel(IReadOnlyCollection<IArtworkInfo> source)
     {
         View = new(source as ObservableCollection<IArtworkInfo> ?? [.. source], CreateWorkViewModel);
-
-        View.Filter = ((IOperableViewViewModel) this).DefaultFilter;
+        SetFilters();
     }
 
-    /// <inheritdoc />
-    public HashSet<string> CachedBlockedTags { get; } = [.. App.AppViewModel.AppSettings.BlockedTags];
+    public FrozenSet<string> CachedBlockedTags { get; } = [.. App.AppViewModel.AppSettings.BlockedTags];
+
+    public IFilter<IWorkViewModel> BlockedTagsFilter => IFilter<IWorkViewModel>.Create(
+        entry => !entry.Entry.Tags.Any(t => t.Any(tag => CachedBlockedTags.Contains(tag.Name))),
+        false);
 
     /// <inheritdoc />
     public bool IsSelecting { get; set; }
@@ -30,7 +34,7 @@ public class SimpleOperableViewViewModel : ViewModelBase, IOperableViewViewModel
     /// <inheritdoc />
     public AvaloniaList<IWorkViewModel> SelectedEntries { get; } = [];
 
-    public void SetSortDescription(params IReadOnlyCollection<ISortDescription<IWorkViewModel>> descriptions)
+    public void SetSortDescriptions(params IEnumerable<ISortDescription<IWorkViewModel>> descriptions)
     {
         using (View.DeferSortDescriptionsChange())
         {
@@ -39,17 +43,27 @@ public class SimpleOperableViewViewModel : ViewModelBase, IOperableViewViewModel
         }
     }
 
-    /// <inheritdoc />
-    public Func<IWorkViewModel, bool>? Filter
+    private void SetFilters()
+    {
+        using (View.DeferFiltersChange())
+        {
+            View.Filters.Clear();
+            View.Filters.Add(BlockedTagsFilter);
+            if (UserFilter is not null)
+                View.Filters.Add(UserFilter);
+        }
+    }
+
+    public IFilter<IWorkViewModel>? UserFilter
     {
         get;
         set
         {
-            if (Equals(value, field))
+            if (Equals(field, value))
                 return;
+
             field = value;
-            View.RaiseFilterChanged();
-            OnPropertyChanged();
+            SetFilters();
         }
     }
 
@@ -59,7 +73,11 @@ public class SimpleOperableViewViewModel : ViewModelBase, IOperableViewViewModel
     IReadOnlyCollection<IWorkViewModel> IOperableViewViewModel.View => View;
 
     /// <inheritdoc />
-    public Range ViewRange { get; set; }
+    public Range ViewRange
+    {
+        get => View.Range;
+        set => View.Range = value;
+    }
 
     /// <inheritdoc />
     public bool RequireAdaptiveGrid => false;

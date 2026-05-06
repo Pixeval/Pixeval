@@ -38,11 +38,25 @@ public sealed class AdvancedObservableCollectionTest
         public override int Val { get => 101; set { } }
     }
 
-    private sealed class SampleViewModel(SampleClass source)
+    private sealed class SampleViewModel : INotifyPropertyChanged
     {
-        public SampleClass Source { get; } = source;
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public SampleViewModel(SampleClass source)
+        {
+            Source = source;
+            Source.PropertyChanged += SourceOnPropertyChanged;
+        }
+
+        public SampleClass Source { get; }
 
         public int Val => Source.Val;
+
+        private void SourceOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == nameof(SampleClass.Val))
+                PropertyChanged?.Invoke(this, new(nameof(Val)));
+        }
     }
 
     [TestMethod]
@@ -89,7 +103,7 @@ public sealed class AdvancedObservableCollectionTest
 
         // Add a filter and item to filter
         var itemToFilter = new SampleClass(1000);
-        aoc.Filter = x => !Filter(x);
+        aoc.Filters.Add(IFilter<SampleClass>.Create(x => !Filter(x), false));
         col.Add(itemToFilter);
 
         var filteredItemInAoc = aoc.FirstOrDefault(Filter);
@@ -177,7 +191,6 @@ public sealed class AdvancedObservableCollectionTest
     {
         var col = new ObservableCollection<SampleClass>();
         var adaptor = new AdvancedObservableAdaptor<SampleClass, SampleViewModel>(col, item => new(item), true);
-        adaptor.ObserveFilterProperty(nameof(SampleClass.Val));
 
         var sourceItem = new SampleClass(1);
         adaptor.Add(sourceItem);
@@ -187,7 +200,7 @@ public sealed class AdvancedObservableCollectionTest
         Assert.IsInstanceOfType(adaptor[0], typeof(SampleViewModel));
         Assert.AreSame(sourceItem, ((IList)adaptor)[0]);
 
-        adaptor.Filter = viewModel => viewModel.Val > 1;
+        adaptor.Filters.Add(IFilter<SampleViewModel>.Create(new HashSet<string> { nameof(SampleViewModel.Val) }, item => item.Val > 1, false));
         Assert.AreEqual(0, adaptor.Count);
 
         sourceItem.Val = 2;

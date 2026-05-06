@@ -1,11 +1,7 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
-using System;
 using Avalonia.Controls;
-using Mako.Global.Enum;
-using Misaki;
-using Pixeval.Controls;
 
 namespace Pixeval.Views;
 

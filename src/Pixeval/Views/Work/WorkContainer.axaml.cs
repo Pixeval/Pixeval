@@ -13,6 +13,7 @@ using Avalonia.Interactivity;
 using Mako.Engine;
 using Mako.Global.Enum;
 using Misaki;
+using Pixeval.Collections;
 using Pixeval.Controls;
 using Pixeval.Filters;
 using Pixeval.I18N;
@@ -65,10 +66,7 @@ public partial class WorkContainer : UserControl
     {
         if (DataContext is IOperableViewViewModel vm && SortOptionComboBox.GetSelectedValue<LocalSortOption>() is var sortOption)
         {
-            if (MakoHelper.GetSortDescription(sortOption) is { } desc)
-                vm.SetSortDescription(desc);
-            else
-                vm.SetSortDescription();
+            vm.SetSortDescriptions(MakoHelper.GetSortDescription(sortOption));
 
             ScrollToTop();
         }
@@ -196,14 +194,14 @@ public partial class WorkContainer : UserControl
         {
             if (string.IsNullOrWhiteSpace(text))
             {
-                viewModel.Filter = null;
+                viewModel.UserFilter = null;
                 viewModel.ViewRange = Range.All;
             }
             else
             {
                 var sequence = Parser.Parse(text, out var index);
 
-                viewModel.Filter = o => o.Filter(sequence);
+                viewModel.UserFilter = IFilter<IWorkViewModel>.Create(o => o.Filter(sequence), false);
                 viewModel.ViewRange = index?.NarrowRange ?? Range.All;
             }
         }

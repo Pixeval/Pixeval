@@ -17,50 +17,37 @@ namespace Pixeval.Collections;
 
 [DebuggerDisplay("Count = {Count}")]
 public class AdvancedObservableAdaptor<TIn, TOut>
-    : DeferSortDescriptions<TOut>, IList, IReadOnlyList<TOut>, INotifyCollectionChanged, INotifyPropertyChanged, ISupportIncrementalLoading, IComparer<TOut>, IDisposable
+    : IDeferredCollection<TOut>, IList, IReadOnlyList<TOut>, INotifyCollectionChanged, INotifyPropertyChanged, ISupportIncrementalLoading, IDisposable
     where TIn : class
     where TOut : class
 {
     private readonly Func<TIn, TOut> _factory;
 
-    private readonly bool _liveShapingEnabled;
+    private readonly AdvancedObservableCollection<TOut> _inner;
 
-    private readonly HashSet<string> _observedFilterProperties = [];
-
-    private readonly List<TOut> _mapped = [];
-
-    private readonly List<TOut> _view = [];
+    private ObservableCollection<TOut> _mappedSource = [];
 
     private ObservableCollection<TIn>? _source;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AdvancedObservableAdaptor{TIn, TOut}"/> class.
-    /// </summary>
     public AdvancedObservableAdaptor(Func<TIn, TOut> factory) : this([], factory)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AdvancedObservableAdaptor{TIn, TOut}"/> class.
-    /// </summary>
-    /// <param name="source">source IEnumerable</param>
-    /// <param name="factory">factory to build view item from source item</param>
-    /// <param name="isLiveShaping">Denotes whether this adaptor should re-filter/re-sort if a PropertyChanged is raised for an observed property.</param>
     public AdvancedObservableAdaptor(ObservableCollection<TIn> source, Func<TIn, TOut> factory, bool isLiveShaping = false)
     {
         ArgumentNullException.ThrowIfNull(factory);
 
         _factory = factory;
-        _liveShapingEnabled = isLiveShaping;
+        _inner = new([], isLiveShaping);
+        _inner.CollectionChanged += InnerOnCollectionChanged;
+        _inner.PropertyChanged += InnerOnPropertyChanged;
+        _inner.FilterChanged += InnerOnFilterChanged;
         Source = source;
     }
 
-    /// <summary>
-    /// Gets or sets the source.
-    /// </summary>
     public ObservableCollection<TIn> Source
     {
-        get => _source ?? [];
+        get => _source!;
         set
         {
             ArgumentNullException.ThrowIfNull(value);
@@ -70,629 +57,161 @@ public class AdvancedObservableAdaptor<TIn, TOut>
 
             DetachSourceHandler(_source);
             _source = value;
-            AttachSourceHandler(_source);
-
-            HandleSourceChanged();
+            AttachSourceHandler(value);
+            RebuildMappedSource();
             OnPropertyChanged();
         }
     }
 
     public bool IsReversed
     {
-        get;
-        set
-        {
-            if (field == value)
-                return;
-
-            field = value;
-            SortChanged();
-            OnPropertyChanged();
-        }
+        get => _inner.IsReversed;
+        set => _inner.IsReversed = value;
     }
 
-    private List<TOut> RangedView
+    public ObservableCollection<ISortDescription<TOut>> SortDescriptions => _inner.SortDescriptions;
+
+    public ObservableCollection<IFilter<TOut>> Filters => _inner.Filters;
+
+    public FilterCombinationMode FilterCombinationMode
     {
-        get
-        {
-            if (Equals(Range, Range.All))
-                return _view;
-
-            var viewCount = _view.Count;
-            var start = Range.Start.GetOffset(viewCount);
-            if (start > viewCount)
-                return [];
-
-            var end = Range.End.GetOffset(viewCount);
-            if (end < 0)
-                return [];
-
-            if (start > end)
-                return [];
-
-            start = Math.Max(0, start);
-            end = Math.Min(viewCount, end);
-            return _view[start..end];
-        }
+        get => _inner.FilterCombinationMode;
+        set => _inner.FilterCombinationMode = value;
     }
 
-    /// <inheritdoc />
-    public IEnumerator<TOut> GetEnumerator() => RangedView.GetEnumerator();
+    public SimpleDefer<TOut> DeferSortDescriptionsChange() => _inner.DeferSortDescriptionsChange();
 
-    /// <inheritdoc />
+    public SimpleDefer<TOut> DeferFiltersChange() => _inner.DeferFiltersChange();
+
+    public IEnumerator<TOut> GetEnumerator() => _inner.GetEnumerator();
+
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public void Add(TIn item) => Source.Add(item);
 
-    /// <inheritdoc cref="ICollection{T}.Clear"/>
     public void Clear() => Source.Clear();
 
-    /// <summary>
-    /// Determines whether the view contains the provided item.
-    /// </summary>
-    public bool Contains(TOut item) => RangedView.Contains(item);
+    public bool Contains(TOut item) => _inner.Contains(item);
 
-    /// <summary>
-    /// Copies the view into the target array.
-    /// </summary>
-    public void CopyTo(TOut[] array, int arrayIndex) => RangedView.CopyTo(array, arrayIndex);
+    public void CopyTo(TOut[] array, int arrayIndex) => _inner.CopyTo(array, arrayIndex);
 
     public bool Remove(TIn item) => Source.Remove(item);
 
-    /// <summary>
-    /// Gets the number of items in the view.
-    /// </summary>
-    public int Count => RangedView.Count;
+    public int Count => _inner.Count;
 
     public bool IsReadOnly => false;
 
-    /// <summary>
-    /// Returns the index of the item in the view.
-    /// </summary>
-    public int IndexOf(TOut item) => RangedView.IndexOf(item);
+    public int IndexOf(TOut item) => _inner.IndexOf(item);
 
     public void Insert(int index, TIn item) => Source.Insert(index, item);
 
-    /// <inheritdoc cref="IList{T}.RemoveAt"/>
     public void RemoveAt(int index) => Source.RemoveAt(index);
 
-    /// <summary>
-    /// Gets the item in the current view.
-    /// </summary>
-    public TOut this[int index] => RangedView[index];
+    public TOut this[int index] => _inner[index];
 
-    /// <inheritdoc cref="ISupportIncrementalLoading.LoadMoreItemsAsync"/>
-    public Task<int> LoadMoreItemsAsync(int count, CancellationToken token = default) => (Source as ISupportIncrementalLoading)?.LoadMoreItemsAsync(count, token) ?? Task.FromResult(0);
-
-    /// <inheritdoc cref="ISupportIncrementalLoading.HasMoreItems"/>
-    public bool HasMoreItems => (Source as ISupportIncrementalLoading)?.HasMoreItems ?? false;
-
-    /// <summary>
-    /// Gets or sets the predicate used to filter the visible items.
-    /// </summary>
-    public Func<TOut, bool>? Filter
+    public Task<int> LoadMoreItemsAsync(int count, CancellationToken token = default)
     {
-        get;
-        set
-        {
-            if (field == value)
-                return;
-
-            field = value;
-            RaiseFilterChanged();
-        }
+        return (Source as ISupportIncrementalLoading)?.LoadMoreItemsAsync(count, token) ?? Task.FromResult(0);
     }
+
+    public bool HasMoreItems => (Source as ISupportIncrementalLoading)?.HasMoreItems ?? false;
 
     public Range Range
     {
-        get;
-        set
-        {
-            if (field.Equals(value))
-                return;
-
-            field = value;
-            OnCollectionChanged(new(NotifyCollectionChangedAction.Reset));
-            OnPropertyChanged(EventArgsCache.CountPropertyChanged);
-        }
-    } = Range.All;
-
-    /// <inheritdoc cref="IComparer{T}.Compare"/>
-    int IComparer<TOut>.Compare(TOut? x, TOut? y) => CompareCore(x, y);
-
-    private int CompareCore(TOut? x, TOut? y)
-    {
-        foreach (var sd in SortDescriptions)
-            if (sd.Comparison(x, y) is var cmp and not 0)
-                return sd.IsDescending ? -cmp : +cmp;
-
-        return 0;
+        get => _inner.Range;
+        set => _inner.Range = value;
     }
 
-    private int CompareView(TOut? x, TOut? y)
-    {
-        var comparison = CompareCore(x, y);
-        return IsReversed ? -comparison : comparison;
-    }
-
-    private IComparer<TOut> ViewComparer => Comparer<TOut>.Create(CompareView);
-
-    /// <summary>
-    /// Occurs when a property value changes.
-    /// </summary>
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    /// <summary>
-    /// Occurs when the collection changes.
-    /// </summary>
     public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
-    /// <summary>
-    /// Occurs when the <see cref="Filter"/> changes.
-    /// </summary>
-    public event EventHandler<AdvancedObservableAdaptor<TIn, TOut>, Func<TOut, bool>?>? FilterChanged;
+    public event EventHandler<AdvancedObservableAdaptor<TIn, TOut>, EventArgs>? FilterChanged;
 
-    /// <summary>
-    /// Property changed event invoker.
-    /// </summary>
-    /// <param name="propertyName">name of the property that changed</param>
     protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null!) => OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
 
-    /// <summary>
-    /// Property changed event invoker.
-    /// </summary>
     protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
 
-    /// <summary>
-    /// Raise CollectionChanged event to any listeners.
-    /// </summary>
     protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e) => CollectionChanged?.Invoke(this, e);
 
-    /// <summary>
-    /// Add a property to re-filter an item on when it is changed.
-    /// </summary>
-    public void ObserveFilterProperty(string propertyName)
+    private void InnerOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        _ = _observedFilterProperties.Add(propertyName);
+        OnCollectionChanged(e);
     }
 
-    /// <summary>
-    /// Remove a property to re-filter an item on when it is changed.
-    /// </summary>
-    public void UnobserveFilterProperty(string propertyName)
+    private void InnerOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        _ = _observedFilterProperties.Remove(propertyName);
-    }
-
-    /// <summary>
-    /// Clears all properties items are re-filtered on.
-    /// </summary>
-    public void ClearObservedFilterProperties()
-    {
-        _observedFilterProperties.Clear();
-    }
-
-    private bool MatchesFilter(TOut item) => Filter?.Invoke(item) ?? true;
-
-    private void ItemOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (!_liveShapingEnabled)
+        if (e.PropertyName == nameof(AdvancedObservableCollection<TOut>.Source))
             return;
 
-        if (string.IsNullOrEmpty(e.PropertyName))
-        {
-            HandleSourceChanged();
-            return;
-        }
+        OnPropertyChanged(e);
+    }
 
-        for (var sourceIndex = 0; sourceIndex < _mapped.Count; ++sourceIndex)
-        {
-            var sourceItem = Source[sourceIndex];
-            var viewItem = _mapped[sourceIndex];
-            if (!ReferenceEquals(viewItem, sender) && !ReferenceEquals(sourceItem, sender))
-                continue;
+    private void InnerOnFilterChanged(AdvancedObservableCollection<TOut> sender, EventArgs e)
+    {
+        FilterChanged?.Invoke(this, e);
+    }
 
-            var filterResult = Filter?.Invoke(viewItem);
-
-            if (filterResult.HasValue && _observedFilterProperties.Contains(e.PropertyName))
-            {
-                var viewIndex = _view.IndexOf(viewItem);
-                if (viewIndex is not -1 && !filterResult.Value)
-                    RemoveFromView(viewIndex, viewItem);
-                else if (viewIndex is -1 && filterResult.Value)
-                    _ = InsertIntoView(sourceIndex, viewItem);
-            }
-
-            if ((filterResult ?? true)
-                && SortDescriptions.Count is not 0
-                && SortDescriptions.Any(sd => sd.ObservedProperties.Contains(e.PropertyName)))
-            {
-                var oldIndex = _view.IndexOf(viewItem);
-                if (oldIndex < 0)
-                    continue;
-
-                _view.RemoveAt(oldIndex);
-                var targetIndex = GetSortedInsertIndex(viewItem);
-
-                _view.Insert(targetIndex, viewItem);
-
-                if (targetIndex != oldIndex)
-                    OnCollectionChanged(new(NotifyCollectionChangedAction.Move, viewItem, targetIndex, oldIndex));
-            }
-        }
+    private void RebuildMappedSource()
+    {
+        _mappedSource = new ObservableCollection<TOut>(Source.Select(_factory));
+        _inner.Source = _mappedSource;
     }
 
     private void AttachSourceHandler(ObservableCollection<TIn>? items)
     {
-        if (items is null)
-            return;
-
-        items.CollectionChanged += SourceNcc_CollectionChanged;
+        if (items is not null)
+            items.CollectionChanged += SourceOnCollectionChanged;
     }
 
     private void DetachSourceHandler(ObservableCollection<TIn>? items)
     {
         if (items is not null)
-            items.CollectionChanged -= SourceNcc_CollectionChanged;
-
-        DetachPropertyChangedHandlers();
+            items.CollectionChanged -= SourceOnCollectionChanged;
     }
 
-    private void AttachPropertyChangedHandler(TIn sourceItem, TOut viewItem)
-    {
-        if (!_liveShapingEnabled)
-            return;
-
-        if (sourceItem is INotifyPropertyChanged sourceNotify)
-            sourceNotify.PropertyChanged += ItemOnPropertyChanged;
-
-        if (!ReferenceEquals(sourceItem, viewItem) && viewItem is INotifyPropertyChanged viewNotify)
-            viewNotify.PropertyChanged += ItemOnPropertyChanged;
-    }
-
-    private void DetachPropertyChangedHandlers()
-    {
-        if (!_liveShapingEnabled)
-            return;
-
-        for (var i = 0; i < _mapped.Count && i < Source.Count; ++i)
-            DetachPropertyChangedHandler(Source[i], _mapped[i]);
-    }
-
-    private void DetachPropertyChangedHandler(TIn sourceItem, TOut viewItem)
-    {
-        if (!_liveShapingEnabled)
-            return;
-
-        if (sourceItem is INotifyPropertyChanged sourceNotify)
-            sourceNotify.PropertyChanged -= ItemOnPropertyChanged;
-
-        if (!ReferenceEquals(sourceItem, viewItem) && viewItem is INotifyPropertyChanged viewNotify)
-            viewNotify.PropertyChanged -= ItemOnPropertyChanged;
-    }
-
-    protected override void SortChangedOverride()
-    {
-        ApplyOrderedView(CreateOrderedVisibleView());
-    }
-
-    public void RaiseFilterChanged()
-    {
-        if (Filter is not null)
-        {
-            for (var index = 0; index < _view.Count; ++index)
-            {
-                var item = _view[index];
-                if (Filter(item))
-                    continue;
-
-                RemoveFromView(index, item);
-                index--;
-            }
-        }
-
-        var remaining = new List<TOut>(_view);
-        for (var index = 0; index < _mapped.Count; ++index)
-        {
-            var item = _mapped[index];
-            if (!MatchesFilter(item))
-                continue;
-
-            if (remaining.IndexOf(item) is var existingIndex and >= 0)
-            {
-                remaining.RemoveAt(existingIndex);
-                continue;
-            }
-
-            _ = InsertIntoView(index, item);
-        }
-
-        FilterChanged?.Invoke(this, Filter);
-    }
-
-    private void HandleSourceChanged()
-    {
-        DetachPropertyChangedHandlers();
-        _mapped.Clear();
-
-        foreach (var item in Source)
-        {
-            var viewItem = _factory(item);
-            _mapped.Add(viewItem);
-            AttachPropertyChangedHandler(item, viewItem);
-        }
-
-        ResetView(CreateOrderedVisibleView());
-    }
-
-    private List<TOut> CreateOrderedVisibleView()
-    {
-        var orderedView = new List<TOut>();
-        foreach (var item in _mapped.Where(MatchesFilter))
-        {
-            if (SortDescriptions.Count is not 0)
-            {
-                var targetIndex = orderedView.BinarySearch(item, this);
-                if (targetIndex < 0)
-                    targetIndex = ~targetIndex;
-
-                orderedView.Insert(targetIndex, item);
-            }
-            else
-                orderedView.Add(item);
-        }
-
-        if (IsReversed)
-            orderedView.Reverse();
-
-        return orderedView;
-    }
-
-    private void ResetView(List<TOut> orderedView)
-    {
-        _view.Clear();
-        foreach (var item in orderedView)
-            _view.Add(item);
-
-        OnCollectionChanged(EventArgsCache.ResetCollectionChanged);
-        OnPropertyChanged(EventArgsCache.CountPropertyChanged);
-    }
-
-    private void ApplyOrderedView(List<TOut> orderedView)
-    {
-        if (_view.Count != orderedView.Count)
-        {
-            ResetView(orderedView);
-            return;
-        }
-
-        for (var targetIndex = 0; targetIndex < orderedView.Count; ++targetIndex)
-        {
-            var item = orderedView[targetIndex];
-            var currentIndex = _view.IndexOf(item);
-            if (currentIndex < 0)
-            {
-                ResetView(orderedView);
-                return;
-            }
-
-            if (currentIndex == targetIndex)
-                continue;
-
-            _view.RemoveAt(currentIndex);
-            _view.Insert(targetIndex, item);
-            OnCollectionChanged(new(NotifyCollectionChangedAction.Move, item, targetIndex, currentIndex));
-        }
-    }
-
-    private void SourceNcc_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    private void SourceOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         switch (e.Action)
         {
-            case NotifyCollectionChangedAction.Add:
+            case NotifyCollectionChangedAction.Add when e is { NewItems: { } newItems, NewStartingIndex: >= 0 }:
             {
-                if (e is { NewStartingIndex: >= 0, NewItems: [TIn item] })
-                    _ = HandleItemAdded(e.NewStartingIndex, item);
-                else
-                    HandleSourceChanged();
+                var insertIndex = e.NewStartingIndex;
+                foreach (TIn item in newItems)
+                    _mappedSource.Insert(insertIndex++, _factory(item));
 
                 break;
             }
-            case NotifyCollectionChangedAction.Remove:
+            case NotifyCollectionChangedAction.Remove when e is { OldItems.Count: > 0, OldStartingIndex: >= 0 }:
             {
-                if (e is { OldStartingIndex: >= 0, OldItems: [TIn item] })
-                    HandleItemRemoved(e.OldStartingIndex, item);
-                else
-                    HandleSourceChanged();
+                for (var index = 0; index < e.OldItems.Count; ++index)
+                    _mappedSource.RemoveAt(e.OldStartingIndex);
 
                 break;
             }
-            case NotifyCollectionChangedAction.Move:
+            case NotifyCollectionChangedAction.Move when e is { OldStartingIndex: >= 0, NewStartingIndex: >= 0 }:
             {
-                if (e is { OldStartingIndex: >= 0, NewStartingIndex: >= 0, NewItems: [TIn item] })
-                    HandleItemMoved(e.OldStartingIndex, e.NewStartingIndex, item);
-                else
-                    HandleSourceChanged();
+                if (e.NewItems is not { Count: 1 })
+                {
+                    RebuildMappedSource();
+                    break;
+                }
 
+                _mappedSource.Move(e.OldStartingIndex, e.NewStartingIndex);
                 break;
             }
-            case NotifyCollectionChangedAction.Replace:
+            case NotifyCollectionChangedAction.Replace when e is { NewItems: { } replacementItems, NewStartingIndex: >= 0 }:
             {
-                if (e is { OldStartingIndex: >= 0, NewStartingIndex: >= 0, OldItems: [TIn oldItem], NewItems: [TIn newItem] })
-                    HandleItemReplaced(e.OldStartingIndex, oldItem, newItem);
-                else
-                    HandleSourceChanged();
+                for (var index = 0; index < replacementItems.Count; ++index)
+                    _mappedSource[e.NewStartingIndex + index] = _factory((TIn)replacementItems[index]!);
 
                 break;
             }
             case NotifyCollectionChangedAction.Reset:
-            {
-                HandleSourceChanged();
-                break;
-            }
             default:
+                RebuildMappedSource();
                 break;
         }
-    }
-
-    private bool HandleItemAdded(int sourceIndex, TIn newItem)
-    {
-        var viewItem = _factory(newItem);
-        _mapped.Insert(sourceIndex, viewItem);
-        AttachPropertyChangedHandler(newItem, viewItem);
-        return InsertIntoView(sourceIndex, viewItem);
-    }
-
-    private bool InsertIntoView(int sourceIndex, TOut newItem)
-    {
-        if (!MatchesFilter(newItem))
-            return false;
-
-        var newViewIndex = SortDescriptions.Count is not 0
-            ? GetSortedInsertIndex(newItem)
-            : GetSequentialInsertIndex(sourceIndex);
-
-        _view.Insert(newViewIndex, newItem);
-
-        var e = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, newItem, newViewIndex);
-        OnPropertyChanged(EventArgsCache.CountPropertyChanged);
-        OnCollectionChanged(e);
-        return true;
-    }
-
-    private int GetSortedInsertIndex(TOut item)
-    {
-        var viewIndex = _view.BinarySearch(item, ViewComparer);
-        if (viewIndex < 0)
-            viewIndex = ~viewIndex;
-        return viewIndex;
-    }
-
-    private int GetSequentialInsertIndex(int sourceIndex)
-    {
-        if (!IsReversed)
-        {
-            for (int i = 0, j = 0; i < _mapped.Count; ++i)
-            {
-                if (i == sourceIndex || j >= _view.Count)
-                    return j;
-
-                if (MatchesFilter(_mapped[i]))
-                    ++j;
-            }
-
-            return _view.Count;
-        }
-
-        for (int i = _mapped.Count - 1, j = 0; i >= 0; --i)
-        {
-            if (i == sourceIndex || j >= _view.Count)
-                return j;
-
-            if (MatchesFilter(_mapped[i]))
-                ++j;
-        }
-
-        return _view.Count;
-    }
-
-    private void HandleItemRemoved(int oldStartingIndex, TIn oldItem)
-    {
-        if (oldStartingIndex < 0 || oldStartingIndex >= _mapped.Count)
-        {
-            HandleSourceChanged();
-            return;
-        }
-
-        var viewItem = _mapped[oldStartingIndex];
-        DetachPropertyChangedHandler(oldItem, viewItem);
-        _mapped.RemoveAt(oldStartingIndex);
-
-        var viewIndex = _view.IndexOf(viewItem);
-        if (viewIndex < 0)
-            return;
-
-        RemoveFromView(viewIndex, viewItem);
-    }
-
-    private void HandleItemMoved(int oldStartingIndex, int newStartingIndex, TIn item)
-    {
-        if (oldStartingIndex < 0 || oldStartingIndex >= _mapped.Count || newStartingIndex < 0 || newStartingIndex > _mapped.Count)
-        {
-            HandleSourceChanged();
-            return;
-        }
-
-        var viewItem = _mapped[oldStartingIndex];
-        _mapped.RemoveAt(oldStartingIndex);
-        _mapped.Insert(newStartingIndex, viewItem);
-
-        if (SortDescriptions.Count is not 0 || !MatchesFilter(viewItem))
-            return;
-
-        var oldViewIndex = _view.IndexOf(viewItem);
-        if (oldViewIndex < 0)
-            return;
-
-        _view.RemoveAt(oldViewIndex);
-        var newViewIndex = GetSequentialInsertIndex(newStartingIndex);
-        _view.Insert(newViewIndex, viewItem);
-
-        if (newViewIndex != oldViewIndex)
-            OnCollectionChanged(new(NotifyCollectionChangedAction.Move, viewItem, newViewIndex, oldViewIndex));
-    }
-
-    private void HandleItemReplaced(int sourceIndex, TIn oldItem, TIn newItem)
-    {
-        if (sourceIndex < 0 || sourceIndex >= _mapped.Count)
-        {
-            HandleSourceChanged();
-            return;
-        }
-
-        var oldViewItem = _mapped[sourceIndex];
-        DetachPropertyChangedHandler(oldItem, oldViewItem);
-
-        var newViewItem = _factory(newItem);
-        _mapped[sourceIndex] = newViewItem;
-        AttachPropertyChangedHandler(newItem, newViewItem);
-
-        var oldViewIndex = _view.IndexOf(oldViewItem);
-        if (oldViewIndex < 0)
-        {
-            if (MatchesFilter(newViewItem))
-                _ = InsertIntoView(sourceIndex, newViewItem);
-
-            return;
-        }
-
-        if (!MatchesFilter(newViewItem))
-        {
-            RemoveFromView(oldViewIndex, oldViewItem);
-            return;
-        }
-
-        _view.RemoveAt(oldViewIndex);
-        var newViewIndex = SortDescriptions.Count is not 0
-            ? GetSortedInsertIndex(newViewItem)
-            : GetSequentialInsertIndex(sourceIndex);
-        _view.Insert(newViewIndex, newViewItem);
-
-        if (newViewIndex == oldViewIndex)
-            OnCollectionChanged(new(NotifyCollectionChangedAction.Replace, newViewItem, oldViewItem, newViewIndex));
-        else
-        {
-            OnCollectionChanged(new(NotifyCollectionChangedAction.Remove, oldViewItem, oldViewIndex));
-            OnCollectionChanged(new(NotifyCollectionChangedAction.Add, newViewItem, newViewIndex));
-        }
-    }
-
-    private void RemoveFromView(int itemIndex, TOut item)
-    {
-        _view.RemoveAt(itemIndex);
-        var e = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, itemIndex);
-        OnPropertyChanged(EventArgsCache.CountPropertyChanged);
-        OnCollectionChanged(e);
     }
 
     int IList.Add(object? value)
@@ -740,16 +259,13 @@ public class AdvancedObservableAdaptor<TIn, TOut>
 
     bool IList.IsFixedSize => false;
 
-    /// <inheritdoc />
     public void Dispose()
     {
         GC.SuppressFinalize(this);
+        _inner.FilterChanged -= InnerOnFilterChanged;
+        _inner.PropertyChanged -= InnerOnPropertyChanged;
+        _inner.CollectionChanged -= InnerOnCollectionChanged;
         DetachSourceHandler(_source);
+        _inner.Dispose();
     }
-}
-
-file static class EventArgsCache
-{
-    internal static readonly PropertyChangedEventArgs CountPropertyChanged = new(nameof(ICollection<>.Count));
-    internal static readonly NotifyCollectionChangedEventArgs ResetCollectionChanged = new(NotifyCollectionChangedAction.Reset);
 }

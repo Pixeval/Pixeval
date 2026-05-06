@@ -53,6 +53,8 @@ public interface IWriteOnlyPersistentManager<TEntry> where TEntry : HistoryEntry
 
     void Update(TEntry entry);
 
+    bool TryDelete(TEntry item);
+
     TEntry? TryDelete(Expression<Func<TEntry, bool>> predicate);
 
     int Delete(Expression<Func<TEntry, bool>> predicate);

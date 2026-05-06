@@ -44,16 +44,18 @@ public static class MakoHelper
 
     public static Uri GenerateSpotlightAppUri(long id) => new($"{AppInfo.AppProtocol}://spotlight/{id}");
 
-    public static ISortDescription<IWorkViewModel>? GetSortDescription(LocalSortOption sortOption)
+    public static IEnumerable<ISortDescription<IWorkViewModel>> GetSortDescription(LocalSortOption sortOption)
     {
-        return sortOption switch
+        if (sortOption is LocalSortOption.DoNotSort)
+            yield break;
+        yield return sortOption switch
         {
-            LocalSortOption.PopularityDescending => ISortDescription<IWorkViewModel>.Create(t => t.Entry.TotalFavorite, t => t.Entry.Id, true),
-            LocalSortOption.PublishDateAscending => ISortDescription<IWorkViewModel>.Create(t => t.Entry.CreateDate, t => t.Entry.Id, false),
-            LocalSortOption.PublishDateDescending => ISortDescription<IWorkViewModel>.Create(t => t.Entry.CreateDate, t => t.Entry.Id, true),
-            LocalSortOption.DoNotSort => null,
-            _ => throw new ArgumentOutOfRangeException(nameof(sortOption))
+            LocalSortOption.PopularityDescending => ISortDescription<IWorkViewModel>.Create(t => t.Entry.TotalFavorite, true),
+            LocalSortOption.PublishDateAscending => ISortDescription<IWorkViewModel>.Create(t => t.Entry.CreateDate),
+            LocalSortOption.PublishDateDescending => ISortDescription<IWorkViewModel>.Create(t => t.Entry.CreateDate, true),
+            LocalSortOption.DoNotSort or _ => throw new ArgumentOutOfRangeException(nameof(sortOption))
         };
+        yield return ISortDescription<IWorkViewModel>.Create(t => t.Entry.Id);
     }
 
     public static async Task<bool> SetFollowAsync(User id, bool isFollowed, bool privately = false)

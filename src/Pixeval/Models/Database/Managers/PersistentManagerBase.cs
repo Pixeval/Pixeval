@@ -65,6 +65,9 @@ public abstract class PersistentManagerBase<[DynamicallyAccessedMembers(Dynamica
         Queryable.Where(predicate).Select(ToModel).ToArray();
 
     /// <inheritdoc />
+    public bool TryDelete(TEntry item) => _db.Delete<TEntry>(item.HistoryEntryId) is not 0;
+
+    /// <inheritdoc />
     public virtual TEntry? TryDelete(Expression<Func<TEntry, bool>> predicate)
     {
         if (Queryable.Where(predicate).FirstOrDefault() is { } e)
