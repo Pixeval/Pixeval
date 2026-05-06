@@ -150,17 +150,31 @@
                 IsVisible="{Binding #InfoPaneRoot.IsDocked}"
                 Pages="{Binding PanePages}" />
             
-            <Button 
-                Click="ChevronButtonClicked"
-                Content="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding #InfoPaneRoot.IsDocked},
-                                                                                 ChevronDown,
-                                                                                 ChevronUp,
-                                                                                 x:TypeArguments=common:Symbol}}"
+            <StackPanel
                 Margin="14"
-                Theme="{StaticResource TransparentButtonStyle}"
-                VerticalAlignment="Top" HorizontalAlignment="Right"
-                ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.InfoAndComments}}" />
-            <!-- TODO: Chevron button ToolTip -->
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Orientation="Horizontal"
+                Spacing="4">
+                <ToggleButton
+                    Width="32"
+                    Height="32"
+                    IsChecked="{Binding #InfoPaneRoot.IsLocked, Mode=TwoWay}"
+                    Content="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding #InfoPaneRoot.IsLocked},
+                                                                                            PinOff,
+                                                                                            Pin,
+                                                                                            x:TypeArguments=common:Symbol}}"
+                    Theme="{StaticResource TransparentButtonStyle}"
+                    ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.Pin}}" />
+                <Button
+                    Click="ChevronButtonClicked"
+                    Content="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding #InfoPaneRoot.IsDocked},
+                                                                                     ChevronDown,
+                                                                                     ChevronUp,
+                                                                                     x:TypeArguments=common:Symbol}}"
+                    Theme="{StaticResource TransparentButtonStyle}"
+                    ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.InfoAndComments}}" />
+            </StackPanel>
             
         </Grid>
     </DockPanel>

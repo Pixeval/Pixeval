@@ -13,7 +13,7 @@ using Pixeval.Views.Work;
 
 namespace Pixeval.Views.Viewers;
 
-[PseudoClasses(":docked")]
+[PseudoClasses(":docked", ":locked")]
 public partial class IllustrationViewerInfoPane : UserControl
 {
     private IllustrationViewerPageViewModel ViewModel => (IllustrationViewerPageViewModel) DataContext!;
@@ -21,12 +21,20 @@ public partial class IllustrationViewerInfoPane : UserControl
     public static readonly StyledProperty<bool> IsDockedProperty = AvaloniaProperty.Register<IllustrationViewerInfoPane, bool>(
         nameof(IsDocked));
 
+    public static readonly StyledProperty<bool> IsLockedProperty = AvaloniaProperty.Register<IllustrationViewerInfoPane, bool>(
+        nameof(IsLocked));
+
     public bool IsDocked
     {
         get => GetValue(IsDockedProperty);
         set => SetValue(IsDockedProperty, value);
     }
-    
+
+    public bool IsLocked
+    {
+        get => GetValue(IsLockedProperty);
+        set => SetValue(IsLockedProperty, value);
+    }
     
     public IllustrationViewerInfoPane()
     {
@@ -38,6 +46,8 @@ public partial class IllustrationViewerInfoPane : UserControl
         base.OnPropertyChanged(change);
         if(change.Property == IsDockedProperty)
             PseudoClasses.Set(":docked", IsDocked);
+        if(change.Property == IsLockedProperty)
+            PseudoClasses.Set(":locked", IsLocked);
     }
 
     private async void AddToBookmarkButton_OnClick(object? sender, RoutedEventArgs e)

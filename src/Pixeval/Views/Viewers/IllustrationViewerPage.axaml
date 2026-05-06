@@ -166,7 +166,8 @@
                         </Transitions>
                     </Border.Transitions>
                     <local:IllustrationViewerInfoPane
-                        IsDocked="{Binding #EntryViewerFloatingPaneView.IsDocked, Mode=TwoWay}" />
+                        IsDocked="{Binding #EntryViewerFloatingPaneView.IsDocked, Mode=TwoWay}"
+                        IsLocked="{Binding #EntryViewerFloatingPaneView.IsLocked, Mode=TwoWay}" />
                 </Border>
             </controls:FloatingPaneView.Pane>
             <DockPanel>

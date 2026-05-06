@@ -250,6 +250,7 @@ namespace Pixeval
         public const string NextPageOrIllustration = "EntryViewerPage.NextPageOrIllustration";
         public const string NextPageOrNovel = "EntryViewerPage.NextPageOrNovel";
         public const string NovelCountItemTitle = "EntryViewerPage.NovelCountItem.Title";
+        public const string Pin = "EntryViewerPage.Pin";
         public const string NovelSettings = "EntryViewerPage.NovelSettings";
         public const string NovelSettingsHeaderTextBlockText = "EntryViewerPage.NovelSettingsHeaderTextBlock.Text";
         public const string PrevIllustration = "EntryViewerPage.PrevIllustration";
