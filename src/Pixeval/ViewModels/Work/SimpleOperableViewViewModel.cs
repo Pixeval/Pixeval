@@ -8,12 +8,19 @@ using Avalonia.Collections;
 using Mako.Model;
 using Misaki;
 using Pixeval.Collections;
+using Pixeval.Utilities;
 
 namespace Pixeval.ViewModels;
 
-public class SimpleOperableViewViewModel(IReadOnlyCollection<IArtworkInfo> source)
-    : ViewModelBase, IOperableViewViewModel
+public class SimpleOperableViewViewModel : ViewModelBase, IOperableViewViewModel
 {
+    public SimpleOperableViewViewModel(IReadOnlyCollection<IArtworkInfo> source)
+    {
+        View = new(source as ObservableCollection<IArtworkInfo> ?? [.. source], CreateWorkViewModel);
+
+        View.Filter = ((IOperableViewViewModel) this).DefaultFilter;
+    }
+
     /// <inheritdoc />
     public HashSet<string> CachedBlockedTags { get; } = [.. App.AppViewModel.AppSettings.BlockedTags];
 
@@ -23,26 +30,30 @@ public class SimpleOperableViewViewModel(IReadOnlyCollection<IArtworkInfo> sourc
     /// <inheritdoc />
     public AvaloniaList<IWorkViewModel> SelectedEntries { get; } = [];
 
-    /// <inheritdoc />
-    public void SetSortDescription(ISortDescription<IWorkViewModel> description)
+    public void SetSortDescription(params IReadOnlyCollection<ISortDescription<IWorkViewModel>> descriptions)
     {
-        var sortDescriptions = View.SortDescriptions;
-        if (sortDescriptions.Count is 0)
-            sortDescriptions.Add(description);
-        else
-            sortDescriptions[0] = description;
+        using (View.DeferSortDescriptionsChange())
+        {
+            View.SortDescriptions.Clear();
+            View.SortDescriptions.AddRange(descriptions);
+        }
     }
 
     /// <inheritdoc />
-    public void ClearSortDescription()
+    public Func<IWorkViewModel, bool>? Filter
     {
-        View.SortDescriptions.Clear();
+        get;
+        set
+        {
+            if (Equals(value, field))
+                return;
+            field = value;
+            View.RaiseFilterChanged();
+            OnPropertyChanged();
+        }
     }
 
-    /// <inheritdoc />
-    public Func<IWorkViewModel, bool>? Filter { get; set; }
-
-    private AdvancedObservableAdaptor<IArtworkInfo, IWorkViewModel> View { get; } = new(source as ObservableCollection<IArtworkInfo> ?? [.. source], CreateWorkViewModel);
+    private AdvancedObservableAdaptor<IArtworkInfo, IWorkViewModel> View { get; }
 
     /// <inheritdoc />
     IReadOnlyCollection<IWorkViewModel> IOperableViewViewModel.View => View;

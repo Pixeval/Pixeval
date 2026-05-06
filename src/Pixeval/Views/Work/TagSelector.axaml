@@ -2,7 +2,6 @@
     x:Class="Pixeval.Views.Work.TagSelector"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:Pixeval"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:utilities="using:Pixeval.Utilities"
     xmlns:work="using:Pixeval.Views.Work"
@@ -12,17 +11,19 @@
         <Style Selector="ListBox.bookmark-tag-list ListBoxItem:nth-last-child(1)">
             <Setter Property="Template">
                 <ControlTemplate>
-                    <ContentPresenter
-                        Content="{TemplateBinding Content}"
-                        ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
                 </ControlTemplate>
             </Setter>
         </Style>
     </UserControl.Styles>
 
-    <Grid RowDefinitions="*,Auto" ColumnDefinitions="*,Auto" RowSpacing="10">
+    <Grid
+        ColumnDefinitions="*,Auto"
+        RowDefinitions="*,Auto"
+        RowSpacing="10">
         <ListBox
-            Grid.ColumnSpan="2" Grid.Row="1"
+            Grid.Row="1"
+            Grid.ColumnSpan="2"
             Classes="bookmark-tag-list"
             IsVisible="{Binding #Root.IsLoading, Converter={x:Static BoolConverters.Not}}"
             ItemsSource="{Binding #Root.CurrentTagsSource}"
@@ -48,18 +49,22 @@
         </ListBox>
         <Button
             x:Name="ConfirmButton"
-            Grid.Column="1" Grid.Row="0"
+            Grid.Row="0"
+            Grid.Column="1"
             HorizontalAlignment="Right"
             Click="OnConfirmClick"
             Content="{markup:SymbolIcon Checkmark}"
             IsEnabled="{Binding #Root.IsLoading, Converter={x:Static BoolConverters.Not}}" />
-        <CheckBox 
-            Grid.Column="0" Grid.Row="0"
+        <CheckBox
+            Grid.Row="0"
+            Grid.Column="0"
             HorizontalAlignment="Left"
-            IsChecked="{Binding #Root.IsPrivate, Mode=TwoWay}"
-            Content="Private"/>
+            Content="Private"
+            IsChecked="{Binding #Root.IsPrivate, Mode=TwoWay}" />
         <ProgressBar
-            Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
             Width="160"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"

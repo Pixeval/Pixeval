@@ -24,7 +24,7 @@ public sealed class IllustrationViewViewModel : WorkViewViewModelBase<IArtworkIn
     private IllustrationViewViewModel(IllustrationViewDataProvider dataProvider, HashSet<string>? blockedTags) : base(blockedTags)
     {
         DataProvider = dataProvider;
-        dataProvider.View.Filter = ((IWorkViewViewModel) this).DefaultFilter;
+        dataProvider.View.Filter = ((IOperableViewViewModel) this).DefaultFilter;
     }
 
     public override IllustrationViewDataProvider DataProvider { get; }

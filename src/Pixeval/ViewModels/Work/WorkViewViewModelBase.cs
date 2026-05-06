@@ -26,18 +26,13 @@ public abstract partial class WorkViewViewModelBase<T, TViewModel>(HashSet<strin
 
     public AvaloniaList<IWorkViewModel> SelectedEntries { get; } = [];
 
-    public void SetSortDescription(ISortDescription<IWorkViewModel> description)
+    public void SetSortDescription(params IReadOnlyCollection<ISortDescription<IWorkViewModel>> descriptions)
     {
-        var sortDescriptions = DataProvider.View.SortDescriptions;
-        if (sortDescriptions.Count is 0)
-            sortDescriptions.Add(description);
-        else
-            sortDescriptions[0] = description;
-    }
-
-    public void ClearSortDescription()
-    {
-        DataProvider.View.SortDescriptions.Clear();
+        using (DataProvider.View.DeferSortDescriptionsChange())
+        {
+            DataProvider.View.SortDescriptions.Clear();
+            DataProvider.View.SortDescriptions.AddRange(descriptions);
+        }
     }
 
     public Func<IWorkViewModel, bool>? Filter

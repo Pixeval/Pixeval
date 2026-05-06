@@ -21,7 +21,7 @@
         <entry:UserContainer.CommandBarElements>
             <controls:SymbolComboBox
                 x:Name="PrivacyPolicyComboBox"
-                ItemsSource="{markup1:EnumResourceItems x:TypeArguments=enum:PrivacyPolicy}"
+                ItemsSource="{markup1:EnumResources x:TypeArguments=enum:PrivacyPolicy}"
                 SelectionChanged="WorkTypeComboBox_OnSelectionChanged" />
         </entry:UserContainer.CommandBarElements>
     </entry:UserContainer>

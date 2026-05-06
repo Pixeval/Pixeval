@@ -17,7 +17,7 @@ namespace Pixeval.Collections;
 
 [DebuggerDisplay("Count = {Count}")]
 public class AdvancedObservableCollection<T>
-    : IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged, ISupportIncrementalLoading, IComparer<T>, IDisposable where T : class
+    : DeferSortDescriptions<T>, IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged, ISupportIncrementalLoading, IComparer<T>, IDisposable where T : class
 {
     private readonly bool _liveShapingEnabled;
 
@@ -40,11 +40,7 @@ public class AdvancedObservableCollection<T>
     public AdvancedObservableCollection(ObservableCollection<T> source, bool isLiveShaping = false)
     {
         _liveShapingEnabled = isLiveShaping;
-        SortDescriptions.CollectionChanged += SortDescriptionsCollectionChanged;
         Source = source;
-        return;
-
-        void SortDescriptionsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => HandleSortChanged();
     }
 
     /// <summary>
@@ -78,7 +74,7 @@ public class AdvancedObservableCollection<T>
                 return;
 
             field = value;
-            HandleSortChanged();
+            SortChanged();
             OnPropertyChanged();
         }
     }
@@ -186,11 +182,6 @@ public class AdvancedObservableCollection<T>
             OnPropertyChanged(EventArgsCache.CountPropertyChanged);
         }
     } = Range.All;
-
-    /// <summary>
-    /// Gets SortDescriptions to sort the visible items
-    /// </summary>
-    public ObservableCollection<ISortDescription<T>> SortDescriptions { get; } = [];
 
     /// <inheritdoc cref="IComparer{T}.Compare"/>
     int IComparer<T>.Compare(T? x, T? y) => CompareCore(x, y);
@@ -349,7 +340,7 @@ public class AdvancedObservableCollection<T>
             item.PropertyChanged -= ItemOnPropertyChanged;
     }
 
-    private void HandleSortChanged()
+    protected override void SortChangedOverride()
     {
         ApplyOrderedView(CreateOrderedVisibleView());
     }

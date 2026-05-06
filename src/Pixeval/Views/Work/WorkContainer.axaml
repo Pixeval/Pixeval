@@ -42,7 +42,7 @@
                 Spacing="5">
                 <controls:SymbolComboBox
                     x:Name="SortOptionComboBox"
-                    ItemsSource="{markup1:EnumResourceItems x:TypeArguments=options:LocalSortOption}"
+                    ItemsSource="{markup1:EnumResources x:TypeArguments=options:LocalSortOption}"
                     SelectedIndex="{x:Static views:PixevalSettings.LocalSortOptionIndex}"
                     SelectionChanged="SortOptionComboBox_OnSelectionChanged" />
                 <AutoCompleteBox

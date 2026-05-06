@@ -24,7 +24,7 @@ public sealed class NovelViewViewModel : WorkViewViewModelBase<Novel, NovelItemV
     private NovelViewViewModel(NovelViewDataProvider dataProvider, HashSet<string>? blockedTags) : base(blockedTags)
     {
         DataProvider = dataProvider;
-        dataProvider.View.Filter = ((IWorkViewViewModel) this).DefaultFilter;
+        dataProvider.View.Filter = ((IOperableViewViewModel) this).DefaultFilter;
     }
 
     public override NovelViewDataProvider DataProvider { get; }

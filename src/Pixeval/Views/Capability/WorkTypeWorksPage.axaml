@@ -16,7 +16,7 @@
         <work:WorkContainer.CommandBarElements>
             <controls:SymbolComboBox
                 x:Name="WorkTypeComboBox"
-                ItemsSource="{markup:EnumResourceItems x:TypeArguments=enum:WorkType}"
+                ItemsSource="{markup:EnumResources x:TypeArguments=enum:WorkType}"
                 SelectedIndex="{x:Static views:PixevalSettings.WorkTypeIndex}"
                 SelectionChanged="WorkTypeComboBox_OnSelectionChanged" />
         </work:WorkContainer.CommandBarElements>

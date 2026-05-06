@@ -13,13 +13,13 @@
     xmlns:novel="using:Pixeval.ViewModels"
     xmlns:utilities="using:Pixeval.Utilities"
     xmlns:work="using:Pixeval.Views.Work"
-    d:DesignHeight="200"
-    d:DesignWidth="400"
     x:DataType="{x:Type novel:NovelItemViewModel}"
     Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
     Design.DataContext="{x:Static utilities:DesignHelper.DesignNovelViewModel}"
     Theme="{StaticResource RoundedButtonStyle}"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    d:DesignHeight="200"
+    d:DesignWidth="400">
     <ContentControl>
         <Grid ClipToBounds="True" ColumnDefinitions="Auto,*">
             <Grid.ContextFlyout>

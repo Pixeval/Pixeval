@@ -17,7 +17,7 @@ namespace Pixeval.Collections;
 
 [DebuggerDisplay("Count = {Count}")]
 public class AdvancedObservableAdaptor<TIn, TOut>
-    : IList, IReadOnlyList<TOut>, INotifyCollectionChanged, INotifyPropertyChanged, ISupportIncrementalLoading, IComparer<TOut>, IDisposable
+    : DeferSortDescriptions<TOut>, IList, IReadOnlyList<TOut>, INotifyCollectionChanged, INotifyPropertyChanged, ISupportIncrementalLoading, IComparer<TOut>, IDisposable
     where TIn : class
     where TOut : class
 {
@@ -52,11 +52,7 @@ public class AdvancedObservableAdaptor<TIn, TOut>
 
         _factory = factory;
         _liveShapingEnabled = isLiveShaping;
-        SortDescriptions.CollectionChanged += SortDescriptionsCollectionChanged;
         Source = source;
-        return;
-
-        void SortDescriptionsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => HandleSortChanged();
     }
 
     /// <summary>
@@ -90,7 +86,7 @@ public class AdvancedObservableAdaptor<TIn, TOut>
                 return;
 
             field = value;
-            HandleSortChanged();
+            SortChanged();
             OnPropertyChanged();
         }
     }
@@ -200,11 +196,6 @@ public class AdvancedObservableAdaptor<TIn, TOut>
             OnPropertyChanged(EventArgsCache.CountPropertyChanged);
         }
     } = Range.All;
-
-    /// <summary>
-    /// Gets SortDescriptions to sort the visible items.
-    /// </summary>
-    public ObservableCollection<ISortDescription<TOut>> SortDescriptions { get; } = [];
 
     /// <inheritdoc cref="IComparer{T}.Compare"/>
     int IComparer<TOut>.Compare(TOut? x, TOut? y) => CompareCore(x, y);
@@ -380,7 +371,7 @@ public class AdvancedObservableAdaptor<TIn, TOut>
             viewNotify.PropertyChanged -= ItemOnPropertyChanged;
     }
 
-    private void HandleSortChanged()
+    protected override void SortChangedOverride()
     {
         ApplyOrderedView(CreateOrderedVisibleView());
     }

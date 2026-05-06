@@ -65,16 +65,11 @@ public partial class WorkContainer : UserControl
     {
         if (DataContext is IOperableViewViewModel vm && SortOptionComboBox.GetSelectedValue<LocalSortOption>() is var sortOption)
         {
-            switch (MakoHelper.GetSortDescription(sortOption))
-            {
-                case { } desc:
-                    vm.SetSortDescription(desc);
-                    break;
-                default:
-                    // reset the view so that it can resort its item to the initial order
-                    vm.ClearSortDescription();
-                    break;
-            }
+            if (MakoHelper.GetSortDescription(sortOption) is { } desc)
+                vm.SetSortDescription(desc);
+            else
+                vm.SetSortDescription();
+
             ScrollToTop();
         }
     }
@@ -186,32 +181,31 @@ public partial class WorkContainer : UserControl
 
     private void FilterAutoSuggestBox_OnKeyDown(object? sender, KeyEventArgs e)
     {
-        if (e.Key is not Key.Enter || sender is not TextBox textBox)
+        if (e.Key is not Key.Enter)
             return;
 
-        if (string.IsNullOrWhiteSpace(textBox.Text))
-        {
-            if (DataContext is IOperableViewViewModel vm)
-            {
-                vm.Filter = null;
-                vm.ViewRange = Range.All;
-            }
-        }
-        else
-            PerformSearch(textBox.Text);
+        PerformSearch(FilterAutoSuggestBox.Text);
     }
 
-    public void PerformSearch(string text)
+    public void PerformSearch(string? text)
     {
         if (DataContext is not IOperableViewViewModel viewModel)
             return;
 
         try
         {
-            var sequence = Parser.Parse(text, out var index);
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                viewModel.Filter = null;
+                viewModel.ViewRange = Range.All;
+            }
+            else
+            {
+                var sequence = Parser.Parse(text, out var index);
 
-            viewModel.Filter = o => o.Filter(sequence);
-            viewModel.ViewRange = index?.NarrowRange ?? Range.All;
+                viewModel.Filter = o => o.Filter(sequence);
+                viewModel.ViewRange = index?.NarrowRange ?? Range.All;
+            }
         }
         catch (Exception e)
         {

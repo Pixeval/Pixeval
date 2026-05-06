@@ -16,9 +16,7 @@ public interface IOperableViewViewModel : INotifyPropertyChanged
 
     AvaloniaList<IWorkViewModel> SelectedEntries { get; }
 
-    void SetSortDescription(ISortDescription<IWorkViewModel> description);
-
-    void ClearSortDescription();
+    void SetSortDescription(params IReadOnlyCollection<ISortDescription<IWorkViewModel>> descriptions);
 
     Func<IWorkViewModel, bool>? Filter { get; set; }
 
