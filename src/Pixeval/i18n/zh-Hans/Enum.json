@@ -33,10 +33,34 @@
     "Text": "正文",
     "Keyword": "标签、标题、说明文字"
   },
+  "SearchNovelContentLengthOption": {
+    "None": "不指定",
+    "TextLength": "字数",
+    "WordCount": "单词数",
+    "ReadingTime": "预计阅读时间"
+  },
   "SearchIllustrationTagMatchOption": {
     "PartialMatchForTags": "标签（部分一致）",
     "ExactMatchForTags": "标签（完全一致）",
     "TitleAndCaption": "匹配标题与说明文字"
+  },
+  "SearchIllustrationContentType": {
+    "IllustrationAndMangaAndUgoira": "插画、漫画、动图",
+    "IllustrationAndUgoira": "插画、动图",
+    "Illustration": "插画",
+    "Manga": "漫画",
+    "Ugoira": "动图"
+  },
+  "SearchIllustrationRatioPattern": {
+    "All": "全部",
+    "Landscape": "横图",
+    "Portrait": "竖图",
+    "Square": "方图"
+  },
+  "WorkSortOption": {
+    "PublishDateDescending": "发布日期降序",
+    "PublishDateAscending": "发布日期升序",
+    "PopularityDescending": "收藏数降序"
   },
   "FontWeight": {
     "Thin": "极细",

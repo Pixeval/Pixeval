@@ -8,22 +8,22 @@
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:pixeval="using:Pixeval"
     xmlns:views="using:Pixeval.Views"
     xmlns:work="using:Pixeval.Views.Work"
-    Header="{I18N {x:Static pixeval:MainPageResources.SearchWorksResult}}"
     Icon="{markup:SymbolIcon SearchSparkle,
                              FontSize=16,
                              IconVariant=Color}"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
-    <work:WorkContainer x:Name="WorkContainer" RefreshRequested="WorkContainer_OnRefreshRequested">
+    <work:WorkContainer x:Name="WorkContainer" IsRefreshEnabled="False">
         <work:WorkContainer.CommandBarElements>
             <controls:SymbolComboBox
                 x:Name="SimpleWorkTypeComboBox"
+                IsEnabled="False"
+                IsVisible="False"
                 ItemsSource="{markup1:EnumResources x:TypeArguments=enum:SimpleWorkType}"
-                SelectedIndex="{x:Static views:PixevalSettings.SimpleWorkTypeIndex}"
+                SelectedValue="{x:Static views:PixevalSettings.SimpleWorkType}"
                 SelectionChanged="WorkTypeComboBox_OnSelectionChanged" />
         </work:WorkContainer.CommandBarElements>
     </work:WorkContainer>

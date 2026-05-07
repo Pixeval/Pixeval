@@ -3,12 +3,14 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Mako;
+using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.Models.Database;
+using Pixeval.ViewModels.Search;
 
 namespace Pixeval.ViewModels;
 
@@ -20,31 +22,69 @@ public partial class SearchPageViewModel : ViewModelBase
 
     private SearchPageViewModel()
     {
+        IllustrationForm = new IllustrationSearchFormViewModel();
+        NovelForm = new NovelSearchFormViewModel();
         _ = LoadResourcesAsync();
     }
 
     private async Task LoadResourcesAsync()
     {
-        await Task.WhenAll(RefreshIllustrationTagsAsync(), RefreshNovelTagsAsync());
+        await Task.WhenAll(RefreshIllustrationTagsAsync(), RefreshNovelTagsAsync(), RefreshSearchOptionsAsync());
     }
 
-    [MemberNotNull(nameof(IllustrationTrendingTags))]
-    public async Task RefreshIllustrationTagsAsync()
+    private async Task RefreshIllustrationTagsAsync()
     {
         IllustrationTrendingTags = await MakoClient.GetIllustrationTrendingTagsAsync();
     }
 
-    [MemberNotNull(nameof(NovelTrendingTags))]
-    public async Task RefreshNovelTagsAsync()
+    private async Task RefreshNovelTagsAsync()
     {
         NovelTrendingTags = await MakoClient.GetNovelTrendingTagsAsync();
     }
 
     [ObservableProperty]
-    public partial IReadOnlyList<TrendingTag> IllustrationTrendingTags { get; private set; }
+    [NotifyPropertyChangedFor(nameof(TrendingTags))]
+    public partial SimpleWorkType SelectedTrendingTagsType { get; set; } = App.AppViewModel.AppSettings.SimpleWorkType;
 
     [ObservableProperty]
-    public partial IReadOnlyList<TrendingTag> NovelTrendingTags { get; private set; }
+    public partial string SearchText { get; set; } = "";
+
+    [ObservableProperty]
+    public partial SimpleWorkType SelectedAdvancedOptionsType { get; set; } = App.AppViewModel.AppSettings.SimpleWorkType;
+
+    public IReadOnlyList<TrendingTag> TrendingTags => SelectedTrendingTagsType is SimpleWorkType.Novel ? NovelTrendingTags : IllustrationTrendingTags;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(TrendingTags))]
+    public partial IReadOnlyList<TrendingTag> IllustrationTrendingTags { get; private set; } = [];
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(TrendingTags))]
+    public partial IReadOnlyList<TrendingTag> NovelTrendingTags { get; private set; } = [];
+
+    public IllustrationSearchFormViewModel IllustrationForm { get; }
+
+    public NovelSearchFormViewModel NovelForm { get; }
 
     public ObservableCollection<SearchHistoryEntry> SearchHistories => App.AppViewModel.HistoryPersistHelper.SearchHistoryEntries;
+
+    private async Task RefreshSearchOptionsAsync()
+    {
+        var options = await MakoClient.GetSearchOptionsAsync();
+        IllustrationForm.ToolItems =
+        [
+            .. IllustrationForm.ToolItems,
+            .. options.IllustrationOptions.Tools.Options
+        ];
+        NovelForm.LanguageItems =
+        [
+            .. NovelForm.LanguageItems,
+            .. options.NovelOptions.Languages.Options
+        ];
+        NovelForm.GenreItems =
+        [
+            .. NovelForm.GenreItems,
+            .. options.NovelOptions.Genres.Options
+        ];
+    }
 }

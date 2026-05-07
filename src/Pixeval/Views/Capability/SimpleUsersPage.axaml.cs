@@ -58,7 +58,7 @@ public class SearchUsersPage : SimpleUsersPage
     public SearchUsersPage(string? searchText)
     {
         _searchText = searchText;
-        Header = I18NManager.GetResource(MainPageResources.SearchUsersResult + " " + _searchText);
+        Header = I18NManager.GetResource(MainPageResources.SearchResultFormatted, _searchText);
         Icon = new SymbolIcon { Symbol = Symbol.Person, FontSize = 16, IconVariant = IconVariant.Color };
         ChangeSource();
     }

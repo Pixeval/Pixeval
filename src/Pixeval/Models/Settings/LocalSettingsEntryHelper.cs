@@ -80,6 +80,34 @@ public static class LocalSettingsEntryHelper
             t.Register(SearchNovelTagMatchOption.Text, EnumResources.SearchNovelTagMatchOptionText);
             t.Register(SearchNovelTagMatchOption.Keyword, EnumResources.SearchNovelTagMatchOptionKeyword);
         });
+        RegisterAttach<SearchIllustrationContentType>(t =>
+        {
+            t.Register(SearchIllustrationContentType.IllustrationAndMangaAndUgoira, EnumResources.SearchIllustrationContentTypeIllustrationAndMangaAndUgoira);
+            t.Register(SearchIllustrationContentType.IllustrationAndUgoira, EnumResources.SearchIllustrationContentTypeIllustrationAndUgoira);
+            t.Register(SearchIllustrationContentType.Illustration, EnumResources.SearchIllustrationContentTypeIllustration);
+            t.Register(SearchIllustrationContentType.Manga, EnumResources.SearchIllustrationContentTypeManga);
+            t.Register(SearchIllustrationContentType.Ugoira, EnumResources.SearchIllustrationContentTypeUgoira);
+        });
+        RegisterAttach<SearchIllustrationRatioPattern>(t =>
+        {
+            t.Register(SearchIllustrationRatioPattern.All, EnumResources.SearchIllustrationRatioPatternAll);
+            t.Register(SearchIllustrationRatioPattern.Landscape, EnumResources.SearchIllustrationRatioPatternLandscape);
+            t.Register(SearchIllustrationRatioPattern.Portrait, EnumResources.SearchIllustrationRatioPatternPortrait);
+            t.Register(SearchIllustrationRatioPattern.Square, EnumResources.SearchIllustrationRatioPatternSquare);
+        });
+        RegisterAttach<SearchNovelContentLengthOption>(t =>
+        {
+            t.Register(SearchNovelContentLengthOption.None, EnumResources.SearchNovelContentLengthOptionNone);
+            t.Register(SearchNovelContentLengthOption.TextLength, EnumResources.SearchNovelContentLengthOptionTextLength);
+            t.Register(SearchNovelContentLengthOption.WordCount, EnumResources.SearchNovelContentLengthOptionWordCount);
+            t.Register(SearchNovelContentLengthOption.ReadingTime, EnumResources.SearchNovelContentLengthOptionReadingTime);
+        });
+        RegisterAttach<WorkSortOption>(t =>
+        {
+            t.Register(WorkSortOption.PublishDateDescending, Symbol.ArrowSortDownLines, EnumResources.WorkSortOptionPublishDateDescending);
+            t.Register(WorkSortOption.PublishDateAscending, Symbol.ArrowSortUpLines, EnumResources.WorkSortOptionPublishDateAscending);
+            t.Register(WorkSortOption.PopularityDescending, Symbol.ArrowTrendingSparkle, EnumResources.WorkSortOptionPopularityDescending);
+        });
         RegisterAttach<PrivacyPolicy>(t =>
         {
             t.Register(PrivacyPolicy.Public, Symbol.Person, EnumResources.PrivacyPolicyPublic);

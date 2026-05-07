@@ -2,14 +2,12 @@ using System;
 using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using Pixeval.Models.Options;
 using Pixeval.ViewModels.Viewers;
 using SmoothScroll.Avalonia.Controls;
-using WebApiClientCore;
 
 namespace Pixeval.Views.Viewers;
 

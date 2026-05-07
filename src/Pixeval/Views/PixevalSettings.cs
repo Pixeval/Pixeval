@@ -2,6 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using Pixeval.AppManagement;
+using Mako.Global.Enum;
 using Pixeval.Models.Options;
 
 namespace Pixeval.Views;
@@ -10,11 +11,11 @@ public static class PixevalSettings
 {
     public static AppSettings Settings => App.AppViewModel.AppSettings;
 
-    public static int LocalSortOptionIndex => (int) Settings.LocalSortOption;
-    
-    public static int WorkTypeIndex => (int) Settings.WorkType;
-    
-    public static int SimpleWorkTypeIndex => (int) Settings.SimpleWorkType;
-    
+    public static LocalSortOption LocalSortOption => Settings.LocalSortOption;
+
+    public static WorkType WorkType => Settings.WorkType;
+
+    public static SimpleWorkType SimpleWorkType => Settings.SimpleWorkType;
+
     public static ThumbnailLayoutType LayoutType => Settings.ThumbnailLayoutType;
 }

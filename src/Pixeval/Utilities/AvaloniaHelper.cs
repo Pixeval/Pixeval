@@ -19,6 +19,7 @@ using Pixeval.Views.Capability;
 using Pixeval.Views.Settings;
 using Pixeval.Views.ViewContainers;
 using DownloadPage = Pixeval.Views.Download.DownloadPage;
+using SearchPage = Pixeval.Views.Search.SearchPage;
 
 namespace Pixeval.Utilities;
 

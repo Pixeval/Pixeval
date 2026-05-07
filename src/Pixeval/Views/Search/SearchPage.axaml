@@ -1,0 +1,132 @@
+<ContentPage
+    x:Class="Pixeval.Views.Search.SearchPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:database="using:Pixeval.Models.Database"
+    xmlns:enum="using:Mako.Global.Enum"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:markup1="clr-namespace:Pixeval.Views.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="using:Mako.Model"
+    xmlns:pixeval="using:Pixeval"
+    xmlns:search="using:Pixeval.Views.Search"
+    xmlns:viewModels="using:Pixeval.ViewModels"
+    x:DataType="{x:Type viewModels:SearchPageViewModel}"
+    DataContext="{x:Static viewModels:SearchPageViewModel.Instance}"
+    Header="{I18N {x:Static pixeval:MainPageResources.SearchTabContent}}"
+    Icon="{markup:SymbolIcon SearchSparkle,
+                             FontSize=16,
+                             IconVariant=Color}"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
+    <ScrollViewer>
+        <DockPanel
+            Margin="20"
+            HorizontalSpacing="5"
+            VerticalSpacing="5">
+            <Expander
+                x:Name="AdvancedExpander"
+                HorizontalAlignment="Stretch"
+                DockPanel.Dock="Top">
+                <Expander.Header>
+                    <AutoCompleteBox
+                        x:Name="SearchAutoCompleteBox"
+                        KeyDown="SearchAutoCompleteBox_OnKeyDown"
+                        PlaceholderText="{I18N {x:Static pixeval:SearchResources.SearchBoxPlaceholderText}}"
+                        Text="{Binding SearchText, Mode=TwoWay}">
+                        <AutoCompleteBox.InnerRightContent>
+                            <Button Click="SearchButton_OnClick" Content="{markup:SymbolIcon Search, FontSize=16}" />
+                        </AutoCompleteBox.InnerRightContent>
+                    </AutoCompleteBox>
+                </Expander.Header>
+                <TabbedPage x:Name="AdvancedOptionsTabControl" SelectedIndex="{Binding SelectedAdvancedOptionsType, Mode=TwoWay}">
+                    <search:IllustrationSearchOptionsPage DataContext="{Binding IllustrationForm}" />
+                    <search:NovelSearchOptionsPage DataContext="{Binding NovelForm}" />
+                </TabbedPage>
+            </Expander>
+            <ScrollViewer MaxHeight="200" DockPanel.Dock="Top">
+                <ItemsControl ItemsSource="{Binding SearchHistories}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type database:SearchHistoryEntry}">
+                            <DockPanel HorizontalSpacing="1">
+                                <Button
+                                    Click="DeleteButton_OnClick"
+                                    Content="{markup:SymbolIcon Dismiss}"
+                                    DockPanel.Dock="Right" />
+                                <Button Click="SearchHistoryButton_OnClick">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <TextBlock Text="{Binding Value}" />
+                                            <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{Binding TranslatedName}" />
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel ItemSpacing="5" LineSpacing="5" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
+            <DockPanel VerticalSpacing="5">
+                <TabStrip
+                    DockPanel.Dock="Top"
+                    ItemsSource="{markup1:EnumResources x:TypeArguments=enum:SimpleWorkType}"
+                    SelectedValue="{Binding SelectedTrendingTagsType, Mode=TwoWay}"
+                    SelectedValueBinding="{Binding Value}">
+                    <TabStrip.ItemTemplate>
+                        <DataTemplate DataType="{x:Type controls:SymbolComboBoxItem}">
+                            <controls:IconText Symbol="{Binding Symbol}" Text="{Binding Description}" />
+                        </DataTemplate>
+                    </TabStrip.ItemTemplate>
+                </TabStrip>
+                <ItemsControl ItemsSource="{Binding TrendingTags}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <controls:AdaptiveGrid
+                                ItemHeight="200"
+                                ItemSpacing="5"
+                                ItemWidth="200"
+                                LineSpacing="5" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type model:TrendingTag}">
+                            <Button
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Click="TrendingTagButton_OnClick">
+                                <Button.Content>
+                                    <DockPanel VerticalSpacing="5">
+                                        <TextBlock
+                                            HorizontalAlignment="Center"
+                                            DockPanel.Dock="Top"
+                                            MaxLines="2"
+                                            Text="{Binding Tag}"
+                                            TextWrapping="WrapWithOverflow" />
+                                        <TextBlock
+                                            HorizontalAlignment="Center"
+                                            DockPanel.Dock="Top"
+                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                            MaxLines="2"
+                                            Text="{Binding TranslatedName}"
+                                            TextWrapping="WrapWithOverflow" />
+                                        <Border ClipToBounds="True" CornerRadius="{StaticResource ControlCornerRadius}">
+                                            <Image controls:Source.Cache="{Binding Illustration.ThumbnailUrls.Medium}" Stretch="UniformToFill" />
+                                        </Border>
+                                    </DockPanel>
+                                </Button.Content>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </DockPanel>
+        </DockPanel>
+    </ScrollViewer>
+</ContentPage>

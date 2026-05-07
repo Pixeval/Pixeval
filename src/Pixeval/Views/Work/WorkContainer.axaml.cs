@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Data.Converters;
@@ -28,6 +29,17 @@ namespace Pixeval.Views.Work;
 /// </summary>
 public partial class WorkContainer : UserControl
 {
+    public static readonly DirectProperty<WorkContainer, bool> IsRefreshEnabledProperty = AvaloniaProperty.RegisterDirect<WorkContainer, bool>(
+        nameof(IsRefreshEnabled),
+        o => o.IsRefreshEnabled,
+        (o, v) => o.IsRefreshEnabled = v);
+
+    public bool IsRefreshEnabled
+    {
+        get;
+        set => SetAndRaise(IsRefreshEnabledProperty, ref field, value);
+    } = true;
+
     public event EventHandler<RoutedEventArgs>? RefreshRequested;
 
     /// <summary>

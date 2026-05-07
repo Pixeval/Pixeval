@@ -31,7 +31,9 @@
                 <CommandBarButton
                     x:Name="RefreshButton"
                     Click="RefreshButton_OnClick"
-                    Icon="{markup:SymbolIcon Symbol=ArrowClockwise}" />
+                    Icon="{markup:SymbolIcon Symbol=ArrowClockwise}"
+                    IsEnabled="{Binding $parent[work:WorkContainer].IsRefreshEnabled}"
+                    IsVisible="{Binding $parent[work:WorkContainer].IsRefreshEnabled}" />
             </CommandBar>
 
             <StackPanel
@@ -43,7 +45,7 @@
                 <controls:SymbolComboBox
                     x:Name="SortOptionComboBox"
                     ItemsSource="{markup1:EnumResources x:TypeArguments=options:LocalSortOption}"
-                    SelectedIndex="{x:Static views:PixevalSettings.LocalSortOptionIndex}"
+                    SelectedValue="{x:Static views:PixevalSettings.LocalSortOption}"
                     SelectionChanged="SortOptionComboBox_OnSelectionChanged" />
                 <AutoCompleteBox
                     x:Name="FilterAutoSuggestBox"

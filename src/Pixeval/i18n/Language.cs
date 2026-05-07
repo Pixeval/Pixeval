@@ -250,9 +250,9 @@ namespace Pixeval
         public const string NextPageOrIllustration = "EntryViewerPage.NextPageOrIllustration";
         public const string NextPageOrNovel = "EntryViewerPage.NextPageOrNovel";
         public const string NovelCountItemTitle = "EntryViewerPage.NovelCountItem.Title";
-        public const string Pin = "EntryViewerPage.Pin";
         public const string NovelSettings = "EntryViewerPage.NovelSettings";
         public const string NovelSettingsHeaderTextBlockText = "EntryViewerPage.NovelSettingsHeaderTextBlock.Text";
+        public const string Pin = "EntryViewerPage.Pin";
         public const string PrevIllustration = "EntryViewerPage.PrevIllustration";
         public const string PrevNovel = "EntryViewerPage.PrevNovel";
         public const string PrevPageOrIllustration = "EntryViewerPage.PrevPageOrIllustration";
@@ -334,9 +334,22 @@ namespace Pixeval
         public const string RankOptionWeekR18 = "Enum.RankOption.WeekR18";
         public const string RankOptionWeekR18G = "Enum.RankOption.WeekR18G";
         public const string RankOptionWeekRookie = "Enum.RankOption.WeekRookie";
+        public const string SearchIllustrationContentTypeIllustration = "Enum.SearchIllustrationContentType.Illustration";
+        public const string SearchIllustrationContentTypeIllustrationAndMangaAndUgoira = "Enum.SearchIllustrationContentType.IllustrationAndMangaAndUgoira";
+        public const string SearchIllustrationContentTypeIllustrationAndUgoira = "Enum.SearchIllustrationContentType.IllustrationAndUgoira";
+        public const string SearchIllustrationContentTypeManga = "Enum.SearchIllustrationContentType.Manga";
+        public const string SearchIllustrationContentTypeUgoira = "Enum.SearchIllustrationContentType.Ugoira";
+        public const string SearchIllustrationRatioPatternAll = "Enum.SearchIllustrationRatioPattern.All";
+        public const string SearchIllustrationRatioPatternLandscape = "Enum.SearchIllustrationRatioPattern.Landscape";
+        public const string SearchIllustrationRatioPatternPortrait = "Enum.SearchIllustrationRatioPattern.Portrait";
+        public const string SearchIllustrationRatioPatternSquare = "Enum.SearchIllustrationRatioPattern.Square";
         public const string SearchIllustrationTagMatchOptionExactMatchForTags = "Enum.SearchIllustrationTagMatchOption.ExactMatchForTags";
         public const string SearchIllustrationTagMatchOptionPartialMatchForTags = "Enum.SearchIllustrationTagMatchOption.PartialMatchForTags";
         public const string SearchIllustrationTagMatchOptionTitleAndCaption = "Enum.SearchIllustrationTagMatchOption.TitleAndCaption";
+        public const string SearchNovelContentLengthOptionNone = "Enum.SearchNovelContentLengthOption.None";
+        public const string SearchNovelContentLengthOptionReadingTime = "Enum.SearchNovelContentLengthOption.ReadingTime";
+        public const string SearchNovelContentLengthOptionTextLength = "Enum.SearchNovelContentLengthOption.TextLength";
+        public const string SearchNovelContentLengthOptionWordCount = "Enum.SearchNovelContentLengthOption.WordCount";
         public const string SearchNovelTagMatchOptionExactMatchForTags = "Enum.SearchNovelTagMatchOption.ExactMatchForTags";
         public const string SearchNovelTagMatchOptionKeyword = "Enum.SearchNovelTagMatchOption.Keyword";
         public const string SearchNovelTagMatchOptionPartialMatchForTags = "Enum.SearchNovelTagMatchOption.PartialMatchForTags";
@@ -348,6 +361,9 @@ namespace Pixeval
         public const string UgoiraDownloadFormatOriginal = "Enum.UgoiraDownloadFormat.Original";
         public const string UgoiraDownloadFormatWebPLossless = "Enum.UgoiraDownloadFormat.WebPLossless";
         public const string UgoiraDownloadFormatWebPLossy = "Enum.UgoiraDownloadFormat.WebPLossy";
+        public const string WorkSortOptionPopularityDescending = "Enum.WorkSortOption.PopularityDescending";
+        public const string WorkSortOptionPublishDateAscending = "Enum.WorkSortOption.PublishDateAscending";
+        public const string WorkSortOptionPublishDateDescending = "Enum.WorkSortOption.PublishDateDescending";
         public const string WorkTypeIllustration = "Enum.WorkType.Illustration";
         public const string WorkTypeManga = "Enum.WorkType.Manga";
         public const string WorkTypeNovel = "Enum.WorkType.Novel";
@@ -502,9 +518,8 @@ namespace Pixeval
         public const string ReverseSearchStartContent = "MainPage.ReverseSearchStartContent";
         public const string SearchKeywordCannotBeBlankContent = "MainPage.SearchKeywordCannotBeBlank.Content";
         public const string SearchKeywordCannotBeBlankTitle = "MainPage.SearchKeywordCannotBeBlank.Title";
+        public const string SearchResultFormatted = "MainPage.SearchResultFormatted";
         public const string SearchTabContent = "MainPage.SearchTab.Content";
-        public const string SearchUsersResult = "MainPage.SearchUsersResult";
-        public const string SearchWorksResult = "MainPage.SearchWorksResult";
         public const string SettingsEntryHeaderSuggestionTextBlockText = "MainPage.SettingsEntryHeaderSuggestionTextBlock.Text";
         public const string SettingsTabContent = "MainPage.SettingsTab.Content";
         public const string SpotlightsTabContent = "MainPage.SpotlightsTab.Content";
@@ -563,6 +578,46 @@ namespace Pixeval
     {
         public const string MessageTextBlockText = "ReverseSearchApiKeyNotPresentDialog.MessageTextBlock.Text";
         public const string SetApiKeyHyperlinkButtonContent = "ReverseSearchApiKeyNotPresentDialog.SetApiKeyHyperlinkButton.Content";
+    }
+    public static class SearchResources
+    {
+        public const string AdvancedOptionsIllustrationTab = "Search.AdvancedOptions.IllustrationTab";
+        public const string AdvancedOptionsNovelTab = "Search.AdvancedOptions.NovelTab";
+        public const string CommonEndDate = "Search.Common.EndDate";
+        public const string CommonIncludePotentialViolationWorks = "Search.Common.IncludePotentialViolationWorks";
+        public const string CommonIncludeTranslatedTagResults = "Search.Common.IncludeTranslatedTagResults";
+        public const string CommonMergePlainKeywordResults = "Search.Common.MergePlainKeywordResults";
+        public const string CommonShowAiWorks = "Search.Common.ShowAiWorks";
+        public const string CommonSortOption = "Search.Common.SortOption";
+        public const string CommonStartDate = "Search.Common.StartDate";
+        public const string CommonUnspecified = "Search.Common.Unspecified";
+        public const string IllustrationContentType = "Search.Illustration.ContentType";
+        public const string IllustrationHeightMax = "Search.Illustration.HeightMax";
+        public const string IllustrationHeightMin = "Search.Illustration.HeightMin";
+        public const string IllustrationMatchOption = "Search.Illustration.MatchOption";
+        public const string IllustrationRatioPattern = "Search.Illustration.RatioPattern";
+        public const string IllustrationTool = "Search.Illustration.Tool";
+        public const string IllustrationWidthMax = "Search.Illustration.WidthMax";
+        public const string IllustrationWidthMin = "Search.Illustration.WidthMin";
+        public const string NovelContentLengthMax = "Search.Novel.ContentLengthMax";
+        public const string NovelContentLengthMin = "Search.Novel.ContentLengthMin";
+        public const string NovelContentLengthOption = "Search.Novel.ContentLengthOption";
+        public const string NovelGenre = "Search.Novel.Genre";
+        public const string NovelIsOriginalOnly = "Search.Novel.IsOriginalOnly";
+        public const string NovelIsReplaceableOnly = "Search.Novel.IsReplaceableOnly";
+        public const string NovelLanguage = "Search.Novel.Language";
+        public const string NovelMatchOption = "Search.Novel.MatchOption";
+        public const string SearchBoxPlaceholderText = "Search.SearchBox.PlaceholderText";
+        public const string SectionsCommon = "Search.Sections.Common";
+        public const string SectionsIllustration = "Search.Sections.Illustration";
+        public const string SectionsNovel = "Search.Sections.Novel";
+        public const string ValidationInvalidDateRangeContent = "Search.Validation.InvalidDateRange.Content";
+        public const string ValidationInvalidDateRangeTitle = "Search.Validation.InvalidDateRange.Title";
+        public const string ValidationInvalidNumericRangeContent = "Search.Validation.InvalidNumericRange.Content";
+        public const string ValidationInvalidNumericRangeTitle = "Search.Validation.InvalidNumericRange.Title";
+        public const string ValidationPremiumSortContent = "Search.Validation.PremiumSort.Content";
+        public const string ValidationPremiumSortTitle = "Search.Validation.PremiumSort.Title";
+        public const string ValidationSearchFailedTitle = "Search.Validation.SearchFailed.Title";
     }
     public static class SettingsMainViewResources
     {

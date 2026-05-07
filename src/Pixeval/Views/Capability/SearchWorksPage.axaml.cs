@@ -1,27 +1,54 @@
 using System;
 using System.Linq;
 using Avalonia.Controls;
-using Avalonia.Interactivity;
-using Mako.Engine;
+using Mako.Engine.Implements;
 using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.Controls;
+using Pixeval.I18N;
 
 namespace Pixeval.Views.Capability;
 
 public partial class SearchWorksPage : ContentPage
 {
-    private readonly string? _searchText;
-
-    public SearchWorksPage() : this(default, null)
+    public SearchWorksPage() : this("", null, null, default)
     {
     }
 
-    public SearchWorksPage(SimpleWorkType type, string? s)
+    public SearchWorksPage(string searchText) : this(searchText, null, null, default)
+    {
+    }
+
+    public SearchWorksPage(string searchText, SimpleWorkType preferredType) : this(
+        searchText,
+        new IllustrationSearchArguments(searchText),
+        new NovelSearchArguments(searchText),
+        preferredType)
+    {
+    }
+
+    public SearchWorksPage(IllustrationSearchArguments illustrationSearchArguments)
+        : this(illustrationSearchArguments.SearchText, illustrationSearchArguments, null, SimpleWorkType.IllustrationAndManga)
+    {
+    }
+
+    public SearchWorksPage(NovelSearchArguments novelSearchArguments)
+        : this(novelSearchArguments.SearchText, null, novelSearchArguments, SimpleWorkType.Novel)
+    {
+    }
+
+    public SearchWorksPage(
+        string searchText,
+        IllustrationSearchArguments? illustrationSearchArguments,
+        NovelSearchArguments? novelSearchArguments,
+        SimpleWorkType preferredType)
     {
         InitializeComponent();
-        _searchText = s;
-        SimpleWorkTypeComboBox.SelectedIndex = (int) type;
+        Header = I18NManager.GetResource(MainPageResources.SearchResultFormatted, searchText);
+        SimpleWorkTypeComboBox.SelectedValue = preferredType;
+        _illustrationArguments = illustrationSearchArguments;
+        _novelArguments = novelSearchArguments;
+        SetIsSwitchEnabled();
         ChangeSource();
     }
 
@@ -30,34 +57,32 @@ public partial class SearchWorksPage : ContentPage
         ChangeSource();
     }
 
-    private void WorkContainer_OnRefreshRequested(object? sender, RoutedEventArgs e)
-    {
-        ChangeSource();
-    }
-
     private void ChangeSource()
     {
-        IFetchEngine<IWorkEntry> engine;
-        if (_searchText is null)
-            engine = App.AppViewModel.MakoClient.Computed(AsyncEnumerable.Empty<IWorkEntry>());
-        else
+        var engine = (_illustrationArguments, _novelArguments) switch
         {
-            var settings = App.AppViewModel.AppSettings;
-            engine = SimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>() is SimpleWorkType.IllustrationAndManga
-                    ? App.AppViewModel.MakoClient.IllustrationSearch(
-                        _searchText,
-                        settings.SearchIllustrationTagMatchOption,
-                        default,
-                        settings.UseSearchStartDate ? settings.SearchStartDate : null,
-                        settings.UseSearchEndDate ? settings.SearchEndDate : null)
-                    : App.AppViewModel.MakoClient.NovelSearch(
-                        _searchText,
-                        settings.SearchNovelTagMatchOption,
-                        default,
-                        settings.UseSearchStartDate ? settings.SearchStartDate : null,
-                        settings.UseSearchEndDate ? settings.SearchEndDate : null);
-        }
+            (null, null) => App.AppViewModel.MakoClient.Computed(AsyncEnumerable.Empty<IWorkEntry>()),
+            (_, null) => App.AppViewModel.MakoClient.IllustrationSearch(_illustrationArguments),
+            (null, _) => App.AppViewModel.MakoClient.NovelSearch(_novelArguments),
+            _ => SimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>() switch
+            {
+                SimpleWorkType.Novel => App.AppViewModel.MakoClient.NovelSearch(_novelArguments),
+                _ => App.AppViewModel.MakoClient.IllustrationSearch(_illustrationArguments),
+            }
+        };
 
         WorkContainer.ResetEngine(engine);
+    }
+
+    private readonly IllustrationSearchArguments? _illustrationArguments;
+
+    private readonly NovelSearchArguments? _novelArguments;
+
+    private void SetIsSwitchEnabled()
+    {
+        if (_illustrationArguments is null || _novelArguments is null)
+            return;
+        SimpleWorkTypeComboBox.IsEnabled = true;
+        SimpleWorkTypeComboBox.IsVisible = true;
     }
 }

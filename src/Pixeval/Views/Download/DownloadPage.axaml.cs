@@ -38,10 +38,10 @@ public partial class DownloadPage : ContentPage
 
     private void ModeFilterComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (ViewModel is not { } vm || e.AddedItems is not [DownloadOptionItem item])
+        if (ViewModel is not { } vm || sender is not ComboBox { SelectedValue: DownloadListOption item })
             return;
 
-        vm.CurrentOption = item.Value;
+        vm.CurrentOption = item;
         vm.ResetFilter();
     }
 

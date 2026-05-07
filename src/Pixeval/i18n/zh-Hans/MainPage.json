@@ -96,8 +96,7 @@
     },
     "RefreshingSessionFailedTitle": "刷新对话失败",
     "RefreshingSessionFailedContent": "请重新登录\n如果该问题反复出现，请联系开发者寻求解决",
-    "SearchWorksResult": "搜索作品结果",
-    "SearchUsersResult": "搜索用户结果",
+    "SearchResultFormatted": "{0} - 搜索",
     "OpenMyPageItem": {
       "Text": "打开个人页面"
     },

@@ -6,6 +6,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
+using Avalonia.Data;
 using FluentIcons.Common;
 using Pixeval.Attributes;
 using Pixeval.Models.Settings;
@@ -58,7 +59,9 @@ public class SymbolComboBox : TemplatedControl
     public static readonly DirectProperty<SymbolComboBox, object?> SelectedValueProperty =
         AvaloniaProperty.RegisterDirect<SymbolComboBox, object?>(
             nameof(SelectedValue),
-            o => o.SelectedValue);
+            o => o.SelectedValue,
+            (o, v) => o.SelectedValue = v,
+            defaultBindingMode: BindingMode.TwoWay);
 
     public static readonly StyledProperty<IDataTemplate?> IconItemTemplateProperty =
         AvaloniaProperty.Register<SymbolComboBox, IDataTemplate?>(nameof(IconItemTemplate));
@@ -71,6 +74,8 @@ public class SymbolComboBox : TemplatedControl
 
     private ComboBox? _innerComboBox;
     private ContentControl? _selectionBoxPresenter;
+    private bool _isSynchronizingSelection;
+    private bool _preferSelectedValue;
 
     public IReadOnlyList<SymbolComboBoxItem>? ItemsSource
     {
@@ -123,7 +128,7 @@ public class SymbolComboBox : TemplatedControl
     public object? SelectedValue
     {
         get;
-        private set => SetAndRaise(SelectedValueProperty, ref field, value);
+        set => SetAndRaise(SelectedValueProperty, ref field, value);
     }
 
     public T GetSelectedValue<T>()
@@ -169,9 +174,31 @@ public class SymbolComboBox : TemplatedControl
     {
         base.OnPropertyChanged(change);
 
-        if (change.Property == SelectedIndexProperty || change.Property == ItemsSourceProperty)
+        if (change.Property == SelectedValueProperty)
         {
+            if (_isSynchronizingSelection)
+                return;
+
+            _preferSelectedValue = true;
+            SyncSelectionFromValue();
+            return;
+        }
+
+        if (change.Property == SelectedIndexProperty)
+        {
+            if (_isSynchronizingSelection || _preferSelectedValue)
+                return;
+
+            SyncSelectionFromIndex();
+            return;
+        }
+
+        if (change.Property == ItemsSourceProperty)
+        {
+            if (change.NewValue is null)
+                return;
             SyncSelection();
+            return;
         }
 
         if (change.Property == IconModeProperty)
@@ -192,9 +219,7 @@ public class SymbolComboBox : TemplatedControl
         if (_innerComboBox is null)
             return;
 
-        var index = _innerComboBox.SelectedIndex;
-        SetValue(SelectedIndexProperty, index);
-        SyncSelection();
+        SyncSelectionFromInnerComboBox();
 
         // ComboBox 选中项变化时会以 LocalValue 优先级重设 ContentTemplate 为 ItemTemplate，
         // 需要在之后重新设置为我们期望的模板
@@ -216,13 +241,80 @@ public class SymbolComboBox : TemplatedControl
 
     private void SyncSelection()
     {
+        if (_preferSelectedValue)
+            SyncSelectionFromValue();
+        else 
+            SyncSelectionFromIndex();
+    }
+
+    private void SyncSelectionFromValue()
+    {
+        var index = FindIndexByValue(SelectedValue);
+        SetSelectedIndexCore(index);
+    }
+
+    private void SyncSelectionFromIndex()
+    {
         if (ItemsSource is null || SelectedIndex < 0 || SelectedIndex >= ItemsSource.Count)
         {
-            SelectedValue = null;
+            SetSelectedValueCore(null);
             return;
         }
 
         var item = ItemsSource[SelectedIndex];
-        SelectedValue = item.Value;
+        SetSelectedValueCore(item.Value);
+    }
+
+    private void SyncSelectionFromInnerComboBox()
+    {
+        if (_innerComboBox is null)
+            return;
+
+        SetSelectedIndexCore(_innerComboBox.SelectedIndex);
+        SetSelectedValueCore((_innerComboBox.SelectedItem as SymbolComboBoxItem)?.Value);
+    }
+
+    private int FindIndexByValue(object? value)
+    {
+        if (ItemsSource is null)
+            return -1;
+
+        for (var i = 0; i < ItemsSource.Count; i++)
+            if (Equals(ItemsSource[i].Value, value))
+                return i;
+
+        return -1;
+    }
+
+    private void SetSelectedIndexCore(int value)
+    {
+        if (SelectedIndex == value)
+            return;
+
+        _isSynchronizingSelection = true;
+        try
+        {
+            SetCurrentValue(SelectedIndexProperty, value);
+        }
+        finally
+        {
+            _isSynchronizingSelection = false;
+        }
+    }
+
+    private void SetSelectedValueCore(object? value)
+    {
+        if (Equals(SelectedValue, value))
+            return;
+
+        _isSynchronizingSelection = true;
+        try
+        {
+            SelectedValue = value;
+        }
+        finally
+        {
+            _isSynchronizingSelection = false;
+        }
     }
 }

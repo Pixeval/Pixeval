@@ -32,12 +32,12 @@ public partial class RankingsPage : ContentPage
         if (SimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>() is SimpleWorkType.IllustrationAndManga)
         {
             RankOptionComboBox.ItemsSource = SymbolComboBoxItem.GetValues("Illustration");
-            RankOptionComboBox.SelectedIndex = (int) App.AppViewModel.AppSettings.IllustrationRankOption;
+            RankOptionComboBox.SelectedValue = App.AppViewModel.AppSettings.IllustrationRankOption;
         }
         else
         {
             RankOptionComboBox.ItemsSource = SymbolComboBoxItem.GetValues("Novel");
-            RankOptionComboBox.SelectedIndex = (int) App.AppViewModel.AppSettings.NovelRankOption;
+            RankOptionComboBox.SelectedValue = App.AppViewModel.AppSettings.NovelRankOption;
         }
         _suppressChangeSource = false;
     }

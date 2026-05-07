@@ -6,8 +6,8 @@
 
     <Design.PreviewWith>
         <StackPanel Margin="20" Spacing="10">
-            <local:SymbolComboBox SelectedIndex="0" />
-            <local:SymbolComboBox IconMode="False" SelectedIndex="0" />
+            <local:SymbolComboBox />
+            <local:SymbolComboBox IconMode="False" />
         </StackPanel>
     </Design.PreviewWith>
 
@@ -47,12 +47,14 @@
                 <ControlTemplate TargetType="{x:Type local:SymbolComboBox}">
                     <ComboBox
                         Name="PART_ComboBox"
+                        x:DataType="local:SymbolComboBoxItem"
                         HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                         VerticalAlignment="{TemplateBinding VerticalAlignment}"
                         ItemTemplate="{TemplateBinding IconItemTemplate}"
                         ItemsSource="{TemplateBinding ItemsSource}"
-                        SelectedIndex="{TemplateBinding SelectedIndex,
-                                                        Mode=TwoWay}">
+                        SelectedValue="{TemplateBinding SelectedValue,
+                                                        Mode=TwoWay}"
+                        SelectedValueBinding="{Binding Value}">
                         <ComboBox.Styles>
                             <!--  Text 模式：切换下拉项模板  -->
                             <Style Selector="ComboBox.text">

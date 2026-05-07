@@ -34,7 +34,7 @@
             <controls:SymbolComboBox
                 x:Name="SimpleWorkTypeComboBox"
                 ItemsSource="{markup1:EnumResources x:TypeArguments=enum:SimpleWorkType}"
-                SelectedIndex="{x:Static views:PixevalSettings.SimpleWorkTypeIndex}"
+                SelectedValue="{x:Static views:PixevalSettings.SimpleWorkType}"
                 SelectionChanged="SimpleWorkTypeComboBox_OnSelectionChanged" />
         </work:WorkContainer.CommandBarElements>
     </work:WorkContainer>
