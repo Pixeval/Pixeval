@@ -6,6 +6,7 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:Pixeval.Views.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:layout="using:Avalonia.Layout"
     xmlns:local="using:Pixeval.Views.Viewers"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:markup1="using:Pixeval.Views.Markup"
@@ -44,138 +45,142 @@
 
     </UserControl.Styles>
 
-    <DockPanel>
-        <StackPanel
-            ClipToBounds="True"
-            DockPanel.Dock="Bottom">
-            <ListBox
-                x:Name="ThumbnailListBox"
-                Grid.Row="2"
-                Height="90"
-                Margin="5,0"
-                Padding="0,0,0,5"
-                HorizontalAlignment="Stretch"
-                IsVisible="{Binding #InfoPaneRoot.IsDocked}"
-                ItemsSource="{Binding Illustrations}"
-                ScrollViewer.HorizontalScrollBarVisibility="Visible"
-                ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                SelectedIndex="{Binding CurrentWorkIndex}"
-                SelectionMode="Single">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal" Spacing="5" />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-                <ListBox.ItemTemplate>
-                    <DataTemplate x:DataType="{x:Type viewModels:IllustrationItemViewModel}">
-                        <Image
-                            Width="80"
-                            Height="80"
-                            controls:Source.Cache="{Binding ThumbnailUrl}"
-                            Stretch="UniformToFill" />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            <CommandBar
-                x:Name="BottomActionBar"
-                HorizontalAlignment="Center"
-                Background="Transparent"
-                DefaultLabelPosition="Collapsed"
-                IsDynamicOverflowEnabled="False">
-                <CommandBarButton
-                    Command="{Binding CurrentIllustration.BookmarkCommand}"
-                    CommandParameter="{Binding $self, Mode=OneTime}"
-                    Icon="{markup1:SymbolIconEx Heart,
-                                            IconVariant={Binding CurrentIllustration.IsBookmarkedDisplay,
+    <Grid>
+        <DockPanel>
+            <StackPanel
+                ClipToBounds="True"
+                DockPanel.Dock="Bottom">
+                <ListBox
+                    x:Name="ThumbnailListBox"
+                    Grid.Row="2"
+                    Height="90"
+                    Margin="5,0"
+                    Padding="0,0,0,5"
+                    HorizontalAlignment="Stretch"
+                    IsVisible="{Binding #InfoPaneRoot.IsDocked}"
+                    ItemsSource="{Binding Illustrations}"
+                    ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                    ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                    SelectedIndex="{Binding CurrentWorkIndex}"
+                    SelectionMode="Single">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" Spacing="5" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type viewModels:IllustrationItemViewModel}">
+                            <Image
+                                Width="80"
+                                Height="80"
+                                controls:Source.Cache="{Binding ThumbnailUrl}"
+                                Stretch="UniformToFill" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <CommandBar
+                    x:Name="BottomActionBar"
+                    HorizontalAlignment="Center"
+                    Background="Transparent"
+                    DefaultLabelPosition="Collapsed"
+                    IsDynamicOverflowEnabled="False"
+                    Margin="32 0">
+                    <CommandBarButton
+                        Command="{Binding CurrentIllustration.BookmarkCommand}"
+                        CommandParameter="{Binding $self, Mode=OneTime}"
+                        Icon="{markup1:SymbolIconEx Heart,
+                                                IconVariant={Binding CurrentIllustration.IsBookmarkedDisplay,
                                                                  Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
-                    IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
-                    Label="{I18N {x:Static pixeval:MiscResources.AddBookmark}}" />
-                <CommandBarButton
-                    Command="{Binding CurrentIllustration.SaveCommand}"
-                    CommandParameter="{Binding $self, Mode=OneTime}"
-                    Icon="{markup:SymbolIcon SaveMultiple}"
-                    IsVisible="{Binding CurrentIllustration.IsPicSet}"
-                    Label="{I18N {x:Static pixeval:EntryItemResources.MangaSave}}" />
-                <CommandBarButton
-                    Command="{Binding CurrentIllustration.SaveAsCommand}"
-                    CommandParameter="{Binding $self, Mode=OneTime}"
-                    Icon="{markup:SymbolIcon SaveEdit}"
-                    IsVisible="{Binding CurrentIllustration.IsPicSet}"
-                    Label="{I18N {x:Static pixeval:EntryItemResources.MangaSaveAs}}" />
-                <CommandBarSeparator />
-                <CommandBarButton
-                    x:Name="AddToBookmarkButton"
-                    Click="AddToBookmarkButton_OnClick"
-                    Icon="{markup1:SymbolIconEx Bookmark,
-                                            IconVariant={Binding CurrentIllustration.IsBookmarkedDisplay,
-                                                                 Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
-                    IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
-                    Label="{I18N {x:Static pixeval:EntryItemResources.AddToBookmark}}" />
-                <!--<CommandBarButton
+                        IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
+                        Label="{I18N {x:Static pixeval:MiscResources.AddBookmark}}" />
+                    <CommandBarButton
+                        Command="{Binding CurrentIllustration.SaveCommand}"
+                        CommandParameter="{Binding $self, Mode=OneTime}"
+                        Icon="{markup:SymbolIcon SaveMultiple}"
+                        IsVisible="{Binding CurrentIllustration.IsPicSet}"
+                        Label="{I18N {x:Static pixeval:EntryItemResources.MangaSave}}" />
+                    <CommandBarButton
+                        Command="{Binding CurrentIllustration.SaveAsCommand}"
+                        CommandParameter="{Binding $self, Mode=OneTime}"
+                        Icon="{markup:SymbolIcon SaveEdit}"
+                        IsVisible="{Binding CurrentIllustration.IsPicSet}"
+                        Label="{I18N {x:Static pixeval:EntryItemResources.MangaSaveAs}}" />
+                    <CommandBarSeparator />
+                    <CommandBarButton
+                        x:Name="AddToBookmarkButton"
+                        Click="AddToBookmarkButton_OnClick"
+                        Icon="{markup1:SymbolIconEx Bookmark,
+                                                IconVariant={Binding CurrentIllustration.IsBookmarkedDisplay,
+                                                                      Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
+                        IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
+                        Label="{I18N {x:Static pixeval:EntryItemResources.AddToBookmark}}" />
+                    <!--<CommandBarButton
                             Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
                             Icon="{markup:SymbolIcon Link}"
                             Label="{I18N {x:Static pixeval:EntryItemResources.GenerateLink}}"
                             Tag="{Binding CurrentIllustration.AppUri}" />-->
-                <CommandBarButton
-                    Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
-                    Icon="{markup:SymbolIcon LinkMultiple}"
-                    Label="{I18N {x:Static pixeval:EntryItemResources.GenerateWebLink}}"
-                    Tag="{Binding CurrentIllustration.WebsiteUri}" />
-                <CommandBarButton
-                    Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
-                    Icon="{markup:SymbolIcon GlobeArrowUp}"
-                    Label="{I18N {x:Static pixeval:EntryItemResources.OpenInWebBrowser}}"
-                    Tag="{Binding CurrentIllustration.WebsiteUri}" />
-            </CommandBar>
-        </StackPanel>
-
-        <Grid VerticalAlignment="Stretch" ClipToBounds="True">
-            
-            <local:WorkInfoPane
-                Name="InfoPaneSection"
-                ArtworkInfo="{Binding CurrentIllustration.Entry}">
-                <local:WorkInfoPane.ActionZone>
-                    <Border
-                        Width="32"
-                        Height="32"
-                        VerticalAlignment="Top"
-                        IsHitTestVisible="False" />
-                </local:WorkInfoPane.ActionZone>
-            </local:WorkInfoPane>
-            
-            <TabbedPage
-                Name="TabbedPageSection"
-                Background="Transparent"
-                TabPlacement="Bottom"
-                IsVisible="{Binding #InfoPaneRoot.IsDocked}"
-                Pages="{Binding PanePages}" />
-            
-            <StackPanel
-                Margin="14"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Top"
-                Orientation="Horizontal"
-                Spacing="4">
-                <ToggleButton
-                    Width="32"
-                    Height="32"
-                    IsChecked="{Binding #InfoPaneRoot.IsLocked, Mode=TwoWay}"
-                    Content="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding #InfoPaneRoot.IsLocked},
-                                                                                            PinOff,
-                                                                                            Pin,
-                                                                                            x:TypeArguments=common:Symbol}}"
-                    Theme="{StaticResource TransparentButtonStyle}"
-                    ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.Pin}}" />
-                <Button
-                    Click="ChevronButtonClicked"
-                    Content="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding #InfoPaneRoot.IsDocked},
-                                                                                     ChevronDown,
-                                                                                     ChevronUp,
-                                                                                     x:TypeArguments=common:Symbol}}"
-                    Theme="{StaticResource TransparentButtonStyle}"
-                    ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.InfoAndComments}}" />
+                    <CommandBarButton
+                        Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
+                        Icon="{markup:SymbolIcon LinkMultiple}"
+                        Label="{I18N {x:Static pixeval:EntryItemResources.GenerateWebLink}}"
+                        Tag="{Binding CurrentIllustration.WebsiteUri}" />
+                    <CommandBarButton
+                        Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
+                        Icon="{markup:SymbolIcon GlobeArrowUp}"
+                        Label="{I18N {x:Static pixeval:EntryItemResources.OpenInWebBrowser}}"
+                        Tag="{Binding CurrentIllustration.WebsiteUri}" />
+                </CommandBar>
             </StackPanel>
-            
-        </Grid>
-    </DockPanel>
+
+            <Grid VerticalAlignment="Stretch" ClipToBounds="True">
+                
+                <local:WorkInfoPane
+                    Name="InfoPaneSection"
+                    ArtworkInfo="{Binding CurrentIllustration.Entry}">
+                    <local:WorkInfoPane.ActionZone>
+                        <Border
+                            Width="32"
+                            Height="32"
+                            VerticalAlignment="Top"
+                            IsHitTestVisible="False" />
+                    </local:WorkInfoPane.ActionZone>
+                </local:WorkInfoPane>
+                
+                <TabbedPage
+                    Name="TabbedPageSection"
+                    Background="Transparent"
+                    TabPlacement="Bottom"
+                    IsVisible="{Binding #InfoPaneRoot.IsDocked}"
+                    Pages="{Binding PanePages}" />
+                
+            </Grid>
+        </DockPanel>
+
+        <ToggleButton
+            Margin="14"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            IsChecked="{Binding #InfoPaneRoot.IsLocked, Mode=TwoWay}"
+            IsVisible="{Binding #InfoPaneRoot.IsDocked, Converter={x:Static BoolConverters.Not}}"
+            Content="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding #InfoPaneRoot.IsLocked},
+                                                                                    PinOff,
+                                                                                    Pin,
+                                                                                    x:TypeArguments=common:Symbol}}"
+            Theme="{StaticResource TransparentButtonStyle}"
+            ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.Pin}}" />
+        <Button
+            Width="32"
+            Height="32"
+            Margin="14"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Click="ChevronButtonClicked"
+            Content="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding #InfoPaneRoot.IsDocked},
+                                                                             ChevronDown,
+                                                                             ChevronUp,
+                                                                             x:TypeArguments=common:Symbol}}"
+            Theme="{StaticResource TransparentButtonStyle}"
+            ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.InfoAndComments}}" />
+
+    </Grid>
 </UserControl>
