@@ -8,6 +8,8 @@ using Avalonia.Layout;
 using Avalonia.Threading;
 using Pixeval.Models.Options;
 using Pixeval.ViewModels.Viewers;
+using SmoothScroll.Avalonia.Controls;
+using WebApiClientCore;
 
 namespace Pixeval.Views.Viewers;
 
@@ -23,6 +25,19 @@ public partial class ContinuousImageViewer : ImageViewerBase
             nameof(StackOrientation),
             o => o.StackOrientation);
 
+    /// <inheritdoc />
+    public override double ZoomFactor
+    {
+        get => ViewerScrollView?.ZoomFactor ?? 1;
+        set
+        {
+            if (ZoomFactor == value)
+                return;
+            ViewerScrollView?.ZoomTo(value);
+            QueueViewportUpdate();
+        }
+    }
+
     private ImageViewerViewModel? _subscribedViewModel;
     private bool _isSelectingFromScroll;
     private bool _viewportUpdateQueued;
@@ -34,7 +49,6 @@ public partial class ContinuousImageViewer : ImageViewerBase
     {
         InitializeComponent();
         ViewerScrollView.ScrollChanged += (_, _) => QueueViewportUpdate();
-        UpdateScrollBarVisibility();
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -71,7 +85,7 @@ public partial class ContinuousImageViewer : ImageViewerBase
             oldValue is BrowseDirection.LeftRight or BrowseDirection.RightLeft
                 ? Orientation.Horizontal
                 : Orientation.Vertical, StackOrientation);
-        UpdateScrollBarVisibility();
+        // TODO: StackPanel does not support RightLeft/BottomUp ordering here yet.
         QueueScrollToSelectedPage();
         QueueViewportUpdate();
     }
@@ -79,22 +93,11 @@ public partial class ContinuousImageViewer : ImageViewerBase
     public Orientation StackOrientation =>
         IsHorizontal ? Orientation.Horizontal : Orientation.Vertical;
 
+    public ScrollContentOrientation ContentOrientation =>
+        IsHorizontal ? ScrollContentOrientation.Horizontal : ScrollContentOrientation.Vertical;
+
     private bool IsHorizontal =>
         BrowseDirection is BrowseDirection.LeftRight or BrowseDirection.RightLeft;
-
-    private void UpdateScrollBarVisibility()
-    {
-        if (ViewerScrollView is null)
-            return;
-
-        // TODO: StackPanel does not support RightLeft/BottomUp ordering here yet.
-        ViewerScrollView.HorizontalScrollBarVisibility = IsHorizontal
-            ? ScrollBarVisibility.Auto
-            : ScrollBarVisibility.Hidden;
-        ViewerScrollView.VerticalScrollBarVisibility = IsHorizontal
-            ? ScrollBarVisibility.Hidden
-            : ScrollBarVisibility.Auto;
-    }
 
     private void UpdateViewModelSubscription()
     {
@@ -348,10 +351,10 @@ public partial class ContinuousImageViewer : ImageViewerBase
         return -1;
     }
 
-    protected override void OnZoomFactorChanged(double oldValue, double newValue)
+    private void ViewerScrollView_OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
-        ViewerScrollView?.ZoomTo(newValue);
-        QueueViewportUpdate();
+        if (e.Property == ScrollView.ZoomFactorProperty)
+            RaisePropertyChanged(ZoomFactorProperty, e.GetOldValue<double>(), e.GetNewValue<double>());
     }
 
     public SingleViewerViewModel? CurrentPage { get; private set; }

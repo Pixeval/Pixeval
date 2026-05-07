@@ -187,7 +187,7 @@ public partial class SingleImageViewer : UserControl
             return;
 
         var ratio = panelSize / imageSize;
-        ViewerScrollView.ZoomTo(Math.Min(ratio.X, ratio.Y));
+        ViewerScrollView.ZoomTo(Math.Min(ratio.X, ratio.Y), false);
     }
 
     public bool IsMirrored
@@ -218,7 +218,7 @@ public partial class SingleImageViewer : UserControl
         get => ViewerScrollView?.ZoomFactor ?? 1;
         set
         {
-            var old = ViewerScrollView?.ZoomFactor ?? 1;
+            var old = ZoomFactor;
             if (old != value)
                 ViewerScrollView?.ZoomTo(value);
         }

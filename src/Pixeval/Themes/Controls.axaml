@@ -1,4 +1,7 @@
-<ResourceDictionary xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:SmoothScroll.Avalonia.Controls;assembly=SmoothScroll.Avalonia.Controls">
 
     <ResourceDictionary.MergedDictionaries>
         <MergeResourceInclude Source="/Controls/AvatarImage.axaml" />
@@ -105,6 +108,18 @@
         BasedOn="{StaticResource {x:Type ListBox}}"
         TargetType="{x:Type ListBox}">
         <Setter Property="Background" Value="Transparent" />
+    </ControlTheme>
+
+    <ControlTheme
+        x:Key="ViewerScrollViewTheme"
+        BasedOn="{StaticResource {x:Type controls:ScrollView}}"
+        TargetType="{x:Type controls:ScrollView}">
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="IsZoomEnabled" Value="True" />
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="MaxZoomFactor" Value="10" />
+        <Setter Property="MinZoomFactor" Value="0.1" />
     </ControlTheme>
 
 </ResourceDictionary>

@@ -41,19 +41,7 @@ public abstract partial class ImageViewerBase : UserControl
         set => SetAndRaise(IsPlayingProperty, ref field, value);
     }
 
-    public double ZoomFactor
-    {
-        get;
-        set
-        {
-            var old = field;
-            if (old == value)
-                return;
-
-            SetAndRaise(ZoomFactorProperty, ref field, value);
-            OnZoomFactorChanged(old, value);
-        }
-    } = 1;
+    public abstract double ZoomFactor { get; set; }
 
     public BrowseDirection BrowseDirection
     {
@@ -98,10 +86,6 @@ public abstract partial class ImageViewerBase : UserControl
         CopyCommand.NotifyCanExecuteChanged();
         SaveCommand.NotifyCanExecuteChanged();
         SaveAsCommand.NotifyCanExecuteChanged();
-    }
-
-    protected virtual void OnZoomFactorChanged(double oldValue, double newValue)
-    {
     }
 
     protected virtual void OnBrowseDirectionChanged(BrowseDirection oldValue, BrowseDirection newValue)

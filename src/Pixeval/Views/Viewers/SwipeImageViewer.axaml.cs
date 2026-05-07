@@ -76,6 +76,13 @@ public partial class SwipeImageViewer : ImageViewerBase
         base.OnDetachedFromVisualTree(e);
     }
 
+    /// <inheritdoc />
+    public override double ZoomFactor
+    {
+        get;
+        set => SetAndRaise(ZoomFactorProperty, ref field, value);
+    }
+
     protected override void NotifyCommandCanExecuteChanged()
     {
         base.NotifyCommandCanExecuteChanged();

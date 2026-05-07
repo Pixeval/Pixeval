@@ -10,20 +10,21 @@
     xmlns:pixeval="using:Pixeval"
     xmlns:scroll="using:SmoothScroll.Avalonia.Controls"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
-    x:DataType="{x:Type viewers:ImageViewerViewModel}">
+    x:DataType="{x:Type viewers:ImageViewerViewModel}"
+    x:Name="Root">
     <scroll:ScrollView
         x:Name="ViewerScrollView"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-        Focusable="True"
-        HorizontalScrollBarVisibility="Auto"
-        IsZoomEnabled="True"
-        MaxZoomFactor="10"
-        MinZoomFactor="0.1"
+        ContentOrientation="{Binding $parent[local:ContinuousImageViewer].ContentOrientation}"
+        HorizontalScrollBarVisibility="Hidden"
+        PropertyChanged="ViewerScrollView_OnPropertyChanged"
         SizeChanged="ViewerScrollView_OnSizeChanged"
-        VerticalScrollBarVisibility="Hidden"
-        ZoomFactor="{Binding $parent[local:ContinuousImageViewer].ZoomFactor, Mode=OneWayToSource}">
-        <ItemsControl x:Name="ImageItemsControl" ItemsSource="{Binding Images}">
+        Theme="{StaticResource ViewerScrollViewTheme}"
+        VerticalScrollBarVisibility="Hidden">
+        <ItemsControl
+            x:Name="ImageItemsControl"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            ItemsSource="{Binding Images}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="{Binding $parent[local:ContinuousImageViewer].StackOrientation}" Spacing="8" />

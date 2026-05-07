@@ -16,21 +16,20 @@
         <!--  TODO: Auto Auto ContentOrientation="Both"  -->
         <scroll:ScrollView
             x:Name="ViewerScrollView"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            Focusable="True"
-            HorizontalScrollBarVisibility="Hidden"
+            ContentOrientation="Both"
+            HorizontalScrollBarVisibility="Auto"
             IsVisible="{Binding LoadSuccessfully}"
-            IsZoomEnabled="True"
             PropertyChanged="ViewerScrollView_OnPropertyChanged"
-            VerticalScrollBarVisibility="Hidden">
+            Theme="{StaticResource ViewerScrollViewTheme}"
+            VerticalScrollBarVisibility="Auto">
             <ai:AnimatedImage
                 x:Name="ImageViewer"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
                 IsPlaying="{Binding $parent[viewers:SingleImageViewer].IsPlaying}"
                 RenderTransformOrigin="50%,50%"
                 SizeChanged="ImageViewerOnSizeChanged"
-                Source="{Binding DisplaySource}"
-                Stretch="None">
+                Source="{Binding DisplaySource}">
                 <ai:AnimatedImage.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform ScaleX="{Binding $parent[viewers:SingleImageViewer].MirrorScaleX}" />
