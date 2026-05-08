@@ -2,6 +2,7 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using System.Collections;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -56,10 +57,26 @@ public static class IncrementalLoadingBehavior
             typeof(IncrementalLoadingBehavior),
             defaultValue: false);
 
-    public static readonly AttachedProperty<WeakEventListener<ItemsControl, object?, NotifyCollectionChangedEventArgs>> WeakEventListenerProperty =
-        AvaloniaProperty.RegisterAttached<ItemsControl, WeakEventListener<ItemsControl, object?, NotifyCollectionChangedEventArgs>>(
+    public static readonly AttachedProperty<WeakEventListener<ItemsControl, object?, NotifyCollectionChangedEventArgs>?> WeakEventListenerProperty =
+        AvaloniaProperty.RegisterAttached<ItemsControl, WeakEventListener<ItemsControl, object?, NotifyCollectionChangedEventArgs>?>(
             "WeakEventListener",
             typeof(IncrementalLoadingBehavior));
+
+    public static readonly AttachedProperty<ScrollViewer?> AttachedScrollViewerProperty =
+        AvaloniaProperty.RegisterAttached<ItemsControl, ScrollViewer?>(
+            "AttachedScrollViewer",
+            typeof(IncrementalLoadingBehavior));
+
+    public static readonly AttachedProperty<ItemsControl?> ScrollViewerOwnerProperty =
+        AvaloniaProperty.RegisterAttached<ScrollViewer, ItemsControl?>(
+            "ScrollViewerOwner",
+            typeof(IncrementalLoadingBehavior));
+
+    public static readonly AttachedProperty<int> InitialLoadVersionProperty =
+        AvaloniaProperty.RegisterAttached<ItemsControl, int>(
+            "InitialLoadVersion",
+            typeof(IncrementalLoadingBehavior),
+            defaultValue: 0);
 
     static IncrementalLoadingBehavior()
     {
@@ -95,17 +112,32 @@ public static class IncrementalLoadingBehavior
             private set => itemsControl.SetValue(IsLoadingMoreProperty, value);
         }
 
-        public WeakEventListener<ItemsControl, object?, NotifyCollectionChangedEventArgs> WeakEventListener
+        public WeakEventListener<ItemsControl, object?, NotifyCollectionChangedEventArgs>? WeakEventListener
         {
             get => itemsControl.GetValue(WeakEventListenerProperty);
             private set => itemsControl.SetValue(WeakEventListenerProperty, value);
         }
 
+        public ScrollViewer? AttachedScrollViewer
+        {
+            get => itemsControl.GetValue(AttachedScrollViewerProperty);
+            private set => itemsControl.SetValue(AttachedScrollViewerProperty, value);
+        }
+
+        private int InitialLoadVersion
+        {
+            get => itemsControl.GetValue(InitialLoadVersionProperty);
+            set => itemsControl.SetValue(InitialLoadVersionProperty, value);
+        }
+
         private async Task<bool> TryLoadMoreItemsAsync()
         {
-            // Don't load if already loading
+            if (!itemsControl.IsLoaded || !itemsControl.IsEffectivelyVisible)
+                return false;
+
             if (itemsControl is not { IsLoadingMore: false })
                 return false;
+
             try
             {
                 itemsControl.IsLoadingMore = true;
@@ -113,35 +145,43 @@ public static class IncrementalLoadingBehavior
                 if (itemsControl is not { ItemsSource: ISupportIncrementalLoading { HasMoreItems: true } source })
                     return false;
 
-                if (itemsControl.FindDescendantOfType<ScrollViewer>() is not { } scrollViewer)
+                if ((itemsControl.AttachedScrollViewer ?? itemsControl.FindDescendantOfType<ScrollViewer>()) is not { IsEffectivelyVisible: true } scrollViewer)
                     return false;
 
                 if (scrollViewer.FindDescendantOfType<ScrollPresenter>() is not { ContentOrientation: var orientation and not ScrollContentOrientation.None })
                     return false;
 
+                var isCollectionEmpty = itemsControl.ItemsSource is ICollection { Count: 0 };
+
                 var isNearBottom =
                     (orientation is ScrollContentOrientation.Vertical or ScrollContentOrientation.Both &&
+                     scrollViewer.Viewport.Height > 0 &&
+                     scrollViewer.Extent.Height > 0 &&
                      scrollViewer.Offset.Y + scrollViewer.Viewport.Height >=
                      scrollViewer.Extent.Height - itemsControl.Threshold)
                     || (orientation is ScrollContentOrientation.Horizontal or ScrollContentOrientation.Both &&
+                        scrollViewer.Viewport.Width > 0 &&
+                        scrollViewer.Extent.Width > 0 &&
                         scrollViewer.Offset.X + scrollViewer.Viewport.Width >=
                         scrollViewer.Extent.Width - itemsControl.Threshold);
 
-                if (isNearBottom)
-                    try
-                    {
-                        await source.LoadMoreItemsAsync(itemsControl.ItemsPerBatch);
-                    }
-                    catch (TaskCanceledException)
-                    {
-                        // ignored
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        // ignored
-                    }
+                if (!isCollectionEmpty && !isNearBottom)
+                    return false;
 
-                return isNearBottom;
+                try
+                {
+                    await source.LoadMoreItemsAsync(itemsControl.ItemsPerBatch);
+                }
+                catch (TaskCanceledException)
+                {
+                    // ignored
+                }
+                catch (OperationCanceledException)
+                {
+                    // ignored
+                }
+
+                return source.HasMoreItems;
             }
             finally
             {
@@ -151,62 +191,86 @@ public static class IncrementalLoadingBehavior
 
         private void AttachItemsSource(ISupportIncrementalLoading sil)
         {
-            // Find the ScrollViewer and trigger initial load
+            itemsControl.DetachItemsSource();
+
             if (sil is INotifyCollectionChanged ncc)
             {
-                itemsControl.WeakEventListener?.Detach();
-
                 var listener = itemsControl.WeakEventListener =
                     new(itemsControl)
                     {
                         // ReSharper disable once AsyncVoidLambda
                         OnEventAction = async (source, changed, arg) => await source.TryLoadMoreItemsAsync(),
-                        OnDetachAction = listener => ncc.CollectionChanged -= listener.OnEvent
+                        OnDetachAction = weakListener => ncc.CollectionChanged -= weakListener.OnEvent
                     };
                 ncc.CollectionChanged += listener.OnEvent;
             }
 
-            _ = itemsControl.InitialLoadAsync();
+            itemsControl.RequestInitialLoad();
         }
 
         private void AttachScrollViewer()
         {
-            // Find the ScrollViewer inside the ItemsControl
-            var scrollViewer = itemsControl.FindDescendantOfType<ScrollViewer>();
-            if (scrollViewer is not null)
-            {
-                scrollViewer.PropertyChanged += (sender, args) =>
-                {
-                    if (args.Property == ScrollViewer.OffsetProperty
-                        || args.Property == Visual.BoundsProperty)
-                        _ = itemsControl.TryLoadMoreItemsAsync();
-                };
-                scrollViewer.ScrollChanged += async (sender, args) => await itemsControl.TryLoadMoreItemsAsync();
+            itemsControl.DetachScrollViewer();
 
-                // Initial load: fill the viewport if needed
-                _ = itemsControl.InitialLoadAsync();
-            }
+            var scrollViewer = itemsControl.FindDescendantOfType<ScrollViewer>();
+            if (scrollViewer is null)
+                return;
+
+            itemsControl.AttachedScrollViewer = scrollViewer;
+            scrollViewer.SetValue(ScrollViewerOwnerProperty, itemsControl);
+            scrollViewer.PropertyChanged += OnScrollViewerPropertyChanged;
+            scrollViewer.ScrollChanged += OnScrollViewerScrollChanged;
+            itemsControl.RequestInitialLoad();
         }
 
         private void DetachScrollViewer()
         {
-            // Reset loading state
+            if (itemsControl.AttachedScrollViewer is { } scrollViewer)
+            {
+                scrollViewer.PropertyChanged -= OnScrollViewerPropertyChanged;
+                scrollViewer.ScrollChanged -= OnScrollViewerScrollChanged;
+                scrollViewer.ClearValue(ScrollViewerOwnerProperty);
+                itemsControl.AttachedScrollViewer = null;
+            }
+
             itemsControl.IsLoadingMore = false;
+        }
+
+        private void DetachItemsSource()
+        {
+            itemsControl.WeakEventListener?.Detach();
+            itemsControl.WeakEventListener = null;
+        }
+
+        private void RequestInitialLoad()
+        {
+            var version = checked(itemsControl.InitialLoadVersion + 1);
+            itemsControl.InitialLoadVersion = version;
+            _ = itemsControl.InitialLoadAsync(version);
+        }
+
+        private void CancelInitialLoad()
+        {
+            itemsControl.InitialLoadVersion = checked(itemsControl.InitialLoadVersion + 1);
         }
 
         /// <summary>
         /// Performs initial loading to fill the viewport if it's not scrollable yet.
         /// </summary>
-        private async Task InitialLoadAsync()
+        private async Task InitialLoadAsync(int version)
         {
-            await Task.Delay(50);
-
-            while (true)
+            while (version == itemsControl.InitialLoadVersion)
             {
+                await Task.Delay(50);
+
+                if (version != itemsControl.InitialLoadVersion)
+                    break;
+
+                if (!itemsControl.IsLoaded || !itemsControl.IsEffectivelyVisible)
+                    continue;
+
                 if (!await itemsControl.TryLoadMoreItemsAsync())
                     break;
-                // 等待UI加载
-                await Task.Delay(50);
             }
         }
     }
@@ -236,36 +300,77 @@ public static class IncrementalLoadingBehavior
         {
             itemsControl.Loaded += OnItemsControlLoaded;
             itemsControl.Unloaded += OnItemsControlUnloaded;
-            if (itemsControl.ItemsSource is ISupportIncrementalLoading sil)
-                itemsControl.AttachItemsSource(sil);
             itemsControl.PropertyChanged += OnItemsControlOnPropertyChanged;
+
+            if (itemsControl.IsLoaded)
+            {
+                itemsControl.AttachScrollViewer();
+                if (itemsControl.ItemsSource is ISupportIncrementalLoading sil)
+                    itemsControl.AttachItemsSource(sil);
+            }
         }
         else
         {
             itemsControl.Loaded -= OnItemsControlLoaded;
             itemsControl.Unloaded -= OnItemsControlUnloaded;
             itemsControl.PropertyChanged -= OnItemsControlOnPropertyChanged;
+            itemsControl.CancelInitialLoad();
+            itemsControl.DetachItemsSource();
             itemsControl.DetachScrollViewer();
         }
     }
 
     private static void OnItemsControlOnPropertyChanged(object? s, AvaloniaPropertyChangedEventArgs e)
     {
-        if (s is not ItemsControl ic)
+        if (s is not ItemsControl ic || e.Property != ItemsControl.ItemsSourceProperty)
             return;
-        if (e.Property == ItemsControl.ItemsSourceProperty && e.NewValue is ISupportIncrementalLoading sil)
+
+        ic.CancelInitialLoad();
+        ic.DetachItemsSource();
+
+        if (ic is { IsEnabled: true, IsLoaded: true } && e.NewValue is ISupportIncrementalLoading sil)
             ic.AttachItemsSource(sil);
     }
 
     private static void OnItemsControlLoaded(object? sender, RoutedEventArgs e)
     {
-        if (sender is ItemsControl itemsControl)
-            itemsControl.AttachScrollViewer();
+        if (sender is not ItemsControl itemsControl)
+            return;
+
+        itemsControl.AttachScrollViewer();
+        if (itemsControl.ItemsSource is ISupportIncrementalLoading sil)
+            itemsControl.AttachItemsSource(sil);
     }
 
     private static void OnItemsControlUnloaded(object? sender, RoutedEventArgs e)
     {
-        if (sender is ItemsControl itemsControl)
-            itemsControl.DetachScrollViewer();
+        if (sender is not ItemsControl itemsControl)
+            return;
+
+        itemsControl.CancelInitialLoad();
+        itemsControl.DetachItemsSource();
+        itemsControl.DetachScrollViewer();
+    }
+
+    private static void OnScrollViewerPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs args)
+    {
+        if (sender is not ScrollViewer scrollViewer)
+            return;
+
+        if (args.Property != ScrollViewer.OffsetProperty
+            && args.Property != Visual.BoundsProperty)
+            return;
+
+        if (scrollViewer.GetValue(ScrollViewerOwnerProperty) is { } itemsControl)
+            _ = itemsControl.TryLoadMoreItemsAsync();
+    }
+
+    private static void OnScrollViewerScrollChanged(object? sender, ScrollChangedEventArgs args)
+    {
+        if (sender is not ScrollViewer scrollViewer)
+            return;
+
+        if (scrollViewer.GetValue(ScrollViewerOwnerProperty) is { } itemsControl)
+            _ = itemsControl.TryLoadMoreItemsAsync();
     }
 }
