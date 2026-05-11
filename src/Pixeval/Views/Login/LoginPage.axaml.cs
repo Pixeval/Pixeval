@@ -2,8 +2,10 @@ using System;
 using System.Threading.Tasks;
 using System.Web;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Pixeval.Utilities;
+using Pixeval.ViewModels;
 using Pixeval.Views.Capability;
 
 namespace Pixeval.Views.Login;
@@ -17,7 +19,10 @@ public partial class LoginPage : ContentPage
 
     private async void LoginButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        var token = TextBox.Text;
+        if (DataContext is not LoginPageViewModel viewModel)
+            return;
+
+        var token = viewModel.RefreshToken;
         if (string.IsNullOrWhiteSpace(token))
             return;
 
@@ -69,5 +74,11 @@ public partial class LoginPage : ContentPage
     {
         var viewContainer = TopLevel.GetTopLevel(this)?.ViewContainer;
         viewContainer?.NavigateTo(new RecommendWorksPage(), true);
+    }
+
+    private void RefreshTokenBox_OnTapped(object? sender, TappedEventArgs e)
+    {
+        if (sender is AutoCompleteBox box)
+            box.IsDropDownOpen = true;
     }
 }

@@ -12,6 +12,7 @@ using Mako.Net;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
 using Pixeval.Caching;
+using Pixeval.Models.Database;
 using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Download;
 using Pixeval.Models.Extensions;
@@ -74,20 +75,31 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
             .AddScoped<DownloadHistoryPersistentManager>()
             .AddScoped<SearchHistoryPersistentManager>()
             .AddScoped<BrowseHistoryPersistentManager>()
+            .AddScoped<LoginUserPersistentManager>()
             .AddSingleton<HistoryPersistHelper>()
             .BuildServiceProvider();
 
         void MakoClientOnTokenRefreshed(MakoClient sender, TokenResponse? tokenResponse)
         {
             if (tokenResponse is null)
-                LoginContext.CurrentRefreshToken = "";
+            {
+                LoginContext.CurrentKey = 0;
+            }
             else
             {
-                LoginContext.CurrentRefreshToken = tokenResponse.RefreshToken;
-                LoginContext.Users[tokenResponse.RefreshToken] = sender.Me!;
-                AppInfo.SaveLoginContext(LoginContext);
+                var manager = AppServiceProvider.GetRequiredService<LoginUserPersistentManager>();
+                var entry = manager.Upsert(LoginUserEntry.FromTokenUser(tokenResponse.RefreshToken, tokenResponse.User));
+                LoginContext.CurrentKey = entry.HistoryEntryId;
             }
+
+            AppInfo.SaveLoginContext(LoginContext);
         }
+    }
+
+    public LoginUserEntry? GetCurrentLoginUser()
+    {
+        return AppServiceProvider.GetRequiredService<LoginUserPersistentManager>()
+            .GetByKey(LoginContext.CurrentKey);
     }
 
     public void SetNameResolvers()

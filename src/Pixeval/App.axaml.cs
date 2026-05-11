@@ -86,10 +86,8 @@ public class App : Application
 
     private static async Task LoginAsync(ViewContainerBase viewContainer)
     {
-        var loginContext = AppViewModel.LoginContext;
-        var token = loginContext.CurrentRefreshToken;
-        if (!string.IsNullOrWhiteSpace(token)
-            && loginContext.Users.ContainsKey(token))
+        if (AppViewModel.GetCurrentLoginUser() is { RefreshToken: { } token }
+            && !string.IsNullOrWhiteSpace(token))
         {
             AppViewModel.MakoClient.SetToken(token);
             if (await AppViewModel.MakoClient.IdentifyTokenAsync())

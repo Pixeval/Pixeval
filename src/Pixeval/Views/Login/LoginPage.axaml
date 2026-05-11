@@ -2,7 +2,9 @@
     x:Class="Pixeval.Views.Login.LoginPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:database="using:Pixeval.Models.Database"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
@@ -18,16 +20,54 @@
     <ContentPage.DataContext>
         <viewModels:LoginPageViewModel />
     </ContentPage.DataContext>
+    <ContentPage.Resources>
+        <DataTemplate x:DataType="{x:Type database:LoginUserEntry}" x:Key="LoginUserTemplate">
+            <DockPanel
+                MinHeight="52"
+                Margin="20,5"
+                HorizontalSpacing="10">
+                <controls:AvatarImage
+                    Width="42"
+                    Height="42"
+                    VerticalAlignment="Center"
+                    controls:Source.Cache="{Binding AvatarUrl}"
+                    DockPanel.Dock="Left" />
+                <StackPanel VerticalAlignment="Center" Spacing="2">
+                    <TextBlock
+                        FontWeight="SemiBold"
+                        Text="{Binding Name}"
+                        TextTrimming="CharacterEllipsis" />
+                    <TextBlock
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="{Binding AccountDisplay}"
+                        TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+            </DockPanel>
+        </DataTemplate>
+    </ContentPage.Resources>
     <StackPanel
         Width="300"
         Margin="50"
         VerticalAlignment="Center"
         DockPanel.Dock="Right"
         Spacing="10">
-        <TextBox
-            x:Name="TextBox"
+        <ContentControl
+            Content="{Binding SelectedUser}"
+            ContentTemplate="{StaticResource LoginUserTemplate}"
+            IsVisible="{Binding HasSelectedUser}" />
+        <AutoCompleteBox
             HorizontalAlignment="Stretch"
-            PlaceholderText="{I18N {x:Static pixeval:LoginPageResources.RefreshTokenBoxPlaceholderText}}" />
+            FilterMode="Custom"
+            IsTextCompletionEnabled="False"
+            ItemFilter="{x:Static viewModels:LoginPageViewModel.LoginUserFilter}"
+            ItemSelector="{x:Static viewModels:LoginPageViewModel.LoginUserTextSelector}"
+            ItemTemplate="{StaticResource LoginUserTemplate}"
+            ItemsSource="{Binding Users}"
+            MinimumPrefixLength="0"
+            PlaceholderText="{I18N {x:Static pixeval:LoginPageResources.RefreshTokenBoxPlaceholderText}}"
+            SelectedItem="{Binding SelectedUser, Mode=TwoWay}"
+            Tapped="RefreshTokenBox_OnTapped"
+            Text="{Binding RefreshToken, Mode=TwoWay}" />
         <Button
             HorizontalAlignment="Stretch"
             Click="LoginButton_OnClick"
