@@ -13,7 +13,7 @@
         <viewers:WorkInfoPane />
     </Design.PreviewWith>
 
-    <DataTemplate x:Key="UserCardDataTemplate" x:DataType="{x:Type misaki:IUser}">
+    <DataTemplate x:DataType="{x:Type misaki:IUser}" x:Key="UserCardDataTemplate">
         <Button
             Padding="8"
             HorizontalAlignment="Stretch"
@@ -52,7 +52,7 @@
         </Button>
     </DataTemplate>
 
-    <DataTemplate x:Key="LiteUserCardDataTemplate" x:DataType="{x:Type misaki:IUser}">
+    <DataTemplate x:DataType="{x:Type misaki:IUser}" x:Key="LiteUserCardDataTemplate">
         <Button
             Padding="8"
             HorizontalAlignment="Stretch"
@@ -80,40 +80,48 @@
         <StackPanel Spacing="5" />
     </ItemsPanelTemplate>
 
-    <ControlTheme
-        x:Key="{x:Type viewers:WorkInfoPane}"
-        TargetType="{x:Type viewers:WorkInfoPane}">
+    <ControlTheme x:Key="{x:Type viewers:WorkInfoPane}" TargetType="{x:Type viewers:WorkInfoPane}">
         <Setter Property="Template">
             <ControlTemplate>
-                <ScrollViewer Name="WIPHostScroller" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer
+                    Name="WIPHostScroller"
+                    HorizontalScrollBarVisibility="Disabled"
+                    VerticalScrollBarVisibility="Auto">
                     <StackPanel
+                        x:DataType="{x:Type misaki:IArtworkInfo}"
                         MinHeight="400"
                         Margin="16,12"
-                        Spacing="5"
                         DataContext="{TemplateBinding ArtworkInfo}"
-                        x:DataType="{x:Type misaki:IArtworkInfo}">
+                        Spacing="5">
                         <Grid ColumnDefinitions="* Auto">
                             <TextBlock
                                 HorizontalAlignment="Left"
+                                controls:TranslatableTextBlockBehavior.IsEnabled="True"
+                                controls:TranslatableTextBlockBehavior.TextType="WorkTitle"
                                 IsVisible="{Binding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                                 Text="{Binding Title}"
                                 TextWrapping="Wrap"
                                 Theme="{StaticResource TitleTextBlockStyle}" />
                             <ContentPresenter
                                 Grid.Column="1"
-                                ContentTemplate="{TemplateBinding ActionZoneTemplate}"
-                                Content="{TemplateBinding ActionZone}" />
+                                Content="{TemplateBinding ActionZone}"
+                                ContentTemplate="{TemplateBinding ActionZoneTemplate}" />
                         </Grid>
 
-                        <controls:MarkdownBox
+                        <ScrollViewer
                             MaxHeight="{Binding #WIPHostScroller.Bounds, Converter={x:Static viewers:WorkInfoPane.HalfVerticalSpaceConverter}}"
                             Margin="0,5,0,0"
-                            IsVisible="{Binding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                            Markdown="{Binding Description}" />
+                            HorizontalScrollBarVisibility="Disabled"
+                            IsVisible="{Binding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                            <TextBlock
+                                controls:TranslatableTextBlockBehavior.IsEnabled="True"
+                                controls:TranslatableTextBlockBehavior.TextType="WorkCaption"
+                                Text="{Binding Description, Converter={x:Static converters:PixevalConverters.HtmlToPlainText}}"
+                                TextWrapping="Wrap" />
+                        </ScrollViewer>
 
                         <StackPanel Orientation="Horizontal" Spacing="5">
-                            <TextBlock VerticalAlignment="Center"
-                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}">
+                            <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorSecondaryBrush}">
                                 <Run Text="ID " />
                                 <Run Text="{Binding Id}" />
                             </TextBlock>
@@ -129,15 +137,9 @@
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Spacing="20">
-                            <controls:IconText
-                                Symbol="Eye"
-                                Text="{Binding TotalView, Converter={x:Static converters:PixevalConverters.IntToString}}" />
-                            <controls:IconText
-                                Symbol="Heart"
-                                Text="{Binding TotalFavorite, Converter={x:Static converters:PixevalConverters.IntToString}}" />
-                            <controls:IconText
-                                Symbol="Clock"
-                                Text="{Binding CreateDate, Converter={x:Static converters:PixevalConverters.DateTimeShortDate}}" />
+                            <controls:IconText Symbol="Eye" Text="{Binding TotalView, Converter={x:Static converters:PixevalConverters.IntToString}}" />
+                            <controls:IconText Symbol="Heart" Text="{Binding TotalFavorite, Converter={x:Static converters:PixevalConverters.IntToString}}" />
+                            <controls:IconText Symbol="Clock" Text="{Binding CreateDate, Converter={x:Static converters:PixevalConverters.DateTimeShortDate}}" />
                         </StackPanel>
 
                         <ItemsControl
@@ -158,6 +160,9 @@
                                         <TextBlock
                                             Margin="10"
                                             HorizontalAlignment="Left"
+                                            controls:TranslatableTextBlockBehavior.IsEnabled="True"
+                                            controls:TranslatableTextBlockBehavior.PretranslatedText="{Binding Key.TranslatedName}"
+                                            controls:TranslatableTextBlockBehavior.TextType="WorkTag"
                                             IsVisible="{Binding Key.Name, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                                             Text="{Binding Key.Name}"
                                             Theme="{StaticResource BodyStrongTextBlockStyle}" />
@@ -169,17 +174,13 @@
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate x:DataType="{x:Type misaki:ITag}">
-                                                    <Button
-                                                        Command="{Binding $parent[viewers:WorkInfoPane].OpenTagCommand}"
-                                                        CommandParameter="{Binding}">
-                                                        <StackPanel Orientation="Horizontal" Spacing="4">
-                                                            <TextBlock Text="{Binding Name}" TextWrapping="NoWrap" />
-                                                            <TextBlock
-                                                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                                IsVisible="{Binding TranslatedName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                                                                Text="{Binding TranslatedName}"
-                                                                TextWrapping="NoWrap" />
-                                                        </StackPanel>
+                                                    <Button Command="{Binding $parent[viewers:WorkInfoPane].OpenTagCommand}" CommandParameter="{Binding}">
+                                                        <TextBlock
+                                                            controls:TranslatableTextBlockBehavior.IsEnabled="True"
+                                                            controls:TranslatableTextBlockBehavior.PretranslatedText="{Binding TranslatedName}"
+                                                            controls:TranslatableTextBlockBehavior.TextType="WorkTag"
+                                                            Text="{Binding Name}"
+                                                            TextWrapping="NoWrap" />
                                                         <Button.ContextFlyout>
                                                             <MenuFlyout>
                                                                 <MenuItem
@@ -215,48 +216,42 @@
         </Setter>
     </ControlTheme>
 
-    <ControlTheme
-        x:Key="LiteWorkInfoPaneStyle"
-        TargetType="{x:Type viewers:WorkInfoPane}">
+    <ControlTheme x:Key="LiteWorkInfoPaneStyle" TargetType="{x:Type viewers:WorkInfoPane}">
         <Setter Property="Template">
             <ControlTemplate>
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                     <StackPanel
+                        x:DataType="{x:Type misaki:IArtworkInfo}"
                         Margin="16,12"
-                        Spacing="5"
                         DataContext="{TemplateBinding ArtworkInfo}"
-                        x:DataType="{x:Type misaki:IArtworkInfo}">
+                        Spacing="5">
                         <Grid ColumnDefinitions="* Auto">
                             <TextBlock
                                 HorizontalAlignment="Left"
                                 IsVisible="{Binding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                                Text="{Binding Title}"
-                                TextWrapping="Wrap"
-                                TextTrimming="CharacterEllipsis"
                                 MaxLines="2"
+                                Text="{Binding Title}"
+                                TextTrimming="CharacterEllipsis"
+                                TextWrapping="Wrap"
                                 Theme="{StaticResource TitleTextBlockStyle}" />
                             <ContentPresenter
                                 Grid.Column="1"
-                                ContentTemplate="{TemplateBinding ActionZoneTemplate}"
-                                Content="{TemplateBinding ActionZone}" />
+                                Content="{TemplateBinding ActionZone}"
+                                ContentTemplate="{TemplateBinding ActionZoneTemplate}" />
                         </Grid>
 
-                        <controls:MarkdownBox
-                            Margin="0,5,0,0"
+                        <ScrollViewer
                             MaxHeight="100"
-                            IsVisible="{Binding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                            Markdown="{Binding Description}" />
+                            Margin="0,5,0,0"
+                            HorizontalScrollBarVisibility="Disabled"
+                            IsVisible="{Binding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                            <TextBlock Text="{Binding Description, Converter={x:Static converters:PixevalConverters.HtmlToPlainText}}" TextWrapping="Wrap" />
+                        </ScrollViewer>
 
                         <StackPanel Orientation="Horizontal" Spacing="20">
-                            <controls:IconText
-                                Symbol="Eye"
-                                Text="{Binding TotalView, Converter={x:Static converters:PixevalConverters.IntToString}}" />
-                            <controls:IconText
-                                Symbol="Heart"
-                                Text="{Binding TotalFavorite, Converter={x:Static converters:PixevalConverters.IntToString}}" />
-                            <controls:IconText
-                                Symbol="Clock"
-                                Text="{Binding CreateDate, Converter={x:Static converters:PixevalConverters.DateTimeShortDate}}" />
+                            <controls:IconText Symbol="Eye" Text="{Binding TotalView, Converter={x:Static converters:PixevalConverters.IntToString}}" />
+                            <controls:IconText Symbol="Heart" Text="{Binding TotalFavorite, Converter={x:Static converters:PixevalConverters.IntToString}}" />
+                            <controls:IconText Symbol="Clock" Text="{Binding CreateDate, Converter={x:Static converters:PixevalConverters.DateTimeShortDate}}" />
                         </StackPanel>
 
                         <ItemsControl

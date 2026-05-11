@@ -47,7 +47,7 @@ public abstract class SimplePersistentManager<[DynamicallyAccessedMembers(Dynami
     /// <inheritdoc />
     public virtual IReadOnlyList<T> Query(Expression<Func<T, bool>> predicate, int skip = 0, int limit = int.MaxValue)
     {
-        return Queryable.Where(predicate).Skip(skip).Take(limit).ToArray();
+        return [.. Queryable.Where(predicate).Skip(skip).Take(limit)];
     }
 
     /// <inheritdoc />
@@ -93,7 +93,7 @@ public abstract class SimplePersistentManager<[DynamicallyAccessedMembers(Dynami
     public virtual IReadOnlyList<T> ToArray() => Queryable.ToArray();
 
     /// <inheritdoc />
-    public virtual IReadOnlyList<T> Reverse() => Queryable.OrderByDescending(t => t.HistoryEntryId).ToArray();
+    public virtual IReadOnlyList<T> Reverse() => [.. Queryable.OrderByDescending(t => t.HistoryEntryId)];
 
     /// <inheritdoc />
     public virtual void Purge(int limit)

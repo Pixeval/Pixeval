@@ -4,6 +4,7 @@
 using System;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.Marshalling;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -13,7 +14,8 @@ using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace Pixeval.Utilities;
 
-public class FileLogger : ILogger, Pixeval.Extensions.Common.ILogger
+[GeneratedComClass]
+public partial class FileLogger : ILogger, Pixeval.Extensions.Common.ILogger
 {
     private readonly string _basePath;
 

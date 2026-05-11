@@ -27,7 +27,7 @@ public partial class IllustrationItemViewModel
             { ViewContainer: { } viewContainer, Clipboard: { } clipboard })
             return;
         await clipboard.SetBitmapAsync(bitmap);
-        viewContainer?.ShowSuccess(I18NManager.GetResource(EntryItemResources.ImageSetToClipBoard));
+        viewContainer?.ShowSuccess(I18NManager.GetResource(MiscResources.Copied));
     }
 
     /// <inheritdoc />

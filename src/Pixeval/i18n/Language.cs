@@ -199,7 +199,6 @@ namespace Pixeval
         public const string DownloadTaskCreated = "EntryItem.DownloadTaskCreated";
         public const string GenerateLink = "EntryItem.GenerateLink";
         public const string GenerateWebLink = "EntryItem.GenerateWebLink";
-        public const string ImageSetToClipBoard = "EntryItem.ImageSetToClipBoard";
         public const string MangaSave = "EntryItem.MangaSave";
         public const string MangaSaveAs = "EntryItem.MangaSaveAs";
         public const string OpenInWebBrowser = "EntryItem.OpenInWebBrowser";

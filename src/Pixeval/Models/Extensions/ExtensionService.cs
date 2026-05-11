@@ -15,6 +15,7 @@ using Pixeval.Extensions.Common.Commands.Transformers;
 using Pixeval.Extensions.Common.Downloaders;
 using Pixeval.Extensions.Common.FormatProviders;
 using Pixeval.Extensions.Common.Settings;
+using Pixeval.Utilities;
 
 namespace Pixeval.Models.Extensions;
 
@@ -42,9 +43,9 @@ public class ExtensionService : IDisposable
 
     private readonly List<ExtensionSettingsGroup> _settingsGroups = [];
 
-    public int OutDateExtensionHostsCount { get; private set; }
+    public int OutDateExtensionHostsCount { get; }
 
-    public void LoadAllHosts(ILogger logger)
+    public ExtensionService(FileLogger logger)
     {
         foreach (var dll in Directory.GetFiles(AppInfo.ExtensionsFolder, "*.dll"))
         {

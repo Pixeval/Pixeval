@@ -150,7 +150,7 @@ public partial class SingleImageViewer : UserControl
             { ViewContainer: { } viewContainer, Clipboard: { } clipboard })
             return;
         await clipboard.SetBitmapAsync(singleFrame);
-        viewContainer?.ShowSuccess(I18NManager.GetResource(EntryItemResources.ImageSetToClipBoard));
+        viewContainer?.ShowSuccess(I18NManager.GetResource(MiscResources.Copied));
     }
 
     [RelayCommand(CanExecute = nameof(CanManipulateImage))]
@@ -162,7 +162,7 @@ public partial class SingleImageViewer : UserControl
             { ViewContainer: { } viewContainer, Clipboard: { } clipboard })
             return;
         await clipboard.SetBitmapAsync(singleFrame);
-        viewContainer?.ShowSuccess(I18NManager.GetResource(EntryItemResources.ImageSetToClipBoard));
+        viewContainer?.ShowSuccess(I18NManager.GetResource(MiscResources.Copied));
     }
 
     [RelayCommand(CanExecute = nameof(CanManipulateImage))]
@@ -174,7 +174,7 @@ public partial class SingleImageViewer : UserControl
             { ViewContainer: { } viewContainer, Clipboard: { } clipboard })
             return;
         await clipboard.SetBitmapAsync(singleFrame);
-        viewContainer?.ShowSuccess(I18NManager.GetResource(EntryItemResources.ImageSetToClipBoard));
+        viewContainer?.ShowSuccess(I18NManager.GetResource(MiscResources.Copied));
     }
 
     /// <summary>

@@ -63,12 +63,7 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
             .AddKeyedSingleton<IDownloadHttpClientService, MakoClient>(IPlatformInfo.Pixiv, (provider, key) => makoClient)
             .AddSingleton<IllustrationDownloadTaskFactory>()
             .AddSingleton<NovelDownloadTaskFactory>()
-            .AddSingleton(_ =>
-            {
-                var extensionService = new ExtensionService();
-                extensionService.LoadAllHosts(logger);
-                return extensionService;
-            })
+            .AddSingleton<ExtensionService>()
             .AddSingleton(cacheTable)
             .AddSingleton(_ => new SQLiteConnection(AppInfo.DatabaseFilePath,
                 SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex))

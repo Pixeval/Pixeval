@@ -2,6 +2,8 @@
 // Licensed under the GPL-3.0 License.
 
 using System.Collections.Generic;
+using System.Net;
+using System.Text.RegularExpressions;
 using AutoSettingsPage.Avalonia;
 using AutoSettingsPage.Models;
 using Avalonia.Controls;
@@ -13,7 +15,7 @@ using Pixeval.Controls;
 
 namespace Pixeval.Views.Converters;
 
-public static class PixevalConverters
+public static partial class PixevalConverters
 {
     public static readonly NumberEllipsisConverter NumberEllipsis = NumberEllipsisConverter.Instance;
 
@@ -55,4 +57,15 @@ public static class PixevalConverters
     public static readonly StringFormatConverter StringFormatConverter = StringFormatConverter.Instance;
 
     public static readonly FuncValueConverter<IReadOnlyCollection<IImageFrame>, string?> ImagePickClosestConverter = new(value => value?.PickClosest(50, 50)?.ImageUri.OriginalString);
+
+    public static readonly FuncValueConverter<string?, string?> HtmlToPlainText = new(value =>
+        value is null
+            ? null
+            : WebUtility.HtmlDecode(HtmlTagRegex().Replace(LineBreakRegex().Replace(value, "\n"), "")));
+    
+    [GeneratedRegex("<br\\s*/?>", RegexOptions.IgnoreCase)]
+    private static partial Regex LineBreakRegex();
+
+    [GeneratedRegex("<[^>]+>")]
+    private static partial Regex HtmlTagRegex();
 }

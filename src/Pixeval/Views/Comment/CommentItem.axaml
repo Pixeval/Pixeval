@@ -17,7 +17,12 @@
     <DockPanel Margin="8" LastChildFill="True">
         <!--  Bottom: Comment content or stamp  -->
         <Panel Margin="57,5,0,0" DockPanel.Dock="Bottom">
-            <controls:MarkdownBox IsVisible="{Binding !IsStamp}" Markdown="{Binding CommentContent}" />
+            <TextBlock
+                controls:TranslatableTextBlockBehavior.IsEnabled="True"
+                controls:TranslatableTextBlockBehavior.TextType="Comment"
+                IsVisible="{Binding !IsStamp}"
+                Text="{Binding Comment.Content}"
+                TextWrapping="Wrap" />
             <Image
                 x:Name="StickerImage"
                 MaxHeight="100"

@@ -56,7 +56,12 @@
                             FontSize="13"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="{Binding Id}" />
-                        <TextBlock MaxHeight="60" Text="{Binding Description}" />
+                        <TextBlock
+                            MaxHeight="60"
+                            controls:TranslatableTextBlockBehavior.IsEnabled="True"
+                            controls:TranslatableTextBlockBehavior.TextType="UserComment"
+                            Text="{Binding Description}"
+                            TextWrapping="Wrap" />
                     </StackPanel>
                 </StackPanel>
 

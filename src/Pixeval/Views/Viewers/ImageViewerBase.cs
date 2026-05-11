@@ -128,6 +128,6 @@ public abstract partial class ImageViewerBase : UserControl
             return;
 
         await clipboard.SetBitmapAsync(singleFrame);
-        viewContainer?.ShowSuccess(I18NManager.GetResource(EntryItemResources.ImageSetToClipBoard));
+        viewContainer?.ShowSuccess(I18NManager.GetResource(MiscResources.Copied));
     }
 }
