@@ -800,7 +800,7 @@ public class TokenizingBox : TemplatedControl
 
             if (!AddTokenCore(token, token))
             {
-                remainder = string.Join(separator, parts.Skip(i));
+                remainder = string.Join(separator, parts, i, parts.Length - i);
                 break;
             }
 

@@ -272,7 +272,7 @@ public class Parser
         void EatBool(bool isExclude)
         {
             var content = Eat<IQueryToken.Data>();
-            var type = content.Value.ToLower() switch
+            var type = content.Value.ToLowerInvariant() switch
             {
                 "r18" => BoolType.R18,
                 "r18g" => BoolType.R18G,

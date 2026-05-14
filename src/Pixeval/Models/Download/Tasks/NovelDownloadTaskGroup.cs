@@ -68,12 +68,12 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
 
     public NovelDownloadTaskGroup(DownloadHistoryEntry entry) : base(entry)
     {
-        var backSlash = TokenizedDestination.LastIndexOf('\\');
-        DocPath = TokenizedDestination[..backSlash];
+        var separatorIndex = TokenizedDestination.LastIndexOfAny([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar]);
+        DocPath = TokenizedDestination[..separatorIndex];
         PdfTempFolderPath = $"{DocPath}.tmp";
         FileHelper.CreateParentDirectory(DocPath);
         // .<ext> or .png or .etc 
-        var imgExt = TokenizedDestination[(backSlash + 1)..];
+        var imgExt = TokenizedDestination[(separatorIndex + 1)..];
         DestinationIllustrationFormat = IoHelper.GetIllustrationFormat(imgExt);
         DestinationNovelFormat = IoHelper.GetNovelFormat(Path.GetExtension(DocPath));
     }
@@ -83,12 +83,12 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
         string destination,
         NovelContent? novelContent) : base(entry, destination, DownloadItemType.Novel)
     {
-        var backSlash = TokenizedDestination.LastIndexOf('\\');
-        DocPath = TokenizedDestination[..backSlash];
+        var separatorIndex = TokenizedDestination.LastIndexOfAny([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar]);
+        DocPath = TokenizedDestination[..separatorIndex];
         PdfTempFolderPath = $"{DocPath}.tmp";
         FileHelper.CreateParentDirectory(DocPath);
         // .<ext> or .png or .etc 
-        var imgExt = TokenizedDestination[(backSlash + 1)..];
+        var imgExt = TokenizedDestination[(separatorIndex + 1)..];
         DestinationIllustrationFormat = IoHelper.GetIllustrationFormat(imgExt);
         DestinationNovelFormat = IoHelper.GetNovelFormat(Path.GetExtension(DocPath));
         if (novelContent is not null)

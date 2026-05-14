@@ -70,7 +70,7 @@ public abstract class PersistentManagerBase<[DynamicallyAccessedMembers(Dynamica
     /// <inheritdoc />
     public virtual TEntry? TryDelete(Expression<Func<TEntry, bool>> predicate)
     {
-        if (Queryable.Where(predicate).FirstOrDefault() is { } e)
+        if (Queryable.FirstOrDefault(predicate) is { } e)
         {
             _db.Delete<TEntry>(e.HistoryEntryId);
             return e;

@@ -41,7 +41,7 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup
             var (uri, msDelay) = Entry.MultiImageUris[i];
             msDelays[i] = msDelay;
             var imageDownloadTask = new ImageDownloadTask(uri,
-                $"{TempFolderPath}\\{i}{Path.GetExtension(uri.OriginalString)}", DatabaseEntry.State);
+                Path.Combine(TempFolderPath, $"{i}{Path.GetExtension(uri.OriginalString)}"), DatabaseEntry.State);
             AddToTasksSet(imageDownloadTask);
         }
         MsDelays = msDelays;

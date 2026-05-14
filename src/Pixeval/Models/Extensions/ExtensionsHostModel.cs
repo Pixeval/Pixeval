@@ -67,13 +67,6 @@ public record ExtensionsHostModel(IExtensionsHost Host) : IDisposable
         return iconBytes is null ? null : new Bitmap(Streams.RentStream(iconBytes));
     }
 
-    private static Control GetIcon(Bitmap? imageSource)
-    {
-        return imageSource is null
-            ? new SymbolIcon { Symbol = Symbol.PuzzlePiece }
-            : new Image { Source = imageSource };
-    }
-
     public void Dispose()
     {
         GC.SuppressFinalize(this);

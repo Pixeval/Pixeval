@@ -170,24 +170,11 @@ public class IncrementalLoadingCollection<TSource, IType> : ObservableCollection
     /// <returns>
     /// Returns a collection of <typeparamref name="IType"/>.
     /// </returns>
-    protected virtual Task<IReadOnlyCollection<IType>> LoadDataAsync(CancellationToken token = default)
+    protected virtual async Task<IReadOnlyCollection<IType>> LoadDataAsync(CancellationToken token = default)
     {
-        return Source.GetPagedItemsAsync(CurrentPageIndex, ItemsPerPage, token)
-            .ContinueWith(
-                t =>
-                {
-                    if (t.IsFaulted)
-                    {
-                        throw t.Exception;
-                    }
-
-                    if (t.IsCompletedSuccessfully)
-                    {
-                        CurrentPageIndex += 1;
-                    }
-
-                    return t.Result;
-                }, token);
+        var result = await Source.GetPagedItemsAsync(CurrentPageIndex, ItemsPerPage, token);
+        CurrentPageIndex += 1;
+        return result;
     }
 
     /// <summary>

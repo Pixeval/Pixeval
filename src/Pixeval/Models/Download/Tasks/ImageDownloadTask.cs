@@ -148,8 +148,8 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
             {
                 var notifier = new ProgressNotifier(this);
                 downloader.Download(notifier, Uri.OriginalString, Destination);
-                while (!notifier.Finished) 
-                    await Task.Delay(1000);
+                while (!notifier.Finished)
+                    await Task.Delay(1000, CancellationTokenSource.Token);
                 if (notifier.Exception is null)
                     await PendingCompleteAsync();
                 else
@@ -302,8 +302,8 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
 
         public void Aborted(IException? exception)
         {
-            Finished = false;
-            Exception = exception?.ToException();
+            Finished = true;
+            Exception = exception?.ToException() ?? new OperationCanceledException();
         }
     }
 }

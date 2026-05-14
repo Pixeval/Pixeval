@@ -243,7 +243,7 @@ public static partial class IoHelper
         return ugoiraDownloadFormat switch
         {
             UgoiraDownloadFormat.Original => FileExtensionMacro.NameConstToken,
-            UgoiraDownloadFormat.Tiff or UgoiraDownloadFormat.APng or UgoiraDownloadFormat.Gif => "." + ugoiraDownloadFormat.ToString()!.ToLower(),
+            UgoiraDownloadFormat.Tiff or UgoiraDownloadFormat.APng or UgoiraDownloadFormat.Gif => "." + ugoiraDownloadFormat.ToString()!.ToLowerInvariant(),
             UgoiraDownloadFormat.WebPLossless or UgoiraDownloadFormat.WebPLossy => ".webp",
             _ => throw new ArgumentOutOfRangeException(nameof(ugoiraDownloadFormat))
         };
@@ -268,7 +268,7 @@ public static partial class IoHelper
         return illustrationDownloadFormat switch
         {
             IllustrationDownloadFormat.Original => FileExtensionMacro.NameConstToken,
-            IllustrationDownloadFormat.Jpg or IllustrationDownloadFormat.Png or IllustrationDownloadFormat.Bmp => "." + illustrationDownloadFormat.ToString()!.ToLower(),
+            IllustrationDownloadFormat.Jpg or IllustrationDownloadFormat.Png or IllustrationDownloadFormat.Bmp => "." + illustrationDownloadFormat.ToString()!.ToLowerInvariant(),
             IllustrationDownloadFormat.WebPLossless or IllustrationDownloadFormat.WebPLossy => ".webp",
             _ => throw new ArgumentOutOfRangeException(nameof(illustrationDownloadFormat))
         };
@@ -293,8 +293,8 @@ public static partial class IoHelper
         return novelDownloadFormat switch
         {
             NovelDownloadFormat.OriginalTxt => "novel.txt",
-            NovelDownloadFormat.Pdf => "." + novelDownloadFormat.ToString()!.ToLower(),
-            NovelDownloadFormat.Html or NovelDownloadFormat.Md => "\\novel." + novelDownloadFormat.ToString()!.ToLower(),
+            NovelDownloadFormat.Pdf => "." + novelDownloadFormat.ToString()!.ToLowerInvariant(),
+            NovelDownloadFormat.Html or NovelDownloadFormat.Md => "\\novel." + novelDownloadFormat.ToString()!.ToLowerInvariant(),
             _ => throw new ArgumentOutOfRangeException(nameof(novelDownloadFormat))
         };
     }

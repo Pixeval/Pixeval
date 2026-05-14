@@ -1,6 +1,7 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using System.IO;
 using Mako.Model;
 using Pixeval.Download;
 using Pixeval.Models.Download.Tasks;
@@ -17,7 +18,7 @@ public class NovelDownloadTaskFactory : IDownloadTaskFactory<Novel, NovelDownloa
         // xxx.pdf\<ext>
         // xxx\novel.txt\.png
         // xxx\novel.md\<ext>
-        path += "\\" + IoHelper.GetIllustrationExtension();
+        path = Path.Combine(path, IoHelper.GetIllustrationExtension());
         var task = new NovelDownloadTaskGroup(context, path, parameter);
         return task;
     }

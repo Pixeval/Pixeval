@@ -60,7 +60,7 @@ public partial class ExtensionsPage : ContentPage
         {
             var fileInfo = new FileInfo(file.Path.LocalPath);
             var fileName = fileInfo.Name;
-            switch (fileInfo.Extension)
+            switch (fileInfo.Extension.ToLowerInvariant())
             {
                 case ".dll":
                 {
@@ -101,7 +101,8 @@ public partial class ExtensionsPage : ContentPage
                         {
                             using var zipArchive = ZipFile.OpenRead(fileInfo.FullName);
                             return zipArchive.Entries.Select(t => t.FullName)
-                                .Where(t => !t.Contains('\\') && !t.Contains('/') && t.EndsWith(".dll")).ToArray();
+                                .Where(t => !t.Contains('\\') && !t.Contains('/') && t.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+                                .ToArray();
                         });
 
                         if (dllNames.Length is not 0)

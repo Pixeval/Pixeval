@@ -54,7 +54,7 @@ public static class CacheHelper
             ArgumentNullException.ThrowIfNull(frame.ZipImageDelays);
             await frame.ZipImageDelays.TryPreloadListAsync(platform);
             var zip = await Streams.ReadZipAsync(stream, true);
-            IAnimatedBitmap.Load(zip, frame.ZipImageDelays, true);
+            return IAnimatedBitmap.Load(zip, frame.ZipImageDelays, true);
         }
         // SingleAnimatedImageType.SingleFile
         else if (await GetSingleImageAsync(platform, key, progress, token) is { } bitmap)

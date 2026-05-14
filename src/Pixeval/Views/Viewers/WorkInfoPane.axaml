@@ -94,7 +94,7 @@
                         DataContext="{TemplateBinding ArtworkInfo}"
                         Spacing="5">
                         <Grid ColumnDefinitions="* Auto">
-                            <TextBlock
+                            <SelectableTextBlock
                                 HorizontalAlignment="Left"
                                 controls:TranslatableTextBlockBehavior.IsEnabled="True"
                                 controls:TranslatableTextBlockBehavior.TextType="WorkTitle"
@@ -113,7 +113,7 @@
                             Margin="0,5,0,0"
                             HorizontalScrollBarVisibility="Disabled"
                             IsVisible="{Binding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
-                            <TextBlock
+                            <SelectableTextBlock
                                 controls:TranslatableTextBlockBehavior.IsEnabled="True"
                                 controls:TranslatableTextBlockBehavior.TextType="WorkCaption"
                                 Text="{Binding Description, Converter={x:Static converters:PixevalConverters.HtmlToPlainText}}"
