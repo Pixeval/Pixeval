@@ -26,8 +26,6 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
 {
     public ServiceProvider AppServiceProvider { get; private set; } = null!;
 
-    public IServiceScope AppServicesScope => AppServiceProvider.CreateScope();
-
     public App App { get; } = app;
 
     public HistoryPersistHelper HistoryPersistHelper => AppServiceProvider.GetRequiredService<HistoryPersistHelper>();
@@ -67,12 +65,12 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
             .AddSingleton(cacheTable)
             .AddSingleton(_ => new SQLiteConnection(AppInfo.DatabaseFilePath,
                 SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex))
-            .AddScoped<DownloadHistoryPersistentManager>()
-            .AddScoped<SearchHistoryPersistentManager>()
-            .AddScoped<BrowseHistoryPersistentManager>()
-            .AddScoped<LoginUserPersistentManager>()
+            .AddSingleton<DownloadHistoryPersistentManager>()
+            .AddSingleton<SearchHistoryPersistentManager>()
+            .AddSingleton<BrowseHistoryPersistentManager>()
+            .AddSingleton<LoginUserPersistentManager>()
             .AddSingleton<HistoryPersistHelper>()
-            .BuildServiceProvider();
+            .BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
 
         void MakoClientOnTokenRefreshed(MakoClient sender, TokenResponse? tokenResponse)
         {
