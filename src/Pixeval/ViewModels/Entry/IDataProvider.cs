@@ -16,7 +16,7 @@ public interface IDataProvider<T, TViewModel>
 {
     AdvancedObservableCollection<TViewModel> View { get; }
 
-    IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel> Source { get; }
+    IncrementalLoadingCollection<TViewModel> Source { get; }
 
     IFetchEngine<T>? FetchEngine { get; }
 

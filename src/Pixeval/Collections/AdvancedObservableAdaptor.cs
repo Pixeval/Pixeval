@@ -17,7 +17,7 @@ namespace Pixeval.Collections;
 
 [DebuggerDisplay("Count = {Count}")]
 public class AdvancedObservableAdaptor<TIn, TOut>
-    : IDeferredCollection<TOut>, IList, IReadOnlyList<TOut>, INotifyCollectionChanged, INotifyPropertyChanged, ISupportIncrementalLoading, IDisposable
+    : IDeferredCollection<TOut>, IList, IReadOnlyList<TOut>, INotifyCollectionChanged, INotifyPropertyChanged, IIncrementalLoading, IDisposable
     where TIn : class
     where TOut : class
 {
@@ -111,10 +111,10 @@ public class AdvancedObservableAdaptor<TIn, TOut>
 
     public Task<int> LoadMoreItemsAsync(int count, CancellationToken token = default)
     {
-        return (Source as ISupportIncrementalLoading)?.LoadMoreItemsAsync(count, token) ?? Task.FromResult(0);
+        return (Source as IIncrementalLoading)?.LoadMoreItemsAsync(count, token) ?? Task.FromResult(0);
     }
 
-    public bool HasMoreItems => (Source as ISupportIncrementalLoading)?.HasMoreItems ?? false;
+    public bool HasMoreItems => (Source as IIncrementalLoading)?.HasMoreItems ?? false;
 
     public Range Range
     {

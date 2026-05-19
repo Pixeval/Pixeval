@@ -59,6 +59,79 @@ public sealed class AdvancedObservableCollectionTest
         }
     }
 
+    private sealed class ControlledIncrementalSource : IIncrementalSource<int>
+    {
+        private readonly Lock _gate = new();
+        private readonly List<Call> _calls = [];
+        private TaskCompletionSource _callChanged = CreateCompletionSource();
+
+        public int CallCount
+        {
+            get
+            {
+                lock (_gate)
+                {
+                    return _calls.Count;
+                }
+            }
+        }
+
+        public async Task<IReadOnlyCollection<int>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken token = default)
+        {
+            var call = new Call(pageIndex, pageSize);
+            lock (_gate)
+            {
+                _calls.Add(call);
+                _callChanged.SetResult();
+                _callChanged = CreateCompletionSource();
+            }
+
+            return await call.Completion.Task.WaitAsync(token);
+        }
+
+        public async Task<Call> WaitForCallAsync(int index)
+        {
+            while (true)
+            {
+                Task waitTask;
+                lock (_gate)
+                {
+                    if (_calls.Count > index)
+                        return _calls[index];
+
+                    waitTask = _callChanged.Task;
+                }
+
+                await waitTask.WaitAsync(TimeSpan.FromSeconds(5));
+            }
+        }
+
+        private static TaskCompletionSource CreateCompletionSource() => new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public sealed class Call(int pageIndex, int pageSize)
+        {
+            public int PageIndex { get; } = pageIndex;
+
+            public int PageSize { get; } = pageSize;
+
+            public TaskCompletionSource<IReadOnlyCollection<int>> Completion { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        }
+    }
+
+    private static async Task AssertOperationCanceledAsync(Task task)
+    {
+        try
+        {
+            await task;
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+
+        Assert.Fail("Expected the task to be canceled.");
+    }
+
     [TestMethod]
     public void Test_SourceNcc_CollectionChanged_Add()
     {
@@ -251,5 +324,71 @@ public sealed class AdvancedObservableCollectionTest
 
         col.Insert(0, new(0));
         CollectionAssert.AreEqual(new[] { 3, 2, 1, 0 }, aoc.Select(item => item.Val).ToArray());
+    }
+
+    [TestMethod]
+    public async Task Test_IncrementalLoadingCollection_CoalescesConcurrentLoads()
+    {
+        var source = new ControlledIncrementalSource();
+        var collection = new IncrementalLoadingCollection<int>(source, 3);
+
+        var first = collection.LoadMoreItemsAsync(0);
+        var call = await source.WaitForCallAsync(0);
+        var second = collection.LoadMoreItemsAsync(0);
+        var third = collection.LoadMoreItemsAsync(0);
+
+        Assert.AreEqual(1, source.CallCount);
+
+        call.Completion.SetResult([1, 2, 3]);
+        CollectionAssert.AreEqual(new[] { 3, 3, 3 }, await Task.WhenAll(first, second, third));
+        CollectionAssert.AreEqual(new[] { 1, 2, 3 }, collection.ToArray());
+        Assert.IsTrue(collection.HasMoreItems);
+    }
+
+    [TestMethod]
+    public async Task Test_IncrementalLoadingCollection_CancelingDuplicateWaitDoesNotCancelSharedLoad()
+    {
+        var source = new ControlledIncrementalSource();
+        var collection = new IncrementalLoadingCollection<int>(source, 3);
+
+        var first = collection.LoadMoreItemsAsync(0);
+        var call = await source.WaitForCallAsync(0);
+        using var cts = new CancellationTokenSource();
+        var second = collection.LoadMoreItemsAsync(0, cts.Token);
+
+        await cts.CancelAsync();
+        await AssertOperationCanceledAsync(second);
+
+        Assert.AreEqual(1, source.CallCount);
+
+        call.Completion.SetResult([1, 2, 3]);
+        Assert.AreEqual(3, await first);
+        CollectionAssert.AreEqual(new[] { 1, 2, 3 }, collection.ToArray());
+        Assert.IsTrue(collection.HasMoreItems);
+    }
+
+    [TestMethod]
+    public async Task Test_IncrementalLoadingCollection_CanceledSourceRequestKeepsPageRetryable()
+    {
+        var source = new ControlledIncrementalSource();
+        var collection = new IncrementalLoadingCollection<int>(source, 3);
+        using var cts = new CancellationTokenSource();
+
+        var canceledLoad = collection.LoadMoreItemsAsync(0, cts.Token);
+        var canceledCall = await source.WaitForCallAsync(0);
+        await cts.CancelAsync();
+
+        await AssertOperationCanceledAsync(canceledLoad);
+        Assert.AreEqual(0, collection.Count);
+        Assert.IsTrue(collection.HasMoreItems);
+        Assert.AreEqual(0, canceledCall.PageIndex);
+
+        var retry = collection.LoadMoreItemsAsync(0);
+        var retryCall = await source.WaitForCallAsync(1);
+        retryCall.Completion.SetResult([1, 2, 3]);
+
+        Assert.AreEqual(3, await retry);
+        Assert.AreEqual(0, retryCall.PageIndex);
+        CollectionAssert.AreEqual(new[] { 1, 2, 3 }, collection.ToArray());
     }
 }

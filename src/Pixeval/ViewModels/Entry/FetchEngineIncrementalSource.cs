@@ -25,7 +25,7 @@ public class FetchEngineIncrementalSource<T, TViewModel>(IAsyncEnumerable<T?> as
 
     public virtual async Task<IReadOnlyCollection<TViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default)
     {
-        var result = new List<TViewModel>();
+        var result = new List<TViewModel>(pageSize);
         var i = 0;
         while (i < pageSize)
         {

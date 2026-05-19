@@ -32,7 +32,7 @@ public class SharableViewDataProvider<T, TViewModel>
         }
     }
 
-    protected SharedRef<IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel>> EntrySourceRef
+    protected SharedRef<IncrementalLoadingCollection<TViewModel>> EntrySourceRef
     {
         get;
         set
@@ -51,7 +51,7 @@ public class SharableViewDataProvider<T, TViewModel>
 
     public AdvancedObservableCollection<TViewModel> View { get; } = [];
 
-    public IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel> Source => EntrySourceRef.Value;
+    public IncrementalLoadingCollection<TViewModel> Source => EntrySourceRef.Value;
 
     /// <summary>
     /// 多次释放可能导致崩溃
@@ -68,7 +68,7 @@ public class SharableViewDataProvider<T, TViewModel>
     public void ResetEngine(IFetchEngine<T>? fetchEngine, Func<T, int, TViewModel> factory, int itemsPerPage = 20, int limit = -1)
     {
         FetchEngineRef = new(fetchEngine, this);
-        EntrySourceRef = new(new(new(FetchEngine!, factory, limit), itemsPerPage), this);
+        EntrySourceRef = new(new(new FetchEngineIncrementalSource<T, TViewModel>(FetchEngine!, factory, limit), itemsPerPage), this);
     }
 
     public SharableViewDataProvider<T, TViewModel> CloneRef()

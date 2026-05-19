@@ -68,11 +68,11 @@ public static class CommentImageHelper
             if (match.Index > lastEnd)
                 _ = sb.Append(span[lastEnd..match.Index]);
             lastEnd = match.Index + match.Length;
-            sb.Append(span[match.Index..lastEnd].ToString().GetMarkdownUrlFromPlaceholderKey());
+            _ = sb.Append(span[match.Index..lastEnd].ToString().GetMarkdownUrlFromPlaceholderKey());
         }
 
         if (span.Length > lastEnd)
-            sb.Append(span[lastEnd..]);
+            _ = sb.Append(span[lastEnd..]);
 
         return sb.ToString();
     }

@@ -13,18 +13,15 @@ namespace Pixeval.Collections;
 /// <summary>
 /// This class represents an <see cref="ObservableCollection{IType}"/> whose items can be loaded incrementally.
 /// </summary>
-/// <typeparam name="TSource">
-/// The data source that must be loaded incrementally.
-/// </typeparam>
 /// <typeparam name="IType">
 /// The type of collection items.
 /// </typeparam>
 /// <seealso cref="IIncrementalSource{TSource}"/>
-/// <seealso cref="ISupportIncrementalLoading"/>
-public class IncrementalLoadingCollection<TSource, IType> : ObservableCollection<IType>, ISupportIncrementalLoading
-    where TSource : IIncrementalSource<IType>
+/// <seealso cref="IIncrementalLoading"/>
+public class IncrementalLoadingCollection<IType> : ObservableCollection<IType>, IIncrementalLoading
 {
-    private readonly SemaphoreSlim _mutex = new SemaphoreSlim(1);
+    private readonly Lock _loadingTaskGate = new();
+    private Task<int>? _loadingTask;
 
     /// <summary>
     /// Gets or sets an <see cref="Action"/> that is called when a retrieval operation begins.
@@ -44,7 +41,7 @@ public class IncrementalLoadingCollection<TSource, IType> : ObservableCollection
     /// <summary>
     /// Gets a value indicating the source of incremental loading.
     /// </summary>
-    protected TSource Source { get; }
+    protected IIncrementalSource<IType> Source { get; }
 
     /// <summary>
     /// Gets a value indicating how many items that must be retrieved for each incremental call.
@@ -55,9 +52,6 @@ public class IncrementalLoadingCollection<TSource, IType> : ObservableCollection
     /// Gets or sets a value indicating The zero-based index of the current items page.
     /// </summary>
     protected int CurrentPageIndex { get; set; }
-
-    private CancellationToken _cancellationToken;
-    private bool _refreshOnLoad;
 
     /// <summary>
     /// Gets a value indicating whether new items are being loaded.
@@ -88,7 +82,7 @@ public class IncrementalLoadingCollection<TSource, IType> : ObservableCollection
     /// </summary>
     public bool HasMoreItems
     {
-        get => !_cancellationToken.IsCancellationRequested && field;
+        get;
 
         private set
         {
@@ -101,7 +95,7 @@ public class IncrementalLoadingCollection<TSource, IType> : ObservableCollection
     } = true;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="IncrementalLoadingCollection{TSource, IType}"/> class using the specified <see cref="IIncrementalSource{TSource}"/> implementation and, optionally, how many items to load for each data page.
+    /// Initializes a new instance of the <see cref="IncrementalLoadingCollection{IType}"/> class using the specified <see cref="IIncrementalSource{TSource}"/> implementation and, optionally, how many items to load for each data page.
     /// </summary>
     /// <param name="source">
     /// An implementation of the <see cref="IIncrementalSource{TSource}"/> interface that contains the logic to actually load data incrementally.
@@ -120,7 +114,7 @@ public class IncrementalLoadingCollection<TSource, IType> : ObservableCollection
     /// </param>
     /// <seealso cref="IIncrementalSource{TSource}"/>
 
-    public IncrementalLoadingCollection(TSource source, int itemsPerPage = 20, Action? onStartLoading = null, Action? onEndLoading = null, Action<Exception>? onError = null)
+    public IncrementalLoadingCollection(IIncrementalSource<IType> source, int itemsPerPage = 20, Action? onStartLoading = null, Action? onEndLoading = null, Action<Exception>? onError = null)
     {
         ArgumentNullException.ThrowIfNull(source);
 
@@ -137,28 +131,37 @@ public class IncrementalLoadingCollection<TSource, IType> : ObservableCollection
     /// <summary>
     /// Clears the collection and triggers/forces a reload of the first page
     /// </summary>
+    /// <param name="token">
+    /// Used to propagate notification that operation should be canceled.
+    /// </param>
     /// <returns>This method does not return a result</returns>
-    public Task RefreshAsync()
+    public async Task RefreshAsync(CancellationToken token = default)
     {
-        if (IsLoading)
+        var loadingTask = GetRunningLoadingTask();
+        if (loadingTask is not null)
         {
-            _refreshOnLoad = true;
-        }
-        else
-        {
-            var previousCount = Count;
-            Clear();
-            CurrentPageIndex = 0;
-            HasMoreItems = true;
-
-            if (previousCount == 0)
+            try
             {
-                // When the list was empty before clearing, the automatic reload isn't fired, so force a reload.
-                return LoadMoreItemsAsync(0);
+                await WaitForLoadingTaskAsync(loadingTask, token);
+            }
+            catch (OperationCanceledException) when (!token.IsCancellationRequested)
+            {
+                // The in-flight load was canceled independently; the refresh can still continue.
             }
         }
 
-        return Task.CompletedTask;
+        token.ThrowIfCancellationRequested();
+
+        var previousCount = Count;
+        Clear();
+        CurrentPageIndex = 0;
+        HasMoreItems = true;
+
+        if (previousCount is 0)
+        {
+            // When the list was empty before clearing, the automatic reload isn't fired, so force a reload.
+            await LoadMoreItemsAsync(0, token);
+        }
     }
 
     /// <summary>
@@ -172,7 +175,9 @@ public class IncrementalLoadingCollection<TSource, IType> : ObservableCollection
     /// </returns>
     protected virtual async Task<IReadOnlyCollection<IType>> LoadDataAsync(CancellationToken token = default)
     {
+        token.ThrowIfCancellationRequested();
         var result = await Source.GetPagedItemsAsync(CurrentPageIndex, ItemsPerPage, token);
+        token.ThrowIfCancellationRequested();
         CurrentPageIndex += 1;
         return result;
     }
@@ -187,59 +192,89 @@ public class IncrementalLoadingCollection<TSource, IType> : ObservableCollection
     /// <returns>
     /// How many items have been actually retrieved.
     /// </returns>
-    public async Task<int> LoadMoreItemsAsync(int count, CancellationToken token = default)
+    public Task<int> LoadMoreItemsAsync(int count, CancellationToken token = default)
     {
-        var resultCount = 0;
-        _cancellationToken = token;
+        if (token.IsCancellationRequested)
+            return Task.FromCanceled<int>(token);
 
-        await _mutex.WaitAsync(token);
+        lock (_loadingTaskGate)
+        {
+            if (_loadingTask is { IsCompleted: false } loadingTask)
+                return WaitForLoadingTaskAsync(loadingTask, token);
+
+            var newLoadingTask = LoadMoreItemsCoreAsync(token);
+            _loadingTask = newLoadingTask;
+            _ = ResetLoadingTaskAsync(newLoadingTask);
+            return newLoadingTask;
+        }
+    }
+
+    private async Task<int> LoadMoreItemsCoreAsync(CancellationToken token)
+    {
         try
         {
-            if (!_cancellationToken.IsCancellationRequested)
+            IReadOnlyCollection<IType> data;
+            try
             {
-                IReadOnlyCollection<IType>? data = null;
-                try
-                {
-                    IsLoading = true;
-                    data = await LoadDataAsync(_cancellationToken);
-                }
-                catch (OperationCanceledException)
-                {
-                    // The operation has been canceled using the Cancellation Token.
-                }
-                catch (Exception ex) when (OnError is not null)
-                {
-                    OnError(ex);
-                }
-
-                if (data is { Count: not 0 } && !_cancellationToken.IsCancellationRequested)
-                {
-                    resultCount = data.Count;
-
-                    foreach (var item in data)
-                    {
-                        Add(item);
-                    }
-                }
-                else
-                {
-                    HasMoreItems = false;
-                }
+                IsLoading = true;
+                data = await LoadDataAsync(token);
             }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                OnError?.Invoke(ex);
+                HasMoreItems = false;
+                return 0;
+            }
+
+            if (data is not { Count: not 0 })
+            {
+                HasMoreItems = false;
+                return 0;
+            }
+
+            foreach (var item in data)
+            {
+                Add(item);
+            }
+
+            return data.Count;
         }
         finally
         {
             IsLoading = false;
-
-            if (_refreshOnLoad)
-            {
-                _refreshOnLoad = false;
-                await RefreshAsync();
-            }
-
-            _mutex.Release();
         }
+    }
 
-        return resultCount;
+    private Task<int>? GetRunningLoadingTask()
+    {
+        lock (_loadingTaskGate)
+        {
+            return _loadingTask is { IsCompleted: false } loadingTask ? loadingTask : null;
+        }
+    }
+
+    private static Task<int> WaitForLoadingTaskAsync(Task<int> loadingTask, CancellationToken token)
+    {
+        return token.CanBeCanceled ? loadingTask.WaitAsync(token) : loadingTask;
+    }
+
+    private async Task ResetLoadingTaskAsync(Task<int> loadingTask)
+    {
+        try
+        {
+            await loadingTask;
+        }
+        catch
+        {
+            // The initiating caller observes the load failure; this continuation only resets shared state.
+        }
+        finally
+        {
+            lock (_loadingTaskGate)
+            {
+                if (ReferenceEquals(_loadingTask, loadingTask))
+                    _loadingTask = null;
+            }
+        }
     }
 }

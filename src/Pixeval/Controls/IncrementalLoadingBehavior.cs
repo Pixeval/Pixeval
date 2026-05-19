@@ -142,7 +142,7 @@ public static class IncrementalLoadingBehavior
             {
                 itemsControl.IsLoadingMore = true;
 
-                if (itemsControl is not { ItemsSource: ISupportIncrementalLoading { HasMoreItems: true } source })
+                if (itemsControl is not { ItemsSource: IIncrementalLoading { HasMoreItems: true } source })
                     return false;
 
                 if ((itemsControl.AttachedScrollViewer ?? itemsControl.FindDescendantOfType<ScrollViewer>()) is not { IsEffectivelyVisible: true } scrollViewer)
@@ -189,7 +189,7 @@ public static class IncrementalLoadingBehavior
             }
         }
 
-        private void AttachItemsSource(ISupportIncrementalLoading sil)
+        private void AttachItemsSource(IIncrementalLoading sil)
         {
             itemsControl.DetachItemsSource();
 
@@ -305,7 +305,7 @@ public static class IncrementalLoadingBehavior
             if (itemsControl.IsLoaded)
             {
                 itemsControl.AttachScrollViewer();
-                if (itemsControl.ItemsSource is ISupportIncrementalLoading sil)
+                if (itemsControl.ItemsSource is IIncrementalLoading sil)
                     itemsControl.AttachItemsSource(sil);
             }
         }
@@ -328,7 +328,7 @@ public static class IncrementalLoadingBehavior
         ic.CancelInitialLoad();
         ic.DetachItemsSource();
 
-        if (ic is { IsEnabled: true, IsLoaded: true } && e.NewValue is ISupportIncrementalLoading sil)
+        if (ic is { IsEnabled: true, IsLoaded: true } && e.NewValue is IIncrementalLoading sil)
             ic.AttachItemsSource(sil);
     }
 
@@ -338,7 +338,7 @@ public static class IncrementalLoadingBehavior
             return;
 
         itemsControl.AttachScrollViewer();
-        if (itemsControl.ItemsSource is ISupportIncrementalLoading sil)
+        if (itemsControl.ItemsSource is IIncrementalLoading sil)
             itemsControl.AttachItemsSource(sil);
     }
 

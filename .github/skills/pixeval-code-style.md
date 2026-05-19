@@ -5,7 +5,7 @@ scope: src excluding src/lib
 
 # Pixeval Code Style
 
-Use this guide for Pixeval main-project code in `src`, but exclude vendored/submodule code under `src/lib`. Prefer nearby file style over global rules when they differ.
+Use this guide for Pixeval main-project code in `src`, but exclude vendored/submodule code under `src/lib`. Understand nearby file style before editing, but do not let existing patterns block a more reasonable, efficient design when the change justifies refactoring call sites or related code.
 
 ## Baseline
 
@@ -13,7 +13,7 @@ Use this guide for Pixeval main-project code in `src`, but exclude vendored/subm
 - Keep C# `using` directives outside namespaces, sort `System` first, and do not split import groups with blank lines.
 - Use file-scoped namespaces in normal C# files.
 - Preserve existing file headers. Do not add a header to files that do not already use one unless the surrounding folder does.
-- Keep changes narrow and in the existing architecture: view code in `.axaml.cs`, view models in `ViewModels`, reusable Avalonia controls in `Controls`, app state in `AppManagement`, helpers in `Utilities`.
+- Keep changes coherent with the architecture: view code in `.axaml.cs`, view models in `ViewModels`, reusable Avalonia controls in `Controls`, app state in `AppManagement`, helpers in `Utilities`. Refactor within that architecture when it produces clearer, faster, or safer code than patching around an old local pattern.
 - Pair `.axaml` and `.axaml.cs` files for views/controls. Constructors that only initialize XAML are commonly `public Foo() => InitializeComponent();`.
 - Assume modern C#: the main Avalonia project targets `net10.0`, nullable is enabled, `LangVersion` is preview, and compiled bindings are enabled by default.
 - Do not introduce broad dependency or project-file churn. Reuse existing packages and helper projects unless the requested change truly requires a new dependency.
@@ -35,7 +35,7 @@ Use this guide for Pixeval main-project code in `src`, but exclude vendored/subm
 - Keep binary operators spaced and wrap operators at the beginning of continued lines.
 - Prefer `static` local functions when they do not capture.
 - Prefer simple `using var` declarations over nested `using` blocks.
-- Use discard variables for intentionally unused values.
+- When intentionally ignoring a non-void return value, assign it to discard (`_ = ...;`) rather than writing a bare call. Use this for fluent APIs, event-like registration helpers, collection mutations, and any statement where the return value is deliberately unused.
 - Use `ArgumentOutOfRangeException(nameof(value))` or equivalent default arms for supposedly exhaustive switches.
 - Use records/record structs for immutable data carriers, tokens, AST nodes, small result types, and value-like layout state.
 - Use primary constructors when the surrounding type already follows that style, especially for small wrappers, settings entries, factories, and persistent managers.
@@ -105,6 +105,10 @@ Prefer:
 if (TopLevel.GetTopLevel(this) is not { ViewContainer: { } viewContainer })
     return;
 
+_ = builder
+    .Add<FooEntry, FooCard>()
+    .Add<BarEntry, BarCard>();
+
 var state = count switch
 {
     0 => Empty,
@@ -140,6 +144,6 @@ Prefer:
 
 ## Before Finishing
 
-- Re-read nearby `src` files and align with their local idioms.
+- Re-read nearby `src` files to understand their local idioms, then choose the most reasonable and efficient implementation. Refactor existing usage when that is cleaner than preserving a weak pattern.
 - Do not copy style from `src/lib`.
 - Run the smallest relevant format/build/test command available for the files touched.

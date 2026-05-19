@@ -24,7 +24,7 @@ namespace Pixeval.Controls;
 
 public static class TranslatableTextBlockBehavior
 {
-    private static ControlTheme CompactFlyoutPresenterTheme => field ??= new ControlTheme(typeof(FlyoutPresenter))
+    private static ControlTheme CompactFlyoutPresenterTheme { get; } = new ControlTheme(typeof(FlyoutPresenter))
     {
         Setters =
         {
@@ -460,6 +460,5 @@ public static class TranslatableTextBlockBehavior
         public SymbolIcon? Icon { get; set; }
 
         public ProgressRing? Progress { get; set; }
-
     }
 }

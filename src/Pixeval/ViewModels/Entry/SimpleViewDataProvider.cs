@@ -15,9 +15,9 @@ public class SimpleViewDataProvider<T, TViewModel> : ViewModelBase, IDataProvide
 {
     public AdvancedObservableCollection<TViewModel> View { get; } = [];
 
-    public IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel> Source
+    public IncrementalLoadingCollection<TViewModel> Source
     {
-        get => (View.Source as IncrementalLoadingCollection<FetchEngineIncrementalSource<T, TViewModel>, TViewModel>)!;
+        get => (View.Source as IncrementalLoadingCollection<TViewModel>)!;
         protected set => View.Source = value;
     }
 
@@ -49,6 +49,6 @@ public class SimpleViewDataProvider<T, TViewModel> : ViewModelBase, IDataProvide
         Dispose();
         FetchEngine = fetchEngine;
 
-        Source = new(new(FetchEngine!, factory, limit), itemsPerPage);
+        Source = new(new FetchEngineIncrementalSource<T,TViewModel>(FetchEngine!, factory, limit), itemsPerPage);
     }
 }

@@ -10,10 +10,10 @@
     xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
-    d:DesignHeight="120"
-    d:DesignWidth="350"
     x:DataType="{x:Type viewers:CommentItemViewModel}"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    d:DesignHeight="120"
+    d:DesignWidth="350">
     <DockPanel Margin="8" LastChildFill="True">
         <!--  Bottom: Comment content or stamp  -->
         <Panel Margin="57,5,0,0" DockPanel.Dock="Bottom">

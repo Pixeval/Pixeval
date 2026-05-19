@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Pixeval.Collections;
 
 /// <summary>Specifies a calling contract for collection views that support incremental loading.</summary>
-public interface ISupportIncrementalLoading
+public interface IIncrementalLoading
 {
     /// <summary>Initializes incremental loading from the view.</summary>
     /// <param name="count">The number of items to load.</param>

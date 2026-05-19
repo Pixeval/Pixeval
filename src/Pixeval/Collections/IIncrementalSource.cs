@@ -22,11 +22,11 @@ public interface IIncrementalSource<TSource>
     /// <param name="pageSize">
     /// The number of <typeparamref name="TSource"/> items to retrieve for the specified <paramref name="pageIndex"/>.
     /// </param>
-    /// <param name="cancellationToken">
+    /// <param name="token">
     /// Used to propagate notification that operation should be canceled.
     /// </param>
     /// <returns>
     /// Returns a collection of <typeparamref name="TSource"/>.
     /// </returns>
-    Task<IReadOnlyCollection<TSource>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<TSource>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken token = default);
 }

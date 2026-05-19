@@ -17,7 +17,7 @@ namespace Pixeval.Collections;
 
 [DebuggerDisplay("Count = {Count}")]
 public class AdvancedObservableCollection<T>
-    : DeferredCollectionBase<T>, IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged, ISupportIncrementalLoading, IComparer<T>, IDisposable where T : class
+    : DeferredCollectionBase<T>, IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged, IIncrementalLoading, IComparer<T>, IDisposable where T : class
 {
     private readonly bool _liveShapingEnabled;
 
@@ -145,11 +145,11 @@ public class AdvancedObservableCollection<T>
 
     #endregion
 
-    /// <inheritdoc cref="ISupportIncrementalLoading.LoadMoreItemsAsync"/>
-    public Task<int> LoadMoreItemsAsync(int count, CancellationToken token = default) => (Source as ISupportIncrementalLoading)?.LoadMoreItemsAsync(count, token) ?? Task.FromResult(0);
+    /// <inheritdoc cref="IIncrementalLoading.LoadMoreItemsAsync"/>
+    public Task<int> LoadMoreItemsAsync(int count, CancellationToken token = default) => (Source as IIncrementalLoading)?.LoadMoreItemsAsync(count, token) ?? Task.FromResult(0);
 
-    /// <inheritdoc cref="ISupportIncrementalLoading.HasMoreItems"/>
-    public bool HasMoreItems => (Source as ISupportIncrementalLoading)?.HasMoreItems ?? false;
+    /// <inheritdoc cref="IIncrementalLoading.HasMoreItems"/>
+    public bool HasMoreItems => (Source as IIncrementalLoading)?.HasMoreItems ?? false;
 
     public Range Range
     {
