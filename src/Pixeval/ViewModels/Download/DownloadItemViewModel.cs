@@ -76,7 +76,7 @@ public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo
 
     public bool IsItemEnabled => !DownloadTask.IsProcessing || CurrentState is DownloadState.Completed;
 
-    public bool IsRedownloadItemEnabled => !DownloadTask.IsProcessing && CurrentState is DownloadState.Completed or DownloadState.Error;
+    public bool IsResetItemEnabled => !DownloadTask.IsProcessing && CurrentState is DownloadState.Completed or DownloadState.Error;
 
     public bool IsCancelItemEnabled => !DownloadTask.IsProcessing && CurrentState is DownloadState.Running or DownloadState.Queued or DownloadState.Paused;
 
@@ -142,7 +142,7 @@ public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo
             or nameof(IDownloadTaskBase.IsProcessing))
         {
             OnPropertyChanged(nameof(IsItemEnabled));
-            OnPropertyChanged(nameof(IsRedownloadItemEnabled));
+            OnPropertyChanged(nameof(IsResetItemEnabled));
             OnPropertyChanged(nameof(IsCancelItemEnabled));
         }
         if (e.PropertyName is nameof(IDownloadTaskBase.CurrentState)

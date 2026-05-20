@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Mako.Model;
+using Pixeval.Download;
 using Pixeval.Models.Database;
 using Pixeval.Models.Options;
 using Pixeval.Utilities;
@@ -70,7 +71,6 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
         var separatorIndex = TokenizedDestination.LastIndexOfAny([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar]);
         DocPath = TokenizedDestination[..separatorIndex];
         PdfTempFolderPath = $"{DocPath}.tmp";
-        FileHelper.CreateParentDirectory(DocPath);
         // .<ext> or .png or .etc 
         var imgExt = TokenizedDestination[(separatorIndex + 1)..];
         DestinationIllustrationFormat = IoHelper.GetIllustrationFormat(imgExt);
@@ -85,7 +85,6 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
         var separatorIndex = TokenizedDestination.LastIndexOfAny([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar]);
         DocPath = TokenizedDestination[..separatorIndex];
         PdfTempFolderPath = $"{DocPath}.tmp";
-        FileHelper.CreateParentDirectory(DocPath);
         // .<ext> or .png or .etc 
         var imgExt = TokenizedDestination[(separatorIndex + 1)..];
         DestinationIllustrationFormat = IoHelper.GetIllustrationFormat(imgExt);
@@ -98,9 +97,9 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
     {
         if (NovelContent == null!)
             SetNovelContent(await App.AppViewModel.MakoClient.GetNovelContentAsync(Entry.Id));
-        // 如果小说正文内容为空，说明是从数据库刚读出的任务，不要写文件
+
         // 小说若无图片，则没有子任务。所以此类任务是瞬间完成，理论上不存在其他状态
-        else if (TasksSet.Count is 0)
+        if (DatabaseEntry.State is DownloadState.Queued && TasksSet.Count is 0)
             await AllTasksDownloadedAsync();
     }
 
@@ -141,6 +140,7 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
             _ => throw new ArgumentOutOfRangeException(nameof(DestinationNovelFormat))
         };
 
+        FileHelper.CreateParentDirectory(DocPath);
         await File.WriteAllTextAsync(DocPath, content, token);
     }
 

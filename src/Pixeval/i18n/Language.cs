@@ -160,7 +160,7 @@ namespace Pixeval
         public const string ErrorMessageDialogTitle = "DownloadItem.ErrorMessageDialogTitle";
         public const string GoToPageItemLabel = "DownloadItem.GoToPageItem.Label";
         public const string OpenDownloadLocationItemLabel = "DownloadItem.OpenDownloadLocationItem.Label";
-        public const string RedownloadItemLabel = "DownloadItem.RedownloadItem.Label";
+        public const string ResetItemLabel = "DownloadItem.ResetItem.Label";
     }
     public static class DownloadPageResources
     {
@@ -182,6 +182,7 @@ namespace Pixeval
         public const string PageTitleTextBlockText = "DownloadPage.PageTitleTextBlock.Text";
         public const string PauseAllButtonContent = "DownloadPage.PauseAllButton.Content";
         public const string PauseButtonLabel = "DownloadPage.PauseButton.Label";
+        public const string ResetButtonLabel = "DownloadPage.ResetButton.Label";
         public const string ResumeAllButtonContent = "DownloadPage.ResumeAllButton.Content";
         public const string ResumeButtonLabel = "DownloadPage.ResumeButton.Label";
         public const string SelectAllButtonLabel = "DownloadPage.SelectAllButton.Label";

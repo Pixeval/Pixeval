@@ -30,7 +30,7 @@ public partial class DownloadItem : UserControl
             vm.ExecutePrimaryAction();
     }
 
-    private void RedownloadItem_OnClicked(object? sender, RoutedEventArgs e)
+    private void ResetItem_OnClicked(object? sender, RoutedEventArgs e)
     {
         ViewModel?.DownloadTask.Reset();
     }

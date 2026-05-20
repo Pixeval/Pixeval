@@ -60,6 +60,11 @@ public partial class DownloadPage : ContentPage
         ViewModel?.CancelSelectedItems();
     }
 
+    private void ResetAllButton_OnClicked(object? sender, RoutedEventArgs e)
+    {
+        ViewModel?.ResetSelectedItems();
+    }
+
     private void ClearDownloadListButton_OnClicked(object? sender, RoutedEventArgs e)
     {
         if (DataContext is not DownloadViewViewModel { SelectedEntries.Count: var count and not 0 } vm)

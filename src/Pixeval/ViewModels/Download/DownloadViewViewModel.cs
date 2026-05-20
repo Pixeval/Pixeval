@@ -69,6 +69,13 @@ public partial class DownloadViewViewModel : ViewModelBase, IDisposable
                 downloadItem.DownloadTask.Cancel();
     }
 
+    public void ResetSelectedItems()
+    {
+        foreach (var item in SelectedEntries)
+            foreach (var downloadItem in item.DownloadItems)
+                downloadItem.DownloadTask.Reset();
+    }
+
     public void RemoveSelectedItems(bool deleteLocalFiles)
     {
         foreach (var item in SelectedEntries.SelectMany(t => t.DownloadItems).Distinct().ToArray())

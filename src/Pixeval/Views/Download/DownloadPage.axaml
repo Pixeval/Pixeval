@@ -69,6 +69,11 @@
                     IsEnabled="{Binding !!SelectedEntries.Count}"
                     Label="{I18N {x:Static pixeval:DownloadPageResources.StopButtonLabel}}" />
                 <CommandBarButton
+                    Click="ResetAllButton_OnClicked"
+                    Icon="{markup:SymbolIcon ArrowRepeatAll}"
+                    IsEnabled="{Binding !!SelectedEntries.Count}"
+                    Label="{I18N {x:Static pixeval:DownloadPageResources.ResetButtonLabel}}" />
+                <CommandBarButton
                     Click="ClearDownloadListButton_OnClicked"
                     Icon="{markup:SymbolIcon Delete}"
                     IsEnabled="{Binding !!SelectedEntries.Count}"

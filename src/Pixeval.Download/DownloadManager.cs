@@ -84,7 +84,8 @@ public class DownloadManager : IDisposable
             _ = QueuedTasks.Remove(v);
         QueuedTasks.Insert(0, taskGroup);
         taskGroup.SubscribeProgress(_downloadTaskChannel.Writer);
-        _ = _downloadTaskChannel.Writer.TryWrite(taskGroup.GetToken());
+        if (taskGroup.CurrentState is DownloadState.Queued)
+            _ = _downloadTaskChannel.Writer.TryWrite(taskGroup.GetToken());
     }
 
     /// <summary>

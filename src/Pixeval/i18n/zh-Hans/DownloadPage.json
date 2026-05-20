@@ -42,6 +42,9 @@
   "SelectAllButton": {
     "Label": "全选"
   },
+  "ResetButton": {
+    "Label": "重新下载"
+  },
   "StopButton": {
     "Label": "取消下载"
   }

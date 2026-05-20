@@ -25,7 +25,7 @@
   "OpenDownloadLocationItem": {
     "Label": "打开下载位置"
   },
-  "RedownloadItem": {
+  "ResetItem": {
     "Label": "重新下载"
   }
 }
