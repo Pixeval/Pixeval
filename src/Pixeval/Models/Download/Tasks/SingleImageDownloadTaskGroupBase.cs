@@ -37,6 +37,7 @@ public abstract class SingleImageDownloadTaskGroupBase : ImageDownloadTask, IDow
         CurrentState = entry.State;
         if (entry.State is DownloadState.Completed or DownloadState.Cancelled or DownloadState.Error)
             ProgressPercentage = 100;
+        SetNotCreateFromEntry();
     }
 
     private static Uri GetImageUri(IArtworkInfo info) =>
@@ -61,7 +62,7 @@ public abstract class SingleImageDownloadTaskGroupBase : ImageDownloadTask, IDow
         {
             if (e.PropertyName is not nameof(CurrentState))
                 return;
-            if (sender is SingleImageDownloadTaskGroupBase g and not { CurrentState: DownloadState.Running or DownloadState.Paused })
+            if (sender is SingleImageDownloadTaskGroupBase g and not { CurrentState: DownloadState.Running or DownloadState.Pending })
             {
                 g.DatabaseEntry.State = g.CurrentState;
                 var manager = App.AppViewModel.AppServiceProvider

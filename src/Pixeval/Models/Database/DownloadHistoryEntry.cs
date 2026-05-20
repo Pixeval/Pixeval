@@ -19,7 +19,7 @@ public class DownloadHistoryEntry : ArtworkHistoryEntry
     }
 
     /// <summary>
-    /// 数据库记录中，此属性不会变为<see cref="DownloadState.Running"/>或<see cref="DownloadState.Paused"/>或<see cref="DownloadState.Pending"/>（而是由外部ViewModel使用）
+    /// 数据库记录中，此属性不会变为<see cref="DownloadState.Running"/>或<see cref="DownloadState.Pending"/>（而是由外部ViewModel使用）
     /// </summary>
     public DownloadState State { get; set; }
 

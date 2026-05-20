@@ -49,8 +49,8 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
             OnPropertyChanged(nameof(ActiveCount));
             OnPropertyChanged(nameof(CompletedCount));
             OnPropertyChanged(nameof(ErrorCount));
-            if (g.CurrentState is DownloadState.Running or DownloadState.Paused or DownloadState.Pending
-                || g.TasksSet.Count is not 0 && g.IsAllCompleted && !g.IsAfterAllDownloadCompleted)
+            if (g.CurrentState is DownloadState.Running or DownloadState.Pending
+                || g.TasksSet.Count is not 0 && g is { IsAllCompleted: true, IsAfterAllDownloadCompleted: false })
                 return;
             g.DatabaseEntry.State = g.CurrentState;
             var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
@@ -76,7 +76,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
             {
                 // ignored
             }
-            Dispatcher.UIThread.Invoke(() => IsPending = false);
+            _ = Dispatcher.UIThread.Invoke(() => IsPending = false);
         }
     }
 
@@ -119,10 +119,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
             : TasksSet)
             .ForEach(t => t.Reset());
         if (TasksSet.Count is 0)
-        {
-            DatabaseEntry.State = DownloadState.Queued;
-            OnPropertyChanged(nameof(CurrentState));
-        }
+            SetDatabaseState(DownloadState.Queued);
         if (CancellationTokenSource.IsCancellationRequested)
         {
             CancellationTokenSource.Dispose();
@@ -139,14 +136,9 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
         IsProcessing = true;
         CancellationTokenSource.Cancel();
         if (TasksSet.Count is 0)
-        {
-            DatabaseEntry.State = DownloadState.Paused;
-            OnPropertyChanged(nameof(CurrentState));
-        }
+            SetDatabaseState(DownloadState.Paused);
         else
-        {
             TasksSet.ForEach(t => t.Pause());
-        }
         IsProcessing = false;
     }
 
@@ -158,15 +150,12 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
             CancellationTokenSource.Dispose();
             CancellationTokenSource = new();
         }
+
         if (TasksSet.Count is 0)
-        {
-            DatabaseEntry.State = DownloadState.Queued;
-            OnPropertyChanged(nameof(CurrentState));
-        }
+            SetDatabaseState(DownloadState.Queued);
         else
-        {
             TasksSet.ForEach(t => t.Resume());
-        }
+
         DownloadTryResume?.Invoke(this);
         IsProcessing = false;
     }
@@ -181,14 +170,9 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
         IsProcessing = true;
         CancellationTokenSource.Cancel();
         if (TasksSet.Count is 0)
-        {
-            DatabaseEntry.State = DownloadState.Cancelled;
-            OnPropertyChanged(nameof(CurrentState));
-        }
+            SetDatabaseState(DownloadState.Cancelled);
         else
-        {
             TasksSet.ForEach(t => t.Cancel());
-        }
         IsProcessing = false;
     }
 
@@ -292,6 +276,15 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
                 _ => ""
             });
         };
+    }
+
+    private void SetDatabaseState(DownloadState state)
+    {
+        DatabaseEntry.State = state;
+        App.AppViewModel.AppServiceProvider
+            .GetRequiredService<DownloadHistoryPersistentManager>()
+            .Update(DatabaseEntry);
+        OnPropertyChanged(nameof(CurrentState));
     }
 
     public void SubscribeProgress(ChannelWriter<DownloadToken> writer)
