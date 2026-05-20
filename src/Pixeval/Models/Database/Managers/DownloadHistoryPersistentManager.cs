@@ -1,6 +1,7 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using System.Collections.Generic;
 using Mako.Model;
 using Misaki;
 using Pixeval.Models.Download.Tasks;
@@ -11,7 +12,17 @@ namespace Pixeval.Models.Database.Managers;
 public class DownloadHistoryPersistentManager(SQLiteConnection db)
     : PersistentManagerBase<DownloadHistoryEntry, IDownloadTaskGroup>(db, App.AppViewModel.AppSettings.MaximumDownloadHistoryRecords)
 {
-    protected override IDownloadTaskGroup ToModel(DownloadHistoryEntry entry)
+    public DownloadHistoryEntry? GetByDestination(string destination) =>
+        string.IsNullOrWhiteSpace(destination)
+            ? null
+            : Queryable.FirstOrDefault(t => t.Destination == destination);
+
+    public IReadOnlyList<DownloadHistoryEntry> GetByFolderId(int downloadFolderId) =>
+        downloadFolderId <= 0
+            ? []
+            : Queryable.Where(t => t.DownloadFolderId == downloadFolderId).ToArray();
+
+    public override IDownloadTaskGroup ToModel(DownloadHistoryEntry entry)
     {
         return entry.Entry switch
         {

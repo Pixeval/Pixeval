@@ -93,6 +93,7 @@ public class App : Application
             if (await AppViewModel.MakoClient.IdentifyTokenAsync())
             {
                 viewContainer.NavigateTo(new RecommendWorksPage());
+                AppViewModel.QueueWorkSubscriptionSyncAll();
                 return;
             }
         }

@@ -39,8 +39,7 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
     private string PdfTempFolderPath { get; }
 
     [MemberNotNull(nameof(NovelContent), nameof(DocumentViewModel))]
-    private void SetNovelContent(
-        NovelContent novelContent)
+    private void SetNovelContent(NovelContent novelContent)
     {
         NovelContent = novelContent;
         DocumentViewModel = new NovelContext(novelContent);

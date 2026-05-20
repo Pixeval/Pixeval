@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using AutoSettingsPage;
 using Avalonia;
@@ -33,10 +34,11 @@ public record SymbolComboBoxItem(object Value, string Description, Symbol Symbol
         return list;
     }
 
-    public static IReadOnlyList<SymbolComboBoxItem> GetValues(object key)
-    {
-        return LocalSettingsEntryHelper.RegisteredAttach[key];
-    }
+    public static IReadOnlyList<SymbolComboBoxItem> GetValues(object key) => LocalSettingsEntryHelper.RegisteredAttach[key];
+
+    public static string GetResource<TEnum>(TEnum e)
+        where TEnum : struct, Enum =>
+        GetValues<TEnum>().First(t => t.Value.Equals(e)).Description;
 }
 
 /// <summary>

@@ -9,6 +9,7 @@ using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.Controls;
 using Pixeval.I18N;
+using Pixeval.Models.Options;
 
 namespace Pixeval.Views.Capability;
 
@@ -31,10 +32,17 @@ public abstract partial class WorkTypeWorksPage : ContentPage
 
     protected void ChangeSource()
     {
-        WorkContainer.ResetEngine(GetFetchEngine(App.AppViewModel.MakoClient, WorkTypeComboBox.GetSelectedValue<WorkType>()));
+        var workType = WorkTypeComboBox.GetSelectedValue<WorkType>();
+        var engine = GetFetchEngine(App.AppViewModel.MakoClient, workType);
+        WorkContainer.ResetEngine(engine);
+        OnSourceChanged(engine, workType);
     }
 
     protected abstract IFetchEngine<IWorkEntry> GetFetchEngine(MakoClient makoClient, WorkType workType);
+
+    protected virtual void OnSourceChanged(IFetchEngine<IWorkEntry> engine, WorkType workType)
+    {
+    }
 }
 
 public class RecommendWorksPage : WorkTypeWorksPage
@@ -86,5 +94,20 @@ public class UserWorkPostsPage : WorkTypeWorksPage
     protected override IFetchEngine<IWorkEntry> GetFetchEngine(MakoClient makoClient, WorkType workType)
     {
         return makoClient.WorkPosts(_userId, workType);
+    }
+
+    protected override void OnSourceChanged(IFetchEngine<IWorkEntry> engine, WorkType workType)
+    {
+        App.AppViewModel.QueueWorkSubscriptionSyncCurrentSource(
+            _userId,
+            WorkSubscriptionType.Posts,
+            workType switch
+            {
+                WorkType.Illustration => WorkSubscriptionWorkKind.Illustration,
+                WorkType.Manga => WorkSubscriptionWorkKind.Manga,
+                WorkType.Novel => WorkSubscriptionWorkKind.Novel,
+                _ => throw new ArgumentOutOfRangeException(nameof(workType))
+            },
+            engine);
     }
 }

@@ -46,6 +46,13 @@ public abstract class PersistentManagerBase<[DynamicallyAccessedMembers(Dynamica
     public virtual void AddOrUpdate(TEntry entry) => _db.InsertOrReplace(entry, typeof(TEntry));
 
     /// <inheritdoc />
+    public virtual TEntry Upsert(TEntry entry)
+    {
+        AddOrUpdate(entry);
+        return Queryable.FirstOrDefault(t => t.HistoryEntryId == entry.HistoryEntryId) ?? entry;
+    }
+
+    /// <inheritdoc />
     public virtual void Update(TEntry entry) => _db.Update(entry, typeof(TEntry));
 
     /// <inheritdoc />
@@ -112,7 +119,7 @@ public abstract class PersistentManagerBase<[DynamicallyAccessedMembers(Dynamica
     /// <inheritdoc />
     public virtual void Clear() => _db.DeleteAll<TEntry>();
 
-    protected abstract TModel ToModel(TEntry entry);
+    public abstract TModel ToModel(TEntry entry);
 
     /// <inheritdoc />
     public IEnumerator<TModel> GetEnumerator() => Queryable.Select(ToModel).GetEnumerator();

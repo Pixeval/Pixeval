@@ -140,5 +140,15 @@
     "RightLeft": "从右到左",
     "TopDown": "从上到下",
     "BottomUp": "从下到上"
+  },
+  "WorkSubscriptionType": {
+    "Bookmarks": "收藏",
+    "Posts": "发布作品"
+  },
+  "WorkSubscriptionWorkKind": {
+    "IllustrationAndManga": "插画和漫画",
+    "Illustration": "插画",
+    "Manga": "漫画",
+    "Novel": "小说"
   }
 }

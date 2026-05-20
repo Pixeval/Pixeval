@@ -86,9 +86,6 @@ public record AppSettings
     [SettingsEntry(Symbol.DeveloperBoardLightning, MaxDownloadConcurrencyLevelEntryHeader, MaxDownloadConcurrencyLevelEntryDescription)]
     public int MaxDownloadTaskConcurrencyLevel { get; set; } = Environment.ProcessorCount / 4;
 
-    [SettingsEntry(Symbol.SaveEdit, DownloadWhenBookmarkedEntryHeader, DownloadWhenBookmarkedEntryDescription)]
-    public bool DownloadWhenBookmarked { get; set; }
-
     /// <summary>
     /// The application-wide default sort option, any illustration page that supports
     /// different orders will use this as its default value

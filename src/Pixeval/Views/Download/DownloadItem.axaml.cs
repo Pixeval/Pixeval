@@ -32,7 +32,7 @@ public partial class DownloadItem : UserControl
 
     private void RedownloadItem_OnClicked(object? sender, RoutedEventArgs e)
     {
-        ViewModel?.DownloadTask.TryReset();
+        ViewModel?.DownloadTask.Reset();
     }
 
     private void CancelDownloadItem_OnClicked(object? sender, RoutedEventArgs e)

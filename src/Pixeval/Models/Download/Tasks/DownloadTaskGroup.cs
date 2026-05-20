@@ -29,7 +29,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
 
     public string Id => DatabaseEntry.Entry.Id;
 
-    protected DownloadTaskGroup(IArtworkInfo entry, string destination, DownloadItemType type) : this(new(destination, type, entry)) => SetNotCreateFromEntry();
+    protected DownloadTaskGroup(IArtworkInfo entry, string destination, DownloadItemType type) : this(new(destination, entry)) => SetNotCreateFromEntry();
 
     /// <summary>
     /// 将<see cref="IsCreateFromEntry"/>设置为<see langword="false"/>以便启动。<br/>
@@ -103,7 +103,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
 
     public abstract string OpenLocalDestination { get; }
 
-    public void TryReset()
+    public void Reset()
     {
         if (CurrentState is not (DownloadState.Completed or DownloadState.Error or DownloadState.Cancelled))
             return;
@@ -111,7 +111,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
         (CurrentState is DownloadState.Error
             ? TasksSet.Where(t => t.CurrentState is DownloadState.Error)
             : TasksSet)
-            .ForEach(t => t.TryReset());
+            .ForEach(t => t.Reset());
         if (CancellationTokenSource.IsCancellationRequested)
         {
             CancellationTokenSource.Dispose();
@@ -129,7 +129,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
         IsProcessing = false;
     }
 
-    public void TryResume()
+    public void Resume()
     {
         IsProcessing = true;
         if (CancellationTokenSource.IsCancellationRequested)
@@ -137,7 +137,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
             CancellationTokenSource.Dispose();
             CancellationTokenSource = new();
         }
-        TasksSet.ForEach(t => t.TryResume());
+        TasksSet.ForEach(t => t.Resume());
         DownloadTryResume?.Invoke(this);
         IsProcessing = false;
     }

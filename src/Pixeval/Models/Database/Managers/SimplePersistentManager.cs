@@ -17,17 +17,17 @@ namespace Pixeval.Models.Database.Managers;
 public abstract class SimplePersistentManager<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : IPersistentManager<T, T>
     where T : HistoryEntry, new()
 {
-    private readonly SQLiteConnection _db;
+    protected readonly SQLiteConnection Db;
 
     protected SimplePersistentManager(SQLiteConnection db, int maximumRecords)
     {
-        _db = db;
+        Db = db;
         MaximumRecords = maximumRecords;
-        _ = _db.CreateTable<T>();
+        _ = Db.CreateTable<T>();
     }
 
     /// <inheritdoc />
-    public virtual TableQuery<T> Queryable => _db.Table<T>();
+    public virtual TableQuery<T> Queryable => Db.Table<T>();
 
     /// <inheritdoc />
     public int MaximumRecords { get; set; }
@@ -41,7 +41,7 @@ public abstract class SimplePersistentManager<[DynamicallyAccessedMembers(Dynami
         if (Queryable.Count() > MaximumRecords)
             Purge(MaximumRecords);
 
-        _db.Insert(t, typeof(T));
+        Db.Insert(t, typeof(T));
     }
 
     /// <inheritdoc />
@@ -51,10 +51,16 @@ public abstract class SimplePersistentManager<[DynamicallyAccessedMembers(Dynami
     }
 
     /// <inheritdoc />
-    public virtual void AddOrUpdate(T entry) => _db.InsertOrReplace(entry, typeof(T));
+    public virtual void AddOrUpdate(T entry) => Db.InsertOrReplace(entry, typeof(T));
+
+    public virtual T Upsert(T entry)
+    {
+        AddOrUpdate(entry);
+        return Queryable.FirstOrDefault(t => t.HistoryEntryId == entry.HistoryEntryId) ?? entry;
+    }
 
     /// <inheritdoc />
-    public virtual void Update(T entry) => _db.Update(entry, typeof(T));
+    public virtual void Update(T entry) => Db.Update(entry, typeof(T));
 
     /// <inheritdoc />
     public virtual IReadOnlyList<T> Take(int count) => Queryable.Take(count).ToArray();
@@ -72,14 +78,14 @@ public abstract class SimplePersistentManager<[DynamicallyAccessedMembers(Dynami
     public virtual IReadOnlyList<T> Select(Expression<Func<T, bool>> predicate) => Queryable.Where(predicate).ToArray();
 
     /// <inheritdoc />
-    public virtual bool TryDelete(T item) => _db.Delete<T>(item.HistoryEntryId) is not 0;
+    public virtual bool TryDelete(T item) => Db.Delete<T>(item.HistoryEntryId) is not 0;
 
     /// <inheritdoc />
     public virtual T? TryDelete(Expression<Func<T, bool>> predicate)
     {
         if (Queryable.FirstOrDefault(predicate) is { } e)
         {
-            _db.Delete<T>(e.HistoryEntryId);
+            Db.Delete<T>(e.HistoryEntryId);
             return e;
         }
 
@@ -103,12 +109,12 @@ public abstract class SimplePersistentManager<[DynamicallyAccessedMembers(Dynami
         {
             var toDelete = Queryable.Take(deleteCount).ToArray();
             foreach (var item in toDelete)
-                _db.Delete<T>(item.HistoryEntryId);
+                Db.Delete<T>(item.HistoryEntryId);
         }
     }
 
     /// <inheritdoc />
-    public virtual void Clear() => _db.DeleteAll<T>();
+    public virtual void Clear() => Db.DeleteAll<T>();
 
     /// <inheritdoc />
     public IEnumerator<T> GetEnumerator() => Queryable.GetEnumerator();

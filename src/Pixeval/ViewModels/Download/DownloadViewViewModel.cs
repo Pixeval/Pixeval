@@ -7,8 +7,10 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Collections;
 using Pixeval.Download;
+using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Download.Tasks;
 
 namespace Pixeval.ViewModels;
@@ -17,26 +19,28 @@ public partial class DownloadViewViewModel : ViewModelBase, IDisposable
 {
     private readonly ObservableCollection<IDownloadTaskGroupBase> _source;
 
-    private readonly ObservableCollection<DownloadItemViewModel> _viewSource = [];
+    private readonly ObservableCollection<IDownloadListEntryViewModel> _viewSource = [];
 
     private readonly Dictionary<string, DownloadItemViewModel> _lookup = [];
+
+    private readonly Dictionary<int, DownloadFolderViewModel> _folders = [];
 
     [ObservableProperty]
     public partial DownloadListOption CurrentOption { get; set; } = DownloadListOption.AllQueued;
 
     [ObservableProperty]
-    public partial ObservableCollection<DownloadItemViewModel> FilteredTasks { get; private set; } = [];
+    public partial ObservableCollection<IDownloadListEntryViewModel> FilteredTasks { get; private set; } = [];
 
-    public AdvancedObservableCollection<DownloadItemViewModel> View { get; }
+    public AdvancedObservableCollection<IDownloadListEntryViewModel> View { get; }
 
-    public ObservableCollection<DownloadItemViewModel> SelectedEntries { get; } = [];
+    public ObservableCollection<IDownloadListEntryViewModel> SelectedEntries { get; } = [];
 
     partial void OnCurrentOptionChanged(DownloadListOption value) => ResetFilter();
 
     public DownloadViewViewModel(ObservableCollection<IDownloadTaskGroupBase> source)
     {
         _source = source;
-        View = new AdvancedObservableCollection<DownloadItemViewModel>(_viewSource, true);
+        View = new AdvancedObservableCollection<IDownloadListEntryViewModel>(_viewSource, true);
         foreach (var task in _source)
             AddTask(task);
 
@@ -47,24 +51,27 @@ public partial class DownloadViewViewModel : ViewModelBase, IDisposable
     public void PauseSelectedItems()
     {
         foreach (var item in SelectedEntries)
-            item.DownloadTask.Pause();
+            foreach (var downloadItem in item.DownloadItems)
+                downloadItem.DownloadTask.Pause();
     }
 
     public void ResumeSelectedItems()
     {
         foreach (var item in SelectedEntries)
-            item.DownloadTask.TryResume();
+            foreach (var downloadItem in item.DownloadItems)
+                downloadItem.DownloadTask.Resume();
     }
 
     public void CancelSelectedItems()
     {
         foreach (var item in SelectedEntries)
-            item.DownloadTask.Cancel();
+            foreach (var downloadItem in item.DownloadItems)
+                downloadItem.DownloadTask.Cancel();
     }
 
     public void RemoveSelectedItems(bool deleteLocalFiles)
     {
-        foreach (var item in SelectedEntries.ToArray())
+        foreach (var item in SelectedEntries.SelectMany(t => t.DownloadItems).Distinct().ToArray())
         {
             if (deleteLocalFiles)
             {
@@ -95,28 +102,17 @@ public partial class DownloadViewViewModel : ViewModelBase, IDisposable
 
         return;
 
-        bool Query(DownloadItemViewModel vm) =>
-            vm.Entry.Title.Contains(key, StringComparison.OrdinalIgnoreCase)
-            || vm.DownloadTask.Id.Contains(key, StringComparison.OrdinalIgnoreCase);
+        bool Query(IDownloadListEntryViewModel vm) => vm.MatchesSearch(key);
     }
 
-    public void ResetFilter(IEnumerable<DownloadItemViewModel>? customSearchResult = null)
+    public void ResetFilter(IEnumerable<IDownloadListEntryViewModel>? customSearchResult = null)
     {
         var hash = customSearchResult?.ToHashSet();
 
         using (View.DeferFiltersChange())
         {
             View.Filters.Clear();
-            View.Filters.Add(IFilter<DownloadItemViewModel>.Create(vm => CurrentOption switch
-            {
-                DownloadListOption.AllQueued => true,
-                DownloadListOption.Running => vm.CurrentState is DownloadState.Running,
-                DownloadListOption.Completed => vm.CurrentState is DownloadState.Completed,
-                DownloadListOption.Cancelled => vm.CurrentState is DownloadState.Cancelled,
-                DownloadListOption.Error => vm.CurrentState is DownloadState.Error,
-                DownloadListOption.CustomSearch => hash?.Contains(vm) ?? true,
-                _ => true
-            }, false));
+            View.Filters.Add(IFilter<IDownloadListEntryViewModel>.Create(vm => vm.MatchesOption(CurrentOption, hash), false));
         }
     }
 
@@ -136,13 +132,51 @@ public partial class DownloadViewViewModel : ViewModelBase, IDisposable
 
         var vm = new DownloadItemViewModel(group);
         _lookup[group.Destination] = vm;
-        _viewSource.Add(vm);
+        if (group.DatabaseEntry.DownloadFolderId <= 0
+            || GetOrCreateFolder(group.DatabaseEntry.DownloadFolderId) is not { } folder)
+        {
+            _viewSource.Add(vm);
+            return;
+        }
+
+        folder.Add(vm);
     }
 
     private void RemoveTask(IDownloadTaskGroupBase task)
     {
         if (_lookup.Remove(task.Destination, out var vm))
+        {
+            if (vm.DownloadTask.DatabaseEntry.DownloadFolderId > 0
+                && _folders.TryGetValue(vm.DownloadTask.DatabaseEntry.DownloadFolderId, out var folder))
+            {
+                _ = folder.Remove(vm);
+                if (!folder.HasItems)
+                {
+                    _ = _folders.Remove(folder.Folder.HistoryEntryId);
+                    _ = _viewSource.Remove(folder);
+                }
+                return;
+            }
+
             _ = _viewSource.Remove(vm);
+        }
+    }
+
+    private DownloadFolderViewModel? GetOrCreateFolder(int folderId)
+    {
+        if (_folders.TryGetValue(folderId, out var folder))
+            return folder;
+
+        var provider = App.AppViewModel.AppServiceProvider;
+        var folderManager = provider.GetRequiredService<DownloadFolderPersistentManager>();
+        if (folderManager.GetByKey(folderId) is not { } entry)
+            return null;
+
+        var subscription = provider.GetRequiredService<WorkSubscriptionPersistentManager>().GetByKey(entry.SubscriptionEntryId);
+        folder = new(entry, subscription);
+        _folders[folderId] = folder;
+        _viewSource.Add(folder);
+        return folder;
     }
 
     private void SourceOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -160,6 +194,7 @@ public partial class DownloadViewViewModel : ViewModelBase, IDisposable
             case NotifyCollectionChangedAction.Reset:
                 _viewSource.Clear();
                 _lookup.Clear();
+                _folders.Clear();
                 foreach (var task in _source)
                     AddTask(task);
                 break;

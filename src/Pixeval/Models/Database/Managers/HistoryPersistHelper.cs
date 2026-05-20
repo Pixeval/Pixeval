@@ -35,10 +35,8 @@ public class HistoryPersistHelper : IDisposable
             OnCollectionChangedEventHandler<BrowseHistoryPersistentManager, BrowseHistoryEntry, IArtworkInfo>(s, e,
                 (m, t) =>
                 {
-                    if (t is ISerializable { SerializeKey: { } key })
-                        m.TryDelete(x =>
-                            x.SerializeKey == key
-                            && x.Id == t.Id);
+                    if (BrowseHistoryEntry.TryCreateWorkKey(t, out var workKey))
+                        m.TryDelete(x => x.WorkKey == workKey);
                 }, t => new(t));
 
         DownloadManager.QueuedTasks.CollectionChanged += (s, e) =>
@@ -68,18 +66,18 @@ public class HistoryPersistHelper : IDisposable
             TranslatedName = translatedName,
             Time = DateTime.UtcNow
         };
-        SearchHistoryEntries.Remove(searchHistoryEntry);
+        if (SearchHistoryEntries.FirstOrDefault(t => t.Value == text) is { } existing)
+            SearchHistoryEntries.Remove(existing);
         SearchHistoryEntries.Insert(0, searchHistoryEntry);
     }
 
     public void AddBrowseHistory(IArtworkInfo entry)
     {
-        if (string.IsNullOrEmpty(entry.Id))
+        if (!BrowseHistoryEntry.TryCreateWorkKey(entry, out var workKey))
             return;
         if (BrowseHistoryEntries.FirstOrDefault(t =>
-                t.Id == entry.Id
-                && (t as ISerializable)?.SerializeKey ==
-                (entry as ISerializable)?.SerializeKey) is { } e)
+                BrowseHistoryEntry.TryCreateWorkKey(t, out var itemWorkKey)
+                && itemWorkKey == workKey) is { } e)
             BrowseHistoryEntries.Remove(e);
         BrowseHistoryEntries.Insert(0, entry);
     }

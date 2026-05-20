@@ -20,8 +20,6 @@ public partial class WorkEntryViewModel<T>
         IsBookmarkedDisplay |= HeartButtonState.Pending; // pre-update
         var result = await SetBookmarkAsync(!IsFavorite);
         IsBookmarkedDisplay = result ? HeartButtonState.Checked : HeartButtonState.Unchecked;
-        if (App.AppViewModel.AppSettings.DownloadWhenBookmarked && result)
-            await SaveAsync(parameter);
     }
 
     [RelayCommand(CanExecute = nameof(IsBookmarkSupported))]
@@ -32,8 +30,6 @@ public partial class WorkEntryViewModel<T>
         IsBookmarkedDisplay |= HeartButtonState.Pending; // pre-update
         var result = await SetBookmarkAsync(true, parameter.IsPrivate, parameter.Tags);
         IsBookmarkedDisplay = result ? HeartButtonState.Checked : HeartButtonState.Unchecked;
-        if (App.AppViewModel.AppSettings.DownloadWhenBookmarked)
-            await SaveAsync(parameter.Control);
     }
 
     protected abstract Task<bool> SetBookmarkAsync(bool favorite, bool privately = false, IEnumerable<string>? tags = null);

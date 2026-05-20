@@ -74,6 +74,7 @@ public partial class LoginPage : ContentPage
     {
         var viewContainer = TopLevel.GetTopLevel(this)?.ViewContainer;
         viewContainer?.NavigateTo(new RecommendWorksPage(), true);
+        App.AppViewModel.QueueWorkSubscriptionSyncAll();
     }
 
     private void RefreshTokenBox_OnTapped(object? sender, TappedEventArgs e)

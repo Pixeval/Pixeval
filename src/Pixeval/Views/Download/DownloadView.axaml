@@ -5,13 +5,14 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:entry="using:Pixeval.Views.Entry"
+    xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:local="using:Pixeval.Views.Download"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:Pixeval.ViewModels"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
     x:DataType="{x:Type viewModels:DownloadViewViewModel}"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
     <entry:EntryView x:Name="EntryView" HasNoItem="{Binding !View.Count}">
         <ListBox
             x:Name="ListBox"
@@ -22,6 +23,65 @@
                 <controls:ItemsViewListBoxStyles />
             </ListBox.Styles>
             <ListBox.DataTemplates>
+                <DataTemplate x:DataType="{x:Type viewModels:DownloadFolderViewModel}">
+                    <Border
+                        Margin="8"
+                        Padding="12"
+                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                        CornerRadius="8">
+                        <Expander IsExpanded="False">
+                            <Expander.Header>
+                                <Grid
+                                    ColumnDefinitions="Auto,*,Auto"
+                                    ColumnSpacing="12"
+                                    RowDefinitions="Auto,Auto"
+                                    RowSpacing="4">
+                                    <fluent:SymbolIcon
+                                        Grid.Row="0"
+                                        Grid.RowSpan="2"
+                                        Grid.Column="0"
+                                        Width="32"
+                                        Height="32"
+                                        VerticalAlignment="Center"
+                                        Symbol="FolderSync" />
+                                    <TextBlock
+                                        Grid.Row="0"
+                                        Grid.Column="1"
+                                        FontSize="16"
+                                        FontWeight="SemiBold"
+                                        Text="{Binding Title}"
+                                        TextTrimming="CharacterEllipsis" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                        Text="{Binding Subtitle}"
+                                        TextTrimming="CharacterEllipsis" />
+                                    <ProgressBar
+                                        Grid.Row="0"
+                                        Grid.RowSpan="2"
+                                        Grid.Column="2"
+                                        Width="160"
+                                        VerticalAlignment="Center"
+                                        Maximum="100"
+                                        Value="{Binding ProgressPercentage}" />
+                                </Grid>
+                            </Expander.Header>
+                            <ItemsControl ItemsSource="{Binding Items}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="{x:Type viewModels:DownloadItemViewModel}">
+                                        <Border
+                                            Margin="0,8,0,0"
+                                            Padding="12"
+                                            Background="Transparent">
+                                            <local:DownloadItem OpenIllustrationRequested="DownloadItem_OnOpenIllustrationRequested" />
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Expander>
+                    </Border>
+                </DataTemplate>
                 <DataTemplate x:DataType="{x:Type viewModels:DownloadItemViewModel}">
                     <Border Padding="16" Background="Transparent">
                         <local:DownloadItem OpenIllustrationRequested="DownloadItem_OnOpenIllustrationRequested" />

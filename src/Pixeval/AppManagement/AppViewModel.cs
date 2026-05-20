@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using Imouto.BooruParser;
 using Mako;
+using Mako.Engine;
 using Mako.Model;
 using Mako.Net;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,10 +16,12 @@ using Pixeval.Caching;
 using Pixeval.Models.Database;
 using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Download;
+using Pixeval.Models.Subscriptions;
 using Pixeval.Models.Extensions;
 using Pixeval.Utilities;
 using Pixeval.Utilities.IO.Caching;
 using SQLite;
+using Pixeval.Models.Options;
 
 namespace Pixeval.AppManagement;
 
@@ -59,6 +62,7 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
             .AddBooruParsers()
             .AddKeyedSingleton<IGetArtworkService, MakoClient>(IPlatformInfo.Pixiv, (provider, key) => makoClient)
             .AddKeyedSingleton<IDownloadHttpClientService, MakoClient>(IPlatformInfo.Pixiv, (provider, key) => makoClient)
+            .AddSingleton<WorkSubscriptionDownloadService>()
             .AddSingleton<IllustrationDownloadTaskFactory>()
             .AddSingleton<NovelDownloadTaskFactory>()
             .AddSingleton<ExtensionService>()
@@ -66,6 +70,8 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
             .AddSingleton(_ => new SQLiteConnection(AppInfo.DatabaseFilePath,
                 SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex))
             .AddSingleton<DownloadHistoryPersistentManager>()
+            .AddSingleton<DownloadFolderPersistentManager>()
+            .AddSingleton<WorkSubscriptionPersistentManager>()
             .AddSingleton<SearchHistoryPersistentManager>()
             .AddSingleton<BrowseHistoryPersistentManager>()
             .AddSingleton<LoginUserPersistentManager>()
@@ -93,6 +99,16 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
     {
         return AppServiceProvider.GetRequiredService<LoginUserPersistentManager>()
             .GetByKey(LoginContext.CurrentKey);
+    }
+
+    public void QueueWorkSubscriptionSyncAll()
+    {
+        AppServiceProvider.GetRequiredService<WorkSubscriptionDownloadService>().QueueSyncAll();
+    }
+
+    public void QueueWorkSubscriptionSyncCurrentSource(long uid, WorkSubscriptionType subscriptionType, WorkSubscriptionWorkKind workKind, IFetchEngine<IWorkEntry> engine)
+    {
+        AppServiceProvider.GetRequiredService<WorkSubscriptionDownloadService>().QueueSyncCurrentSource(uid, subscriptionType, workKind, engine);
     }
 
     public void SetNameResolvers()

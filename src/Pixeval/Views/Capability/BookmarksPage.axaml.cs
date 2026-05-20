@@ -5,6 +5,7 @@ using Avalonia.Interactivity;
 using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.Controls;
+using Pixeval.Models.Options;
 using Pixeval.Utilities;
 
 namespace Pixeval.Views.Capability;
@@ -67,10 +68,19 @@ public partial class BookmarksPage : ContentPage
     private void ChangeSource()
     {
         var tag = (TagComboBox.SelectedItem as BookmarkTag)?.Name;
-        WorkContainer.ResetEngine(App.AppViewModel.MakoClient.WorkBookmarks(
+        var workType = SimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>();
+        var engine = App.AppViewModel.MakoClient.WorkBookmarks(
             _userId,
-            SimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>(),
+            workType,
             PrivacyPolicyComboBox.GetSelectedValue<PrivacyPolicy>(),
-            tag));
+            tag);
+        WorkContainer.ResetEngine(engine);
+        App.AppViewModel.QueueWorkSubscriptionSyncCurrentSource(
+            _userId,
+            WorkSubscriptionType.Bookmarks,
+            workType is SimpleWorkType.Novel
+                ? WorkSubscriptionWorkKind.Novel
+                : WorkSubscriptionWorkKind.IllustrationAndManga,
+            engine);
     }
 }

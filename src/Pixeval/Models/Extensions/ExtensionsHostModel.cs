@@ -5,18 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text.Json;
-using Avalonia.Controls;
-using Avalonia.Media.Imaging;
-using FluentIcons.Avalonia;
-using FluentIcons.Common;
 using Pixeval.Extensions.Common;
-using Pixeval.Utilities;
 
 namespace Pixeval.Models.Extensions;
 
-public record ExtensionsHostModel(IExtensionsHost Host) : IDisposable
+public class ExtensionsHostModel(IExtensionsHost host) : IDisposable
 {
-    public IExtensionsHost Host { get; } = Host;
+    public IExtensionsHost Host { get; } = host;
 
     public bool IsActive
     {
@@ -32,27 +27,23 @@ public record ExtensionsHostModel(IExtensionsHost Host) : IDisposable
 
     internal nint Handle { get; init; }
 
-    public string Name { get; } = Host.ExtensionName;
+    public string Name { get; } = host.ExtensionName;
 
-    public string Description { get; } = Host.Description;
+    public string Description { get; } = host.Description;
 
-    public string Author { get; } = Host.AuthorName;
+    public string Author { get; } = host.AuthorName;
 
-    public string Version { get; } = Host.Version;
+    public string Version { get; } = host.Version;
 
-    public Uri? Link { get; } = Uri.TryCreate(Host.ExtensionLink, UriKind.RelativeOrAbsolute, out var uri) ? uri : null;
+    public Uri? Link { get; } = Uri.TryCreate(host.ExtensionLink, UriKind.RelativeOrAbsolute, out var uri) ? uri : null;
 
-    public Uri? HelpLink { get; } = Uri.TryCreate(Host.HelpLink, UriKind.RelativeOrAbsolute, out var uri) ? uri : null;
+    public Uri? HelpLink { get; } = Uri.TryCreate(host.HelpLink, UriKind.RelativeOrAbsolute, out var uri) ? uri : null;
 
-    private Bitmap? IconImageSource { get; } = GetIconSource(Host.Icon);
+    public byte[]? Icon { get; } = host.Icon;
 
-    public Control Icon => IconImageSource is null
-        ? new SymbolIcon { Symbol = Symbol.PuzzlePiece }
-        : new Image { Source = IconImageSource };
+    public Dictionary<string, JsonElement> Values { get; } = GetValues(host);
 
-    public Dictionary<string, JsonElement> Values { get; } = GetValues(Host);
-
-    public IReadOnlyList<IExtension> Extensions { get; } = Host.Extensions;
+    public IReadOnlyList<IExtension> Extensions { get; } = host.Extensions;
 
     private static Dictionary<string, JsonElement> GetValues(IExtensionsHost host)
     {
@@ -60,11 +51,6 @@ public record ExtensionsHostModel(IExtensionsHost Host) : IDisposable
         if (!exists)
             value = [];
         return value!;
-    }
-
-    private static Bitmap? GetIconSource(byte[]? iconBytes)
-    {
-        return iconBytes is null ? null : new Bitmap(Streams.RentStream(iconBytes));
     }
 
     public void Dispose()

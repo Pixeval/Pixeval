@@ -14,6 +14,7 @@ public class NovelDownloadTaskFactory : IDownloadTaskFactory<Novel, NovelDownloa
     public NovelDownloadTaskGroup Create(Novel context, string rawPath, NovelContent? parameter)
     {
         var path = IoHelper.NormalizePath(ArtworkMetaPathParser.Instance.Reduce(rawPath, context));
+        path = IoHelper.ChangeExtension(path, IoHelper.GetNovelExtension());
         // xxx.pdf\.png
         // xxx.pdf\<ext>
         // xxx\novel.txt\.png

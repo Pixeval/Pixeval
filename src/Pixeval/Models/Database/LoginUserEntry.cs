@@ -9,10 +9,10 @@ namespace Pixeval.Models.Database;
 
 public class LoginUserEntry : HistoryEntry
 {
-    [Indexed]
+    [Indexed(Unique = true)]
     public string RefreshToken { get; set; } = "";
 
-    [Indexed]
+    [Indexed(Unique = true)]
     public long UserId { get; set; }
 
     public string Name { get; set; } = "";

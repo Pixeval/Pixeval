@@ -123,7 +123,7 @@ public class SettingsPageViewModel : ViewModelBase
                             WorkTypeEnum.Novel,
                             t => t.NovelDownloadFormat))
                 .Int(t => t.LossyImageDownloadQuality, -1, 100, 5)
-                .Bool(t => t.DownloadWhenBookmarked))
+                .WorkSubscriptions())
             //.NewGroup(SettingsEntryCategory.Misc)
             //.Config(group => group)
             .Build();

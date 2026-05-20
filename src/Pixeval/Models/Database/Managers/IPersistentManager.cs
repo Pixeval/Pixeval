@@ -51,6 +51,8 @@ public interface IWriteOnlyPersistentManager<TEntry> where TEntry : HistoryEntry
 
     void AddOrUpdate(TEntry entry);
 
+    TEntry Upsert(TEntry entry);
+
     void Update(TEntry entry);
 
     bool TryDelete(TEntry item);

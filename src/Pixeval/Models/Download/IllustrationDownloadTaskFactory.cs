@@ -14,6 +14,9 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IArtworkInfo
     public IDownloadTaskGroup Create(IArtworkInfo context, string rawPath, object? parameter = null)
     {
         var path = IoHelper.NormalizePath(ArtworkMetaPathParser.Instance.Reduce(rawPath, context));
+        path = IoHelper.ChangeExtension(path, context.ImageType is ImageType.SingleAnimatedImage
+            ? IoHelper.GetUgoiraExtension()
+            : IoHelper.GetIllustrationExtension());
 
         IDownloadTaskGroup task = context switch
         {

@@ -51,8 +51,6 @@ namespace Pixeval
         public const string DownloadPathMacroEntryHeader = "AppSettings.DownloadPathMacroEntry.Header";
         public const string DownloadUpdateAutomaticallyEntryDescription = "AppSettings.DownloadUpdateAutomaticallyEntry.Description";
         public const string DownloadUpdateAutomaticallyEntryHeader = "AppSettings.DownloadUpdateAutomaticallyEntry.Header";
-        public const string DownloadWhenBookmarkedEntryDescription = "AppSettings.DownloadWhenBookmarkedEntry.Description";
-        public const string DownloadWhenBookmarkedEntryHeader = "AppSettings.DownloadWhenBookmarkedEntry.Header";
         public const string EnableDomainFrontingEntryDescription = "AppSettings.EnableDomainFrontingEntry.Description";
         public const string EnableDomainFrontingEntryHeader = "AppSettings.EnableDomainFrontingEntry.Header";
         public const string ImageMirrorServerEntryDescription = "AppSettings.ImageMirrorServerEntry.Description";
@@ -125,6 +123,8 @@ namespace Pixeval
         public const string WebCookieEntryPlaceholder = "AppSettings.WebCookieEntry.Placeholder";
         public const string WorkDownloadFormatEntryDescription = "AppSettings.WorkDownloadFormatEntry.Description";
         public const string WorkDownloadFormatEntryHeader = "AppSettings.WorkDownloadFormatEntry.Header";
+        public const string WorkSubscriptionsSettingsEntryDescription = "AppSettings.WorkSubscriptionsSettingsEntry.Description";
+        public const string WorkSubscriptionsSettingsEntryHeader = "AppSettings.WorkSubscriptionsSettingsEntry.Header";
     }
     public static class CommentRepliesBlockResources
     {
@@ -363,6 +363,12 @@ namespace Pixeval
         public const string WorkSortOptionPopularityDescending = "Enum.WorkSortOption.PopularityDescending";
         public const string WorkSortOptionPublishDateAscending = "Enum.WorkSortOption.PublishDateAscending";
         public const string WorkSortOptionPublishDateDescending = "Enum.WorkSortOption.PublishDateDescending";
+        public const string WorkSubscriptionTypeBookmarks = "Enum.WorkSubscriptionType.Bookmarks";
+        public const string WorkSubscriptionTypePosts = "Enum.WorkSubscriptionType.Posts";
+        public const string WorkSubscriptionWorkKindIllustration = "Enum.WorkSubscriptionWorkKind.Illustration";
+        public const string WorkSubscriptionWorkKindIllustrationAndManga = "Enum.WorkSubscriptionWorkKind.IllustrationAndManga";
+        public const string WorkSubscriptionWorkKindManga = "Enum.WorkSubscriptionWorkKind.Manga";
+        public const string WorkSubscriptionWorkKindNovel = "Enum.WorkSubscriptionWorkKind.Novel";
         public const string WorkTypeIllustration = "Enum.WorkType.Illustration";
         public const string WorkTypeManga = "Enum.WorkType.Manga";
         public const string WorkTypeNovel = "Enum.WorkType.Novel";
@@ -768,6 +774,11 @@ namespace Pixeval
         public const string CopyTranslatedTagMenuItemText = "WorkInfoPage.CopyTranslatedTagMenuItem.Text";
         public const string WorkCaptionEmpty = "WorkInfoPage.WorkCaptionEmpty";
         public const string WorkTagListTextBlockText = "WorkInfoPage.WorkTagListTextBlock.Text";
+    }
+    public static class WorkSubscriptionsSettingsExpanderResources
+    {
+        public const string InvalidUserId = "WorkSubscriptionsSettingsExpander.InvalidUserId";
+        public const string UserIdTextBoxPlaceholderText = "WorkSubscriptionsSettingsExpander.UserIdTextBox.PlaceholderText";
     }
     public static class MarkdownResources
     {

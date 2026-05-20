@@ -1,0 +1,97 @@
+<controls:SettingsExpander
+    x:Class="Pixeval.Views.Settings.WorkSubscriptionsSettingsExpander"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avalonia="using:AutoSettingsPage.Avalonia"
+    xmlns:controls="using:CommunityToolkit.Avalonia.Controls"
+    xmlns:controls1="using:Pixeval.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:entries="using:Pixeval.Models.Settings.Entries"
+    xmlns:fluent="using:FluentIcons.Avalonia"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:markup1="using:Pixeval.Views.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:options="using:Pixeval.Models.Options"
+    xmlns:pixeval="using:Pixeval"
+    xmlns:settings="using:Pixeval.ViewModels.Settings"
+    x:DataType="{x:Type entries:WorkSubscriptionsSettingsEntry}"
+    Description="{Binding Converter={x:Static avalonia:SettingsEntryHelper.DescriptionConverter}}"
+    Header="{Binding Header}"
+    Tag="{Binding Token}"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
+    <controls:SettingsExpander.HeaderIcon>
+        <fluent:SymbolIcon Symbol="{Binding Icon}" />
+    </controls:SettingsExpander.HeaderIcon>
+    <controls:SettingsExpander.Items>
+        <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
+            <Grid
+                ColumnDefinitions="180,Auto,Auto,Auto"
+                ColumnSpacing="8"
+                RowDefinitions="Auto,Auto"
+                RowSpacing="8">
+                <TextBox x:Name="UserIdTextBox" PlaceholderText="{I18N {x:Static pixeval:WorkSubscriptionsSettingsExpanderResources.UserIdTextBoxPlaceholderText}}" />
+                <controls1:SymbolComboBox
+                    x:Name="SubscriptionTypeComboBox"
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    IconMode="False"
+                    ItemsSource="{markup1:EnumResources x:TypeArguments=options:WorkSubscriptionType}"
+                    SelectedIndex="0"
+                    SelectionChanged="SubscriptionTypeComboBox_OnSelectionChanged" />
+                <controls1:SymbolComboBox
+                    x:Name="WorkKindComboBox"
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    IconMode="False"
+                    SelectedIndex="0" />
+                <Button
+                    Grid.Row="0"
+                    Grid.Column="3"
+                    Click="AddButton_OnClicked"
+                    Content="{markup:SymbolIcon Add}" />
+                <TextBlock
+                    x:Name="ErrorTextBlock"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="4"
+                    Foreground="{DynamicResource SystemFillColorCriticalBrush}"
+                    IsVisible="False"
+                    TextWrapping="Wrap" />
+            </Grid>
+        </controls:SettingsCard>
+        <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
+            <ListBox x:Name="SubscriptionListBox">
+                <ListBox.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type settings:WorkSubscriptionItemViewModel}">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <StackPanel Spacing="2">
+                                <TextBlock
+                                    FontWeight="SemiBold"
+                                    Text="{Binding UserName}"
+                                    TextTrimming="CharacterEllipsis" />
+                                <TextBlock
+                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                    Text="{Binding UserId}"
+                                    TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                            <StackPanel
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal"
+                                Spacing="8">
+                                <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{Binding SubscriptionTypeText}" />
+                                <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{Binding WorkKindText}" />
+                                <Button
+                                    Click="DeleteButton_OnClicked"
+                                    Content="{markup:SymbolIcon Delete}"
+                                    Tag="{Binding}" />
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </controls:SettingsCard>
+    </controls:SettingsExpander.Items>
+</controls:SettingsExpander>

@@ -189,7 +189,7 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
         }
     }
 
-    public void TryReset()
+    public void Reset()
     {
         if (CurrentState is not (DownloadState.Completed or DownloadState.Error or DownloadState.Cancelled))
             return;
@@ -218,7 +218,7 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
         IsProcessing = false;
     }
 
-    public void TryResume()
+    public void Resume()
     {
         if (CurrentState is not DownloadState.Paused)
             return;

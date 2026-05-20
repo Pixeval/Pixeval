@@ -2,6 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using FluentIcons.Common;
@@ -12,7 +13,7 @@ using Pixeval.Models.Download.Tasks;
 
 namespace Pixeval.ViewModels;
 
-public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo>
+public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo>, IDownloadListEntryViewModel
 {
     public IDownloadTaskGroup DownloadTask { get; }
 
@@ -32,6 +33,8 @@ public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo
     public bool ShowGroupStats => DownloadTask.Count > 1;
 
     public DownloadState CurrentState => DownloadTask.CurrentState;
+
+    public IReadOnlyList<DownloadItemViewModel> DownloadItems => [this];
 
     public bool IsPending => CurrentState is DownloadState.Pending;
 
@@ -95,10 +98,10 @@ public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo
                 DownloadTask.Pause();
                 break;
             case Symbol.ArrowRepeatAll:
-                DownloadTask.TryReset();
+                DownloadTask.Reset();
                 break;
             case Symbol.Play:
-                DownloadTask.TryResume();
+                DownloadTask.Resume();
                 break;
             case Symbol.Open:
                 break;
@@ -106,6 +109,21 @@ public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo
     }
 
     public override string ThumbnailUrl => Entry.Thumbnails.PickMax()?.ImageUri.OriginalString ?? string.Empty;
+
+    public bool MatchesSearch(string key) =>
+        Entry.Title.Contains(key, StringComparison.OrdinalIgnoreCase)
+        || DownloadTask.Id.Contains(key, StringComparison.OrdinalIgnoreCase);
+
+    public bool MatchesOption(DownloadListOption option, ISet<IDownloadListEntryViewModel>? customSearchResult) => option switch
+    {
+        DownloadListOption.AllQueued => true,
+        DownloadListOption.Running => CurrentState is DownloadState.Running,
+        DownloadListOption.Completed => CurrentState is DownloadState.Completed,
+        DownloadListOption.Cancelled => CurrentState is DownloadState.Cancelled,
+        DownloadListOption.Error => CurrentState is DownloadState.Error,
+        DownloadListOption.CustomSearch => customSearchResult?.Contains(this) ?? true,
+        _ => true
+    };
 
     private void DownloadTaskOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {

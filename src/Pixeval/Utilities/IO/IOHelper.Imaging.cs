@@ -358,10 +358,9 @@ public static partial class IoHelper
         }
     }
 
-    public static string ChangeExtensionFromUrl(string path, string url)
+    public static string ChangeExtension(string path, string extension)
     {
-        var index = url.LastIndexOf('.');
-        return Path.ChangeExtension(path, url[index..]);
+        return path.Replace(FileExtensionMacro.NameConstToken, extension);
     }
 
     public static string ReplaceTokenExtensionFromUrl(string path, Uri uri, int setIndex)

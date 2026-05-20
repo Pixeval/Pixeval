@@ -44,6 +44,7 @@ public static class LocalSettingsEntryHelper
             .Add<IPSetSettingsEntry<AppSettings>, IPListInput>()
             .Add<DomainFrontingSettingsEntry<AppSettings>, DomainFrontingSettingsExpander>()
             .Add<DownloadMacroAppSettingsEntry, DownloadMacroSettingsExpander>()
+            .Add<WorkSubscriptionsSettingsEntry, WorkSubscriptionsSettingsExpander>()
             .Add<MultiValuesEntry<AppSettings>, MultiValuesSettingsExpander>()
             .Add<FontSettingsEntry<AppSettings>, FontSettingsExpander>()
 
@@ -328,6 +329,10 @@ public static class LocalSettingsEntryHelper
         public ISettingsGroupBuilder<AppSettings> DownloadMacro(
             Action<DownloadMacroAppSettingsEntry>? config = null) =>
             builder.Add(new(builder.Settings), config);
+
+        public ISettingsGroupBuilder<AppSettings> WorkSubscriptions(
+            Action<WorkSubscriptionsSettingsEntry>? config = null) =>
+            builder.Add(new(), config);
     }
 
     private class SettingsResourceKeysProviderImpl : ISettingsResourceKeysProvider

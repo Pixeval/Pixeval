@@ -24,7 +24,7 @@ public abstract class SingleImageDownloadTaskGroupBase : ImageDownloadTask, IDow
 
     public string Id => DatabaseEntry.Entry.Id;
 
-    protected SingleImageDownloadTaskGroupBase(IArtworkInfo entry, string destination) : this(new(destination, DownloadItemType.Illustration, entry))
+    protected SingleImageDownloadTaskGroupBase(IArtworkInfo entry, string destination) : this(new(destination, entry))
     {
         CurrentState = DownloadState.Queued;
         ProgressPercentage = 0;

@@ -5,7 +5,10 @@ using System;
 using System.Collections.Generic;
 using AutoSettingsPage.Models;
 using Avalonia.Controls;
+using Avalonia.Media.Imaging;
+using FluentIcons.Avalonia;
 using FluentIcons.Common;
+using Pixeval.Utilities;
 
 namespace Pixeval.Models.Extensions;
 
@@ -25,7 +28,12 @@ public class ExtensionSettingsGroup(ExtensionsHostModel model) : List<IExtension
     /// <inheritdoc />
     Symbol ISettingsEntry.Icon => Symbol.PuzzlePiece;
 
-    public Control Icon { get; } = model.Icon;
+    /// <summary>
+    /// 不能缓存<see cref="ExtensionsHostModel.Icon"/>
+    /// </summary>
+    public Control Icon => Model.Icon is { } icon
+        ? new Image { Source = new Bitmap(Streams.RentStream(icon)) }
+        : new SymbolIcon { Symbol = Symbol.PuzzlePiece };
 
     /// <inheritdoc />
     public Uri? DescriptionUri { get; } = model.Link;
