@@ -1,4 +1,4 @@
-<ResourceDictionary
+﻿<ResourceDictionary
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:fluent="using:FluentIcons.Avalonia"
@@ -46,8 +46,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:SymbolComboBox}">
                     <ComboBox
-                        Name="PART_ComboBox"
                         x:DataType="local:SymbolComboBoxItem"
+                        Name="PART_ComboBox"
                         HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                         VerticalAlignment="{TemplateBinding VerticalAlignment}"
                         ItemTemplate="{TemplateBinding IconItemTemplate}"

@@ -1,13 +1,12 @@
-﻿<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Styles.Resources>
-	    <ResourceDictionary>
-		    <ResourceDictionary.MergedDictionaries>
-			    <ResourceInclude Source="TabsControl.axaml"/>
-			    <ResourceInclude Source="DragTabItem.axaml"/>
-		    </ResourceDictionary.MergedDictionaries>
-	    </ResourceDictionary>
-	</Styles.Resources>
-	
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="TabsControl.axaml" />
+                <ResourceInclude Source="DragTabItem.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Styles.Resources>
+
 </Styles>

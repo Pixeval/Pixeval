@@ -1,19 +1,19 @@
-<ContentPage
+﻿<ContentPage
     x:Class="Pixeval.Views.Viewers.WorkInfoPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:misaki="using:Misaki"
     xmlns:pixeval="using:Pixeval"
     xmlns:viewers="using:Pixeval.Views.Viewers"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DesignHeight="600"
-    d:DesignWidth="350"
     x:DataType="{x:Type misaki:IArtworkInfo}"
-    Header="{I18N {x:Static pixeval:EntryViewerPageResources.InfoTabContent}}"
     Name="WorkInfoPageRoot"
     Background="Transparent"
-    mc:Ignorable="d">
+    Header="{I18N {x:Static pixeval:EntryViewerPageResources.InfoTabContent}}"
+    mc:Ignorable="d"
+    d:DesignHeight="600"
+    d:DesignWidth="350">
     <viewers:WorkInfoPane
         ActionZone="{Binding #WorkInfoPageRoot.ActionZone}"
         ActionZoneTemplate="{Binding #WorkInfoPageRoot.ActionZoneTemplate}"

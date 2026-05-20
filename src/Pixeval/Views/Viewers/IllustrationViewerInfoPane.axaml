@@ -25,7 +25,7 @@
         <Style Selector="local|IllustrationViewerInfoPane#InfoPaneRoot">
             <Style Selector="^ local|WorkInfoPane#InfoPaneSection">
                 <Setter Property="Theme" Value="{StaticResource LiteWorkInfoPaneStyle}" />
-                <Setter Property="IsVisible" Value="True"></Setter>
+                <Setter Property="IsVisible" Value="True" />
             </Style>
             <Style Selector="^ TabbedPage#TabbedPageSection">
                 <Setter Property="IsVisible" Value="False" />
@@ -35,7 +35,7 @@
                 <Style Selector="^ local|WorkInfoPane#InfoPaneSection">
                     <!-- <Setter Property="Theme" Value="{StaticResource {x:Type local:WorkInfoPane}}" /> -->
                     <Setter Property="Theme" Value="{StaticResource LiteWorkInfoPaneStyle}" />
-                    <Setter Property="IsVisible" Value="False"></Setter>
+                    <Setter Property="IsVisible" Value="False" />
                 </Style>
                 <Style Selector="^ TabbedPage#TabbedPageSection">
                     <Setter Property="IsVisible" Value="True" />
@@ -47,9 +47,7 @@
 
     <Grid>
         <DockPanel>
-            <StackPanel
-                ClipToBounds="True"
-                DockPanel.Dock="Bottom">
+            <StackPanel ClipToBounds="True" DockPanel.Dock="Bottom">
                 <ListBox
                     x:Name="ThumbnailListBox"
                     Grid.Row="2"
@@ -80,17 +78,17 @@
                 </ListBox>
                 <CommandBar
                     x:Name="BottomActionBar"
+                    Margin="32,0"
                     HorizontalAlignment="Center"
                     Background="Transparent"
                     DefaultLabelPosition="Collapsed"
-                    IsDynamicOverflowEnabled="False"
-                    Margin="32 0">
+                    IsDynamicOverflowEnabled="False">
                     <CommandBarButton
                         Command="{Binding CurrentIllustration.BookmarkCommand}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
                         Icon="{markup1:SymbolIconEx Heart,
-                                                IconVariant={Binding CurrentIllustration.IsBookmarkedDisplay,
-                                                                 Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
+                                                    IconVariant={Binding CurrentIllustration.IsBookmarkedDisplay,
+                                                                         Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
                         IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
                         Label="{I18N {x:Static pixeval:MiscResources.AddBookmark}}" />
                     <CommandBarButton
@@ -110,8 +108,8 @@
                         x:Name="AddToBookmarkButton"
                         Click="AddToBookmarkButton_OnClick"
                         Icon="{markup1:SymbolIconEx Bookmark,
-                                                IconVariant={Binding CurrentIllustration.IsBookmarkedDisplay,
-                                                                      Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
+                                                    IconVariant={Binding CurrentIllustration.IsBookmarkedDisplay,
+                                                                         Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
                         IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
                         Label="{I18N {x:Static pixeval:EntryItemResources.AddToBookmark}}" />
                     <!--<CommandBarButton
@@ -133,10 +131,8 @@
             </StackPanel>
 
             <Grid VerticalAlignment="Stretch" ClipToBounds="True">
-                
-                <local:WorkInfoPane
-                    Name="InfoPaneSection"
-                    ArtworkInfo="{Binding CurrentIllustration.Entry}">
+
+                <local:WorkInfoPane Name="InfoPaneSection" ArtworkInfo="{Binding CurrentIllustration.Entry}">
                     <local:WorkInfoPane.ActionZone>
                         <Border
                             Width="32"
@@ -145,14 +141,14 @@
                             IsHitTestVisible="False" />
                     </local:WorkInfoPane.ActionZone>
                 </local:WorkInfoPane>
-                
+
                 <TabbedPage
                     Name="TabbedPageSection"
                     Background="Transparent"
-                    TabPlacement="Bottom"
                     IsVisible="{Binding #InfoPaneRoot.IsDocked}"
-                    Pages="{Binding PanePages}" />
-                
+                    Pages="{Binding PanePages}"
+                    TabPlacement="Bottom" />
+
             </Grid>
         </DockPanel>
 
@@ -160,12 +156,12 @@
             Margin="14"
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
+            Content="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding #InfoPaneRoot.IsLocked},
+                                                                         PinOff,
+                                                                         Pin,
+                                                                         x:TypeArguments=common:Symbol}}"
             IsChecked="{Binding #InfoPaneRoot.IsLocked, Mode=TwoWay}"
             IsVisible="{Binding #InfoPaneRoot.IsDocked, Converter={x:Static BoolConverters.Not}}"
-            Content="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding #InfoPaneRoot.IsLocked},
-                                                                                    PinOff,
-                                                                                    Pin,
-                                                                                    x:TypeArguments=common:Symbol}}"
             Theme="{StaticResource TransparentButtonStyle}"
             ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.Pin}}" />
         <Button
@@ -176,9 +172,9 @@
             VerticalAlignment="Top"
             Click="ChevronButtonClicked"
             Content="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding #InfoPaneRoot.IsDocked},
-                                                                             ChevronDown,
-                                                                             ChevronUp,
-                                                                             x:TypeArguments=common:Symbol}}"
+                                                                         ChevronDown,
+                                                                         ChevronUp,
+                                                                         x:TypeArguments=common:Symbol}}"
             Theme="{StaticResource TransparentButtonStyle}"
             ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.InfoAndComments}}" />
 

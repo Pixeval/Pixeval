@@ -40,10 +40,10 @@
             <Setter Property="Transitions">
                 <Transitions>
                     <DoubleTransition
+                        Delay="0:0:0.1"
                         Easing="CubicEaseOut"
                         Property="DockProgress"
-                        Duration="0:0:0.3"
-                        Delay="0:0:0.1" />
+                        Duration="0:0:0.3" />
                 </Transitions>
             </Setter>
 
@@ -69,7 +69,7 @@
 
             <Style Selector="^ local|SwipeImageViewer">
                 <Setter Property="ClipToBounds" Value="False" />
-                
+
                 <Style Selector="^ TransitioningContentControl">
                     <Setter Property="ClipToBounds" Value="False" />
 
@@ -155,19 +155,17 @@
                     <Border.Transitions>
                         <Transitions>
                             <CornerRadiusTransition
+                                Delay="0:0:0.1"
                                 Easing="CubicEaseOut"
                                 Property="CornerRadius"
-                                Duration="0:0:0.3"
-                                Delay="0:0:0.1" />
+                                Duration="0:0:0.3" />
                             <BrushTransition
+                                Delay="0:0:0.1"
                                 Property="Background"
-                                Duration="0:0:0.3"
-                                Delay="0:0:0.1" />
+                                Duration="0:0:0.3" />
                         </Transitions>
                     </Border.Transitions>
-                    <local:IllustrationViewerInfoPane
-                        IsDocked="{Binding #EntryViewerFloatingPaneView.IsDocked, Mode=TwoWay}"
-                        IsLocked="{Binding #EntryViewerFloatingPaneView.IsLocked, Mode=TwoWay}" />
+                    <local:IllustrationViewerInfoPane IsDocked="{Binding #EntryViewerFloatingPaneView.IsDocked, Mode=TwoWay}" IsLocked="{Binding #EntryViewerFloatingPaneView.IsLocked, Mode=TwoWay}" />
                 </Border>
             </controls:FloatingPaneView.Pane>
             <DockPanel>
@@ -271,16 +269,14 @@
                                                                     FontSize=16}"
                                         IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}"
                                         ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.RotateClockwise}}" />
-                                    <CommandBarSeparator x:Name="SwipeTransformSeparator"
-                                                         IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}" />
+                                    <CommandBarSeparator x:Name="SwipeTransformSeparator" IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}" />
                                     <CommandBarButton
                                         Command="{Binding #I.ImageViewer.ZoomOutCommand}"
                                         Content="{markup:SymbolIcon ZoomOut,
                                                                     FontSize=16}"
                                         ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomOut}}" />
                                     <controls:CommandBarElementContainer>
-                                        <TextBlock x:Name="ZoomFactorTextBlock"
-                                                   Text="{Binding #I.ImageViewer.ZoomFactor, StringFormat={}{0:P0}}" />
+                                        <TextBlock x:Name="ZoomFactorTextBlock" Text="{Binding #I.ImageViewer.ZoomFactor, StringFormat={}{0:P0}}" />
                                     </controls:CommandBarElementContainer>
                                     <CommandBarButton
                                         Command="{Binding #I.ImageViewer.ZoomInCommand}"

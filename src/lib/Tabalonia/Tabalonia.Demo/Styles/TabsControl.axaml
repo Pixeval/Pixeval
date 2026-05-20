@@ -1,19 +1,20 @@
-<ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:controls="clr-namespace:Tabalonia.Controls;assembly=Tabalonia"
-                    xmlns:panels="clr-namespace:Tabalonia.Panels;assembly=Tabalonia">
+﻿<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Tabalonia.Controls;assembly=Tabalonia"
+    xmlns:panels="clr-namespace:Tabalonia.Panels;assembly=Tabalonia">
 
     <Thickness x:Key="TabControlTopPlacementItemMargin">0 0 0 2</Thickness>
 
     <ControlTheme x:Key="AddItemCommandButton" TargetType="Button">
         <Setter Property="Content">
             <Template>
-                <Viewbox Width="20"
-                         Height="20"
-                         Stretch="Uniform">
+                <Viewbox
+                    Width="20"
+                    Height="20"
+                    Stretch="Uniform">
                     <Canvas Width="24" Height="24">
-                        <Path Fill="{Binding $parent[Button].Foreground}"
-                              Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+                        <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Fill="{Binding $parent[Button].Foreground}" />
                     </Canvas>
                 </Viewbox>
             </Template>
@@ -35,18 +36,19 @@
 
         <Setter Property="Template">
             <ControlTemplate>
-                <ContentPresenter x:Name="PART_ContentPresenter"
-                                  Background="{TemplateBinding Background}"
-                                  BorderBrush="{TemplateBinding BorderBrush}"
-                                  BorderThickness="{TemplateBinding BorderThickness}"
-                                  CornerRadius="{TemplateBinding CornerRadius}"
-                                  Content="{TemplateBinding Content}"
-                                  ContentTemplate="{TemplateBinding ContentTemplate}"
-                                  Padding="{TemplateBinding Padding}"
-                                  Foreground="{TemplateBinding Foreground}"
-                                  RecognizesAccessKey="True"
-                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                <ContentPresenter
+                    x:Name="PART_ContentPresenter"
+                    Padding="{TemplateBinding Padding}"
+                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    Content="{TemplateBinding Content}"
+                    ContentTemplate="{TemplateBinding ContentTemplate}"
+                    CornerRadius="{TemplateBinding CornerRadius}"
+                    Foreground="{TemplateBinding Foreground}"
+                    RecognizesAccessKey="True" />
             </ControlTemplate>
         </Setter>
 
@@ -105,56 +107,55 @@
         <Setter Property="Background" Value="{DynamicResource TabControlBackground}" />
         <Setter Property="Template">
             <ControlTemplate>
-                <Border BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="{TemplateBinding CornerRadius}"
-                        Background="{TemplateBinding Background}"
-                        HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                        VerticalAlignment="{TemplateBinding VerticalAlignment}">
+                <Border
+                    HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                    VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="{TemplateBinding CornerRadius}">
                     <DockPanel>
 
-                        <panels:TopPanel Name="PART_TopPanel"
-                                         Background="{TemplateBinding Background}"
-                                         HorizontalAlignment="Stretch"
-                                         DockPanel.Dock="{TemplateBinding TabStripPlacement}">
+                        <panels:TopPanel
+                            Name="PART_TopPanel"
+                            HorizontalAlignment="Stretch"
+                            Background="{TemplateBinding Background}"
+                            DockPanel.Dock="{TemplateBinding TabStripPlacement}">
 
-                            <ContentPresenter Name="PART_LeftContent"
-                                              Content="{TemplateBinding LeftContent}" />
-                            
-                            <Thumb Name="PART_LeftDragWindowThumb"
-                                   MinWidth="{TemplateBinding LeftThumbWidth}" />
+                            <ContentPresenter Name="PART_LeftContent" Content="{TemplateBinding LeftContent}" />
+
+                            <Thumb Name="PART_LeftDragWindowThumb" MinWidth="{TemplateBinding LeftThumbWidth}" />
 
 
-                            <ItemsPresenter Name="PART_ItemsPresenter"
-                                            ItemsPanel="{TemplateBinding ItemsPanel}" />
+                            <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
 
-                            <Button Name="PART_AddItemButton"
-                                    Command="{Binding AddItemCommand, RelativeSource={RelativeSource TemplatedParent}}"
-                                    Theme="{StaticResource AddItemCommandButton}" 
-                                    IsVisible="{TemplateBinding ShowDefaultAddButton}"/>
+                            <Button
+                                Name="PART_AddItemButton"
+                                Command="{Binding AddItemCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                IsVisible="{TemplateBinding ShowDefaultAddButton}"
+                                Theme="{StaticResource AddItemCommandButton}" />
 
-                            <Thumb Name="PART_RightDragWindowThumb"
-                                   MinWidth="{TemplateBinding RightThumbWidth}" />
+                            <Thumb Name="PART_RightDragWindowThumb" MinWidth="{TemplateBinding RightThumbWidth}" />
 
-                            <ContentPresenter Name="PART_RightContent"
-                                              Content="{TemplateBinding RightContent}" />
+                            <ContentPresenter Name="PART_RightContent" Content="{TemplateBinding RightContent}" />
                         </panels:TopPanel>
 
-                        <ContentPresenter Name="PART_SelectedContentHost"
-                                          Margin="{TemplateBinding Padding}"
-                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          Content="{TemplateBinding SelectedContent}"
-                                          ContentTemplate="{TemplateBinding SelectedContentTemplate}" />
+                        <ContentPresenter
+                            Name="PART_SelectedContentHost"
+                            Margin="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding SelectedContent}"
+                            ContentTemplate="{TemplateBinding SelectedContentTemplate}" />
                     </DockPanel>
                 </Border>
             </ControlTemplate>
         </Setter>
 
-        <Style Selector="^[TabStripPlacement=Left] /template/ ItemsPresenter#PART_ItemsPresenter > WrapPanel">
+        <Style Selector="^[TabStripPlacement=Left] /template/ ItemsPresenter#PART_ItemsPresenter &gt; WrapPanel">
             <Setter Property="Orientation" Value="Vertical" />
         </Style>
-        <Style Selector="^[TabStripPlacement=Right] /template/ ItemsPresenter#PART_ItemsPresenter > WrapPanel">
+        <Style Selector="^[TabStripPlacement=Right] /template/ ItemsPresenter#PART_ItemsPresenter &gt; WrapPanel">
             <Setter Property="Orientation" Value="Vertical" />
         </Style>
         <Style Selector="^[TabStripPlacement=Top] /template/ ItemsPresenter#PART_ItemsPresenter">

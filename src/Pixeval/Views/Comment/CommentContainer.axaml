@@ -1,4 +1,4 @@
-<ContentPage
+﻿<ContentPage
     x:Class="Pixeval.Views.CommentContainer"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -6,11 +6,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
     xmlns:views="using:Pixeval.Views"
-    Background="Transparent"
-    d:DesignHeight="600"
-    d:DesignWidth="350"
     x:DataType="{x:Type viewers:CommentsViewViewModel}"
-    mc:Ignorable="d">
+    Background="Transparent"
+    mc:Ignorable="d"
+    d:DesignHeight="600"
+    d:DesignWidth="350">
     <DockPanel>
         <views:PixivReplyBar
             x:Name="ReplyBar"

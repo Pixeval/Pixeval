@@ -1,4 +1,4 @@
-<ContentPage
+﻿<ContentPage
     x:Class="Pixeval.Views.Search.IllustrationSearchOptionsPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -146,8 +146,8 @@
                 HorizontalAlignment="Stretch"
                 DisplayMemberBinding="{Binding}"
                 ItemsSource="{Binding ToolItems}"
-                SelectedValueBinding="{Binding}"
-                SelectedValue="{Binding Tool, Mode=TwoWay}" />
+                SelectedValue="{Binding Tool, Mode=TwoWay}"
+                SelectedValueBinding="{Binding}" />
         </Grid>
     </StackPanel>
 </ContentPage>

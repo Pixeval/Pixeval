@@ -1,26 +1,26 @@
-<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-	
+
 
     <Style Selector="Button.AddItemCommandButtonStyle">
-		<Setter Property="Background" Value="Transparent" />
+        <Setter Property="Background" Value="Transparent" />
         <Setter Property="Template">
             <ControlTemplate>
-				<Border x:Name="border"
-                        Height="28"
-                        Width="28"
-                        CornerRadius="1"
-                        Background="{TemplateBinding Background}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        BorderBrush="{TemplateBinding BorderBrush}">
+                <Border
+                    x:Name="border"
+                    Width="28"
+                    Height="28"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="1">
 
-                    <Viewbox Width="20"
-                             Height="20"
-                             Stretch="Uniform">
+                    <Viewbox
+                        Width="20"
+                        Height="20"
+                        Stretch="Uniform">
                         <Canvas Width="24" Height="24">
-                            <Path Fill="{TemplateBinding Foreground}"
-                                  Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+                            <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Fill="{TemplateBinding Foreground}" />
                         </Canvas>
                     </Viewbox>
                 </Border>
@@ -37,8 +37,7 @@
         <Setter Property="Foreground" Value="{DynamicResource InactiveWindowAddCommandButtonForegroundBrush}" />
     </Style>
 
-    <Style
-        Selector="Window[IsActive=false] Button.AddItemCommandButtonStyle:pointerover">
+    <Style Selector="Window[IsActive=false] Button.AddItemCommandButtonStyle:pointerover">
         <Setter Property="Foreground" Value="{DynamicResource InactiveWindowAddCommandButtonPointerOverForegroundBrush}" />
     </Style>
 
@@ -49,5 +48,5 @@
     <Style Selector="Button.AddItemCommandButtonStyle">
         <Setter Property="CornerRadius" Value="8" />
     </Style>
-   
+
 </Styles>

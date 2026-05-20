@@ -1,4 +1,4 @@
-<UserControl
+﻿<UserControl
     x:Class="Pixeval.Views.CommentView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,11 +9,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
     xmlns:views="using:Pixeval.Views"
-    d:DesignHeight="400"
-    d:DesignWidth="350"
     x:DataType="{x:Type viewers:CommentsViewViewModel}"
     DataContextChanged="CommentView_OnDataContextChanged"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    d:DesignHeight="400"
+    d:DesignWidth="350">
     <entry:EntryView HasNoItem="{Binding !DataProvider.View.Count}" IsLoadingMore="{Binding #ListBox.(controls:IncrementalLoadingBehavior.IsLoadingMore)}">
         <ListBox
             x:Name="ListBox"

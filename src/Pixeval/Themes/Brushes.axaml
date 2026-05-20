@@ -1,4 +1,4 @@
-<ResourceDictionary
+﻿<ResourceDictionary
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:avconv="using:Avalonia.Controls.Converters">
@@ -428,15 +428,14 @@
     <Thickness x:Key="MenuFlyoutItemThemePaddingNarrow">11,4,11,5</Thickness>
 
     <!--  TabStrip/TabControl  -->
-<!--    <Thickness x:Key="TabControlTopPlacementItemMargin">0,0,0,2</Thickness>
+    <!--    <Thickness x:Key="TabControlTopPlacementItemMargin">0,0,0,2</Thickness>
     <x:Double x:Key="TabItemMinHeight">48</x:Double>
     <x:Double x:Key="TabItemVerticalPipeHeight">24</x:Double>
     <x:Double x:Key="TabItemPipeThickness">2</x:Double>
     <Thickness x:Key="TabItemHeaderMargin">12,0</Thickness>
     <x:Double x:Key="TabItemHeaderFontSize">24</x:Double>
     <Thickness x:Key="TabItemMargin">12,0</Thickness>
-    <FontWeight x:Key="TabItemHeaderThemeFontWeight">SemiLight</FontWeight>
--->
+    <FontWeight x:Key="TabItemHeaderThemeFontWeight">SemiLight</FontWeight>    -->
     <!--  Flyouts  -->
     <Thickness x:Key="FlyoutBorderThemeThickness">1</Thickness>
     <Thickness x:Key="FlyoutContentPadding">16,15,16,17</Thickness>

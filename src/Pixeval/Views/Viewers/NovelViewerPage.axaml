@@ -1,4 +1,4 @@
-<ContentPage
+﻿<ContentPage
     x:Class="Pixeval.Views.Viewers.NovelViewerPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -13,11 +13,11 @@
     xmlns:utilities="using:Pixeval.Utilities"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
     xmlns:work="using:Pixeval.Views.Work"
-    d:DesignHeight="600"
-    d:DesignWidth="1000"
     x:DataType="{x:Type viewers:NovelViewerPageViewModel}"
     Header="{Binding CurrentNovel.Entry.Title}"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    d:DesignHeight="600"
+    d:DesignWidth="1000">
     <ContentPage.Icon>
         <Image
             Width="16"
