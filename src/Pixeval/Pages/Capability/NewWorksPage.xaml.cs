@@ -23,7 +23,7 @@ public sealed partial class NewWorksPage : IScrollViewHost
 
     private void ChangeSource()
     {
-        WorkContainer.WorkView.ResetEngine(App.AppViewModel.MakoClient.NewWorks(WorkTypeComboBox.GetSelectedItem<WorkType>(), App.AppViewModel.AppSettings.TargetFilter));
+        WorkContainer.WorkView.ResetEngine(App.AppViewModel.MakoClient.WorkNew(WorkTypeComboBox.GetSelectedItem<WorkType>()));
     }
 
     public ScrollView ScrollView => WorkContainer.ScrollView;

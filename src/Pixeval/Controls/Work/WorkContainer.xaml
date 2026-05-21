@@ -41,7 +41,7 @@
                     x:Name="SortOptionComboBox"
                     SelectedEnum="{x:Bind pixeval:App.AppViewModel.AppSettings.WorkSortOption}"
                     SelectionChanged="SortOptionComboBox_OnSelectionChanged"
-                    Style="{StaticResource WorkSortOptionComboBoxStyle}" />
+                    Style="{StaticResource LocalSortOptionComboBoxStyle}" />
                 <AutoSuggestBox
                     x:Uid="/WorkContainer/FilterAutoSuggestBox"
                     Width="250"

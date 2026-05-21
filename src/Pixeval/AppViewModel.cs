@@ -40,7 +40,7 @@ public partial class AppViewModel(App app) : IDisposable
 
     public VersionContext VersionContext { get; } = AppInfo.LoadVersionContext() ?? new VersionContext();
 
-    public long PixivUid => MakoClient.Me.Id;
+    public long PixivUid => MakoClient.Me!.Id;
 
     public void AppLoggedIn()
     {

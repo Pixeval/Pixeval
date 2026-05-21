@@ -99,10 +99,10 @@
     </Style>
 
     <Style
-        x:Key="WorkSortOptionComboBoxStyle"
+        x:Key="LocalSortOptionComboBoxStyle"
         BasedOn="{StaticResource DefaultComboBoxStyle}"
         TargetType="winUi:EnumComboBox">
-        <Setter Property="ItemsSource" Value="{controls:EnumValues Type=WorkSortOption}" />
+        <Setter Property="ItemsSource" Value="{controls:EnumValues Type=LocalSortOption}" />
         <Setter Property="PlaceholderText" Value="{controls:ResourceString ResourceKey='SortOptionComboBox/PlaceholderText', ResourceFile=Misc}" />
     </Style>
 

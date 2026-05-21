@@ -22,6 +22,7 @@ using Pixeval.Util.UI;
 using Pixeval.Utilities;
 using Pixeval.Controls;
 using WinUI3Utilities;
+using Pixeval.Settings;
 
 #if DEBUG
 using System.Diagnostics;
@@ -39,6 +40,7 @@ public partial class App
         AppViewModel = new AppViewModel(this);
         WindowFactory.Initialize(AppViewModel.AppSettings, AppInfo.IconApplicationUri, AppInfo.SvgIconApplicationUri);
         AppInstance.GetCurrent().Activated += (_, arguments) => ActivationRegistrar.Dispatch(arguments);
+        LocalSettingsEntryHelper.Init();
         InitializeComponent();
     }
 

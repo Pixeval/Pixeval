@@ -18,45 +18,26 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IArtworkInfo
         var path = IoHelper.NormalizePath(ArtworkMetaPathParser.Instance.Reduce(rawPath, context));
         _ = manager.Delete(entry => entry.Destination == path);
 
-        IDownloadTaskGroup? task;
-        switch (context)
+        var task = context switch
         {
-            case ISingleImage { ImageType: ImageType.SingleImage } singleImage:
-            {
-                task = new SingleImageDownloadTaskGroup(singleImage, path);
-                break;
-            }
-            case ISingleImage { ImageType: ImageType.ImageSet, SetIndex: > -1 } singleImage:
-            {
-                task = new SingleImageDownloadTaskGroup(singleImage, path);
-                break;
-            }
-            case ISingleAnimatedImage
+            ISingleImage { ImageType: ImageType.SingleImage } singleImage => new SingleImageDownloadTaskGroup(
+                singleImage, path),
+            ISingleImage { ImageType: ImageType.ImageSet, SetIndex: > -1 } singleImage =>
+                new SingleImageDownloadTaskGroup(singleImage, path),
+            ISingleAnimatedImage
             {
                 ImageType: ImageType.SingleAnimatedImage,
                 PreferredAnimatedImageType: SingleAnimatedImageType.MultiFiles
-            } singleAnimatedImage:
-            {
-                task = new UgoiraDownloadTaskGroup(singleAnimatedImage, path);
-                break;
-            }
-            case ISingleAnimatedImage
+            } singleAnimatedImage => new UgoiraDownloadTaskGroup(singleAnimatedImage, path),
+            ISingleAnimatedImage
             {
                 ImageType: ImageType.SingleAnimatedImage,
-                PreferredAnimatedImageType: SingleAnimatedImageType.SingleFile or SingleAnimatedImageType.SingleZipFile
-            } singleAnimatedImage:
-            {
-                task = new SingleAnimatedImageDownloadTaskGroup(singleAnimatedImage, path);
-                break;
-            }
-            case IImageSet { ImageType: ImageType.ImageSet } imageSet:
-            {
-                task = new MangaDownloadTaskGroup(imageSet, path);
-                break;
-            }
-            default:
-                return ThrowHelper.ThrowNotSupportedException<IDownloadTaskGroup>();
-        }
+                PreferredAnimatedImageType: SingleAnimatedImageType.SingleFile
+                or SingleAnimatedImageType.SingleZipFile
+            } singleAnimatedImage => new SingleAnimatedImageDownloadTaskGroup(singleAnimatedImage, path),
+            IImageSet { ImageType: ImageType.ImageSet } imageSet => new MangaDownloadTaskGroup(imageSet, path),
+            _ => ThrowHelper.ThrowNotSupportedException<IDownloadTaskGroup>()
+        };
 
         manager.Insert(task.DatabaseEntry);
         return task;

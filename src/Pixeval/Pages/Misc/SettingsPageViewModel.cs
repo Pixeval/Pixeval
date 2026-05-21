@@ -19,6 +19,7 @@ using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
 using Pixeval.Extensions;
+using Pixeval.Models.Options;
 using Pixeval.Options;
 using Pixeval.Settings;
 using Pixeval.Util.ComponentModels;
@@ -84,7 +85,8 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                             .IPSet(t => t.PixivWebApiNameResolver),
                     entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.DomainFronting = t)
                 .Enum(t => t.DomainFrontingType, DomainFrontingType.Pairs,
-                    entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.DomainFrontingType = (DomainFrontingType) t)
+                    entry => entry.ValueChanged += t =>
+                        App.AppViewModel.MakoClient.Configuration.DomainFrontingType = (DomainFrontingType) t)
                 .Proxy(entry => entry.ProxyChanged = t => App.AppViewModel.MakoClient.Configuration.Proxy = t)
                 .String(t => t.MirrorHost,
                     entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.MirrorHost = t)
@@ -113,7 +115,7 @@ public partial class SettingsPageViewModel : UiObservableObject, IDisposable
                 .Int(t => t.ReverseSearchResultSimilarityThreshold, 1, 100, 1)
                 .Int(t => t.MaximumSearchHistoryRecords, 10, 200, 1)
                 .Int(t => t.MaximumSuggestionBoxSearchHistory, 0, 20, 1)
-                .Enum(t => t.WorkSortOption, WorkSortOption.Pairs)
+                .Enum(t => t.WorkSortOption, LocalSortOption.Pairs)
                 .Enum(t => t.SimpleWorkType, SimpleWorkType.Pairs)
                 .MultiValues(t => t.IllustrationRankOption, entry =>
                     entry.Enum(

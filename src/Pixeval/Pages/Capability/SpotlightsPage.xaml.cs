@@ -18,7 +18,7 @@ public sealed partial class SpotlightsPage : IScrollViewHost
 
     private void ChangeSource()
     {
-        SpotlightView.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Spotlights());
+        SpotlightView.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Spotlight());
     }
 
     public ScrollView ScrollView => SpotlightView.ScrollView;

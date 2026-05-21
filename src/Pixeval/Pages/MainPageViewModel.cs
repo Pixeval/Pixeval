@@ -36,14 +36,14 @@ public partial class MainPageViewModel : UiObservableObject
     public partial ImageSource? AvatarSource { get; private set; }
 
     [ObservableProperty]
-    public partial string UserName { get; private set; } = App.AppViewModel.MakoClient.Me.Name;
+    public partial string UserName { get; private set; } = App.AppViewModel.MakoClient.Me!.Name;
 
     [ObservableProperty]
-    public partial bool IsPremium { get; private set; } = App.AppViewModel.MakoClient.Me.IsPremium;
+    public partial bool IsPremium { get; private set; } = App.AppViewModel.MakoClient.Me!.IsPremium;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Url))]
-    public partial long Id { get; private set; } = App.AppViewModel.MakoClient.Me.Id;
+    public partial long Id { get; private set; } = App.AppViewModel.MakoClient.Me!.Id;
 
     public Uri Url => MakoHelper.GenerateUserWebUri(Id);
 

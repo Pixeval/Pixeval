@@ -29,24 +29,20 @@ public sealed partial class SearchWorksPage : IScrollViewHost
         var settings = App.AppViewModel.AppSettings;
         WorkContainer.WorkView.ResetEngine(
             SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>() is SimpleWorkType.IllustrationAndManga
-                ? App.AppViewModel.MakoClient.SearchIllustrations(
-                    _searchText,
-                    settings.SearchIllustrationTagMatchOption,
-                    settings.WorkSortOption,
-                    settings.UseSearchStartDate ? settings.SearchStartDate : null,
-                    settings.UseSearchEndDate ? settings.SearchEndDate : null,
-                    null,
-                    settings.TargetFilter)
-                : App.AppViewModel.MakoClient.SearchNovels(
-                    _searchText,
-                    settings.SearchNovelTagMatchOption,
-                    settings.WorkSortOption,
-                    settings.UseSearchStartDate ? settings.SearchStartDate : null,
-                    settings.UseSearchEndDate ? settings.SearchEndDate : null,
-                    true,
-                    true,
-                    null,
-                    settings.TargetFilter));
+                ? App.AppViewModel.MakoClient.IllustrationSearch(
+                    new(_searchText)
+                    {
+                        StartDate = settings.UseSearchStartDate ? settings.SearchStartDate : null,
+                        EndDate = settings.UseSearchEndDate ? settings.SearchEndDate : null,
+                        MatchOption = settings.SearchIllustrationTagMatchOption
+                    })
+                : App.AppViewModel.MakoClient.NovelSearch(
+                    new(_searchText)
+                    {
+                        StartDate = settings.UseSearchStartDate ? settings.SearchStartDate : null,
+                        EndDate = settings.UseSearchEndDate ? settings.SearchEndDate : null,
+                        MatchOption = settings.SearchNovelTagMatchOption
+                    }));
     }
 
     public ScrollView ScrollView => WorkContainer.ScrollView;

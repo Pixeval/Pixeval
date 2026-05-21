@@ -24,9 +24,7 @@ public sealed partial class SearchUsersPage : IScrollViewHost
     {
         var settings = App.AppViewModel.AppSettings;
         IllustratorView.ViewModel.ResetEngine(
-            App.AppViewModel.MakoClient.SearchUser(
-                _searchText,
-                settings.TargetFilter));
+            App.AppViewModel.MakoClient.UserSearch(_searchText));
     }
 
     public ScrollView ScrollView => IllustratorView.ScrollView;

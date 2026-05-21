@@ -28,7 +28,7 @@ public sealed partial class FollowingsPage : IScrollViewHost
 
     private void ChangeSource()
     {
-        IllustratorView.ViewModel.ResetEngine(App.AppViewModel.MakoClient.Following(_uid, PrivacyPolicyComboBox.GetSelectedItem<PrivacyPolicy>()));
+        IllustratorView.ViewModel.ResetEngine(App.AppViewModel.MakoClient.UserFollowing(_uid, PrivacyPolicyComboBox.GetSelectedItem<PrivacyPolicy>()));
     }
 
     public ScrollView ScrollView => IllustratorView.ScrollView;

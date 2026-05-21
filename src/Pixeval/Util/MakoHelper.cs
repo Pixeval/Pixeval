@@ -12,6 +12,7 @@ using Mako.Model;
 using Misaki;
 using Pixeval.Collections;
 using Pixeval.Controls;
+using Pixeval.Models.Options;
 using Pixeval.Options;
 using static Pixeval.MiscResources;
 using WinUI3Utilities;
@@ -38,7 +39,7 @@ public static class MakoHelper
 
     public static async Task<List<BookmarkTag>> GetBookmarkTagsAsync(long uid, SimpleWorkType type, PrivacyPolicy policy)
     {
-        var tags = await App.AppViewModel.MakoClient.WorkBookmarkTag(uid, type, policy).ToListAsync();
+        var tags = await App.AppViewModel.MakoClient.WorkBookmarkTags(uid, type, policy).ToListAsync();
         tags.Insert(0, AllBookmarkTag.Instance);
         return tags;
     }
@@ -111,15 +112,15 @@ public static class MakoHelper
 
     public static Uri GenerateSpotlightAppUri(long id) => new($"{AppInfo.AppProtocol}://spotlight/{id}");
 
-    public static SortDescription<IWorkViewModel>? GetSortDescription(WorkSortOption sortOption)
+    public static SortDescription<IWorkViewModel>? GetSortDescription(LocalSortOption sortOption)
     {
         return sortOption switch
         {
-            WorkSortOption.PopularityDescending => new(WorkEntryBookmarkComparer.Instance, SortDirection.Descending),
-            WorkSortOption.PublishDateAscending => new(WorkEntryPublishDateComparer.Instance, SortDirection.Ascending),
-            WorkSortOption.PublishDateDescending => new(WorkEntryPublishDateComparer.Instance, SortDirection.Descending),
-            WorkSortOption.DoNotSort => null,
-            _ => ThrowHelper.ArgumentOutOfRange<WorkSortOption, SortDescription<IWorkViewModel>?>(sortOption)
+            LocalSortOption.PopularityDescending => new(WorkEntryBookmarkComparer.Instance, SortDirection.Descending),
+            LocalSortOption.PublishDateAscending => new(WorkEntryPublishDateComparer.Instance, SortDirection.Ascending),
+            LocalSortOption.PublishDateDescending => new(WorkEntryPublishDateComparer.Instance, SortDirection.Descending),
+            LocalSortOption.DoNotSort => null,
+            _ => ThrowHelper.ArgumentOutOfRange<LocalSortOption, SortDescription<IWorkViewModel>?>(sortOption)
         };
     }
 

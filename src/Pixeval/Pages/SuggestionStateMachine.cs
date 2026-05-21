@@ -23,12 +23,12 @@ public class SuggestionStateMachine
         new(SearcherLogic.Contain, PinIn.CreateDefault());
 
     private readonly Task<IEnumerable<SuggestionModel>> _illustrationTrendingTagCache =
-        Functions.Block(async () => (await App.AppViewModel.MakoClient.GetTrendingTagsAsync(App.AppViewModel.AppSettings.TargetFilter))
+        Functions.Block(async () => (await App.AppViewModel.MakoClient.GetIllustrationTrendingTagsAsync())
             .Select(t => new Tag { Name = t.Tag, TranslatedName = t.TranslatedName })
             .Select(SuggestionModel.FromIllustrationTag));
 
     private readonly Task<IEnumerable<SuggestionModel>> _novelTrendingTagCache =
-        Functions.Block(async () => (await App.AppViewModel.MakoClient.GetTrendingTagsForNovelAsync(App.AppViewModel.AppSettings.TargetFilter))
+        Functions.Block(async () => (await App.AppViewModel.MakoClient.GetNovelTrendingTagsAsync())
             .Select(t => new Tag { Name = t.Tag, TranslatedName = t.TranslatedName })
             .Select(SuggestionModel.FromNovelTag));
 

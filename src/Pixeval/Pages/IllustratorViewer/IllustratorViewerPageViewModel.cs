@@ -59,7 +59,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
         RelatedUserTag
     ];
 
-    public IllustratorViewerPageViewModel(PixivSingleUserResponse userDetail, FrameworkElement frameworkElement) : base(frameworkElement)
+    public IllustratorViewerPageViewModel(SingleUserResponse userDetail, FrameworkElement frameworkElement) : base(frameworkElement)
     {
         UserDetail = userDetail;
         IsFollowed = userDetail.UserEntity.IsFollowed;
@@ -70,7 +70,7 @@ public partial class IllustratorViewerPageViewModel : UiObservableObject
         _ = SetAvatarAndBackgroundAsync();
     }
 
-    public PixivSingleUserResponse UserDetail { get; }
+    public SingleUserResponse UserDetail { get; }
 
     public string Name => UserDetail.UserEntity.Name;
 

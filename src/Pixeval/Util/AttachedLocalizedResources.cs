@@ -127,13 +127,6 @@ public static partial class SearchNovelTagMatchOptionExtension;
 [AttachedLocalizedResource(nameof(ElementTheme.Dark), nameof(MiscResources.AppThemeDark))]
 public static partial class ElementThemeExtension;
 
-[AttachedLocalizationMetadata<WorkSortOption>(typeof(MiscResources))]
-[AttachedLocalizedResource(nameof(WorkSortOption.DoNotSort), nameof(MiscResources.WorkSortOptionDoNotSort))]
-[AttachedLocalizedResource(nameof(WorkSortOption.PopularityDescending), nameof(MiscResources.WorkSortOptionPopularityDescending))]
-[AttachedLocalizedResource(nameof(WorkSortOption.PublishDateAscending), nameof(MiscResources.WorkSortOptionPublishDateAscending))]
-[AttachedLocalizedResource(nameof(WorkSortOption.PublishDateDescending), nameof(MiscResources.WorkSortOptionPublishDateDescending))]
-public static partial class WorkSortOptionExtension;
-
 [AttachedLocalizationMetadata<PrivacyPolicy>(typeof(MiscResources))]
 [AttachedLocalizedResource(nameof(PrivacyPolicy.Public), nameof(MiscResources.PrivacyPolicyPublic))]
 [AttachedLocalizedResource(nameof(PrivacyPolicy.Private), nameof(MiscResources.PrivacyPolicyPrivate))]

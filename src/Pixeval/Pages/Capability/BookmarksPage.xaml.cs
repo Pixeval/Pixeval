@@ -44,7 +44,7 @@ public sealed partial class BookmarksPage : IScrollViewHost
 
     private void TagComboBox_OnSelectionChangedWhenLoaded(object? sender, SelectionChangedEventArgs e)
     {
-        if (TagComboBox.SelectedItem is BookmarkTag { Name: var name } tag && tag is not AllBookmarkTag)
+        if (TagComboBox.SelectedItem is BookmarkTag { Name: var name } and not AllBookmarkTag)
         {
             // fetch the bookmark IDs for tag, but do not wait for it.
             _ = _viewModel.LoadBookmarksForTagAsync(name, GetBookmarksEngine(name));
@@ -75,8 +75,8 @@ public sealed partial class BookmarksPage : IScrollViewHost
     {
         var policy = GetPolicy();
         return SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>() is SimpleWorkType.IllustrationAndManga
-            ? App.AppViewModel.MakoClient.IllustrationBookmarks(_viewModel.UserId, policy, tag, App.AppViewModel.AppSettings.TargetFilter)
-            : App.AppViewModel.MakoClient.NovelBookmarks(_viewModel.UserId, policy, tag, App.AppViewModel.AppSettings.TargetFilter);
+            ? App.AppViewModel.MakoClient.IllustrationBookmarks(_viewModel.UserId, tag, policy)
+            : App.AppViewModel.MakoClient.NovelBookmarks(_viewModel.UserId, tag, policy);
     }
 
     private PrivacyPolicy GetPolicy()

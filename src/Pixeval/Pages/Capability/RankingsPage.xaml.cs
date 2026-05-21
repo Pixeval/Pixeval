@@ -30,7 +30,7 @@ public sealed partial class RankingsPage : IScrollViewHost
         SimpleWorkTypeComboBox.SelectedEnum = App.AppViewModel.AppSettings.SimpleWorkType;
     }
 
-    public DateTimeOffset MaxDate => MakoClient.RankingMaxDate;
+    public DateTimeOffset MaxDate => MakoClient.RankingMaxDateTime;
 
     public override void OnPageActivated(NavigationEventArgs e, object? parameter)
     {
@@ -65,8 +65,8 @@ public sealed partial class RankingsPage : IScrollViewHost
         var rankOption = RankOptionComboBox.SelectedItem.To<StringPair>().Value.To<RankOption>();
         var dateTime = RankDateTimeCalendarDatePicker.Date!.Value;
         WorkContainer.WorkView.ResetEngine(SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>() is SimpleWorkType.IllustrationAndManga
-            ? App.AppViewModel.MakoClient.IllustrationRanking(rankOption, dateTime, App.AppViewModel.AppSettings.TargetFilter)
-            : App.AppViewModel.MakoClient.NovelRanking(rankOption, dateTime, App.AppViewModel.AppSettings.TargetFilter));
+            ? App.AppViewModel.MakoClient.IllustrationRanking(rankOption, dateTime)
+            : App.AppViewModel.MakoClient.NovelRanking(rankOption, dateTime));
     }
 
     public ScrollView ScrollView => WorkContainer.ScrollView;

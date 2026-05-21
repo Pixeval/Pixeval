@@ -24,9 +24,7 @@ public sealed partial class RecentPostsPage : IScrollViewHost
     private void ChangeSource()
     {
         var privacyPolicy = PrivacyPolicyComboBox.GetSelectedItem<PrivacyPolicy>();
-        WorkContainer.WorkView.ResetEngine(SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>() is SimpleWorkType.IllustrationAndManga
-            ? App.AppViewModel.MakoClient.RecentIllustrationPosts(privacyPolicy)
-            : App.AppViewModel.MakoClient.RecentNovelPosts(privacyPolicy));
+        WorkContainer.WorkView.ResetEngine(App.AppViewModel.MakoClient.WorkFollowing(SimpleWorkTypeComboBox.GetSelectedItem<SimpleWorkType>(), privacyPolicy));
     }
 
     public ScrollView ScrollView => WorkContainer.ScrollView;

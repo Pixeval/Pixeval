@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using AutoSettingsPage;
 using Mako.Global.Enum;
 using Microsoft.UI.Xaml.Markup;
+using Pixeval.Models.Options;
 using Pixeval.Util;
 using WinUI3Utilities;
 
@@ -21,7 +22,7 @@ public sealed partial class EnumValuesExtension : MarkupExtension
         {
             EnumValuesEnum.WorkType => WorkType.Pairs,
             EnumValuesEnum.SimpleWorkType => SimpleWorkType.Pairs,
-            EnumValuesEnum.WorkSortOption => WorkSortOption.Pairs,
+            EnumValuesEnum.LocalSortOption => LocalSortOption.Pairs,
             EnumValuesEnum.PrivacyPolicy => PrivacyPolicy.Pairs,
             EnumValuesEnum.DownloadListOption => DownloadListOption.Pairs,
             _ => ThrowHelper.ArgumentOutOfRange<EnumValuesEnum, object>(Type)
@@ -33,7 +34,7 @@ public enum EnumValuesEnum
 {
     WorkType,
     SimpleWorkType,
-    WorkSortOption,
+    LocalSortOption,
     PrivacyPolicy,
     DownloadListOption
 }

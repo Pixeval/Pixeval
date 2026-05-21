@@ -16,7 +16,7 @@ public sealed partial class MyPixivUsersPage : IScrollViewHost
         if (e.Parameter is not long userId)
             userId = App.AppViewModel.PixivUid;
 
-        IllustratorView.ViewModel.ResetEngine(App.AppViewModel.MakoClient.MyPixivUsers(userId));
+        IllustratorView.ViewModel.ResetEngine(App.AppViewModel.MakoClient.UserMyPixiv(userId));
     }
 
     public ScrollView ScrollView => IllustratorView.ScrollView;

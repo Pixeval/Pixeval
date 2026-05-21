@@ -60,6 +60,11 @@ public static class LocalSettingsEntryHelper
                throw new ArgumentException(propertyName);
     }
 
+    /// <summary>
+    /// 如果不提前初始化，<see cref="LanguageAppSettingsEntry.LanguageEntryAttribute"/>就没法被<see cref="SettingsResourceKeysProviderImpl"/>覆盖
+    /// </summary>
+    public static void Init() { }
+
     static LocalSettingsEntryHelper()
     {
         SettingsEntryHelper.AvailableFonts = CanvasTextFormat.GetSystemFontFamilies();

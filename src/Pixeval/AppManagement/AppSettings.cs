@@ -17,6 +17,7 @@ using Microsoft.UI.Xaml;
 using Pixeval.Attributes;
 using Pixeval.Controls;
 using Pixeval.Controls.Windowing;
+using Pixeval.Models.Options;
 using Pixeval.Options;
 using Pixeval.Util.UI;
 using Pixeval.Utilities;
@@ -91,7 +92,7 @@ public partial record AppSettings() : IWindowSettings
     /// different orders will use this as its default value
     /// </summary>
     [SettingsEntry(Symbol.ArrowSort, nameof(DefaultSearchSortOptionEntryHeader), nameof(DefaultSearchSortOptionEntryDescription))]
-    public WorkSortOption WorkSortOption { get; set; }
+    public LocalSortOption WorkSortOption { get; set; }
 
     [SettingsEntry(Symbol.Grid, nameof(SimpleWorkTypeEntryHeader), nameof(SimpleWorkTypeEntryDescription))]
     public SimpleWorkType SimpleWorkType { get; set; }
@@ -300,7 +301,7 @@ public partial record AppSettings() : IWindowSettings
 
     public MakoConfiguration ToMakoConfiguration()
     {
-        return new MakoConfiguration(EnableDomainFronting, DomainFrontingType, Proxy, WebCookie, MirrorHost, 500, CurrentCulture);
+        return new MakoConfiguration(EnableDomainFronting, DomainFrontingType, Proxy, WebCookie, MirrorHost, TargetFilter, 700, CultureInfo.CurrentCulture);
     }
 
     private static string GetSpecialFolder()
@@ -315,7 +316,6 @@ public partial record AppSettings() : IWindowSettings
     }
 }
 
-[JsonSerializable(typeof(AppSettings_4_3_11))]
 [JsonSerializable(typeof(AppSettings))]
 [JsonSerializable(typeof(LoginContext))]
 [JsonSerializable(typeof(string[]))]

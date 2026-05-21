@@ -19,18 +19,18 @@ public static class IllustratorViewerHelper
         {
             return param switch
             {
-                PixivSingleUserResponse userDetail => new IllustratorViewerPageViewModel(userDetail, frameworkElement),
+                SingleUserResponse userDetail => new IllustratorViewerPageViewModel(userDetail, frameworkElement),
                 _ => ThrowHelper.Argument<object, IllustratorViewerPageViewModel>(param, "Invalid parameter type.")
             };
         }
 
         public async Task CreateIllustratorPageAsync(long userId)
         {
-            var userDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(userId, App.AppViewModel.AppSettings.TargetFilter);
+            var userDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(userId);
             frameworkElement.CreateIllustratorPage(userDetail);
         }
 
-        public void CreateIllustratorPage(PixivSingleUserResponse userDetail)
+        public void CreateIllustratorPage(SingleUserResponse userDetail)
         {
             if (frameworkElement.FindAscendantOrSelf<TabPage>() is { } tabPage)
                 tabPage.AddPage(new NavigationViewTag<IllustratorViewerPage>(userDetail.UserEntity.Name, userDetail)

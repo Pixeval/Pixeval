@@ -31,7 +31,7 @@ public sealed partial class FeedPage
     {
         InitializeComponent();
         _viewModel = new FeedPageViewModel();
-        _viewModel.DataProvider.ResetEngine(new FeedProxyFetchEngine(App.AppViewModel.MakoClient.Feeds())!);
+        _viewModel.DataProvider.ResetEngine(new FeedProxyFetchEngine(App.AppViewModel.MakoClient.Feed())!);
     }
 
     private async void TimelineUnit_OnLoaded(object sender, RoutedEventArgs e)
@@ -121,7 +121,7 @@ public sealed partial class FeedPage
                         FeedPageFrame.Content = novelItemView;
                         break;
                     case FeedType.AddFavorite:
-                        var user = await _viewModel.PerformLoadAsync(() => App.AppViewModel.MakoClient.GetUserFromIdAsync(svmEntry.Id, App.AppViewModel.AppSettings.TargetFilter));
+                        var user = await _viewModel.PerformLoadAsync(() => App.AppViewModel.MakoClient.GetUserFromIdAsync(svmEntry.Id));
                         var illustratorViewer = new IllustratorViewerPage();
                         illustratorViewer.SetViewModel(user);
                         FeedPageFrame.Content = illustratorViewer;

@@ -33,7 +33,7 @@ public sealed partial class IllustratorWorkPage : IScrollViewHost
 
     private void ChangeSource()
     {
-        WorkContainer.WorkView.ResetEngine(App.AppViewModel.MakoClient.WorkPosts(_uid, WorkTypeComboBox.GetSelectedItem<WorkType>(), App.AppViewModel.AppSettings.TargetFilter));
+        WorkContainer.WorkView.ResetEngine(App.AppViewModel.MakoClient.WorkPosts(_uid, WorkTypeComboBox.GetSelectedItem<WorkType>()));
     }
 
     private void WorkContainer_OnRefreshRequested(object sender, RoutedEventArgs e) => ChangeSource();
