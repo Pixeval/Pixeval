@@ -118,7 +118,7 @@
         <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
         <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
         <GenerateTestArtifacts>True</GenerateTestArtifacts>
-        <AppxBundle>Always</AppxBundle>
+        <AppxBundle>Never</AppxBundle>
         <AppInstallerUri>%UserProfile%\Desktop</AppInstallerUri>
         <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
         <GenerateTemporaryStoreCertificate>False</GenerateTemporaryStoreCertificate>
