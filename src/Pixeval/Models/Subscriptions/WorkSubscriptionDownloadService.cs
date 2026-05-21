@@ -22,8 +22,6 @@ namespace Pixeval.Models.Subscriptions;
 
 public class WorkSubscriptionDownloadService(
     WorkSubscriptionPersistentManager subscriptionManager,
-    DownloadFolderPersistentManager folderManager,
-    DownloadHistoryPersistentManager downloadHistoryPersistentManager,
     HistoryPersistHelper historyPersistHelper,
     IllustrationDownloadTaskFactory illustrationDownloadTaskFactory,
     NovelDownloadTaskFactory novelDownloadTaskFactory,
@@ -61,10 +59,9 @@ public class WorkSubscriptionDownloadService(
 
         try
         {
-            var knownKeys = await CreateKnownKeysAsync();
             foreach (var subscription in subscriptionManager.ToArray())
                 foreach (var engine in CreateEngines(subscription))
-                    await SyncSubscriptionCoreAsync(subscription, engine, knownKeys);
+                    await SyncSubscriptionCoreAsync(subscription, engine, CreateKnownKeys());
         }
         catch (Exception e)
         {
@@ -86,8 +83,7 @@ public class WorkSubscriptionDownloadService(
         var wasCompleted = engine.EngineHandle.IsCompleted;
         try
         {
-            var knownKeys = await CreateKnownKeysAsync();
-            await SyncSubscriptionCoreAsync(subscription, engine, knownKeys);
+            await SyncSubscriptionCoreAsync(subscription, engine, CreateKnownKeys());
         }
         catch (Exception e)
         {
@@ -110,7 +106,6 @@ public class WorkSubscriptionDownloadService(
             return;
 
         var duplicateCount = 0;
-        var folder = folderManager.GetOrCreate(subscription);
 
         await foreach (var entry in engine)
         {
@@ -129,7 +124,7 @@ public class WorkSubscriptionDownloadService(
                 continue;
             }
 
-            var task = await CreateDownloadTaskAsync(entry, folder.HistoryEntryId);
+            var task = await CreateDownloadTaskAsync(entry, subscription.HistoryEntryId);
             if (!IsEngineUsable(engine))
                 return;
 
@@ -189,28 +184,24 @@ public class WorkSubscriptionDownloadService(
         }
     }
 
-    private Task<HashSet<string>> CreateKnownKeysAsync()
+    private HashSet<string> CreateKnownKeys()
     {
         var keys = new HashSet<string>(StringComparer.Ordinal);
-
-        foreach (var task in downloadHistoryPersistentManager)
-            if (TryGetKey(task.DatabaseEntry, out var key))
-                _ = keys.Add(key);
 
         foreach (var task in historyPersistHelper.DownloadManager.QueuedTasks.OfType<IDownloadTaskGroup>())
             if (TryGetKey(task.DatabaseEntry, out var key))
                 _ = keys.Add(key);
 
-        return Task.FromResult(keys);
+        return keys;
     }
 
-    private async Task<IDownloadTaskGroup> CreateDownloadTaskAsync(IArtworkInfo entry, int folderId)
+    private async Task<IDownloadTaskGroup> CreateDownloadTaskAsync(IArtworkInfo entry, int subscriptionEntryId)
     {
         var task = entry is Novel novel
             ? novelDownloadTaskFactory.Create(novel, App.AppViewModel.AppSettings.DownloadPathMacro, null)
             : await CreateIllustrationDownloadTaskAsync();
 
-        task.DatabaseEntry.DownloadFolderId = folderId;
+        task.DatabaseEntry.WorkSubscriptionId = subscriptionEntryId;
         return task;
 
         async Task<IDownloadTaskGroup> CreateIllustrationDownloadTaskAsync()
@@ -238,7 +229,6 @@ public class WorkSubscriptionDownloadService(
 
         subscription.Name = entry.User.Name;
         subscriptionManager.Update(subscription);
-        _ = folderManager.GetOrCreate(subscription);
     }
 
     private static bool IsEngineUsable(IFetchEngine<IWorkEntry> engine) =>

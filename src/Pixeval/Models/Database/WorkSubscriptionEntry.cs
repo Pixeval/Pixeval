@@ -19,6 +19,10 @@ public class WorkSubscriptionEntry : HistoryEntry
 
     public string Name { get; set; } = "";
 
+    public string AvatarUrl { get; set; } = "";
+
+    public string Account { get; set; } = "";
+
     [Ignore]
     public string DisplayName => string.IsNullOrWhiteSpace(Name) ? UserId.ToString() : Name;
 
@@ -28,5 +32,7 @@ public class WorkSubscriptionEntry : HistoryEntry
         SubscriptionType = entry.SubscriptionType;
         WorkKind = entry.WorkKind;
         Name = entry.Name;
+        AvatarUrl = entry.AvatarUrl;
+        Account = entry.Account;
     }
 }

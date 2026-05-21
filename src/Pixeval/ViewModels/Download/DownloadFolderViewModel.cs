@@ -12,20 +12,16 @@ using Pixeval.Models.Database;
 
 namespace Pixeval.ViewModels;
 
-public sealed class DownloadFolderViewModel(DownloadFolderEntry folder, WorkSubscriptionEntry? subscription)
+public sealed class DownloadFolderViewModel(WorkSubscriptionEntry subscription)
     : ViewModelBase, IDownloadListEntryViewModel
 {
-    public DownloadFolderEntry Folder { get; } = folder;
-
-    public WorkSubscriptionEntry? Subscription { get; } = subscription;
+    public WorkSubscriptionEntry Subscription { get; } = subscription;
 
     public ObservableCollection<DownloadItemViewModel> Items { get; } = [];
 
     public IReadOnlyList<DownloadItemViewModel> DownloadItems => [.. Items];
 
-    public string Title => Subscription is null
-        ? Folder.DisplayName
-        : GetDisplayName(Subscription);
+    public string Title => GetDisplayName(Subscription);
 
     public static string GetDisplayName(WorkSubscriptionEntry subscription) =>
         $"{subscription.DisplayName} · " +

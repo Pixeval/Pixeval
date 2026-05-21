@@ -778,7 +778,9 @@ namespace Pixeval
     }
     public static class WorkSubscriptionsSettingsExpanderResources
     {
+        public const string AddSubscriptionButtonToolTip = "WorkSubscriptionsSettingsExpander.AddSubscriptionButton.ToolTip";
         public const string InvalidUserId = "WorkSubscriptionsSettingsExpander.InvalidUserId";
+        public const string SubscriptionAdded = "WorkSubscriptionsSettingsExpander.SubscriptionAdded";
         public const string UserIdTextBoxPlaceholderText = "WorkSubscriptionsSettingsExpander.UserIdTextBox.PlaceholderText";
     }
     public static class MarkdownResources

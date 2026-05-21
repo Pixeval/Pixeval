@@ -1,10 +1,11 @@
 <ResourceDictionary
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:SmoothScroll.Avalonia.Controls;assembly=SmoothScroll.Avalonia.Controls">
+    xmlns:controls="using:SmoothScroll.Avalonia.Controls">
 
     <ResourceDictionary.MergedDictionaries>
         <MergeResourceInclude Source="/Controls/AvatarImage.axaml" />
+        <MergeResourceInclude Source="/Controls/UserBasicInfoPresenter.axaml" />
         <MergeResourceInclude Source="/Controls/IconText.axaml" />
         <MergeResourceInclude Source="/Controls/SymbolComboBox.axaml" />
         <MergeResourceInclude Source="/Controls/WaveProgressHeart.axaml" />

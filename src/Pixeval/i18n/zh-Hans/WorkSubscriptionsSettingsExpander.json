@@ -1,4 +1,8 @@
 {
+  "AddSubscriptionButton": {
+    "ToolTip": "添加订阅"
+  },
+  "SubscriptionAdded": "已添加订阅",
   "UserIdTextBox": {
     "PlaceholderText": "用户 ID"
   },

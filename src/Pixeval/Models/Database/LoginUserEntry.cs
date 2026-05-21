@@ -23,7 +23,7 @@ public class LoginUserEntry : HistoryEntry
 
     public bool IsPremium { get; set; }
 
-    public long XRestrict { get; set; }
+    public XRestrict XRestrict { get; set; }
 
     public bool IsMailAuthorized { get; set; }
 
@@ -40,6 +40,25 @@ public class LoginUserEntry : HistoryEntry
 
     [Ignore]
     public string AccountDisplay => string.IsNullOrWhiteSpace(Account) ? "" : $"@{Account}";
+
+    [Ignore]
+    public TokenUser TokenUser => new()
+    {
+        Id = UserId,
+        Name = Name,
+        Account = Account,
+        ProfileImageUrls = new()
+        {
+            Px16X16 = Avatar16Url,
+            Px50X50 = Avatar50Url,
+            Px170X170 = Avatar170Url
+        },
+        MailAddress = MailAddress,
+        IsPremium = IsPremium,
+        XRestrict = XRestrict,
+        IsMailAuthorized = IsMailAuthorized,
+        RequirePolicyAgreement = RequirePolicyAgreement
+    };
 
     public static LoginUserEntry FromTokenUser(string refreshToken, TokenUser user)
     {
@@ -58,22 +77,6 @@ public class LoginUserEntry : HistoryEntry
             Avatar50Url = user.ProfileImageUrls.Px50X50,
             Avatar170Url = user.ProfileImageUrls.Px170X170
         };
-    }
-
-    public void UpdateFrom(string refreshToken, TokenUser user)
-    {
-        RefreshToken = refreshToken;
-        UserId = user.Id;
-        Name = user.Name;
-        Account = user.Account;
-        MailAddress = user.MailAddress;
-        IsPremium = user.IsPremium;
-        XRestrict = user.XRestrict;
-        IsMailAuthorized = user.IsMailAuthorized;
-        RequirePolicyAgreement = user.RequirePolicyAgreement;
-        Avatar16Url = user.ProfileImageUrls.Px16X16;
-        Avatar50Url = user.ProfileImageUrls.Px50X50;
-        Avatar170Url = user.ProfileImageUrls.Px170X170;
     }
 
     public void UpdateFrom(LoginUserEntry entry)

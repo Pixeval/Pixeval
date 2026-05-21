@@ -70,7 +70,6 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
             .AddSingleton(_ => new SQLiteConnection(AppInfo.DatabaseFilePath,
                 SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex))
             .AddSingleton<DownloadHistoryPersistentManager>()
-            .AddSingleton<DownloadFolderPersistentManager>()
             .AddSingleton<WorkSubscriptionPersistentManager>()
             .AddSingleton<SearchHistoryPersistentManager>()
             .AddSingleton<BrowseHistoryPersistentManager>()

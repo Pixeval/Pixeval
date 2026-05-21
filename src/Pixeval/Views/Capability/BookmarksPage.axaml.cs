@@ -5,28 +5,30 @@ using Avalonia.Interactivity;
 using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.Controls;
+using Pixeval.I18N;
 using Pixeval.Models.Options;
+using Pixeval.Models.Subscriptions;
 using Pixeval.Utilities;
 
 namespace Pixeval.Views.Capability;
 
 public partial class BookmarksPage : ContentPage
 {
-    private readonly long _userId;
+    private readonly UserBasicInfo _user;
     private bool _suppressChangeSource;
 
     public static IReadOnlyList<BookmarkTag> DefaultTags { get; } = [AllBookmarkTag.Instance];
 
-    public BookmarksPage() : this(App.AppViewModel.PixivUid)
+    public BookmarksPage() : this(App.AppViewModel.MakoClient.Me!)
     {
     }
 
-    public BookmarksPage(long id)
+    public BookmarksPage(UserBasicInfo user)
     {
         InitializeComponent();
 
-        _userId = id;
-        if (id != App.AppViewModel.PixivUid)
+        _user = user;
+        if (_user.Id != App.AppViewModel.PixivUid)
             PrivacyPolicyComboBox.IsEnabled = PrivacyPolicyComboBox.IsVisible = false;
 
         FetchTags();
@@ -55,7 +57,7 @@ public partial class BookmarksPage : ContentPage
     public async void FetchTags()
     {
         var tags = await MakoHelper.GetBookmarkTagsAsync(
-            _userId,
+            _user.Id,
             SimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>(),
             PrivacyPolicyComboBox.GetSelectedValue<PrivacyPolicy>());
 
@@ -70,17 +72,28 @@ public partial class BookmarksPage : ContentPage
         var tag = (TagComboBox.SelectedItem as BookmarkTag)?.Name;
         var workType = SimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>();
         var engine = App.AppViewModel.MakoClient.WorkBookmarks(
-            _userId,
+            _user.Id,
             workType,
             PrivacyPolicyComboBox.GetSelectedValue<PrivacyPolicy>(),
             tag);
         WorkContainer.ResetEngine(engine);
         App.AppViewModel.QueueWorkSubscriptionSyncCurrentSource(
-            _userId,
+            _user.Id,
             WorkSubscriptionType.Bookmarks,
             workType is SimpleWorkType.Novel
                 ? WorkSubscriptionWorkKind.Novel
                 : WorkSubscriptionWorkKind.IllustrationAndManga,
             engine);
+    }
+
+    private void AddSubscriptionButton_OnClicked(object? sender, RoutedEventArgs e)
+    {
+        var workKind = SimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>() is SimpleWorkType.Novel
+            ? WorkSubscriptionWorkKind.Novel
+            : WorkSubscriptionWorkKind.IllustrationAndManga;
+
+        if (WorkSubscriptionHelper.TryAddOrUpdate(_user, WorkSubscriptionType.Bookmarks, workKind))
+            TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(
+                I18NManager.GetResource(WorkSubscriptionsSettingsExpanderResources.SubscriptionAdded));
     }
 }

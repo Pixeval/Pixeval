@@ -23,7 +23,7 @@ public partial class DownloadViewViewModel : ViewModelBase, IDisposable
 
     private readonly Dictionary<string, DownloadItemViewModel> _lookup = [];
 
-    private readonly Dictionary<int, DownloadFolderViewModel> _folders = [];
+    private readonly Dictionary<int, DownloadFolderViewModel> _subscriptionFolders = [];
 
     [ObservableProperty]
     public partial DownloadListOption CurrentOption { get; set; } = DownloadListOption.AllQueued;
@@ -139,8 +139,8 @@ public partial class DownloadViewViewModel : ViewModelBase, IDisposable
 
         var vm = new DownloadItemViewModel(group);
         _lookup[group.Destination] = vm;
-        if (group.DatabaseEntry.DownloadFolderId <= 0
-            || GetOrCreateFolder(group.DatabaseEntry.DownloadFolderId) is not { } folder)
+        if (group.DatabaseEntry.WorkSubscriptionId <= 0
+            || GetOrCreateFolder(group.DatabaseEntry.WorkSubscriptionId) is not { } folder)
         {
             _viewSource.Add(vm);
             return;
@@ -153,13 +153,13 @@ public partial class DownloadViewViewModel : ViewModelBase, IDisposable
     {
         if (_lookup.Remove(task.Destination, out var vm))
         {
-            if (vm.DownloadTask.DatabaseEntry.DownloadFolderId > 0
-                && _folders.TryGetValue(vm.DownloadTask.DatabaseEntry.DownloadFolderId, out var folder))
+            if (vm.DownloadTask.DatabaseEntry.WorkSubscriptionId > 0
+                && _subscriptionFolders.TryGetValue(vm.DownloadTask.DatabaseEntry.WorkSubscriptionId, out var folder))
             {
                 _ = folder.Remove(vm);
                 if (!folder.HasItems)
                 {
-                    _ = _folders.Remove(folder.Folder.HistoryEntryId);
+                    _ = _subscriptionFolders.Remove(folder.Subscription.HistoryEntryId);
                     _ = _viewSource.Remove(folder);
                 }
                 return;
@@ -169,19 +169,17 @@ public partial class DownloadViewViewModel : ViewModelBase, IDisposable
         }
     }
 
-    private DownloadFolderViewModel? GetOrCreateFolder(int folderId)
+    private DownloadFolderViewModel? GetOrCreateFolder(int subscriptionEntryId)
     {
-        if (_folders.TryGetValue(folderId, out var folder))
+        if (_subscriptionFolders.TryGetValue(subscriptionEntryId, out var folder))
             return folder;
 
         var provider = App.AppViewModel.AppServiceProvider;
-        var folderManager = provider.GetRequiredService<DownloadFolderPersistentManager>();
-        if (folderManager.GetByKey(folderId) is not { } entry)
+        if (provider.GetRequiredService<WorkSubscriptionPersistentManager>().GetByKey(subscriptionEntryId) is not { } subscription)
             return null;
 
-        var subscription = provider.GetRequiredService<WorkSubscriptionPersistentManager>().GetByKey(entry.SubscriptionEntryId);
-        folder = new(entry, subscription);
-        _folders[folderId] = folder;
+        folder = new(subscription);
+        _subscriptionFolders[subscriptionEntryId] = folder;
         _viewSource.Add(folder);
         return folder;
     }
@@ -201,7 +199,7 @@ public partial class DownloadViewViewModel : ViewModelBase, IDisposable
             case NotifyCollectionChangedAction.Reset:
                 _viewSource.Clear();
                 _lookup.Clear();
-                _folders.Clear();
+                _subscriptionFolders.Clear();
                 foreach (var task in _source)
                     AddTask(task);
                 break;

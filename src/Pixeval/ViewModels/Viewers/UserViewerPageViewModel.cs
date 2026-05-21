@@ -58,8 +58,8 @@ public partial class UserViewerPageViewModel : ViewModelBase, IDisposable
 
         TabPages =
         [
-            new UserWorkPostsPage(Id),
-            new BookmarksPage(Id),
+            new UserWorkPostsPage(UserDetail.UserEntity),
+            new BookmarksPage(UserDetail.UserEntity),
             new FollowingsPage(Id),
             new MyPixivUsersPage(Id),
             new RelatedUsersPage(Id),

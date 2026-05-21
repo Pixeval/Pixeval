@@ -12,9 +12,11 @@ using CommunityToolkit.Avalonia.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Controls;
 using Pixeval.I18N;
+using Pixeval.Models.Database;
 using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Options;
 using Pixeval.Models.Settings.Entries;
+using Pixeval.Models.Subscriptions;
 using Pixeval.ViewModels.Settings;
 
 namespace Pixeval.Views.Settings;
@@ -35,15 +37,11 @@ public partial class WorkSubscriptionsSettingsExpander : SettingsExpander, IEntr
     public WorkSubscriptionsSettingsExpander()
     {
         InitializeComponent();
-        SubscriptionListBox.ItemsSource = Subscriptions;
         UpdateWorkKindItems();
     }
 
     private static WorkSubscriptionPersistentManager SubscriptionManager =>
         App.AppViewModel.AppServiceProvider.GetRequiredService<WorkSubscriptionPersistentManager>();
-
-    private static DownloadFolderPersistentManager FolderManager =>
-        App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadFolderPersistentManager>();
 
     private static IReadOnlyList<SymbolComboBoxItem> BookmarkWorkKinds { get; } =
         [.. SymbolComboBoxItem.GetValues<WorkSubscriptionWorkKind>().Where(t => t.Value is WorkSubscriptionWorkKind.IllustrationAndManga or WorkSubscriptionWorkKind.Novel)];
@@ -76,27 +74,11 @@ public partial class WorkSubscriptionsSettingsExpander : SettingsExpander, IEntr
 
             workKind = selectedWorkKind;
         }
-        var name = "";
-        try
-        {
-            name = (await App.AppViewModel.MakoClient.GetUserFromIdAsync(userId)).UserEntity.Name;
-        }
-        catch
-        {
-            // Sync can fill the name from the author field later.
-        }
+        var user = (await App.AppViewModel.MakoClient.GetUserFromIdAsync(userId)).UserEntity;
 
-        var entry = SubscriptionManager.Upsert(new()
-        {
-            UserId = userId,
-            SubscriptionType = subscriptionType,
-            WorkKind = workKind,
-            Name = name
-        });
-        _ = FolderManager.GetOrCreate(entry);
+        _ = WorkSubscriptionHelper.TryAddOrUpdate(user, subscriptionType, workKind);
         UserIdTextBox.Text = "";
         Reload();
-        App.AppViewModel.QueueWorkSubscriptionSyncAll();
     }
 
     private void DeleteButton_OnClicked(object? sender, RoutedEventArgs e)

@@ -1,7 +1,10 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Mako.Model;
+using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Models.Database;
 
@@ -11,13 +14,27 @@ public class WorkSubscriptionItemViewModel(WorkSubscriptionEntry entry) : Observ
 {
     public WorkSubscriptionEntry Entry { get; } = entry;
 
-    public int Id => Entry.HistoryEntryId;
-
-    public long UserId => Entry.UserId;
-
-    public string UserName => Entry.DisplayName;
+    public UserBasicInfo User { get; } = new WorkSubscriptionShimmer(entry);
 
     public string SubscriptionTypeText => SymbolComboBoxItem.GetResource(Entry.SubscriptionType);
 
     public string WorkKindText => SymbolComboBoxItem.GetResource(Entry.WorkKind);
+
+    private sealed record WorkSubscriptionShimmer : UserBasicInfo
+    {
+        [SetsRequiredMembers]
+        public WorkSubscriptionShimmer(WorkSubscriptionEntry entry)
+        {
+            Id = entry.UserId;
+            Name = entry.DisplayName;
+            Account = entry.Account;
+            AvatarUrl = string.IsNullOrWhiteSpace(entry.AvatarUrl)
+                ? AppInfo.PixivNoProfilePath
+                : entry.AvatarUrl;
+        }
+
+        public override string AvatarUrl { get; }
+
+        public override string Description { get; set; } = "";
+    }
 }

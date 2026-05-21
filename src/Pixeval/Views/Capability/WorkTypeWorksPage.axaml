@@ -5,8 +5,10 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:enum="using:Mako.Global.Enum"
+    xmlns:fluent="using:FluentIcons.Avalonia.Markup"
     xmlns:markup="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
     xmlns:views="using:Pixeval.Views"
     xmlns:work="using:Pixeval.Views.Work"
     mc:Ignorable="d"
@@ -14,6 +16,13 @@
     d:DesignWidth="800">
     <work:WorkContainer x:Name="WorkContainer" RefreshRequested="WorkContainer_OnRefreshRequested">
         <work:WorkContainer.CommandBarElements>
+            <Button
+                x:Name="AddSubscriptionButton"
+                VerticalAlignment="Stretch"
+                Click="AddSubscriptionButton_OnClicked"
+                Content="{fluent:SymbolIcon Add}"
+                IsVisible="False"
+                ToolTip.Tip="{I18N {x:Static pixeval:WorkSubscriptionsSettingsExpanderResources.AddSubscriptionButtonToolTip}}" />
             <controls:SymbolComboBox
                 x:Name="WorkTypeComboBox"
                 ItemsSource="{markup:EnumResources x:TypeArguments=enum:WorkType}"

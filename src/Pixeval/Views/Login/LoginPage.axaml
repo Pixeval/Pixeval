@@ -22,27 +22,7 @@
     </ContentPage.DataContext>
     <ContentPage.Resources>
         <DataTemplate x:DataType="{x:Type database:LoginUserEntry}" x:Key="LoginUserTemplate">
-            <DockPanel
-                MinHeight="52"
-                Margin="20,5"
-                HorizontalSpacing="10">
-                <controls:AvatarImage
-                    Width="42"
-                    Height="42"
-                    VerticalAlignment="Center"
-                    controls:Source.Cache="{Binding AvatarUrl}"
-                    DockPanel.Dock="Left" />
-                <StackPanel VerticalAlignment="Center" Spacing="2">
-                    <TextBlock
-                        FontWeight="SemiBold"
-                        Text="{Binding Name}"
-                        TextTrimming="CharacterEllipsis" />
-                    <TextBlock
-                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="{Binding AccountDisplay}"
-                        TextTrimming="CharacterEllipsis" />
-                </StackPanel>
-            </DockPanel>
+            <controls:UserBasicInfoPresenter Margin="20,5" User="{Binding TokenUser}" />
         </DataTemplate>
     </ContentPage.Resources>
     <StackPanel

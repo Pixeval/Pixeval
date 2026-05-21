@@ -21,6 +21,12 @@
     d:DesignWidth="800">
     <work:WorkContainer x:Name="WorkContainer" RefreshRequested="WorkContainer_OnRefreshRequested">
         <work:WorkContainer.CommandBarElements>
+            <Button
+                x:Name="AddSubscriptionButton"
+                VerticalAlignment="Stretch"
+                Click="AddSubscriptionButton_OnClicked"
+                Content="{markup:SymbolIcon Add}"
+                ToolTip.Tip="{I18N {x:Static pixeval:WorkSubscriptionsSettingsExpanderResources.AddSubscriptionButtonToolTip}}" />
             <ComboBox
                 x:Name="TagComboBox"
                 VerticalAlignment="Stretch"

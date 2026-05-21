@@ -29,5 +29,5 @@ public class DownloadHistoryEntry : ArtworkHistoryEntry
     public string Destination { get; init; } = null!;
 
     [Indexed]
-    public int DownloadFolderId { get; set; }
+    public int WorkSubscriptionId { get; set; }
 }

@@ -17,10 +17,10 @@ public class DownloadHistoryPersistentManager(SQLiteConnection db)
             ? null
             : Queryable.FirstOrDefault(t => t.Destination == destination);
 
-    public IReadOnlyList<DownloadHistoryEntry> GetByFolderId(int downloadFolderId) =>
-        downloadFolderId <= 0
+    public IReadOnlyList<DownloadHistoryEntry> GetBySubscriptionId(int subscriptionEntryId) =>
+        subscriptionEntryId <= 0
             ? []
-            : Queryable.Where(t => t.DownloadFolderId == downloadFolderId).ToArray();
+            : Queryable.Where(t => t.WorkSubscriptionId == subscriptionEntryId).ToArray();
 
     public override IDownloadTaskGroup ToModel(DownloadHistoryEntry entry)
     {

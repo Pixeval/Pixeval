@@ -10,6 +10,8 @@ using Mako.Model;
 using Pixeval.Controls;
 using Pixeval.I18N;
 using Pixeval.Models.Options;
+using Pixeval.Models.Subscriptions;
+using Pixeval.Utilities;
 
 namespace Pixeval.Views.Capability;
 
@@ -41,6 +43,14 @@ public abstract partial class WorkTypeWorksPage : ContentPage
     protected abstract IFetchEngine<IWorkEntry> GetFetchEngine(MakoClient makoClient, WorkType workType);
 
     protected virtual void OnSourceChanged(IFetchEngine<IWorkEntry> engine, WorkType workType)
+    {
+    }
+
+    protected void EnableAddSubscriptionButton() => AddSubscriptionButton.IsVisible = true;
+
+    private void AddSubscriptionButton_OnClicked(object? sender, RoutedEventArgs e) => AddSubscription();
+
+    protected virtual void AddSubscription()
     {
     }
 }
@@ -77,29 +87,30 @@ public class NewWorksPage : WorkTypeWorksPage
 
 public class UserWorkPostsPage : WorkTypeWorksPage
 {
-    private readonly long _userId;
+    private readonly UserBasicInfo _user;
 
-    public UserWorkPostsPage() : this(App.AppViewModel.PixivUid)
+    public UserWorkPostsPage() : this(App.AppViewModel.MakoClient.Me!)
     {
     }
 
-    public UserWorkPostsPage(long id)
+    public UserWorkPostsPage(UserBasicInfo user)
     {
-        _userId = id;
+        _user = user;
         Header = I18NManager.GetResource(EntryViewerPageResources.WorkNavigationViewItemContent);
         Icon = new SymbolIcon { Symbol = Symbol.Image, FontSize = 16, IconVariant = IconVariant.Color };
+        EnableAddSubscriptionButton();
         ChangeSource();
     }
 
     protected override IFetchEngine<IWorkEntry> GetFetchEngine(MakoClient makoClient, WorkType workType)
     {
-        return makoClient.WorkPosts(_userId, workType);
+        return makoClient.WorkPosts(_user.Id, workType);
     }
 
     protected override void OnSourceChanged(IFetchEngine<IWorkEntry> engine, WorkType workType)
     {
         App.AppViewModel.QueueWorkSubscriptionSyncCurrentSource(
-            _userId,
+            _user.Id,
             WorkSubscriptionType.Posts,
             workType switch
             {
@@ -109,5 +120,21 @@ public class UserWorkPostsPage : WorkTypeWorksPage
                 _ => throw new ArgumentOutOfRangeException(nameof(workType))
             },
             engine);
+    }
+
+    protected override void AddSubscription()
+    {
+        var workType = WorkTypeComboBox.GetSelectedValue<WorkType>();
+        var workKind = workType switch
+        {
+            WorkType.Illustration => WorkSubscriptionWorkKind.Illustration,
+            WorkType.Manga => WorkSubscriptionWorkKind.Manga,
+            WorkType.Novel => WorkSubscriptionWorkKind.Novel,
+            _ => throw new ArgumentOutOfRangeException(nameof(workType))
+        };
+
+        if (WorkSubscriptionHelper.TryAddOrUpdate(_user, WorkSubscriptionType.Posts, workKind))
+            TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(
+                I18NManager.GetResource(WorkSubscriptionsSettingsExpanderResources.SubscriptionAdded));
     }
 }
