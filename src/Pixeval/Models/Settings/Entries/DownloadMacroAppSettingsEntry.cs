@@ -33,9 +33,8 @@ public class DownloadMacroAppSettingsEntry(
         ["if_pic_one"] = SettingsMainViewResources.IfPicOneMacroTooltip,
         ["if_pic_set"] = SettingsMainViewResources.IfPicSetMacroTooltip,
         ["if_pic_gif"] = SettingsMainViewResources.IfPicGifMacroTooltip,
-        ["if_pic_all"] = SettingsMainViewResources.IfPicAllMacroTooltip,
         ["pic_set_index"] = SettingsMainViewResources.PicSetIndexMacroTooltip
     }.ToFrozenDictionary();
 
-    public static ICollection<SymbolComboBoxItem> AvailableMacros { get; } = [.. MetaPathMacroAttributeHelper.GetIArtworkInfoInstances().Select(m => new SymbolComboBoxItem($"@{{{(m is IPredicate ? $"{m.Name}:" : m.Name)}}}", _MacroTooltips[m.Name], default))];
+    public static ICollection<SymbolComboBoxItem> AvailableMacros { get; } = [.. MetaPathMacroAttributeHelper.GetIArtworkInfoInstances().Select(m => new SymbolComboBoxItem($"@{{{(m is IPredicate ? $"{m.Name}?a:b" : m.Name)}}}", _MacroTooltips[m.Name], default))];
 }

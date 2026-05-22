@@ -6,11 +6,11 @@ using System.Diagnostics;
 
 namespace Pixeval.Download.MacroParser.Ast;
 
-[DebuggerDisplay("{Content}")]
-public record OptionalMacroParameter<TContext>(Sequence<TContext> Content) : IMetaPathNode<TContext>
+[DebuggerDisplay("{WhenTrue} : {WhenFalse}")]
+public record ConditionalMacroBranches<TContext>(Sequence<TContext>? WhenTrue, Sequence<TContext>? WhenFalse) : IMetaPathNode<TContext>
 {
     public string Evaluate(IReadOnlyList<IMacro> env, TContext context)
     {
-        return Content.Evaluate(env, context);
+        return string.Empty;
     }
 }

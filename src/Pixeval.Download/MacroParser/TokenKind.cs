@@ -10,6 +10,6 @@ public enum TokenKind
     At,
     LBrace,
     RBrace,
-    Exclamation,
+    Question,
     Colon
 }

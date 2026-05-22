@@ -9,8 +9,6 @@ namespace Pixeval.Download.Macros;
 [MetaPathMacro<IArtworkInfo>]
 public class IsPicOneMacro : IPredicate<IArtworkInfo>
 {
-    public bool IsNot { get; set; }
-
     public const string NameConst = "if_pic_one";
 
     public string Name => NameConst;

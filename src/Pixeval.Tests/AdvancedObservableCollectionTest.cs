@@ -153,7 +153,7 @@ public sealed class AdvancedObservableCollectionTest
             col.Add(item);
         }
 
-        Assert.AreNotEqual(0, col.Count);
+        Assert.IsNotEmpty(col);
         Assert.AreNotEqual(0, aoc.Count);
 
         Assert.HasCount(refList.Count, col);
@@ -267,10 +267,9 @@ public sealed class AdvancedObservableCollectionTest
 
         var sourceItem = new SampleClass(1);
         adaptor.Add(sourceItem);
-
-        Assert.AreEqual(1, col.Count);
+        Assert.HasCount(1, col);
         Assert.AreEqual(1, adaptor.Count);
-        Assert.IsInstanceOfType(adaptor[0], typeof(SampleViewModel));
+        Assert.IsInstanceOfType<SampleViewModel>(adaptor[0]);
         Assert.AreSame(sourceItem, ((IList)adaptor)[0]);
 
         adaptor.Filters.Add(IFilter<SampleViewModel>.Create(new HashSet<string> { nameof(SampleViewModel.Val) }, item => item.Val > 1, false));
@@ -297,13 +296,13 @@ public sealed class AdvancedObservableCollectionTest
         };
 
         var adaptor = new AdvancedObservableAdaptor<SampleClass, SampleViewModel>(col, item => new(item));
-        CollectionAssert.AreEqual(new[] { 1, 2, 3 }, adaptor.Select(item => item.Val).ToArray());
+        CollectionAssert.AreEqual((int[]) [1, 2, 3], adaptor.Select(item => item.Val).ToArray());
 
         adaptor.IsReversed = true;
-        CollectionAssert.AreEqual(new[] { 3, 2, 1 }, adaptor.Select(item => item.Val).ToArray());
+        CollectionAssert.AreEqual((int[]) [3, 2, 1], adaptor.Select(item => item.Val).ToArray());
 
         col.Insert(0, new(0));
-        CollectionAssert.AreEqual(new[] { 3, 2, 1, 0 }, adaptor.Select(item => item.Val).ToArray());
+        CollectionAssert.AreEqual((int[]) [3, 2, 1, 0], adaptor.Select(item => item.Val).ToArray());
     }
 
     [TestMethod]
@@ -317,13 +316,13 @@ public sealed class AdvancedObservableCollectionTest
         };
 
         var aoc = new AdvancedObservableCollection<SampleClass>(col);
-        CollectionAssert.AreEqual(new[] { 1, 2, 3 }, aoc.Select(item => item.Val).ToArray());
+        CollectionAssert.AreEqual((int[]) [1, 2, 3], aoc.Select(item => item.Val).ToArray());
 
         aoc.IsReversed = true;
-        CollectionAssert.AreEqual(new[] { 3, 2, 1 }, aoc.Select(item => item.Val).ToArray());
+        CollectionAssert.AreEqual((int[]) [3, 2, 1], aoc.Select(item => item.Val).ToArray());
 
         col.Insert(0, new(0));
-        CollectionAssert.AreEqual(new[] { 3, 2, 1, 0 }, aoc.Select(item => item.Val).ToArray());
+        CollectionAssert.AreEqual((int[]) [3, 2, 1, 0], aoc.Select(item => item.Val).ToArray());
     }
 
     [TestMethod]
@@ -340,8 +339,8 @@ public sealed class AdvancedObservableCollectionTest
         Assert.AreEqual(1, source.CallCount);
 
         call.Completion.SetResult([1, 2, 3]);
-        CollectionAssert.AreEqual(new[] { 3, 3, 3 }, await Task.WhenAll(first, second, third));
-        CollectionAssert.AreEqual(new[] { 1, 2, 3 }, collection.ToArray());
+        CollectionAssert.AreEqual((int[]) [3, 3, 3], await Task.WhenAll(first, second, third));
+        CollectionAssert.AreEqual((int[]) [1, 2, 3], collection.ToArray());
         Assert.IsTrue(collection.HasMoreItems);
     }
 
@@ -363,7 +362,7 @@ public sealed class AdvancedObservableCollectionTest
 
         call.Completion.SetResult([1, 2, 3]);
         Assert.AreEqual(3, await first);
-        CollectionAssert.AreEqual(new[] { 1, 2, 3 }, collection.ToArray());
+        CollectionAssert.AreEqual((int[]) [1, 2, 3], collection.ToArray());
         Assert.IsTrue(collection.HasMoreItems);
     }
 
@@ -379,7 +378,7 @@ public sealed class AdvancedObservableCollectionTest
         await cts.CancelAsync();
 
         await AssertOperationCanceledAsync(canceledLoad);
-        Assert.AreEqual(0, collection.Count);
+        Assert.IsEmpty(collection);
         Assert.IsTrue(collection.HasMoreItems);
         Assert.AreEqual(0, canceledCall.PageIndex);
 
@@ -389,6 +388,6 @@ public sealed class AdvancedObservableCollectionTest
 
         Assert.AreEqual(3, await retry);
         Assert.AreEqual(0, retryCall.PageIndex);
-        CollectionAssert.AreEqual(new[] { 1, 2, 3 }, collection.ToArray());
+        CollectionAssert.AreEqual((int[]) [1, 2, 3], collection.ToArray());
     }
 }

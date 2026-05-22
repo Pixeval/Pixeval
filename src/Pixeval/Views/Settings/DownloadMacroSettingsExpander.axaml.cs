@@ -1,15 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
 using AutoSettingsPage.Avalonia;
-using Avalonia.Interactivity;
 using CommunityToolkit.Avalonia.Controls;
-using Mako.Model;
 using Misaki;
+using Pixeval.Controls.Settings;
 using Pixeval.Download;
 using Pixeval.Download.MacroParser;
-using Pixeval.Download.MacroParser.Ast;
 using Pixeval.Download.Macros;
 using Pixeval.I18N;
 using Pixeval.Models.Settings.Entries;
@@ -20,57 +15,88 @@ namespace Pixeval.Views.Settings;
 
 public partial class DownloadMacroSettingsExpander : SettingsExpander, IEntryControl<DownloadMacroAppSettingsEntry>
 {
-    public DownloadMacroAppSettingsEntry Entry { set => DataContext = value; }
-
-    public DownloadMacroSettingsExpander() => InitializeComponent();
-
-    /// <summary>
-    /// This TestParser is used to test whether the user input meta path is legal
-    /// </summary>
-    private static readonly MacroParser<string> _TestParser = new();
+    private readonly MacroEditorColorizer _colorizer = new();
+    private DownloadMacroAppSettingsEntry? _entry;
+    private bool _isSynchronizingText;
 
     private static readonly ISingleImage _SingleImage = DesignHelper.DownloadParserSampleWork(ImageType.SingleImage);
     private static readonly ISingleImage _SingleAnimatedImage = DesignHelper.DownloadParserSampleWork(ImageType.SingleAnimatedImage);
     private static readonly ISingleImage _ImageSet = DesignHelper.DownloadParserSampleWork(ImageType.ImageSet);
     private static readonly ISingleImage _Novel = DesignHelper.DownloadParserSampleWork(ImageType.Other);
 
-    public void DownloadPathMacroTextBox_OnTextChanged(object sender, RoutedEventArgs e)
+    public DownloadMacroAppSettingsEntry Entry
     {
-        if (DataContext is not DownloadMacroAppSettingsEntry entry)
+        set
+        {
+            DataContext = value;
+            _entry = value;
+            SyncTextFromEntry(value.Value);
+            ApplyText(value.Value);
+        }
+    }
+
+    public DownloadMacroSettingsExpander()
+    {
+        InitializeComponent();
+        DownloadPathMacroTextBox.TextArea.TextView.LineTransformers.Add(_colorizer);
+        DownloadPathMacroTextBox.TextChanged += DownloadPathMacroTextBox_OnTextChanged;
+    }
+
+    private void DownloadPathMacroTextBox_OnTextChanged(object? sender, EventArgs e)
+    {
+        if (_entry is null || _isSynchronizingText)
             return;
 
-        var text = DownloadPathMacroTextBox.Text?.ReplaceLineEndings("")?.Trim();
+        ApplyText(DownloadPathMacroTextBox.Text?.ReplaceLineEndings("")?.Trim());
+    }
 
-        if (string.IsNullOrWhiteSpace(text))
+    private void ApplyText(string? text)
+    {
+        var normalized = text ?? string.Empty;
+        var analysis = ArtworkMetaPathAnalyzer.Analyze(normalized);
+        _colorizer.Update(analysis, normalized.Length);
+        DownloadPathMacroTextBox.TextArea.TextView.InvalidateVisual();
+
+        if (string.IsNullOrWhiteSpace(normalized))
         {
             DownloadMacroInvalidInfoBar.Text = SettingsMainViewResources.DownloadMacroInvalidInfoBarInputCannotBeBlank;
             DownloadMacroInvalidInfoBar.IsVisible = true;
             return;
         }
 
+        if (analysis.Diagnostics.Count > 0)
+        {
+            DownloadMacroInvalidInfoBar.Text = FormatDiagnostic(analysis.Diagnostics[0]);
+            DownloadMacroInvalidInfoBar.IsVisible = true;
+            return;
+        }
+
         try
         {
-            _TestParser.SetupParsingEnvironment(new Lexer(text));
-            var result = _TestParser.Parse();
-            if (result is not null)
-            {
-                if (ValidateMacro(result, ArtworkMetaPathParser.Instance) is { } ex)
-                {
-                    DownloadMacroInvalidInfoBar.Text = ex;
-                    DownloadMacroInvalidInfoBar.IsVisible = true;
-                }
-                else
-                {
-                    DownloadMacroInvalidInfoBar.IsVisible = false;
-                    SetExamplePaths(text);
-                    entry.Value = text;
-                }
-            }
+            SetExamplePaths(normalized);
+            DownloadMacroInvalidInfoBar.IsVisible = false;
+            _entry?.Value = normalized;
         }
         catch (Exception exception)
         {
             DownloadMacroInvalidInfoBar.Text = I18NManager.GetResource(SettingsMainViewResources.DownloadMacroInvalidInfoBarMacroInvalidFormatted, exception.Message);
             DownloadMacroInvalidInfoBar.IsVisible = true;
+        }
+    }
+
+    private void SyncTextFromEntry(string text)
+    {
+        if (string.Equals(DownloadPathMacroTextBox.Text, text, StringComparison.Ordinal))
+            return;
+
+        _isSynchronizingText = true;
+        try
+        {
+            DownloadPathMacroTextBox.Text = text;
+        }
+        finally
+        {
+            _isSynchronizingText = false;
         }
     }
 
@@ -87,50 +113,30 @@ public partial class DownloadMacroSettingsExpander : SettingsExpander, IEntryCon
                 .Replace(FileExtensionMacro.NameConstToken, ".png");
     }
 
-    private static string? ValidateMacro(
-        IMetaPathNode<string> tree, IMetaPathParser<Illustration> macroProvider)
+    private static string FormatDiagnostic(MacroDiagnostic diagnostic)
     {
-        return ValidateMacro(tree, ImmutableDictionary<string, bool>.Empty, [], macroProvider);
-    }
-
-    private static string? ValidateMacro(
-        IMetaPathNode<string> tree,
-        ImmutableDictionary<string, bool> context,
-        List<(string Name, ImmutableDictionary<string, bool> Context)> lastSegmentContexts,
-        IMetaPathParser<Illustration> macroProvider)
-    {
-        return tree switch
+        return diagnostic.Kind switch
         {
-            PlainText<string>(var t) when t.Contains('\\') => lastSegmentContexts.Let(x =>
-            {
-                foreach (var (name, ctx) in x)
-                    if (!ctx.Any(y => context.TryGetValue(y.Key, out var actual) && y.Value != actual))
-                        return I18NManager.GetResource(MacroParserResources.MacroShouldBeInLastSegmentFormatted, name);
-                return null;
-            }),
-            PlainText<string> => null,
-            OptionalMacroParameter<string>(var sequence) => ValidateMacro(sequence, context, lastSegmentContexts, macroProvider),
-            Macro<string>({ Text: var name }, var optionalParams, var isNot) =>
-                macroProvider.MacroProvider.TryResolve(name, isNot) switch
-                {
-                    Unknown => I18NManager.GetResource(MacroParserResources.UnknownMacroNameFormatted, name),
-                    // ITransducer
-                    ITransducer when isNot => I18NManager.GetResource(MacroParserResources.NegationNotAllowedFormatted, name),
-                    ITransducer when optionalParams is not null => I18NManager.GetResource(MacroParserResources.NonParameterizedMacroBearingParameterFormatted, name),
-                    PicSetIndexMacro m when !(context.TryGetValue(IsPicSetMacro.NameConst, out var v) && v) => I18NManager.GetResource(MacroParserResources.MacroShouldBeContainedFormatted, m.Name, IsPicSetMacro.NameConst),
-                    ILastSegment l => (null as string).Apply(_ => lastSegmentContexts.Add((l.Name, context))),
-                    ITransducer => null,
-                    // IPredicate
-                    IPredicate when optionalParams is null => I18NManager.GetResource(MacroParserResources.ParameterizedMacroMissingParameterFormatted, name),
-                    IPredicate p => ValidateMacro(optionalParams, context.Let(t => t.SetItem(p.Name, !p.IsNot)), lastSegmentContexts, macroProvider),
-                    _ => I18NManager.GetResource(MacroParserResources.UnknownMacroNameFormatted, name)
-                },
-            Sequence<string>(var first, var rests) =>
-                ValidateMacro(first, context, lastSegmentContexts, macroProvider)
-                ?? (rests is null
-                    ? null
-                    : ValidateMacro(rests, context, lastSegmentContexts, macroProvider)),
-            _ => throw new ArgumentOutOfRangeException(nameof(tree))
+            MacroDiagnosticKind.UnexpectedToken => I18NManager.GetResource(
+                MacroParserResources.UnexpectedTokenFormatted,
+                diagnostic.Span.Start + 1),
+            MacroDiagnosticKind.UnknownMacroName => I18NManager.GetResource(
+                MacroParserResources.UnknownMacroNameFormatted,
+                diagnostic.PrimaryParameter ?? string.Empty),
+            MacroDiagnosticKind.NonParameterizedMacroBearingParameter => I18NManager.GetResource(
+                MacroParserResources.NonParameterizedMacroBearingParameterFormatted,
+                diagnostic.PrimaryParameter ?? string.Empty),
+            MacroDiagnosticKind.ConditionalBranchesMissing => I18NManager.GetResource(
+                MacroParserResources.ParameterizedMacroMissingParameterFormatted,
+                diagnostic.PrimaryParameter ?? string.Empty),
+            MacroDiagnosticKind.MacroShouldBeContained => I18NManager.GetResource(
+                MacroParserResources.MacroShouldBeContainedFormatted,
+                diagnostic.PrimaryParameter ?? string.Empty,
+                diagnostic.SecondaryParameter ?? string.Empty),
+            MacroDiagnosticKind.MacroShouldBeInLastSegment => I18NManager.GetResource(
+                MacroParserResources.MacroShouldBeInLastSegmentFormatted,
+                diagnostic.PrimaryParameter ?? string.Empty),
+            _ => throw new ArgumentOutOfRangeException(nameof(diagnostic))
         };
     }
 }

@@ -468,7 +468,6 @@ namespace Pixeval
         public const string MacroShouldBeContainedFormatted = "MacroParser.MacroShouldBeContainedFormatted";
         public const string MacroShouldBeInLastSegmentFormatted = "MacroParser.MacroShouldBeInLastSegmentFormatted";
         public const string MinimumShouldBeSmallerThanMaximiumFormatted = "MacroParser.MinimumShouldBeSmallerThanMaximiumFormatted";
-        public const string NegationNotAllowedFormatted = "MacroParser.NegationNotAllowedFormatted";
         public const string NonParameterizedMacroBearingParameterFormatted = "MacroParser.NonParameterizedMacroBearingParameterFormatted";
         public const string NumericTooLargeFormatted = "MacroParser.NumericTooLargeFormatted";
         public const string NumericTooSmallInRangeFormatted = "MacroParser.NumericTooSmallInRangeFormatted";
@@ -672,7 +671,6 @@ namespace Pixeval
         public const string IdMacroTooltip = "SettingsMainView.IdMacroTooltip";
         public const string IfAiMacroTooltip = "SettingsMainView.IfAiMacroTooltip";
         public const string IfNovelMacroTooltip = "SettingsMainView.IfNovelMacroTooltip";
-        public const string IfPicAllMacroTooltip = "SettingsMainView.IfPicAllMacroTooltip";
         public const string IfPicGifMacroTooltip = "SettingsMainView.IfPicGifMacroTooltip";
         public const string IfPicOneMacroTooltip = "SettingsMainView.IfPicOneMacroTooltip";
         public const string IfPicSetMacroTooltip = "SettingsMainView.IfPicSetMacroTooltip";

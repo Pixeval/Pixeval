@@ -6,6 +6,7 @@
     xmlns:controls="using:CommunityToolkit.Avalonia.Controls"
     xmlns:controls2="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:edit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
     xmlns:entries="using:Pixeval.Models.Settings.Entries"
     xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -15,14 +16,14 @@
     Description="{Binding Converter={x:Static avalonia:SettingsEntryHelper.DescriptionConverter}}"
     Header="{Binding Header}"
     mc:Ignorable="d"
-    d:DesignHeight="450"
-    d:DesignWidth="800">
+    d:DesignHeight="520"
+    d:DesignWidth="900">
     <controls:SettingsExpander.HeaderIcon>
         <fluent:SymbolIcon Symbol="{Binding Icon}" />
     </controls:SettingsExpander.HeaderIcon>
     <controls:SettingsExpander.Items>
         <controls:SettingsCard ContentAlignment="Left">
-            <StackPanel Spacing="3">
+            <StackPanel Spacing="6">
                 <ItemsControl ItemsSource="{x:Static entries:DownloadMacroAppSettingsEntry.AvailableMacros}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -35,16 +36,25 @@
                                 Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
                                 Content="{Binding Value}"
                                 Tag="{Binding Value}"
-                                ToolTip.Tip="{I18N Key={Binding Value}}" />
+                                ToolTip.Tip="{I18N Key={Binding Description}}" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <TextBox
+                <TextBlock
+                    Opacity="0.7"
+                    Text="{I18N {x:Static pixeval:SettingsMainViewResources.DownloadPathMacroTextBoxPlaceholderText}}"
+                    TextWrapping="Wrap" />
+                <edit:TextEditor
                     x:Name="DownloadPathMacroTextBox"
-                    AcceptsReturn="False"
-                    PlaceholderText="{I18N {x:Static pixeval:SettingsMainViewResources.DownloadPathMacroTextBoxPlaceholderText}}"
-                    Text="{Binding Value, Mode=OneTime}"
-                    TextChanged="DownloadPathMacroTextBox_OnTextChanged" />
+                    HorizontalAlignment="Left"
+                    Background="Transparent"
+                    BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                    BorderThickness="1"
+                    FontFamily="Cascadia Code,Consolas,Monospace"
+                    FontSize="14"
+                    HorizontalScrollBarVisibility="Auto"
+                    ShowLineNumbers="False"
+                    VerticalScrollBarVisibility="Auto" />
                 <TextBlock>
                     <Run Text="{I18N {x:Static pixeval:SettingsMainViewResources.SinglePathBlockText}}" />
                     <Run x:Name="SinglePathBlock" />
@@ -66,7 +76,8 @@
                 <TextBlock
                     x:Name="DownloadMacroInvalidInfoBar"
                     Foreground="Red"
-                    IsVisible="False" />
+                    IsVisible="False"
+                    TextWrapping="Wrap" />
             </StackPanel>
         </controls:SettingsCard>
     </controls:SettingsExpander.Items>

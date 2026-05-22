@@ -8,14 +8,12 @@ namespace Pixeval.Download.MacroParser;
 public class MacroParser<TContext>
 {
     private TokenInfo? _currentToken;
-    private bool _expectContextualColon;
     private Lexer? _lexer;
 
     public void SetupParsingEnvironment(Lexer lexer)
     {
         _lexer = lexer;
         _currentToken = _lexer.NextToken();
-        _expectContextualColon = false;
     }
 
     private TokenInfo EatToken(TokenKind kind)
@@ -26,7 +24,10 @@ public class MacroParser<TContext>
             return token;
         }
         
-        throw new MacroParseException(MacroParseException.ErrorType.UnexpectedToken, _currentToken?.Position.Start.Value.ToString() ?? "EOF");
+        throw new MacroParseException(
+            MacroParseException.ErrorType.UnexpectedToken,
+            _currentToken?.Position.Start.Value.ToString() ?? "EOF",
+            _currentToken?.Position.ToTextSpan() ?? new MacroTextSpan(0, 1));
     }
 
     // ReSharper disable once OutParameterValueIsAlwaysDiscarded.Local
@@ -47,32 +48,41 @@ public class MacroParser<TContext>
     {
         var root = Path();
         return _lexer!.NextToken() is { } token
-            ? throw new MacroParseException(MacroParseException.ErrorType.UnexpectedToken, (token.Position.Start.Value - 1).ToString())
+            ? throw new MacroParseException(
+                MacroParseException.ErrorType.UnexpectedToken,
+                (token.Position.Start.Value - 1).ToString(),
+                token.Position.ToTextSpan())
             : root;
     }
 
     private Sequence<TContext>? Path()
     {
-        return Sequence();
+        return Sequence(null);
     }
 
-    private Sequence<TContext>? Sequence()
+    private Sequence<TContext>? Sequence(TokenKind? stopToken)
     {
-        if (_currentToken is not { TokenKind: TokenKind.RBrace } and not null && SingleNode() is { } node)
-            return new(node, Sequence());
+        if (_currentToken is not null
+            && _currentToken.TokenKind != TokenKind.RBrace
+            && _currentToken.TokenKind != stopToken
+            && SingleNode(stopToken) is { } node)
+        {
+            return new(node, Sequence(stopToken));
+        }
 
         return null;
     }
 
-    private SingleNode<TContext>? SingleNode()
+    private SingleNode<TContext>? SingleNode(TokenKind? stopToken)
     {
         return _currentToken switch
         {
             { TokenKind: TokenKind.At } => Macro(),
             { TokenKind: TokenKind.PlainText or TokenKind.Colon } => PlainText(),
-            { TokenKind: TokenKind.RBrace } => null,
+            { TokenKind: var tokenKind } when tokenKind == stopToken || tokenKind == TokenKind.RBrace => null,
             _ => throw new MacroParseException(MacroParseException.ErrorType.UnexpectedToken,
-                (_currentToken?.Position.Start.Value + 1)?.ToString() ?? "EOF")
+                (_currentToken?.Position.Start.Value + 1)?.ToString() ?? "EOF",
+                _currentToken?.Position.ToTextSpan() ?? new MacroTextSpan(0, 1))
         };
     }
 
@@ -80,33 +90,32 @@ public class MacroParser<TContext>
     {
         _ = EatToken(TokenKind.At);
         _ = EatToken(TokenKind.LBrace);
-        var isNot = TryEatToken(TokenKind.Exclamation, out _);
         var macroName = PlainText();
-        _expectContextualColon = true;
-        var node = new Macro<TContext>(macroName, OptionalMacroParameter(), isNot);
+        var node = new Macro<TContext>(macroName, ConditionalBranches());
         _ = EatToken(TokenKind.RBrace);
         return node;
     }
 
-    private OptionalMacroParameter<TContext>? OptionalMacroParameter()
+    private ConditionalMacroBranches<TContext>? ConditionalBranches()
     {
-        _expectContextualColon = false;
-        return TryEatToken(TokenKind.Colon, out _) && Sequence() is { } sequence ? new OptionalMacroParameter<TContext>(sequence) : null;
+        if (!TryEatToken(TokenKind.Question, out _))
+            return null;
+
+        var whenTrue = Sequence(TokenKind.Colon);
+        _ = EatToken(TokenKind.Colon);
+        var whenFalse = Sequence(TokenKind.RBrace);
+        return new ConditionalMacroBranches<TContext>(whenTrue, whenFalse);
     }
 
     private PlainText<TContext> PlainText()
     {
         if (_currentToken?.TokenKind is TokenKind.Colon)
         {
-            if (_expectContextualColon)
-            {
-                throw new MacroParseException(MacroParseException.ErrorType.UnexpectedToken, _currentToken.Position.Start.ToString());
-            }
-
-            _ = EatToken(TokenKind.Colon);
-            return new($":{EatToken(TokenKind.PlainText).Text}");
+            var colon = EatToken(TokenKind.Colon);
+            return new(":", colon.Position);
         }
 
-        return new(EatToken(TokenKind.PlainText).Text);
+        var text = EatToken(TokenKind.PlainText);
+        return new(text.Text, text.Position);
     }
 }

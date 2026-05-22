@@ -14,6 +14,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
+		<PackageReference Include="Avalonia.AvaloniaEdit" Version="12.0.0" />
 		<PackageReference Include="Avalonia.Controls.WebView" Version="12.0.0" />
 		<PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
 		<PackageReference Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />

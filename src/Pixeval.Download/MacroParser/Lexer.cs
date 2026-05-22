@@ -23,10 +23,6 @@ public class Lexer(string rawString)
                 var at = new TokenInfo(TokenKind.At, "@", _rawString.Forward..(_rawString.Forward + 1));
                 _rawString.Advance();
                 return at;
-            case '!':
-                var exclamation = new TokenInfo(TokenKind.Exclamation, "!", _rawString.Forward..(_rawString.Forward + 1));
-                _rawString.Advance();
-                return exclamation;
             case '{':
                 var lBrace = new TokenInfo(TokenKind.LBrace, "{", _rawString.Forward..(_rawString.Forward + 1));
                 _rawString.Advance();
@@ -35,6 +31,10 @@ public class Lexer(string rawString)
                 var rBrace = new TokenInfo(TokenKind.RBrace, "}", _rawString.Forward..(_rawString.Forward + 1));
                 _rawString.Advance();
                 return rBrace;
+            case '?':
+                var question = new TokenInfo(TokenKind.Question, "?", _rawString.Forward..(_rawString.Forward + 1));
+                _rawString.Advance();
+                return question;
             case ':':
                 var colon = new TokenInfo(TokenKind.Colon, ":", _rawString.Forward..(_rawString.Forward + 1));
                 _rawString.Advance();
@@ -48,7 +48,7 @@ public class Lexer(string rawString)
     {
         var forward = _rawString.Forward;
         _rawString.AdvanceMarker();
-        var str = _rawString.GetUntilIf(ch => ch is not '{' and not '}' and not '@' and not ':');
+        var str = _rawString.GetUntilIf(ch => ch is not '{' and not '}' and not '@' and not ':' and not '?');
         var token = new TokenInfo(TokenKind.PlainText, str, forward..(forward + str.Length));
         return Path.GetInvalidPathChars().Intersect(token.Text).IsNotNullOrEmpty()
             ? null

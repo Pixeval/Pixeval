@@ -13,10 +13,7 @@ public sealed record Unknown : IMacro
     public string Name => "";
 }
 
-public interface IPredicate : IMacro
-{
-    bool IsNot { get; internal set; }
-}
+public interface IPredicate : IMacro;
 
 public interface IPredicate<in TContext> : IPredicate
 {

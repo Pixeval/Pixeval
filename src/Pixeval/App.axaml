@@ -18,6 +18,7 @@
         <autoSettingsPage:AutoSettingsPageTheme />
         <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />
         <StyleInclude Source="/Controls/FloatingCommandBarStyles.axaml" />
+        <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
         <smoothScroll:ScrollViewDefaultTheme />
         <smoothScroll:ScrollViewerSmoothTheme />
     </Application.Styles>
