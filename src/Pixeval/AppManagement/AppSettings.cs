@@ -69,7 +69,7 @@ public record AppSettings
 
     public UgoiraDownloadFormat UgoiraDownloadFormat { get; set; } = UgoiraDownloadFormat.WebPLossless;
 
-    public NovelDownloadFormat NovelDownloadFormat { get; set; }
+    public string NovelDownloadFormat { get; set; } = Models.Download.NovelDownloadFormatToken.DefaultToken;
 
     [SettingsEntry(Symbol.FolderZip, LossyImageDownloadQualityEntryHeader, LossyImageDownloadQualityEntryDescription)]
     public int LossyImageDownloadQuality { get; set; } = -1;

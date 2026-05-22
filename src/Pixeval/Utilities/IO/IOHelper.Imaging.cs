@@ -8,8 +8,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using Mako.Model;
+using Microsoft.Extensions.DependencyInjection;
 using Misaki;
 using Pixeval.Download.Macros;
+using Pixeval.Models.Download;
+using Pixeval.Models.Extensions;
 using Pixeval.Models.Options;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
@@ -287,28 +290,57 @@ public static partial class IoHelper
         };
     }
 
-    public static string GetNovelExtension(NovelDownloadFormat? novelDownloadFormat = null)
+    public static string GetNovelExtension(string? novelDownloadFormat = null)
     {
-        novelDownloadFormat ??= App.AppViewModel.AppSettings.NovelDownloadFormat;
-        return novelDownloadFormat switch
+        var token = GetAvailableNovelDownloadFormatToken(novelDownloadFormat);
+        if (token.ExtensionFormatExtension is { } extension)
+            return extension;
+
+        return token.BuiltInFormat switch
         {
             NovelDownloadFormat.OriginalTxt => "novel.txt",
-            NovelDownloadFormat.Pdf => "." + novelDownloadFormat.ToString()!.ToLowerInvariant(),
-            NovelDownloadFormat.Html or NovelDownloadFormat.Md => "\\novel." + novelDownloadFormat.ToString()!.ToLowerInvariant(),
+            NovelDownloadFormat.Html or NovelDownloadFormat.Md => "\\novel." + token.BuiltInFormat.ToString()!.ToLowerInvariant(),
             _ => throw new ArgumentOutOfRangeException(nameof(novelDownloadFormat))
         };
     }
 
+    private static NovelDownloadFormatToken GetAvailableNovelDownloadFormatToken(string? novelDownloadFormat)
+    {
+        novelDownloadFormat ??= App.AppViewModel.AppSettings.NovelDownloadFormat;
+        var token = new NovelDownloadFormatToken(novelDownloadFormat);
+        if (token.BuiltInFormat is not null)
+            return token;
+
+        if (token.ExtensionFormatExtension is { } extension
+            && App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>().GetNovelFormatProvider(extension) is not null)
+            return token;
+
+        return NovelDownloadFormatToken.Default;
+    }
+
     public static NovelDownloadFormat GetNovelFormat(string extension)
+    {
+        if (TryGetNovelFormat(extension, out var format))
+            return format;
+
+        throw new ArgumentOutOfRangeException(nameof(extension));
+    }
+
+    public static bool TryGetNovelFormat(string extension, out NovelDownloadFormat format)
     {
         return extension switch
         {
-            ".txt" => NovelDownloadFormat.OriginalTxt,
-            ".pdf" => NovelDownloadFormat.Pdf,
-            ".html" => NovelDownloadFormat.Html,
-            ".md" => NovelDownloadFormat.Md,
-            _ => throw new ArgumentOutOfRangeException(nameof(extension))
+            ".txt" => Assign(NovelDownloadFormat.OriginalTxt, out format),
+            ".html" => Assign(NovelDownloadFormat.Html, out format),
+            ".md" => Assign(NovelDownloadFormat.Md, out format),
+            _ => Assign(default, out format, false)
         };
+
+        static bool Assign(NovelDownloadFormat value, out NovelDownloadFormat format, bool result = true)
+        {
+            format = value;
+            return result;
+        }
     }
 
     public static async Task<Image> GetImageFromZipStreamAsync(Stream zipStream, UgoiraMetadata ugoiraMetadata)

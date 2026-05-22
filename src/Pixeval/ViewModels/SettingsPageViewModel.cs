@@ -119,9 +119,7 @@ public class SettingsPageViewModel : ViewModelBase
                         .Enum(
                             WorkTypeEnum.Ugoira,
                             t => t.UgoiraDownloadFormat)
-                        .Enum(
-                            WorkTypeEnum.Novel,
-                            t => t.NovelDownloadFormat))
+                        .NovelDownloadFormat(WorkTypeEnum.Novel))
                 .Int(t => t.LossyImageDownloadQuality, -1, 100, 5)
                 .WorkSubscriptions())
             //.NewGroup(SettingsEntryCategory.Misc)

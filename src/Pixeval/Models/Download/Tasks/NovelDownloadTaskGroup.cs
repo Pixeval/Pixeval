@@ -2,13 +2,17 @@
 // Licensed under the GPL v3 License.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Mako.Model;
+using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Download;
+using Pixeval.Extensions.Common.FormatProviders;
 using Pixeval.Models.Database;
+using Pixeval.Models.Extensions;
 using Pixeval.Models.Options;
 using Pixeval.Utilities;
 using Pixeval.Utilities.IO;
@@ -35,28 +39,31 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
 
     private IllustrationDownloadFormat DestinationIllustrationFormat { get; }
 
-    private NovelDownloadFormat DestinationNovelFormat { get; }
+    private NovelDownloadFormatToken DestinationNovelFormat { get; }
 
-    private string PdfTempFolderPath { get; }
+    private string TempImageFolderPath { get; }
 
     [MemberNotNull(nameof(NovelContent), nameof(DocumentViewModel))]
     private void SetNovelContent(NovelContent novelContent)
     {
         NovelContent = novelContent;
         DocumentViewModel = new NovelContext(novelContent);
-        var directory = DestinationNovelFormat is NovelDownloadFormat.Pdf
-            ? PdfTempFolderPath
+        var directory = DestinationNovelFormat.IsExtension
+            ? TempImageFolderPath
             : Path.GetDirectoryName(DocPath)!;
 
-        var imgExt = IoHelper.GetIllustrationExtension(DestinationIllustrationFormat);
-        if (DestinationIllustrationFormat is not IllustrationDownloadFormat.Original)
+        var imageFormat = DestinationNovelFormat.IsExtension
+            ? IllustrationDownloadFormat.Png
+            : DestinationIllustrationFormat;
+        var imgExt = IoHelper.GetIllustrationExtension(imageFormat);
+        if (imageFormat is not IllustrationDownloadFormat.Original)
             DocumentViewModel.ImageExtension = imgExt;
         for (var i = 0; i < DocumentViewModel.TotalImagesCount; ++i)
         {
             var url = DocumentViewModel.AllUrls[i];
             var name = Path.Combine(directory, DocumentViewModel.AllTokens[i]);
             var imageDownloadTask = new ImageDownloadTask(new(url),
-                DestinationIllustrationFormat is IllustrationDownloadFormat.Original
+                imageFormat is IllustrationDownloadFormat.Original
                     ? IoHelper.ReplaceTokenExtensionFromUrl(name, url, -1)
                     : name + imgExt,
                 DatabaseEntry.State);
@@ -70,11 +77,11 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
     {
         var separatorIndex = TokenizedDestination.LastIndexOfAny([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar]);
         DocPath = TokenizedDestination[..separatorIndex];
-        PdfTempFolderPath = $"{DocPath}.tmp";
+        TempImageFolderPath = $"{DocPath}.tmp";
         // .<ext> or .png or .etc 
         var imgExt = TokenizedDestination[(separatorIndex + 1)..];
         DestinationIllustrationFormat = IoHelper.GetIllustrationFormat(imgExt);
-        DestinationNovelFormat = IoHelper.GetNovelFormat(Path.GetExtension(DocPath));
+        DestinationNovelFormat = GetNovelFormat(DocPath);
     }
 
     public NovelDownloadTaskGroup(
@@ -84,11 +91,11 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
     {
         var separatorIndex = TokenizedDestination.LastIndexOfAny([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar]);
         DocPath = TokenizedDestination[..separatorIndex];
-        PdfTempFolderPath = $"{DocPath}.tmp";
+        TempImageFolderPath = $"{DocPath}.tmp";
         // .<ext> or .png or .etc 
         var imgExt = TokenizedDestination[(separatorIndex + 1)..];
         DestinationIllustrationFormat = IoHelper.GetIllustrationFormat(imgExt);
-        DestinationNovelFormat = IoHelper.GetNovelFormat(Path.GetExtension(DocPath));
+        DestinationNovelFormat = GetNovelFormat(DocPath);
         if (novelContent is not null)
             SetNovelContent(novelContent);
     }
@@ -105,43 +112,67 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
 
     protected override async Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender, CancellationToken token = default)
     {
-        //TODO PDF support
-        //if (DestinationNovelFormat is NovelDownloadFormat.Pdf)
-        //{
-        //    var i = 0;
-        //    foreach (var imageDownloadTask in TasksSet)
-        //    {
-        //        DocumentViewModel.SetStream(i, File.OpenAsyncRead(imageDownloadTask.Destination));
-        //        ++i;
-        //    }
-
-        //    var document = DocumentViewModel.LoadPdfContent();
-        //    document.GeneratePdf(DocPath);
-        //    i = 0;
-        //    foreach (var imageDownloadTask in TasksSet)
-        //    {
-        //        if (DocumentViewModel.TryGetStream(i) is { } stream)
-        //            await stream.DisposeAsync();
-        //        imageDownloadTask.Delete();
-        //        ++i;
-        //    }
-
-        //    FileHelper.DeleteEmptyFolder(PdfTempFolderPath);
-        //    return;
-        //}
-
         ((INovelContext<Stream>) DocumentViewModel).InitImages();
+        if (DestinationNovelFormat.ExtensionFormatExtension is { } extension)
+        {
+            await FormatByExtensionAsync(extension);
+            return;
+        }
 
-        var content = DestinationNovelFormat switch
+        await FormatBuiltInAsync(token);
+    }
+
+    private async Task FormatBuiltInAsync(CancellationToken token)
+    {
+        var format = DestinationNovelFormat.BuiltInFormat ?? NovelDownloadFormatToken.DefaultBuiltInFormat;
+        var content = format switch
         {
             NovelDownloadFormat.OriginalTxt => NovelContent.Text,
             NovelDownloadFormat.Html => DocumentViewModel.LoadHtmlContent().ToString(),
             NovelDownloadFormat.Md => DocumentViewModel.LoadMdContent().ToString(),
-            _ => throw new ArgumentOutOfRangeException(nameof(DestinationNovelFormat))
+            _ => throw new ArgumentOutOfRangeException(nameof(format))
         };
 
         FileHelper.CreateParentDirectory(DocPath);
         await File.WriteAllTextAsync(DocPath, content, token);
+    }
+
+    private async Task FormatByExtensionAsync(string extension)
+    {
+        var provider = GetExtensionService().GetNovelFormatProvider(extension)
+            ?? throw new NotSupportedException(extension);
+
+        var streams = new Dictionary<string, Stream>();
+        try
+        {
+            for (var i = 0; i < TasksSet.Count; i++)
+            {
+                var imageDownloadTask = TasksSet[i];
+                var imageStream = File.OpenRead(imageDownloadTask.Destination);
+                streams.Add(Path.GetFileName(imageDownloadTask.Destination), imageStream);
+                DocumentViewModel.SetStream(i, imageStream);
+            }
+
+            FileHelper.CreateParentDirectory(DocPath);
+            await provider.FormatNovelAsync(NovelContent.Text, DocPath, streams);
+        }
+        finally
+        {
+            await DeleteTemporaryImageTasksAsync();
+            streams.Clear();
+        }
+    }
+
+    private async Task DeleteTemporaryImageTasksAsync()
+    {
+        for (var i = 0; i < TasksSet.Count; i++)
+        {
+            if (DocumentViewModel.TryGetStream(i) is { } stream)
+                await stream.DisposeAsync();
+            TasksSet[i].Delete();
+        }
+
+        FileHelper.DeleteEmptyFolder(TempImageFolderPath);
     }
 
     public override string OpenLocalDestination => DocPath;
@@ -152,6 +183,18 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
             task.Delete();
         if (File.Exists(DocPath))
             File.Delete(DocPath);
-        FileHelper.DeleteEmptyFolder(DestinationNovelFormat is NovelDownloadFormat.Pdf ? PdfTempFolderPath : Path.GetDirectoryName(DocPath));
+        FileHelper.DeleteEmptyFolder(DestinationNovelFormat.IsExtension ? TempImageFolderPath : Path.GetDirectoryName(DocPath));
     }
+
+    private static NovelDownloadFormatToken GetNovelFormat(string docPath)
+    {
+        var extension = Path.GetExtension(docPath);
+        if (IoHelper.TryGetNovelFormat(extension, out var builtInFormat))
+            return NovelDownloadFormatToken.BuiltIn(builtInFormat);
+
+        return NovelDownloadFormatToken.ExtensionPrefix + extension;
+    }
+
+    private static ExtensionService GetExtensionService() =>
+        App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
 }

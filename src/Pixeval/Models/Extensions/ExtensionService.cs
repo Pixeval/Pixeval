@@ -41,6 +41,9 @@ public class ExtensionService : IDisposable
 
     public IEnumerable<INovelFormatProviderExtension> ActiveNovelFormatProviders => ActiveExtensions.OfType<INovelFormatProviderExtension>();
 
+    public INovelFormatProviderExtension? GetNovelFormatProvider(string extension) =>
+        ActiveNovelFormatProviders.FirstOrDefault(t => string.Equals(t.FormatExtension, extension, StringComparison.OrdinalIgnoreCase));
+
     private readonly List<ExtensionSettingsGroup> _settingsGroups = [];
 
     public int OutDateExtensionHostsCount { get; }
