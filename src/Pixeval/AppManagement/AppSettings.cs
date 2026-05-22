@@ -71,9 +71,6 @@ public record AppSettings
 
     public string NovelDownloadFormat { get; set; } = Models.Download.NovelDownloadFormatToken.DefaultToken;
 
-    [SettingsEntry(Symbol.FolderZip, LossyImageDownloadQualityEntryHeader, LossyImageDownloadQualityEntryDescription)]
-    public int LossyImageDownloadQuality { get; set; } = -1;
-
     [SettingsEntry(Symbol.ImageSplit, OverwriteDownloadedFileEntryHeader, OverwriteDownloadedFileEntryDescription)]
     public bool OverwriteDownloadedFile { get; set; }
 

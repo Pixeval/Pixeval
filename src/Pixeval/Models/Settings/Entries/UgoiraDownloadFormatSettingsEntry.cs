@@ -47,6 +47,7 @@ public class UgoiraDownloadFormatSettingsEntry(AppSettings settings)
     private static IReadOnlyList<IReadOnlyStringPair<object>> CreateEnumItems()
     {
         var builtIns = SymbolComboBoxItem.GetValues<UgoiraDownloadFormat>()
+            .Where(static t => (UgoiraDownloadFormat) t.Value is UgoiraDownloadFormat.Original)
             .Select(t => new SymbolComboBoxItem(UgoiraDownloadFormatToken.BuiltIn((UgoiraDownloadFormat) t.Value), t.Description, t.Symbol));
 
         var extensions = App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>()

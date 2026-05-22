@@ -12,7 +12,6 @@ public record DependencyViewModel(string Name, string Author, string Url, string
     private static readonly (string, string)[] _Dependencies =
     [
         ("CommunityToolkit/dotnet", LicenseTexts.MIT("2021", ".NET Foundation and Contributors.")),
-        ("SixLabors/ImageSharp", LicenseTexts.ImageSharp),
         ("davidxuang/FluentIcons", LicenseTexts.MIT("2022", "davidxuang")),
         ("dotnetcore/WebApiClient", LicenseTexts.MIT("2020", ".NET Core Community")),
         ("whistyun/Markdown.Avalonia", LicenseTexts.MIT("2020", "Whistyun")),

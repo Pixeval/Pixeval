@@ -48,6 +48,7 @@ public class IllustrationDownloadFormatSettingsEntry(AppSettings settings)
     private static IReadOnlyList<IReadOnlyStringPair<object>> CreateEnumItems()
     {
         var builtIns = SymbolComboBoxItem.GetValues<IllustrationDownloadFormat>()
+            .Where(static t => (IllustrationDownloadFormat) t.Value is IllustrationDownloadFormat.Original)
             .Select(t => t with { Value = IllustrationDownloadFormatToken.BuiltIn((IllustrationDownloadFormat) t.Value) });
 
         var extensions = App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>()

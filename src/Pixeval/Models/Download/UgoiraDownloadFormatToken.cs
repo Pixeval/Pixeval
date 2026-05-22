@@ -11,9 +11,9 @@ public readonly record struct UgoiraDownloadFormatToken(string Value)
 {
     public const string ExtensionPrefix = "extension:";
 
-    public const string DefaultToken = nameof(UgoiraDownloadFormat.WebPLossless);
+    public const string DefaultToken = nameof(UgoiraDownloadFormat.Original);
 
-    public const UgoiraDownloadFormat DefaultBuiltInFormat = UgoiraDownloadFormat.WebPLossless;
+    public const UgoiraDownloadFormat DefaultBuiltInFormat = UgoiraDownloadFormat.Original;
 
     public static UgoiraDownloadFormatToken Default => BuiltIn(DefaultBuiltInFormat);
 

@@ -81,17 +81,11 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup
         }
 
         var builtInFormat = DestinationUgoiraFormat.BuiltInFormat ?? UgoiraDownloadFormatToken.DefaultBuiltInFormat;
-        if (builtInFormat is UgoiraDownloadFormat.Original)
-        {
-            await File.WriteAllTextAsync(CsvPath,
-                string.Join(',', MsDelays.Select(t => t.ToString())), token);
-            return;
-        }
+        if (builtInFormat is not UgoiraDownloadFormat.Original)
+            throw new NotSupportedException(builtInFormat.ToString());
 
-        await Destinations.UgoiraSaveToFileAsync(MsDelays, TokenizedDestination, builtInFormat);
-        foreach (var imageDownloadTask in TasksSet)
-            imageDownloadTask.Delete();
-        FileHelper.DeleteEmptyFolder(TempFolderPath);
+        await File.WriteAllTextAsync(CsvPath,
+            string.Join(',', MsDelays.Select(t => t.ToString())), token);
     }
 
     private UgoiraDownloadFormatToken DestinationUgoiraFormat { get; }
@@ -141,10 +135,7 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup
         if (!string.IsNullOrWhiteSpace(entry.FormatToken))
             return IoHelper.GetAvailableUgoiraDownloadFormatToken(entry.FormatToken);
 
-        var extension = Path.GetExtension(entry.Destination);
-        return IoHelper.TryGetUgoiraFormat(extension, out var format)
-            ? UgoiraDownloadFormatToken.BuiltIn(format)
-            : UgoiraDownloadFormatToken.ExtensionPrefix + extension;
+        return UgoiraDownloadFormatToken.Default;
     }
 
     private static ExtensionService GetExtensionService() =>

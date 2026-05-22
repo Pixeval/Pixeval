@@ -45,21 +45,7 @@ public class SingleAnimatedImageDownloadTaskGroup : SingleImageDownloadTaskGroup
         if (builtInFormat is UgoiraDownloadFormat.Original)
             return;
 
-        switch (Entry.PreferredAnimatedImageType)
-        {
-            case SingleAnimatedImageType.SingleZipFile:
-            {
-                await Entry.ZipImageDelays!.TryPreloadListAsync(Entry);
-                var msDelays = Entry.ZipImageDelays!;
-                var zipPath = Destination + ".zip";
-                File.Move(Destination, zipPath);
-                await using var read = File.OpenAsyncRead(zipPath);
-                await read.UgoiraSaveToFileAsync(msDelays, Destination, builtInFormat);
-                break;
-            }
-            case SingleAnimatedImageType.SingleFile:
-                break;
-        }
+        throw new NotSupportedException(builtInFormat.ToString());
     }
 
     private async Task FormatByExtensionAsync(ImageDownloadTask sender, string extension)
@@ -69,9 +55,9 @@ public class SingleAnimatedImageDownloadTaskGroup : SingleImageDownloadTaskGroup
         var tempPath = sender.Destination + ".source";
         FileHelper.Move(sender.Destination, tempPath, true);
         IReadOnlyList<Stream> streams = [];
-        IReadOnlyList<int> delays = [];
         try
         {
+            IReadOnlyList<int> delays;
             switch (Entry.PreferredAnimatedImageType)
             {
                 case SingleAnimatedImageType.SingleZipFile:
@@ -104,10 +90,7 @@ public class SingleAnimatedImageDownloadTaskGroup : SingleImageDownloadTaskGroup
         if (!string.IsNullOrWhiteSpace(entry.FormatToken))
             return IoHelper.GetAvailableUgoiraDownloadFormatToken(entry.FormatToken);
 
-        var extension = Path.GetExtension(entry.Destination);
-        return IoHelper.TryGetUgoiraFormat(extension, out var format)
-            ? UgoiraDownloadFormatToken.BuiltIn(format)
-            : UgoiraDownloadFormatToken.ExtensionPrefix + extension;
+        return UgoiraDownloadFormatToken.Default;
     }
 
     private static ExtensionService GetExtensionService() =>

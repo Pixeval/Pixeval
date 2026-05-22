@@ -96,10 +96,7 @@ public class MangaDownloadTaskGroup : DownloadTaskGroup
         if (!string.IsNullOrWhiteSpace(entry.FormatToken))
             return IoHelper.GetAvailableIllustrationDownloadFormatToken(entry.FormatToken);
 
-        var extension = Path.GetExtension(entry.Destination);
-        return IoHelper.TryGetIllustrationFormat(extension, out var format)
-            ? IllustrationDownloadFormatToken.BuiltIn(format)
-            : IllustrationDownloadFormatToken.ExtensionPrefix + extension;
+        return IllustrationDownloadFormatToken.Default;
     }
 
     private static ExtensionService GetExtensionService() =>

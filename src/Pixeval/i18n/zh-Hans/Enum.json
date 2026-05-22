@@ -76,14 +76,10 @@
     "ExtraBlack": "特黑"
   },
   "IllustrationDownloadFormat": {
-    "Original": "图片原始格式",
-    "WebPLossless": "无损WebP",
-    "WebPLossy": "有损WebP"
+    "Original": "图片原始格式"
   },
   "UgoiraDownloadFormat": {
-    "Original": "动图原始格式",
-    "WebPLossless": "无损WebP",
-    "WebPLossy": "有损WebP"
+    "Original": "动图原始格式"
   },
   "NovelDownloadFormat": {
     "OriginalTxt": "TXT外挂插图（Pixiv小说原生标签）",

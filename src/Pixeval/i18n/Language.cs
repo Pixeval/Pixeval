@@ -56,8 +56,6 @@ namespace Pixeval
         public const string ImageMirrorServerEntryDescription = "AppSettings.ImageMirrorServerEntry.Description";
         public const string ImageMirrorServerEntryHeader = "AppSettings.ImageMirrorServerEntry.Header";
         public const string ImageMirrorServerEntryPlaceholder = "AppSettings.ImageMirrorServerEntry.Placeholder";
-        public const string LossyImageDownloadQualityEntryDescription = "AppSettings.LossyImageDownloadQualityEntry.Description";
-        public const string LossyImageDownloadQualityEntryHeader = "AppSettings.LossyImageDownloadQualityEntry.Header";
         public const string MaxDownloadConcurrencyLevelEntryDescription = "AppSettings.MaxDownloadConcurrencyLevelEntry.Description";
         public const string MaxDownloadConcurrencyLevelEntryHeader = "AppSettings.MaxDownloadConcurrencyLevelEntry.Header";
         public const string MaximumBrowseHistoryRecordsEntryDescription = "AppSettings.MaximumBrowseHistoryRecordsEntry.Description";
@@ -302,8 +300,6 @@ namespace Pixeval
         public const string FontWeightSemiLight = "Enum.FontWeight.SemiLight";
         public const string FontWeightThin = "Enum.FontWeight.Thin";
         public const string IllustrationDownloadFormatOriginal = "Enum.IllustrationDownloadFormat.Original";
-        public const string IllustrationDownloadFormatWebPLossless = "Enum.IllustrationDownloadFormat.WebPLossless";
-        public const string IllustrationDownloadFormatWebPLossy = "Enum.IllustrationDownloadFormat.WebPLossy";
         public const string LocalSortOptionDoNotSort = "Enum.LocalSortOption.DoNotSort";
         public const string LocalSortOptionPopularityDescending = "Enum.LocalSortOption.PopularityDescending";
         public const string LocalSortOptionPublishDateAscending = "Enum.LocalSortOption.PublishDateAscending";
@@ -359,8 +355,6 @@ namespace Pixeval
         public const string ThumbnailLayoutTypeGrid = "Enum.ThumbnailLayoutType.Grid";
         public const string ThumbnailLayoutTypeLinedFlow = "Enum.ThumbnailLayoutType.LinedFlow";
         public const string UgoiraDownloadFormatOriginal = "Enum.UgoiraDownloadFormat.Original";
-        public const string UgoiraDownloadFormatWebPLossless = "Enum.UgoiraDownloadFormat.WebPLossless";
-        public const string UgoiraDownloadFormatWebPLossy = "Enum.UgoiraDownloadFormat.WebPLossy";
         public const string WorkSortOptionPopularityDescending = "Enum.WorkSortOption.PopularityDescending";
         public const string WorkSortOptionPublishDateAscending = "Enum.WorkSortOption.PublishDateAscending";
         public const string WorkSortOptionPublishDateDescending = "Enum.WorkSortOption.PublishDateDescending";

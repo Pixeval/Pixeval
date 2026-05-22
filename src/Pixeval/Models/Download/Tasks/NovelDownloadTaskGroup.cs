@@ -53,12 +53,10 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
             : Path.GetDirectoryName(DocPath)!;
 
         var imageFormat = DestinationNovelFormat.IsExtension
-            ? IllustrationDownloadFormatToken.BuiltIn(IllustrationDownloadFormat.Png)
+            ? IllustrationDownloadFormatToken.Default
             : DestinationIllustrationFormat;
-        var imgExt = DestinationNovelFormat.IsExtension
-            ? ".png"
-            : IoHelper.GetIllustrationExtension(imageFormat.Value);
-        if (DestinationNovelFormat.IsExtension || imageFormat.BuiltInFormat is not IllustrationDownloadFormat.Original)
+        var imgExt = IoHelper.GetIllustrationExtension(imageFormat.Value);
+        if (imageFormat.BuiltInFormat is not IllustrationDownloadFormat.Original)
             DocumentViewModel.ImageExtension = imgExt;
         for (var i = 0; i < DocumentViewModel.TotalImagesCount; ++i)
         {
@@ -231,9 +229,7 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
         if (!string.IsNullOrWhiteSpace(entry.ImageFormatToken))
             return IoHelper.GetAvailableIllustrationDownloadFormatToken(entry.ImageFormatToken);
 
-        return IoHelper.TryGetIllustrationFormat(imgExt, out var builtInFormat)
-            ? IllustrationDownloadFormatToken.BuiltIn(builtInFormat)
-            : IllustrationDownloadFormatToken.ExtensionPrefix + imgExt;
+        return IllustrationDownloadFormatToken.Default;
     }
 
     private static ExtensionService GetExtensionService() =>
