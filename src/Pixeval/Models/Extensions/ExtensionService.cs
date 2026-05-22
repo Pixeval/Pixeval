@@ -37,9 +37,17 @@ public class ExtensionService : IDisposable
 
     public IEnumerable<IDownloaderExtension> ActiveDownloaders => ActiveExtensions.OfType<IDownloaderExtension>();
 
-    public IEnumerable<IImageFormatProviderExtension> ActiveImageFormatProviders => ActiveExtensions.OfType<IImageFormatProviderExtension>();
+    public IEnumerable<IStaticImageFormatProviderExtension> ActiveStaticImageFormatProviders => ActiveExtensions.OfType<IStaticImageFormatProviderExtension>();
+
+    public IEnumerable<IAnimatedImageFormatProviderExtension> ActiveAnimatedImageFormatProviders => ActiveExtensions.OfType<IAnimatedImageFormatProviderExtension>();
 
     public IEnumerable<INovelFormatProviderExtension> ActiveNovelFormatProviders => ActiveExtensions.OfType<INovelFormatProviderExtension>();
+
+    public IStaticImageFormatProviderExtension? GetStaticImageFormatProvider(string extension) =>
+        ActiveStaticImageFormatProviders.FirstOrDefault(t => string.Equals(t.FormatExtension, extension, StringComparison.OrdinalIgnoreCase));
+
+    public IAnimatedImageFormatProviderExtension? GetAnimatedImageFormatProvider(string extension) =>
+        ActiveAnimatedImageFormatProviders.FirstOrDefault(t => string.Equals(t.FormatExtension, extension, StringComparison.OrdinalIgnoreCase));
 
     public INovelFormatProviderExtension? GetNovelFormatProvider(string extension) =>
         ActiveNovelFormatProviders.FirstOrDefault(t => string.Equals(t.FormatExtension, extension, StringComparison.OrdinalIgnoreCase));

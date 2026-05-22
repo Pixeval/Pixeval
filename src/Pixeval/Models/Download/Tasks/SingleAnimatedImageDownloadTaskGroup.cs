@@ -1,9 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Misaki;
+using Pixeval.Extensions.Common.FormatProviders;
 using Pixeval.Models.Database;
+using Pixeval.Models.Extensions;
 using Pixeval.Models.Options;
 using Pixeval.Utilities;
 using Pixeval.Utilities.IO;
@@ -14,25 +18,33 @@ public class SingleAnimatedImageDownloadTaskGroup : SingleImageDownloadTaskGroup
 {
     public ISingleAnimatedImage Entry => (ISingleAnimatedImage) DatabaseEntry.Entry;
 
-    private UgoiraDownloadFormat DestinationUgoiraFormat { get; }
+    private UgoiraDownloadFormatToken DestinationUgoiraFormat { get; }
 
     public SingleAnimatedImageDownloadTaskGroup(ISingleAnimatedImage entry, string destination) : base(entry, destination)
     {
         if (entry.PreferredAnimatedImageType is not SingleAnimatedImageType.SingleZipFile and not SingleAnimatedImageType.SingleFile)
             throw new InvalidOperationException($"{nameof(ISingleAnimatedImage.PreferredAnimatedImageType)} should be {nameof(SingleAnimatedImageType.SingleZipFile)} or {nameof(SingleAnimatedImageType.SingleFile)}");
-        // DatabaseEntry.Destination可以包含未被替换的token，从此可以拿到UgoiraDownloadFormat.Original
-        DestinationUgoiraFormat = IoHelper.GetUgoiraFormat(Path.GetExtension(DatabaseEntry.Destination));
+        DestinationUgoiraFormat = IoHelper.GetAvailableUgoiraDownloadFormatToken();
+        DatabaseEntry.FormatToken = DestinationUgoiraFormat.Value;
     }
 
     public SingleAnimatedImageDownloadTaskGroup(DownloadHistoryEntry entry) : base(entry)
     {
-        DestinationUgoiraFormat = IoHelper.GetUgoiraFormat(Path.GetExtension(DatabaseEntry.Destination));
+        DestinationUgoiraFormat = GetFormatToken(entry);
     }
 
     protected override async Task AfterDownloadAsyncOverride(ImageDownloadTask sender, CancellationToken token = default)
     {
-        if (DestinationUgoiraFormat is UgoiraDownloadFormat.Original)
+        if (DestinationUgoiraFormat.ExtensionFormatExtension is { } extension)
+        {
+            await FormatByExtensionAsync(sender, extension);
             return;
+        }
+
+        var builtInFormat = DestinationUgoiraFormat.BuiltInFormat ?? UgoiraDownloadFormatToken.DefaultBuiltInFormat;
+        if (builtInFormat is UgoiraDownloadFormat.Original)
+            return;
+
         switch (Entry.PreferredAnimatedImageType)
         {
             case SingleAnimatedImageType.SingleZipFile:
@@ -42,11 +54,62 @@ public class SingleAnimatedImageDownloadTaskGroup : SingleImageDownloadTaskGroup
                 var zipPath = Destination + ".zip";
                 File.Move(Destination, zipPath);
                 await using var read = File.OpenAsyncRead(zipPath);
-                await read.UgoiraSaveToFileAsync(msDelays, Destination, DestinationUgoiraFormat);
+                await read.UgoiraSaveToFileAsync(msDelays, Destination, builtInFormat);
                 break;
             }
             case SingleAnimatedImageType.SingleFile:
                 break;
         }
     }
+
+    private async Task FormatByExtensionAsync(ImageDownloadTask sender, string extension)
+    {
+        var provider = GetExtensionService().GetAnimatedImageFormatProvider(extension)
+            ?? throw new NotSupportedException(extension);
+        var tempPath = sender.Destination + ".source";
+        FileHelper.Move(sender.Destination, tempPath, true);
+        IReadOnlyList<Stream> streams = [];
+        IReadOnlyList<int> delays = [];
+        try
+        {
+            switch (Entry.PreferredAnimatedImageType)
+            {
+                case SingleAnimatedImageType.SingleZipFile:
+                    await Entry.ZipImageDelays!.TryPreloadListAsync(Entry);
+                    delays = Entry.ZipImageDelays!;
+                    await using (var read = File.OpenAsyncRead(tempPath))
+                        streams = [.. await Streams.ReadZipAsync(read, true)];
+                    break;
+                case SingleAnimatedImageType.SingleFile:
+                    await using (var read = File.OpenAsyncRead(tempPath))
+                        (streams, delays) = await IoHelper.SplitAnimatedImageStreamAsync(read);
+                    break;
+                default:
+                    throw new NotSupportedException(Entry.PreferredAnimatedImageType.ToString());
+            }
+
+            await provider.FormatImageAsync(streams, delays, sender.Destination);
+        }
+        finally
+        {
+            foreach (var stream in streams)
+                await stream.DisposeAsync();
+            if (File.Exists(tempPath))
+                File.Delete(tempPath);
+        }
+    }
+
+    private static UgoiraDownloadFormatToken GetFormatToken(DownloadHistoryEntry entry)
+    {
+        if (!string.IsNullOrWhiteSpace(entry.FormatToken))
+            return IoHelper.GetAvailableUgoiraDownloadFormatToken(entry.FormatToken);
+
+        var extension = Path.GetExtension(entry.Destination);
+        return IoHelper.TryGetUgoiraFormat(extension, out var format)
+            ? UgoiraDownloadFormatToken.BuiltIn(format)
+            : UgoiraDownloadFormatToken.ExtensionPrefix + extension;
+    }
+
+    private static ExtensionService GetExtensionService() =>
+        App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
 }

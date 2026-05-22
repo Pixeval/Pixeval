@@ -28,6 +28,10 @@ public class DownloadHistoryEntry : ArtworkHistoryEntry
     [Indexed(Unique = true)]
     public string Destination { get; init; } = null!;
 
+    public string? FormatToken { get; set; }
+
+    public string? ImageFormatToken { get; set; }
+
     [Indexed]
     public int WorkSubscriptionId { get; set; }
 }

@@ -1,12 +1,15 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Misaki;
+using Pixeval.Extensions.Common.FormatProviders;
 using Pixeval.Models.Database;
-using Pixeval.Models.Options;
+using Pixeval.Models.Extensions;
 using Pixeval.Utilities;
 using Pixeval.Utilities.IO;
 
@@ -18,12 +21,13 @@ public class MangaDownloadTaskGroup : DownloadTaskGroup
 
     public MangaDownloadTaskGroup(DownloadHistoryEntry entry) : base(entry)
     {
-        DestinationIllustrationFormat = IoHelper.GetIllustrationFormat(Path.GetExtension(TokenizedDestination));
+        DestinationIllustrationFormat = GetFormatToken(entry);
     }
 
     public MangaDownloadTaskGroup(IImageSet entry, string destination) : base(entry, destination, DownloadItemType.Manga)
     {
-        DestinationIllustrationFormat = IoHelper.GetIllustrationFormat(Path.GetExtension(TokenizedDestination));
+        DestinationIllustrationFormat = IoHelper.GetAvailableIllustrationDownloadFormatToken();
+        DatabaseEntry.FormatToken = DestinationIllustrationFormat.Value;
     }
 
     public override ValueTask InitializeTaskGroupAsync()
@@ -44,12 +48,31 @@ public class MangaDownloadTaskGroup : DownloadTaskGroup
         SetNotCreateFromEntry();
     }
 
-    protected override Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender, CancellationToken token = default)
+    protected override async Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender, CancellationToken token = default)
     {
-        return Task.CompletedTask;
+        if (DestinationIllustrationFormat.ExtensionFormatExtension is not { } extension)
+            return;
+
+        var provider = GetExtensionService().GetStaticImageFormatProvider(extension)
+            ?? throw new NotSupportedException(extension);
+        foreach (var task in TasksSet)
+        {
+            var tempPath = task.Destination + ".source";
+            FileHelper.Move(task.Destination, tempPath, true);
+            try
+            {
+                await using var stream = File.OpenAsyncRead(tempPath);
+                await provider.FormatImageAsync(stream, task.Destination);
+            }
+            finally
+            {
+                if (File.Exists(tempPath))
+                    File.Delete(tempPath);
+            }
+        }
     }
 
-    private IllustrationDownloadFormat DestinationIllustrationFormat { get; }
+    private IllustrationDownloadFormatToken DestinationIllustrationFormat { get; }
 
     public override string OpenLocalDestination
     {
@@ -67,4 +90,18 @@ public class MangaDownloadTaskGroup : DownloadTaskGroup
             task.Delete();
         FileHelper.DeleteEmptyFolder(OpenLocalDestination);
     }
+
+    private static IllustrationDownloadFormatToken GetFormatToken(DownloadHistoryEntry entry)
+    {
+        if (!string.IsNullOrWhiteSpace(entry.FormatToken))
+            return IoHelper.GetAvailableIllustrationDownloadFormatToken(entry.FormatToken);
+
+        var extension = Path.GetExtension(entry.Destination);
+        return IoHelper.TryGetIllustrationFormat(extension, out var format)
+            ? IllustrationDownloadFormatToken.BuiltIn(format)
+            : IllustrationDownloadFormatToken.ExtensionPrefix + extension;
+    }
+
+    private static ExtensionService GetExtensionService() =>
+        App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
 }

@@ -44,7 +44,9 @@ public static class LocalSettingsEntryHelper
             .Add<IPSetSettingsEntry<AppSettings>, IPListInput>()
             .Add<DomainFrontingSettingsEntry<AppSettings>, DomainFrontingSettingsExpander>()
             .Add<DownloadMacroAppSettingsEntry, DownloadMacroSettingsExpander>()
+            .Add<IllustrationDownloadFormatSettingsEntry, EnumSettingsCard>()
             .Add<NovelDownloadFormatSettingsEntry, EnumSettingsCard>()
+            .Add<UgoiraDownloadFormatSettingsEntry, EnumSettingsCard>()
             .Add<WorkSubscriptionsSettingsEntry, WorkSubscriptionsSettingsExpander>()
             .Add<MultiValuesEntry<AppSettings>, MultiValuesSettingsExpander>()
             .Add<FontSettingsEntry<AppSettings>, FontSettingsExpander>()
@@ -331,10 +333,20 @@ public static class LocalSettingsEntryHelper
             Action<DownloadMacroAppSettingsEntry>? config = null) =>
             builder.Add(new(builder.Settings), config);
 
+        public ISettingsGroupBuilder<AppSettings> IllustrationDownloadFormat(
+            WorkTypeEnum workType = WorkTypeEnum.Illustration,
+            Action<IllustrationDownloadFormatSettingsEntry>? config = null) =>
+            builder.Add(new IllustrationDownloadFormatSettingsEntry(builder.Settings, workType), config);
+
         public ISettingsGroupBuilder<AppSettings> NovelDownloadFormat(
             WorkTypeEnum workType = WorkTypeEnum.Novel,
             Action<NovelDownloadFormatSettingsEntry>? config = null) =>
             builder.Add(new NovelDownloadFormatSettingsEntry(builder.Settings, workType), config);
+
+        public ISettingsGroupBuilder<AppSettings> UgoiraDownloadFormat(
+            WorkTypeEnum workType = WorkTypeEnum.Ugoira,
+            Action<UgoiraDownloadFormatSettingsEntry>? config = null) =>
+            builder.Add(new UgoiraDownloadFormatSettingsEntry(builder.Settings, workType), config);
 
         public ISettingsGroupBuilder<AppSettings> WorkSubscriptions(
             Action<WorkSubscriptionsSettingsEntry>? config = null) =>

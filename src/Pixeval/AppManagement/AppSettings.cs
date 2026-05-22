@@ -65,9 +65,9 @@ public record AppSettings
     public string DownloadPathMacro { get; set; } = GetSpecialFolder() + @"\@{if_pic_set?[@{artist_name}] @{title}:}\[@{artist_name}] @{id}@{if_pic_set?p@{pic_set_index}:}@{ext}";
 
     [SettingsEntry(Symbol.TextPeriodAsterisk, WorkDownloadFormatEntryHeader, WorkDownloadFormatEntryDescription)]
-    public IllustrationDownloadFormat IllustrationDownloadFormat { get; set; } = IllustrationDownloadFormat.Png;
+    public string IllustrationDownloadFormat { get; set; } = Models.Download.IllustrationDownloadFormatToken.DefaultToken;
 
-    public UgoiraDownloadFormat UgoiraDownloadFormat { get; set; } = UgoiraDownloadFormat.WebPLossless;
+    public string UgoiraDownloadFormat { get; set; } = Models.Download.UgoiraDownloadFormatToken.DefaultToken;
 
     public string NovelDownloadFormat { get; set; } = Models.Download.NovelDownloadFormatToken.DefaultToken;
 

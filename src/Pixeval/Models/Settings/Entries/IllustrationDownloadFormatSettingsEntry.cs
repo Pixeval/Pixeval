@@ -1,0 +1,71 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL v3 License.
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using AutoSettingsPage;
+using AutoSettingsPage.Models;
+using FluentIcons.Common;
+using Microsoft.Extensions.DependencyInjection;
+using Pixeval.AppManagement;
+using Pixeval.Controls;
+using Pixeval.Extensions.Common;
+using Pixeval.Extensions.Common.FormatProviders;
+using Pixeval.I18N;
+using Pixeval.Models.Download;
+using Pixeval.Models.Extensions;
+using Pixeval.Models.Options;
+
+namespace Pixeval.Models.Settings.Entries;
+
+public class IllustrationDownloadFormatSettingsEntry(AppSettings settings)
+    : SingleValueSettingsEntry<AppSettings, object>(
+        settings,
+        nameof(AppSettings.IllustrationDownloadFormat),
+        "",
+        "",
+        Symbol.Image,
+        null,
+        static appSettings => new IllustrationDownloadFormatToken(appSettings.IllustrationDownloadFormat),
+        static (appSettings, value) => appSettings.IllustrationDownloadFormat = ((IllustrationDownloadFormatToken) value).Value),
+        IEnumSettingsEntry<object>
+{
+    public IllustrationDownloadFormatSettingsEntry(AppSettings settings, WorkTypeEnum workType) : this(settings)
+    {
+        Description = "";
+        (Icon, var header) = workType switch
+        {
+            WorkTypeEnum.Illustration => (Symbol.Image, EnumResources.WorkTypeIllustration),
+            WorkTypeEnum.Manga => (Symbol.ImageMultiple, EnumResources.WorkTypeManga),
+            _ => throw new ArgumentOutOfRangeException(nameof(workType))
+        };
+        Header = I18NManager.GetResource(header);
+    }
+
+    public IReadOnlyList<IReadOnlyStringPair<object>> EnumItems { get; } = CreateEnumItems();
+
+    private static IReadOnlyList<IReadOnlyStringPair<object>> CreateEnumItems()
+    {
+        var builtIns = SymbolComboBoxItem.GetValues<IllustrationDownloadFormat>()
+            .Select(t => t with { Value = IllustrationDownloadFormatToken.BuiltIn((IllustrationDownloadFormat) t.Value) });
+
+        var extensions = App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>()
+            .ActiveStaticImageFormatProviders
+            .Select(t => new SymbolComboBoxItem(IllustrationDownloadFormatToken.Extension(t), t.FormatDescription, t is IEntryExtension entry ? entry.Icon : Symbol.Image));
+
+        return [.. builtIns.Concat(extensions)];
+    }
+
+    public override object Value
+    {
+        get
+        {
+            var value = base.Value;
+            return EnumItems.Any(t => Equals(t.Value, value))
+                ? value
+                : IllustrationDownloadFormatToken.Default;
+        }
+        set => base.Value = value;
+    }
+}

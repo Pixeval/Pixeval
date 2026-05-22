@@ -5,7 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text.Json;
+using Avalonia.Controls;
+using Avalonia.Media.Imaging;
+using FluentIcons.Avalonia;
+using FluentIcons.Common;
 using Pixeval.Extensions.Common;
+using Pixeval.Utilities;
 
 namespace Pixeval.Models.Extensions;
 
@@ -39,7 +44,12 @@ public class ExtensionsHostModel(IExtensionsHost host) : IDisposable
 
     public Uri? HelpLink { get; } = Uri.TryCreate(host.HelpLink, UriKind.RelativeOrAbsolute, out var uri) ? uri : null;
 
-    public byte[]? Icon { get; } = host.Icon;
+    /// <summary>
+    /// 不能缓存<see cref="ExtensionsHostModel.Icon"/>
+    /// </summary>
+    public Control Icon => host.Icon is { } icon
+        ? new Image { Source = new Bitmap(Streams.RentStream(icon)) }
+        : new SymbolIcon { Symbol = Symbol.PuzzlePiece };
 
     public Dictionary<string, JsonElement> Values { get; } = GetValues(host);
 

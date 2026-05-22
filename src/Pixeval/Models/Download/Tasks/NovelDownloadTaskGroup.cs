@@ -37,7 +37,7 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
     /// </remarks>
     private string DocPath { get; }
 
-    private IllustrationDownloadFormat DestinationIllustrationFormat { get; }
+    private IllustrationDownloadFormatToken DestinationIllustrationFormat { get; }
 
     private NovelDownloadFormatToken DestinationNovelFormat { get; }
 
@@ -53,17 +53,19 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
             : Path.GetDirectoryName(DocPath)!;
 
         var imageFormat = DestinationNovelFormat.IsExtension
-            ? IllustrationDownloadFormat.Png
+            ? IllustrationDownloadFormatToken.BuiltIn(IllustrationDownloadFormat.Png)
             : DestinationIllustrationFormat;
-        var imgExt = IoHelper.GetIllustrationExtension(imageFormat);
-        if (imageFormat is not IllustrationDownloadFormat.Original)
+        var imgExt = DestinationNovelFormat.IsExtension
+            ? ".png"
+            : IoHelper.GetIllustrationExtension(imageFormat.Value);
+        if (DestinationNovelFormat.IsExtension || imageFormat.BuiltInFormat is not IllustrationDownloadFormat.Original)
             DocumentViewModel.ImageExtension = imgExt;
         for (var i = 0; i < DocumentViewModel.TotalImagesCount; ++i)
         {
             var url = DocumentViewModel.AllUrls[i];
             var name = Path.Combine(directory, DocumentViewModel.AllTokens[i]);
             var imageDownloadTask = new ImageDownloadTask(new(url),
-                imageFormat is IllustrationDownloadFormat.Original
+                imageFormat.BuiltInFormat is IllustrationDownloadFormat.Original
                     ? IoHelper.ReplaceTokenExtensionFromUrl(name, url, -1)
                     : name + imgExt,
                 DatabaseEntry.State);
@@ -80,8 +82,8 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
         TempImageFolderPath = $"{DocPath}.tmp";
         // .<ext> or .png or .etc 
         var imgExt = TokenizedDestination[(separatorIndex + 1)..];
-        DestinationIllustrationFormat = IoHelper.GetIllustrationFormat(imgExt);
-        DestinationNovelFormat = GetNovelFormat(DocPath);
+        DestinationIllustrationFormat = GetIllustrationFormat(entry, imgExt);
+        DestinationNovelFormat = GetNovelFormat(entry, DocPath);
     }
 
     public NovelDownloadTaskGroup(
@@ -94,8 +96,10 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
         TempImageFolderPath = $"{DocPath}.tmp";
         // .<ext> or .png or .etc 
         var imgExt = TokenizedDestination[(separatorIndex + 1)..];
-        DestinationIllustrationFormat = IoHelper.GetIllustrationFormat(imgExt);
-        DestinationNovelFormat = GetNovelFormat(DocPath);
+        DestinationIllustrationFormat = IoHelper.GetAvailableIllustrationDownloadFormatToken();
+        DestinationNovelFormat = IoHelper.GetAvailableNovelDownloadFormatToken();
+        DatabaseEntry.FormatToken = DestinationNovelFormat.Value;
+        DatabaseEntry.ImageFormatToken = DestinationIllustrationFormat.Value;
         if (novelContent is not null)
             SetNovelContent(novelContent);
     }
@@ -118,6 +122,9 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
             await FormatByExtensionAsync(extension);
             return;
         }
+
+        if (DestinationIllustrationFormat.ExtensionFormatExtension is { } imageExtension)
+            await FormatBuiltInImagesByExtensionAsync(imageExtension);
 
         await FormatBuiltInAsync(token);
     }
@@ -186,13 +193,47 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
         FileHelper.DeleteEmptyFolder(DestinationNovelFormat.IsExtension ? TempImageFolderPath : Path.GetDirectoryName(DocPath));
     }
 
-    private static NovelDownloadFormatToken GetNovelFormat(string docPath)
+    private async Task FormatBuiltInImagesByExtensionAsync(string extension)
     {
+        var provider = GetExtensionService().GetStaticImageFormatProvider(extension)
+            ?? throw new NotSupportedException(extension);
+        foreach (var task in TasksSet)
+        {
+            var tempPath = task.Destination + ".source";
+            FileHelper.Move(task.Destination, tempPath, true);
+            try
+            {
+                await using var stream = File.OpenAsyncRead(tempPath);
+                await provider.FormatImageAsync(stream, task.Destination);
+            }
+            finally
+            {
+                if (File.Exists(tempPath))
+                    File.Delete(tempPath);
+            }
+        }
+    }
+
+    private static NovelDownloadFormatToken GetNovelFormat(DownloadHistoryEntry entry, string docPath)
+    {
+        if (!string.IsNullOrWhiteSpace(entry.FormatToken))
+            return IoHelper.GetAvailableNovelDownloadFormatToken(entry.FormatToken);
+
         var extension = Path.GetExtension(docPath);
         if (IoHelper.TryGetNovelFormat(extension, out var builtInFormat))
             return NovelDownloadFormatToken.BuiltIn(builtInFormat);
 
         return NovelDownloadFormatToken.ExtensionPrefix + extension;
+    }
+
+    private static IllustrationDownloadFormatToken GetIllustrationFormat(DownloadHistoryEntry entry, string imgExt)
+    {
+        if (!string.IsNullOrWhiteSpace(entry.ImageFormatToken))
+            return IoHelper.GetAvailableIllustrationDownloadFormatToken(entry.ImageFormatToken);
+
+        return IoHelper.TryGetIllustrationFormat(imgExt, out var builtInFormat)
+            ? IllustrationDownloadFormatToken.BuiltIn(builtInFormat)
+            : IllustrationDownloadFormatToken.ExtensionPrefix + imgExt;
     }
 
     private static ExtensionService GetExtensionService() =>

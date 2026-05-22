@@ -116,7 +116,7 @@ public static partial class IoHelper
 
     public static IImageEncoder GetUgoiraEncoder(UgoiraDownloadFormat? ugoiraDownloadFormat = null)
     {
-        ugoiraDownloadFormat ??= App.AppViewModel.AppSettings.UgoiraDownloadFormat;
+        ugoiraDownloadFormat ??= GetAvailableUgoiraDownloadFormatToken().BuiltInFormat ?? UgoiraDownloadFormatToken.DefaultBuiltInFormat;
         return ugoiraDownloadFormat switch
         {
             UgoiraDownloadFormat.Tiff => new TiffEncoder(),
@@ -211,7 +211,7 @@ public static partial class IoHelper
 
     public static IImageEncoder GetIllustrationEncoder(IllustrationDownloadFormat? illustrationDownloadFormat = null)
     {
-        illustrationDownloadFormat ??= App.AppViewModel.AppSettings.IllustrationDownloadFormat;
+        illustrationDownloadFormat ??= GetAvailableIllustrationDownloadFormatToken().BuiltInFormat ?? IllustrationDownloadFormatToken.DefaultBuiltInFormat;
         var quality = App.AppViewModel.AppSettings.LossyImageDownloadQuality;
         return illustrationDownloadFormat switch
         {
@@ -240,9 +240,31 @@ public static partial class IoHelper
         };
     }
 
-    public static string GetUgoiraExtension(UgoiraDownloadFormat? ugoiraDownloadFormat = null)
+    public static UgoiraDownloadFormatToken GetAvailableUgoiraDownloadFormatToken(string? ugoiraDownloadFormat = null)
     {
         ugoiraDownloadFormat ??= App.AppViewModel.AppSettings.UgoiraDownloadFormat;
+        var token = new UgoiraDownloadFormatToken(ugoiraDownloadFormat);
+        if (token.BuiltInFormat is not null)
+            return token;
+
+        if (token.ExtensionFormatExtension is { } extension
+            && App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>().GetAnimatedImageFormatProvider(extension) is not null)
+            return token;
+
+        return UgoiraDownloadFormatToken.Default;
+    }
+
+    public static string GetUgoiraExtension(string? ugoiraDownloadFormat = null)
+    {
+        var token = GetAvailableUgoiraDownloadFormatToken(ugoiraDownloadFormat);
+        if (token.ExtensionFormatExtension is { } extension)
+            return extension;
+
+        return GetUgoiraBuiltInExtension(token.BuiltInFormat ?? UgoiraDownloadFormatToken.DefaultBuiltInFormat);
+    }
+
+    private static string GetUgoiraBuiltInExtension(UgoiraDownloadFormat ugoiraDownloadFormat)
+    {
         return ugoiraDownloadFormat switch
         {
             UgoiraDownloadFormat.Original => FileExtensionMacro.NameConstToken,
@@ -254,20 +276,56 @@ public static partial class IoHelper
 
     public static UgoiraDownloadFormat GetUgoiraFormat(string extension)
     {
-        return extension switch
-        {
-            FileExtensionMacro.NameConstToken => UgoiraDownloadFormat.Original,
-            ".tiff" => UgoiraDownloadFormat.Tiff,
-            ".apng" => UgoiraDownloadFormat.APng,
-            ".gif" => UgoiraDownloadFormat.Gif,
-            ".webp" => UgoiraDownloadFormat.WebPLossless,
-            _ => throw new ArgumentOutOfRangeException(nameof(extension))
-        };
+        if (TryGetUgoiraFormat(extension, out var format))
+            return format;
+
+        throw new ArgumentOutOfRangeException(nameof(extension));
     }
 
-    public static string GetIllustrationExtension(IllustrationDownloadFormat? illustrationDownloadFormat = null)
+    public static bool TryGetUgoiraFormat(string extension, out UgoiraDownloadFormat format)
+    {
+        return extension switch
+        {
+            FileExtensionMacro.NameConstToken => Assign(UgoiraDownloadFormat.Original, out format),
+            ".tiff" => Assign(UgoiraDownloadFormat.Tiff, out format),
+            ".apng" => Assign(UgoiraDownloadFormat.APng, out format),
+            ".gif" => Assign(UgoiraDownloadFormat.Gif, out format),
+            ".webp" => Assign(UgoiraDownloadFormat.WebPLossless, out format),
+            _ => Assign(default, out format, false)
+        };
+
+        static bool Assign(UgoiraDownloadFormat value, out UgoiraDownloadFormat format, bool result = true)
+        {
+            format = value;
+            return result;
+        }
+    }
+
+    public static IllustrationDownloadFormatToken GetAvailableIllustrationDownloadFormatToken(string? illustrationDownloadFormat = null)
     {
         illustrationDownloadFormat ??= App.AppViewModel.AppSettings.IllustrationDownloadFormat;
+        var token = new IllustrationDownloadFormatToken(illustrationDownloadFormat);
+        if (token.BuiltInFormat is not null)
+            return token;
+
+        if (token.ExtensionFormatExtension is { } extension
+            && App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>().GetStaticImageFormatProvider(extension) is not null)
+            return token;
+
+        return IllustrationDownloadFormatToken.Default;
+    }
+
+    public static string GetIllustrationExtension(string? illustrationDownloadFormat = null)
+    {
+        var token = GetAvailableIllustrationDownloadFormatToken(illustrationDownloadFormat);
+        if (token.ExtensionFormatExtension is { } extension)
+            return extension;
+
+        return GetIllustrationBuiltInExtension(token.BuiltInFormat ?? IllustrationDownloadFormatToken.DefaultBuiltInFormat);
+    }
+
+    private static string GetIllustrationBuiltInExtension(IllustrationDownloadFormat illustrationDownloadFormat)
+    {
         return illustrationDownloadFormat switch
         {
             IllustrationDownloadFormat.Original => FileExtensionMacro.NameConstToken,
@@ -279,15 +337,29 @@ public static partial class IoHelper
 
     public static IllustrationDownloadFormat GetIllustrationFormat(string extension)
     {
+        if (TryGetIllustrationFormat(extension, out var format))
+            return format;
+
+        throw new ArgumentOutOfRangeException(nameof(extension));
+    }
+
+    public static bool TryGetIllustrationFormat(string extension, out IllustrationDownloadFormat format)
+    {
         return extension switch
         {
-            ".jpg" => IllustrationDownloadFormat.Jpg,
-            ".png" => IllustrationDownloadFormat.Png,
-            ".bmp" => IllustrationDownloadFormat.Bmp,
-            ".webp" => IllustrationDownloadFormat.WebPLossless,
-            FileExtensionMacro.NameConstToken => IllustrationDownloadFormat.Original,
-            _ => throw new ArgumentOutOfRangeException(nameof(extension))
+            ".jpg" => Assign(IllustrationDownloadFormat.Jpg, out format),
+            ".png" => Assign(IllustrationDownloadFormat.Png, out format),
+            ".bmp" => Assign(IllustrationDownloadFormat.Bmp, out format),
+            ".webp" => Assign(IllustrationDownloadFormat.WebPLossless, out format),
+            FileExtensionMacro.NameConstToken => Assign(IllustrationDownloadFormat.Original, out format),
+            _ => Assign(default, out format, false)
         };
+
+        static bool Assign(IllustrationDownloadFormat value, out IllustrationDownloadFormat format, bool result = true)
+        {
+            format = value;
+            return result;
+        }
     }
 
     public static string GetNovelExtension(string? novelDownloadFormat = null)
@@ -304,7 +376,7 @@ public static partial class IoHelper
         };
     }
 
-    private static NovelDownloadFormatToken GetAvailableNovelDownloadFormatToken(string? novelDownloadFormat)
+    public static NovelDownloadFormatToken GetAvailableNovelDownloadFormatToken(string? novelDownloadFormat = null)
     {
         novelDownloadFormat ??= App.AppViewModel.AppSettings.NovelDownloadFormat;
         var token = new NovelDownloadFormatToken(novelDownloadFormat);

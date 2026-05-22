@@ -113,12 +113,8 @@ public class SettingsPageViewModel : ViewModelBase
                     entry => entry.ValueChanged += t => App.AppViewModel.HistoryPersistHelper.DownloadManager.ConcurrencyDegree = t)
                 .DownloadMacro()
                 .MultiValues(t => t.IllustrationDownloadFormat, entry =>
-                    entry.Enum(
-                            WorkTypeEnum.Illustration,
-                            t => t.IllustrationDownloadFormat)
-                        .Enum(
-                            WorkTypeEnum.Ugoira,
-                            t => t.UgoiraDownloadFormat)
+                    entry.IllustrationDownloadFormat(WorkTypeEnum.Illustration)
+                        .UgoiraDownloadFormat(WorkTypeEnum.Ugoira)
                         .NovelDownloadFormat(WorkTypeEnum.Novel))
                 .Int(t => t.LossyImageDownloadQuality, -1, 100, 5)
                 .WorkSubscriptions())
