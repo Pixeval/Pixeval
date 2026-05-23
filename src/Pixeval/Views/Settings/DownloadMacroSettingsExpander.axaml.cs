@@ -125,20 +125,20 @@ public partial class DownloadMacroSettingsExpander : SettingsExpander, IEntryCon
                 diagnostic.Span.Start + 1),
             MacroDiagnosticKind.UnknownMacroName => I18NManager.GetResource(
                 MacroParserResources.UnknownMacroNameFormatted,
-                diagnostic.PrimaryParameter ?? string.Empty),
+                diagnostic.PrimaryParameter),
             MacroDiagnosticKind.NonParameterizedMacroBearingParameter => I18NManager.GetResource(
                 MacroParserResources.NonParameterizedMacroBearingParameterFormatted,
-                diagnostic.PrimaryParameter ?? string.Empty),
+                diagnostic.PrimaryParameter),
             MacroDiagnosticKind.ConditionalBranchesMissing => I18NManager.GetResource(
                 MacroParserResources.ParameterizedMacroMissingParameterFormatted,
-                diagnostic.PrimaryParameter ?? string.Empty),
+                diagnostic.PrimaryParameter),
             MacroDiagnosticKind.MacroShouldBeContained => I18NManager.GetResource(
                 MacroParserResources.MacroShouldBeContainedFormatted,
-                diagnostic.PrimaryParameter ?? string.Empty,
-                diagnostic.SecondaryParameter ?? string.Empty),
+                diagnostic.PrimaryParameter,
+                diagnostic.SecondaryParameter),
             MacroDiagnosticKind.MacroShouldBeInLastSegment => I18NManager.GetResource(
                 MacroParserResources.MacroShouldBeInLastSegmentFormatted,
-                diagnostic.PrimaryParameter ?? string.Empty),
+                diagnostic.PrimaryParameter),
             _ => throw new ArgumentOutOfRangeException(nameof(diagnostic))
         };
     }

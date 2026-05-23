@@ -180,7 +180,7 @@
   "IfPicOneMacroTooltip": "如果是静态单图，会替换为 ? 后面的内容，否则替换为 : 后面的内容",
   "IfNovelMacroTooltip": "如果是小说，会替换为 ? 后面的内容，否则替换为 : 后面的内容",
   "IfPicGifMacroTooltip": "如果是动图，会替换为 ? 后面的内容，否则替换为 : 后面的内容",
-  "PicSetIndexMacroTooltip": "如果是多图，该宏会被替换为当前图片在多图中的索引（第几张）；必须与 @{if_pic_set?a:b} 宏配合使用，必须在文件名上使用",
+  "PicSetIndexMacroTooltip": "如果是多图，该宏会被替换为当前图片在多图中的索引（第几张）；必须与 @{if_pic_set?:} 宏配合使用，必须在文件名上使用",
   "OpenExtensionsEntry": {
     "Header": "打开扩展文件夹",
     "Description": "此处存储了软件会加载的扩展DLL文件"

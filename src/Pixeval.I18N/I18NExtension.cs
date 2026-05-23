@@ -15,17 +15,8 @@ public class I18NExtension : AvaloniaObject
         Key = key;
     }
 
-    public static readonly DirectProperty<I18NExtension, string> KeyProperty = AvaloniaProperty.RegisterDirect<I18NExtension, string>(
-        nameof(Key),
-        o => o.Key,
-        (t, v) => t.Key = v);
-
     [Content]
-    public string Key
-    {
-        get;
-        set => SetAndRaise(KeyProperty, ref field, value);
-    } = "";
+    public string Key { get; set; } = "";
 
     public string ProvideValue(IServiceProvider serviceProvider)
     {

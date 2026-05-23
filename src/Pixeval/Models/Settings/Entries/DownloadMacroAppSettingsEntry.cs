@@ -9,6 +9,7 @@ using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.Macros;
+using Pixeval.I18N;
 
 namespace Pixeval.Models.Settings.Entries;
 
@@ -36,5 +37,5 @@ public class DownloadMacroAppSettingsEntry(
         ["pic_set_index"] = SettingsMainViewResources.PicSetIndexMacroTooltip
     }.ToFrozenDictionary();
 
-    public static ICollection<SymbolComboBoxItem> AvailableMacros { get; } = [.. MetaPathMacroAttributeHelper.GetIArtworkInfoInstances().Select(m => new SymbolComboBoxItem($"@{{{(m is IPredicate ? $"{m.Name}?:" : m.Name)}}}", _MacroTooltips[m.Name], default))];
+    public static ICollection<SymbolComboBoxItem> AvailableMacros { get; } = [.. MetaPathMacroAttributeHelper.GetIArtworkInfoInstances().Select(m => new SymbolComboBoxItem($"@{{{(m is IPredicate ? $"{m.Name}?:" : m.Name)}}}", I18NManager.GetResource(_MacroTooltips[m.Name]), default))];
 }

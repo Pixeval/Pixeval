@@ -36,7 +36,7 @@
                                 Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
                                 Content="{Binding Value}"
                                 Tag="{Binding Value}"
-                                ToolTip.Tip="{I18N Key={Binding Description}}" />
+                                ToolTip.Tip="{Binding Description}" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
