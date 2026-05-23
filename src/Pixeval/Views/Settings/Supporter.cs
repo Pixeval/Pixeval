@@ -2,23 +2,38 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.AppManagement;
 using Pixeval.Utilities;
 using Pixeval.Utilities.IO;
+using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Settings;
 
-public record Supporter(string Nickname, string Name, Uri ProfilePicture, Uri ProfileUri)
+public partial class Supporter : ViewModelBase
 {
+    public Supporter() // JsonSerializer use
+    {
+    }
+
+    public Supporter(string nickname, string name)
+    {
+        Nickname = nickname;
+        Name = name;
+    }
+
+    static Supporter()
+    {
+        Supporters.Sort((_, _) => Random.Shared.Next(0, 2) is 0 ? -1 : 1);
+    }
+
     public static string BasePath { get; } = Path.Combine(AppInfo.CacheFolder, "GitHubSupporters");
 
     public string AtName => "@" + Name;
@@ -32,84 +47,84 @@ public record Supporter(string Nickname, string Name, Uri ProfilePicture, Uri Pr
         }
     }
 
-    // ReSharper disable StringLiteralTypo
-    private static readonly IEnumerable<(string Nickname, string Name)> _Supporters =
-        new (string Nickname, string Name)[]
+    public string Nickname { get; init; } = null!;
+
+    public string Name { get; init; } = null!;
+
+    public string? LocalProfilePicture
+    {
+        get
         {
-            ("Sep", "Guro2"),
-            ("无论时间", "wulunshijian"),
-            ("CN", "ControlNet"),
-            ("CY", "Cyl18"),
-            ("对味", "duiweiya"),
-            ("LG", "LasmGratel"),
-            ("鱼鱼", "sovetskyfish"),
-            ("探姬", "PerolNotsfsssf"),
-            ("Summpot", "Summpot"),
-            ("扑克", "Poker-sang"),
-            ("南门二", "Rigil-Kentaurus"),
-            ("当妈", "TheRealKamisama"),
-            ("茶栗", "cqjjjzr"),
-            ("cnbluefire", "cnbluefire"),
-            ("岛风", "frg2089"),
-            ("Ёж, просто ёж", "bropines"),
-            ("irony", "kokoro-aya"),
-            ("Betta_Fish", "zxbmmmmmmmmm"),
-            ("Dylech30th", "dylech30th")
-        }.OrderBy(_ => Random.Shared.Next());
+            var path = Path.Combine(BasePath, Name + ".png");
+            return File.Exists(path) ? path : null;
+        }
+    }
+
+    [ObservableProperty]
+    public partial Uri? ProfilePicture { get; set; }
+
+    [ObservableProperty]
+    public partial Uri? ProfileUri { get; set; }
+
+    // ReSharper disable StringLiteralTypo
+    public static Supporter[] Supporters { get; } =
+    [
+        new("探姬", "PerolNotsfsssf"),
+        new("Summpot", "Summpot"),
+        new("扑克", "Poker-sang"),
+        new("Shirasagi", "Shirasagi0012"),
+        new("cnbluefire", "cnbluefire"),
+        new("岛风", "frg2089"),
+        new("Ёж, просто ёж", "bropines"),
+        new("irony", "kokoro-aya"),
+        new("Betta_Fish", "zxbmmmmmmmmm"),
+        new("Dylech30th", "dylech30th")
+    ];
     // ReSharper restore StringLiteralTypo
 
-    public static List<Supporter>? Supporters { get; private set; }
-
-    public static async IAsyncEnumerable<Supporter> GetSupportersAsync()
+    public static async Task GetSupportersAsync()
     {
         _ = Directory.CreateDirectory(BasePath);
 
-        if (Supporters is null)
+        using var httpClient = new HttpClient();
+        httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0");
+
+        var path = Path.Combine(BasePath, "github-supporters.json");
+        var exists = File.Exists(path);
+        if (exists)
         {
-            using var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0");
+            await using var fileStream = File.OpenAsyncRead(path);
 
-            var path = Path.Combine(BasePath, "github-supporters.json");
-            if (File.Exists(path))
+            if (await JsonSerializer.DeserializeAsync(fileStream, GitHubUserSerializeContext.Default.SupporterArray) is { } supporters
+                && supporters.Length == Supporters.Length)
             {
-                await using var fileStream = File.OpenAsyncRead(path);
+                foreach (var supporter in Supporters)
+                    await LoadAvatarAsync(supporter, BasePath, httpClient);
 
-                if (await JsonSerializer.DeserializeAsync(fileStream, typeof(Supporter[]), SupporterSerializeContext.Default) is Supporter[] supporters
-                    && supporters.Length == _Supporters.Count())
-                {
-                    Supporters = [.. supporters.OrderBy(_ => Random.Shared.Next())];
-                    foreach (var supporter in Supporters)
-                    {
-                        await LoadAvatarAsync(supporter, BasePath, httpClient);
-                        yield return supporter;
-                    }
-                    yield break;
-                }
+                return;
+            }
+        }
+
+        foreach (var supporter in Supporters)
+            if (await httpClient.GetFromJsonAsync("https://api.github.com/users/" + supporter.Name, GitHubUserSerializeContext.Default.GitHubUser) is { } user)
+            {
+                supporter.ProfilePicture = user.AvatarUrl;
+                supporter.ProfileUri = user.HtmlUrl;
+                await LoadAvatarAsync(supporter, BasePath, httpClient);
             }
 
-            Supporters = [];
-            foreach (var (nickname, name) in _Supporters)
-                if (await httpClient.GetFromJsonAsync("https://api.github.com/users/" + name, typeof(GitHubUser),
-                        GitHubUserSerializeContext.Default) is GitHubUser user)
-                {
-                    var supporter = new Supporter(nickname, name, user.AvatarUrl, user.HtmlUrl);
-                    Supporters.Add(supporter);
-                    await LoadAvatarAsync(supporter, BasePath, httpClient);
-                    yield return supporter;
-                }
+        if (!exists)
+        {
             await using var fs = File.CreateAsyncWrite(path);
-            await JsonSerializer.SerializeAsync(fs, Supporters, typeof(List<Supporter>), SupporterSerializeContext.Default);
+            await JsonSerializer.SerializeAsync(fs, Supporters, GitHubUserSerializeContext.Default.SupporterArray);
         }
-        else
-            foreach (var supporter in Supporters)
-                yield return supporter;
     }
 
     private static async ValueTask LoadAvatarAsync(Supporter supporter, string basePath, HttpClient client)
     {
         var path = Path.Combine(basePath, supporter.Name + ".png");
-        if (File.Exists(path))
+        if (File.Exists(path) || supporter.ProfilePicture is null)
             return;
         var file = File.CreateAsyncWrite(path);
         if (await client.DownloadStreamAsync(file, supporter.ProfilePicture) is not null)
@@ -118,16 +133,16 @@ public record Supporter(string Nickname, string Name, Uri ProfilePicture, Uri Pr
             File.Delete(path);
         }
         else
+        {
             await file.DisposeAsync();
+            supporter.OnPropertyChanged(nameof(LocalProfilePicture));
+        }
     }
 }
 
 [JsonSerializable(typeof(GitHubUser))]
-public partial class GitHubUserSerializeContext : JsonSerializerContext;
-
 [JsonSerializable(typeof(Supporter[]))]
-[JsonSerializable(typeof(List<Supporter>))]
-public partial class SupporterSerializeContext : JsonSerializerContext;
+public partial class GitHubUserSerializeContext : JsonSerializerContext;
 
 public class GitHubUser
 {

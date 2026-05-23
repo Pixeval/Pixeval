@@ -6,6 +6,11 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<IsAotCompatible>true</IsAotCompatible>
 		<AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+		
+		<Version>5.0.0.0</Version>
+		<AssemblyVersion>$(Version)</AssemblyVersion>
+		<FileVersion>$(Version)</FileVersion>
+		<InformationalVersion>$(Version)</InformationalVersion>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -53,7 +53,7 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
 
         var cacheTable = new CacheTable<PixevalIllustrationCacheKey, PixevalIllustrationCacheHeader, PixevalIllustrationCacheProtocol>(
             new PixevalIllustrationCacheProtocol(),
-            new CacheToken(1, defaultCacheSizeInByte, AppInfo.CacheFolder, 8));
+            new CacheToken(1, defaultCacheSizeInByte, CacheHelper.CachePath, 8));
         var makoClient = new MakoClient(App.AppViewModel.AppSettings.ToMakoConfiguration(), logger);
         makoClient.TokenRefreshed += MakoClientOnTokenRefreshed;
 
@@ -173,7 +173,16 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
         if (_disposed)
             return;
         _disposed = true;
-        AppServiceProvider?.Dispose();
+        try
+        {
+            AppServiceProvider?.Dispose();
+            CacheHelper.PurgeCache();
+        }
+        catch
+        {
+            // ignored
+            // 保证退出时不出幺蛾子
+        }
         GC.SuppressFinalize(this);
     }
 

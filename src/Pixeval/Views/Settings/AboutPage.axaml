@@ -1,4 +1,4 @@
-﻿<ContentPage
+<ContentPage
     x:Class="Pixeval.Views.Settings.AboutPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -16,6 +16,11 @@
     d:DesignWidth="600">
     <ScrollViewer>
         <StackPanel Margin="20" Spacing="20">
+            <StackPanel Spacing="4">
+                <TextBlock Text="Pixeval" Theme="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock Text="{Binding $parent[settings:AboutPage].CurrentVersionText}" Theme="{StaticResource CaptionTextBlockStyle}" />
+            </StackPanel>
+
             <!--  Special Thanks  -->
             <StackPanel Spacing="10">
                 <TextBlock Text="{I18N {x:Static pixeval:AboutPageResources.SpecialThanksSubtitleTextBlockText}}" Theme="{StaticResource SubtitleTextBlockStyle}" />
@@ -43,14 +48,11 @@
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     Spacing="8">
-                                    <Ellipse
+                                    <local:AvatarImage
                                         Width="64"
                                         Height="64"
-                                        HorizontalAlignment="Center">
-                                        <Ellipse.Fill>
-                                            <ImageBrush Source="{Binding ProfileImage}" Stretch="UniformToFill" />
-                                        </Ellipse.Fill>
-                                    </Ellipse>
+                                        HorizontalAlignment="Center"
+                                        local:Source.Cache="{Binding LocalProfilePicture}" />
                                     <TextBlock
                                         HorizontalAlignment="Center"
                                         FontWeight="SemiBold"

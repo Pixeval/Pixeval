@@ -25,12 +25,14 @@ public static class CacheHelper
     public static readonly Lazy<Task<Bitmap>> ImageNotAvailableTask = new(() => AppInfo.GetImageNotAvailableStream().DecodeBitmapImageAsync(true));
     public static readonly Lazy<Task<IAnimatedBitmap>> AnimatedImageNotAvailableTask = new(async () => IAnimatedBitmap.Load([await ImageNotAvailableTask.Value], [100]));
 
-    private static IllustrationCacheTable CacheTable { get; } =
+    private static IllustrationCacheTable CacheTable =>
         App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>();
+
+    public static string CachePath { get; } = Path.Combine(AppInfo.CacheFolder, "FileCache");
 
     public static void PurgeCache()
     {
-        Directory.Delete(AppInfo.CacheFolder, true);
+        Directory.Delete(CachePath, true);
     }
 
     /// <summary>

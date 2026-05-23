@@ -2,6 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using Avalonia.Controls;
@@ -18,13 +19,14 @@ public partial class AboutPage : ContentPage
         LoadData();
     }
 
-    public ObservableCollection<Supporter> Supporters { get; } = [];
+    public IReadOnlyList<Supporter> Supporters => Supporter.Supporters;
+
+    public string CurrentVersionText => AppInfo.AppVersion.CurrentVersionText;
 
     private async void LoadData()
     {
         LicenseTextBlock.Markdown = Encoding.UTF8.GetString(await AppInfo.GetAssetBytesAsync("GPLv3.md"));
-        await foreach (var supporter in Supporter.GetSupportersAsync())
-            Supporters.Add(supporter);
+        await Supporter.GetSupportersAsync();
     }
 
     private void SupporterCard_OnTapped(object? sender, TappedEventArgs e)

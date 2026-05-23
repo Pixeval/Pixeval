@@ -55,7 +55,7 @@ public class App : Application
                 desktop.Exit += (o, e) =>
                 {
                     AppInfo.SaveContext();
-                    AppInfo.Dispose();
+                    AppViewModel.Dispose();
                 };
 
                 viewContainer = new TabViewContainer();

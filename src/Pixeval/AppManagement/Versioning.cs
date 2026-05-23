@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -14,8 +15,21 @@ namespace Pixeval.AppManagement;
 
 public class Versioning
 {
-    // TODO Version
-    public Version CurrentVersion { get; } = new Version();
+    public Versioning()
+    {
+        var assembly = typeof(Versioning).Assembly;
+        CurrentVersion = assembly.GetName().Version ?? new(0, 0, 0, 0);
+        CurrentVersionText = assembly
+            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+            ?.InformationalVersion ?? CurrentVersion.ToString();
+    }
+
+    public Version CurrentVersion { get; }
+
+    /// <remarks>
+    /// <see cref="AssemblyInformationalVersionAttribute"/> 包含 GitSha 信息
+    /// </remarks>
+    public string CurrentVersionText { get; }
 
     public Version? NewestVersion => NewestAppReleaseModel?.Version;
 

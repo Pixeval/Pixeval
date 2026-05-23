@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform;
 using Pixeval.Utilities;
-using Pixeval.Utilities.IO.Caching;
 
 namespace Pixeval.AppManagement;
 
@@ -130,20 +129,6 @@ public static class AppInfo
     {
         SaveLoginContext(App.AppViewModel.LoginContext);
         SaveSettings(App.AppViewModel.AppSettings);
-    }
-
-    public static void Dispose()
-    {
-        try
-        {
-            CacheHelper.PurgeCache();
-            App.AppViewModel.Dispose();
-        }
-        catch
-        {
-            // ignored
-            // 保证退出时不出幺蛾子
-        }
     }
 
     public static AppSettings? LoadConfig(FileLogger logger)
