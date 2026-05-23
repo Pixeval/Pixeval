@@ -1,8 +1,7 @@
 // Copyright (c) Pixeval.
-// Licensed under the GPL v3 License.
+// Licensed under the GPL-3.0 License.
 
 using System.Diagnostics.CodeAnalysis;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Mako.Model;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
@@ -10,7 +9,7 @@ using Pixeval.Models.Database;
 
 namespace Pixeval.ViewModels.Settings;
 
-public class WorkSubscriptionItemViewModel(WorkSubscriptionEntry entry) : ObservableObject
+public class WorkSubscriptionItemViewModel(WorkSubscriptionEntry entry) : ViewModelBase
 {
     public WorkSubscriptionEntry Entry { get; } = entry;
 

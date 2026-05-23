@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL-3.0 License.
+
 using System;
 using System.Threading.Tasks;
 using System.Web;

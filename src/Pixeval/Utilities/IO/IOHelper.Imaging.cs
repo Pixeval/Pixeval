@@ -1,5 +1,5 @@
 // Copyright (c) Pixeval.
-// Licensed under the GPL v3 License.
+// Licensed under the GPL-3.0 License.
 
 using System;
 using System.Collections.Generic;
@@ -263,9 +263,8 @@ public static partial class IoHelper
         return path.Replace(FileExtensionMacro.NameConstToken, null).Replace("<", null).Replace(">", null);
     }
 
-    private static string GetEncodedImageExtension(SKEncodedImageFormat encodedFormat)
-    {
-        return encodedFormat switch
+    private static string GetEncodedImageExtension(SKEncodedImageFormat encodedFormat) =>
+        encodedFormat switch
         {
             SKEncodedImageFormat.Jpeg => ".jpg",
             SKEncodedImageFormat.Png => ".png",
@@ -282,7 +281,6 @@ public static partial class IoHelper
             SKEncodedImageFormat.Avif => ".avif",
             _ => throw new NotSupportedException($"Unsupported image format: {encodedFormat}.")
         };
-    }
 
     extension(IArtworkInfo artworkInfo)
     {

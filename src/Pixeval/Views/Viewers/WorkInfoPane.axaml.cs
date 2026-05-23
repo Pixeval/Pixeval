@@ -1,3 +1,6 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL-3.0 License.
+
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;

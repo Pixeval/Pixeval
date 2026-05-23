@@ -1,7 +1,5 @@
-// This source file is adapted from the Windows Presentation Foundation project. 
-// (https://github.com/dotnet/wpf/) 
-// 
-// Licensed to The Avalonia Project under MIT License, courtesy of The .NET Foundation.
+// Copyright (c) Pixeval.
+// Licensed under the GPL-3.0 License.
 
 using System;
 using System.Diagnostics;

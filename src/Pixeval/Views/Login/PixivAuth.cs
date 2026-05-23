@@ -1,5 +1,5 @@
 // Copyright (c) Pixeval.
-// Licensed under the GPL v3 License.
+// Licensed under the GPL-3.0 License.
 
 using System;
 using System.Net;
