@@ -214,50 +214,33 @@ public class AdvancedObservableAdaptor<TIn, TOut>
         }
     }
 
-    int IList.Add(object? value)
-    {
-        ArgumentNullException.ThrowIfNull(value);
-        Source.Add((TIn)value);
-        return Source.Count - 1;
-    }
+    int IList.Add(object? value) => throw new NotSupportedException();
 
-    bool IList.Contains(object? value) => value is TIn item && Source.Contains(item);
+    bool IList.Contains(object? value) => value is TOut item && _inner.Contains(item);
 
-    int IList.IndexOf(object? value) => value is TIn item ? Source.IndexOf(item) : -1;
+    int IList.IndexOf(object? value) => value is TOut item ? _inner.IndexOf(item) : -1;
 
-    void IList.Insert(int index, object? value)
-    {
-        ArgumentNullException.ThrowIfNull(value);
-        Source.Insert(index, (TIn)value);
-    }
+    void IList.Insert(int index, object? value) => throw new NotSupportedException();
 
-    void IList.Remove(object? value)
-    {
-        if (value is TIn item)
-            _ = Source.Remove(item);
-    }
+    void IList.Remove(object? value) => throw new NotSupportedException();
 
-    int ICollection.Count => Source.Count;
+    int ICollection.Count => _inner.Count;
 
-    void ICollection.CopyTo(Array array, int index) => ((ICollection)Source).CopyTo(array, index);
+    void ICollection.CopyTo(Array array, int index) => ((ICollection)_inner).CopyTo(array, index);
 
     bool ICollection.IsSynchronized => false;
 
-    object ICollection.SyncRoot => ((ICollection)Source).SyncRoot;
+    object ICollection.SyncRoot => ((ICollection)_inner).SyncRoot;
 
-    bool IList.IsReadOnly => false;
+    bool IList.IsReadOnly => true;
 
     object? IList.this[int index]
     {
-        get => Source[index];
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            Source[index] = (TIn)value;
-        }
+        get => _inner[index];
+        set => throw new NotSupportedException();
     }
 
-    bool IList.IsFixedSize => false;
+    bool IList.IsFixedSize => true;
 
     public void Dispose()
     {

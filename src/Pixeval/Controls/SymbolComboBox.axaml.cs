@@ -2,6 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -82,6 +83,9 @@ public class SymbolComboBox : TemplatedControl
     private bool _isSynchronizingSelection;
     private bool _preferSelectedValue;
 
+    /// <summary>
+    /// 也需要继承<see cref="IList"/>才能正常使用
+    /// </summary>
     public IReadOnlyList<SymbolComboBoxItem>? ItemsSource
     {
         get => GetValue(ItemsSourceProperty);

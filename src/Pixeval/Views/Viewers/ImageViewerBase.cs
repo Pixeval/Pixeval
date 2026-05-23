@@ -42,7 +42,7 @@ public abstract partial class ImageViewerBase : UserControl
     {
         get;
         set => SetAndRaise(IsPlayingProperty, ref field, value);
-    }
+    } = true;
 
     public abstract double ZoomFactor { get; set; }
 

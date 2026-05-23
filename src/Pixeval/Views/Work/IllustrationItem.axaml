@@ -16,7 +16,7 @@
     x:DataType="{x:Type viewModels:IllustrationItemViewModel}"
     Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
     Design.DataContext="{x:Static utilities:DesignHelper.DesignIllustrationViewModel}"
-    RenderTransformOrigin="0.5,0.5"
+    RenderTransformOrigin="50%,50%"
     Theme="{StaticResource RoundedButtonStyle}"
     mc:Ignorable="d"
     d:DesignHeight="250"

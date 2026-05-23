@@ -13,7 +13,6 @@
     x:DataType="{x:Type vm:SingleViewerViewModel}">
     <Panel>
         <!--  图片查看器（缩放/平移）  -->
-        <!--  TODO: Auto Auto ContentOrientation="Both"  -->
         <scroll:ScrollView
             x:Name="ViewerScrollView"
             ContentOrientation="Both"
