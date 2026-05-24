@@ -16,10 +16,9 @@ public abstract class PersistentManagerBase<[DynamicallyAccessedMembers(Dynamica
 {
     private readonly SQLiteConnection _db;
 
-    protected PersistentManagerBase(SQLiteConnection db, int maximumRecords)
+    protected PersistentManagerBase(SQLiteConnection db)
     {
         _db = db;
-        MaximumRecords = maximumRecords;
         _ = _db.CreateTable<TEntry>();
     }
 
@@ -27,19 +26,10 @@ public abstract class PersistentManagerBase<[DynamicallyAccessedMembers(Dynamica
     public virtual TableQuery<TEntry> Queryable => _db.Table<TEntry>();
 
     /// <inheritdoc />
-    public int MaximumRecords { get; set; }
-
-    /// <inheritdoc />
     public virtual int Count => Queryable.Count();
 
     /// <inheritdoc />
-    public virtual void Insert(TEntry t)
-    {
-        if (Queryable.Count() > MaximumRecords)
-            Purge(MaximumRecords);
-
-        _db.Insert(t, typeof(TEntry));
-    }
+    public virtual void Insert(TEntry t) => _db.Insert(t, typeof(TEntry));
 
     /// <inheritdoc />
     public virtual IReadOnlyList<TModel> Query(Expression<Func<TEntry, bool>> predicate, int skip = 0, int limit = int.MaxValue) =>

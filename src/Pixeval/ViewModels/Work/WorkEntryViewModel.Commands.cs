@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.Input;
 using Pixeval.Controls;
+using Pixeval.I18N;
+using Pixeval.Utilities;
 
 namespace Pixeval.ViewModels;
 
@@ -30,6 +32,28 @@ public partial class WorkEntryViewModel<T>
         IsBookmarkedDisplay |= HeartButtonState.Pending; // pre-update
         var result = await SetBookmarkAsync(true, parameter.IsPrivate, parameter.Tags);
         IsBookmarkedDisplay = result ? HeartButtonState.Checked : HeartButtonState.Unchecked;
+    }
+
+    [RelayCommand(CanExecute = nameof(CanManageWatchLater))]
+    private void AddToWatchLater(Control? parameter)
+    {
+        if (GetHistoryPersistHelper() is not { } helper)
+            return;
+
+        var target = !IsInWatchLater;
+
+        if (target)
+        {
+            if (!helper.AddWatchLater(Entry))
+                return;
+        }
+        else if (!helper.RemoveWatchLater(Entry))
+            return;
+
+        IsInWatchLater = target;
+
+        TopLevel.GetTopLevel(parameter)?.ViewContainer?.ShowSuccess(
+            I18NManager.GetResource(target ? MiscResources.AddedToWatchLater : MiscResources.RemovedFromWatchLater));
     }
 
     protected abstract Task<bool> SetBookmarkAsync(bool favorite, bool privately = false, IEnumerable<string>? tags = null);

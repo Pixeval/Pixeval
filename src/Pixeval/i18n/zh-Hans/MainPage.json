@@ -20,6 +20,9 @@
   "HistoriesTab": {
     "Content": "浏览历史"
   },
+  "WatchLaterTab": {
+    "Content": "稍后再看"
+  },
   "TagsTab": {
     "Content": "标签"
   },

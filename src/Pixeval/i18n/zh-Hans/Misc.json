@@ -1,6 +1,8 @@
 {
   "AddBookmark": "收藏",
   "RemoveBookmark": "取消收藏",
+  "AddedToWatchLater": "已添加到稍后再看",
+  "RemovedFromWatchLater": "已从稍后再看移除",
   "Follow": "关注",
   "FollowPrivately": "悄悄关注",
   "Unfollow": "取消关注",

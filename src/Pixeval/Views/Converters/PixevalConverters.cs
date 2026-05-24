@@ -25,6 +25,8 @@ public static partial class PixevalConverters
 
     public static readonly FuncValueConverter<int, string> IntToString = new(value => value.ToString());
 
+    public static readonly FuncValueConverter<bool, IconVariant> BoolToIconVariant = new(value => value ? IconVariant.Color : IconVariant.Regular);
+
     public static readonly FuncValueConverter<HeartButtonState, IconVariant> StateToIconVariant = new(value => value switch
     {
         _ when (value & HeartButtonState.Pending) is not 0 => IconVariant.Filled,

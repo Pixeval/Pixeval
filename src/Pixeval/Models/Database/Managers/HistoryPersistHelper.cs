@@ -18,7 +18,8 @@ public class HistoryPersistHelper : IDisposable
         [FromKeyedServices(IPlatformInfo.Pixiv)] IDownloadHttpClientService service,
         DownloadHistoryPersistentManager downloadHistoryPersistentManager,
         SearchHistoryPersistentManager searchHistoryPersistentManager,
-        BrowseHistoryPersistentManager browseHistoryPersistentManager)
+        BrowseHistoryPersistentManager browseHistoryPersistentManager,
+        WatchLaterPersistentManager watchLaterPersistentManager)
     {
         DownloadManager = new DownloadManager(service.GetImageDownloadClient(), App.AppViewModel.AppSettings.MaxDownloadTaskConcurrencyLevel);
 
@@ -26,6 +27,7 @@ public class HistoryPersistHelper : IDisposable
             DownloadManager.QueueTask(downloadTaskGroup);
         SearchHistoryEntries = new(searchHistoryPersistentManager.Reverse());
         BrowseHistoryEntries = new(browseHistoryPersistentManager.Queryable.Select(t => t.Entry).Reverse());
+        WatchLaterEntries = new(watchLaterPersistentManager.Queryable.Select(t => t.Entry).Reverse());
 
         SearchHistoryEntries.CollectionChanged += (s, e) =>
             OnCollectionChangedEventHandler<SearchHistoryPersistentManager, SearchHistoryEntry, SearchHistoryEntry>(s,
@@ -36,6 +38,14 @@ public class HistoryPersistHelper : IDisposable
                 (m, t) =>
                 {
                     if (BrowseHistoryEntry.TryCreateWorkKey(t, out var workKey))
+                        m.TryDelete(x => x.WorkKey == workKey);
+                }, t => new(t));
+
+        WatchLaterEntries.CollectionChanged += (s, e) =>
+            OnCollectionChangedEventHandler<WatchLaterPersistentManager, WatchLaterEntry, IArtworkInfo>(s, e,
+                (m, t) =>
+                {
+                    if (WatchLaterEntry.TryCreateWorkKey(t, out var workKey))
                         m.TryDelete(x => x.WorkKey == workKey);
                 }, t => new(t));
 
@@ -55,6 +65,8 @@ public class HistoryPersistHelper : IDisposable
     public ObservableCollection<SearchHistoryEntry> SearchHistoryEntries { get; }
 
     public ObservableCollection<IArtworkInfo> BrowseHistoryEntries { get; }
+
+    public ObservableCollection<IArtworkInfo> WatchLaterEntries { get; }
 
     public void AddSearchHistory(string text, string? translatedName = null)
     {
@@ -80,6 +92,42 @@ public class HistoryPersistHelper : IDisposable
                 && itemWorkKey == workKey) is { } e)
             BrowseHistoryEntries.Remove(e);
         BrowseHistoryEntries.Insert(0, entry);
+    }
+
+    public bool ContainsWatchLater(IArtworkInfo entry)
+    {
+        return WatchLaterEntry.TryCreateWorkKey(entry, out var workKey)
+               && WatchLaterEntries.FirstOrDefault(t =>
+                   WatchLaterEntry.TryCreateWorkKey(t, out var itemWorkKey)
+                   && itemWorkKey == workKey) is not null;
+    }
+
+    public bool AddWatchLater(IArtworkInfo entry)
+    {
+        if (!WatchLaterEntry.TryCreateWorkKey(entry, out var workKey))
+            return false;
+
+        if (WatchLaterEntries.FirstOrDefault(t =>
+                WatchLaterEntry.TryCreateWorkKey(t, out var itemWorkKey)
+                && itemWorkKey == workKey) is { } existing)
+            WatchLaterEntries.Remove(existing);
+
+        WatchLaterEntries.Insert(0, entry);
+        return true;
+    }
+
+    public bool RemoveWatchLater(IArtworkInfo entry)
+    {
+        if (!WatchLaterEntry.TryCreateWorkKey(entry, out var workKey))
+            return false;
+
+        if (WatchLaterEntries.FirstOrDefault(t =>
+                WatchLaterEntry.TryCreateWorkKey(t, out var itemWorkKey)
+                && itemWorkKey == workKey) is not { } existing)
+            return false;
+
+        WatchLaterEntries.Remove(existing);
+        return true;
     }
 
     private static void OnCollectionChangedEventHandler<TManager, TEntry, TItem>(

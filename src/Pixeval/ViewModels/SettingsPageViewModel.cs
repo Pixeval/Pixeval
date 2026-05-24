@@ -15,7 +15,6 @@ using Pixeval.AppManagement;
 using Pixeval.Models.Extensions;
 using Pixeval.Models.Options;
 using Pixeval.Models.Settings;
-using Pixeval.Utilities;
 
 namespace Pixeval.ViewModels;
 
@@ -71,14 +70,12 @@ public class SettingsPageViewModel : ViewModelBase
                 .Enum(t => t.BrowseDirection)
                 .Enum(t => t.TargetFilter)
                 .Collection(t => t.BlockedTags)
-                .Bool(t => t.OpenWorkInfoByDefault)
-                .Int(t => t.MaximumBrowseHistoryRecords, 10, ushort.MaxValue, 10))
+                .Bool(t => t.OpenWorkInfoByDefault))
             .NewGroup(SettingsEntryCategory.Search)
             .Config(group => group
                 .String(t => t.ReverseSearchApiKey,
                     entry => entry.DescriptionUri = new("https://saucenao.com/user.php?page=search-api"))
                 .Int(t => t.ReverseSearchResultSimilarityThreshold, 1, 100, 1)
-                .Int(t => t.MaximumSearchHistoryRecords, 10, 200, 1)
                 .Int(t => t.MaximumSuggestionBoxSearchHistory, 0, 20, 1)
                 .Enum(t => t.LocalSortOption)
                 .Enum(t => t.SimpleWorkType)
@@ -106,7 +103,6 @@ public class SettingsPageViewModel : ViewModelBase
                         DateTime.MaxValue)))
             .NewGroup(SettingsEntryCategory.Download)
             .Config(group => group
-                .Int(t => t.MaximumDownloadHistoryRecords, 10, ushort.MaxValue, 1)
                 .Bool(t => t.OverwriteDownloadedFile)
                 .Int(t => t.MaxDownloadTaskConcurrencyLevel, 1, Environment.ProcessorCount, 1,
                     entry => entry.ValueChanged += t => App.AppViewModel.HistoryPersistHelper.DownloadManager.ConcurrencyDegree = t)

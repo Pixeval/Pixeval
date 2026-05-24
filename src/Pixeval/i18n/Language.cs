@@ -58,15 +58,6 @@ namespace Pixeval
         public const string ImageMirrorServerEntryPlaceholder = "AppSettings.ImageMirrorServerEntry.Placeholder";
         public const string MaxDownloadConcurrencyLevelEntryDescription = "AppSettings.MaxDownloadConcurrencyLevelEntry.Description";
         public const string MaxDownloadConcurrencyLevelEntryHeader = "AppSettings.MaxDownloadConcurrencyLevelEntry.Header";
-        public const string MaximumBrowseHistoryRecordsEntryDescription = "AppSettings.MaximumBrowseHistoryRecordsEntry.Description";
-        public const string MaximumBrowseHistoryRecordsEntryHeader = "AppSettings.MaximumBrowseHistoryRecordsEntry.Header";
-        public const string MaximumBrowseHistoryRecordsEntryPlaceholder = "AppSettings.MaximumBrowseHistoryRecordsEntry.Placeholder";
-        public const string MaximumDownloadHistoryRecordsEntryDescription = "AppSettings.MaximumDownloadHistoryRecordsEntry.Description";
-        public const string MaximumDownloadHistoryRecordsEntryHeader = "AppSettings.MaximumDownloadHistoryRecordsEntry.Header";
-        public const string MaximumDownloadHistoryRecordsEntryPlaceholder = "AppSettings.MaximumDownloadHistoryRecordsEntry.Placeholder";
-        public const string MaximumSearchHistoryRecordsEntryDescription = "AppSettings.MaximumSearchHistoryRecordsEntry.Description";
-        public const string MaximumSearchHistoryRecordsEntryHeader = "AppSettings.MaximumSearchHistoryRecordsEntry.Header";
-        public const string MaximumSearchHistoryRecordsEntryPlaceholder = "AppSettings.MaximumSearchHistoryRecordsEntry.Placeholder";
         public const string MaximumSuggestionBoxSearchHistoryEntryDescription = "AppSettings.MaximumSuggestionBoxSearchHistoryEntry.Description";
         public const string MaximumSuggestionBoxSearchHistoryEntryHeader = "AppSettings.MaximumSuggestionBoxSearchHistoryEntry.Header";
         public const string NovelSettingsBackgroundEntryDescription = "AppSettings.NovelSettingsBackgroundEntry.Description";
@@ -194,6 +185,7 @@ namespace Pixeval
     public static class EntryItemResources
     {
         public const string AddToBookmark = "EntryItem.AddToBookmark";
+        public const string AddToWatchLater = "EntryItem.AddToWatchLater";
         public const string Copy = "EntryItem.Copy";
         public const string DownloadTaskCreated = "EntryItem.DownloadTaskCreated";
         public const string GenerateLink = "EntryItem.GenerateLink";
@@ -203,6 +195,7 @@ namespace Pixeval
         public const string OpenInWebBrowser = "EntryItem.OpenInWebBrowser";
         public const string OpenNovel = "EntryItem.OpenNovel";
         public const string OpenUserInfoPage = "EntryItem.OpenUserInfoPage";
+        public const string RemoveFromWatchLater = "EntryItem.RemoveFromWatchLater";
         public const string Save = "EntryItem.Save";
         public const string SaveAs = "EntryItem.SaveAs";
         public const string SaveAsCancelled = "EntryItem.SaveAsCancelled";
@@ -583,10 +576,12 @@ namespace Pixeval
         public const string SwitchAccountItemText = "MainPage.SwitchAccountItem.Text";
         public const string TagAutoCompletionSuggestionTextBlockText = "MainPage.TagAutoCompletionSuggestionTextBlock.Text";
         public const string TagsTabContent = "MainPage.TagsTab.Content";
+        public const string WatchLaterTabContent = "MainPage.WatchLaterTab.Content";
     }
     public static class MiscResources
     {
         public const string AddBookmark = "Misc.AddBookmark";
+        public const string AddedToWatchLater = "Misc.AddedToWatchLater";
         public const string AllCountedTagName = "Misc.AllCountedTagName";
         public const string BackToWindow = "Misc.BackToWindow";
         public const string BookmarkTagSelectorPrivateCheckBoxContent = "Misc.BookmarkTagSelectorPrivateCheckBox.Content";
@@ -609,6 +604,7 @@ namespace Pixeval
         public const string Play = "Misc.Play";
         public const string PrivacyPolicyComboBoxPlaceholderText = "Misc.PrivacyPolicyComboBox.PlaceholderText";
         public const string RemoveBookmark = "Misc.RemoveBookmark";
+        public const string RemovedFromWatchLater = "Misc.RemovedFromWatchLater";
         public const string ReplyContentTooLong = "Misc.ReplyContentTooLong";
         public const string RestoreOriginalResolution = "Misc.RestoreOriginalResolution";
         public const string SearchUser = "Misc.SearchUser";

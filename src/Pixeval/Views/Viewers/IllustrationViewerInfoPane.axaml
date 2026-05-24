@@ -112,6 +112,13 @@
                                                                          Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
                         IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
                         Label="{I18N {x:Static pixeval:EntryItemResources.AddToBookmark}}" />
+                    <CommandBarButton
+                        Command="{Binding CurrentIllustration.AddToWatchLaterCommand}"
+                        CommandParameter="{Binding $self, Mode=OneTime}"
+                        Icon="{markup1:SymbolIconEx Clock,
+                                                    IconVariant={Binding CurrentIllustration.IsInWatchLater,
+                                                                         Converter={x:Static converters:PixevalConverters.BoolToIconVariant}}}"
+                        Label="{I18N {x:Static pixeval:EntryItemResources.AddToWatchLater}}" />
                     <!--<CommandBarButton
                             Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
                             Icon="{markup:SymbolIcon Link}"

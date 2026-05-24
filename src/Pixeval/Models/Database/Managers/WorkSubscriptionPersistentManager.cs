@@ -7,7 +7,7 @@ using SQLite;
 namespace Pixeval.Models.Database.Managers;
 
 public class WorkSubscriptionPersistentManager(SQLiteConnection db)
-    : SimplePersistentManager<WorkSubscriptionEntry>(db, int.MaxValue)
+    : SimplePersistentManager<WorkSubscriptionEntry>(db)
 {
     public WorkSubscriptionEntry? GetBySubscriptionKey(
         long userId,

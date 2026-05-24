@@ -73,6 +73,7 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
             .AddSingleton<WorkSubscriptionPersistentManager>()
             .AddSingleton<SearchHistoryPersistentManager>()
             .AddSingleton<BrowseHistoryPersistentManager>()
+            .AddSingleton<WatchLaterPersistentManager>()
             .AddSingleton<LoginUserPersistentManager>()
             .AddSingleton<HistoryPersistHelper>()
             .BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });

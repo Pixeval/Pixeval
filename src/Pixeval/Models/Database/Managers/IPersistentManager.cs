@@ -43,8 +43,6 @@ public interface IWriteOnlyPersistentManager<TEntry> where TEntry : HistoryEntry
 {
     TableQuery<TEntry> Queryable { get; }
 
-    int MaximumRecords { get; set; }
-
     int Count { get; }
 
     void Insert(TEntry t);

@@ -5,7 +5,7 @@ using SQLite;
 
 namespace Pixeval.Models.Database.Managers;
 
-public class LoginUserPersistentManager(SQLiteConnection db) : SimplePersistentManager<LoginUserEntry>(db, int.MaxValue)
+public class LoginUserPersistentManager(SQLiteConnection db) : SimplePersistentManager<LoginUserEntry>(db)
 {
     public LoginUserEntry? GetByKey(int key) => key <= 0 ? null : Db.Find<LoginUserEntry>(key);
 

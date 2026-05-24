@@ -40,6 +40,13 @@
                                                                      Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
                     IsVisible="{Binding IsBookmarkSupported}" />
                 <MenuItem
+                    Command="{Binding AddToWatchLaterCommand}"
+                    CommandParameter="{Binding $self, Mode=OneTime}"
+                    Header="{I18N {x:Static pixeval:EntryItemResources.AddToWatchLater}}"
+                    Icon="{markup1:SymbolIconEx Clock,
+                                                IconVariant={Binding IsInWatchLater,
+                                                                     Converter={x:Static converters:PixevalConverters.BoolToIconVariant}}}" />
+                <MenuItem
                     Click="OpenUserInfoPage_OnClicked"
                     Header="{I18N {x:Static pixeval:EntryItemResources.OpenUserInfoPage}}"
                     Icon="{markup:SymbolIcon Person}" />

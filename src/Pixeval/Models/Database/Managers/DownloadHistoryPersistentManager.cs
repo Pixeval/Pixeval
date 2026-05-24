@@ -10,7 +10,7 @@ using SQLite;
 namespace Pixeval.Models.Database.Managers;
 
 public class DownloadHistoryPersistentManager(SQLiteConnection db)
-    : PersistentManagerBase<DownloadHistoryEntry, IDownloadTaskGroup>(db, App.AppViewModel.AppSettings.MaximumDownloadHistoryRecords)
+    : PersistentManagerBase<DownloadHistoryEntry, IDownloadTaskGroup>(db)
 {
     public DownloadHistoryEntry? GetByDestination(string destination) =>
         string.IsNullOrWhiteSpace(destination)

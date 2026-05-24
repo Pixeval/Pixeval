@@ -74,9 +74,6 @@ public record AppSettings
     [SettingsEntry(Symbol.ImageSplit, OverwriteDownloadedFileEntryHeader, OverwriteDownloadedFileEntryDescription)]
     public bool OverwriteDownloadedFile { get; set; }
 
-    [SettingsEntry(Symbol.History, MaximumDownloadHistoryRecordsEntryHeader, MaximumDownloadHistoryRecordsEntryDescription, MaximumDownloadHistoryRecordsEntryPlaceholder)]
-    public int MaximumDownloadHistoryRecords { get; set; } = 100;
-
     /// <summary>
     /// The max download tasks that are allowed to run concurrently
     /// </summary>
@@ -108,9 +105,6 @@ public record AppSettings
     /// The novel tag match option for keyword search
     /// </summary>
     public SearchNovelTagMatchOption SearchNovelTagMatchOption { get; set; } = SearchNovelTagMatchOption.PartialMatchForTags;
-
-    [SettingsEntry(Symbol.History, MaximumSearchHistoryRecordsEntryHeader, MaximumSearchHistoryRecordsEntryDescription, MaximumSearchHistoryRecordsEntryPlaceholder)]
-    public int MaximumSearchHistoryRecords { get; set; } = 50;
 
     [SettingsEntry(Symbol.Key, ReverseSearchApiKeyEntryHeader, ReverseSearchApiKeyEntryDescription, ReverseSearchApiKeyEntryPlaceholder)]
     public string ReverseSearchApiKey { get; set; } = "";
@@ -154,9 +148,6 @@ public record AppSettings
     /// </summary>
     [SettingsEntry(Symbol.HardDrive, ImageMirrorServerEntryHeader, ImageMirrorServerEntryDescription, ImageMirrorServerEntryPlaceholder)]
     public string MirrorHost { get; set; } = "";
-
-    [SettingsEntry(Symbol.History, MaximumBrowseHistoryRecordsEntryHeader, MaximumBrowseHistoryRecordsEntryDescription, MaximumBrowseHistoryRecordsEntryPlaceholder)]
-    public int MaximumBrowseHistoryRecords { get; set; } = 100;
 
     [SettingsEntry(Symbol.ArrowCircleLeft, UseSearchStartDateEntryHeader, UseSearchStartDateEntryDescription)]
     public bool UseSearchStartDate { get; set; }

@@ -64,6 +64,7 @@ public static class AvaloniaHelper
     public static IReadOnlyList<NavigationInfo> FooterItems { get; } =
     [
         new(typeof(BrowsingHistoryPage), Symbol.History, MainPageResources.HistoriesTabContent),
+        new(typeof(WatchLaterPage), Symbol.Clock, MainPageResources.WatchLaterTabContent),
         new(typeof(DownloadPage), Symbol.ArrowSquareDown, MainPageResources.DownloadListTabContent),
         new(typeof(ExtensionsPage), Symbol.PuzzlePiece, MainPageResources.ExtensionsTabContent),
         new(typeof(HelpPage), Symbol.ChatBubblesQuestion, MainPageResources.HelpTabContent),

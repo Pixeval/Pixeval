@@ -6,7 +6,7 @@ using SQLite;
 namespace Pixeval.Models.Database.Managers;
 
 public class SearchHistoryPersistentManager(SQLiteConnection db)
-    : SimplePersistentManager<SearchHistoryEntry>(db, App.AppViewModel.AppSettings.MaximumSearchHistoryRecords)
+    : SimplePersistentManager<SearchHistoryEntry>(db)
 {
     public SearchHistoryEntry? GetByValue(string value) =>
         string.IsNullOrWhiteSpace(value)

@@ -1,4 +1,4 @@
-﻿<ContentPage
+<ContentPage
     x:Class="Pixeval.Views.Viewers.NovelViewerPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -72,6 +72,13 @@
                         Icon="{markup:SymbolIcon Bookmark}"
                         IsVisible="{Binding CurrentNovel.IsBookmarkSupported}"
                         Label="{I18N {x:Static pixeval:EntryItemResources.AddToBookmark}}" />
+                    <CommandBarButton
+                        Command="{Binding CurrentNovel.AddToWatchLaterCommand}"
+                        CommandParameter="{Binding $self, Mode=OneTime}"
+                        Icon="{markup1:SymbolIconEx Clock,
+                                                    IconVariant={Binding CurrentNovel.IsInWatchLater,
+                                                                         Converter={x:Static converters:PixevalConverters.BoolToIconVariant}}}"
+                        Label="{I18N {x:Static pixeval:EntryItemResources.AddToWatchLater}}" />
                     <!--<CommandBarButton
                             Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
                             Icon="{markup:SymbolIcon Link}"

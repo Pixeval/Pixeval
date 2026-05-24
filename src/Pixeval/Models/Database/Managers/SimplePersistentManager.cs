@@ -19,10 +19,9 @@ public abstract class SimplePersistentManager<[DynamicallyAccessedMembers(Dynami
 {
     protected readonly SQLiteConnection Db;
 
-    protected SimplePersistentManager(SQLiteConnection db, int maximumRecords)
+    protected SimplePersistentManager(SQLiteConnection db)
     {
         Db = db;
-        MaximumRecords = maximumRecords;
         _ = Db.CreateTable<T>();
     }
 
@@ -30,19 +29,10 @@ public abstract class SimplePersistentManager<[DynamicallyAccessedMembers(Dynami
     public virtual TableQuery<T> Queryable => Db.Table<T>();
 
     /// <inheritdoc />
-    public int MaximumRecords { get; set; }
-
-    /// <inheritdoc />
     public virtual int Count => Queryable.Count();
 
     /// <inheritdoc />
-    public virtual void Insert(T t)
-    {
-        if (Queryable.Count() > MaximumRecords)
-            Purge(MaximumRecords);
-
-        Db.Insert(t, typeof(T));
-    }
+    public virtual void Insert(T t) => Db.Insert(t, typeof(T));
 
     /// <inheritdoc />
     public virtual IReadOnlyList<T> Query(Expression<Func<T, bool>> predicate, int skip = 0, int limit = int.MaxValue)
