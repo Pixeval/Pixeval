@@ -49,6 +49,10 @@ namespace Pixeval
         public const string DownloadUpdateAutomaticallyEntryHeader = "AppSettings.DownloadUpdateAutomaticallyEntry.Header";
         public const string EnableDomainFrontingEntryDescription = "AppSettings.EnableDomainFrontingEntry.Description";
         public const string EnableDomainFrontingEntryHeader = "AppSettings.EnableDomainFrontingEntry.Header";
+        public const string HomePageColumnsEntryDescription = "AppSettings.HomePageColumnsEntry.Description";
+        public const string HomePageColumnsEntryHeader = "AppSettings.HomePageColumnsEntry.Header";
+        public const string HomePageRowsEntryDescription = "AppSettings.HomePageRowsEntry.Description";
+        public const string HomePageRowsEntryHeader = "AppSettings.HomePageRowsEntry.Header";
         public const string ImageMirrorServerEntryDescription = "AppSettings.ImageMirrorServerEntry.Description";
         public const string ImageMirrorServerEntryHeader = "AppSettings.ImageMirrorServerEntry.Header";
         public const string ImageMirrorServerEntryPlaceholder = "AppSettings.ImageMirrorServerEntry.Placeholder";
@@ -461,6 +465,40 @@ namespace Pixeval
         public const string QueryFilterHelpHeaderText = "HelpPage.QueryFilterHelpHeader.Text";
         public const string QueryFilterSimpleHelpHeaderText = "HelpPage.QueryFilterSimpleHelpHeader.Text";
         public const string TitleTextBlockText = "HelpPage.TitleTextBlock.Text";
+    }
+    public static class HomePageResources
+    {
+        public const string CardLibraryTitleTextBlockText = "HomePage.CardLibraryTitleTextBlock.Text";
+        public const string DeleteSelectedCardButtonContent = "HomePage.DeleteSelectedCardButton.Content";
+        public const string EditButtonLabel = "HomePage.EditButton.Label";
+        public const string EditPaneDescriptionTextBlockText = "HomePage.EditPaneDescriptionTextBlock.Text";
+        public const string EditPaneTitleTextBlockText = "HomePage.EditPaneTitleTextBlock.Text";
+        public const string GridColumnsTextBlockText = "HomePage.GridColumnsTextBlock.Text";
+        public const string GridRowsTextBlockText = "HomePage.GridRowsTextBlock.Text";
+        public const string GridSizeTitleTextBlockText = "HomePage.GridSizeTitleTextBlock.Text";
+        public const string HeightTextBlockText = "HomePage.HeightTextBlock.Text";
+        public const string LayoutConflictWarningContent = "HomePage.LayoutConflictWarning.Content";
+        public const string LayoutConflictWarningTitle = "HomePage.LayoutConflictWarning.Title";
+        public const string NoSelectedCardTextBlockText = "HomePage.NoSelectedCardTextBlock.Text";
+        public const string NoSpaceWarningContent = "HomePage.NoSpaceWarning.Content";
+        public const string NoSpaceWarningTitle = "HomePage.NoSpaceWarning.Title";
+        public const string PositionXTextBlockText = "HomePage.PositionXTextBlock.Text";
+        public const string PositionYTextBlockText = "HomePage.PositionYTextBlock.Text";
+        public const string RankingWorksCardDescription = "HomePage.RankingWorksCard.Description";
+        public const string RankingWorksCardTitle = "HomePage.RankingWorksCard.Title";
+        public const string RecommendedNovelsCardDescription = "HomePage.RecommendedNovelsCard.Description";
+        public const string RecommendedNovelsCardTitle = "HomePage.RecommendedNovelsCard.Title";
+        public const string RecommendedUsersCardDescription = "HomePage.RecommendedUsersCard.Description";
+        public const string RecommendedUsersCardTitle = "HomePage.RecommendedUsersCard.Title";
+        public const string RecommendedWorksCardDescription = "HomePage.RecommendedWorksCard.Description";
+        public const string RecommendedWorksCardTitle = "HomePage.RecommendedWorksCard.Title";
+        public const string ResetLayoutButtonLabel = "HomePage.ResetLayoutButton.Label";
+        public const string SelectedCardTitleTextBlockText = "HomePage.SelectedCardTitleTextBlock.Text";
+        public const string SingleImageCardDescription = "HomePage.SingleImageCard.Description";
+        public const string SingleImageCardTitle = "HomePage.SingleImageCard.Title";
+        public const string SpotlightsCardDescription = "HomePage.SpotlightsCard.Description";
+        public const string SpotlightsCardTitle = "HomePage.SpotlightsCard.Title";
+        public const string WidthTextBlockText = "HomePage.WidthTextBlock.Text";
     }
     public static class ImageViewerPageResources
     {

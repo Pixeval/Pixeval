@@ -1,0 +1,79 @@
+{
+  "EditButton": {
+    "Label": "编辑"
+  },
+  "ResetLayoutButton": {
+    "Label": "重置布局"
+  },
+  "EditPaneTitleTextBlock": {
+    "Text": "主页布局"
+  },
+  "EditPaneDescriptionTextBlock": {
+    "Text": "选择卡片添加到主页，再调整它在网格中的位置和大小。"
+  },
+  "SelectedCardTitleTextBlock": {
+    "Text": "选中的卡片"
+  },
+  "GridSizeTitleTextBlock": {
+    "Text": "主页网格"
+  },
+  "GridRowsTextBlock": {
+    "Text": "行"
+  },
+  "GridColumnsTextBlock": {
+    "Text": "列"
+  },
+  "NoSelectedCardTextBlock": {
+    "Text": "点击主页上的卡片后可编辑位置和尺寸。"
+  },
+  "PositionXTextBlock": {
+    "Text": "列"
+  },
+  "PositionYTextBlock": {
+    "Text": "行"
+  },
+  "WidthTextBlock": {
+    "Text": "宽"
+  },
+  "HeightTextBlock": {
+    "Text": "高"
+  },
+  "DeleteSelectedCardButton": {
+    "Content": "删除卡片"
+  },
+  "CardLibraryTitleTextBlock": {
+    "Text": "可添加卡片"
+  },
+  "RecommendedWorksCard": {
+    "Title": "推荐作品",
+    "Description": "示例作品推荐区域"
+  },
+  "RecommendedUsersCard": {
+    "Title": "推荐作者",
+    "Description": "示例作者推荐区域"
+  },
+  "RecommendedNovelsCard": {
+    "Title": "推荐小说",
+    "Description": "示例小说推荐区域"
+  },
+  "RankingWorksCard": {
+    "Title": "作品榜单",
+    "Description": "示例榜单作品区域"
+  },
+  "SpotlightsCard": {
+    "Title": "特辑推荐",
+    "Description": "示例特辑推荐区域"
+  },
+  "SingleImageCard": {
+    "Title": "单独图片",
+    "Description": "示例单图展示区域"
+  },
+  "NoSpaceWarning": {
+    "Title": "没有可用空间",
+    "Content": "当前主页网格中没有能容纳这张卡片的位置。"
+  },
+  "LayoutConflictWarning": {
+    "Title": "布局冲突",
+    "Content": "该位置或尺寸会超出主页网格，或与其他卡片重叠。"
+  }
+}

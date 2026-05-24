@@ -1,0 +1,241 @@
+﻿<ContentPage
+    x:Class="Pixeval.Views.HomePage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:home="using:Pixeval.Views.Home"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
+    Header="{I18N {x:Static pixeval:MainPageResources.HomeTabContent}}"
+    Icon="{markup:SymbolIcon Home,
+                             FontSize=16,
+                             IconVariant=Color}"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
+    <Grid ColumnDefinitions="*,Auto">
+        <DockPanel Margin="20">
+            <CommandBar
+                HorizontalAlignment="Right"
+                DefaultLabelPosition="Right"
+                DockPanel.Dock="Top"
+                IsDynamicOverflowEnabled="True">
+                <CommandBarToggleButton
+                    x:Name="EditModeButton"
+                    Click="EditModeButton_OnClick"
+                    Icon="{markup:SymbolIcon Edit}"
+                    Label="{I18N {x:Static pixeval:HomePageResources.EditButtonLabel}}" />
+                <CommandBarButton
+                    Click="ResetLayoutButton_OnClick"
+                    Icon="{markup:SymbolIcon ArrowReset}"
+                    IsVisible="{Binding #EditModeButton.IsChecked}"
+                    Label="{I18N {x:Static pixeval:HomePageResources.ResetLayoutButtonLabel}}" />
+            </CommandBar>
+
+            <Border
+                Margin="0,12,0,0"
+                Background="{DynamicResource SolidBackgroundFillColorBaseBrush}"
+                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                ClipToBounds="True"
+                CornerRadius="{DynamicResource ControlCornerRadius}">
+                <Grid>
+                    <Grid
+                        x:Name="GuideGrid"
+                        Margin="12"
+                        ColumnSpacing="12"
+                        IsHitTestVisible="False"
+                        IsVisible="{Binding #EditModeButton.IsChecked}"
+                        RowSpacing="12" />
+                    <Grid
+                        x:Name="HomeGrid"
+                        Margin="12"
+                        ColumnSpacing="12"
+                        RowSpacing="12" />
+                </Grid>
+            </Border>
+        </DockPanel>
+
+        <Border
+            x:Name="EditPane"
+            Grid.Column="1"
+            Width="320"
+            Background="{DynamicResource SolidBackgroundFillColorTertiaryBrush}"
+            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+            BorderThickness="1,0,0,0"
+            IsVisible="False">
+            <ScrollViewer>
+                <StackPanel Margin="16" Spacing="16">
+                    <StackPanel Spacing="4">
+                        <TextBlock
+                            FontSize="16"
+                            FontWeight="SemiBold"
+                            Text="{I18N {x:Static pixeval:HomePageResources.EditPaneTitleTextBlockText}}" />
+                        <TextBlock
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Text="{I18N {x:Static pixeval:HomePageResources.EditPaneDescriptionTextBlockText}}"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+
+                    <Border
+                        Padding="12"
+                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                        CornerRadius="{DynamicResource ControlCornerRadius}">
+                        <StackPanel Spacing="10">
+                            <TextBlock FontWeight="SemiBold" Text="{I18N {x:Static pixeval:HomePageResources.GridSizeTitleTextBlockText}}" />
+                            <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8">
+                                <TextBlock VerticalAlignment="Center" Text="{I18N {x:Static pixeval:HomePageResources.GridRowsTextBlockText}}" />
+                                <NumericUpDown
+                                    x:Name="GridRowsBox"
+                                    Grid.Column="1"
+                                    AllowSpin="True"
+                                    ClipValueToMinMax="True"
+                                    FormatString="F0"
+                                    Increment="1"
+                                    Maximum="12"
+                                    Minimum="1"
+                                    ValueChanged="GridSizeBox_OnValueChanged" />
+                                <TextBlock
+                                    Grid.Column="2"
+                                    VerticalAlignment="Center"
+                                    Text="{I18N {x:Static pixeval:HomePageResources.GridColumnsTextBlockText}}" />
+                                <NumericUpDown
+                                    x:Name="GridColumnsBox"
+                                    Grid.Column="3"
+                                    AllowSpin="True"
+                                    ClipValueToMinMax="True"
+                                    FormatString="F0"
+                                    Increment="1"
+                                    Maximum="12"
+                                    Minimum="1"
+                                    ValueChanged="GridSizeBox_OnValueChanged" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <Border
+                        Padding="12"
+                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                        CornerRadius="{DynamicResource ControlCornerRadius}">
+                        <StackPanel Spacing="10">
+                            <TextBlock FontWeight="SemiBold" Text="{I18N {x:Static pixeval:HomePageResources.SelectedCardTitleTextBlockText}}" />
+                            <TextBlock
+                                x:Name="SelectedCardTextBlock"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Text="{I18N {x:Static pixeval:HomePageResources.NoSelectedCardTextBlockText}}"
+                                TextWrapping="Wrap" />
+                            <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8">
+                                <TextBlock VerticalAlignment="Center" Text="{I18N {x:Static pixeval:HomePageResources.PositionXTextBlockText}}" />
+                                <NumericUpDown
+                                    x:Name="SelectedColumnBox"
+                                    Grid.Column="1"
+                                    AllowSpin="True"
+                                    ClipValueToMinMax="True"
+                                    FormatString="F0"
+                                    Increment="1"
+                                    Minimum="1"
+                                    ValueChanged="SelectedCardNumericBox_OnValueChanged" />
+                                <TextBlock
+                                    Grid.Column="2"
+                                    VerticalAlignment="Center"
+                                    Text="{I18N {x:Static pixeval:HomePageResources.PositionYTextBlockText}}" />
+                                <NumericUpDown
+                                    x:Name="SelectedRowBox"
+                                    Grid.Column="3"
+                                    AllowSpin="True"
+                                    ClipValueToMinMax="True"
+                                    FormatString="F0"
+                                    Increment="1"
+                                    Minimum="1"
+                                    ValueChanged="SelectedCardNumericBox_OnValueChanged" />
+                            </Grid>
+                            <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8">
+                                <TextBlock VerticalAlignment="Center" Text="{I18N {x:Static pixeval:HomePageResources.WidthTextBlockText}}" />
+                                <NumericUpDown
+                                    x:Name="SelectedWidthBox"
+                                    Grid.Column="1"
+                                    AllowSpin="True"
+                                    ClipValueToMinMax="True"
+                                    FormatString="F0"
+                                    Increment="1"
+                                    Minimum="1"
+                                    ValueChanged="SelectedCardNumericBox_OnValueChanged" />
+                                <TextBlock
+                                    Grid.Column="2"
+                                    VerticalAlignment="Center"
+                                    Text="{I18N {x:Static pixeval:HomePageResources.HeightTextBlockText}}" />
+                                <NumericUpDown
+                                    x:Name="SelectedHeightBox"
+                                    Grid.Column="3"
+                                    AllowSpin="True"
+                                    ClipValueToMinMax="True"
+                                    FormatString="F0"
+                                    Increment="1"
+                                    Minimum="1"
+                                    ValueChanged="SelectedCardNumericBox_OnValueChanged" />
+                            </Grid>
+                            <Button
+                                x:Name="DeleteSelectedCardButton"
+                                HorizontalAlignment="Stretch"
+                                Click="DeleteSelectedCardButton_OnClick"
+                                IsEnabled="False">
+                                <StackPanel
+                                    HorizontalAlignment="Center"
+                                    Orientation="Horizontal"
+                                    Spacing="8">
+                                    <ContentControl Content="{markup:SymbolIcon Delete}" />
+                                    <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.DeleteSelectedCardButtonContent}}" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+
+                    <StackPanel Spacing="8">
+                        <TextBlock FontWeight="SemiBold" Text="{I18N {x:Static pixeval:HomePageResources.CardLibraryTitleTextBlockText}}" />
+                        <ItemsControl x:Name="CardLibraryItemsControl">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="{x:Type home:HomeCardTemplate}">
+                                    <Button
+                                        Margin="0,0,0,8"
+                                        Padding="0"
+                                        HorizontalAlignment="Stretch"
+                                        Background="Transparent"
+                                        Click="AddCardButton_OnClick">
+                                        <Border
+                                            Padding="12"
+                                            Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                            CornerRadius="{DynamicResource ControlCornerRadius}">
+                                            <Grid ColumnDefinitions="44,*,Auto" ColumnSpacing="12">
+                                                <Border
+                                                    Width="44"
+                                                    Height="44"
+                                                    Background="{Binding Brush}"
+                                                    CornerRadius="{DynamicResource ControlCornerRadius}" />
+                                                <StackPanel Grid.Column="1" Spacing="3">
+                                                    <TextBlock
+                                                        FontWeight="SemiBold"
+                                                        Text="{Binding Title}"
+                                                        TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock
+                                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                        Text="{Binding Description}"
+                                                        TextWrapping="Wrap" />
+                                                </StackPanel>
+                                                <TextBlock
+                                                    Grid.Column="2"
+                                                    VerticalAlignment="Center"
+                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                    Text="{Binding SizeText}" />
+                                            </Grid>
+                                        </Border>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</ContentPage>

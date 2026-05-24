@@ -13,7 +13,7 @@ using Pixeval.AppManagement;
 using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
-using Pixeval.Views.Capability;
+using Pixeval.Views;
 using Pixeval.Views.Login;
 using Pixeval.Views.ViewContainers;
 
@@ -95,7 +95,7 @@ public class App : Application
             AppViewModel.MakoClient.SetToken(token);
             if (await AppViewModel.MakoClient.IdentifyTokenAsync())
             {
-                viewContainer.NavigateTo(new RecommendWorksPage());
+                viewContainer.NavigateTo(new HomePage());
                 AppViewModel.QueueWorkSubscriptionSyncAll();
                 return;
             }

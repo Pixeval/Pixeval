@@ -17,6 +17,7 @@ using Mako;
 using Mako.Global.Enum;
 using Mako.Net;
 using Pixeval.I18N;
+using Pixeval.Models.Home;
 using Pixeval.Models.Options;
 using static Pixeval.AppSettingsResources;
 
@@ -60,6 +61,16 @@ public record AppSettings
 
     [SettingsEntry(Symbol.Checkmark, DefaultSelectedTabEntryHeader, DefaultSelectedTabEntryDescription)]
     public MainPageTabItem DefaultSelectedTabItem { get; set; }
+
+    [SettingsEntry(Symbol.Table, HomePageRowsEntryHeader, HomePageRowsEntryDescription)]
+    public int HomePageRows { get; set; } = 6;
+
+    [SettingsEntry(Symbol.Table, HomePageColumnsEntryHeader, HomePageColumnsEntryDescription)]
+    public int HomePageColumns { get; set; } = 6;
+
+    public bool IsHomePageLayoutInitialized { get; set; }
+
+    public ObservableCollection<HomePageCardLayout> HomePageCards { get; set; } = [];
 
     [SettingsEntry(Symbol.Rename, DownloadPathMacroEntryHeader, DownloadPathMacroEntryDescription)]
     public string DownloadPathMacro { get; set; } = GetSpecialFolder() + @"\@{if_pic_set?[@{artist_name}] @{title}:}\[@{artist_name}] @{id}@{if_pic_set?p@{pic_set_index}:}@{ext}";
@@ -269,4 +280,5 @@ public record AppSettings
 [JsonSerializable(typeof(Dictionary<string, Dictionary<string, JsonElement>>))]
 // MultiStringsAppSettingsEntry 使用 ObservableCollection<string>
 [JsonSerializable(typeof(ObservableCollection<string>))]
+[JsonSerializable(typeof(ObservableCollection<HomePageCardLayout>))]
 public partial class SettingsSerializerContext : JsonSerializerContext;

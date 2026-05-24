@@ -7,9 +7,9 @@ using System.Web;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
-using Pixeval.Views.Capability;
 
 namespace Pixeval.Views.Login;
 
@@ -67,16 +67,16 @@ public partial class LoginPage : ContentPage
         catch (Exception exception)
         {
             viewContainer.ShowError(exception.GetType().ToString(), exception.Message);
-            //_ = await viewContainer.CreateAcknowledgementAsync(
-            //    I18NManager.GetResource(LoginPageResources.FetchingSessionFailedTitle),
-            //    I18NManager.GetResource(LoginPageResources.FetchingSessionFailedContent));
+            _ = await viewContainer.CreateAcknowledgementAsync(
+                I18NManager.GetResource(LoginPageResources.FetchingSessionFailedTitle),
+                I18NManager.GetResource(LoginPageResources.FetchingSessionFailedContent));
         }
     }
 
     public void LoginNavigate()
     {
         var viewContainer = TopLevel.GetTopLevel(this)?.ViewContainer;
-        viewContainer?.NavigateTo(new RecommendWorksPage(), true);
+        viewContainer?.NavigateTo(new HomePage(), true);
         App.AppViewModel.QueueWorkSubscriptionSyncAll();
     }
 
