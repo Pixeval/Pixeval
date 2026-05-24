@@ -42,8 +42,8 @@ public abstract class PersistentManagerBase<[DynamicallyAccessedMembers(Dynamica
     }
 
     /// <inheritdoc />
-    public virtual IReadOnlyList<TModel> Query(Expression<Func<TEntry, bool>> predicate, int skip = 0, int limit = int.MaxValue) => 
-        Queryable.Where(predicate).Skip(skip).Take(limit).Select(ToModel).ToArray();
+    public virtual IReadOnlyList<TModel> Query(Expression<Func<TEntry, bool>> predicate, int skip = 0, int limit = int.MaxValue) =>
+        [.. Queryable.Where(predicate).Skip(skip).Take(limit).Select(ToModel)];
 
     /// <inheritdoc />
     public virtual void AddOrUpdate(TEntry entry) => _db.InsertOrReplace(entry, typeof(TEntry));
@@ -59,7 +59,7 @@ public abstract class PersistentManagerBase<[DynamicallyAccessedMembers(Dynamica
     public virtual void Update(TEntry entry) => _db.Update(entry, typeof(TEntry));
 
     /// <inheritdoc />
-    public virtual IReadOnlyList<TModel> Take(int count) => Queryable.Take(count).Select(ToModel).ToArray();
+    public virtual IReadOnlyList<TModel> Take(int count) => [.. Queryable.Take(count).Select(ToModel)];
 
     /// <inheritdoc />
     public virtual IReadOnlyList<TModel> TakeLast(int count)
@@ -67,12 +67,12 @@ public abstract class PersistentManagerBase<[DynamicallyAccessedMembers(Dynamica
         var c = Count;
         if (count > c)
             count = c;
-        return Queryable.Skip(c - count).Take(count).Select(ToModel).ToArray();
+        return [.. Queryable.Skip(c - count).Take(count).Select(ToModel)];
     }
 
     /// <inheritdoc />
-    public virtual IReadOnlyList<TModel> Select(Expression<Func<TEntry, bool>> predicate) => 
-        Queryable.Where(predicate).Select(ToModel).ToArray();
+    public virtual IReadOnlyList<TModel> Select(Expression<Func<TEntry, bool>> predicate) =>
+        [.. Queryable.Where(predicate).Select(ToModel)];
 
     /// <inheritdoc />
     public bool TryDelete(TEntry item) => _db.Delete<TEntry>(item.HistoryEntryId) is not 0;
@@ -98,13 +98,13 @@ public abstract class PersistentManagerBase<[DynamicallyAccessedMembers(Dynamica
     /// <inheritdoc />
     public virtual IReadOnlyList<TModel> ToArray()
     {
-        return Queryable.Select(ToModel).ToArray();
+        return [.. Queryable.Select(ToModel)];
     }
 
     /// <inheritdoc />
     public virtual IReadOnlyList<TModel> Reverse()
     {
-        return Queryable.OrderByDescending(t => t.HistoryEntryId).Select(ToModel).ToArray();
+        return [.. Queryable.OrderByDescending(t => t.HistoryEntryId).Select(ToModel)];
     }
 
     /// <inheritdoc />

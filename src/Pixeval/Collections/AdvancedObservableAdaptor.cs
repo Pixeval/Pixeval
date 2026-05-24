@@ -63,6 +63,8 @@ public class AdvancedObservableAdaptor<TIn, TOut>
         }
     }
 
+    public ObservableCollection<TOut> MappedSource => _mappedSource;
+
     public bool IsReversed
     {
         get => _inner.IsReversed;

@@ -971,7 +971,7 @@ public class TokenizingBox : TemplatedControl
 
     private List<object?> GetTokenItemsSnapshot()
     {
-        return (ItemsSource ?? _internalItems).Cast<object?>().ToList();
+        return [.. (ItemsSource ?? _internalItems).Cast<object?>()];
     }
 
     private void UpdateVisualState()

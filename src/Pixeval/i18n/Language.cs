@@ -410,6 +410,64 @@ namespace Pixeval
         public const string SparseFollowUserFormatted = "FeedPage.SparseFollowUserFormatted";
         public const string SparsePostIllustFormatted = "FeedPage.SparsePostIllustFormatted";
     }
+    public static class FilterResources
+    {
+        public const string CompletionsAnd = "Filter.Completions.And";
+        public const string CompletionsAuthor = "Filter.Completions.Author";
+        public const string CompletionsBookmark = "Filter.Completions.Bookmark";
+        public const string CompletionsEndDate = "Filter.Completions.EndDate";
+        public const string CompletionsExcludeAi = "Filter.Completions.Exclude.Ai";
+        public const string CompletionsExcludeGif = "Filter.Completions.Exclude.Gif";
+        public const string CompletionsExcludeR18 = "Filter.Completions.Exclude.R18";
+        public const string CompletionsExcludeR18G = "Filter.Completions.Exclude.R18G";
+        public const string CompletionsIncludeAi = "Filter.Completions.Include.Ai";
+        public const string CompletionsIncludeGif = "Filter.Completions.Include.Gif";
+        public const string CompletionsIncludeR18 = "Filter.Completions.Include.R18";
+        public const string CompletionsIncludeR18G = "Filter.Completions.Include.R18G";
+        public const string CompletionsIndex = "Filter.Completions.Index";
+        public const string CompletionsNot = "Filter.Completions.Not";
+        public const string CompletionsOr = "Filter.Completions.Or";
+        public const string CompletionsRatio = "Filter.Completions.Ratio";
+        public const string CompletionsStartDate = "Filter.Completions.StartDate";
+        public const string CompletionsTag = "Filter.Completions.Tag";
+        public const string CompletionsTitle = "Filter.Completions.Title";
+        public const string DiagnosticsCompletionSuffixFormatted = "Filter.Diagnostics.CompletionSuffixFormatted";
+        public const string DiagnosticsDateRequiresMonthAndDay = "Filter.Diagnostics.DateRequiresMonthAndDay";
+        public const string DiagnosticsDateValueTooLarge = "Filter.Diagnostics.DateValueTooLarge";
+        public const string DiagnosticsDenominatorCannotBeZero = "Filter.Diagnostics.DenominatorCannotBeZero";
+        public const string DiagnosticsDoubleRangeOpenIntervalUnsupported = "Filter.Diagnostics.DoubleRangeOpenIntervalUnsupported";
+        public const string DiagnosticsDuplicateViewRange = "Filter.Diagnostics.DuplicateViewRange";
+        public const string DiagnosticsExpectedInteger = "Filter.Diagnostics.ExpectedInteger";
+        public const string DiagnosticsIndexRangeMinimumGreaterThanMaximum = "Filter.Diagnostics.IndexRangeMinimumGreaterThanMaximum";
+        public const string DiagnosticsIndexRangeStartsFromOne = "Filter.Diagnostics.IndexRangeStartsFromOne";
+        public const string DiagnosticsIndexRangeTooLarge = "Filter.Diagnostics.IndexRangeTooLarge";
+        public const string DiagnosticsIntegerOutOfRange = "Filter.Diagnostics.IntegerOutOfRange";
+        public const string DiagnosticsInternalExpectedDateValue = "Filter.Diagnostics.InternalExpectedDateValue";
+        public const string DiagnosticsInternalExpectedDoubleRangeValue = "Filter.Diagnostics.InternalExpectedDoubleRangeValue";
+        public const string DiagnosticsInternalExpectedLongRangeValue = "Filter.Diagnostics.InternalExpectedLongRangeValue";
+        public const string DiagnosticsInternalExpectedTextValue = "Filter.Diagnostics.InternalExpectedTextValue";
+        public const string DiagnosticsInternalUnsupportedLongRangeBindingMode = "Filter.Diagnostics.InternalUnsupportedLongRangeBindingMode";
+        public const string DiagnosticsInternalViewRangeBindingFailed = "Filter.Diagnostics.InternalViewRangeBindingFailed";
+        public const string DiagnosticsInvalidDate = "Filter.Diagnostics.InvalidDate";
+        public const string DiagnosticsInvalidDoubleRangeFormat = "Filter.Diagnostics.InvalidDoubleRangeFormat";
+        public const string DiagnosticsInvalidDoubleValue = "Filter.Diagnostics.InvalidDoubleValue";
+        public const string DiagnosticsInvalidLongRangeFormat = "Filter.Diagnostics.InvalidLongRangeFormat";
+        public const string DiagnosticsInvalidValue = "Filter.Diagnostics.InvalidValue";
+        public const string DiagnosticsMessageWithPositionFormatted = "Filter.Diagnostics.MessageWithPositionFormatted";
+        public const string DiagnosticsMissingDateValue = "Filter.Diagnostics.MissingDateValue";
+        public const string DiagnosticsMissingFractionalPart = "Filter.Diagnostics.MissingFractionalPart";
+        public const string DiagnosticsMissingGroupOperator = "Filter.Diagnostics.MissingGroupOperator";
+        public const string DiagnosticsMissingPredicateAfterNegation = "Filter.Diagnostics.MissingPredicateAfterNegation";
+        public const string DiagnosticsMissingRangeValue = "Filter.Diagnostics.MissingRangeValue";
+        public const string DiagnosticsMissingRightParenthesis = "Filter.Diagnostics.MissingRightParenthesis";
+        public const string DiagnosticsMissingStringQuote = "Filter.Diagnostics.MissingStringQuote";
+        public const string DiagnosticsMissingTextValue = "Filter.Diagnostics.MissingTextValue";
+        public const string DiagnosticsNegativeRangeUnsupported = "Filter.Diagnostics.NegativeRangeUnsupported";
+        public const string DiagnosticsRangeMinimumGreaterThanMaximum = "Filter.Diagnostics.RangeMinimumGreaterThanMaximum";
+        public const string DiagnosticsUnexpectedToken = "Filter.Diagnostics.UnexpectedToken";
+        public const string DiagnosticsUnsupportedNegation = "Filter.Diagnostics.UnsupportedNegation";
+        public const string DiagnosticsUnsupportedValueKind = "Filter.Diagnostics.UnsupportedValueKind";
+    }
     public static class HelpPageResources
     {
         public const string AppLinkHelpText = "HelpPage.AppLinkHelp.Text";

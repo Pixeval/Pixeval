@@ -8,6 +8,7 @@ using Avalonia.Controls;
 using CommunityToolkit.Mvvm.Input;
 using Misaki;
 using Pixeval.Filters;
+using Pixeval.Models.Filters;
 
 namespace Pixeval.ViewModels;
 
@@ -28,69 +29,50 @@ public interface IWorkViewModel
     /// <inheritdoc cref="WorkEntryViewModel{T}.SaveCommand"/>
     IAsyncRelayCommand<Control?> SaveCommand { get; }
 
-    bool Filter(TreeNodeBase node) => node switch
+    bool Filter(FilterNode node) => node switch
     {
-        LeafSequence sequence => sequence switch
+        FilterGroupNode sequence => sequence switch
         {
             {
-                IsNot: var isNot,
-                Type: SequenceType.And,
+                IsNegated: var isNot,
+                Operator: FilterLogicalOperator.And,
                 Children: { Count: > 0 } children
-            } => isNot ^ children.Select(Filter).All(t => t),
+            } => isNot ^ children.All(Filter),
             {
-                IsNot: var isNot,
-                Type: SequenceType.Or,
+                IsNegated: var isNot,
+                Operator: FilterLogicalOperator.Or,
                 Children: { Count: > 0 } children
-            } => isNot ^ children.Select(Filter).Any(t => t),
+            } => isNot ^ children.Any(Filter),
             _ => true
         },
-        QueryLeaf
+        FilterPredicateNode
         {
-            IsNot: var isNot
-        } q => isNot ^ FilterQuery(q),
+            IsNegated: var isNot
+        } predicate => isNot ^ FilterPredicate(predicate),
         _ => throw new ArgumentOutOfRangeException(nameof(node))
     };
 
-    bool FilterQuery(QueryLeaf queryToken)
+    bool FilterPredicate(FilterPredicateNode predicate)
     {
-        return queryToken switch
+        return predicate.Syntax.Key switch
         {
-            StringLeaf stringLeaf => stringLeaf.Type switch
-            {
-                StringType.Title => StringCompare(stringLeaf.Content, Entry.Title),
-                StringType.Author => Entry.Authors.Any(t => StringCompare(stringLeaf.Content, t.Name)),
-                StringType.Tag => Entry.Tags.Any(t => t.Any(h => StringCompare(stringLeaf.Content, h.Name) || StringCompare(stringLeaf.Content, h.TranslatedName))),
-                _ => throw new ArgumentOutOfRangeException(nameof(stringLeaf.Type))
-            },
-            BoolLeaf boolLeaf => boolLeaf.IsExclude ^ boolLeaf.Type switch
-            {
-                BoolType.R18 => Entry.SafeRating.IsR18,
-                BoolType.R18G => Entry.SafeRating.IsR18G,
-                BoolType.Ai => Entry.IsAiGenerated,
-                BoolType.Gif => Entry.ImageType is ImageType.SingleAnimatedImage,
-                _ => throw new ArgumentOutOfRangeException(nameof(boolLeaf.Type))
-            },
-            NumericRangeLeaf numericRangeLeaf => numericRangeLeaf.Type switch
-            {
-                NumericRangeType.Bookmark => numericRangeLeaf.IsInRange(Entry.TotalFavorite),
-                NumericRangeType.Index => true,
-                _ => throw new ArgumentOutOfRangeException(nameof(numericRangeLeaf.Type))
-            },
-            FloatRangeLeaf floatRangeLeaf => floatRangeLeaf.Type switch
-            {
-                FloatRangeType.Ratio => Entry is not IImageSize image || floatRangeLeaf.IsInRange(image.AspectRatio),
-                _ => throw new ArgumentOutOfRangeException(nameof(floatRangeLeaf.Type))
-            },
-            DateLeaf dateLeaf => dateLeaf.Edge switch
-            {
-                DateRangeEdge.Starting => Entry.CreateDate >= dateLeaf.Date,
-                DateRangeEdge.Ending => Entry.CreateDate < dateLeaf.Date,
-                _ => throw new ArgumentOutOfRangeException(nameof(dateLeaf.Edge))
-            },
-            _ => throw new ArgumentOutOfRangeException(nameof(queryToken))
+            WorkFilterSyntaxKeys.Title => StringCompare((FilterTextValue)predicate.Value!, Entry.Title),
+            WorkFilterSyntaxKeys.Author => Entry.Authors.Any(t => StringCompare((FilterTextValue)predicate.Value!, t.Name)),
+            WorkFilterSyntaxKeys.Tag => Entry.Tags.Any(t => t.Any(h => StringCompare((FilterTextValue)predicate.Value!, h.Name) || h.TranslatedName is { } translatedName && StringCompare((FilterTextValue)predicate.Value!, translatedName))),
+            WorkFilterSyntaxKeys.Bookmark => ((FilterLongRange)predicate.Value!).Contains(Entry.TotalFavorite),
+            WorkFilterSyntaxKeys.Ratio => Entry is not IImageSize image || ((FilterDoubleRange)predicate.Value!).Contains(image.AspectRatio),
+            WorkFilterSyntaxKeys.StartDate => Entry.CreateDate >= (DateTimeOffset)predicate.Value!,
+            WorkFilterSyntaxKeys.EndDate => Entry.CreateDate < (DateTimeOffset)predicate.Value!,
+            WorkFilterSyntaxKeys.R18 => ((bool)predicate.Value!) ^ Entry.SafeRating.IsR18,
+            WorkFilterSyntaxKeys.R18G => ((bool)predicate.Value!) ^ Entry.SafeRating.IsR18G,
+            WorkFilterSyntaxKeys.Ai => ((bool)predicate.Value!) ^ Entry.IsAiGenerated,
+            WorkFilterSyntaxKeys.Gif => ((bool)predicate.Value!) ^ Entry.ImageType is ImageType.SingleAnimatedImage,
+            _ => throw new ArgumentOutOfRangeException(nameof(predicate))
         };
 
-        static bool StringCompare(IQueryToken.Data data, string target)
-            => data.IsPrecise ? data.Value == target : target.Contains(data.Value);
+        static bool StringCompare(FilterTextValue data, string target)
+            => data.IsExact
+                ? data.AsSpan().Equals(target, StringComparison.Ordinal)
+                : target.Contains(data.AsSpan(), StringComparison.Ordinal);
     }
 }

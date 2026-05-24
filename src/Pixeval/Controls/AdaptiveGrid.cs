@@ -268,7 +268,7 @@ public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasure
             totalMajor += lineSpacing * (actualLineCount - 1);
 
         var panelSize = this.MinorMajorSize(panelMinor, totalMajor);
-        return new LayoutState(lines, visibleIndices.ToArray(), actualLineCount, itemsPerLine, lineSpacing,
+        return new LayoutState(lines, [.. visibleIndices], actualLineCount, itemsPerLine, lineSpacing,
             itemSpacing, baseMinor, itemsAlignment, this, panelSize);
     }
 

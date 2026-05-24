@@ -63,7 +63,7 @@ public abstract class SimplePersistentManager<[DynamicallyAccessedMembers(Dynami
     public virtual void Update(T entry) => Db.Update(entry, typeof(T));
 
     /// <inheritdoc />
-    public virtual IReadOnlyList<T> Take(int count) => Queryable.Take(count).ToArray();
+    public virtual IReadOnlyList<T> Take(int count) => [.. Queryable.Take(count)];
 
     /// <inheritdoc />
     public virtual IReadOnlyList<T> TakeLast(int count)
@@ -71,11 +71,11 @@ public abstract class SimplePersistentManager<[DynamicallyAccessedMembers(Dynami
         var c = Count;
         if (count > c)
             count = c;
-        return Queryable.Skip(c - count).Take(count).ToArray();
+        return [.. Queryable.Skip(c - count).Take(count)];
     }
 
     /// <inheritdoc />
-    public virtual IReadOnlyList<T> Select(Expression<Func<T, bool>> predicate) => Queryable.Where(predicate).ToArray();
+    public virtual IReadOnlyList<T> Select(Expression<Func<T, bool>> predicate) => [.. Queryable.Where(predicate)];
 
     /// <inheritdoc />
     public virtual bool TryDelete(T item) => Db.Delete<T>(item.HistoryEntryId) is not 0;
@@ -96,7 +96,7 @@ public abstract class SimplePersistentManager<[DynamicallyAccessedMembers(Dynami
     public virtual int Delete(Expression<Func<T, bool>> predicate) => Queryable.Delete(predicate);
 
     /// <inheritdoc />
-    public virtual IReadOnlyList<T> ToArray() => Queryable.ToArray();
+    public virtual IReadOnlyList<T> ToArray() => [.. Queryable];
 
     /// <inheritdoc />
     public virtual IReadOnlyList<T> Reverse() => [.. Queryable.OrderByDescending(t => t.HistoryEntryId)];

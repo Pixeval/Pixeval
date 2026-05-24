@@ -73,6 +73,9 @@ public class SimpleOperableViewViewModel : ViewModelBase, IOperableViewViewModel
     IReadOnlyCollection<IWorkViewModel> IOperableViewViewModel.View => View;
 
     /// <inheritdoc />
+    public IReadOnlyCollection<IWorkViewModel> Source => View.MappedSource;
+
+    /// <inheritdoc />
     public Range ViewRange
     {
         get => View.Range;

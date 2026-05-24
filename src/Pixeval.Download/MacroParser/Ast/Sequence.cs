@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 
 namespace Pixeval.Download.MacroParser.Ast;
 
@@ -11,6 +12,10 @@ public record Sequence<TContext>(SingleNode<TContext> First, Sequence<TContext>?
 {
     public string Evaluate(IReadOnlyList<IMacro> env, TContext context)
     {
-        return First.Evaluate(env, context) + (Remains?.Evaluate(env, context) ?? "");
+        var builder = new StringBuilder();
+        for (var current = this; current is not null; current = current.Remains)
+            _ = builder.Append(current.First.Evaluate(env, context));
+
+        return builder.ToString();
     }
 }

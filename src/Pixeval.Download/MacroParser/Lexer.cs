@@ -1,14 +1,15 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using System;
 using System.IO;
-using System.Linq;
 using Pixeval.Utilities;
 
 namespace Pixeval.Download.MacroParser;
 
 public class Lexer(string rawString)
 {
+    private static readonly char[] _InvalidPathChars = Path.GetInvalidPathChars();
     private readonly CharStream _rawString = new(rawString);
 
     private char CurrentChar => _rawString.Peek();
@@ -49,9 +50,8 @@ public class Lexer(string rawString)
         var forward = _rawString.Forward;
         _rawString.AdvanceMarker();
         var str = _rawString.GetUntilIf(ch => ch is not '{' and not '}' and not '@' and not ':' and not '?');
-        var token = new TokenInfo(TokenKind.PlainText, str, forward..(forward + str.Length));
-        return Path.GetInvalidPathChars().Intersect(token.Text).IsNotNullOrEmpty()
+        return str.AsSpan().IndexOfAny(_InvalidPathChars) >= 0
             ? null
-            : token;
+            : new TokenInfo(TokenKind.PlainText, str, forward..(forward + str.Length));
     }
 }

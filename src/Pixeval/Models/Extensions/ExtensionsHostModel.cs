@@ -47,7 +47,7 @@ public class ExtensionsHostModel(IExtensionsHost host) : IDisposable
     /// <summary>
     /// 不能缓存<see cref="ExtensionsHostModel.Icon"/>
     /// </summary>
-    public Control Icon => host.Icon is { } icon
+    public Control Icon => Host.Icon is { } icon
         ? new Image { Source = new Bitmap(Streams.RentStream(icon)) }
         : new SymbolIcon { Symbol = Symbol.PuzzlePiece };
 

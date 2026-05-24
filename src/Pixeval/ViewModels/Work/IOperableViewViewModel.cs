@@ -23,6 +23,8 @@ public interface IOperableViewViewModel : INotifyPropertyChanged
 
     IReadOnlyCollection<IWorkViewModel> View { get; }
 
+    IReadOnlyCollection<IWorkViewModel> Source { get; }
+
     Range ViewRange { get; set; }
 
     bool RequireAdaptiveGrid { get; }
