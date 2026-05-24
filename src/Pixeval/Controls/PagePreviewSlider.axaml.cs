@@ -249,7 +249,7 @@ public class PagePreviewSlider : TemplatedControl
 
         if (ItemsCount <= 0)
         {
-            IndicatorText = string.Empty;
+            IndicatorText = "";
             PreviewIndex = -1;
             PreviewItem = null;
             _previewPointerX = 0;
@@ -405,7 +405,7 @@ public class PagePreviewSlider : TemplatedControl
     private string BuildIndicatorText()
     {
         if (ItemsCount <= 0)
-            return string.Empty;
+            return "";
 
         var activeIndex = _isHovering && PreviewIndex >= 0
             ? PreviewIndex

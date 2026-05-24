@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml.MarkupExtensions;
 using Pixeval.Models.Home;
 using Pixeval.Views.Home;
 
@@ -15,23 +14,82 @@ public partial class HomePage
 {
     private void RefreshGrid()
     {
-        NormalizeCards();
-        EnsureGridDefinitions(HomeGrid);
-        EnsureGuideGrid();
-        HomeGrid.Children.Clear();
-
-        foreach (var card in _cards)
+        _isRefreshingGrid = true;
+        try
         {
-            var control = new HomePageCardControl(card, GetTemplate(card.Kind), RowCount, ColumnCount, EditModeButton.IsChecked is true, card == _selectedCard);
-            control.CardSelected += HomeCardControl_OnCardSelected;
-            control.EditPreview += HomeCardControl_OnEditPreview;
-            control.EditCompleted += HomeCardControl_OnEditCompleted;
-            Grid.SetColumn(control, card.Column);
-            Grid.SetRow(control, card.Row);
-            Grid.SetColumnSpan(control, card.ColumnSpan);
-            Grid.SetRowSpan(control, card.RowSpan);
-            HomeGrid.Children.Add(control);
+            NormalizeCards();
+            EnsureGridDefinitions(HomeGrid);
+            EnsureGuideGrid();
+            HomeGrid.Children.Clear();
+
+            foreach (var card in _cards)
+            {
+                AddCardControl(card);
+            }
         }
+        finally
+        {
+            _isRefreshingGrid = false;
+        }
+    }
+
+    private void RefreshSelectionVisuals()
+    {
+        foreach (var child in HomeGrid.Children)
+            if (child is HomePageCardControl control)
+                control.IsSelected = control.Card == _selectedCard;
+    }
+
+    private void RefreshEditModeVisuals()
+    {
+        var isEditing = EditModeButton.IsChecked is true;
+        foreach (var child in HomeGrid.Children)
+            if (child is HomePageCardControl control)
+                control.IsEditing = isEditing;
+    }
+
+    private void AddCardControl(HomePageCardLayout card)
+    {
+        var control = new HomePageCardControl(card, GetTemplate(card), RowCount, ColumnCount)
+        {
+            IsEditing = EditModeButton.IsChecked is true,
+            IsSelected = card == _selectedCard
+        };
+        control.CardSelected += HomeCardControl_OnCardSelected;
+        control.EditPreview += HomeCardControl_OnEditPreview;
+        control.EditCompleted += HomeCardControl_OnEditCompleted;
+        Grid.SetColumn(control, card.Column);
+        Grid.SetRow(control, card.Row);
+        Grid.SetColumnSpan(control, card.ColumnSpan);
+        Grid.SetRowSpan(control, card.RowSpan);
+        HomeGrid.Children.Add(control);
+    }
+
+    private void RemoveCardControl(HomePageCardLayout card)
+    {
+        for (var i = HomeGrid.Children.Count - 1; i >= 0; i--)
+            if (HomeGrid.Children[i] is HomePageCardControl control && control.Card == card)
+            {
+                control.CancelEdit();
+                HomeGrid.Children.RemoveAt(i);
+                return;
+            }
+    }
+
+    private void UpdateSelectedCardLayoutVisual()
+    {
+        if (_selectedCard is not { } card)
+            return;
+
+        foreach (var child in HomeGrid.Children)
+            if (child is HomePageCardControl control && control.Card == card)
+            {
+                Grid.SetColumn(control, card.Column);
+                Grid.SetRow(control, card.Row);
+                Grid.SetColumnSpan(control, card.ColumnSpan);
+                Grid.SetRowSpan(control, card.RowSpan);
+                return;
+            }
     }
 
     private void EnsureGridDefinitions(Grid grid)
@@ -53,13 +111,7 @@ public partial class HomePage
         for (var row = 0; row < RowCount; row++)
         for (var column = 0; column < ColumnCount; column++)
         {
-            var guide = new Border
-            {
-                [!Border.BorderBrushProperty] = new DynamicResourceExtension("ControlStrokeColorDefaultBrush"),
-                BorderThickness = new(1),
-                CornerRadius = new(4),
-                Opacity = 0.65
-            };
+            var guide = new HomeGridGuideCell();
             Grid.SetColumn(guide, column);
             Grid.SetRow(guide, row);
             GuideGrid.Children.Add(guide);

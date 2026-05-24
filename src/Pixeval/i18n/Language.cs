@@ -468,6 +468,10 @@ namespace Pixeval
     }
     public static class HomePageResources
     {
+        public const string AddConfiguredCardButtonContent = "HomePage.AddConfiguredCardButton.Content";
+        public const string CardPreviewEmptyTextBlockText = "HomePage.CardPreview.EmptyTextBlock.Text";
+        public const string CardPreviewFailedTextBlockText = "HomePage.CardPreview.FailedTextBlock.Text";
+        public const string CardPreviewLoadingTextBlockText = "HomePage.CardPreview.LoadingTextBlock.Text";
         public const string CardLibraryTitleTextBlockText = "HomePage.CardLibraryTitleTextBlock.Text";
         public const string DeleteSelectedCardButtonContent = "HomePage.DeleteSelectedCardButton.Content";
         public const string EditButtonLabel = "HomePage.EditButton.Label";
@@ -477,6 +481,8 @@ namespace Pixeval
         public const string GridRowsTextBlockText = "HomePage.GridRowsTextBlock.Text";
         public const string GridSizeTitleTextBlockText = "HomePage.GridSizeTitleTextBlock.Text";
         public const string HeightTextBlockText = "HomePage.HeightTextBlock.Text";
+        public const string InvalidSourceParameterWarningContent = "HomePage.InvalidSourceParameterWarning.Content";
+        public const string InvalidSourceParameterWarningTitle = "HomePage.InvalidSourceParameterWarning.Title";
         public const string LayoutConflictWarningContent = "HomePage.LayoutConflictWarning.Content";
         public const string LayoutConflictWarningTitle = "HomePage.LayoutConflictWarning.Title";
         public const string NoSelectedCardTextBlockText = "HomePage.NoSelectedCardTextBlock.Text";
@@ -484,21 +490,55 @@ namespace Pixeval
         public const string NoSpaceWarningTitle = "HomePage.NoSpaceWarning.Title";
         public const string PositionXTextBlockText = "HomePage.PositionXTextBlock.Text";
         public const string PositionYTextBlockText = "HomePage.PositionYTextBlock.Text";
-        public const string RankingWorksCardDescription = "HomePage.RankingWorksCard.Description";
-        public const string RankingWorksCardTitle = "HomePage.RankingWorksCard.Title";
-        public const string RecommendedNovelsCardDescription = "HomePage.RecommendedNovelsCard.Description";
-        public const string RecommendedNovelsCardTitle = "HomePage.RecommendedNovelsCard.Title";
-        public const string RecommendedUsersCardDescription = "HomePage.RecommendedUsersCard.Description";
-        public const string RecommendedUsersCardTitle = "HomePage.RecommendedUsersCard.Title";
-        public const string RecommendedWorksCardDescription = "HomePage.RecommendedWorksCard.Description";
-        public const string RecommendedWorksCardTitle = "HomePage.RecommendedWorksCard.Title";
         public const string ResetLayoutButtonLabel = "HomePage.ResetLayoutButton.Label";
         public const string SelectedCardTitleTextBlockText = "HomePage.SelectedCardTitleTextBlock.Text";
+        public const string SelectCardSourcePromptTextBlockText = "HomePage.SelectCardSourcePromptTextBlock.Text";
         public const string SingleImageCardDescription = "HomePage.SingleImageCard.Description";
         public const string SingleImageCardTitle = "HomePage.SingleImageCard.Title";
+        public const string SingleNovelCardDescription = "HomePage.SingleNovelCard.Description";
+        public const string SingleNovelCardTitle = "HomePage.SingleNovelCard.Title";
+        public const string SingleUserCardDescription = "HomePage.SingleUserCard.Description";
+        public const string SingleUserCardTitle = "HomePage.SingleUserCard.Title";
+        public const string SourceEntryIdTextBlockText = "HomePage.SourceEntryIdTextBlock.Text";
+        public const string SourceParametersTitleTextBlockText = "HomePage.SourceParametersTitleTextBlock.Text";
+        public const string SourcePrivacyPolicyTextBlockText = "HomePage.SourcePrivacyPolicyTextBlock.Text";
+        public const string SourceRankingDateTextBlockText = "HomePage.SourceRankingDateTextBlock.Text";
+        public const string SourceRankOptionTextBlockText = "HomePage.SourceRankOptionTextBlock.Text";
+        public const string SourceSearchTextTextBlockText = "HomePage.SourceSearchTextTextBlock.Text";
+        public const string SourceSimpleWorkTypeTextBlockText = "HomePage.SourceSimpleWorkTypeTextBlock.Text";
+        public const string SourceSpotlightCategoryTextBlockText = "HomePage.SourceSpotlightCategoryTextBlock.Text";
+        public const string SourceTagTextBlockText = "HomePage.SourceTagTextBlock.Text";
+        public const string SourceUserIdTextBlockText = "HomePage.SourceUserIdTextBlock.Text";
+        public const string SourceWorkTypeTextBlockText = "HomePage.SourceWorkTypeTextBlock.Text";
+        public const string SpotlightCategoryAll = "HomePage.SpotlightCategory.All";
+        public const string SpotlightCategoryInspiration = "HomePage.SpotlightCategory.Inspiration";
+        public const string SpotlightCategorySpotlight = "HomePage.SpotlightCategory.Spotlight";
+        public const string SpotlightCategoryTutorial = "HomePage.SpotlightCategory.Tutorial";
         public const string SpotlightsCardDescription = "HomePage.SpotlightsCard.Description";
         public const string SpotlightsCardTitle = "HomePage.SpotlightsCard.Title";
+        public const string UserFollowingCardDescription = "HomePage.UserFollowingCard.Description";
+        public const string UserFollowingCardTitle = "HomePage.UserFollowingCard.Title";
+        public const string UserMyPixivCardDescription = "HomePage.UserMyPixivCard.Description";
+        public const string UserMyPixivCardTitle = "HomePage.UserMyPixivCard.Title";
+        public const string UserRecommendedCardDescription = "HomePage.UserRecommendedCard.Description";
+        public const string UserRecommendedCardTitle = "HomePage.UserRecommendedCard.Title";
+        public const string UserSearchCardDescription = "HomePage.UserSearchCard.Description";
+        public const string UserSearchCardTitle = "HomePage.UserSearchCard.Title";
         public const string WidthTextBlockText = "HomePage.WidthTextBlock.Text";
+        public const string WorkBookmarksCardDescription = "HomePage.WorkBookmarksCard.Description";
+        public const string WorkBookmarksCardTitle = "HomePage.WorkBookmarksCard.Title";
+        public const string WorkFollowingCardDescription = "HomePage.WorkFollowingCard.Description";
+        public const string WorkFollowingCardTitle = "HomePage.WorkFollowingCard.Title";
+        public const string WorkNewCardDescription = "HomePage.WorkNewCard.Description";
+        public const string WorkNewCardTitle = "HomePage.WorkNewCard.Title";
+        public const string WorkPostsCardDescription = "HomePage.WorkPostsCard.Description";
+        public const string WorkPostsCardTitle = "HomePage.WorkPostsCard.Title";
+        public const string WorkRankingCardDescription = "HomePage.WorkRankingCard.Description";
+        public const string WorkRankingCardTitle = "HomePage.WorkRankingCard.Title";
+        public const string WorkRecommendedCardDescription = "HomePage.WorkRecommendedCard.Description";
+        public const string WorkRecommendedCardTitle = "HomePage.WorkRecommendedCard.Title";
+        public const string WorkSearchCardDescription = "HomePage.WorkSearchCard.Description";
+        public const string WorkSearchCardTitle = "HomePage.WorkSearchCard.Title";
     }
     public static class ImageViewerPageResources
     {

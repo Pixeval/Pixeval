@@ -1,0 +1,138 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.Avalonia"
+    xmlns:home="using:Pixeval.Views.Home"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="240"
+    d:DesignWidth="320">
+    <ControlTheme x:Key="{x:Type home:HomePageCardControl}" TargetType="{x:Type home:HomePageCardControl}">
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="{x:Type home:HomePageCardControl}">
+                <Grid
+                    x:Name="PART_RootGrid"
+                    Background="Transparent"
+                    ClipToBounds="False">
+                    <Border
+                        x:Name="PART_CardBorder"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                        BorderThickness="2"
+                        ClipToBounds="True"
+                        CornerRadius="8">
+                        <Grid RowDefinitions="*,Auto">
+                            <Grid>
+                                <ContentPresenter Content="{TemplateBinding PreviewContent}" IsVisible="{TemplateBinding IsPreviewVisible}" />
+                                <StackPanel
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    IsVisible="{TemplateBinding IsPlaceholderVisible}"
+                                    Spacing="8">
+                                    <fluent:SymbolIcon
+                                        HorizontalAlignment="Center"
+                                        FontSize="32"
+                                        IconVariant="Color"
+                                        Opacity="0.92"
+                                        Symbol="{TemplateBinding CardSymbol}" />
+                                    <TextBlock
+                                        Foreground="{DynamicResource TextOnAccentFillColorSelectedTextBrush}"
+                                        Opacity="0.84"
+                                        Text="{TemplateBinding PlaceholderText}"
+                                        TextAlignment="Center"
+                                        TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                            </Grid>
+
+                            <Border
+                                Grid.Row="1"
+                                Padding="12,8"
+                                Background="{DynamicResource ControlOnImageFillColorDefaultBrush}">
+                                <TextBlock
+                                    FontSize="12"
+                                    FontWeight="SemiBold"
+                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                    MaxLines="1"
+                                    Text="{TemplateBinding CardTitle}"
+                                    TextTrimming="CharacterEllipsis" />
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <Grid x:Name="PART_ResizeHandlesLayer" IsVisible="{TemplateBinding IsEditing}">
+                        <Grid.Styles>
+                            <Style Selector="Grid > Border">
+                                <Setter Property="CornerRadius" Value="5" />
+                                <Setter Property="BorderThickness" Value="1" />
+                                <Setter Property="Background" Value="{DynamicResource ControlOnImageFillColorDefaultBrush}" />
+                                <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+                            </Style>
+
+                            <Style Selector="^:editing:selected /template/ Border#PART_CardBorder">
+                                <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+                            </Style>
+                        </Grid.Styles>
+                        <Border
+                            Width="14"
+                            Height="14"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Tag="{x:Static home:HomeCardEditAction.ResizeTopLeft}" />
+                        <Border
+                            Height="10"
+                            MinWidth="10"
+                            Margin="28,0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Top"
+                            Tag="{x:Static home:HomeCardEditAction.ResizeTop}" />
+                        <Border
+                            Width="14"
+                            Height="14"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Tag="{x:Static home:HomeCardEditAction.ResizeTopRight}" />
+                        <Border
+                            Width="10"
+                            MinHeight="10"
+                            Margin="0,28"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Stretch"
+                            Tag="{x:Static home:HomeCardEditAction.ResizeRight}" />
+                        <Border
+                            Width="14"
+                            Height="14"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Tag="{x:Static home:HomeCardEditAction.ResizeBottomRight}" />
+                        <Border
+                            Height="10"
+                            MinWidth="10"
+                            Margin="28,0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Tag="{x:Static home:HomeCardEditAction.ResizeBottom}" />
+                        <Border
+                            Width="14"
+                            Height="14"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Bottom"
+                            Tag="{x:Static home:HomeCardEditAction.ResizeBottomLeft}" />
+                        <Border
+                            Width="10"
+                            MinHeight="10"
+                            Margin="0,28"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Stretch"
+                            Tag="{x:Static home:HomeCardEditAction.ResizeLeft}" />
+                    </Grid>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

@@ -44,29 +44,121 @@
   "CardLibraryTitleTextBlock": {
     "Text": "可添加卡片"
   },
-  "RecommendedWorksCard": {
+  "SourceParametersTitleTextBlock": {
+    "Text": "卡片参数"
+  },
+  "SelectCardSourcePromptTextBlock": {
+    "Text": "先选择一个卡片源，再填写参数添加到主页。"
+  },
+  "SourceWorkTypeTextBlock": {
+    "Text": "作品类型"
+  },
+  "SourceSimpleWorkTypeTextBlock": {
+    "Text": "作品范围"
+  },
+  "SourcePrivacyPolicyTextBlock": {
+    "Text": "公开范围"
+  },
+  "SourceRankOptionTextBlock": {
+    "Text": "榜单类型"
+  },
+  "SourceRankingDateTextBlock": {
+    "Text": "榜单日期"
+  },
+  "SourceUserIdTextBlock": {
+    "Text": "用户 ID"
+  },
+  "SourceEntryIdTextBlock": {
+    "Text": "作品 ID"
+  },
+  "SourceSearchTextTextBlock": {
+    "Text": "搜索关键词"
+  },
+  "SourceTagTextBlock": {
+    "Text": "收藏标签"
+  },
+  "SourceSpotlightCategoryTextBlock": {
+    "Text": "特辑分类"
+  },
+  "AddConfiguredCardButton": {
+    "Content": "添加卡片"
+  },
+  "WorkRecommendedCard": {
     "Title": "推荐作品",
-    "Description": "示例作品推荐区域"
+    "Description": "来自 Pixiv 推荐引擎，可选择插画、漫画或小说。"
   },
-  "RecommendedUsersCard": {
-    "Title": "推荐作者",
-    "Description": "示例作者推荐区域"
+  "WorkBookmarksCard": {
+    "Title": "收藏作品",
+    "Description": "指定用户、公开范围和标签的收藏作品列表。"
   },
-  "RecommendedNovelsCard": {
-    "Title": "推荐小说",
-    "Description": "示例小说推荐区域"
-  },
-  "RankingWorksCard": {
+  "WorkRankingCard": {
     "Title": "作品榜单",
-    "Description": "示例榜单作品区域"
+    "Description": "指定作品范围、榜单类型和日期的排行列表。"
+  },
+  "WorkNewCard": {
+    "Title": "最新作品",
+    "Description": "按作品类型展示 Pixiv 最新作品。"
+  },
+  "WorkFollowingCard": {
+    "Title": "关注作品",
+    "Description": "来自已关注用户的新作品列表。"
+  },
+  "WorkPostsCard": {
+    "Title": "用户投稿",
+    "Description": "指定用户的插画、漫画或小说投稿。"
+  },
+  "WorkSearchCard": {
+    "Title": "搜索作品",
+    "Description": "按关键词搜索插画、漫画或小说。"
+  },
+  "UserRecommendedCard": {
+    "Title": "推荐用户",
+    "Description": "Pixiv 推荐用户列表。"
+  },
+  "UserSearchCard": {
+    "Title": "搜索用户",
+    "Description": "按关键词搜索用户。"
+  },
+  "UserFollowingCard": {
+    "Title": "关注用户",
+    "Description": "指定用户正在关注的用户列表。"
+  },
+  "UserMyPixivCard": {
+    "Title": "好 P 友",
+    "Description": "指定用户的 My pixiv 用户列表。"
   },
   "SpotlightsCard": {
     "Title": "特辑推荐",
-    "Description": "示例特辑推荐区域"
+    "Description": "Pixivision 特辑列表，可选择分类。"
   },
   "SingleImageCard": {
     "Title": "单独图片",
-    "Description": "示例单图展示区域"
+    "Description": "指定插画 ID 展示单个作品。"
+  },
+  "SingleNovelCard": {
+    "Title": "单独小说",
+    "Description": "指定小说 ID 展示单个小说。"
+  },
+  "SingleUserCard": {
+    "Title": "单独用户",
+    "Description": "指定用户 ID 展示单个用户。"
+  },
+  "CardPreview": {
+    "LoadingTextBlock": {
+      "Text": "正在加载"
+    },
+    "EmptyTextBlock": {
+      "Text": "暂无内容"
+    },
+    "FailedTextBlock": {
+      "Text": "加载失败"
+    }
+  },
+  "SpotlightCategory": {
+    "All": "全部",
+    "Spotlight": "访谈",
+    "Tutorial": "教程",
+    "Inspiration": "灵感"
   },
   "NoSpaceWarning": {
     "Title": "没有可用空间",
@@ -75,5 +167,9 @@
   "LayoutConflictWarning": {
     "Title": "布局冲突",
     "Content": "该位置或尺寸会超出主页网格，或与其他卡片重叠。"
+  },
+  "InvalidSourceParameterWarning": {
+    "Title": "参数不完整",
+    "Content": "请填写当前卡片源所需的用户 ID、作品 ID 或搜索关键词。"
   }
 }

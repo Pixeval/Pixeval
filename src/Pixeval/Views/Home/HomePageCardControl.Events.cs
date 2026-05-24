@@ -8,6 +8,19 @@ namespace Pixeval.Views.Home;
 
 public readonly record struct HomeCardBounds(int Column, int Row, int ColumnSpan, int RowSpan);
 
+public enum HomeCardEditAction
+{
+    Move,
+    ResizeLeft,
+    ResizeTop,
+    ResizeRight,
+    ResizeBottom,
+    ResizeTopLeft,
+    ResizeTopRight,
+    ResizeBottomRight,
+    ResizeBottomLeft
+}
+
 public sealed class HomeCardSelectedEventArgs(HomePageCardLayout card, bool refreshSelection) : EventArgs
 {
     public HomePageCardLayout Card { get; } = card;

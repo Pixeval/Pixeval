@@ -1,0 +1,55 @@
+<UserControl
+    x:Class="Pixeval.Views.Home.HomeCardListPreviewItem"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.Avalonia"
+    xmlns:home="using:Pixeval.Views.Home"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:DataType="{x:Type home:HomeCardPreviewCell}"
+    VerticalAlignment="Center"
+    mc:Ignorable="d"
+    d:DesignHeight="48"
+    d:DesignWidth="220">
+    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+        <Border
+            Width="44"
+            Height="44"
+            Background="{Binding FallbackBrush}"
+            ClipToBounds="True"
+            CornerRadius="6">
+            <Grid>
+                <Image
+                    controls:Source.Cache="{Binding Item.ImageUrl}"
+                    IsVisible="{Binding Item.ImageUrl, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                    Stretch="UniformToFill" />
+                <fluent:SymbolIcon
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="20"
+                    IsVisible="{Binding Item.ImageUrl, Converter={x:Static StringConverters.IsNullOrEmpty}}"
+                    Symbol="{Binding Item.Symbol}" />
+            </Grid>
+        </Border>
+
+        <StackPanel
+            Grid.Column="1"
+            VerticalAlignment="Center"
+            Spacing="2">
+            <TextBlock
+                FontWeight="SemiBold"
+                Foreground="{DynamicResource TextOnAccentFillColorSelectedTextBrush}"
+                MaxLines="1"
+                Text="{Binding Item.Title}"
+                TextTrimming="CharacterEllipsis" />
+            <TextBlock
+                FontSize="12"
+                Foreground="{DynamicResource TextOnAccentFillColorSelectedTextBrush}"
+                MaxLines="1"
+                Opacity="0.78"
+                Text="{Binding Item.Subtitle}"
+                TextTrimming="CharacterEllipsis" />
+        </StackPanel>
+    </Grid>
+</UserControl>

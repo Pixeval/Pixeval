@@ -209,6 +209,6 @@ public partial class DownloadViewViewModel : ViewModelBase, IDisposable
         }
 
         ResetFilter();
-        FilterTask(string.Empty);
+        FilterTask("");
     }
 }

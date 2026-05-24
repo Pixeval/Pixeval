@@ -13,9 +13,13 @@ public sealed partial class HomePageCardControl
 {
     private const int MinimumSpan = 1;
 
+    private const string PartRootGrid = "PART_RootGrid";
+
+    private const string PartResizeHandlesLayer = "PART_ResizeHandlesLayer";
+
     private void Card_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (sender is not Control captureTarget
+        if (_rootGrid is not Control captureTarget
             || !IsEditing
             || e.GetCurrentPoint(this).Properties.IsLeftButtonPressed is false)
         {
@@ -27,20 +31,15 @@ public sealed partial class HomePageCardControl
         e.Handled = true;
     }
 
-    private static void ResizeHandle_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    private void ResizeHandle_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (sender is not Border
-            {
-                Tag: HomeCardEditAction action, Parent: Grid
-                {
-                    Tag: HomePageCardControl { IsEditing: true } control
-                } root
-            }
-            || !e.GetCurrentPoint(control).Properties.IsLeftButtonPressed)
+        if (sender is not Border { Tag: HomeCardEditAction action }
+            || !IsEditing
+            || !e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
             return;
 
-        control.BeginEdit(action, root, e);
-        control.CardSelected?.Invoke(control, new(control.Card, false));
+        BeginEdit(action, _rootGrid!, e);
+        CardSelected?.Invoke(this, new(Card, false));
         e.Handled = true;
     }
 
@@ -207,7 +206,6 @@ public sealed partial class HomePageCardControl
         Grid.SetRow(this, Card.Row);
         Grid.SetColumnSpan(this, Card.ColumnSpan);
         Grid.SetRowSpan(this, Card.RowSpan);
-        _sizeTextBlock.Text = BuildSizeText();
     }
 
     private void CompleteEdit()
@@ -217,12 +215,9 @@ public sealed partial class HomePageCardControl
 
         var state = _pointerEditState;
         _pointerEditState = null;
-        _ignoreNextClick = state.HasChanged;
         state.Pointer.Capture(null);
         EditCompleted?.Invoke(this, new(Card, state.HasChanged));
     }
-
-    private string BuildSizeText() => $"{Card.ColumnSpan} x {Card.RowSpan}";
 
     private static int GetGridDelta(double delta, double extent, double spacing, int count)
     {
@@ -231,19 +226,6 @@ public sealed partial class HomePageCardControl
 
         var cellExtent = Math.Max(1, (extent - (spacing * Math.Max(0, count - 1))) / count);
         return (int) Math.Round(delta / (cellExtent + spacing), MidpointRounding.AwayFromZero);
-    }
-
-    private enum HomeCardEditAction
-    {
-        Move,
-        ResizeLeft,
-        ResizeTop,
-        ResizeRight,
-        ResizeBottom,
-        ResizeTopLeft,
-        ResizeTopRight,
-        ResizeBottomRight,
-        ResizeBottomLeft
     }
 
     private sealed class PointerEditState(

@@ -38,7 +38,7 @@ public partial class WorkContainer : UserControl
     private static AutoCompleteFilterPredicate<object?> FilterCompletionFilter { get; } = static (_, item) => item is FilterCompletionItem;
 
     private static AutoCompleteSelector<object> FilterCompletionSelector { get; } = static (_, item)
-        => item is FilterCompletionItem completion ? completion.InsertText : item?.ToString() ?? string.Empty;
+        => item is FilterCompletionItem completion ? completion.InsertText : item?.ToString() ?? "";
 
     private TextBox? _filterTextBox;
     private IReadOnlyCollection<IWorkViewModel>? _filterCompletionSource;
@@ -341,7 +341,7 @@ public partial class WorkContainer : UserControl
     private void UpdateFilterCompletions(string? text, FilterAnalysisResult? analysis = null)
     {
         Debug.WriteLine(nameof(UpdateFilterCompletions));
-        var normalized = text ?? string.Empty;
+        var normalized = text ?? "";
         analysis ??= AnalyzeFilter(normalized);
         var suggestions = analysis.Completions
             .Select(completion => completion with { InsertText = ApplyCompletion(normalized, completion) })
@@ -368,7 +368,7 @@ public partial class WorkContainer : UserControl
             ? I18NManager.GetResource(
                 FilterResources.DiagnosticsCompletionSuffixFormatted,
                 string.Join(", ", analysis.Completions.Select(t => t.DisplayText).Distinct(StringComparer.OrdinalIgnoreCase).Take(6)))
-            : string.Empty;
+            : "";
         return I18NManager.GetResource(
             FilterResources.DiagnosticsMessageWithPositionFormatted,
             FormatDiagnostic(diagnostic),

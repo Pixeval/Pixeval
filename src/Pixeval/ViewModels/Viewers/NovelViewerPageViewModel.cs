@@ -99,7 +99,7 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
 
     public bool IsMultiPage => PageCount > 1;
 
-    public string CurrentMarkdown => PageCount is 0 ? string.Empty : _pageMarkdowns[CurrentPageIndex];
+    public string CurrentMarkdown => PageCount is 0 ? "" : _pageMarkdowns[CurrentPageIndex];
 
     #region Settings
 
@@ -208,7 +208,7 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
             }
 
             if (pages.Count == 0)
-                pages.Add(string.Empty);
+                pages.Add("");
 
             return pages;
         }

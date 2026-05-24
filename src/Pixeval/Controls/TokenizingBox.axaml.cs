@@ -741,7 +741,7 @@ public class TokenizingBox : TemplatedControl
 
     private void AutoCompleteBoxOnTextChanged(object? sender, TextChangedEventArgs e)
     {
-        ProcessTokenSeparators(_autoCompleteBox?.Text ?? string.Empty);
+        ProcessTokenSeparators(_autoCompleteBox?.Text ?? "");
     }
 
     private bool CommitSuggestion(object? item)
@@ -752,10 +752,10 @@ public class TokenizingBox : TemplatedControl
         if (!AddTokenCore(item, item as string))
             return false;
 
-        SetCurrentValue(TextProperty, string.Empty);
+        SetCurrentValue(TextProperty, "");
         if (_autoCompleteBox is not null)
         {
-            _autoCompleteBox.Text = string.Empty;
+            _autoCompleteBox.Text = "";
             _autoCompleteBox.SelectedItem = null;
             _autoCompleteBox.IsDropDownOpen = false;
             QueueFocusTextBox();
@@ -773,10 +773,10 @@ public class TokenizingBox : TemplatedControl
         if (!AddTokenCore(text, text))
             return false;
 
-        SetCurrentValue(TextProperty, string.Empty);
+        SetCurrentValue(TextProperty, "");
         if (_autoCompleteBox is not null)
         {
-            _autoCompleteBox.Text = string.Empty;
+            _autoCompleteBox.Text = "";
             QueueFocusTextBox();
         }
 
@@ -792,7 +792,7 @@ public class TokenizingBox : TemplatedControl
         var parts = text.Split([separator], StringSplitOptions.None);
         var endsWithSeparator = text.EndsWith(separator, StringComparison.Ordinal);
         var tokenCount = endsWithSeparator ? parts.Length : parts.Length - 1;
-        var remainder = endsWithSeparator ? string.Empty : parts[^1].Trim();
+        var remainder = endsWithSeparator ? "" : parts[^1].Trim();
         var processedToken = false;
 
         for (var i = 0; i < tokenCount; ++i)
@@ -999,7 +999,7 @@ public class TokenizingBox : TemplatedControl
         if (_countTextBlock is not null)
         {
             _countTextBlock.IsVisible = MaxCount >= 0;
-            _countTextBlock.Text = MaxCount >= 0 ? $"{snapshot.Count}/{MaxCount}" : string.Empty;
+            _countTextBlock.Text = MaxCount >= 0 ? $"{snapshot.Count}/{MaxCount}" : "";
         }
     }
 }

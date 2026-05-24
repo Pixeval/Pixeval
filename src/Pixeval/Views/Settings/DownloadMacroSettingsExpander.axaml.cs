@@ -55,7 +55,7 @@ public partial class DownloadMacroSettingsExpander : SettingsExpander, IEntryCon
 
     private void ApplyText(string? text)
     {
-        var normalized = text ?? string.Empty;
+        var normalized = text ?? "";
         var analysis = ArtworkMetaPathAnalyzer.Analyze(normalized);
         _colorizer.Update(analysis, normalized.Length);
         DownloadPathMacroTextBox.TextArea.TextView.InvalidateVisual();

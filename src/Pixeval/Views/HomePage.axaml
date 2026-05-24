@@ -2,7 +2,9 @@
     x:Class="Pixeval.Views.HomePage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:home="using:Pixeval.Views.Home"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -191,6 +193,109 @@
                         </StackPanel>
                     </Border>
 
+                    <Border
+                        x:Name="SourceParametersPane"
+                        Padding="12"
+                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                        CornerRadius="{DynamicResource ControlCornerRadius}">
+                        <StackPanel Spacing="10">
+                            <StackPanel Spacing="4">
+                                <TextBlock
+                                    x:Name="SourceParameterTitleTextBlock"
+                                    FontWeight="SemiBold"
+                                    Text="{I18N {x:Static pixeval:HomePageResources.SourceParametersTitleTextBlockText}}" />
+                                <TextBlock
+                                    x:Name="SourceParameterDescriptionTextBlock"
+                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                    Text="{I18N {x:Static pixeval:HomePageResources.SelectCardSourcePromptTextBlockText}}"
+                                    TextWrapping="Wrap" />
+                            </StackPanel>
+
+                            <StackPanel x:Name="SourceWorkTypePanel" Spacing="4">
+                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceWorkTypeTextBlockText}}" />
+                                <controls:SymbolComboBox
+                                    x:Name="SourceWorkTypeComboBox"
+                                    HorizontalAlignment="Stretch"
+                                    IconMode="False" />
+                            </StackPanel>
+
+                            <StackPanel x:Name="SourceSimpleWorkTypePanel" Spacing="4">
+                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceSimpleWorkTypeTextBlockText}}" />
+                                <controls:SymbolComboBox
+                                    x:Name="SourceSimpleWorkTypeComboBox"
+                                    HorizontalAlignment="Stretch"
+                                    IconMode="False"
+                                    SelectionChanged="SourceSimpleWorkTypeComboBox_OnSelectionChanged" />
+                            </StackPanel>
+
+                            <StackPanel x:Name="SourcePrivacyPolicyPanel" Spacing="4">
+                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourcePrivacyPolicyTextBlockText}}" />
+                                <controls:SymbolComboBox
+                                    x:Name="SourcePrivacyPolicyComboBox"
+                                    HorizontalAlignment="Stretch"
+                                    IconMode="False" />
+                            </StackPanel>
+
+                            <StackPanel x:Name="SourceRankOptionPanel" Spacing="4">
+                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceRankOptionTextBlockText}}" />
+                                <controls:SymbolComboBox
+                                    x:Name="SourceRankOptionComboBox"
+                                    HorizontalAlignment="Stretch"
+                                    IconMode="False" />
+                            </StackPanel>
+
+                            <StackPanel x:Name="SourceRankingDatePanel" Spacing="4">
+                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceRankingDateTextBlockText}}" />
+                                <CalendarDatePicker
+                                    x:Name="SourceRankingDatePicker"
+                                    HorizontalAlignment="Stretch"
+                                    SelectedDateFormat="Short" />
+                            </StackPanel>
+
+                            <StackPanel x:Name="SourceUserIdPanel" Spacing="4">
+                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceUserIdTextBlockText}}" />
+                                <TextBox x:Name="SourceUserIdTextBox" />
+                            </StackPanel>
+
+                            <StackPanel x:Name="SourceEntryIdPanel" Spacing="4">
+                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceEntryIdTextBlockText}}" />
+                                <TextBox x:Name="SourceEntryIdTextBox" />
+                            </StackPanel>
+
+                            <StackPanel x:Name="SourceSearchTextPanel" Spacing="4">
+                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceSearchTextTextBlockText}}" />
+                                <TextBox x:Name="SourceSearchTextBox" />
+                            </StackPanel>
+
+                            <StackPanel x:Name="SourceTagPanel" Spacing="4">
+                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceTagTextBlockText}}" />
+                                <TextBox x:Name="SourceTagTextBox" />
+                            </StackPanel>
+
+                            <StackPanel x:Name="SourceSpotlightCategoryPanel" Spacing="4">
+                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceSpotlightCategoryTextBlockText}}" />
+                                <controls:SymbolComboBox
+                                    x:Name="SourceSpotlightCategoryComboBox"
+                                    HorizontalAlignment="Stretch"
+                                    IconMode="False" />
+                            </StackPanel>
+
+                            <Button
+                                x:Name="AddConfiguredCardButton"
+                                HorizontalAlignment="Stretch"
+                                Click="AddConfiguredCardButton_OnClick"
+                                IsEnabled="False">
+                                <StackPanel
+                                    HorizontalAlignment="Center"
+                                    Orientation="Horizontal"
+                                    Spacing="8">
+                                    <ContentControl Content="{markup:SymbolIcon Add}" />
+                                    <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.AddConfiguredCardButtonContent}}" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+
                     <StackPanel Spacing="8">
                         <TextBlock FontWeight="SemiBold" Text="{I18N {x:Static pixeval:HomePageResources.CardLibraryTitleTextBlockText}}" />
                         <ItemsControl x:Name="CardLibraryItemsControl">
@@ -201,17 +306,26 @@
                                         Padding="0"
                                         HorizontalAlignment="Stretch"
                                         Background="Transparent"
-                                        Click="AddCardButton_OnClick">
+                                        Click="CardTemplateButton_OnClick">
                                         <Border
                                             Padding="12"
                                             Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
                                             CornerRadius="{DynamicResource ControlCornerRadius}">
-                                            <Grid ColumnDefinitions="44,*,Auto" ColumnSpacing="12">
+                                            <Grid ColumnDefinitions="44,*" ColumnSpacing="12">
                                                 <Border
                                                     Width="44"
                                                     Height="44"
-                                                    Background="{Binding Brush}"
-                                                    CornerRadius="{DynamicResource ControlCornerRadius}" />
+                                                    Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="{DynamicResource ControlCornerRadius}">
+                                                    <fluent:SymbolIcon
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        FontSize="20"
+                                                        IconVariant="Color"
+                                                        Symbol="{Binding Symbol}" />
+                                                </Border>
                                                 <StackPanel Grid.Column="1" Spacing="3">
                                                     <TextBlock
                                                         FontWeight="SemiBold"
@@ -222,11 +336,6 @@
                                                         Text="{Binding Description}"
                                                         TextWrapping="Wrap" />
                                                 </StackPanel>
-                                                <TextBlock
-                                                    Grid.Column="2"
-                                                    VerticalAlignment="Center"
-                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                    Text="{Binding SizeText}" />
                                             </Grid>
                                         </Border>
                                     </Button>

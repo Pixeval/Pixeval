@@ -51,7 +51,7 @@ public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo
         DownloadState.Cancelled => I18NManager.GetResource(DownloadItemResources.DownloadCancelled),
         DownloadState.Pending => I18NManager.GetResource(DownloadItemResources.DownloadPending),
         DownloadState.Paused => I18NManager.GetResource(DownloadItemResources.DownloadPaused),
-        _ => string.Empty
+        _ => ""
     };
 
     public Symbol ActionButtonSymbol => CurrentState switch
@@ -71,7 +71,7 @@ public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo
         Symbol.ArrowRepeatAll => I18NManager.GetResource(DownloadItemResources.ActionButtonContentRetry),
         Symbol.Open => I18NManager.GetResource(DownloadItemResources.ActionButtonContentOpen),
         Symbol.Play => I18NManager.GetResource(DownloadItemResources.ActionButtonContentResume),
-        _ => string.Empty
+        _ => ""
     };
 
     public bool IsItemEnabled => !DownloadTask.IsProcessing || CurrentState is DownloadState.Completed;
@@ -108,7 +108,7 @@ public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo
         }
     }
 
-    public override string ThumbnailUrl => Entry.Thumbnails.PickMax()?.ImageUri.OriginalString ?? string.Empty;
+    public override string ThumbnailUrl => Entry.Thumbnails.PickMax()?.ImageUri.OriginalString ?? "";
 
     public bool MatchesSearch(string key) =>
         Entry.Title.Contains(key, StringComparison.OrdinalIgnoreCase)

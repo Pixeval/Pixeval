@@ -18,6 +18,7 @@
         <MergeResourceInclude Source="/Controls/TokenizingBox.axaml" />
         <MergeResourceInclude Source="/Views/Entry/EntryView.axaml" />
         <MergeResourceInclude Source="/Views/Work/AddNewBookmarkTagItem.axaml" />
+        <MergeResourceInclude Source="/Views/Home/HomePageCardControl.axaml" />
         <MergeResourceInclude Source="/Views/Viewers/WorkInfoPane.axaml" />
     </ResourceDictionary.MergedDictionaries>
 
