@@ -76,9 +76,7 @@ public class SettingsPageViewModel : ViewModelBase
                 .String(t => t.ReverseSearchApiKey,
                     entry => entry.DescriptionUri = new("https://saucenao.com/user.php?page=search-api"))
                 .Int(t => t.ReverseSearchResultSimilarityThreshold, 1, 100, 1)
-                .Int(t => t.MaximumSuggestionBoxSearchHistory, 0, 20, 1)
-                .Enum(t => t.LocalSortOption)
-                .Enum(t => t.SimpleWorkType)
+                .Enum(t => t.DefaultSimpleWorkType)
                 .MultiValues(t => t.IllustrationRankOption, entry =>
                     entry.Enum(
                             WorkTypeEnum.Illustration,
@@ -87,20 +85,7 @@ public class SettingsPageViewModel : ViewModelBase
                         .Enum(
                             WorkTypeEnum.Novel,
                             t => t.NovelRankOption,
-                            "Novel"))
-                .MultiValues(t => t.SearchIllustrationTagMatchOption, entry =>
-                    entry.Enum(
-                            WorkTypeEnum.Illustration,
-                            t => t.SearchIllustrationTagMatchOption)
-                        .Enum(
-                            WorkTypeEnum.Novel,
-                            t => t.SearchNovelTagMatchOption))
-                .DateWithSwitch(t => t.UseSearchStartDate,
-                    entry => entry.DateTime(t => t.SearchStartDate, DateTime.MinValue,
-                        DateTime.MaxValue))
-                .DateWithSwitch(t => t.UseSearchEndDate,
-                    entry => entry.DateTime(t => t.SearchEndDate, DateTime.MinValue,
-                        DateTime.MaxValue)))
+                            "Novel")))
             .NewGroup(SettingsEntryCategory.Download)
             .Config(group => group
                 .Bool(t => t.OverwriteDownloadedFile)

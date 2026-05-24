@@ -80,31 +80,13 @@ public record AppSettings
     [SettingsEntry(Symbol.DeveloperBoardLightning, MaxDownloadConcurrencyLevelEntryHeader, MaxDownloadConcurrencyLevelEntryDescription)]
     public int MaxDownloadTaskConcurrencyLevel { get; set; } = Environment.ProcessorCount / 4;
 
-    /// <summary>
-    /// The application-wide default sort option, any illustration page that supports
-    /// different orders will use this as its default value
-    /// </summary>
-    [SettingsEntry(Symbol.ArrowSort, DefaultSearchSortOptionEntryHeader, DefaultSearchSortOptionEntryDescription)]
-    public LocalSortOption LocalSortOption { get; set; }
-
     [SettingsEntry(Symbol.Grid, SimpleWorkTypeEntryHeader, SimpleWorkTypeEntryDescription)]
-    public SimpleWorkType SimpleWorkType { get; set; }
+    public SimpleWorkType DefaultSimpleWorkType { get; set; }
 
     [SettingsEntry(Symbol.ArrowTrending, RankOptionEntryHeader, RankOptionEntryDescription)]
     public RankOption IllustrationRankOption { get; set; }
 
     public RankOption NovelRankOption { get; set; }
-
-    /// <summary>
-    /// The illustration tag match option for keyword search
-    /// </summary>
-    [SettingsEntry(Symbol.CheckmarkCircleSquare, DefaultSearchTagMatchOptionEntryHeader, DefaultSearchTagMatchOptionEntryDescription)]
-    public SearchIllustrationTagMatchOption SearchIllustrationTagMatchOption { get; set; } = SearchIllustrationTagMatchOption.PartialMatchForTags;
-
-    /// <summary>
-    /// The novel tag match option for keyword search
-    /// </summary>
-    public SearchNovelTagMatchOption SearchNovelTagMatchOption { get; set; } = SearchNovelTagMatchOption.PartialMatchForTags;
 
     [SettingsEntry(Symbol.Key, ReverseSearchApiKeyEntryHeader, ReverseSearchApiKeyEntryDescription, ReverseSearchApiKeyEntryPlaceholder)]
     public string ReverseSearchApiKey { get; set; } = "";
@@ -114,9 +96,6 @@ public record AppSettings
 
     [SettingsEntry(Symbol.TargetArrow, ReverseSearchResultSimilarityThresholdEntryHeader, ReverseSearchResultSimilarityThresholdEntryDescription)]
     public int ReverseSearchResultSimilarityThreshold { get; set; } = 80;
-
-    [SettingsEntry(Symbol.History, MaximumSuggestionBoxSearchHistoryEntryHeader, MaximumSuggestionBoxSearchHistoryEntryDescription)]
-    public int MaximumSuggestionBoxSearchHistory { get; set; } = 10;
 
     /// <summary>
     /// The target filter that indicates the type of the client
@@ -148,16 +127,6 @@ public record AppSettings
     /// </summary>
     [SettingsEntry(Symbol.HardDrive, ImageMirrorServerEntryHeader, ImageMirrorServerEntryDescription, ImageMirrorServerEntryPlaceholder)]
     public string MirrorHost { get; set; } = "";
-
-    [SettingsEntry(Symbol.ArrowCircleLeft, UseSearchStartDateEntryHeader, UseSearchStartDateEntryDescription)]
-    public bool UseSearchStartDate { get; set; }
-
-    public DateTime SearchStartDate { get; set; } = DateTime.Now - TimeSpan.FromDays(1);
-
-    [SettingsEntry(Symbol.ArrowCircleRight, UseSearchEndDateEntryHeader, UseSearchEndDateEntryDescription)]
-    public bool UseSearchEndDate { get; set; }
-
-    public DateTime SearchEndDate { get; set; } = DateTime.UtcNow;
 
     [SettingsEntry(Symbol.Info, OpenWorkInfoByDefaultEntryHeader, OpenWorkInfoByDefaultEntryDescription)]
     public bool OpenWorkInfoByDefault { get; set; }
@@ -242,7 +211,7 @@ public record AppSettings
 
     public bool IsMaximized { get; set; }
 
-    public WorkType WorkType => SimpleWorkType is SimpleWorkType.IllustrationAndManga ? WorkType.Illustration : WorkType.Novel;
+    public WorkType WorkType => DefaultSimpleWorkType is SimpleWorkType.IllustrationAndManga ? WorkType.Illustration : WorkType.Novel;
 
     public ApplicationTheme ActualTheme => Theme is ApplicationTheme.Default
         ? Application.Current!.ActualThemeVariant == ThemeVariant.Dark ? ApplicationTheme.Dark : ApplicationTheme.Light

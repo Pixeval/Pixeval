@@ -39,10 +39,6 @@ namespace Pixeval
         public const string BrowseDirectionHeader = "AppSettings.BrowseDirection.Header";
         public const string BrowseModeDescription = "AppSettings.BrowseMode.Description";
         public const string BrowseModeHeader = "AppSettings.BrowseMode.Header";
-        public const string DefaultSearchSortOptionEntryDescription = "AppSettings.DefaultSearchSortOptionEntry.Description";
-        public const string DefaultSearchSortOptionEntryHeader = "AppSettings.DefaultSearchSortOptionEntry.Header";
-        public const string DefaultSearchTagMatchOptionEntryDescription = "AppSettings.DefaultSearchTagMatchOptionEntry.Description";
-        public const string DefaultSearchTagMatchOptionEntryHeader = "AppSettings.DefaultSearchTagMatchOptionEntry.Header";
         public const string DefaultSelectedTabEntryDescription = "AppSettings.DefaultSelectedTabEntry.Description";
         public const string DefaultSelectedTabEntryHeader = "AppSettings.DefaultSelectedTabEntry.Header";
         public const string DomainFrontingTypeEntryDescription = "AppSettings.DomainFrontingTypeEntry.Description";
@@ -58,8 +54,6 @@ namespace Pixeval
         public const string ImageMirrorServerEntryPlaceholder = "AppSettings.ImageMirrorServerEntry.Placeholder";
         public const string MaxDownloadConcurrencyLevelEntryDescription = "AppSettings.MaxDownloadConcurrencyLevelEntry.Description";
         public const string MaxDownloadConcurrencyLevelEntryHeader = "AppSettings.MaxDownloadConcurrencyLevelEntry.Header";
-        public const string MaximumSuggestionBoxSearchHistoryEntryDescription = "AppSettings.MaximumSuggestionBoxSearchHistoryEntry.Description";
-        public const string MaximumSuggestionBoxSearchHistoryEntryHeader = "AppSettings.MaximumSuggestionBoxSearchHistoryEntry.Header";
         public const string NovelSettingsBackgroundEntryDescription = "AppSettings.NovelSettingsBackgroundEntry.Description";
         public const string NovelSettingsBackgroundEntryHeader = "AppSettings.NovelSettingsBackgroundEntry.Header";
         public const string NovelSettingsFontColorEntryDescription = "AppSettings.NovelSettingsFontColorEntry.Description";
@@ -103,10 +97,6 @@ namespace Pixeval
         public const string ThumbnailLayoutTypeEntryHeader = "AppSettings.ThumbnailLayoutTypeEntry.Header";
         public const string UseFileCacheEntryDescription = "AppSettings.UseFileCacheEntry.Description";
         public const string UseFileCacheEntryHeader = "AppSettings.UseFileCacheEntry.Header";
-        public const string UseSearchEndDateEntryDescription = "AppSettings.UseSearchEndDateEntry.Description";
-        public const string UseSearchEndDateEntryHeader = "AppSettings.UseSearchEndDateEntry.Header";
-        public const string UseSearchStartDateEntryDescription = "AppSettings.UseSearchStartDateEntry.Description";
-        public const string UseSearchStartDateEntryHeader = "AppSettings.UseSearchStartDateEntry.Header";
         public const string WebCookieEntryDescription = "AppSettings.WebCookieEntry.Description";
         public const string WebCookieEntryHeader = "AppSettings.WebCookieEntry.Header";
         public const string WebCookieEntryPlaceholder = "AppSettings.WebCookieEntry.Placeholder";

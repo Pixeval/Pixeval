@@ -58,7 +58,6 @@
                 <controls:SymbolComboBox
                     x:Name="SortOptionComboBox"
                     ItemsSource="{markup1:EnumResources x:TypeArguments=options:LocalSortOption}"
-                    SelectedValue="{x:Static views:PixevalSettings.LocalSortOption}"
                     SelectionChanged="SortOptionComboBox_OnSelectionChanged" />
                 <AutoCompleteBox
                     x:Name="FilterAutoSuggestBox"

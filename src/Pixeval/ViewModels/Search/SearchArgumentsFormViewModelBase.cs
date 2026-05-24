@@ -13,16 +13,9 @@ public abstract partial class SearchArgumentsFormViewModelBase : ViewModelBase
 {
     protected static readonly string CommonUnspecified = I18NManager.GetResource(SearchResources.CommonUnspecified);
 
-    protected SearchArgumentsFormViewModelBase()
-    {
-        var settings = App.AppViewModel.AppSettings;
-        StartDateOption = new OptionalDateSearchOptionViewModel(settings.UseSearchStartDate, settings.SearchStartDate);
-        EndDateOption = new OptionalDateSearchOptionViewModel(settings.UseSearchEndDate, settings.SearchEndDate);
-    }
+    public OptionalDateSearchOptionViewModel StartDateOption { get; } = new();
 
-    public OptionalDateSearchOptionViewModel StartDateOption { get; }
-
-    public OptionalDateSearchOptionViewModel EndDateOption { get; }
+    public OptionalDateSearchOptionViewModel EndDateOption { get; } = new();
 
     [ObservableProperty]
     public partial WorkSortOption SortOption { get; set; } = WorkSortOption.PublishDateDescending;

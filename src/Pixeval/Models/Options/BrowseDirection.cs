@@ -1,6 +1,7 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
+using FluentIcons.Common;
 using Pixeval.Attributes;
 
 namespace Pixeval.Models.Options;
@@ -8,15 +9,15 @@ namespace Pixeval.Models.Options;
 [LocalizationMetadata]
 public enum BrowseDirection
 {
-    [LocalizedResource(EnumResources.BrowseDirectionLeftRight)]
+    [LocalizedResource(Symbol.ArrowRight, EnumResources.BrowseDirectionLeftRight)]
     LeftRight,
 
-    [LocalizedResource(EnumResources.BrowseDirectionRightLeft)]
+    [LocalizedResource(Symbol.ArrowLeft, EnumResources.BrowseDirectionRightLeft)]
     RightLeft,
 
-    [LocalizedResource(EnumResources.BrowseDirectionTopDown)]
+    [LocalizedResource(Symbol.ArrowDown, EnumResources.BrowseDirectionTopDown)]
     TopDown,
 
-    [LocalizedResource(EnumResources.BrowseDirectionBottomUp)]
+    [LocalizedResource(Symbol.ArrowUp, EnumResources.BrowseDirectionBottomUp)]
     BottomUp
 }

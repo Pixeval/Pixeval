@@ -43,13 +43,13 @@ public partial class SearchPageViewModel : ViewModelBase
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TrendingTags))]
-    public partial SimpleWorkType SelectedTrendingTagsType { get; set; } = App.AppViewModel.AppSettings.SimpleWorkType;
+    public partial SimpleWorkType SelectedTrendingTagsType { get; set; } = App.AppViewModel.AppSettings.DefaultSimpleWorkType;
 
     [ObservableProperty]
     public partial string SearchText { get; set; } = "";
 
     [ObservableProperty]
-    public partial SimpleWorkType SelectedAdvancedOptionsType { get; set; } = App.AppViewModel.AppSettings.SimpleWorkType;
+    public partial SimpleWorkType SelectedAdvancedOptionsType { get; set; } = App.AppViewModel.AppSettings.DefaultSimpleWorkType;
 
     public IReadOnlyList<TrendingTag> TrendingTags => SelectedTrendingTagsType is SimpleWorkType.Novel ? NovelTrendingTags : IllustrationTrendingTags;
 

@@ -12,11 +12,6 @@ namespace Pixeval.ViewModels.Search;
 
 public partial class NovelSearchFormViewModel : SearchArgumentsFormViewModelBase
 {
-    public NovelSearchFormViewModel()
-    {
-        MatchOption = App.AppViewModel.AppSettings.SearchNovelTagMatchOption;
-    }
-
     [ObservableProperty]
     public partial SearchNovelTagMatchOption MatchOption { get; set; }
 
