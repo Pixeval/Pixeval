@@ -14,8 +14,6 @@ namespace Pixeval.ViewModels;
 
 public interface IWorkViewModel
 {
-    bool IsBookmarkEnabled { get; set; }
-
     bool IsBookmarkSupported { get; }
 
     IArtworkInfo Entry { get; }

@@ -9,5 +9,5 @@ namespace Pixeval.ViewModels;
 
 public interface IWorkViewViewModel : IOperableViewViewModel, IDisposable
 {
-    void ResetEngine(IFetchEngine<IArtworkInfo>? newEngine, bool isBookmarkEnabled = true, int itemsPerPage = 20, int itemLimit = -1);
+    void ResetEngine(IFetchEngine<IArtworkInfo>? newEngine, int itemsPerPage = 20, int itemLimit = -1);
 }

@@ -19,9 +19,7 @@ public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>
         IsInWatchLater = GetHistoryPersistHelper()?.ContainsWatchLater(entry) is true;
     }
 
-    public bool IsBookmarkEnabled { get; set; }
-
-    public bool IsBookmarkSupported => IsBookmarkEnabled && Entry.Platform is IPlatformInfo.Pixiv;
+    public bool IsBookmarkSupported => Entry.Platform is IPlatformInfo.Pixiv;
 
     IArtworkInfo IWorkViewModel.Entry => Entry;
 
@@ -40,13 +38,4 @@ public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>
     protected bool CanManageWatchLater => GetHistoryPersistHelper() is not null && WatchLaterEntry.TryCreateWorkKey(Entry, out _);
 
     private static HistoryPersistHelper? GetHistoryPersistHelper() => App.AppViewModel?.AppServiceProvider?.GetService<HistoryPersistHelper>();
-}
-
-[Flags]
-public enum BookmarkSupportState
-{
-    Unsupported,
-    Get,
-    Set,
-    Both = Get | Set
 }

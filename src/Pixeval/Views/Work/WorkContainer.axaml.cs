@@ -416,9 +416,9 @@ public partial class WorkContainer : UserControl
     private TextBox? GetFilterTextBox()
         => _filterTextBox ??= FilterAutoSuggestBox.GetVisualDescendants().OfType<TextBox>().FirstOrDefault();
 
-    public void ResetEngine(IFetchEngine<IArtworkInfo> newEngine, bool isBookmarkEnabled = true, int itemsPerPage = 20, int itemLimit = -1)
+    public void ResetEngine(IFetchEngine<IArtworkInfo> newEngine, int itemsPerPage = 20, int itemLimit = -1)
     {
-        WorkView.ResetEngine(newEngine, isBookmarkEnabled, itemsPerPage, itemLimit);
+        WorkView.ResetEngine(newEngine, itemsPerPage, itemLimit);
     }
 
     public void SetSource(IReadOnlyCollection<IArtworkInfo> source)

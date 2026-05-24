@@ -179,8 +179,8 @@
             VerticalAlignment="Top"
             Click="ChevronButtonClicked"
             Content="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding #InfoPaneRoot.IsDocked},
-                                                                         ChevronDown,
                                                                          ChevronUp,
+                                                                         ChevronDown,
                                                                          x:TypeArguments=common:Symbol}}"
             Theme="{StaticResource TransparentButtonStyle}"
             ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.InfoAndComments}}" />

@@ -82,10 +82,10 @@ public abstract partial class WorkViewViewModelBase<T, TViewModel>(FrozenSet<str
 
     public abstract bool RequireAdaptiveGrid { get; }
 
-    public void ResetEngine(IFetchEngine<IArtworkInfo>? newEngine, bool isBookmarkEnabled = true, int itemsPerPage = 20, int itemLimit = -1)
+    public void ResetEngine(IFetchEngine<IArtworkInfo>? newEngine, int itemsPerPage = 20, int itemLimit = -1)
     {
         CachedBlockedTags = [.. App.AppViewModel.AppSettings.BlockedTags.ToFrozenSet()];
-        ResetEngine((IFetchEngine<T>?) newEngine, (info, _) => TViewModel.CreateInstance(info).Apply(t => t.IsBookmarkEnabled = isBookmarkEnabled), itemsPerPage, itemLimit);
+        ResetEngine((IFetchEngine<T>?) newEngine, (info, _) => TViewModel.CreateInstance(info), itemsPerPage, itemLimit);
         SetFilters();
     }
 }

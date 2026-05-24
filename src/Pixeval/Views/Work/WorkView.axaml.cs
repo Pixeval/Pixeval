@@ -81,18 +81,18 @@ public partial class WorkView : UserControl, IDisposable
 
         switch (vm, DataContext)
         {
-            case (NovelItemViewModel { IsBookmarkSupported: false, Entry.Id: var id }, _):
-                await viewContainer.CreateNovelPageAsync(id);
-                break;
             case (NovelItemViewModel viewModel, NovelViewViewModel viewViewModel):
                 viewContainer.CreateNovelPage(viewModel, viewViewModel);
                 break;
-            case (IllustrationItemViewModel { IsBookmarkSupported: false, Entry: Illustration { Id: var id } }, _):
-                var illustration = await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id);
-                await viewContainer.CreateIllustrationPageAsync(illustration);
-                break;
             case (IllustrationItemViewModel viewModel, IllustrationViewViewModel viewViewModel):
                 viewContainer.CreateIllustrationPage(viewModel, viewViewModel);
+                break;
+            case (NovelItemViewModel { Entry.Id: var id }, _):
+                await viewContainer.CreateNovelPageAsync(id);
+                break;
+            case (IllustrationItemViewModel { Entry: Illustration { Id: var id } }, _):
+                var illustration = await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id);
+                await viewContainer.CreateIllustrationPageAsync(illustration);
                 break;
         }
     }
@@ -100,7 +100,7 @@ public partial class WorkView : UserControl, IDisposable
     /// <summary>
     /// 在调用<see cref="ResetEngine"/>前<see cref="StyledElement.DataContext"/>为<see langword="null"/>
     /// </summary>
-    public void ResetEngine(IFetchEngine<IArtworkInfo> newEngine, bool isBookmarkEnabled = true, int itemsPerPage = 20, int itemLimit = -1)
+    public void ResetEngine(IFetchEngine<IArtworkInfo> newEngine, int itemsPerPage = 20, int itemLimit = -1)
     {
         var isNovelEngine = newEngine is IFetchEngine<Novel>;
         var viewModel = DataContext as IWorkViewViewModel;
@@ -108,11 +108,11 @@ public partial class WorkView : UserControl, IDisposable
         {
             case NovelViewViewModel when isNovelEngine:
             case IllustrationViewViewModel when !isNovelEngine:
-                viewModel.ResetEngine(newEngine, isBookmarkEnabled, itemsPerPage, itemLimit);
+                viewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
                 break;
             default:
                 IWorkViewViewModel newViewModel = isNovelEngine ? new NovelViewViewModel() : new IllustrationViewViewModel();
-                newViewModel.ResetEngine(newEngine, isBookmarkEnabled, itemsPerPage, itemLimit);
+                newViewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
                 DataContext = newViewModel;
                 WorkListBox.ItemsSource = newViewModel.View;
                 viewModel?.Dispose();
@@ -129,7 +129,7 @@ public partial class WorkView : UserControl, IDisposable
 
     public async void WorkItem_OnRequestOpenUserInfoPage(Control sender, IWorkViewModel e)
     {
-        if (e is { IsBookmarkSupported: false, Entry: WorkBase { User.Id: var id } })
+        if (e is { Entry: WorkBase { User.Id: var id } })
         {
             if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer)
                 await viewContainer.CreateUserPageAsync(id);
