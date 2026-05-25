@@ -68,7 +68,7 @@ public class SharableViewDataProvider<T, TViewModel>
     public void ResetEngine(IFetchEngine<T>? fetchEngine, Func<T, int, TViewModel> factory, int itemsPerPage = 20, int limit = -1)
     {
         FetchEngineRef = new(fetchEngine, this);
-        EntrySourceRef = new(new(new FetchEngineIncrementalSource<T, TViewModel>(FetchEngine!, factory, limit), itemsPerPage), this);
+        EntrySourceRef = new(new(new IncrementalSource<T, TViewModel>(FetchEngine!, factory, limit), itemsPerPage), this);
     }
 
     public SharableViewDataProvider<T, TViewModel> CloneRef()

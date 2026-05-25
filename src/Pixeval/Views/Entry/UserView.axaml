@@ -20,6 +20,7 @@
         IsLoadingMore="{Binding #ListBox.(controls:IncrementalLoadingBehavior.IsLoadingMore)}">
         <ListBox
             x:Name="ListBox"
+            controls:AdaptiveGridIncrementalLoadingBehavior.IsEnabled="True"
             controls:IncrementalLoadingBehavior.IsEnabled="True"
             controls:IncrementalLoadingBehavior.Threshold="200"
             ContainerPrepared="ListBox_OnContainerPrepared"

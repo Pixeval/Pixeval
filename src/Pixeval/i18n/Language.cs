@@ -49,6 +49,10 @@ namespace Pixeval
         public const string DownloadUpdateAutomaticallyEntryHeader = "AppSettings.DownloadUpdateAutomaticallyEntry.Header";
         public const string EnableDomainFrontingEntryDescription = "AppSettings.EnableDomainFrontingEntry.Description";
         public const string EnableDomainFrontingEntryHeader = "AppSettings.EnableDomainFrontingEntry.Header";
+        public const string HideHomePageCardTitleEntryDescription = "AppSettings.HideHomePageCardTitleEntry.Description";
+        public const string HideHomePageCardTitleEntryHeader = "AppSettings.HideHomePageCardTitleEntry.Header";
+        public const string HideHomePageToolbarEntryDescription = "AppSettings.HideHomePageToolbarEntry.Description";
+        public const string HideHomePageToolbarEntryHeader = "AppSettings.HideHomePageToolbarEntry.Header";
         public const string HomePageColumnsEntryDescription = "AppSettings.HomePageColumnsEntry.Description";
         public const string HomePageColumnsEntryHeader = "AppSettings.HomePageColumnsEntry.Header";
         public const string HomePageRowsEntryDescription = "AppSettings.HomePageRowsEntry.Description";
@@ -469,18 +473,23 @@ namespace Pixeval
     public static class HomePageResources
     {
         public const string AddConfiguredCardButtonContent = "HomePage.AddConfiguredCardButton.Content";
+        public const string CardBackgroundTextBlockText = "HomePage.CardBackgroundTextBlock.Text";
+        public const string CardLibraryTitleTextBlockText = "HomePage.CardLibraryTitleTextBlock.Text";
         public const string CardPreviewEmptyTextBlockText = "HomePage.CardPreview.EmptyTextBlock.Text";
         public const string CardPreviewFailedTextBlockText = "HomePage.CardPreview.FailedTextBlock.Text";
         public const string CardPreviewLoadingTextBlockText = "HomePage.CardPreview.LoadingTextBlock.Text";
-        public const string CardLibraryTitleTextBlockText = "HomePage.CardLibraryTitleTextBlock.Text";
         public const string DeleteSelectedCardButtonContent = "HomePage.DeleteSelectedCardButton.Content";
         public const string EditButtonLabel = "HomePage.EditButton.Label";
         public const string EditPaneDescriptionTextBlockText = "HomePage.EditPaneDescriptionTextBlock.Text";
         public const string EditPaneTitleTextBlockText = "HomePage.EditPaneTitleTextBlock.Text";
         public const string GridColumnsTextBlockText = "HomePage.GridColumnsTextBlock.Text";
         public const string GridRowsTextBlockText = "HomePage.GridRowsTextBlock.Text";
+        public const string GridShrinkBlockedWarningContent = "HomePage.GridShrinkBlockedWarning.Content";
+        public const string GridShrinkBlockedWarningTitle = "HomePage.GridShrinkBlockedWarning.Title";
         public const string GridSizeTitleTextBlockText = "HomePage.GridSizeTitleTextBlock.Text";
         public const string HeightTextBlockText = "HomePage.HeightTextBlock.Text";
+        public const string HideCardTitleButtonLabel = "HomePage.HideCardTitleButton.Label";
+        public const string HideToolbarButtonLabel = "HomePage.HideToolbarButton.Label";
         public const string InvalidSourceParameterWarningContent = "HomePage.InvalidSourceParameterWarning.Content";
         public const string InvalidSourceParameterWarningTitle = "HomePage.InvalidSourceParameterWarning.Title";
         public const string LayoutConflictWarningContent = "HomePage.LayoutConflictWarning.Content";
@@ -490,9 +499,8 @@ namespace Pixeval
         public const string NoSpaceWarningTitle = "HomePage.NoSpaceWarning.Title";
         public const string PositionXTextBlockText = "HomePage.PositionXTextBlock.Text";
         public const string PositionYTextBlockText = "HomePage.PositionYTextBlock.Text";
-        public const string ResetLayoutButtonLabel = "HomePage.ResetLayoutButton.Label";
-        public const string SelectedCardTitleTextBlockText = "HomePage.SelectedCardTitleTextBlock.Text";
         public const string SelectCardSourcePromptTextBlockText = "HomePage.SelectCardSourcePromptTextBlock.Text";
+        public const string SelectedCardTitleTextBlockText = "HomePage.SelectedCardTitleTextBlock.Text";
         public const string SingleImageCardDescription = "HomePage.SingleImageCard.Description";
         public const string SingleImageCardTitle = "HomePage.SingleImageCard.Title";
         public const string SingleNovelCardDescription = "HomePage.SingleNovelCard.Description";
@@ -506,14 +514,9 @@ namespace Pixeval
         public const string SourceRankOptionTextBlockText = "HomePage.SourceRankOptionTextBlock.Text";
         public const string SourceSearchTextTextBlockText = "HomePage.SourceSearchTextTextBlock.Text";
         public const string SourceSimpleWorkTypeTextBlockText = "HomePage.SourceSimpleWorkTypeTextBlock.Text";
-        public const string SourceSpotlightCategoryTextBlockText = "HomePage.SourceSpotlightCategoryTextBlock.Text";
         public const string SourceTagTextBlockText = "HomePage.SourceTagTextBlock.Text";
         public const string SourceUserIdTextBlockText = "HomePage.SourceUserIdTextBlock.Text";
         public const string SourceWorkTypeTextBlockText = "HomePage.SourceWorkTypeTextBlock.Text";
-        public const string SpotlightCategoryAll = "HomePage.SpotlightCategory.All";
-        public const string SpotlightCategoryInspiration = "HomePage.SpotlightCategory.Inspiration";
-        public const string SpotlightCategorySpotlight = "HomePage.SpotlightCategory.Spotlight";
-        public const string SpotlightCategoryTutorial = "HomePage.SpotlightCategory.Tutorial";
         public const string SpotlightsCardDescription = "HomePage.SpotlightsCard.Description";
         public const string SpotlightsCardTitle = "HomePage.SpotlightsCard.Title";
         public const string UserFollowingCardDescription = "HomePage.UserFollowingCard.Description";

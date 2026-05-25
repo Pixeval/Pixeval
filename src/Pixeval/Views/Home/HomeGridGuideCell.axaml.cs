@@ -7,8 +7,5 @@ namespace Pixeval.Views.Home;
 
 public sealed partial class HomeGridGuideCell : Border
 {
-    public HomeGridGuideCell()
-    {
-        InitializeComponent();
-    }
+    public HomeGridGuideCell() => InitializeComponent();
 }

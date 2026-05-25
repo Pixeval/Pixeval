@@ -21,6 +21,12 @@ public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasure
     public static readonly StyledProperty<double> ItemSpacingProperty =
         AvaloniaProperty.Register<AdaptiveGrid, double>(nameof(ItemSpacing));
 
+    public static readonly DirectProperty<AdaptiveGrid, int> LinesProperty =
+        AvaloniaProperty.RegisterDirect<AdaptiveGrid, int>(nameof(Lines), control => control.Lines);
+
+    public static readonly DirectProperty<AdaptiveGrid, int> ItemsPerLineProperty =
+        AvaloniaProperty.RegisterDirect<AdaptiveGrid, int>(nameof(ItemsPerLine), control => control.ItemsPerLine);
+
     public static readonly StyledProperty<double> LineSpacingProperty =
         AvaloniaProperty.Register<AdaptiveGrid, double>(nameof(LineSpacing));
 
@@ -70,6 +76,18 @@ public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasure
     {
         get => GetValue(ItemSpacingProperty);
         set => SetValue(ItemSpacingProperty, value);
+    }
+
+    public int Lines
+    {
+        get;
+        private set => SetAndRaise(LinesProperty, ref field, value);
+    }
+
+    public int ItemsPerLine
+    {
+        get;
+        private set => SetAndRaise(ItemsPerLineProperty, ref field, value);
     }
 
     public double LineSpacing
@@ -222,6 +240,9 @@ public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasure
 
             accumulatedMajor += layout.LineMajor;
         }
+
+        Lines = layout.LineCount;
+        ItemsPerLine = layout.ItemsPerLine;
 
         return finalSize;
     }

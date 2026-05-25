@@ -6,7 +6,10 @@ using Pixeval.Models.Home;
 
 namespace Pixeval.Views.Home;
 
-public readonly record struct HomeCardBounds(int Column, int Row, int ColumnSpan, int RowSpan);
+public readonly record struct HomeCardBounds(int Column, int Row, int ColumnSpan, int RowSpan)
+{
+    public static HomeCardBounds From(HomePageCardLayout card) => new(card.Column, card.Row, card.ColumnSpan, card.RowSpan);
+}
 
 public enum HomeCardEditAction
 {
@@ -44,7 +47,7 @@ public sealed class HomeCardEditCompletedEventArgs(HomePageCardLayout card, bool
     public bool HasChanged { get; } = hasChanged;
 }
 
-public static class HomeCardBoundsFactory
+public sealed class HomeCardDeleteRequestedEventArgs(HomePageCardLayout card) : EventArgs
 {
-    public static HomeCardBounds From(HomePageCardLayout card) => new(card.Column, card.Row, card.ColumnSpan, card.RowSpan);
+    public HomePageCardLayout Card { get; } = card;
 }

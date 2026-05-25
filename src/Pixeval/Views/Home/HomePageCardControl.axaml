@@ -1,10 +1,13 @@
 <ResourceDictionary
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:home="using:Pixeval.Views.Home"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
     mc:Ignorable="d"
     d:DesignHeight="240"
     d:DesignWidth="320">
@@ -16,10 +19,7 @@
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Template">
             <ControlTemplate TargetType="{x:Type home:HomePageCardControl}">
-                <Grid
-                    x:Name="PART_RootGrid"
-                    Background="Transparent"
-                    ClipToBounds="False">
+                <Panel x:Name="PART_RootPanel" ClipToBounds="False">
                     <Border
                         x:Name="PART_CardBorder"
                         Background="{TemplateBinding Background}"
@@ -27,13 +27,127 @@
                         BorderThickness="2"
                         ClipToBounds="True"
                         CornerRadius="8">
-                        <Grid RowDefinitions="*,Auto">
-                            <Grid>
-                                <ContentPresenter Content="{TemplateBinding PreviewContent}" IsVisible="{TemplateBinding IsPreviewVisible}" />
+                        <DockPanel>
+                            <Border
+                                IsVisible="{TemplateBinding IsCardTitleVisible}"
+                                Padding="12,8"
+                                Background="{DynamicResource ControlOnImageFillColorDefaultBrush}"
+                                DockPanel.Dock="Bottom">
+                                <TextBlock
+                                    FontSize="12"
+                                    FontWeight="SemiBold"
+                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                    MaxLines="1"
+                                    Text="{TemplateBinding CardTitle}"
+                                    TextTrimming="CharacterEllipsis" />
+                            </Border>
+
+                            <Panel>
+                                <ItemsControl
+                                    x:DataType="{x:Type home:HomeCardPreviewViewModel}"
+                                    x:Name="PART_ContentItemsControl"
+                                    Margin="10"
+                                    ClipToBounds="True"
+                                    controls:AdaptiveGridIncrementalLoadingBehavior.IsEnabled="True"
+                                    DataContext="{TemplateBinding PreviewViewModel}"
+                                    IsHitTestVisible="{Binding !IsEditing, RelativeSource={RelativeSource TemplatedParent}}"
+                                    ItemsSource="{Binding Items}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <controls:AdaptiveGrid
+                                                ItemSize="150"
+                                                ItemSpacing="5"
+                                                ItemsAlignment="Stretch"
+                                                LineSize="100"
+                                                LineSpacing="5"
+                                                MaxItemsInLine="{Binding Items.Count}"
+                                                MaxLines="{Binding Items.Count}"
+                                                MinItemsInLine="1"
+                                                MinLines="1" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.DataTemplates>
+                                        <DataTemplate x:DataType="{x:Type home:HomeCardImagePreviewItem}">
+                                            <Button
+                                                Padding="0"
+                                                Background="Transparent"
+                                                Command="{Binding OpenCommand}"
+                                                CommandParameter="{Binding $self}"
+                                                Theme="{StaticResource TransparentButtonStyle}">
+                                                <Image controls:Source.Cache="{Binding ImageUrl}" Stretch="UniformToFill" />
+                                            </Button>
+                                        </DataTemplate>
+
+                                        <DataTemplate x:DataType="{x:Type home:HomeCardNovelPreviewItem}">
+                                            <Button
+                                                Padding="0"
+                                                Background="Transparent"
+                                                Command="{Binding OpenCommand}"
+                                                CommandParameter="{Binding $self}"
+                                                Theme="{StaticResource TransparentButtonStyle}">
+                                                <DockPanel>
+                                                    <Image
+                                                        Height="64"
+                                                        controls:Source.Cache="{Binding ImageUrl}"
+                                                        DockPanel.Dock="Top"
+                                                        Stretch="UniformToFill" />
+                                                    <TextBlock
+                                                        Margin="0,6,0,0"
+                                                        FontSize="12"
+                                                        Foreground="{DynamicResource TextOnAccentFillColorSelectedTextBrush}"
+                                                        MaxLines="2"
+                                                        Text="{Binding Title}"
+                                                        TextTrimming="CharacterEllipsis"
+                                                        TextWrapping="Wrap" />
+                                                </DockPanel>
+                                            </Button>
+                                        </DataTemplate>
+
+                                        <DataTemplate x:DataType="{x:Type home:HomeCardUserPreviewItem}">
+                                            <Button
+                                                Padding="0"
+                                                Background="Transparent"
+                                                Command="{Binding OpenCommand}"
+                                                CommandParameter="{Binding $self}"
+                                                Theme="{StaticResource TransparentButtonStyle}">
+                                                <controls:AvatarImage controls:Source.Cache="{Binding AvatarUrl}" />
+                                            </Button>
+                                        </DataTemplate>
+
+                                        <DataTemplate x:DataType="{x:Type home:HomeCardSpotlightPreviewItem}">
+                                            <Button
+                                                Padding="0"
+                                                Background="Transparent"
+                                                Command="{Binding OpenCommand}"
+                                                CommandParameter="{Binding $self}"
+                                                Theme="{StaticResource TransparentButtonStyle}">
+                                                <DockPanel VerticalSpacing="6">
+                                                    <Image
+                                                        Height="56"
+                                                        controls:Source.Cache="{Binding ImageUrl}"
+                                                        DockPanel.Dock="Top"
+                                                        Stretch="UniformToFill" />
+                                                    <TextBlock
+                                                        FontSize="12"
+                                                        Foreground="{DynamicResource TextOnAccentFillColorSelectedTextBrush}"
+                                                        MaxLines="2"
+                                                        Text="{Binding Title}"
+                                                        TextTrimming="CharacterEllipsis"
+                                                        TextWrapping="Wrap" />
+                                                </DockPanel>
+                                            </Button>
+                                        </DataTemplate>
+                                    </ItemsControl.DataTemplates>
+                                </ItemsControl>
+
                                 <StackPanel
+                                    x:DataType="{x:Type home:HomeCardPreviewViewModel}"
+                                    x:Name="PART_PlaceholderPanel"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    IsVisible="{TemplateBinding IsPlaceholderVisible}"
+                                    DataContext="{TemplateBinding PreviewViewModel}"
+                                    IsHitTestVisible="{Binding !IsEditing, RelativeSource={RelativeSource TemplatedParent}}"
+                                    IsVisible="{Binding !Items.Count}"
                                     Spacing="8">
                                     <fluent:SymbolIcon
                                         HorizontalAlignment="Center"
@@ -44,40 +158,53 @@
                                     <TextBlock
                                         Foreground="{DynamicResource TextOnAccentFillColorSelectedTextBrush}"
                                         Opacity="0.84"
-                                        Text="{TemplateBinding PlaceholderText}"
+                                        Text="{Binding PlaceholderText}"
                                         TextAlignment="Center"
                                         TextTrimming="CharacterEllipsis" />
                                 </StackPanel>
-                            </Grid>
-
-                            <Border
-                                Grid.Row="1"
-                                Padding="12,8"
-                                Background="{DynamicResource ControlOnImageFillColorDefaultBrush}">
-                                <TextBlock
-                                    FontSize="12"
-                                    FontWeight="SemiBold"
-                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                    MaxLines="1"
-                                    Text="{TemplateBinding CardTitle}"
-                                    TextTrimming="CharacterEllipsis" />
-                            </Border>
-                        </Grid>
+                            </Panel>
+                        </DockPanel>
                     </Border>
 
-                    <Grid x:Name="PART_ResizeHandlesLayer" IsVisible="{TemplateBinding IsEditing}">
-                        <Grid.Styles>
-                            <Style Selector="Grid > Border">
+                    <Panel x:Name="PART_ResizeHandlesLayer" IsVisible="{TemplateBinding IsEditing}">
+                        <Panel.Styles>
+                            <Style Selector="Panel > Border">
                                 <Setter Property="CornerRadius" Value="5" />
                                 <Setter Property="BorderThickness" Value="1" />
                                 <Setter Property="Background" Value="{DynamicResource ControlOnImageFillColorDefaultBrush}" />
                                 <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+                                <Setter Property="BoxShadow" Value="0 2 8 0 #40000000" />
+                                <Setter Property="Opacity" Value="0.86" />
+                                <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+                                <Setter Property="Transitions">
+                                    <Transitions>
+                                        <DoubleTransition Property="Opacity" Duration="0:0:0.12" />
+                                        <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.12" />
+                                        <BoxShadowsTransition Property="BoxShadow" Duration="0:0:0.12" />
+                                    </Transitions>
+                                </Setter>
+                            </Style>
+
+                            <Style Selector="Panel > Border:pointerover">
+                                <Setter Property="Background" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
+                                <Setter Property="BoxShadow" Value="0 3 12 0 #66000000" />
+                                <Setter Property="Opacity" Value="1" />
+                                <Setter Property="RenderTransform" Value="scale(1.05)" />
+                            </Style>
+
+                            <Style Selector="Panel > Border.pressed">
+                                <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+                                <Setter Property="BorderBrush" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+                                <Setter Property="BoxShadow" Value="0 1 5 0 #73000000" />
+                                <Setter Property="Opacity" Value="1" />
+                                <Setter Property="RenderTransform" Value="scale(0.95)" />
                             </Style>
 
                             <Style Selector="^:editing:selected /template/ Border#PART_CardBorder">
                                 <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
                             </Style>
-                        </Grid.Styles>
+
+                        </Panel.Styles>
                         <Border
                             Width="14"
                             Height="14"
@@ -130,8 +257,18 @@
                             HorizontalAlignment="Left"
                             VerticalAlignment="Stretch"
                             Tag="{x:Static home:HomeCardEditAction.ResizeLeft}" />
-                    </Grid>
-                </Grid>
+                    </Panel>
+
+                    <Button
+                        x:Name="PART_QuickDeleteButton"
+                        Padding="10"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Background="{DynamicResource ControlOnImageFillColorDefault}"
+                        Content="{markup:SymbolIcon Delete}"
+                        IsVisible="{TemplateBinding IsEditing}"
+                        ToolTip.Tip="{I18N {x:Static pixeval:HomePageResources.DeleteSelectedCardButtonContent}}" />
+                </Panel>
             </ControlTemplate>
         </Setter>
     </ControlTheme>

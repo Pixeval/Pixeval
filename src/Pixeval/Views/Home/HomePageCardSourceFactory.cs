@@ -2,34 +2,49 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
-using FluentIcons.Common;
 using Mako;
 using Mako.Engine;
 using Mako.Engine.Implements;
 using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.Models.Home;
-using Pixeval.Utilities;
 
 namespace Pixeval.Views.Home;
 
 public static class HomePageCardSourceFactory
 {
-    public static async Task<IReadOnlyList<HomeCardPreviewItem>> LoadPreviewItemsAsync(HomePageCardLayout card, int count)
+    public static async Task LoadPreviewItemsAsync(HomeCardPreviewViewModel viewModel)
     {
-        return card.TemplateKind switch
+        var card = viewModel.Card;
+        switch (card.TemplateKind)
         {
-            HomePageCardTemplateKind.WorkList or HomePageCardTemplateKind.NovelList => await LoadWorkItemsAsync(CreateWorkEngine(card), count),
-            HomePageCardTemplateKind.UserList => await LoadUserItemsAsync(CreateUserEngine(card), count),
-            HomePageCardTemplateKind.SpotlightList => await LoadSpotlightItemsAsync(App.AppViewModel.MakoClient.Spotlight(card.SpotlightCategory), count),
-            HomePageCardTemplateKind.SingleImage => [CreateWorkItem(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(card.EntryId))],
-            HomePageCardTemplateKind.SingleNovel => [CreateWorkItem(await App.AppViewModel.MakoClient.GetNovelFromIdAsync(card.EntryId))],
-            HomePageCardTemplateKind.SingleUser => [CreateUserItem((await App.AppViewModel.MakoClient.GetUserFromIdAsync(card.UserId)).UserEntity)],
-            _ => throw new ArgumentOutOfRangeException(nameof(card))
-        };
+            case HomePageCardTemplateKind.WorkList or HomePageCardTemplateKind.NovelList:
+                var workEngine = CreateWorkEngine(card);
+                viewModel.SetEngine(workEngine, (work, index) => work is Novel novel
+                    ? new HomeCardNovelPreviewItem(novel)
+                    : new HomeCardImagePreviewItem(work));
+                return;
+            case HomePageCardTemplateKind.UserList:
+                var userEngine = CreateUserEngine(card);
+                viewModel.SetEngine(userEngine, (user, index) => new HomeCardUserPreviewItem(user.UserInfo));
+                return;
+            case HomePageCardTemplateKind.SpotlightList:
+                var spotlightEngine = App.AppViewModel.MakoClient.Spotlight();
+                viewModel.SetEngine(spotlightEngine, (spotlight, index) => new HomeCardSpotlightPreviewItem(spotlight));
+                return;
+            case HomePageCardTemplateKind.SingleImage:
+                viewModel.SetItems(new HomeCardImagePreviewItem(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(card.EntryId)));
+                return;
+            case HomePageCardTemplateKind.SingleNovel:
+                viewModel.SetItems(new HomeCardNovelPreviewItem(await App.AppViewModel.MakoClient.GetNovelFromIdAsync(card.EntryId)));
+                return;
+            case HomePageCardTemplateKind.SingleUser:
+                viewModel.SetItems(new HomeCardUserPreviewItem((await App.AppViewModel.MakoClient.GetUserFromIdAsync(card.UserId)).UserEntity));
+                return;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(card));
+        }
     }
 
     private static IFetchEngine<IWorkEntry> CreateWorkEngine(HomePageCardLayout card)
@@ -69,61 +84,4 @@ public static class HomePageCardSourceFactory
 
     private static DateTimeOffset GetRankingDate(HomePageCardLayout card) =>
         card.RankingDate == default ? MakoClient.RankingMaxDateTime : card.RankingDate;
-
-    private static async Task<IReadOnlyList<HomeCardPreviewItem>> LoadWorkItemsAsync(IAsyncEnumerable<IWorkEntry> engine, int count)
-    {
-        var items = new List<HomeCardPreviewItem>(count);
-        await using var enumerator = engine.GetAsyncEnumerator(CancellationToken.None);
-        while (await enumerator.MoveNextAsync())
-        {
-            items.Add(CreateWorkItem(enumerator.Current));
-            if (items.Count >= count)
-                break;
-        }
-
-        return items;
-    }
-
-    private static async Task<IReadOnlyList<HomeCardPreviewItem>> LoadUserItemsAsync(IAsyncEnumerable<User> engine, int count)
-    {
-        var items = new List<HomeCardPreviewItem>(count);
-        await using var enumerator = engine.GetAsyncEnumerator(CancellationToken.None);
-        while (await enumerator.MoveNextAsync())
-        {
-            items.Add(CreateUserItem(enumerator.Current));
-            if (items.Count >= count)
-                break;
-        }
-
-        return items;
-    }
-
-    private static async Task<IReadOnlyList<HomeCardPreviewItem>> LoadSpotlightItemsAsync(IAsyncEnumerable<Spotlight> engine, int count)
-    {
-        var items = new List<HomeCardPreviewItem>(count);
-        await using var enumerator = engine.GetAsyncEnumerator(CancellationToken.None);
-        while (await enumerator.MoveNextAsync())
-        {
-            var spotlight = enumerator.Current;
-            items.Add(new(spotlight.PureTitle, spotlight.SubcategoryLabel, spotlight.Thumbnail, Symbol.SlideTextSparkle));
-            if (items.Count >= count)
-                break;
-        }
-
-        return items;
-    }
-
-    private static HomeCardPreviewItem CreateWorkItem(IWorkEntry entry) => new(
-        entry.Title,
-        entry.User.Name,
-        entry.GetThumbnailUrl(),
-        entry is Novel ? Symbol.BookOpen : Symbol.Image);
-
-    private static HomeCardPreviewItem CreateUserItem(User user) => CreateUserItem(user.UserInfo);
-
-    private static HomeCardPreviewItem CreateUserItem(UserInfo user) => new(
-        user.Name,
-        user.Account,
-        string.IsNullOrWhiteSpace(user.AvatarUrl) ? null : user.AvatarUrl,
-        Symbol.Person);
 }

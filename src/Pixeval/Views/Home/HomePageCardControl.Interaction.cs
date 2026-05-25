@@ -2,10 +2,11 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Pixeval.Models.Home;
+using Avalonia.VisualTree;
 
 namespace Pixeval.Views.Home;
 
@@ -13,15 +14,22 @@ public sealed partial class HomePageCardControl
 {
     private const int MinimumSpan = 1;
 
-    private const string PartRootGrid = "PART_RootGrid";
+    private const string PartRootGrid = "PART_RootPanel";
 
     private const string PartResizeHandlesLayer = "PART_ResizeHandlesLayer";
+
+    private const string PartQuickDeleteButton = "PART_QuickDeleteButton";
+
+    private const string PressedClass = "pressed";
+
+    private Border? _pressedResizeHandle;
 
     private void Card_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (_rootGrid is not Control captureTarget
             || !IsEditing
-            || e.GetCurrentPoint(this).Properties.IsLeftButtonPressed is false)
+            || IsQuickDeleteEvent(e)
+            || !e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
             return;
         }
@@ -33,15 +41,22 @@ public sealed partial class HomePageCardControl
 
     private void ResizeHandle_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (sender is not Border { Tag: HomeCardEditAction action }
+        if (e.Source is not Border { Tag: HomeCardEditAction action }
+            || _rootGrid is not { } captureTarget
             || !IsEditing
             || !e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
             return;
 
-        BeginEdit(action, _rootGrid!, e);
+        SetPressedResizeHandle((Border) e.Source);
+        BeginEdit(action, captureTarget, e);
         CardSelected?.Invoke(this, new(Card, false));
         e.Handled = true;
     }
+
+    private bool IsQuickDeleteEvent(PointerPressedEventArgs e) =>
+        _quickDeleteButton is not null
+        && e.Source is Visual visual
+        && visual.GetSelfAndVisualAncestors().Contains(_quickDeleteButton);
 
     private void BeginEdit(HomeCardEditAction action, Control captureTarget, PointerPressedEventArgs e)
     {
@@ -67,7 +82,7 @@ public sealed partial class HomePageCardControl
             return;
 
         var candidate = CreateCandidate(e);
-        if (candidate.Equals(HomeCardBoundsFactory.From(Card)))
+        if (candidate.Equals(HomeCardBounds.From(Card)))
         {
             e.Handled = true;
             return;
@@ -102,7 +117,7 @@ public sealed partial class HomePageCardControl
     private HomeCardBounds CreateCandidate(PointerEventArgs e)
     {
         if (_pointerEditState is not { } state)
-            return HomeCardBoundsFactory.From(Card);
+            return HomeCardBounds.From(Card);
 
         var pointerPosition = e.GetPosition(state.LayoutGrid);
         var deltaColumn = GetGridDelta(pointerPosition.X - state.StartPoint.X, state.LayoutGrid.Bounds.Width, state.LayoutGrid.ColumnSpacing, ColumnCount);
@@ -215,8 +230,19 @@ public sealed partial class HomePageCardControl
 
         var state = _pointerEditState;
         _pointerEditState = null;
+        SetPressedResizeHandle(null);
         state.Pointer.Capture(null);
         EditCompleted?.Invoke(this, new(Card, state.HasChanged));
+    }
+
+    private void SetPressedResizeHandle(Border? handle)
+    {
+        if (_pressedResizeHandle == handle)
+            return;
+
+        _pressedResizeHandle?.Classes.Remove(PressedClass);
+        _pressedResizeHandle = handle;
+        _pressedResizeHandle?.Classes.Add(PressedClass);
     }
 
     private static int GetGridDelta(double delta, double extent, double spacing, int count)

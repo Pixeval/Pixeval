@@ -47,7 +47,9 @@ public class SettingsPageViewModel : ViewModelBase
                 .Bool(t => t.UseFileCache)
                 .Enum(t => t.DefaultSelectedTabItem)
                 .Int(t => t.HomePageRows, 1, 12, 1)
-                .Int(t => t.HomePageColumns, 1, 12, 1))
+                .Int(t => t.HomePageColumns, 1, 12, 1)
+                .Bool(t => t.HideHomePageToolbar)
+                .Bool(t => t.HideHomePageCardTitle))
             .NewGroup(SettingsEntryCategory.Network)
             .Config(group => group
                 .DomainFronting(t => t.EnableDomainFronting, entry =>

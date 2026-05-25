@@ -17,6 +17,7 @@ using Pixeval.I18N;
 using Pixeval.Views;
 using Pixeval.Views.Capability;
 using Pixeval.Views.Download;
+using Pixeval.Views.Home;
 using Pixeval.Views.Search;
 using Pixeval.Views.Settings;
 using Pixeval.Views.ViewContainers;

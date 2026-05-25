@@ -63,11 +63,11 @@ public static partial class PixevalConverters
     public static readonly FuncValueConverter<string?, string?> HtmlToPlainText = new(value =>
         value is null
             ? null
-            : WebUtility.HtmlDecode(HtmlTagRegex().Replace(LineBreakRegex().Replace(value, "\n"), "")));
+            : WebUtility.HtmlDecode(HtmlTagRegex.Replace(LineBreakRegex.Replace(value, "\n"), "")));
     
     [GeneratedRegex("<br\\s*/?>", RegexOptions.IgnoreCase)]
-    private static partial Regex LineBreakRegex();
+    private static partial Regex LineBreakRegex { get; }
 
     [GeneratedRegex("<[^>]+>")]
-    private static partial Regex HtmlTagRegex();
+    private static partial Regex HtmlTagRegex { get; }
 }

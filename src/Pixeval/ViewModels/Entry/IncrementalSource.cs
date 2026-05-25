@@ -10,7 +10,7 @@ using Pixeval.Collections;
 
 namespace Pixeval.ViewModels;
 
-public class FetchEngineIncrementalSource<T, TViewModel>(IAsyncEnumerable<T?> asyncEnumerator, Func<T, int, TViewModel> factory, int limit = -1)
+public class IncrementalSource<T, TViewModel>(IAsyncEnumerable<T?> asyncEnumerator, Func<T, int, TViewModel> factory, int limit = -1)
     : IIncrementalSource<TViewModel>
     where T : IIdentityInfo
 {

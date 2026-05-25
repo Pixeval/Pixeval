@@ -3,28 +3,68 @@
 
 using System;
 using System.Linq;
+using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
-using FluentIcons.Common;
+using Avalonia.Media;
 using Mako;
 using Mako.Global.Enum;
-using Mako.Model;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.I18N;
 using Pixeval.Models.Home;
-using Pixeval.Models.Settings;
 using Pixeval.Utilities;
-using Pixeval.Views.Home;
 
-namespace Pixeval.Views;
+namespace Pixeval.Views.Home;
 
 public partial class HomePage
 {
     private void EditModeButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        var isEditing = EditModeButton.IsChecked is true;
+        SetEditMode(EditModeButton.IsChecked is true);
+    }
+
+    private void HideToolbarButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var settings = App.AppViewModel.AppSettings;
+        settings.HideHomePageToolbar = HideToolbarButton.IsChecked is true;
+        ApplyDisplaySettings();
+        AppInfo.SaveSettings(settings);
+    }
+
+    private void HideCardTitleButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var settings = App.AppViewModel.AppSettings;
+        settings.HideHomePageCardTitle = HideCardTitleButton.IsChecked is true;
+        ApplyDisplaySettings();
+        AppInfo.SaveSettings(settings);
+    }
+
+    private void InitializeDisplaySettingsControls()
+    {
+        var settings = App.AppViewModel.AppSettings;
+        HideToolbarButton.IsChecked = settings.HideHomePageToolbar;
+        HideCardTitleButton.IsChecked = settings.HideHomePageCardTitle;
+    }
+
+    private void ApplyDisplaySettings()
+    {
+        var settings = App.AppViewModel.AppSettings;
+        if (settings.HideHomePageToolbar)
+            SetEditMode(false);
+
+        HomeToolbar.IsVisible = !settings.HideHomePageToolbar;
+        HomeGridBorder.Margin = settings.HideHomePageToolbar ? new Thickness(0) : new Thickness(0, 12, 0, 0);
+
+        foreach (var child in Enumerable.OfType<HomePageCardControl>(HomeGrid.Children))
+            child.IsCardTitleVisible = !settings.HideHomePageCardTitle;
+    }
+
+    private void SetEditMode(bool isEditing)
+    {
+        if (EditModeButton.IsChecked != isEditing)
+            EditModeButton.IsChecked = isEditing;
+
         EditPane.IsVisible = isEditing;
         if (!isEditing)
         {
@@ -37,15 +77,6 @@ public partial class HomePage
             UpdateGridSizeControls();
         }
         RefreshEditModeVisuals();
-    }
-
-    private void ResetLayoutButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        _cards.Clear();
-        SelectCard(null);
-        CreateDefaultCards();
-        SaveLayout();
-        RefreshGrid();
     }
 
     private void CardTemplateButton_OnClick(object? sender, RoutedEventArgs e)
@@ -91,14 +122,8 @@ public partial class HomePage
 
     private void DeleteSelectedCardButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (_selectedCard is null)
-            return;
-
-        var deletedCard = _selectedCard;
-        _ = _cards.Remove(deletedCard);
-        RemoveCardControl(deletedCard);
-        SelectCard(null);
-        SaveLayout();
+        if (_selectedCard is { } card)
+            DeleteCard(card);
     }
 
     private void GridSizeBox_OnValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
@@ -106,16 +131,25 @@ public partial class HomePage
         if (_isUpdatingGridSizeControls || sender is not NumericUpDown)
             return;
 
-        var rows = Math.Clamp(DecimalToPositiveInt(GridRowsBox.Value), MinimumGridSize, MaximumGridSize);
-        var columns = Math.Clamp(DecimalToPositiveInt(GridColumnsBox.Value), MinimumGridSize, MaximumGridSize);
+        var rows = DecimalToPositiveInt(Math.Clamp(GridRowsBox.Value ?? 1, MinimumGridSize, MaximumGridSize));
+        var columns = DecimalToPositiveInt(Math.Clamp(GridColumnsBox.Value ?? 1, MinimumGridSize, MaximumGridSize));
         var settings = App.AppViewModel.AppSettings;
         if (settings.HomePageRows == rows && settings.HomePageColumns == columns)
             return;
 
+        if (!CanResizeGrid(rows, columns))
+        {
+            UpdateGridSizeControls();
+            TopLevel.GetTopLevel(this)?.ViewContainer?.ShowWarning(
+                I18NManager.GetResource(HomePageResources.GridShrinkBlockedWarningTitle),
+                I18NManager.GetResource(HomePageResources.GridShrinkBlockedWarningContent));
+            return;
+        }
+
         settings.HomePageRows = rows;
         settings.HomePageColumns = columns;
         SaveLayout();
-        RefreshGrid();
+        RefreshGridSize();
         UpdateSelectedCardControls();
         UpdateGridSizeControls();
     }
@@ -154,6 +188,20 @@ public partial class HomePage
         UpdateSelectedCardControls();
     }
 
+    private void SelectedBackgroundColorPicker_OnColorChanged(object? sender, ColorChangedEventArgs e)
+    {
+        if (_isUpdatingSelectedCardControls || _selectedCard is null)
+            return;
+
+        var color = e.NewColor.ToUInt32();
+        if (_selectedCard.BackgroundColor == color)
+            return;
+
+        _selectedCard.BackgroundColor = color;
+        SaveLayout();
+        UpdateSelectedCardLayoutVisual();
+    }
+
     private void HomeCardControl_OnCardSelected(object? sender, HomeCardSelectedEventArgs e)
     {
         SelectCard(e.Card);
@@ -181,6 +229,26 @@ public partial class HomePage
         UpdateSelectedCardControls();
     }
 
+    private void HomeCardControl_OnDeleteRequested(object? sender, HomeCardDeleteRequestedEventArgs e)
+    {
+        DeleteCard(e.Card);
+    }
+
+    private void DeleteCard(HomePageCardLayout card)
+    {
+        if (!_cards.Remove(card))
+            return;
+
+        if (_activeCardControl?.Card == card)
+            _activeCardControl = null;
+
+        RemoveCardControl(card);
+        if (_selectedCard == card)
+            SelectCard(null);
+
+        SaveLayout();
+    }
+
     private void SelectCard(HomePageCardLayout? card)
     {
         _selectedCard = card;
@@ -204,15 +272,18 @@ public partial class HomePage
             SelectedHeightBox.Maximum = RowCount;
 
             var card = _selectedCard;
-            SelectedColumnBox.IsEnabled = card is not null;
-            SelectedRowBox.IsEnabled = card is not null;
-            SelectedWidthBox.IsEnabled = card is not null;
-            SelectedHeightBox.IsEnabled = card is not null;
+            var cardIsNotNull = card is not null;
+            SelectedColumnBox.IsEnabled = cardIsNotNull;
+            SelectedRowBox.IsEnabled = cardIsNotNull;
+            SelectedWidthBox.IsEnabled = cardIsNotNull;
+            SelectedHeightBox.IsEnabled = cardIsNotNull;
+            SelectedBackgroundColorPicker.IsEnabled = cardIsNotNull;
 
-            SelectedColumnBox.Value = card is null ? 1 : card.Column + 1;
-            SelectedRowBox.Value = card is null ? 1 : card.Row + 1;
+            SelectedColumnBox.Value = (card?.Column ?? 0) + 1;
+            SelectedRowBox.Value = (card?.Row ?? 0) + 1;
             SelectedWidthBox.Value = card?.ColumnSpan ?? 1;
             SelectedHeightBox.Value = card?.RowSpan ?? 1;
+            SelectedBackgroundColorPicker.Color = Color.FromUInt32(card?.BackgroundColor ?? 0);
         }
         finally
         {
@@ -225,10 +296,6 @@ public partial class HomePage
         _isUpdatingGridSizeControls = true;
         try
         {
-            GridRowsBox.Maximum = MaximumGridSize;
-            GridColumnsBox.Maximum = MaximumGridSize;
-            GridRowsBox.Minimum = MinimumGridSize;
-            GridColumnsBox.Minimum = MinimumGridSize;
             GridRowsBox.Value = RowCount;
             GridColumnsBox.Value = ColumnCount;
         }
@@ -240,29 +307,8 @@ public partial class HomePage
 
     private void InitializeSourceParameterControls()
     {
-        RegisterHomePageEnums();
-        SourceWorkTypeComboBox.ItemsSource = SymbolComboBoxItem.GetValues<WorkType>();
-        SourceSimpleWorkTypeComboBox.ItemsSource = SymbolComboBoxItem.GetValues<SimpleWorkType>();
-        SourcePrivacyPolicyComboBox.ItemsSource = SymbolComboBoxItem.GetValues<PrivacyPolicy>();
-        SourceSpotlightCategoryComboBox.ItemsSource = SymbolComboBoxItem.GetValues<SpotlightCategory>();
-        SourceRankingDatePicker.DisplayDateEnd = MakoClient.RankingMaxDateTime.LocalDateTime;
-        SourceRankingDatePicker.SelectedDate = MakoClient.RankingMaxDateTime.LocalDateTime;
         UpdateRankOptionItems();
         UpdateSourceParameterControls();
-    }
-
-    private static void RegisterHomePageEnums()
-    {
-        if (!LocalSettingsEntryHelper.RegisteredAttach.ContainsKey(typeof(SpotlightCategory)))
-        {
-            LocalSettingsEntryHelper.RegisterAttach<SpotlightCategory>(t =>
-            {
-                t.Register(SpotlightCategory.All, Symbol.SlideTextSparkle, HomePageResources.SpotlightCategoryAll);
-                t.Register(SpotlightCategory.Spotlight, Symbol.SlideTextSparkle, HomePageResources.SpotlightCategorySpotlight);
-                t.Register(SpotlightCategory.Tutorial, Symbol.BookQuestionMark, HomePageResources.SpotlightCategoryTutorial);
-                t.Register(SpotlightCategory.Inspiration, Symbol.DesignIdeas, HomePageResources.SpotlightCategoryInspiration);
-            });
-        }
     }
 
     private void UpdateSourceParameterControls()
@@ -279,7 +325,6 @@ public partial class HomePage
         SourceWorkTypeComboBox.SelectedValue = template.WorkType;
         SourceSimpleWorkTypeComboBox.SelectedValue = template.SimpleWorkType;
         SourcePrivacyPolicyComboBox.SelectedValue = template.PrivacyPolicy;
-        SourceSpotlightCategoryComboBox.SelectedValue = template.SpotlightCategory;
         UpdateRankOptionItems();
         SourceRankOptionComboBox.SelectedValue = SourceSimpleWorkTypeComboBox.SelectedValue is SimpleWorkType.Novel
             ? App.AppViewModel.AppSettings.NovelRankOption
@@ -331,19 +376,22 @@ public partial class HomePage
         SourceEntryIdPanel.IsVisible = sourceKind is HomePageCardSourceKind.SingleImage or HomePageCardSourceKind.SingleNovel;
         SourceSearchTextPanel.IsVisible = sourceKind is HomePageCardSourceKind.WorkSearch or HomePageCardSourceKind.UserSearch;
         SourceTagPanel.IsVisible = sourceKind is HomePageCardSourceKind.WorkBookmarks;
-        SourceSpotlightCategoryPanel.IsVisible = sourceKind is HomePageCardSourceKind.Spotlight;
     }
 
     private void UpdateRankOptionItems()
     {
         if (SourceRankOptionComboBox is null || SourceSimpleWorkTypeComboBox is null)
             return;
-
-        var key = SourceSimpleWorkTypeComboBox.SelectedValue is SimpleWorkType.Novel ? "Novel" : "Illustration";
-        SourceRankOptionComboBox.ItemsSource = SymbolComboBoxItem.GetValues(key);
-        SourceRankOptionComboBox.SelectedValue = SourceSimpleWorkTypeComboBox.SelectedValue is SimpleWorkType.Novel
-            ? App.AppViewModel.AppSettings.NovelRankOption
-            : App.AppViewModel.AppSettings.IllustrationRankOption;
+        if (SourceSimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>() is SimpleWorkType.IllustrationAndManga)
+        {
+            SourceRankOptionComboBox.ItemsSource = SymbolComboBoxItem.GetValues("Illustration");
+            SourceRankOptionComboBox.SelectedValue = App.AppViewModel.AppSettings.IllustrationRankOption;
+        }
+        else
+        {
+            SourceRankOptionComboBox.ItemsSource = SymbolComboBoxItem.GetValues("Novel");
+            SourceRankOptionComboBox.SelectedValue = App.AppViewModel.AppSettings.NovelRankOption;
+        }
     }
 
     private bool TryCreateCardFromSourceParameters(HomeCardTemplate template, out HomePageCardLayout card)
@@ -367,7 +415,6 @@ public partial class HomePage
         card.TemplateKind = ResolveTemplateKind(template, card.WorkType, card.SimpleWorkType);
         card.PrivacyPolicy = SourcePrivacyPolicyComboBox.SelectedValue is PrivacyPolicy privacyPolicy ? privacyPolicy : template.PrivacyPolicy;
         card.RankOption = SourceRankOptionComboBox.SelectedValue is RankOption rankOption ? rankOption : template.RankOption;
-        card.SpotlightCategory = SourceSpotlightCategoryComboBox.SelectedValue is SpotlightCategory spotlightCategory ? spotlightCategory : template.SpotlightCategory;
         card.UserId = userId;
         card.EntryId = entryId;
         card.SearchText = string.IsNullOrWhiteSpace(SourceSearchTextBox.Text) ? null : SourceSearchTextBox.Text.Trim();
@@ -427,7 +474,6 @@ public partial class HomePage
         SimpleWorkType = template.SimpleWorkType,
         PrivacyPolicy = template.PrivacyPolicy,
         RankOption = template.RankOption,
-        SpotlightCategory = template.SpotlightCategory,
         RankingDate = MakoClient.RankingMaxDateTime,
         Column = column,
         Row = row,

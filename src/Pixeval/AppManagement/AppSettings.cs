@@ -68,7 +68,11 @@ public record AppSettings
     [SettingsEntry(Symbol.Table, HomePageColumnsEntryHeader, HomePageColumnsEntryDescription)]
     public int HomePageColumns { get; set; } = 6;
 
-    public bool IsHomePageLayoutInitialized { get; set; }
+    [SettingsEntry(Symbol.WindowHeaderHorizontal, HideHomePageToolbarEntryHeader, HideHomePageToolbarEntryDescription)]
+    public bool HideHomePageToolbar { get; set; }
+
+    [SettingsEntry(Symbol.AppTitle, HideHomePageCardTitleEntryHeader, HideHomePageCardTitleEntryDescription)]
+    public bool HideHomePageCardTitle { get; set; }
 
     public ObservableCollection<HomePageCardLayout> HomePageCards { get; set; } = [];
 

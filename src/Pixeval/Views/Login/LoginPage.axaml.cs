@@ -10,6 +10,7 @@ using Avalonia.Interactivity;
 using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
+using Pixeval.Views.Home;
 
 namespace Pixeval.Views.Login;
 

@@ -6,9 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
 using Pixeval.Models.Home;
-using Pixeval.Views.Home;
 
-namespace Pixeval.Views;
+namespace Pixeval.Views.Home;
 
 public partial class HomePage
 {
@@ -20,6 +19,9 @@ public partial class HomePage
             NormalizeCards();
             EnsureGridDefinitions(HomeGrid);
             EnsureGuideGrid();
+            foreach (var child in HomeGrid.Children.OfType<HomePageCardControl>())
+                DetachCardControl(child);
+
             HomeGrid.Children.Clear();
 
             foreach (var card in _cards)
@@ -31,6 +33,26 @@ public partial class HomePage
         {
             _isRefreshingGrid = false;
         }
+    }
+
+    private void RefreshGridSize()
+    {
+        _isRefreshingGrid = true;
+        try
+        {
+            _activeCardControl?.CancelEdit();
+            _activeCardControl = null;
+            NormalizeCards();
+            EnsureGridDefinitions(HomeGrid);
+            EnsureGuideGrid();
+            SyncCardControls();
+        }
+        finally
+        {
+            _isRefreshingGrid = false;
+        }
+
+        RefreshSelectionVisuals();
     }
 
     private void RefreshSelectionVisuals()
@@ -52,17 +74,46 @@ public partial class HomePage
     {
         var control = new HomePageCardControl(card, GetTemplate(card), RowCount, ColumnCount)
         {
+            IsCardTitleVisible = !App.AppViewModel.AppSettings.HideHomePageCardTitle,
             IsEditing = EditModeButton.IsChecked is true,
             IsSelected = card == _selectedCard
         };
         control.CardSelected += HomeCardControl_OnCardSelected;
         control.EditPreview += HomeCardControl_OnEditPreview;
         control.EditCompleted += HomeCardControl_OnEditCompleted;
+        control.DeleteRequested += HomeCardControl_OnDeleteRequested;
         Grid.SetColumn(control, card.Column);
         Grid.SetRow(control, card.Row);
         Grid.SetColumnSpan(control, card.ColumnSpan);
         Grid.SetRowSpan(control, card.RowSpan);
         HomeGrid.Children.Add(control);
+    }
+
+    private void SyncCardControls()
+    {
+        for (var i = HomeGrid.Children.Count - 1; i >= 0; i--)
+            if (HomeGrid.Children[i] is HomePageCardControl control && !_cards.Any(card => ReferenceEquals(card, control.Card)))
+            {
+                DetachCardControl(control);
+                HomeGrid.Children.RemoveAt(i);
+            }
+
+        foreach (var card in _cards)
+        {
+            if (TryGetCardControl(card, out var control))
+            {
+                control.UpdateGridSize(RowCount, ColumnCount);
+                control.UpdateBackground();
+                control.IsCardTitleVisible = !App.AppViewModel.AppSettings.HideHomePageCardTitle;
+                control.IsEditing = EditModeButton.IsChecked is true;
+                control.IsSelected = card == _selectedCard;
+                ApplyCardLayout(control);
+            }
+            else
+            {
+                AddCardControl(card);
+            }
+        }
     }
 
     private void RemoveCardControl(HomePageCardLayout card)
@@ -71,6 +122,7 @@ public partial class HomePage
             if (HomeGrid.Children[i] is HomePageCardControl control && control.Card == card)
             {
                 control.CancelEdit();
+                DetachCardControl(control);
                 HomeGrid.Children.RemoveAt(i);
                 return;
             }
@@ -81,15 +133,41 @@ public partial class HomePage
         if (_selectedCard is not { } card)
             return;
 
+        if (TryGetCardControl(card, out var control))
+        {
+            control.UpdateBackground();
+            ApplyCardLayout(control);
+        }
+    }
+
+    private bool TryGetCardControl(HomePageCardLayout card, out HomePageCardControl control)
+    {
         foreach (var child in HomeGrid.Children)
-            if (child is HomePageCardControl control && control.Card == card)
+            if (child is HomePageCardControl candidate && ReferenceEquals(candidate.Card, card))
             {
-                Grid.SetColumn(control, card.Column);
-                Grid.SetRow(control, card.Row);
-                Grid.SetColumnSpan(control, card.ColumnSpan);
-                Grid.SetRowSpan(control, card.RowSpan);
-                return;
+                control = candidate;
+                return true;
             }
+
+        control = null!;
+        return false;
+    }
+
+    private void DetachCardControl(HomePageCardControl control)
+    {
+        control.CardSelected -= HomeCardControl_OnCardSelected;
+        control.EditPreview -= HomeCardControl_OnEditPreview;
+        control.EditCompleted -= HomeCardControl_OnEditCompleted;
+        control.DeleteRequested -= HomeCardControl_OnDeleteRequested;
+    }
+
+    private static void ApplyCardLayout(HomePageCardControl control)
+    {
+        var card = control.Card;
+        Grid.SetColumn(control, card.Column);
+        Grid.SetRow(control, card.Row);
+        Grid.SetColumnSpan(control, card.ColumnSpan);
+        Grid.SetRowSpan(control, card.RowSpan);
     }
 
     private void EnsureGridDefinitions(Grid grid)
@@ -109,24 +187,13 @@ public partial class HomePage
         GuideGrid.Children.Clear();
 
         for (var row = 0; row < RowCount; row++)
-        for (var column = 0; column < ColumnCount; column++)
-        {
-            var guide = new HomeGridGuideCell();
-            Grid.SetColumn(guide, column);
-            Grid.SetRow(guide, row);
-            GuideGrid.Children.Add(guide);
-        }
-    }
-
-    private void CreateDefaultCards()
-    {
-        _cards.Add(CreateCard(_cardTemplates[0], 0, 0, Math.Min(3, ColumnCount), Math.Min(2, RowCount)));
-        if (ColumnCount >= 5)
-            _cards.Add(CreateCard(_cardTemplates[1], 3, 0, Math.Min(2, ColumnCount - 3), Math.Min(2, RowCount)));
-        if (RowCount >= 4)
-            _cards.Add(CreateCard(_cardTemplates[3], 0, 2, Math.Min(3, ColumnCount), Math.Min(2, RowCount - 2)));
-        if (ColumnCount >= 5 && RowCount >= 5)
-            _cards.Add(CreateCard(_cardTemplates[4], 3, 2, Math.Min(2, ColumnCount - 3), Math.Min(3, RowCount - 2)));
+            for (var column = 0; column < ColumnCount; column++)
+            {
+                var guide = new HomeGridGuideCell();
+                Grid.SetColumn(guide, column);
+                Grid.SetRow(guide, row);
+                GuideGrid.Children.Add(guide);
+            }
     }
 
     private bool TryFindFreePosition(int columnSpan, int rowSpan, out int column, out int row)
@@ -174,9 +241,9 @@ public partial class HomePage
     private bool TryFindFreePosition(int columnSpan, int rowSpan, IReadOnlyCollection<HomePageCardLayout> occupiedCards, out int column, out int row)
     {
         for (row = 0; row <= RowCount - rowSpan; row++)
-        for (column = 0; column <= ColumnCount - columnSpan; column++)
-            if (CanPlace(occupiedCards, column, row, columnSpan, rowSpan))
-                return true;
+            for (column = 0; column <= ColumnCount - columnSpan; column++)
+                if (CanPlace(occupiedCards, column, row, columnSpan, rowSpan))
+                    return true;
 
         column = row = 0;
         return false;
@@ -195,6 +262,9 @@ public partial class HomePage
 
     private bool CanPlace(HomePageCardLayout movingCard, HomeCardBounds bounds) =>
         CanPlace(movingCard, bounds.Column, bounds.Row, bounds.ColumnSpan, bounds.RowSpan);
+
+    private bool CanResizeGrid(int rowCount, int columnCount) =>
+        _cards.All(card => card.Row + card.RowSpan <= rowCount && card.Column + card.ColumnSpan <= columnCount);
 
     private bool CanPlace(IReadOnlyCollection<HomePageCardLayout> occupiedCards, int column, int row, int columnSpan, int rowSpan)
     {

@@ -19,6 +19,7 @@
         IsLoadingMore="{Binding #WorkListBox.(controls:IncrementalLoadingBehavior.IsLoadingMore)}">
         <ListBox
             x:Name="WorkListBox"
+            controls:AdaptiveGridIncrementalLoadingBehavior.IsEnabled="True"
             controls:IncrementalLoadingBehavior.IsEnabled="True"
             controls:IncrementalLoadingBehavior.Threshold="200"
             ContainerPrepared="ListBox_OnContainerPrepared"

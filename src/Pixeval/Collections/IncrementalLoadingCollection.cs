@@ -67,13 +67,9 @@ public class IncrementalLoadingCollection<IType> : ObservableCollection<IType>, 
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsLoading)));
 
             if (field)
-            {
                 OnStartLoading?.Invoke();
-            }
             else
-            {
                 OnEndLoading?.Invoke();
-            }
         }
     }
 
@@ -86,11 +82,10 @@ public class IncrementalLoadingCollection<IType> : ObservableCollection<IType>, 
 
         private set
         {
-            if (value != field)
-            {
-                field = value;
-                OnPropertyChanged(new PropertyChangedEventArgs(nameof(HasMoreItems)));
-            }
+            if (value == field)
+                return;
+            field = value;
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(HasMoreItems)));
         }
     } = true;
 

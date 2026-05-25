@@ -49,6 +49,6 @@ public class SimpleViewDataProvider<T, TViewModel> : ViewModelBase, IDataProvide
         Dispose();
         FetchEngine = fetchEngine;
 
-        Source = new(new FetchEngineIncrementalSource<T,TViewModel>(FetchEngine!, factory, limit), itemsPerPage);
+        Source = new(new IncrementalSource<T,TViewModel>(FetchEngine!, factory, limit), itemsPerPage);
     }
 }

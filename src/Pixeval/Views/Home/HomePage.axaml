@@ -1,12 +1,15 @@
-﻿<ContentPage
-    x:Class="Pixeval.Views.HomePage"
+<ContentPage
+    x:Class="Pixeval.Views.Home.HomePage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:capability="using:Pixeval.Views.Capability"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:enum="using:Mako.Global.Enum"
     xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:home="using:Pixeval.Views.Home"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
     Header="{I18N {x:Static pixeval:MainPageResources.HomeTabContent}}"
@@ -19,23 +22,30 @@
     <Grid ColumnDefinitions="*,Auto">
         <DockPanel Margin="20">
             <CommandBar
+                x:Name="HomeToolbar"
                 HorizontalAlignment="Right"
                 DefaultLabelPosition="Right"
                 DockPanel.Dock="Top"
                 IsDynamicOverflowEnabled="True">
                 <CommandBarToggleButton
+                    x:Name="HideCardTitleButton"
+                    Click="HideCardTitleButton_OnClick"
+                    Icon="{markup:SymbolIcon AppTitle}"
+                    Label="{I18N {x:Static pixeval:HomePageResources.HideCardTitleButtonLabel}}" />
+                <CommandBarToggleButton
+                    x:Name="HideToolbarButton"
+                    Click="HideToolbarButton_OnClick"
+                    Icon="{markup:SymbolIcon WindowHeaderHorizontal}"
+                    Label="{I18N {x:Static pixeval:HomePageResources.HideToolbarButtonLabel}}" />
+                <CommandBarToggleButton
                     x:Name="EditModeButton"
                     Click="EditModeButton_OnClick"
                     Icon="{markup:SymbolIcon Edit}"
                     Label="{I18N {x:Static pixeval:HomePageResources.EditButtonLabel}}" />
-                <CommandBarButton
-                    Click="ResetLayoutButton_OnClick"
-                    Icon="{markup:SymbolIcon ArrowReset}"
-                    IsVisible="{Binding #EditModeButton.IsChecked}"
-                    Label="{I18N {x:Static pixeval:HomePageResources.ResetLayoutButtonLabel}}" />
             </CommandBar>
 
             <Border
+                x:Name="HomeGridBorder"
                 Margin="0,12,0,0"
                 Background="{DynamicResource SolidBackgroundFillColorBaseBrush}"
                 BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
@@ -87,7 +97,10 @@
                         <StackPanel Spacing="10">
                             <TextBlock FontWeight="SemiBold" Text="{I18N {x:Static pixeval:HomePageResources.GridSizeTitleTextBlockText}}" />
                             <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8">
-                                <TextBlock VerticalAlignment="Center" Text="{I18N {x:Static pixeval:HomePageResources.GridRowsTextBlockText}}" />
+                                <TextBlock
+                                    Grid.Column="0"
+                                    VerticalAlignment="Center"
+                                    Text="{I18N {x:Static pixeval:HomePageResources.GridRowsTextBlockText}}" />
                                 <NumericUpDown
                                     x:Name="GridRowsBox"
                                     Grid.Column="1"
@@ -95,8 +108,8 @@
                                     ClipValueToMinMax="True"
                                     FormatString="F0"
                                     Increment="1"
-                                    Maximum="12"
-                                    Minimum="1"
+                                    Maximum="{x:Static home:HomePage.MaximumGridSize}"
+                                    Minimum="{x:Static home:HomePage.MinimumGridSize}"
                                     ValueChanged="GridSizeBox_OnValueChanged" />
                                 <TextBlock
                                     Grid.Column="2"
@@ -109,8 +122,8 @@
                                     ClipValueToMinMax="True"
                                     FormatString="F0"
                                     Increment="1"
-                                    Maximum="12"
-                                    Minimum="1"
+                                    Maximum="{x:Static home:HomePage.MaximumGridSize}"
+                                    Minimum="{x:Static home:HomePage.MinimumGridSize}"
                                     ValueChanged="GridSizeBox_OnValueChanged" />
                             </Grid>
                         </StackPanel>
@@ -177,6 +190,20 @@
                                     Minimum="1"
                                     ValueChanged="SelectedCardNumericBox_OnValueChanged" />
                             </Grid>
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.CardBackgroundTextBlockText}}" />
+                                <ColorPicker
+                                    x:Name="SelectedBackgroundColorPicker"
+                                    HorizontalAlignment="Stretch"
+                                    ColorChanged="SelectedBackgroundColorPicker_OnColorChanged"
+                                    IsAlphaEnabled="True"
+                                    IsAlphaVisible="True"
+                                    IsColorModelVisible="False"
+                                    IsColorPaletteVisible="False"
+                                    IsComponentSliderVisible="False"
+                                    IsComponentTextInputVisible="False"
+                                    IsHexInputVisible="True" />
+                            </StackPanel>
                             <Button
                                 x:Name="DeleteSelectedCardButton"
                                 HorizontalAlignment="Stretch"
@@ -216,7 +243,8 @@
                                 <controls:SymbolComboBox
                                     x:Name="SourceWorkTypeComboBox"
                                     HorizontalAlignment="Stretch"
-                                    IconMode="False" />
+                                    IconMode="False"
+                                    ItemsSource="{markup1:EnumResources x:TypeArguments=enum:WorkType}" />
                             </StackPanel>
 
                             <StackPanel x:Name="SourceSimpleWorkTypePanel" Spacing="4">
@@ -225,6 +253,7 @@
                                     x:Name="SourceSimpleWorkTypeComboBox"
                                     HorizontalAlignment="Stretch"
                                     IconMode="False"
+                                    ItemsSource="{markup1:EnumResources x:TypeArguments=enum:SimpleWorkType}"
                                     SelectionChanged="SourceSimpleWorkTypeComboBox_OnSelectionChanged" />
                             </StackPanel>
 
@@ -233,7 +262,8 @@
                                 <controls:SymbolComboBox
                                     x:Name="SourcePrivacyPolicyComboBox"
                                     HorizontalAlignment="Stretch"
-                                    IconMode="False" />
+                                    IconMode="False"
+                                    ItemsSource="{markup1:EnumResources x:TypeArguments=enum:PrivacyPolicy}" />
                             </StackPanel>
 
                             <StackPanel x:Name="SourceRankOptionPanel" Spacing="4">
@@ -249,6 +279,8 @@
                                 <CalendarDatePicker
                                     x:Name="SourceRankingDatePicker"
                                     HorizontalAlignment="Stretch"
+                                    DisplayDateEnd="{x:Static capability:RankingsPage.MaxDate}"
+                                    SelectedDate="{x:Static capability:RankingsPage.MaxDate}"
                                     SelectedDateFormat="Short" />
                             </StackPanel>
 
@@ -270,14 +302,6 @@
                             <StackPanel x:Name="SourceTagPanel" Spacing="4">
                                 <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceTagTextBlockText}}" />
                                 <TextBox x:Name="SourceTagTextBox" />
-                            </StackPanel>
-
-                            <StackPanel x:Name="SourceSpotlightCategoryPanel" Spacing="4">
-                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceSpotlightCategoryTextBlockText}}" />
-                                <controls:SymbolComboBox
-                                    x:Name="SourceSpotlightCategoryComboBox"
-                                    HorizontalAlignment="Stretch"
-                                    IconMode="False" />
                             </StackPanel>
 
                             <Button

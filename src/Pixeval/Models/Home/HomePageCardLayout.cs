@@ -3,7 +3,6 @@
 
 using System;
 using Mako.Global.Enum;
-using Mako.Model;
 
 namespace Pixeval.Models.Home;
 
@@ -51,8 +50,6 @@ public record HomePageCardLayout
 
     public RankOption RankOption { get; set; } = RankOption.Day;
 
-    public SpotlightCategory SpotlightCategory { get; set; } = SpotlightCategory.All;
-
     public long UserId { get; set; }
 
     public long EntryId { get; set; }
@@ -60,6 +57,8 @@ public record HomePageCardLayout
     public string? SearchText { get; set; }
 
     public string? Tag { get; set; }
+
+    public uint BackgroundColor { get; set; }
 
     public DateTimeOffset RankingDate { get; set; }
 

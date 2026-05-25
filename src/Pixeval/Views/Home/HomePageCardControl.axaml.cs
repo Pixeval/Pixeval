@@ -5,8 +5,9 @@ using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Interactivity;
+using Avalonia.Media;
 using FluentIcons.Common;
-using Pixeval.I18N;
 using Pixeval.Models.Home;
 
 namespace Pixeval.Views.Home;
@@ -35,39 +36,29 @@ public sealed partial class HomePageCardControl : TemplatedControl
     public static readonly StyledProperty<bool> IsSelectedProperty =
         AvaloniaProperty.Register<HomePageCardControl, bool>(nameof(IsSelected));
 
+    public static readonly StyledProperty<bool> IsCardTitleVisibleProperty =
+        AvaloniaProperty.Register<HomePageCardControl, bool>(nameof(IsCardTitleVisible), true);
+
     public static readonly DirectProperty<HomePageCardControl, string> CardTitleProperty =
-        AvaloniaProperty.RegisterDirect<HomePageCardControl, string>(nameof(CardTitle), control => control.CardTitle,
-            (control, value) => control.CardTitle = value);
+        AvaloniaProperty.RegisterDirect<HomePageCardControl, string>(nameof(CardTitle), control => control.CardTitle);
 
     public static readonly DirectProperty<HomePageCardControl, Symbol> CardSymbolProperty =
-        AvaloniaProperty.RegisterDirect<HomePageCardControl, Symbol>(nameof(CardSymbol), control => control.CardSymbol,
-            (control, value) => control.CardSymbol = value);
+        AvaloniaProperty.RegisterDirect<HomePageCardControl, Symbol>(nameof(CardSymbol), control => control.CardSymbol);
 
-    public static readonly DirectProperty<HomePageCardControl, string?> PlaceholderTextProperty =
-        AvaloniaProperty.RegisterDirect<HomePageCardControl, string?>(nameof(PlaceholderText), control => control.PlaceholderText,
-            (control, value) => control.PlaceholderText = value);
-
-    public static readonly DirectProperty<HomePageCardControl, object?> PreviewContentProperty =
-        AvaloniaProperty.RegisterDirect<HomePageCardControl, object?>(nameof(PreviewContent), control => control.PreviewContent,
-            (control, value) => control.PreviewContent = value);
-
-    public static readonly DirectProperty<HomePageCardControl, bool> IsPreviewVisibleProperty =
-        AvaloniaProperty.RegisterDirect<HomePageCardControl, bool>(nameof(IsPreviewVisible), control => control.IsPreviewVisible);
-
-    public static readonly DirectProperty<HomePageCardControl, bool> IsPlaceholderVisibleProperty =
-        AvaloniaProperty.RegisterDirect<HomePageCardControl, bool>(nameof(IsPlaceholderVisible), control => control.IsPlaceholderVisible);
+    public static readonly DirectProperty<HomePageCardControl, HomeCardPreviewViewModel?> PreviewViewModelProperty =
+        AvaloniaProperty.RegisterDirect<HomePageCardControl, HomeCardPreviewViewModel?>(nameof(PreviewViewModel), control => control.PreviewViewModel,
+            (control, value) => control.PreviewViewModel = value);
 
     private static readonly HomeCardTemplate _PlaceholderTemplate = new(
         HomePageCardSourceKind.WorkRecommended,
         HomePageCardTemplateKind.WorkList,
+        Symbol.Board,
         "",
-        "",
-        1,
-        1,
-        default);
+        "");
 
-    private Grid? _rootGrid;
-    private Grid? _resizeHandlesLayer;
+    private Panel? _rootGrid;
+    private Panel? _resizeHandlesLayer;
+    private Button? _quickDeleteButton;
     private PointerEditState? _pointerEditState;
 
     public HomePageCardControl(
@@ -80,13 +71,13 @@ public sealed partial class HomePageCardControl : TemplatedControl
         CardTemplate = template;
         RowCount = rowCount;
         ColumnCount = columnCount;
-        ShowPlaceholder(I18NManager.GetResource(HomePageResources.CardPreviewLoadingTextBlockText));
+        PreviewViewModel = new(card);
         Loaded += HomePageCardControl_OnLoaded;
     }
 
     public HomePageCardControl()
     {
-        ShowPlaceholder(I18NManager.GetResource(HomePageResources.CardPreviewLoadingTextBlockText));
+        PreviewViewModel = new(Card);
     }
 
     public event EventHandler<HomeCardSelectedEventArgs>? CardSelected;
@@ -94,6 +85,8 @@ public sealed partial class HomePageCardControl : TemplatedControl
     public event EventHandler<HomeCardEditPreviewEventArgs>? EditPreview;
 
     public event EventHandler<HomeCardEditCompletedEventArgs>? EditCompleted;
+
+    public event EventHandler<HomeCardDeleteRequestedEventArgs>? DeleteRequested;
 
     public HomePageCardLayout Card
     {
@@ -104,7 +97,15 @@ public sealed partial class HomePageCardControl : TemplatedControl
     public HomeCardTemplate CardTemplate
     {
         get;
-        private set => SetAndRaise(CardTemplateProperty, ref field, value);
+        private set
+        {
+            var oldTitle = CardTitle;
+            var oldSymbol = CardSymbol;
+            SetAndRaise(CardTemplateProperty, ref field, value);
+            RaisePropertyChanged(CardTitleProperty, oldTitle, CardTitle);
+            RaisePropertyChanged(CardSymbolProperty, oldSymbol, CardSymbol);
+            Background = new SolidColorBrush(Color.FromUInt32(Card.BackgroundColor));
+        }
     } = _PlaceholderTemplate;
 
     public int RowCount
@@ -119,17 +120,9 @@ public sealed partial class HomePageCardControl : TemplatedControl
         private set => SetAndRaise(ColumnCountProperty, ref field, value);
     } = 1;
 
-    public string CardTitle
-    {
-        get;
-        private set => SetAndRaise(CardTitleProperty, ref field, value);
-    } = "";
+    public string CardTitle => CardTemplate.Title;
 
-    public Symbol CardSymbol
-    {
-        get;
-        private set => SetAndRaise(CardSymbolProperty, ref field, value);
-    }
+    public Symbol CardSymbol => CardTemplate.Symbol;
 
     public bool IsEditing
     {
@@ -143,13 +136,13 @@ public sealed partial class HomePageCardControl : TemplatedControl
         set => SetValue(IsSelectedProperty, value);
     }
 
-    public string? PlaceholderText
+    public bool IsCardTitleVisible
     {
-        get;
-        private set => SetAndRaise(PlaceholderTextProperty, ref field, value);
+        get => GetValue(IsCardTitleVisibleProperty);
+        set => SetValue(IsCardTitleVisibleProperty, value);
     }
 
-    public object? PreviewContent
+    public HomeCardPreviewViewModel? PreviewViewModel
     {
         get;
         private set
@@ -157,28 +150,26 @@ public sealed partial class HomePageCardControl : TemplatedControl
             if (ReferenceEquals(field, value))
                 return;
 
-            var isPreviewVisible = value is not null;
-            SetAndRaise(PreviewContentProperty, ref field, value);
-            IsPreviewVisible = isPreviewVisible;
-            IsPlaceholderVisible = !isPreviewVisible;
+            var old = field;
+            SetAndRaise(PreviewViewModelProperty, ref field, value);
+            old?.Dispose();
         }
-    }
-
-    public bool IsPreviewVisible
-    {
-        get;
-        private set => SetAndRaise(IsPreviewVisibleProperty, ref field, value);
-    }
-
-    public bool IsPlaceholderVisible
-    {
-        get;
-        private set => SetAndRaise(IsPlaceholderVisibleProperty, ref field, value);
     }
 
     public void CancelEdit()
     {
         CompleteEdit();
+    }
+
+    public void UpdateGridSize(int rowCount, int columnCount)
+    {
+        RowCount = rowCount;
+        ColumnCount = columnCount;
+    }
+
+    public void UpdateBackground()
+    {
+        Background = new SolidColorBrush(Color.FromUInt32(Card.BackgroundColor));
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -187,8 +178,9 @@ public sealed partial class HomePageCardControl : TemplatedControl
 
         base.OnApplyTemplate(e);
 
-        _rootGrid = e.NameScope.Find<Grid>(PartRootGrid);
-        _resizeHandlesLayer = e.NameScope.Find<Grid>(PartResizeHandlesLayer);
+        _rootGrid = e.NameScope.Find<Panel>(PartRootGrid);
+        _resizeHandlesLayer = e.NameScope.Find<Panel>(PartResizeHandlesLayer);
+        _quickDeleteButton = e.NameScope.Find<Button>(PartQuickDeleteButton);
 
         if (_rootGrid is not null)
         {
@@ -198,19 +190,13 @@ public sealed partial class HomePageCardControl : TemplatedControl
             _rootGrid.PointerReleased += Card_OnPointerReleased;
         }
 
-        if (_resizeHandlesLayer is not null)
-            _resizeHandlesLayer.PointerPressed += ResizeHandle_OnPointerPressed;
+        _resizeHandlesLayer?.PointerPressed += ResizeHandle_OnPointerPressed;
+        _quickDeleteButton?.Click += QuickDeleteButton_OnClick;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-
-        if (change.Property == CardTemplateProperty)
-        {
-            ApplyCardTemplate(change.GetNewValue<HomeCardTemplate>());
-            return;
-        }
 
         if (change.Property == IsEditingProperty)
         {
@@ -234,8 +220,22 @@ public sealed partial class HomePageCardControl : TemplatedControl
         _rootGrid?.PointerReleased -= Card_OnPointerReleased;
 
         _resizeHandlesLayer?.PointerPressed -= ResizeHandle_OnPointerPressed;
+        _quickDeleteButton?.Click -= QuickDeleteButton_OnClick;
 
         _rootGrid = null;
         _resizeHandlesLayer = null;
+        _quickDeleteButton = null;
+    }
+
+    private void QuickDeleteButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        DeleteRequested?.Invoke(this, new(Card));
+        e.Handled = true;
+    }
+
+    protected override void OnDetachedFromLogicalTree(Avalonia.LogicalTree.LogicalTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromLogicalTree(e);
+        PreviewViewModel = null;
     }
 }

@@ -2,8 +2,11 @@
   "EditButton": {
     "Label": "编辑"
   },
-  "ResetLayoutButton": {
-    "Label": "重置布局"
+  "HideCardTitleButton": {
+    "Label": "隐藏卡片标题"
+  },
+  "HideToolbarButton": {
+    "Label": "隐藏工具栏"
   },
   "EditPaneTitleTextBlock": {
     "Text": "主页布局"
@@ -37,6 +40,9 @@
   },
   "HeightTextBlock": {
     "Text": "高"
+  },
+  "CardBackgroundTextBlock": {
+    "Text": "背景色"
   },
   "DeleteSelectedCardButton": {
     "Content": "删除卡片"
@@ -76,9 +82,6 @@
   },
   "SourceTagTextBlock": {
     "Text": "收藏标签"
-  },
-  "SourceSpotlightCategoryTextBlock": {
-    "Text": "特辑分类"
   },
   "AddConfiguredCardButton": {
     "Content": "添加卡片"
@@ -129,7 +132,7 @@
   },
   "SpotlightsCard": {
     "Title": "特辑推荐",
-    "Description": "Pixivision 特辑列表，可选择分类。"
+    "Description": "Pixivision 特辑列表。"
   },
   "SingleImageCard": {
     "Title": "单独图片",
@@ -154,12 +157,6 @@
       "Text": "加载失败"
     }
   },
-  "SpotlightCategory": {
-    "All": "全部",
-    "Spotlight": "访谈",
-    "Tutorial": "教程",
-    "Inspiration": "灵感"
-  },
   "NoSpaceWarning": {
     "Title": "没有可用空间",
     "Content": "当前主页网格中没有能容纳这张卡片的位置。"
@@ -167,6 +164,10 @@
   "LayoutConflictWarning": {
     "Title": "布局冲突",
     "Content": "该位置或尺寸会超出主页网格，或与其他卡片重叠。"
+  },
+  "GridShrinkBlockedWarning": {
+    "Title": "无法缩小网格",
+    "Content": "要删除的行或列上已有卡片，请先移动或删除这些卡片。"
   },
   "InvalidSourceParameterWarning": {
     "Title": "参数不完整",
