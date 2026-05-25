@@ -27,9 +27,9 @@
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <controls:AdaptiveGrid
-                        ItemHeight="160"
+                        ItemSize="300"
                         ItemSpacing="5"
-                        ItemWidth="300"
+                        LineSize="160"
                         LineSpacing="5" />
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>

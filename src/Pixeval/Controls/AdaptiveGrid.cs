@@ -2,7 +2,6 @@
 // Licensed under the GPL-3.0 License.
 
 using System.Collections.Generic;
-using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -33,15 +32,37 @@ public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasure
         AvaloniaProperty.Register<AdaptiveGrid, WrapPanelItemsAlignment>(nameof(ItemsAlignment),
             defaultValue: WrapPanelItemsAlignment.Stretch);
 
-    public static readonly StyledProperty<double> ItemWidthProperty =
-        AvaloniaProperty.Register<AdaptiveGrid, double>(nameof(ItemWidth), double.NaN);
+    public static readonly StyledProperty<double> ItemSizeProperty =
+        AvaloniaProperty.Register<AdaptiveGrid, double>(nameof(ItemSize), double.NaN);
 
-    public static readonly StyledProperty<double> ItemHeightProperty =
-        AvaloniaProperty.Register<AdaptiveGrid, double>(nameof(ItemHeight), double.NaN);
+    public static readonly StyledProperty<double> LineSizeProperty =
+        AvaloniaProperty.Register<AdaptiveGrid, double>(nameof(LineSize), double.NaN);
+
+    public static readonly StyledProperty<int> MaxLinesProperty =
+        AvaloniaProperty.Register<AdaptiveGrid, int>(nameof(MaxLines), -1, validate: value => value >= -1);
+
+    public static readonly StyledProperty<int> MaxItemsInLineProperty =
+        AvaloniaProperty.Register<AdaptiveGrid, int>(nameof(MaxItemsInLine), -1, validate: value => value >= -1);
+
+    public static readonly StyledProperty<int> MinLinesProperty =
+        AvaloniaProperty.Register<AdaptiveGrid, int>(nameof(MinLines), -1, validate: value => value >= -1);
+
+    public static readonly StyledProperty<int> MinItemsInLineProperty =
+        AvaloniaProperty.Register<AdaptiveGrid, int>(nameof(MinItemsInLine), -1, validate: value => value >= -1);
 
     static AdaptiveGrid()
     {
-        AffectsMeasure<AdaptiveGrid>(ItemSpacingProperty, LineSpacingProperty, OrientationProperty, ItemWidthProperty, ItemHeightProperty);
+        AffectsMeasure<AdaptiveGrid>(
+            ItemSpacingProperty,
+            LineSpacingProperty,
+            OrientationProperty,
+            ItemsAlignmentProperty,
+            ItemSizeProperty,
+            LineSizeProperty,
+            MaxLinesProperty,
+            MaxItemsInLineProperty,
+            MinLinesProperty,
+            MinItemsInLineProperty);
         AffectsArrange<AdaptiveGrid>(ItemsAlignmentProperty);
     }
 
@@ -69,16 +90,40 @@ public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasure
         set => SetValue(ItemsAlignmentProperty, value);
     }
 
-    public double ItemWidth
+    public double ItemSize
     {
-        get => GetValue(ItemWidthProperty);
-        set => SetValue(ItemWidthProperty, value);
+        get => GetValue(ItemSizeProperty);
+        set => SetValue(ItemSizeProperty, value);
     }
 
-    public double ItemHeight
+    public double LineSize
     {
-        get => GetValue(ItemHeightProperty);
-        set => SetValue(ItemHeightProperty, value);
+        get => GetValue(LineSizeProperty);
+        set => SetValue(LineSizeProperty, value);
+    }
+
+    public int MaxLines
+    {
+        get => GetValue(MaxLinesProperty);
+        set => SetValue(MaxLinesProperty, value);
+    }
+
+    public int MaxItemsInLine
+    {
+        get => GetValue(MaxItemsInLineProperty);
+        set => SetValue(MaxItemsInLineProperty, value);
+    }
+
+    public int MinLines
+    {
+        get => GetValue(MinLinesProperty);
+        set => SetValue(MinLinesProperty, value);
+    }
+
+    public int MinItemsInLine
+    {
+        get => GetValue(MinItemsInLineProperty);
+        set => SetValue(MinItemsInLineProperty, value);
     }
 
     private Orientation ScrollOrientation { get; set; } = Orientation.Vertical;
@@ -145,15 +190,23 @@ public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasure
         var children = Children;
         double accumulatedMajor = 0;
 
-        foreach (var t in children.Where(t => !t.IsVisible))
+        var visibleCursor = 0;
+        for (var childIndex = 0; childIndex < children.Count; ++childIndex)
         {
-            t.Arrange(default);
+            var isArranged = visibleCursor < layout.VisibleIndices.Length && layout.VisibleIndices[visibleCursor] == childIndex;
+            if (isArranged)
+            {
+                ++visibleCursor;
+                continue;
+            }
+
+            children[childIndex].Arrange(default);
         }
 
         for (var lineIndex = 0; lineIndex < layout.LineCount; ++lineIndex)
         {
             if (lineIndex > 0)
-                accumulatedMajor += layout.LineSpacing;
+                accumulatedMajor += layout.LineSlotSpacing;
 
             var line = layout.Lines[lineIndex];
             var minorStart = layout.GetLineMinorStart(lineIndex);
@@ -163,11 +216,11 @@ public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasure
             for (var itemIndex = 0; itemIndex < line.Count; ++itemIndex)
             {
                 var childIndex = layout.VisibleIndices[line.Start + itemIndex];
-                children[childIndex].Arrange(this.MinorMajorRect(minorStart, accumulatedMajor, slotMinor, line.Major));
+                children[childIndex].Arrange(this.MinorMajorRect(minorStart, accumulatedMajor, slotMinor, layout.LineMajor));
                 minorStart += slotMinor + minorSpacing;
             }
 
-            accumulatedMajor += line.Major;
+            accumulatedMajor += layout.LineMajor;
         }
 
         return finalSize;
@@ -177,22 +230,24 @@ public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasure
     {
         var itemSpacing = ItemSpacing;
         var lineSpacing = LineSpacing;
-        var itemWidth = ItemWidth;
-        var itemHeight = ItemHeight;
-        var itemWidthSet = !double.IsNaN(itemWidth);
-        var itemHeightSet = !double.IsNaN(itemHeight);
-        var itemMinorSet = this.Minor(itemWidthSet, itemHeightSet);
-        var itemMajorSet = this.Major(itemWidthSet, itemHeightSet);
-        var configuredMinor = this.Minor(itemWidth, itemHeight);
-        var configuredMajor = this.Major(itemWidth, itemHeight);
+        var itemSize = ItemSize;
+        var lineSize = LineSize;
+        var itemSizeSet = !double.IsNaN(itemSize);
+        var lineSizeSet = !double.IsNaN(lineSize);
+        var minLines = MinLines;
+        var maxLines = MaxLines;
+        var minItemsInLine = MinItemsInLine;
+        var maxItemsInLine = MaxItemsInLine;
         var children = Children;
+        var availableMinor = this.Minor(availableSize);
+        var availableMajor = this.Major(availableSize);
 
-        var childConstraint = new Size(
-            itemWidthSet ? itemWidth : availableSize.Width,
-            itemHeightSet ? itemHeight : availableSize.Height);
+        var childConstraint = this.MinorMajorSize(
+            itemSizeSet ? itemSize : availableMinor,
+            lineSizeSet ? lineSize : availableMajor);
 
-        var baseMinor = itemMinorSet ? configuredMinor : 0;
-        var visibleCount = 0;
+        var baseMinor = itemSizeSet ? itemSize : 0;
+        var baseMajor = lineSizeSet ? lineSize : 0;
         var visibleIndices = new List<int>(children.Count);
 
         for (var i = 0; i < children.Count; ++i)
@@ -204,72 +259,70 @@ public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasure
             if (!child.IsVisible)
                 continue;
 
-            ++visibleCount;
             visibleIndices.Add(i);
-            if (!itemMinorSet)
+            if (!itemSizeSet)
                 baseMinor = Max(baseMinor, this.Minor(child.DesiredSize));
+            if (!lineSizeSet)
+                baseMajor = Max(baseMajor, this.Major(child.DesiredSize));
         }
 
-        if (visibleCount == 0)
-            return new LayoutState([], [], 0, 0, lineSpacing, itemSpacing, 0, ItemsAlignment, this, new Size());
+        if (visibleIndices.Count is 0)
+            return new LayoutState([], [], 0, 0, 0, lineSpacing, itemSpacing, 0, 0,
+                WrapPanelItemsAlignment.Start, WrapPanelItemsAlignment.Start, this, new Size());
 
         if (!MathUtilities.GreaterThan(baseMinor, 0))
             baseMinor = 1;
+        if (!MathUtilities.GreaterThan(baseMajor, 0))
+            baseMajor = 1;
 
-        var itemsPerLine = GetItemsPerLine(this.Minor(availableSize), baseMinor, itemSpacing, visibleCount);
-        var measuredMinor = (itemsPerLine * baseMinor) + (Max(0, itemsPerLine - 1) * itemSpacing);
-        var panelMinor = measuredMinor;
-        var itemsAlignment = ItemsAlignment;
+        var normalItemsPerLine = GetItemsPerLine(availableMinor, baseMinor, itemSpacing, visibleIndices.Count);
+        var itemsPerLine = ConstrainCount(normalItemsPerLine, minItemsInLine, maxItemsInLine);
 
-        if (this.Minor(availableSize) is double.PositiveInfinity)
-            itemsAlignment = WrapPanelItemsAlignment.Start;
+        if (itemsPerLine is 0)
+            return new LayoutState([], [], 0, 0, 0, lineSpacing, itemSpacing, baseMajor, baseMinor,
+                WrapPanelItemsAlignment.Start, WrapPanelItemsAlignment.Start, this, new Size());
 
-        if (itemsAlignment is WrapPanelItemsAlignment.Justify or WrapPanelItemsAlignment.Stretch &&
-            !double.IsPositiveInfinity(this.Minor(availableSize)))
-            panelMinor = this.Minor(availableSize);
+        var totalLineCount = GetLineCountForItems(visibleIndices.Count, itemsPerLine);
+        var visibleLineCount = totalLineCount;
+        if (!double.IsPositiveInfinity(availableMajor))
+            visibleLineCount = Min(visibleLineCount, GetLineCount(availableMajor, baseMajor, lineSpacing, totalLineCount));
 
-        var lines = new LineState[(visibleCount + itemsPerLine - 1) / itemsPerLine];
-        var actualLineCount = 0;
-        var currentStart = -1;
-        var currentCount = 0;
-        double currentMajor = 0;
+        var allocatedLineCount = ConstrainCount(visibleLineCount, minLines, maxLines);
 
-        for (var i = 0; i < visibleIndices.Count; ++i)
+        if (allocatedLineCount is 0)
+            return new LayoutState([], [], 0, 0, itemsPerLine, lineSpacing, itemSpacing, baseMajor, baseMinor,
+                WrapPanelItemsAlignment.Start, WrapPanelItemsAlignment.Start, this, new Size());
+
+        var displayedItemCount = Min(visibleIndices.Count, allocatedLineCount * itemsPerLine);
+        var actualLineCount = GetLineCountForItems(displayedItemCount, itemsPerLine);
+
+        var lines = new LineState[actualLineCount];
+        for (var lineIndex = 0; lineIndex < actualLineCount; ++lineIndex)
         {
-            var childIndex = visibleIndices[i];
-            var child = children[childIndex];
-
-            if (currentCount == 0)
-            {
-                currentStart = i;
-                currentMajor = 0;
-            }
-
-            currentCount++;
-            currentMajor = Max(currentMajor, itemMajorSet ? configuredMajor : this.Major(child.DesiredSize));
-
-            if (currentCount == itemsPerLine)
-            {
-                lines[actualLineCount++] = new LineState(currentStart, currentCount, currentMajor);
-                currentStart = -1;
-                currentCount = 0;
-                currentMajor = 0;
-            }
+            var start = lineIndex * itemsPerLine;
+            lines[lineIndex] = new LineState(start, Min(itemsPerLine, displayedItemCount - start));
         }
 
-        if (currentCount > 0)
-            lines[actualLineCount++] = new LineState(currentStart, currentCount, currentMajor);
+        var measuredMinor = (itemsPerLine * baseMinor) + (Max(0, itemsPerLine - 1) * itemSpacing);
+        var measuredMajor = (allocatedLineCount * baseMajor) + (Max(0, allocatedLineCount - 1) * lineSpacing);
+        var panelMinor = measuredMinor;
+        var panelMajor = measuredMajor;
+        var minorAlignment = double.IsPositiveInfinity(availableMinor)
+            ? WrapPanelItemsAlignment.Start
+            : ItemsAlignment;
+        var majorAlignment = double.IsPositiveInfinity(availableMajor)
+            ? WrapPanelItemsAlignment.Start
+            : ItemsAlignment;
 
-        double totalMajor = 0;
-        for (var i = 0; i < actualLineCount; ++i)
-            totalMajor += lines[i].Major;
+        if (minorAlignment is WrapPanelItemsAlignment.Justify or WrapPanelItemsAlignment.Stretch)
+            panelMinor = availableMinor;
+        if (majorAlignment is WrapPanelItemsAlignment.Justify or WrapPanelItemsAlignment.Stretch)
+            panelMajor = availableMajor;
 
-        if (actualLineCount > 1)
-            totalMajor += lineSpacing * (actualLineCount - 1);
-
-        var panelSize = this.MinorMajorSize(panelMinor, totalMajor);
-        return new LayoutState(lines, [.. visibleIndices], actualLineCount, itemsPerLine, lineSpacing,
-            itemSpacing, baseMinor, itemsAlignment, this, panelSize);
+        var panelSize = this.MinorMajorSize(panelMinor, panelMajor);
+        return new LayoutState(lines, [.. visibleIndices.GetRange(0, displayedItemCount)], actualLineCount,
+            allocatedLineCount, itemsPerLine, lineSpacing, itemSpacing, baseMajor, baseMinor,
+            minorAlignment, majorAlignment, this, panelSize);
     }
 
     private static int GetItemsPerLine(double availableMinor, double itemMinor, double itemSpacing, int fallbackCount)
@@ -286,35 +339,92 @@ public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasure
         return Max(1, (int)Floor((availableMinor + itemSpacing) / (itemMinor + itemSpacing)));
     }
 
-    private readonly record struct LineState(int Start, int Count, double Major);
+    private static int GetLineCountForItems(int itemCount, int itemsPerLine)
+    {
+        if (itemCount <= 0 || itemsPerLine <= 0)
+            return 0;
+
+        return (itemCount + itemsPerLine - 1) / itemsPerLine;
+    }
+
+    private static int ConstrainCount(int normalCount, int minCount, int maxCount)
+    {
+        var effectiveMax = maxCount;
+        var effectiveMin = minCount;
+
+        if (effectiveMax >= 0)
+            effectiveMin = effectiveMin >= 0 ? Min(effectiveMin, effectiveMax) : effectiveMin;
+
+        if (effectiveMax >= 0)
+            normalCount = Min(normalCount, effectiveMax);
+
+        if (effectiveMin >= 0)
+            normalCount = Max(normalCount, effectiveMin);
+
+        return Max(0, normalCount);
+    }
+
+    private static int GetLineCount(double availableMajor, double lineMajor, double lineSpacing, int fallbackCount)
+    {
+        if (fallbackCount <= 0)
+            return 0;
+
+        if (double.IsPositiveInfinity(availableMajor))
+            return fallbackCount;
+
+        if (!MathUtilities.GreaterThan(lineMajor, 0))
+            return 0;
+
+        return Max(0, (int)Floor((availableMajor + lineSpacing) / (lineMajor + lineSpacing)));
+    }
+
+    private static double GetAlignedSize(double availableSize, int itemCount, double spacing, double baseSize, WrapPanelItemsAlignment itemsAlignment)
+    {
+        return itemsAlignment switch
+        {
+            WrapPanelItemsAlignment.Stretch when itemCount > 0 =>
+                LayoutAlignmentHelper.GetDistributableSpace(availableSize, Max(0, itemCount - 1) * spacing) / itemCount,
+            _ => baseSize
+        };
+    }
+
+    private static double GetAlignedSpacing(double availableSize, int itemCount, double spacing, double baseSize, WrapPanelItemsAlignment itemsAlignment)
+    {
+        return itemsAlignment switch
+        {
+            WrapPanelItemsAlignment.Justify when itemCount > 1 =>
+                LayoutAlignmentHelper.GetDistributableSpace(availableSize, itemCount * baseSize) / (itemCount - 1),
+            _ => spacing
+        };
+    }
+
+    private readonly record struct LineState(int Start, int Count);
 
     private readonly record struct LayoutState(
         LineState[] Lines,
         int[] VisibleIndices,
         int LineCount,
+        int AllocatedLineCount,
         int ItemsPerLine,
         double LineSpacing,
         double ItemSpacing,
+        double BaseMajor,
         double BaseMinor,
-        WrapPanelItemsAlignment ItemsAlignment,
+        WrapPanelItemsAlignment MinorAlignment,
+        WrapPanelItemsAlignment MajorAlignment,
         IOrientationBasedMeasures Measures,
         Size PanelSize)
     {
         private double AvailableMinor => Measures.Minor(PanelSize);
+        private double AvailableMajor => Measures.Major(PanelSize);
 
-        public double SlotMinor => ItemsAlignment switch
-        {
-            WrapPanelItemsAlignment.Stretch when ItemsPerLine > 0 =>
-                (AvailableMinor - (Max(0, ItemsPerLine - 1) * ItemSpacing) - 0.01) / ItemsPerLine,
-            _ => BaseMinor
-        };
+        public double SlotMinor => GetAlignedSize(AvailableMinor, ItemsPerLine, ItemSpacing, BaseMinor, MinorAlignment);
 
-        public double SlotSpacing => ItemsAlignment switch
-        {
-            WrapPanelItemsAlignment.Justify when ItemsPerLine > 1 =>
-                (AvailableMinor - (ItemsPerLine * BaseMinor) - 0.01) / (ItemsPerLine - 1),
-            _ => ItemSpacing
-        };
+        public double SlotSpacing => GetAlignedSpacing(AvailableMinor, ItemsPerLine, ItemSpacing, BaseMinor, MinorAlignment);
+
+        public double LineMajor => GetAlignedSize(AvailableMajor, AllocatedLineCount, LineSpacing, BaseMajor, MajorAlignment);
+
+        public double LineSlotSpacing => GetAlignedSpacing(AvailableMajor, AllocatedLineCount, LineSpacing, BaseMajor, MajorAlignment);
 
         private double SlotStride => SlotMinor + SlotSpacing;
 
@@ -322,7 +432,7 @@ public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasure
         {
             var line = Lines[lineIndex];
             var emptySlotCount = Max(0, ItemsPerLine - line.Count);
-            return ItemsAlignment switch
+            return MinorAlignment switch
             {
                 WrapPanelItemsAlignment.Center => emptySlotCount / 2,
                 WrapPanelItemsAlignment.End => emptySlotCount,

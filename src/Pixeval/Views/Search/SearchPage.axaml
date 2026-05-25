@@ -90,9 +90,9 @@
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <controls:AdaptiveGrid
-                                ItemHeight="200"
+                                ItemSize="200"
                                 ItemSpacing="5"
-                                ItemWidth="200"
+                                LineSize="200"
                                 LineSpacing="5" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>

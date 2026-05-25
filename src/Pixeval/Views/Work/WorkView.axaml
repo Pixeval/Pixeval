@@ -67,10 +67,10 @@
                 <Setter.Value>
                     <ItemsPanelTemplate>
                         <controls:AdaptiveGrid
-                            ItemHeight="200"
+                            ItemSize="350"
                             ItemSpacing="5"
-                            ItemWidth="350"
                             ItemsAlignment="Stretch"
+                            LineSize="200"
                             LineSpacing="5" />
                     </ItemsPanelTemplate>
                 </Setter.Value>
