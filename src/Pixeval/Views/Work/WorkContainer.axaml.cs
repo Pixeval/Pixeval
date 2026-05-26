@@ -299,7 +299,7 @@ public partial class WorkContainer : UserControl
     {
         if (ReferenceEquals(_filterCompletionSource, source) && _filterCompletionSourceCount == source.Count)
             return;
-
+        
         var tags = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
         var authors = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         foreach (var work in source)

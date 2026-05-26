@@ -39,7 +39,7 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
     public NovelViewerPageViewModel(NovelViewViewModel viewModel, int currentNovelIndex)
     {
         ViewModelSource = new NovelViewViewModel(viewModel);
-        ViewModelSource.DataProvider.View.FilterChanged += (_, _) => CurrentWorkIndex = Novels.IndexOf(CurrentNovel);
+        ViewModelSource.View.FilterChanged += (_, _) => CurrentWorkIndex = Novels.IndexOf(CurrentNovel);
         CurrentWorkIndex = currentNovelIndex;
     }
 
@@ -47,7 +47,7 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
 
     public NovelItemViewModel[]? NovelsSource { get; }
 
-    public IList<NovelItemViewModel> Novels => ViewModelSource?.DataProvider.View ?? (IList<NovelItemViewModel>) NovelsSource!;
+    public IList<NovelItemViewModel> Novels => ViewModelSource?.View ?? (IList<NovelItemViewModel>) NovelsSource!;
 
     public NovelItemViewModel CurrentNovel => Novels[CurrentWorkIndex];
 

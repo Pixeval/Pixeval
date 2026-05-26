@@ -39,21 +39,21 @@ public abstract partial class WorkViewViewModelBase<T, TViewModel>(FrozenSet<str
 
     public void SetSortDescriptions(params IEnumerable<ISortDescription<IWorkViewModel>> descriptions)
     {
-        using (DataProvider.View.DeferSortDescriptionsChange())
+        using (View.DeferSortDescriptionsChange())
         {
-            DataProvider.View.SortDescriptions.Clear();
-            DataProvider.View.SortDescriptions.AddRange(descriptions);
+            View.SortDescriptions.Clear();
+            View.SortDescriptions.AddRange(descriptions);
         }
     }
 
     protected void SetFilters()
     {
-        using (DataProvider.View.DeferFiltersChange())
+        using (View.DeferFiltersChange())
         {
-            DataProvider.View.Filters.Clear();
-            DataProvider.View.Filters.Add(BlockedTagsFilter);
+            View.Filters.Clear();
+            View.Filters.Add(BlockedTagsFilter);
             if (UserFilter is not null)
-                DataProvider.View.Filters.Add(UserFilter);
+                View.Filters.Add(UserFilter);
         }
     }
 
@@ -70,14 +70,14 @@ public abstract partial class WorkViewViewModelBase<T, TViewModel>(FrozenSet<str
         }
     }
 
-    public IReadOnlyCollection<IWorkViewModel> View => DataProvider.View;
+    IReadOnlyCollection<IWorkViewModel> IOperableViewViewModel.View => View;
 
-    public IReadOnlyCollection<IWorkViewModel> Source => DataProvider.Source;
+    IReadOnlyCollection<IWorkViewModel> IOperableViewViewModel.Source => Source;
 
     public Range ViewRange
     {
-        get => DataProvider.View.Range;
-        set => DataProvider.View.Range = value;
+        get => View.Range;
+        set => View.Range = value;
     }
 
     public abstract bool RequireAdaptiveGrid { get; }

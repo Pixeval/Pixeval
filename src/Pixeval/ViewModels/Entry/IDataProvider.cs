@@ -2,8 +2,8 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using Mako.Engine;
 using Misaki;
 using Pixeval.Collections;
 
@@ -18,7 +18,5 @@ public interface IDataProvider<T, TViewModel>
 
     IncrementalLoadingCollection<TViewModel> Source { get; }
 
-    IFetchEngine<T>? FetchEngine { get; }
-
-    void ResetEngine(IFetchEngine<T>? fetchEngine, Func<T, int, TViewModel> factory, int itemsPerPage = 20, int limit = -1);
+    void ResetEngine(IAsyncEnumerable<T>? fetchEngine, Func<T, int, TViewModel> factory, int itemsPerPage = 20, int limit = -1);
 }

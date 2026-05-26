@@ -80,7 +80,7 @@ public static class IllustrationViewerHelper
         /// <param name="illustrationViewViewModel">指定的插画ViewModel所在的<see cref="WorkView"/>的ViewModel</param>
         public void CreateIllustrationPage(IllustrationItemViewModel illustrationViewModel, IllustrationViewViewModel illustrationViewViewModel)
         {
-            var index = illustrationViewViewModel.DataProvider.View.IndexOf(illustrationViewModel);
+            var index = illustrationViewViewModel.View.IndexOf(illustrationViewModel);
             CreateIllustrationPage(control, new IllustrationViewerPageViewModel(illustrationViewViewModel, index));
         }
     }

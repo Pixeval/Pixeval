@@ -9,7 +9,14 @@ using Pixeval.Collections;
 
 namespace Pixeval.ViewModels;
 
-public interface IOperableViewViewModel : INotifyPropertyChanged
+public interface ISimpleViewViewModel : INotifyPropertyChanged
+{
+    IReadOnlyCollection<INotifyPropertyChanged> View { get; }
+
+    IReadOnlyCollection<INotifyPropertyChanged> Source { get; }
+}
+
+public interface IOperableViewViewModel : ISimpleViewViewModel
 {
     bool IsSelecting { get; set; }
 
@@ -21,11 +28,15 @@ public interface IOperableViewViewModel : INotifyPropertyChanged
 
     IFilter<IWorkViewModel>? UserFilter { get; set; }
 
-    IReadOnlyCollection<IWorkViewModel> View { get; }
-
-    IReadOnlyCollection<IWorkViewModel> Source { get; }
-
     Range ViewRange { get; set; }
 
     bool RequireAdaptiveGrid { get; }
+
+    new IReadOnlyCollection<IWorkViewModel> View { get; }
+
+    new IReadOnlyCollection<IWorkViewModel> Source { get; }
+
+    IReadOnlyCollection<INotifyPropertyChanged> ISimpleViewViewModel.View => View;
+
+    IReadOnlyCollection<INotifyPropertyChanged> ISimpleViewViewModel.Source => Source;
 }

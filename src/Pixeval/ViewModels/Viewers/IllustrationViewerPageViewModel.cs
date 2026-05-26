@@ -37,7 +37,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
     public IllustrationViewerPageViewModel(IllustrationViewViewModel viewModel, int currentIllustrationIndex)
     {
         ViewModelSource = new IllustrationViewViewModel(viewModel);
-        ViewModelSource.DataProvider.View.FilterChanged += (_, _) => CurrentWorkIndex = Illustrations.IndexOf(CurrentIllustration);
+        ViewModelSource.View.FilterChanged += (_, _) => CurrentWorkIndex = Illustrations.IndexOf(CurrentIllustration);
         CurrentWorkIndex = currentIllustrationIndex;
     }
 
@@ -155,7 +155,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
     /// <summary>
     /// 插画列表
     /// </summary>
-    public IList<IllustrationItemViewModel> Illustrations => ViewModelSource?.DataProvider.View ?? (IList<IllustrationItemViewModel>) IllustrationsSource!;
+    public IList<IllustrationItemViewModel> Illustrations => ViewModelSource?.View ?? (IList<IllustrationItemViewModel>) IllustrationsSource!;
 
     #endregion
 }

@@ -17,7 +17,7 @@ public class IncrementalSource<T, TViewModel>(IAsyncEnumerable<T?> asyncEnumerat
     /// <summary>
     /// 当为null时暂时不报错
     /// </summary>
-    private readonly IAsyncEnumerator<T> _asyncEnumerator = asyncEnumerator?.GetAsyncEnumerator()!;
+    private readonly IAsyncEnumerator<T?> _asyncEnumerator = asyncEnumerator.GetAsyncEnumerator();
 
     private readonly HashSet<string> _yieldedItems = [];
 

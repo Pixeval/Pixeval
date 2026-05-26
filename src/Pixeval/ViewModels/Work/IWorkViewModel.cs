@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.Input;
@@ -12,7 +13,7 @@ using Pixeval.Models.Filters;
 
 namespace Pixeval.ViewModels;
 
-public interface IWorkViewModel
+public interface IWorkViewModel : INotifyPropertyChanged
 {
     bool IsBookmarkSupported { get; }
 

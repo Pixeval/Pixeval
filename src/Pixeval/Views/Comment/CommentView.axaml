@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Pixeval.Views.CommentView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -14,12 +14,12 @@
     mc:Ignorable="d"
     d:DesignHeight="400"
     d:DesignWidth="350">
-    <entry:EntryView HasNoItem="{Binding !DataProvider.View.Count}" IsLoadingMore="{Binding #ListBox.(controls:IncrementalLoadingBehavior.IsLoadingMore)}">
+    <entry:EntryView HasNoItem="{Binding !View.Count}" IsLoadingMore="{Binding #ListBox.(controls:IncrementalLoadingBehavior.IsLoadingMore)}">
         <ListBox
             x:Name="ListBox"
             controls:IncrementalLoadingBehavior.IsEnabled="True"
             controls:IncrementalLoadingBehavior.Threshold="200"
-            ItemsSource="{Binding DataProvider.View}">
+            ItemsSource="{Binding View}">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Spacing="5" />

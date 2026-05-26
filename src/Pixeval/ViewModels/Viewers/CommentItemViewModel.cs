@@ -68,11 +68,11 @@ public sealed class CommentItemViewModel(Comment comment, SimpleWorkType parentT
             : App.AppViewModel.MakoClient.DeleteIllustrationCommentAsync(Id);
     }
 
-    public override void AddComment(Comment comment) => DataProvider.Source.Insert(0, new CommentItemViewModel(comment, ParentType, ParentId, false));
+    public override void AddComment(Comment comment) => Source.Insert(0, new CommentItemViewModel(comment, ParentType, ParentId, false));
 
     public override void RefreshEngine()
     {
-        DataProvider.ResetEngine(ParentType is SimpleWorkType.Novel
+        ResetEngine(ParentType is SimpleWorkType.Novel
             ? App.AppViewModel.MakoClient.NovelCommentReplies(Id)
             : App.AppViewModel.MakoClient.IllustrationCommentReplies(Id),
             (comment, _) => new(comment, ParentType, ParentId, false));

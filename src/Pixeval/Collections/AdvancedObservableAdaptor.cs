@@ -25,8 +25,6 @@ public class AdvancedObservableAdaptor<TIn, TOut>
 
     private readonly AdvancedObservableCollection<TOut> _inner;
 
-    private ObservableCollection<TOut> _mappedSource = [];
-
     private ObservableCollection<TIn>? _source;
 
     public AdvancedObservableAdaptor(Func<TIn, TOut> factory) : this([], factory)
@@ -63,7 +61,7 @@ public class AdvancedObservableAdaptor<TIn, TOut>
         }
     }
 
-    public ObservableCollection<TOut> MappedSource => _mappedSource;
+    public ObservableCollection<TOut> MappedSource { get; private set; } = [];
 
     public bool IsReversed
     {
@@ -156,8 +154,8 @@ public class AdvancedObservableAdaptor<TIn, TOut>
 
     private void RebuildMappedSource()
     {
-        _mappedSource = new ObservableCollection<TOut>(Source.Select(_factory));
-        _inner.Source = _mappedSource;
+        MappedSource = new ObservableCollection<TOut>(Source.Select(_factory));
+        _inner.Source = MappedSource;
     }
 
     private void AttachSourceHandler(ObservableCollection<TIn>? items)
@@ -180,14 +178,14 @@ public class AdvancedObservableAdaptor<TIn, TOut>
             {
                 var insertIndex = e.NewStartingIndex;
                 foreach (TIn item in newItems)
-                    _mappedSource.Insert(insertIndex++, _factory(item));
+                    MappedSource.Insert(insertIndex++, _factory(item));
 
                 break;
             }
             case NotifyCollectionChangedAction.Remove when e is { OldItems.Count: > 0, OldStartingIndex: >= 0 }:
             {
                 for (var index = 0; index < e.OldItems.Count; ++index)
-                    _mappedSource.RemoveAt(e.OldStartingIndex);
+                    MappedSource.RemoveAt(e.OldStartingIndex);
 
                 break;
             }
@@ -199,13 +197,13 @@ public class AdvancedObservableAdaptor<TIn, TOut>
                     break;
                 }
 
-                _mappedSource.Move(e.OldStartingIndex, e.NewStartingIndex);
+                MappedSource.Move(e.OldStartingIndex, e.NewStartingIndex);
                 break;
             }
             case NotifyCollectionChangedAction.Replace when e is { NewItems: { } replacementItems, NewStartingIndex: >= 0 }:
             {
                 for (var index = 0; index < replacementItems.Count; ++index)
-                    _mappedSource[e.NewStartingIndex + index] = _factory((TIn)replacementItems[index]!);
+                    MappedSource[e.NewStartingIndex + index] = _factory((TIn)replacementItems[index]!);
 
                 break;
             }

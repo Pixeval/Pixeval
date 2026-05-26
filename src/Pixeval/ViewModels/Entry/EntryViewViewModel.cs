@@ -2,21 +2,24 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using Mako.Engine;
 using Misaki;
-using Pixeval.Controls;
+using Pixeval.Collections;
 
 namespace Pixeval.ViewModels;
 
 public abstract class EntryViewViewModel<T, TViewModel>
-    : ViewModelBase, IDisposable
+    : ViewModelBase, ISimpleViewViewModel, IDisposable
     where T : class, IIdentityInfo
-    where TViewModel : EntryViewModel<T>, IFactory<T, TViewModel>
+    where TViewModel : ViewModelBase
 {
-    /// <summary>
-    /// Avoid calls to <see cref="IDataProvider{T,TViewModel}.ResetEngine"/>, calls to <see cref="ResetEngine"/> instead.
-    /// </summary>
-    public abstract IDataProvider<T, TViewModel> DataProvider { get; }
+    protected abstract IDataProvider<T, TViewModel> DataProvider { get; }
+
+    public AdvancedObservableCollection<TViewModel> View => DataProvider.View;
+
+    public IncrementalLoadingCollection<TViewModel> Source => DataProvider.Source;
 
     public void Dispose()
     {
@@ -25,4 +28,10 @@ public abstract class EntryViewViewModel<T, TViewModel>
     }
 
     public void ResetEngine(IFetchEngine<T>? newEngine, Func<T, int, TViewModel> factory, int itemsPerPage = 20, int itemLimit = -1) => DataProvider.ResetEngine(newEngine, factory, itemsPerPage, itemLimit);
+
+    /// <inheritdoc />
+    IReadOnlyCollection<INotifyPropertyChanged> ISimpleViewViewModel.View => View;
+
+    /// <inheritdoc />
+    IReadOnlyCollection<INotifyPropertyChanged> ISimpleViewViewModel.Source => Source;
 }

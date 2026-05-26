@@ -2,7 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using Mako.Model;
-using SpotlightViewDataProvider = Pixeval.ViewModels.SimpleViewDataProvider<
+using SpotlightViewDataProvider = Pixeval.ViewModels.SharableViewDataProvider<
     Mako.Model.Spotlight,
     Pixeval.ViewModels.SpotlightItemViewModel>;
 
@@ -10,5 +10,5 @@ namespace Pixeval.ViewModels;
 
 public sealed class SpotlightViewViewModel : EntryViewViewModel<Spotlight, SpotlightItemViewModel>
 {
-    public override SpotlightViewDataProvider DataProvider { get; } = new();
+    protected override SpotlightViewDataProvider DataProvider { get; } = new();
 }

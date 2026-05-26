@@ -43,7 +43,7 @@ public static class NovelViewerHelper
         /// <param name="novelViewViewModel">指定的小说ViewModel所在的WorkView的ViewModel。</param>
         public void CreateNovelPage(NovelItemViewModel novelViewModel, NovelViewViewModel novelViewViewModel)
         {
-            var index = novelViewViewModel.DataProvider.View.IndexOf(novelViewModel);
+            var index = novelViewViewModel.View.IndexOf(novelViewModel);
             control.NavigateTo(new NovelViewerPage(new NovelViewerPageViewModel(novelViewViewModel, index)));
         }
     }

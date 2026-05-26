@@ -2,8 +2,8 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using Mako.Engine;
 using Misaki;
 using Pixeval.Collections;
 using Pixeval.Utilities;
@@ -11,7 +11,7 @@ using Pixeval.Utilities;
 namespace Pixeval.ViewModels;
 
 /// <summary>
-/// 复用时调用<see cref="CloneRef"/>，<see cref="FetchEngineRef"/>和<see cref="EntrySourceRef"/>会在所有复用对象都Dispose时Dispose<br/>
+/// 复用时调用<see cref="CloneRef"/>，<see cref="EntrySourceRef"/>会在所有复用对象都Dispose时Dispose<br/>
 /// 初始化时调用<see cref="ResetEngine"/>
 /// </summary>
 public class SharableViewDataProvider<T, TViewModel>
@@ -19,19 +19,6 @@ public class SharableViewDataProvider<T, TViewModel>
     where T : class, IIdentityInfo
     where TViewModel : EntryViewModel<T>
 {
-    public SharedRef<IFetchEngine<T>?>? FetchEngineRef
-    {
-        get;
-        private set
-        {
-            if (Equals(value, field))
-                return;
-            if (field?.TryDispose(this) is true)
-                FetchEngine?.EngineHandle.Cancel();
-            field = value;
-        }
-    }
-
     protected SharedRef<IncrementalLoadingCollection<TViewModel>> EntrySourceRef
     {
         get;
@@ -47,8 +34,6 @@ public class SharableViewDataProvider<T, TViewModel>
         }
     } = null!;
 
-    public IFetchEngine<T>? FetchEngine => FetchEngineRef?.Value;
-
     public AdvancedObservableCollection<TViewModel> View { get; } = [];
 
     public IncrementalLoadingCollection<TViewModel> Source => EntrySourceRef.Value;
@@ -59,22 +44,20 @@ public class SharableViewDataProvider<T, TViewModel>
     public void Dispose()
     {
         GC.SuppressFinalize(this);
-        View.Dispose();
+        
         DisposeEntrySourceRef();
-        // 赋值为null会自动调用setter中的Dispose逻辑
-        FetchEngineRef = null;
     }
 
-    public void ResetEngine(IFetchEngine<T>? fetchEngine, Func<T, int, TViewModel> factory, int itemsPerPage = 20, int limit = -1)
+    public void ResetEngine(IAsyncEnumerable<T>? fetchEngine, Func<T, int, TViewModel> factory, int itemsPerPage = 20, int limit = -1)
     {
-        FetchEngineRef = new(fetchEngine, this);
-        EntrySourceRef = new(new(new IncrementalSource<T, TViewModel>(FetchEngine!, factory, limit), itemsPerPage), this);
+        Dispose();
+
+        EntrySourceRef = new(new(new IncrementalSource<T, TViewModel>(fetchEngine!, factory, limit), itemsPerPage), this);
     }
 
     public SharableViewDataProvider<T, TViewModel> CloneRef()
     {
         var dataProvider = new SharableViewDataProvider<T, TViewModel>();
-        dataProvider.FetchEngineRef = FetchEngineRef?.MakeShared(dataProvider);
         dataProvider.EntrySourceRef = EntrySourceRef.MakeShared(dataProvider);
         dataProvider.View.FilterCombinationMode = View.FilterCombinationMode;
         dataProvider.View.IsReversed = View.IsReversed;

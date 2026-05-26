@@ -16,7 +16,7 @@
     </UserControl.DataContext>
     <entry:EntryView
         x:Name="EntryView"
-        HasNoItem="{Binding !DataProvider.View.Count}"
+        HasNoItem="{Binding !View.Count}"
         IsLoadingMore="{Binding #ListBox.(controls:IncrementalLoadingBehavior.IsLoadingMore)}">
         <ListBox
             x:Name="ListBox"
@@ -24,7 +24,7 @@
             controls:IncrementalLoadingBehavior.IsEnabled="True"
             controls:IncrementalLoadingBehavior.Threshold="200"
             ContainerPrepared="ListBox_OnContainerPrepared"
-            ItemsSource="{Binding DataProvider.View}">
+            ItemsSource="{Binding View}">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <controls:AdaptiveGrid

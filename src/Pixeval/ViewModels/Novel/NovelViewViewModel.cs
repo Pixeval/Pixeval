@@ -14,7 +14,7 @@ public sealed class NovelViewViewModel : WorkViewViewModelBase<Novel, NovelItemV
     public NovelViewViewModel(NovelViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef(), viewModel.CachedBlockedTags)
     {
         UserFilter = viewModel.UserFilter;
-        DataProvider.View.Range = viewModel.DataProvider.View.Range;
+        View.Range = viewModel.View.Range;
     }
 
     public NovelViewViewModel() : this(new NovelViewDataProvider(), null)
@@ -27,7 +27,7 @@ public sealed class NovelViewViewModel : WorkViewViewModelBase<Novel, NovelItemV
         SetFilters();
     }
 
-    public override NovelViewDataProvider DataProvider { get; }
+    protected override NovelViewDataProvider DataProvider { get; }
 
     public override bool RequireAdaptiveGrid => true;
 }
