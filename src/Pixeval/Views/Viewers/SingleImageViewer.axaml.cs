@@ -15,6 +15,9 @@ using SmoothScroll.Avalonia.Controls;
 
 namespace Pixeval.Views.Viewers;
 
+/// <summary>
+/// <see cref="SwipeImageViewer"/> 内部使用
+/// </summary>
 public partial class SingleImageViewer : UserControl
 {
     public static readonly DirectProperty<SingleImageViewer, double> MirrorScaleXProperty =
@@ -113,15 +116,18 @@ public partial class SingleImageViewer : UserControl
         RotateCounterclockwiseCommand.NotifyCanExecuteChanged();
         ZoomInCommand.NotifyCanExecuteChanged();
         ZoomOutCommand.NotifyCanExecuteChanged();
+        ZoomToOriginalCommand.NotifyCanExecuteChanged();
+        ZoomToFitCommand.NotifyCanExecuteChanged();
         PlayPauseCommand.NotifyCanExecuteChanged();
+        MirrorCommand.NotifyCanExecuteChanged();
         CopyCommand.NotifyCanExecuteChanged();
         SaveCommand.NotifyCanExecuteChanged();
         SaveAsCommand.NotifyCanExecuteChanged();
     }
 
-    private bool CanManipulateImage => (DataContext as SingleViewerViewModel)?.LoadSuccessfully == true;
+    private bool CanManipulateImage => DataContext is SingleViewerViewModel { LoadSuccessfully: true };
 
-    private bool CanPlayGif => (DataContext as SingleViewerViewModel)?.IsGifLoadSuccessfully == true;
+    private bool CanPlayGif => DataContext is SingleViewerViewModel { IsGifLoadSuccessfully: true };
 
     [RelayCommand(CanExecute = nameof(CanManipulateImage))]
     private void Mirror()
@@ -140,6 +146,12 @@ public partial class SingleImageViewer : UserControl
 
     [RelayCommand(CanExecute = nameof(CanManipulateImage))]
     private void ZoomOut() => ZoomFactor /= 1.2;
+
+    [RelayCommand(CanExecute = nameof(CanManipulateImage))]
+    private void ZoomToOriginal() => ZoomFactor = 1;
+
+    [RelayCommand(CanExecute = nameof(CanManipulateImage))]
+    private void ZoomToFit() => ZoomToFitCore(true);
 
     [RelayCommand(CanExecute = nameof(CanPlayGif))]
     private void PlayPause() => IsPlaying = !IsPlaying;
@@ -183,14 +195,16 @@ public partial class SingleImageViewer : UserControl
     /// <summary>
     /// 默认缩放到适应窗口大小（Uniform）
     /// </summary>
-    private void ImageViewerOnSizeChanged(object? sender, SizeChangedEventArgs e)
+    private void ImageViewerOnSizeChanged(object? sender, SizeChangedEventArgs e) => ZoomToFitCore(false);
+
+    private void ZoomToFitCore(bool animation)
     {
-        if (sender is not Control { Bounds.Size: { Width: not 0, Height: not 0 } imageSize }
+        if (ImageViewer is not Control { Bounds.Size: { Width: not 0, Height: not 0 } imageSize }
             || ViewerScrollView is not { Bounds.Size: { Width: not 0, Height: not 0 } panelSize })
             return;
 
         var ratio = panelSize / imageSize;
-        ViewerScrollView.ZoomTo(Math.Min(ratio.X, ratio.Y), false);
+        ViewerScrollView.ZoomTo(Math.Min(ratio.X, ratio.Y), animation);
     }
 
     public bool IsMirrored

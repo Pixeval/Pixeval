@@ -259,6 +259,8 @@ namespace Pixeval
         public const string WorkNavigationViewItemContent = "EntryViewerPage.WorkNavigationViewItem.Content";
         public const string ZoomIn = "EntryViewerPage.ZoomIn";
         public const string ZoomOut = "EntryViewerPage.ZoomOut";
+        public const string ZoomToFit = "EntryViewerPage.ZoomToFit";
+        public const string ZoomToOriginal = "EntryViewerPage.ZoomToOriginal";
     }
     public static class EnumResources
     {

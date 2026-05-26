@@ -124,6 +124,7 @@ public static partial class IoHelper
                     var lastReported = DateTime.MinValue;
                     while ((bytesRead = await contentStream.ReadAsync(new(buffer), token).ConfigureAwait(false)) is not 0)
                     {
+                        await Task.Delay(100);
                         await destination.WriteAsync(new(buffer, 0, bytesRead), token).ConfigureAwait(false);
                         totalRead += bytesRead;
                         // reduce the frequency of the invocation of the callback, otherwise it will draw a severe performance impact

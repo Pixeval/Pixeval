@@ -18,6 +18,7 @@
         ContentOrientation="{Binding $parent[local:ContinuousImageViewer].ContentOrientation}"
         HorizontalScrollBarVisibility="Hidden"
         PropertyChanged="ViewerScrollView_OnPropertyChanged"
+        ScrollChanged="ViewerScrollView_OnScrollChanged"
         SizeChanged="ViewerScrollView_OnSizeChanged"
         Theme="{StaticResource ViewerScrollViewTheme}"
         VerticalScrollBarVisibility="Hidden">
@@ -25,6 +26,8 @@
             x:Name="ImageItemsControl"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
+            ContainerClearing="ImageItemsControl_OnContainerClearing"
+            ContainerPrepared="ImageItemsControl_OnContainerPrepared"
             ItemsSource="{Binding Images}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>

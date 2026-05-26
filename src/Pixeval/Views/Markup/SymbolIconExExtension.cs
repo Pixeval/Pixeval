@@ -9,6 +9,9 @@ namespace Pixeval.Views.Markup;
 
 public sealed class SymbolIconExExtension : SymbolIcon
 {
+    /// <inheritdoc />
+    protected override Type StyleKeyOverride => typeof(SymbolIcon);
+
     public SymbolIconExExtension()
     {
     }

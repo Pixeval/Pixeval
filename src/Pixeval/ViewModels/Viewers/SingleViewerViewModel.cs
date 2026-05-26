@@ -58,13 +58,14 @@ public partial class SingleViewerViewModel : ViewModelBase, IDisposable
     private readonly string _platform;
     private readonly IArtworkInfo _entry;
 
-    public int CurrentIndex => _entry.TryGetSetIndex();
+    public int Index { get; }
 
     /// <inheritdoc/>
-    public SingleViewerViewModel(string platform, IArtworkInfo entry)
+    public SingleViewerViewModel(string platform, IArtworkInfo entry, int index)
     {
         _platform = platform;
         _entry = entry;
+        Index = index;
         _ = LoadThumbnailImageAsync();
     }
 

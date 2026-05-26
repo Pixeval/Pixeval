@@ -47,7 +47,6 @@
                                                                                   Play,
                                                                                   x:TypeArguments=common:Symbol}}"
                         InputGesture="Space"
-                        IsEnabled="{Binding LoadSuccessfully}"
                         IsVisible="{Binding IsPicGif}" />
                     <!--  保存  -->
                     <MenuItem
@@ -76,6 +75,7 @@
                         Header="{I18N {x:Static pixeval:EntryViewerPageResources.RotateCounterclockwise}}"
                         Icon="{markup:SymbolIcon ArrowRotateCounterclockwise}" />
                     <MenuItem
+                        Command="{Binding $parent[viewers:SingleImageViewer].MirrorCommand}"
                         Header="{I18N {x:Static pixeval:EntryViewerPageResources.Mirror}}"
                         Icon="{markup:SymbolIcon FlipHorizontal}"
                         IsChecked="{Binding $parent[viewers:SingleImageViewer].IsMirrored, Mode=TwoWay}"

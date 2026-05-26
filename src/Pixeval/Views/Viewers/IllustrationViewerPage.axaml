@@ -2,10 +2,12 @@
     x:Class="Pixeval.Views.Viewers.IllustrationViewerPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:common="using:FluentIcons.Common"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Views.Viewers"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
     xmlns:ss="using:SmoothScroll.Avalonia.Controls"
@@ -251,50 +253,66 @@
                                 Theme="{StaticResource FloatingCommandBarTheme}">
                                 <CommandBar.PrimaryCommands>
                                     <CommandBarButton
+                                        Command="{Binding #I.SwipeImageViewer.CurrentPage.PlayPauseCommand, FallbackValue={x:Null}}"
+                                        Content="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding #I.SwipeImageViewer.CurrentPage.IsPlaying, FallbackValue={x:False}},
+                                                                                                     Pause,
+                                                                                                     Play,
+                                                                                                     x:TypeArguments=common:Symbol}}"
+                                        ToolTip.Tip="{I18N {x:Static pixeval:MiscResources.Play}}">
+                                        <CommandBarButton.IsVisible>
+                                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                                <Binding Path="CurrentIllustration.IsPicGif" />
+                                                <Binding Mode="OneTime" Path="#I.IsSwipeMode" />
+                                            </MultiBinding>
+                                        </CommandBarButton.IsVisible>
+                                    </CommandBarButton>
+                                    <CommandBarButton
                                         Command="{Binding #I.SwipeImageViewer.RotateCounterclockwiseCommand, FallbackValue={x:Null}}"
-                                        Content="{markup:SymbolIcon ArrowRotateCounterclockwise,
-                                                                    FontSize=16}"
+                                        Content="{markup:SymbolIcon ArrowRotateCounterclockwise}"
                                         IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}"
                                         ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.RotateCounterclockwise}}" />
                                     <CommandBarToggleButton
                                         Command="{Binding #I.SwipeImageViewer.MirrorCommand, FallbackValue={x:Null}}"
-                                        Content="{markup:SymbolIcon FlipHorizontal,
-                                                                    FontSize=16}"
+                                        Content="{markup:SymbolIcon FlipHorizontal}"
                                         IsChecked="{Binding #I.SwipeImageViewer.IsMirrored, Mode=TwoWay, FallbackValue={x:False}}"
                                         IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}"
                                         ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.Mirror}}" />
                                     <CommandBarButton
                                         Command="{Binding #I.SwipeImageViewer.RotateClockwiseCommand, FallbackValue={x:Null}}"
-                                        Content="{markup:SymbolIcon ArrowRotateClockwise,
-                                                                    FontSize=16}"
+                                        Content="{markup:SymbolIcon ArrowRotateClockwise}"
                                         IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}"
                                         ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.RotateClockwise}}" />
                                     <CommandBarSeparator x:Name="SwipeTransformSeparator" IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}" />
                                     <CommandBarButton
                                         Command="{Binding #I.ImageViewer.ZoomOutCommand}"
-                                        Content="{markup:SymbolIcon ZoomOut,
-                                                                    FontSize=16}"
+                                        Content="{markup:SymbolIcon ZoomOut}"
                                         ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomOut}}" />
                                     <controls:CommandBarElementContainer>
                                         <TextBlock x:Name="ZoomFactorTextBlock" Text="{Binding #I.ImageViewer.ZoomFactor, StringFormat={}{0:P0}}" />
                                     </controls:CommandBarElementContainer>
                                     <CommandBarButton
                                         Command="{Binding #I.ImageViewer.ZoomInCommand}"
-                                        Content="{markup:SymbolIcon ZoomIn,
-                                                                    FontSize=16}"
+                                        Content="{markup:SymbolIcon ZoomIn}"
                                         ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomIn}}" />
+                                    <CommandBarButton
+                                        Command="{Binding #I.ImageViewer.ZoomToOriginalCommand}"
+                                        Content="{markup:SymbolIcon RatioOneToOne}"
+                                        ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomToOriginal}}" />
+                                    <CommandBarButton
+                                        Command="{Binding #I.SwipeImageViewer.CurrentPage.ZoomToFitCommand, FallbackValue={x:Null}}"
+                                        Content="{markup:SymbolIcon PageFit}"
+                                        IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}"
+                                        ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomToFit}}" />
                                     <CommandBarSeparator />
                                     <CommandBarButton
                                         Command="{Binding PrevCommand}"
-                                        Content="{markup:SymbolIcon ChevronLeft,
-                                                                    FontSize=16}"
+                                        Content="{markup:SymbolIcon ChevronLeft}"
                                         IsEnabled="{Binding PrevButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                                         RightTapped="PrevButton_OnRightClick"
                                         ToolTip.Tip="{Binding PrevButtonText}" />
                                     <CommandBarButton
                                         Command="{Binding NextCommand}"
-                                        Content="{markup:SymbolIcon ChevronRight,
-                                                                    FontSize=16}"
+                                        Content="{markup:SymbolIcon ChevronRight}"
                                         IsEnabled="{Binding NextButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                                         RightTapped="NextButton_OnRightClick"
                                         ToolTip.Tip="{Binding NextButtonText}" />

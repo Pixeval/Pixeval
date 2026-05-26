@@ -276,7 +276,8 @@ public sealed class AdvancedObservableCollectionTest
         Assert.HasCount(1, col);
         Assert.AreEqual(1, adaptor.Count);
         Assert.IsInstanceOfType<SampleViewModel>(adaptor[0]);
-        Assert.AreSame(sourceItem, ((IList)adaptor)[0]);
+        Assert.AreSame(adaptor[0], ((IList)adaptor)[0]);
+        Assert.IsTrue(((IList)adaptor).IsReadOnly);
 
         adaptor.Filters.Add(IFilter<SampleViewModel>.Create(new HashSet<string> { nameof(SampleViewModel.Val) }, item => item.Val > 1, false));
         Assert.AreEqual(0, adaptor.Count);
@@ -286,8 +287,9 @@ public sealed class AdvancedObservableCollectionTest
         Assert.AreEqual(2, adaptor[0].Val);
 
         var replacement = new SampleClass(3);
-        ((IList)adaptor)[0] = replacement;
+        col[0] = replacement;
         Assert.AreSame(replacement, col[0]);
+        Assert.AreSame(replacement, adaptor[0].Source);
         Assert.AreEqual(3, adaptor[0].Val);
     }
 

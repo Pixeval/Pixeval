@@ -19,8 +19,8 @@ public partial class ImageViewerViewModel : ViewModelBase, IDisposable
         var entry = thumbnailViewModel.Entry;
 
         Images = entry is not IImageSet set
-            ? [new(platform, entry)]
-            : set.Pages.Select(t => new SingleViewerViewModel(platform, t)).ToArray();
+            ? [new(platform, entry, 0)]
+            : set.Pages.Select((t, i) => new SingleViewerViewModel(platform, t, i)).ToArray();
 
         PageCount = Images.Count;
 

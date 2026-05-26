@@ -33,6 +33,8 @@ public partial class ContinuousImageViewer : ImageViewerBase
         }
     }
 
+    public SingleViewerViewModel? CurrentPage { get; private set; }
+
     private ImageViewerViewModel? _subscribedViewModel;
     private bool _isSelectingFromScroll;
     private bool _viewportUpdateQueued;
@@ -43,7 +45,11 @@ public partial class ContinuousImageViewer : ImageViewerBase
     public ContinuousImageViewer()
     {
         InitializeComponent();
-        ViewerScrollView.ScrollChanged += (_, _) => QueueViewportUpdate();
+    }
+
+    private void ViewerScrollView_OnScrollChanged(object? sender, ScrollChangedEventArgs e)
+    {
+        QueueViewportUpdate();
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -164,6 +170,9 @@ public partial class ContinuousImageViewer : ImageViewerBase
             RaiseSelectionChanged(ViewModel?.SelectedPageIndex ?? -1, CurrentPage);
     }
 
+    /// <summary>
+    /// 滚动到指定页码
+    /// </summary>
     private void QueueScrollToSelectedPage()
     {
         if (_scrollToSelectedPageQueued)
@@ -175,32 +184,36 @@ public partial class ContinuousImageViewer : ImageViewerBase
             _scrollToSelectedPageQueued = false;
             ScrollToSelectedPage();
         }, DispatcherPriority.Loaded);
-    }
+        return;
 
-    private void ScrollToSelectedPage()
-    {
-        if (ViewModel is not { Images.Count: > 0 } viewModel)
-            return;
-
-        var index = Math.Clamp(viewModel.SelectedPageIndex, 0, viewModel.Images.Count - 1);
-        if (ImageItemsControl.ContainerFromIndex(index) is not { } container)
-            return;
-
-        if (GetPageOriginInContent(container) is not { } origin)
+        void ScrollToSelectedPage()
         {
-            container.BringIntoView();
-            return;
-        }
+            if (ViewModel is not { Images.Count: > 0 } viewModel)
+                return;
 
-        var offset = Math.Clamp(
-            GetScrollOffset(origin, container.Bounds.Size),
-            0,
-            IsHorizontal ? ViewerScrollView.ScrollBarMaximum.X : ViewerScrollView.ScrollBarMaximum.Y);
-        ViewerScrollView.Offset = IsHorizontal
-            ? new(offset, ViewerScrollView.Offset.Y)
-            : new(ViewerScrollView.Offset.X, offset);
+            var index = Math.Clamp(viewModel.SelectedPageIndex, 0, viewModel.Images.Count - 1);
+            if (ImageItemsControl.ContainerFromIndex(index) is not { } container)
+                return;
+
+            if (GetPageOriginInContent(container) is not { } origin)
+            {
+                container.BringIntoView();
+                return;
+            }
+
+            var offset = Math.Clamp(
+                GetScrollOffset(origin, container.Bounds.Size),
+                0,
+                IsHorizontal ? ViewerScrollView.ScrollBarMaximum.X : ViewerScrollView.ScrollBarMaximum.Y);
+            ViewerScrollView.Offset = IsHorizontal
+                ? new(offset, ViewerScrollView.Offset.Y)
+                : new(ViewerScrollView.Offset.X, offset);
+        }
     }
 
+    /// <summary>
+    /// 用于更新页码和加载页码周围的图片
+    /// </summary>
     private void QueueViewportUpdate()
     {
         if (_viewportUpdateQueued)
@@ -213,87 +226,88 @@ public partial class ContinuousImageViewer : ImageViewerBase
             UpdateSelectedPageFromViewport();
             PreloadPagesAroundViewport();
         }, DispatcherPriority.Background);
-    }
+        return;
 
-    private void UpdateSelectedPageFromViewport()
-    {
-        if (ViewModel is not { Images.Count: > 0 } viewModel
-            || ViewportLength <= 0)
-            return;
-
-        var bestIndex = -1;
-        var bestAnchorDistance = double.MaxValue;
-        var nearestIndex = -1;
-        var nearestAnchorDistance = double.MaxValue;
-        var viewportLength = ViewportLength;
-        var viewportAnchor = GetViewportAnchor();
-
-        for (var i = 0; i < viewModel.Images.Count; i++)
+        void UpdateSelectedPageFromViewport()
         {
-            if (GetPageBoundsInViewport(i) is not { } bounds)
-                continue;
+            if (ViewModel is not { Images.Count: > 0 } viewModel
+                || ViewportLength <= 0)
+                return;
 
-            var pageStart = GetStart(bounds);
-            var pageEnd = GetEnd(bounds);
-            var visibleStart = Math.Max(pageStart, 0);
-            var visibleEnd = Math.Min(pageEnd, viewportLength);
-            var visibleLength = Math.Max(0, visibleEnd - visibleStart);
-            var anchorDistance = Math.Abs(GetPageAnchor(bounds) - viewportAnchor);
+            var bestIndex = -1;
+            var bestAnchorDistance = double.MaxValue;
+            var nearestIndex = -1;
+            var nearestAnchorDistance = double.MaxValue;
+            var viewportLength = ViewportLength;
+            var viewportAnchor = ViewportAnchor;
 
-            if (visibleLength > 0 && anchorDistance < bestAnchorDistance)
+            for (var i = 0; i < viewModel.Images.Count; i++)
             {
-                bestAnchorDistance = anchorDistance;
-                bestIndex = i;
+                if (GetPageBoundsInViewport(i) is not { } bounds)
+                    continue;
+
+                var pageStart = GetStart(bounds);
+                var pageEnd = GetEnd(bounds);
+                var visibleStart = Math.Max(pageStart, 0);
+                var visibleEnd = Math.Min(pageEnd, viewportLength);
+                var visibleLength = Math.Max(0, visibleEnd - visibleStart);
+                var anchorDistance = Math.Abs(GetPageAnchor(bounds) - viewportAnchor);
+
+                if (visibleLength > 0 && anchorDistance < bestAnchorDistance)
+                {
+                    bestAnchorDistance = anchorDistance;
+                    bestIndex = i;
+                }
+
+                if (anchorDistance < nearestAnchorDistance)
+                {
+                    nearestAnchorDistance = anchorDistance;
+                    nearestIndex = i;
+                }
             }
 
-            if (anchorDistance < nearestAnchorDistance)
+            var selectedIndex = bestIndex >= 0 ? bestIndex : nearestIndex;
+            if (selectedIndex >= 0)
+                SetSelectedPageIndex(selectedIndex);
+        }
+
+        void PreloadPagesAroundViewport()
+        {
+            if (ViewModel is not { Images.Count: > 0 } viewModel
+                || ViewportLength <= 0)
+                return;
+
+            var startIndex = viewModel.Images.Count;
+            var endIndex = -1;
+            var viewportLength = ViewportLength;
+
+            for (var i = 0; i < viewModel.Images.Count; i++)
             {
-                nearestAnchorDistance = anchorDistance;
-                nearestIndex = i;
+                if (GetPageBoundsInViewport(i) is not { } bounds)
+                    continue;
+
+                if (GetEnd(bounds) < -viewportLength || GetStart(bounds) > viewportLength * 2)
+                    continue;
+
+                startIndex = Math.Min(startIndex, i);
+                endIndex = Math.Max(endIndex, i);
             }
+
+            if (endIndex < 0)
+            {
+                startIndex = Math.Max(0, viewModel.SelectedPageIndex - 1);
+                endIndex = Math.Min(viewModel.Images.Count - 1, viewModel.SelectedPageIndex + 1);
+            }
+
+            if (startIndex == _preloadedStartIndex && endIndex == _preloadedEndIndex)
+                return;
+
+            _preloadedStartIndex = startIndex;
+            _preloadedEndIndex = endIndex;
+
+            for (var i = startIndex; i <= endIndex; i++)
+                _ = viewModel.Images[i].LoadOriginalImageAsync();
         }
-
-        var selectedIndex = bestIndex >= 0 ? bestIndex : nearestIndex;
-        if (selectedIndex >= 0)
-            SetSelectedPageIndex(selectedIndex);
-    }
-
-    private void PreloadPagesAroundViewport()
-    {
-        if (ViewModel is not { Images.Count: > 0 } viewModel
-            || ViewportLength <= 0)
-            return;
-
-        var startIndex = viewModel.Images.Count;
-        var endIndex = -1;
-        var viewportLength = ViewportLength;
-
-        for (var i = 0; i < viewModel.Images.Count; i++)
-        {
-            if (GetPageBoundsInViewport(i) is not { } bounds)
-                continue;
-
-            if (GetEnd(bounds) < -viewportLength || GetStart(bounds) > viewportLength * 2)
-                continue;
-
-            startIndex = Math.Min(startIndex, i);
-            endIndex = Math.Max(endIndex, i);
-        }
-
-        if (endIndex < 0)
-        {
-            startIndex = Math.Max(0, viewModel.SelectedPageIndex - 1);
-            endIndex = Math.Min(viewModel.Images.Count - 1, viewModel.SelectedPageIndex + 1);
-        }
-
-        if (startIndex == _preloadedStartIndex && endIndex == _preloadedEndIndex)
-            return;
-
-        _preloadedStartIndex = startIndex;
-        _preloadedEndIndex = endIndex;
-
-        for (var i = startIndex; i <= endIndex; i++)
-            _ = viewModel.Images[i].LoadOriginalImageAsync();
     }
 
     private Rect? GetPageBoundsInViewport(int index)
@@ -302,9 +316,9 @@ public partial class ContinuousImageViewer : ImageViewerBase
             || GetPageOriginInContent(container) is not { } origin)
             return null;
 
-        return new(
-            new Point(origin.X * ZoomFactor - ViewerScrollView.Offset.X, origin.Y * ZoomFactor - ViewerScrollView.Offset.Y),
-            new Size(container.Bounds.Width * ZoomFactor, container.Bounds.Height * ZoomFactor));
+        return new Rect(
+            (origin * ZoomFactor) - ViewerScrollView.Offset,
+            container.Bounds.Size * ZoomFactor);
     }
 
     private Point? GetPageOriginInContent(Control container) => container.TranslatePoint(default, ImageItemsControl);
@@ -314,11 +328,12 @@ public partial class ContinuousImageViewer : ImageViewerBase
         var anchor = IsHorizontal
             ? IsReversed ? origin.X + size.Width : origin.X
             : IsReversed ? origin.Y + size.Height : origin.Y;
-        var viewportAnchor = IsReversed ? ViewportLength : 0;
-        return anchor * ZoomFactor - viewportAnchor;
+        return (anchor * ZoomFactor) - ViewportAnchor;
     }
 
     private double ViewportLength => IsHorizontal ? ViewerScrollView.Viewport.Width : ViewerScrollView.Viewport.Height;
+
+    private double ViewportAnchor => IsReversed ? ViewportLength : 0;
 
     private double GetStart(Rect bounds) => IsHorizontal ? bounds.Left : bounds.Top;
 
@@ -326,33 +341,14 @@ public partial class ContinuousImageViewer : ImageViewerBase
 
     private double GetPageAnchor(Rect bounds) => IsReversed ? GetEnd(bounds) : GetStart(bounds);
 
-    private double GetViewportAnchor() => IsReversed ? ViewportLength : 0;
-
-    private void ViewerScrollView_OnSizeChanged(object? sender, SizeChangedEventArgs e)
-    {
-        QueueViewportUpdate();
-    }
+    private void ViewerScrollView_OnSizeChanged(object? sender, SizeChangedEventArgs e) => QueueViewportUpdate();
 
     private void ImageItem_OnSizeChanged(object? sender, SizeChangedEventArgs e) => QueueViewportUpdate();
 
     private void ImageItem_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (sender is not Control { DataContext: SingleViewerViewModel page }
-            || ViewModel is not { } viewModel)
-            return;
-
-        var index = IndexOfPage(viewModel, page);
-        if (index >= 0)
+        if (sender is Control { DataContext: SingleViewerViewModel { Index: >= 0 and var index } })
             SetSelectedPageIndex(index);
-    }
-
-    private static int IndexOfPage(ImageViewerViewModel viewModel, SingleViewerViewModel page)
-    {
-        for (var i = 0; i < viewModel.Images.Count; i++)
-            if (ReferenceEquals(viewModel.Images[i], page))
-                return i;
-
-        return -1;
     }
 
     private void ViewerScrollView_OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
@@ -364,5 +360,7 @@ public partial class ContinuousImageViewer : ImageViewerBase
         }
     }
 
-    public SingleViewerViewModel? CurrentPage { get; private set; }
+    private void ImageItemsControl_OnContainerPrepared(object? sender, ContainerPreparedEventArgs e) => ViewerScrollView.RegisterAnchorCandidate(e.Container);
+
+    private void ImageItemsControl_OnContainerClearing(object? sender, ContainerClearingEventArgs e) => ViewerScrollView.UnregisterAnchorCandidate(e.Container);
 }

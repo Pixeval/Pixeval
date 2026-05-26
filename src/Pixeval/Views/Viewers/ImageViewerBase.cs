@@ -85,6 +85,7 @@ public abstract partial class ImageViewerBase : UserControl
     {
         ZoomInCommand.NotifyCanExecuteChanged();
         ZoomOutCommand.NotifyCanExecuteChanged();
+        ZoomToOriginalCommand.NotifyCanExecuteChanged();
         PlayPauseCommand.NotifyCanExecuteChanged();
         CopyCommand.NotifyCanExecuteChanged();
         SaveCommand.NotifyCanExecuteChanged();
@@ -110,6 +111,9 @@ public abstract partial class ImageViewerBase : UserControl
 
     [RelayCommand(CanExecute = nameof(CanManipulateCurrentImage))]
     private void ZoomOut() => ZoomFactor /= 1.2;
+
+    [RelayCommand(CanExecute = nameof(CanManipulateCurrentImage))]
+    private void ZoomToOriginal() => ZoomFactor = 1;
 
     [RelayCommand(CanExecute = nameof(CanPlayCurrentGif))]
     private void PlayPause() => IsPlaying = !IsPlaying;
