@@ -2,6 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using AnimatedControls.Avalonia;
 using Avalonia.Media.Imaging;
@@ -9,12 +10,17 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Misaki;
 using Pixeval.I18N;
 using Pixeval.Utilities;
+using Pixeval.Utilities.IO;
 using Pixeval.Utilities.IO.Caching;
 
 namespace Pixeval.ViewModels.Viewers;
 
 public partial class SingleViewerViewModel : ViewModelBase, IDisposable
 {
+    // Multiple viewer interactions can request the same page concurrently; share one load task to keep progress stable.
+    private readonly Lock _loadOriginalImageTaskGate = new();
+    private Task? _loadOriginalImageTask;
+
     [ObservableProperty]
     public partial double LoadingProgress { get; private set; }
 
@@ -52,6 +58,8 @@ public partial class SingleViewerViewModel : ViewModelBase, IDisposable
     private readonly string _platform;
     private readonly IArtworkInfo _entry;
 
+    public int CurrentIndex => _entry.TryGetSetIndex();
+
     /// <inheritdoc/>
     public SingleViewerViewModel(string platform, IArtworkInfo entry)
     {
@@ -80,7 +88,24 @@ public partial class SingleViewerViewModel : ViewModelBase, IDisposable
         ThumbnailSource = await LoadThumbnailImageOverrideAsync();
     }
 
-    public async Task LoadOriginalImageAsync()
+    public Task LoadOriginalImageAsync()
+    {
+        if (LoadSuccessfully || _disposed)
+            return Task.CompletedTask;
+
+        lock (_loadOriginalImageTaskGate)
+        {
+            if (_loadOriginalImageTask is { IsCompleted: false } loadingTask)
+                return loadingTask;
+
+            var newLoadingTask = LoadOriginalImageCoreAsync();
+            _loadOriginalImageTask = newLoadingTask;
+            _ = ResetLoadOriginalImageTaskAsync(newLoadingTask);
+            return newLoadingTask;
+        }
+    }
+
+    private async Task LoadOriginalImageCoreAsync()
     {
         if (LoadSuccessfully || _disposed)
             return;
@@ -89,10 +114,36 @@ public partial class SingleViewerViewModel : ViewModelBase, IDisposable
 
         var source = await LoadOriginalImageOverrideAsync();
 
-        if (source is not null)
+        if (source is null)
+            return;
+
+        if (_disposed)
         {
-            OriginalSource = source;
-            LoadSuccessfully = true;
+            source.Dispose();
+            return;
+        }
+
+        OriginalSource = source;
+        LoadSuccessfully = true;
+    }
+
+    private async Task ResetLoadOriginalImageTaskAsync(Task loadingTask)
+    {
+        try
+        {
+            await loadingTask;
+        }
+        catch
+        {
+            // The initiating caller observes the failure; this continuation only resets shared state.
+        }
+        finally
+        {
+            lock (_loadOriginalImageTaskGate)
+            {
+                if (ReferenceEquals(_loadOriginalImageTask, loadingTask))
+                    _loadOriginalImageTask = null;
+            }
         }
     }
 
