@@ -1,4 +1,4 @@
-<ResourceDictionary
+﻿<ResourceDictionary
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
@@ -8,6 +8,7 @@
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
+    xmlns:viewModels="using:Pixeval.ViewModels"
     mc:Ignorable="d"
     d:DesignHeight="240"
     d:DesignWidth="320">
@@ -29,10 +30,10 @@
                         CornerRadius="8">
                         <DockPanel>
                             <Border
-                                IsVisible="{TemplateBinding IsCardTitleVisible}"
                                 Padding="12,8"
                                 Background="{DynamicResource ControlOnImageFillColorDefaultBrush}"
-                                DockPanel.Dock="Bottom">
+                                DockPanel.Dock="Bottom"
+                                IsVisible="{TemplateBinding IsCardTitleVisible}">
                                 <TextBlock
                                     FontSize="12"
                                     FontWeight="SemiBold"
@@ -47,8 +48,8 @@
                                     x:DataType="{x:Type home:HomeCardPreviewViewModel}"
                                     x:Name="PART_ContentItemsControl"
                                     Margin="10"
-                                    ClipToBounds="True"
                                     controls:AdaptiveGridIncrementalLoadingBehavior.IsEnabled="True"
+                                    ClipToBounds="True"
                                     DataContext="{TemplateBinding PreviewViewModel}"
                                     IsHitTestVisible="{Binding !IsEditing, RelativeSource={RelativeSource TemplatedParent}}"
                                     ItemsSource="{Binding Items}">
@@ -67,28 +68,28 @@
                                         </ItemsPanelTemplate>
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.DataTemplates>
-                                        <DataTemplate x:DataType="{x:Type home:HomeCardImagePreviewItem}">
+                                        <DataTemplate x:DataType="{x:Type viewModels:IllustrationItemViewModel}">
                                             <Button
                                                 Padding="0"
                                                 Background="Transparent"
-                                                Command="{Binding OpenCommand}"
-                                                CommandParameter="{Binding $self}"
+                                                Command="{Binding $parent[home:HomePageCardControl].OpenPreviewItemCommand}"
+                                                CommandParameter="{Binding}"
                                                 Theme="{StaticResource TransparentButtonStyle}">
-                                                <Image controls:Source.Cache="{Binding ImageUrl}" Stretch="UniformToFill" />
+                                                <Image controls:Source.Cache="{Binding ThumbnailUrl}" Stretch="UniformToFill" />
                                             </Button>
                                         </DataTemplate>
 
-                                        <DataTemplate x:DataType="{x:Type home:HomeCardNovelPreviewItem}">
+                                        <DataTemplate x:DataType="{x:Type viewModels:NovelItemViewModel}">
                                             <Button
                                                 Padding="0"
                                                 Background="Transparent"
-                                                Command="{Binding OpenCommand}"
-                                                CommandParameter="{Binding $self}"
+                                                Command="{Binding $parent[home:HomePageCardControl].OpenPreviewItemCommand}"
+                                                CommandParameter="{Binding}"
                                                 Theme="{StaticResource TransparentButtonStyle}">
                                                 <DockPanel>
                                                     <Image
                                                         Height="64"
-                                                        controls:Source.Cache="{Binding ImageUrl}"
+                                                        controls:Source.Cache="{Binding ThumbnailUrl}"
                                                         DockPanel.Dock="Top"
                                                         Stretch="UniformToFill" />
                                                     <TextBlock
@@ -96,42 +97,42 @@
                                                         FontSize="12"
                                                         Foreground="{DynamicResource TextOnAccentFillColorSelectedTextBrush}"
                                                         MaxLines="2"
-                                                        Text="{Binding Title}"
+                                                        Text="{Binding Entry.Title}"
                                                         TextTrimming="CharacterEllipsis"
                                                         TextWrapping="Wrap" />
                                                 </DockPanel>
                                             </Button>
                                         </DataTemplate>
 
-                                        <DataTemplate x:DataType="{x:Type home:HomeCardUserPreviewItem}">
+                                        <DataTemplate x:DataType="{x:Type viewModels:UserItemViewModel}">
                                             <Button
                                                 Padding="0"
                                                 Background="Transparent"
-                                                Command="{Binding OpenCommand}"
-                                                CommandParameter="{Binding $self}"
+                                                Command="{Binding $parent[home:HomePageCardControl].OpenPreviewItemCommand}"
+                                                CommandParameter="{Binding}"
                                                 Theme="{StaticResource TransparentButtonStyle}">
                                                 <controls:AvatarImage controls:Source.Cache="{Binding AvatarUrl}" />
                                             </Button>
                                         </DataTemplate>
 
-                                        <DataTemplate x:DataType="{x:Type home:HomeCardSpotlightPreviewItem}">
+                                        <DataTemplate x:DataType="{x:Type viewModels:SpotlightItemViewModel}">
                                             <Button
                                                 Padding="0"
                                                 Background="Transparent"
-                                                Command="{Binding OpenCommand}"
-                                                CommandParameter="{Binding $self}"
+                                                Command="{Binding $parent[home:HomePageCardControl].OpenPreviewItemCommand}"
+                                                CommandParameter="{Binding}"
                                                 Theme="{StaticResource TransparentButtonStyle}">
                                                 <DockPanel VerticalSpacing="6">
                                                     <Image
                                                         Height="56"
-                                                        controls:Source.Cache="{Binding ImageUrl}"
+                                                        controls:Source.Cache="{Binding ThumbnailUrl}"
                                                         DockPanel.Dock="Top"
                                                         Stretch="UniformToFill" />
                                                     <TextBlock
                                                         FontSize="12"
                                                         Foreground="{DynamicResource TextOnAccentFillColorSelectedTextBrush}"
                                                         MaxLines="2"
-                                                        Text="{Binding Title}"
+                                                        Text="{Binding Entry.PureTitle}"
                                                         TextTrimming="CharacterEllipsis"
                                                         TextWrapping="Wrap" />
                                                 </DockPanel>
@@ -168,7 +169,7 @@
 
                     <Panel x:Name="PART_ResizeHandlesLayer" IsVisible="{TemplateBinding IsEditing}">
                         <Panel.Styles>
-                            <Style Selector="Panel > Border">
+                            <Style Selector="Panel &gt; Border">
                                 <Setter Property="CornerRadius" Value="5" />
                                 <Setter Property="BorderThickness" Value="1" />
                                 <Setter Property="Background" Value="{DynamicResource ControlOnImageFillColorDefaultBrush}" />
@@ -185,14 +186,14 @@
                                 </Setter>
                             </Style>
 
-                            <Style Selector="Panel > Border:pointerover">
+                            <Style Selector="Panel &gt; Border:pointerover">
                                 <Setter Property="Background" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
                                 <Setter Property="BoxShadow" Value="0 3 12 0 #66000000" />
                                 <Setter Property="Opacity" Value="1" />
                                 <Setter Property="RenderTransform" Value="scale(1.05)" />
                             </Style>
 
-                            <Style Selector="Panel > Border.pressed">
+                            <Style Selector="Panel &gt; Border.pressed">
                                 <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}" />
                                 <Setter Property="BorderBrush" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
                                 <Setter Property="BoxShadow" Value="0 1 5 0 #73000000" />

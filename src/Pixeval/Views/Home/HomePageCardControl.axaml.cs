@@ -2,13 +2,19 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using CommunityToolkit.Mvvm.Input;
 using FluentIcons.Common;
+using Mako.Model;
 using Pixeval.Models.Home;
+using Pixeval.Utilities;
+using Pixeval.ViewModels;
+using Pixeval.Views.Viewers;
 
 namespace Pixeval.Views.Home;
 
@@ -61,12 +67,15 @@ public sealed partial class HomePageCardControl : TemplatedControl
     private Button? _quickDeleteButton;
     private PointerEditState? _pointerEditState;
 
+    public IAsyncRelayCommand<object?> OpenPreviewItemCommand { get; }
+
     public HomePageCardControl(
         HomePageCardLayout card,
         HomeCardTemplate template,
         int rowCount,
         int columnCount)
     {
+        OpenPreviewItemCommand = new AsyncRelayCommand<object?>(OpenPreviewItemAsync);
         Card = card;
         CardTemplate = template;
         RowCount = rowCount;
@@ -77,6 +86,7 @@ public sealed partial class HomePageCardControl : TemplatedControl
 
     public HomePageCardControl()
     {
+        OpenPreviewItemCommand = new AsyncRelayCommand<object?>(OpenPreviewItemAsync);
         PreviewViewModel = new(Card);
     }
 
@@ -231,6 +241,59 @@ public sealed partial class HomePageCardControl : TemplatedControl
     {
         DeleteRequested?.Invoke(this, new(Card));
         e.Handled = true;
+    }
+
+    private async Task OpenPreviewItemAsync(object? parameter)
+    {
+        if (TopLevel.GetTopLevel(this) is not { } topLevel)
+            return;
+
+        switch (parameter)
+        {
+            case NovelItemViewModel viewModel:
+                await OpenNovelAsync(topLevel, viewModel);
+                break;
+            case IllustrationItemViewModel viewModel:
+                await OpenIllustrationAsync(topLevel, viewModel);
+                break;
+            case UserItemViewModel viewModel:
+                if (topLevel.ViewContainer is { } viewContainer)
+                    await viewContainer.CreateUserPageAsync(viewModel.UserId);
+                break;
+            case SpotlightItemViewModel viewModel:
+                if (topLevel.Launcher is { } launcher)
+                    await launcher.LaunchUriAsync(new(viewModel.Entry.ArticleUrl));
+                break;
+        }
+    }
+
+    private async Task OpenNovelAsync(TopLevel topLevel, NovelItemViewModel viewModel)
+    {
+        if (topLevel.ViewContainer is not { } viewContainer)
+            return;
+
+        if (PreviewViewModel?.ViewModel is NovelViewViewModel viewViewModel)
+            viewContainer.CreateNovelPage(viewModel, viewViewModel);
+        else
+            await viewContainer.CreateNovelPageAsync(viewModel.Entry.Id);
+    }
+
+    private async Task OpenIllustrationAsync(TopLevel topLevel, IllustrationItemViewModel viewModel)
+    {
+        if (topLevel.ViewContainer is not { } viewContainer)
+            return;
+
+        if (PreviewViewModel?.ViewModel is IllustrationViewViewModel viewViewModel)
+        {
+            viewContainer.CreateIllustrationPage(viewModel, viewViewModel);
+            return;
+        }
+
+        if (viewModel.Entry is Illustration { Id: var id })
+        {
+            var illustration = await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id);
+            await viewContainer.CreateIllustrationPageAsync(illustration);
+        }
     }
 
     protected override void OnDetachedFromLogicalTree(Avalonia.LogicalTree.LogicalTreeAttachmentEventArgs e)
