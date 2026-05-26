@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ai="using:AnimatedControls.Avalonia"
     xmlns:common="using:FluentIcons.Common"
+    xmlns:controls="using:Pixeval.Controls"
     xmlns:local="using:Pixeval.Views.Viewers"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:markup1="using:Pixeval.Views.Markup"
@@ -27,7 +28,7 @@
             ItemsSource="{Binding Images}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel Orientation="{Binding $parent[local:ContinuousImageViewer].StackOrientation}" Spacing="8" />
+                    <controls:ReversibleStackPanel BrowseDirection="{Binding $parent[local:ContinuousImageViewer].BrowseDirection}" Spacing="8" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>

@@ -6,7 +6,6 @@ using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Layout;
 using Avalonia.Threading;
 using Pixeval.Models.Options;
 using Pixeval.ViewModels.Viewers;
@@ -20,11 +19,6 @@ public partial class ContinuousImageViewer : ImageViewerBase
         AvaloniaProperty.RegisterDirect<ContinuousImageViewer, SingleViewerViewModel?>(
             nameof(CurrentPage),
             o => o.CurrentPage);
-
-    public static readonly DirectProperty<ContinuousImageViewer, Orientation> StackOrientationProperty =
-        AvaloniaProperty.RegisterDirect<ContinuousImageViewer, Orientation>(
-            nameof(StackOrientation),
-            o => o.StackOrientation);
 
     /// <inheritdoc />
     public override double ZoomFactor
@@ -82,17 +76,9 @@ public partial class ContinuousImageViewer : ImageViewerBase
     /// <inheritdoc />
     protected override void OnBrowseDirectionChanged(BrowseDirection oldValue, BrowseDirection newValue)
     {
-        RaisePropertyChanged(StackOrientationProperty,
-            oldValue is BrowseDirection.LeftRight or BrowseDirection.RightLeft
-                ? Orientation.Horizontal
-                : Orientation.Vertical, StackOrientation);
-        // TODO: StackPanel does not support RightLeft/BottomUp ordering here yet.
         QueueScrollToSelectedPage();
         QueueViewportUpdate();
     }
-
-    public Orientation StackOrientation =>
-        IsHorizontal ? Orientation.Horizontal : Orientation.Vertical;
 
     public ScrollContentOrientation ContentOrientation =>
         IsHorizontal ? ScrollContentOrientation.Horizontal : ScrollContentOrientation.Vertical;
@@ -106,20 +92,15 @@ public partial class ContinuousImageViewer : ImageViewerBase
         if (ReferenceEquals(_subscribedViewModel, viewModel))
             return;
 
-        if (_subscribedViewModel is not null)
-            _subscribedViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
+        _subscribedViewModel?.PropertyChanged -= ViewModelOnPropertyChanged;
 
         _subscribedViewModel = viewModel;
-        if (_subscribedViewModel is not null)
-            _subscribedViewModel.PropertyChanged += ViewModelOnPropertyChanged;
+        _subscribedViewModel?.PropertyChanged += ViewModelOnPropertyChanged;
     }
 
     private void UnsubscribeFromViewModel()
     {
-        if (_subscribedViewModel is null)
-            return;
-
-        _subscribedViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
+        _subscribedViewModel?.PropertyChanged -= ViewModelOnPropertyChanged;
         _subscribedViewModel = null;
     }
 

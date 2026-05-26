@@ -32,8 +32,8 @@ public abstract partial class ImageViewerBase : UserControl
             o => o.ZoomFactor,
             (o, v) => o.ZoomFactor = v);
 
-    public static readonly DirectProperty<SwipeImageViewer, BrowseDirection> BrowseDirectionProperty =
-        AvaloniaProperty.RegisterDirect<SwipeImageViewer, BrowseDirection>(
+    public static readonly DirectProperty<ImageViewerBase, BrowseDirection> BrowseDirectionProperty =
+        AvaloniaProperty.RegisterDirect<ImageViewerBase, BrowseDirection>(
             nameof(BrowseDirection),
             o => o.BrowseDirection,
             (o, v) => o.BrowseDirection = v);
