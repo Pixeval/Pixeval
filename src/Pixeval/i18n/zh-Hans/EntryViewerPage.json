@@ -53,18 +53,20 @@
   "SetAs": "设置显示的图片为",
   "SetAsBackgroundSucceededTitle": "已设置背景",
   "SetAsLockScreenSucceededTitle": "已设置锁屏",
-  "PrevPageOrIllustration": "L：上一页漫画\nR：上一个画集",
-  "PrevIllustration": "L/R：上一个画集",
-  "NextPageOrIllustration": "L：下一页漫画\nR：下一个画集",
-  "NextIllustration": "L/R：下一个画集",
+  "Next": {
+    "Page": "L/R：下一页",
+    "PageOrWork": "L：下一页\nR：下一篇",
+    "Work": "L/R：下一篇"
+  },
+  "Prev": {
+    "Page": "L/R：上一页",
+    "PageOrWork": "L：上一页\nR：上一篇",
+    "Work": "L/R：上一篇"
+  },
   "SetAsSucceededTitle": "设置成功",
   "ShareTitleFormatted": "分享{0}",
   "ZoomIn": "放大",
   "ZoomOut": "缩小",
-  "PrevPageOrNovel": "L：上一页小说\nR：上一篇小说",
-  "PrevNovel": "L/R：上一篇小说",
-  "NextPageOrNovel": "L：下一页小说\nR：下一篇小说",
-  "NextNovel": "L/R：下一篇小说",
   "LoadingNovelTextBlock": {
     "Text": "正在加载小说"
   },

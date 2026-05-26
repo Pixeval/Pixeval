@@ -86,6 +86,9 @@ public partial class ContinuousImageViewer : ImageViewerBase
     private bool IsHorizontal =>
         BrowseDirection is BrowseDirection.LeftRight or BrowseDirection.RightLeft;
 
+    private bool IsReversed =>
+        BrowseDirection is BrowseDirection.RightLeft or BrowseDirection.BottomUp;
+
     private void UpdateViewModelSubscription()
     {
         var viewModel = ViewModel;
@@ -183,15 +186,16 @@ public partial class ContinuousImageViewer : ImageViewerBase
         if (ImageItemsControl.ContainerFromIndex(index) is not { } container)
             return;
 
-        if (container.TranslatePoint(default, ImageItemsControl) is not { } origin)
+        if (GetPageOriginInContent(container) is not { } origin)
         {
             container.BringIntoView();
             return;
         }
 
-        var offset = IsHorizontal
-            ? Math.Clamp(origin.X * ZoomFactor, 0, ViewerScrollView.ScrollBarMaximum.X)
-            : Math.Clamp(origin.Y * ZoomFactor, 0, ViewerScrollView.ScrollBarMaximum.Y);
+        var offset = Math.Clamp(
+            GetScrollOffset(origin, container.Bounds.Size),
+            0,
+            IsHorizontal ? ViewerScrollView.ScrollBarMaximum.X : ViewerScrollView.ScrollBarMaximum.Y);
         ViewerScrollView.Offset = IsHorizontal
             ? new(offset, ViewerScrollView.Offset.Y)
             : new(ViewerScrollView.Offset.X, offset);
@@ -218,11 +222,11 @@ public partial class ContinuousImageViewer : ImageViewerBase
             return;
 
         var bestIndex = -1;
-        var bestVisibleHeight = 0d;
+        var bestAnchorDistance = double.MaxValue;
         var nearestIndex = -1;
-        var nearestDistance = double.MaxValue;
+        var nearestAnchorDistance = double.MaxValue;
         var viewportLength = ViewportLength;
-        var viewportCenter = viewportLength / 2;
+        var viewportAnchor = GetViewportAnchor();
 
         for (var i = 0; i < viewModel.Images.Count; i++)
         {
@@ -234,16 +238,17 @@ public partial class ContinuousImageViewer : ImageViewerBase
             var visibleStart = Math.Max(pageStart, 0);
             var visibleEnd = Math.Min(pageEnd, viewportLength);
             var visibleLength = Math.Max(0, visibleEnd - visibleStart);
-            if (visibleLength > bestVisibleHeight)
+            var anchorDistance = Math.Abs(GetPageAnchor(bounds) - viewportAnchor);
+
+            if (visibleLength > 0 && anchorDistance < bestAnchorDistance)
             {
-                bestVisibleHeight = visibleLength;
+                bestAnchorDistance = anchorDistance;
                 bestIndex = i;
             }
 
-            var distance = Math.Abs(((pageStart + pageEnd) / 2) - viewportCenter);
-            if (distance < nearestDistance)
+            if (anchorDistance < nearestAnchorDistance)
             {
-                nearestDistance = distance;
+                nearestAnchorDistance = anchorDistance;
                 nearestIndex = i;
             }
         }
@@ -294,10 +299,23 @@ public partial class ContinuousImageViewer : ImageViewerBase
     private Rect? GetPageBoundsInViewport(int index)
     {
         if (ImageItemsControl.ContainerFromIndex(index) is not { } container
-            || container.TranslatePoint(default, ViewerScrollView) is not { } origin)
+            || GetPageOriginInContent(container) is not { } origin)
             return null;
 
-        return new(origin, new Size(container.Bounds.Width * ZoomFactor, container.Bounds.Height * ZoomFactor));
+        return new(
+            new Point(origin.X * ZoomFactor - ViewerScrollView.Offset.X, origin.Y * ZoomFactor - ViewerScrollView.Offset.Y),
+            new Size(container.Bounds.Width * ZoomFactor, container.Bounds.Height * ZoomFactor));
+    }
+
+    private Point? GetPageOriginInContent(Control container) => container.TranslatePoint(default, ImageItemsControl);
+
+    private double GetScrollOffset(Point origin, Size size)
+    {
+        var anchor = IsHorizontal
+            ? IsReversed ? origin.X + size.Width : origin.X
+            : IsReversed ? origin.Y + size.Height : origin.Y;
+        var viewportAnchor = IsReversed ? ViewportLength : 0;
+        return anchor * ZoomFactor - viewportAnchor;
     }
 
     private double ViewportLength => IsHorizontal ? ViewerScrollView.Viewport.Width : ViewerScrollView.Viewport.Height;
@@ -305,6 +323,10 @@ public partial class ContinuousImageViewer : ImageViewerBase
     private double GetStart(Rect bounds) => IsHorizontal ? bounds.Left : bounds.Top;
 
     private double GetEnd(Rect bounds) => IsHorizontal ? bounds.Right : bounds.Bottom;
+
+    private double GetPageAnchor(Rect bounds) => IsReversed ? GetEnd(bounds) : GetStart(bounds);
+
+    private double GetViewportAnchor() => IsReversed ? ViewportLength : 0;
 
     private void ViewerScrollView_OnSizeChanged(object? sender, SizeChangedEventArgs e)
     {
@@ -336,7 +358,10 @@ public partial class ContinuousImageViewer : ImageViewerBase
     private void ViewerScrollView_OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
         if (e.Property == ScrollView.ZoomFactorProperty)
+        {
             RaisePropertyChanged(ZoomFactorProperty, e.GetOldValue<double>(), e.GetNewValue<double>());
+            QueueViewportUpdate();
+        }
     }
 
     public SingleViewerViewModel? CurrentPage { get; private set; }

@@ -39,6 +39,7 @@ public partial class ImageViewerViewModel : ViewModelBase, IDisposable
     /// <inheritdoc />
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
         foreach (var loadableBitmap in Images)
             loadableBitmap.Dispose();
     }

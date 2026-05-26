@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -65,18 +66,23 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
     public IllustrationItemViewModel CurrentIllustration => Illustrations[CurrentWorkIndex];
 
     /// <summary>
-    /// 当前插画图片的ViewModel
+    /// 当前图集的ViewModel
     /// </summary>
     public ImageViewerViewModel CurrentImage
     {
         get;
-        set
+        private set
         {
             if (field == value)
                 return;
+            field?.PropertyChanged -= CurrentImageOnPropertyChanged;
             field?.Dispose();
             field = value;
+            if (field == null!)
+                return;
+            field.PropertyChanged += CurrentImageOnPropertyChanged;
             OnPropertyChanged();
+            NotifyPagingStateChanged();
         }
     } = null!;
 
@@ -96,22 +102,24 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
             field = value;
 
             CurrentImage = new ImageViewerViewModel(CurrentIllustration);
-            
+
             // TODO: I would suggest use ViewLocator here, to keep the ViewModel separated from the View.
             // new WorkInfoPage(CurrentIllustration.Entry)
             var list = new List<Page>(3);
-            if (CurrentIllustration.Entry is Illustration { Id: var id } illust)
+            if (CurrentIllustration.Entry is Illustration { Id: var id } illustration)
             {
-                var workInfoPage = new WorkInfoPage(illust);
-                workInfoPage.ActionZone = new Border
+                var workInfoPage = new WorkInfoPage(illustration)
                 {
-                    Width = 32,
-                    Height = 32,
-                    HorizontalAlignment = HorizontalAlignment.Right,
-                    VerticalAlignment = VerticalAlignment.Top,
-                    IsHitTestVisible = false
+                    ActionZone = new Border
+                    {
+                        Width = 32,
+                        Height = 32,
+                        HorizontalAlignment = HorizontalAlignment.Right,
+                        VerticalAlignment = VerticalAlignment.Top,
+                        IsHitTestVisible = false
+                    }
                 };
-                
+
                 list.Add(workInfoPage);  
                 list.Add(new CommentsPage(new CommentsViewViewModel(SimpleWorkType.IllustrationAndManga, id)));
                 list.Add(new RelatedWorksPage { IllustrationId = id });
@@ -136,8 +144,8 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
         get => CurrentImage.SelectedPageIndex;
         set
         {
-            // 不检查值是否变化，强制触发更新事件
             CurrentImage.SelectedPageIndex = value;
+            // 不检查值是否变化，强制触发更新事件
             OnPropertyChanged();
             OnPropertyChanged(nameof(PrevButtonText));
             OnPropertyChanged(nameof(NextButtonText));
@@ -146,6 +154,18 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
             PrevWorkCommand.NotifyCanExecuteChanged();
             NextWorkCommand.NotifyCanExecuteChanged();
         }
+    }
+
+    private void CurrentImageOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(ImageViewerViewModel.SelectedPageIndex))
+            NotifyPagingStateChanged();
+    }
+
+    private void NotifyPagingStateChanged()
+    {
+        // 触发更新
+        CurrentPageIndex = CurrentImage.SelectedPageIndex;
     }
 
     public override int PageCount => CurrentImage.PageCount;

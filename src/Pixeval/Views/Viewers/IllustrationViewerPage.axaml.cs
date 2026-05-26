@@ -33,16 +33,10 @@ public partial class IllustrationViewerPage : ContentPage
         }
     }
 
-    private void PrevButton_OnRightClick(object? sender, TappedEventArgs e)
-    {
-        ViewModel.CurrentWorkIndex--;
-    }
+    private void PrevButton_OnRightClick(object? sender, TappedEventArgs e) => ViewModel.PrevCommand.Execute(null);
 
-    private void NextButton_OnRightClick(object? sender, TappedEventArgs e)
-    {
-        ViewModel.CurrentWorkIndex++;
-    }
-    
+    private void NextButton_OnRightClick(object? sender, TappedEventArgs e) => ViewModel.NextCommand.Execute(null);
+
     private void ImageViewerPage_OnSelectionChanged(Control sender, ImageViewerSelectionChangedEventArgs e)
     {
         EntryViewerFloatingPaneView.ShowPaneTemporarily();
