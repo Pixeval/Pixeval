@@ -13,36 +13,16 @@
     mc:Ignorable="d"
     d:DesignHeight="90"
     d:DesignWidth="800">
-    <Grid
-        ColumnDefinitions="Auto,*,Auto"
-        ColumnSpacing="12"
-        RowDefinitions="Auto,Auto"
-        RowSpacing="6">
+    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
         <Image
-            Grid.RowSpan="2"
+            Grid.Column="0"
             Width="56"
             Height="56"
             VerticalAlignment="Center"
             controls:Source.Cache="{Binding ThumbnailUrl}"
             Stretch="UniformToFill" />
 
-        <StackPanel
-            Grid.Row="0"
-            Grid.Column="1"
-            Orientation="Vertical"
-            Spacing="2">
-            <TextBlock
-                FontWeight="SemiBold"
-                Text="{Binding Entry.Title}"
-                TextTrimming="CharacterEllipsis" />
-            <TextBlock
-                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                Text="{Binding AuthorsText}"
-                TextTrimming="CharacterEllipsis" />
-        </StackPanel>
-
         <CommandBar
-            Grid.Row="0"
             Grid.Column="2"
             VerticalAlignment="Center"
             DefaultLabelPosition="Right"
@@ -79,45 +59,48 @@
             </CommandBar.SecondaryCommands>
         </CommandBar>
 
-        <Grid
-            Grid.Row="1"
-            Grid.Column="1"
-            ColumnDefinitions="*,Auto"
-            ColumnSpacing="8"
-            RowDefinitions="Auto,*"
-            RowSpacing="4">
+        <StackPanel Grid.Column="1" Spacing="4">
+            <TextBlock
+                FontWeight="SemiBold"
+                MaxLines="1"
+                Text="{Binding Entry.Title}"
+                TextTrimming="CharacterEllipsis" />
+            <TextBlock
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                MaxLines="1"
+                Text="{Binding AuthorsText}"
+                TextTrimming="CharacterEllipsis" />
             <ProgressBar
-                Grid.ColumnSpan="2"
                 IsIndeterminate="{Binding IsPending}"
                 Maximum="100"
                 Value="{Binding DownloadTask.ProgressPercentage}" />
-            <TextBlock
-                Grid.Row="1"
-                Grid.Column="0"
-                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                Text="{Binding ProgressMessage}"
-                TextTrimming="CharacterEllipsis"
-                TextWrapping="NoWrap" />
-            <StackPanel
-                Grid.Row="1"
-                Grid.Column="1"
-                IsVisible="{Binding ShowGroupStats}"
-                Orientation="Horizontal"
-                Spacing="5">
-                <controls:DigitalSignalItem
-                    x:Name="StateDigitalSignalItem"
-                    Fill="{markup1:BindingDynamicResource {Binding StateBrushKey}}"
-                    IsVisible="{Binding !!DownloadTask.ActiveCount}"
-                    Text="{Binding DownloadTask.ActiveCount}" />
-                <controls:DigitalSignalItem
-                    Fill="{DynamicResource SystemFillColorSuccessBrush}"
-                    IsVisible="{Binding !!DownloadTask.CompletedCount}"
-                    Text="{Binding DownloadTask.CompletedCount}" />
-                <controls:DigitalSignalItem
-                    Fill="{DynamicResource SystemFillColorCriticalBrush}"
-                    IsVisible="{Binding !!DownloadTask.ErrorCount}"
-                    Text="{Binding DownloadTask.ErrorCount}" />
-            </StackPanel>
-        </Grid>
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                <TextBlock
+                    Grid.Column="0"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    Text="{Binding ProgressMessage}"
+                    TextTrimming="CharacterEllipsis"
+                    TextWrapping="NoWrap" />
+                <StackPanel
+                    Grid.Column="1"
+                    IsVisible="{Binding ShowGroupStats}"
+                    Orientation="Horizontal"
+                    Spacing="5">
+                    <controls:DigitalSignalItem
+                        x:Name="StateDigitalSignalItem"
+                        Fill="{markup1:BindingDynamicResource {Binding StateBrushKey}}"
+                        IsVisible="{Binding !!DownloadTask.ActiveCount}"
+                        Text="{Binding DownloadTask.ActiveCount}" />
+                    <controls:DigitalSignalItem
+                        Fill="{DynamicResource SystemFillColorSuccessBrush}"
+                        IsVisible="{Binding !!DownloadTask.CompletedCount}"
+                        Text="{Binding DownloadTask.CompletedCount}" />
+                    <controls:DigitalSignalItem
+                        Fill="{DynamicResource SystemFillColorCriticalBrush}"
+                        IsVisible="{Binding !!DownloadTask.ErrorCount}"
+                        Text="{Binding DownloadTask.ErrorCount}" />
+                </StackPanel>
+            </Grid>
+        </StackPanel>
     </Grid>
 </UserControl>

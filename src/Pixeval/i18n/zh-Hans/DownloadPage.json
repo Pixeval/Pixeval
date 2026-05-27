@@ -11,12 +11,7 @@
     "Label": "删除"
   },
   "DeleteDownloadHistoryRecordsFormatted": "删除 {0} 条历史记录",
-  "DownloadListOptionAllQueued": "所有下载任务",
-  "DownloadListOptionCancelled": "已取消",
-  "DownloadListOptionCompleted": "已下载",
-  "DownloadListOptionCustomSearch": "自定义搜索",
-  "DownloadListOptionError": "下载失败",
-  "DownloadListOptionRunning": "正在下载",
+  "FolderSubtitleFormatted": "{0} 个下载任务",
   "FilterAutoSuggestBox": {
     "PlaceholderText": "作品名/作品ID"
   },

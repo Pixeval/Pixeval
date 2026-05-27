@@ -102,11 +102,7 @@ public partial class SettingsMainView : ContentPage
                 return;
 
             await using var stream = await file.OpenReadAsync();
-            //if (await JsonSerializer.DeserializeAsync(stream, SettingsSerializerContext.Default.LoginContext) is { } loginContext)
-            //{
-            //    loginContext.CopyTo(App.AppViewModel.LoginContext);
-            //    viewContainer.ShowSuccess(SettingsMainViewResources.ImportSessionSuccess, file.Name);
-            //}
+
             if (await JsonSerializer.DeserializeAsync(stream, SettingsSerializerContext.Default.AppSettings) is { } appSettings)
             {
                 foreach (var localGroup in vm.LocalGroups)
@@ -164,5 +160,11 @@ public partial class SettingsMainView : ContentPage
     {
         if (IsInNavigationPage && Parent is NavigationPage frame)
             await frame.PushAsync(new AboutPage());
+    }
+
+    private async void HelpPageButton_OnClicked(object? sender, RoutedEventArgs e)
+    {
+        if (IsInNavigationPage && Parent is NavigationPage frame)
+            await frame.PushAsync(new HelpPage());
     }
 }

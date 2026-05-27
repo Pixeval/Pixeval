@@ -278,8 +278,16 @@
             <controls:SettingsCard
                 ActionIcon="{markup:SymbolIcon ChevronRight}"
                 Click="AboutPageButton_OnClicked"
-                Header="关于"
-                HeaderIcon="{markup:SymbolIcon PersonStarburst}"
+                Header="{I18N {x:Static pixeval:MainPageResources.TabAbout}}"
+                HeaderIcon="{markup:SymbolIcon PersonStarburst,
+                                               IconVariant=Color}"
+                IsClickEnabled="True" />
+            <controls:SettingsCard
+                ActionIcon="{markup:SymbolIcon ChevronRight}"
+                Click="HelpPageButton_OnClicked"
+                Header="{I18N {x:Static pixeval:MainPageResources.TabHelp}}"
+                HeaderIcon="{markup:SymbolIcon ChatBubblesQuestion,
+                                               IconVariant=Color}"
                 IsClickEnabled="True" />
             <ItemsControl ItemsSource="{Binding Groups}">
                 <ItemsControl.ItemsPanel>

@@ -1,4 +1,4 @@
-<ContentPage
+<NavigationPage
     x:Class="Pixeval.Views.Download.DownloadPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -6,81 +6,10 @@
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
-    xmlns:viewModels="using:Pixeval.ViewModels"
-    xmlns:views="using:Pixeval.Views.Download"
-    x:DataType="{x:Type viewModels:DownloadViewViewModel}"
     Header="{I18N {x:Static pixeval:MainPageResources.TabDownload}}"
     Icon="{markup:SymbolIcon ArrowSquareDown,
                              FontSize=16,
                              IconVariant=Color}"
     mc:Ignorable="d"
     d:DesignHeight="450"
-    d:DesignWidth="800">
-    <DockPanel>
-        <DockPanel DockPanel.Dock="Top" LastChildFill="True">
-            <StackPanel
-                VerticalAlignment="Center"
-                DockPanel.Dock="Left"
-                Orientation="Horizontal"
-                Spacing="5">
-                <ComboBox
-                    x:Name="ModeFilterComboBox"
-                    MinWidth="150"
-                    DisplayMemberBinding="{Binding Text}"
-                    ItemsSource="{x:Static views:DownloadPage.Options}"
-                    SelectedValue="{x:Static viewModels:DownloadListOption.AllQueued}"
-                    SelectedValueBinding="{Binding Value}"
-                    SelectionChanged="ModeFilterComboBox_OnSelectionChanged" />
-                <TextBox
-                    x:Name="FilterTextBox"
-                    Width="260"
-                    KeyDown="FilterTextBox_OnKeyDown"
-                    PlaceholderText="{I18N {x:Static pixeval:DownloadPageResources.FilterAutoSuggestBoxPlaceholderText}}"
-                    TextChanged="FilterTextBox_OnTextChanged" />
-                <CheckBox
-                    x:Name="DeleteLocalFilesCheckBox"
-                    VerticalAlignment="Center"
-                    Content="{I18N {x:Static pixeval:DownloadPageDeleteTasksDialogResources.DeleteLocalFilesContent}}" />
-            </StackPanel>
-
-            <CommandBar x:Name="TopToolBar" IsDynamicOverflowEnabled="True">
-                <CommandBarButton
-                    Click="CancelSelectButton_OnClicked"
-                    Icon="{markup:SymbolIcon SelectAllOff}"
-                    IsEnabled="{Binding !!SelectedEntries.Count}"
-                    Label="{Binding SelectedEntries.Count, Converter={x:Static views:DownloadPage.SelectionCountLabelConverter}}" />
-                <CommandBarButton
-                    Click="SelectAllButton_OnClicked"
-                    Icon="{markup:SymbolIcon SelectAllOn}"
-                    Label="{I18N {x:Static pixeval:DownloadPageResources.SelectAllButtonLabel}}" />
-                <CommandBarButton
-                    Click="ResumeAllButton_OnClicked"
-                    Icon="{markup:SymbolIcon Play}"
-                    IsEnabled="{Binding !!SelectedEntries.Count}"
-                    Label="{I18N {x:Static pixeval:DownloadPageResources.ResumeButtonLabel}}" />
-                <CommandBarButton
-                    Click="PauseAllButton_OnClicked"
-                    Icon="{markup:SymbolIcon Pause}"
-                    IsEnabled="{Binding !!SelectedEntries.Count}"
-                    Label="{I18N {x:Static pixeval:DownloadPageResources.PauseButtonLabel}}" />
-                <CommandBarButton
-                    Click="CancelAllButton_OnClicked"
-                    Icon="{markup:SymbolIcon Stop}"
-                    IsEnabled="{Binding !!SelectedEntries.Count}"
-                    Label="{I18N {x:Static pixeval:DownloadPageResources.StopButtonLabel}}" />
-                <CommandBarButton
-                    Click="ResetAllButton_OnClicked"
-                    Icon="{markup:SymbolIcon ArrowRepeatAll}"
-                    IsEnabled="{Binding !!SelectedEntries.Count}"
-                    Label="{I18N {x:Static pixeval:DownloadPageResources.ResetButtonLabel}}" />
-                <CommandBarButton
-                    Click="ClearDownloadListButton_OnClicked"
-                    Icon="{markup:SymbolIcon Delete}"
-                    IsEnabled="{Binding !!SelectedEntries.Count}"
-                    Label="{I18N {x:Static pixeval:DownloadPageResources.DeleteButtonLabel}}" />
-            </CommandBar>
-        </DockPanel>
-
-        <views:DownloadView x:Name="DownloadView" />
-    </DockPanel>
-</ContentPage>
+    d:DesignWidth="800" />

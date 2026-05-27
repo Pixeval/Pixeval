@@ -37,6 +37,7 @@ public abstract class SingleImageDownloadTaskGroupBase : ImageDownloadTask, IDow
         IoHelper.ReplaceTokenExtensionFromUrl(entry.Destination, GetImageUri(entry.Entry), entry.Entry.TryGetSetIndex()))
     {
         DatabaseEntry = entry;
+        ErrorMessage = entry.ErrorMessage;
         CurrentState = entry.State;
         if (entry.State is DownloadState.Completed or DownloadState.Cancelled or DownloadState.Error)
             ProgressPercentage = 100;
@@ -68,6 +69,9 @@ public abstract class SingleImageDownloadTaskGroupBase : ImageDownloadTask, IDow
             if (sender is SingleImageDownloadTaskGroupBase g and not { CurrentState: DownloadState.Running or DownloadState.Pending })
             {
                 g.DatabaseEntry.State = g.CurrentState;
+                g.DatabaseEntry.ErrorMessage = g.CurrentState is DownloadState.Error
+                    ? g.ErrorMessage
+                    : null;
                 var manager = App.AppViewModel.AppServiceProvider
                     .GetRequiredService<DownloadHistoryPersistentManager>();
                 manager.Update(g.DatabaseEntry);

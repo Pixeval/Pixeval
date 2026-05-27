@@ -32,6 +32,8 @@ public class DownloadHistoryEntry : ArtworkHistoryEntry
 
     public string? ImageFormatToken { get; set; }
 
+    public string? ErrorMessage { get; set; }
+
     [Indexed]
     public int WorkSubscriptionId { get; set; }
 }

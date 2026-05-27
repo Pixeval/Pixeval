@@ -64,7 +64,7 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
     public partial double ProgressPercentage { get; protected set; }
 
     [ObservableProperty]
-    public partial Exception? ErrorCause { get; private set; }
+    public virtual partial string? ErrorMessage { get; protected set; }
 
     [ObservableProperty]
     public partial bool IsProcessing { get; private set; }
@@ -117,7 +117,7 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
 
     private async Task SetErrorAsync(Exception ex)
     {
-        ErrorCause = ex;
+        ErrorMessage = ex.ToString();
         CurrentState = DownloadState.Error;
         await DownloadErrorAsync.Invoke(this);
     }
@@ -194,7 +194,7 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
         if (CurrentState is not (DownloadState.Completed or DownloadState.Error or DownloadState.Cancelled))
             return;
         IsProcessing = true;
-        ErrorCause = null;
+        ErrorMessage = null;
         ProgressPercentage = 0;
         Delete();
         if (CancellationTokenSource.IsCancellationRequested)

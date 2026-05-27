@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using Pixeval.Download;
+using Pixeval.Models.Options;
 
 namespace Pixeval.ViewModels;
 

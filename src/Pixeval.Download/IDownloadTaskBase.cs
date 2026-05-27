@@ -28,9 +28,9 @@ public interface IDownloadTaskBase
     string Destination { get; }
 
     /// <summary>
-    /// 当<see cref="CurrentState"/>是<see cref="DownloadState.Error"/>时表示失败原因，其他状态值为null
+    /// 当<see cref="CurrentState"/>是<see cref="DownloadState.Error"/>时表示可持久化的失败原因，其他状态值为null
     /// </summary>
-    Exception? ErrorCause { get; }
+    string? ErrorMessage { get; }
 
     /// <summary>
     /// 打开本地文件位置，一般来说单文件下载任务会直接是文件，多文件下载任务会是所在文件夹（即<see cref="Destination"/>路径的不含token的部分）

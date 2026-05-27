@@ -3,7 +3,7 @@
 
 using Avalonia.Controls;
 
-namespace Pixeval.Views;
+namespace Pixeval.Views.Settings;
 
 public partial class HelpPage : ContentPage
 {

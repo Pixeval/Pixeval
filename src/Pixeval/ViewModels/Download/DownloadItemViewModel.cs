@@ -10,6 +10,7 @@ using Misaki;
 using Pixeval.Download;
 using Pixeval.I18N;
 using Pixeval.Models.Download.Tasks;
+using Pixeval.Models.Options;
 
 namespace Pixeval.ViewModels;
 
@@ -46,7 +47,7 @@ public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo
     {
         DownloadState.Queued => I18NManager.GetResource(DownloadItemResources.DownloadQueued),
         DownloadState.Running => I18NManager.GetResource(DownloadItemResources.DownloadRunningFormatted, (int) DownloadTask.ProgressPercentage),
-        DownloadState.Error => I18NManager.GetResource(DownloadItemResources.DownloadErrorMessageFormatted, DownloadTask.ErrorCause?.Message),
+        DownloadState.Error => I18NManager.GetResource(DownloadItemResources.DownloadErrorMessageFormatted, ErrorMessage),
         DownloadState.Completed => I18NManager.GetResource(DownloadItemResources.DownloadCompleted),
         DownloadState.Cancelled => I18NManager.GetResource(DownloadItemResources.DownloadCancelled),
         DownloadState.Pending => I18NManager.GetResource(DownloadItemResources.DownloadPending),
@@ -110,6 +111,8 @@ public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo
 
     public override string ThumbnailUrl => Entry.Thumbnails.PickMax()?.ImageUri.OriginalString ?? "";
 
+    public string? ErrorMessage => DownloadTask.ErrorMessage;
+
     public bool MatchesSearch(string key) =>
         Entry.Title.Contains(key, StringComparison.OrdinalIgnoreCase)
         || DownloadTask.Id.Contains(key, StringComparison.OrdinalIgnoreCase);
@@ -147,9 +150,10 @@ public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo
         }
         if (e.PropertyName is nameof(IDownloadTaskBase.CurrentState)
             or nameof(IDownloadTaskBase.ProgressPercentage)
-            or nameof(IDownloadTaskBase.ErrorCause))
+            or nameof(IDownloadTaskBase.ErrorMessage))
         {
             OnPropertyChanged(nameof(ProgressMessage));
+            OnPropertyChanged(nameof(ErrorMessage));
         }
     }
 }

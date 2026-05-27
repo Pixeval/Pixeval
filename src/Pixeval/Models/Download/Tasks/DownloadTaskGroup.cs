@@ -53,6 +53,9 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
                 || g.TasksSet.Count is not 0 && g is { IsAllCompleted: true, IsAfterAllDownloadCompleted: false })
                 return;
             g.DatabaseEntry.State = g.CurrentState;
+            g.DatabaseEntry.ErrorMessage = g.DatabaseEntry.State is DownloadState.Error
+                ? g.ErrorMessage
+                : null;
             var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
             manager.Update(g.DatabaseEntry);
         };
@@ -95,7 +98,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
 
     private bool IsAfterAllDownloadCompleted { get; set; }
 
-    private Exception? _errorCause;
+    private string? _errorMessage;
 
     protected abstract Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender, CancellationToken token = default);
 
@@ -120,7 +123,9 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
             return;
         IsProcessing = true;
         IsAfterAllDownloadCompleted = false;
-        _errorCause = null;
+        _errorMessage = null;
+        DatabaseEntry.ErrorMessage = null;
+        OnPropertyChanged(nameof(ErrorMessage));
         (CurrentState is DownloadState.Error
             ? TasksSet.Where(t => t.CurrentState is DownloadState.Error)
             : TasksSet)
@@ -205,7 +210,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
         {
             if (IsCreateFromEntry)
                 return DatabaseEntry.State;
-            if (_errorCause is not null)
+            if (_errorMessage is not null)
                 return DownloadState.Error;
             if (TasksSet.Count is 0)
                 return IsPending ? DownloadState.Pending : DatabaseEntry.State;
@@ -281,7 +286,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
             {
                 nameof(ImageDownloadTask.ProgressPercentage) => nameof(ProgressPercentage),
                 nameof(ImageDownloadTask.CurrentState) => nameof(CurrentState),
-                nameof(ImageDownloadTask.ErrorCause) => nameof(ErrorCause),
+                nameof(ImageDownloadTask.ErrorMessage) => nameof(ErrorMessage),
                 _ => ""
             });
         };
@@ -290,7 +295,11 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
     private void SetDatabaseState(DownloadState state)
     {
         if (state is not DownloadState.Error)
-            _errorCause = null;
+        {
+            _errorMessage = null;
+            DatabaseEntry.ErrorMessage = null;
+            OnPropertyChanged(nameof(ErrorMessage));
+        }
         DatabaseEntry.State = state;
         App.AppViewModel.AppServiceProvider
             .GetRequiredService<DownloadHistoryPersistentManager>()
@@ -300,12 +309,13 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
 
     private void SetError(Exception exception)
     {
-        _errorCause = exception;
+        _errorMessage = exception.ToString();
         DatabaseEntry.State = DownloadState.Error;
+        DatabaseEntry.ErrorMessage = _errorMessage;
         App.AppViewModel.AppServiceProvider
             .GetRequiredService<DownloadHistoryPersistentManager>()
             .Update(DatabaseEntry);
-        OnPropertyChanged(nameof(ErrorCause));
+        OnPropertyChanged(nameof(ErrorMessage));
         OnPropertyChanged(nameof(CurrentState));
         OnPropertyChanged(nameof(ErrorCount));
     }
@@ -319,7 +329,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
         void OnDownloadWrite(DownloadTaskGroup o) => writer.TryWrite(o.GetToken());
     }
 
-    public Exception? ErrorCause => _errorCause ?? TasksSet.FirstOrDefault(t => t.ErrorCause is not null)?.ErrorCause;
+    public string? ErrorMessage => _errorMessage ?? TasksSet.FirstOrDefault(t => t.ErrorMessage is not null)?.ErrorMessage ?? DatabaseEntry.ErrorMessage;
 
     public bool IsAllCompleted => !TasksSet.Any(t => t.CurrentState is not DownloadState.Completed);
 
@@ -329,7 +339,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
 
     public int CompletedCount => TasksSet.Count(t => t.CurrentState is DownloadState.Completed);
 
-    public int ErrorCount => _errorCause is not null ? 1 : TasksSet.Count(t => t.CurrentState is DownloadState.Error);
+    public int ErrorCount => _errorMessage is not null ? 1 : TasksSet.Count(t => t.CurrentState is DownloadState.Error);
 
     public double ProgressPercentage =>
         IsCreateFromEntry

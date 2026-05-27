@@ -155,14 +155,9 @@ namespace Pixeval
         public const string ClearDownloadListButtonContent = "DownloadPage.ClearDownloadListButton.Content";
         public const string DeleteButtonLabel = "DownloadPage.DeleteButton.Label";
         public const string DeleteDownloadHistoryRecordsFormatted = "DownloadPage.DeleteDownloadHistoryRecordsFormatted";
-        public const string DownloadListOptionAllQueued = "DownloadPage.DownloadListOptionAllQueued";
-        public const string DownloadListOptionCancelled = "DownloadPage.DownloadListOptionCancelled";
-        public const string DownloadListOptionCompleted = "DownloadPage.DownloadListOptionCompleted";
-        public const string DownloadListOptionCustomSearch = "DownloadPage.DownloadListOptionCustomSearch";
-        public const string DownloadListOptionError = "DownloadPage.DownloadListOptionError";
-        public const string DownloadListOptionRunning = "DownloadPage.DownloadListOptionRunning";
         public const string FilterAutoSuggestBoxPlaceholderText = "DownloadPage.FilterAutoSuggestBox.PlaceholderText";
         public const string FilterAutoSuggestBoxNoResultFound = "DownloadPage.FilterAutoSuggestBoxNoResultFound";
+        public const string FolderSubtitleFormatted = "DownloadPage.FolderSubtitleFormatted";
         public const string ModeFilterComboBoxPlaceholderText = "DownloadPage.ModeFilterComboBox.PlaceholderText";
         public const string PageTitleTextBlockText = "DownloadPage.PageTitleTextBlock.Text";
         public const string PauseAllButtonContent = "DownloadPage.PauseAllButton.Content";
@@ -272,6 +267,12 @@ namespace Pixeval
         public const string ClearDataKindSearchHistory = "Enum.ClearDataKind.SearchHistory";
         public const string DomainFrontingTypeDesync = "Enum.DomainFrontingType.Desync";
         public const string DomainFrontingTypeFragmentation = "Enum.DomainFrontingType.Fragmentation";
+        public const string DownloadListOptionAllQueued = "Enum.DownloadListOption.AllQueued";
+        public const string DownloadListOptionCancelled = "Enum.DownloadListOption.Cancelled";
+        public const string DownloadListOptionCompleted = "Enum.DownloadListOption.Completed";
+        public const string DownloadListOptionCustomSearch = "Enum.DownloadListOption.CustomSearch";
+        public const string DownloadListOptionError = "Enum.DownloadListOption.Error";
+        public const string DownloadListOptionRunning = "Enum.DownloadListOption.Running";
         public const string FontWeightBlack = "Enum.FontWeight.Black";
         public const string FontWeightBold = "Enum.FontWeight.Bold";
         public const string FontWeightExtraBlack = "Enum.FontWeight.ExtraBlack";
@@ -608,6 +609,7 @@ namespace Pixeval
         public const string SearchResultFormatted = "MainPage.SearchResultFormatted";
         public const string SettingsEntryHeaderSuggestionTextBlockText = "MainPage.SettingsEntryHeaderSuggestionTextBlock.Text";
         public const string SwitchAccountItemText = "MainPage.SwitchAccountItem.Text";
+        public const string TabAbout = "MainPage.Tab.About";
         public const string TabBrowsingHistory = "MainPage.Tab.BrowsingHistory";
         public const string TabDownload = "MainPage.Tab.Download";
         public const string TabExtensions = "MainPage.Tab.Extensions";

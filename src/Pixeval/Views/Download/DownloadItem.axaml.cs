@@ -69,7 +69,7 @@ public partial class DownloadItem : UserControl
         if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer)
             _ = await viewContainer.CreateAcknowledgementAsync(
                 I18NManager.GetResource(DownloadItemResources.ErrorMessageDialogTitle),
-                vm.DownloadTask.ErrorCause?.ToString());
+                vm.DownloadTask.ErrorMessage);
     }
 
     private async Task OpenPathAsync(string path)

@@ -68,7 +68,6 @@ public static class AvaloniaHelper
         new(typeof(WatchLaterPage), Symbol.Clock, MainPageResources.TabWatchLater),
         new(typeof(DownloadPage), Symbol.ArrowSquareDown, MainPageResources.TabDownload),
         new(typeof(ExtensionsPage), Symbol.PuzzlePiece, MainPageResources.TabExtensions),
-        new(typeof(HelpPage), Symbol.ChatBubblesQuestion, MainPageResources.TabHelp),
         new(typeof(SettingsPage), Symbol.Settings, MainPageResources.TabSettings)
     ];
 

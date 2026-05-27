@@ -1,93 +1,105 @@
-<UserControl
+<ContentPage
     x:Class="Pixeval.Views.Download.DownloadView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:entry="using:Pixeval.Views.Entry"
-    xmlns:fluent="using:FluentIcons.Avalonia"
+    xmlns:icons="using:FluentIcons.Avalonia.Markup"
     xmlns:local="using:Pixeval.Views.Download"
+    xmlns:markup="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:options="using:Pixeval.Models.Options"
+    xmlns:pixeval="using:Pixeval"
     xmlns:viewModels="using:Pixeval.ViewModels"
     x:DataType="{x:Type viewModels:DownloadViewViewModel}"
+    x:Name="Root"
+    Background="Transparent"
+    Header="{I18N {x:Static pixeval:MainPageResources.TabDownload}}"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
-    <entry:EntryView x:Name="EntryView" HasNoItem="{Binding !View.Count}">
-        <ListBox
-            x:Name="ListBox"
-            ItemsSource="{Binding View}"
-            SelectedItems="{Binding SelectedEntries}"
-            SelectionMode="Multiple">
-            <ListBox.Styles>
-                <controls:ItemsViewListBoxStyles />
-            </ListBox.Styles>
-            <ListBox.DataTemplates>
-                <DataTemplate x:DataType="{x:Type viewModels:DownloadFolderViewModel}">
-                    <Border
-                        Margin="8"
-                        Padding="12"
-                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                        CornerRadius="8">
-                        <Expander IsExpanded="False">
-                            <Expander.Header>
-                                <Grid
-                                    ColumnDefinitions="Auto,*,Auto"
-                                    ColumnSpacing="12"
-                                    RowDefinitions="Auto,Auto"
-                                    RowSpacing="4">
-                                    <fluent:SymbolIcon
-                                        Grid.Row="0"
-                                        Grid.RowSpan="2"
-                                        Grid.Column="0"
-                                        Width="32"
-                                        Height="32"
-                                        VerticalAlignment="Center"
-                                        Symbol="FolderSync" />
-                                    <TextBlock
-                                        Grid.Row="0"
-                                        Grid.Column="1"
-                                        FontSize="16"
-                                        FontWeight="SemiBold"
-                                        Text="{Binding Title}"
-                                        TextTrimming="CharacterEllipsis" />
-                                    <TextBlock
-                                        Grid.Row="1"
-                                        Grid.Column="1"
-                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                        Text="{Binding Subtitle}"
-                                        TextTrimming="CharacterEllipsis" />
-                                    <ProgressBar
-                                        Grid.Row="0"
-                                        Grid.RowSpan="2"
-                                        Grid.Column="2"
-                                        Width="160"
-                                        VerticalAlignment="Center"
-                                        Maximum="100"
-                                        Value="{Binding ProgressPercentage}" />
-                                </Grid>
-                            </Expander.Header>
-                            <ItemsControl ItemsSource="{Binding Items}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate x:DataType="{x:Type viewModels:DownloadItemViewModel}">
-                                        <Border
-                                            Margin="0,8,0,0"
-                                            Padding="12"
-                                            Background="Transparent">
-                                            <local:DownloadItem OpenIllustrationRequested="DownloadItem_OnOpenIllustrationRequested" />
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </Expander>
-                    </Border>
-                </DataTemplate>
-                <DataTemplate x:DataType="{x:Type viewModels:DownloadItemViewModel}">
-                    <Border Padding="16" Background="Transparent">
-                        <local:DownloadItem OpenIllustrationRequested="DownloadItem_OnOpenIllustrationRequested" />
-                    </Border>
-                </DataTemplate>
-            </ListBox.DataTemplates>
-        </ListBox>
-    </entry:EntryView>
-</UserControl>
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top" LastChildFill="True">
+            <StackPanel
+                VerticalAlignment="Center"
+                DockPanel.Dock="Left"
+                Orientation="Horizontal"
+                Spacing="5">
+                <controls:SymbolComboBox
+                    MinWidth="150"
+                    IconMode="False"
+                    ItemsSource="{markup:EnumResources x:TypeArguments=options:DownloadListOption}"
+                    SelectedValue="{Binding CurrentOption, Mode=TwoWay}" />
+                <TextBox
+                    Width="260"
+                    KeyDown="FilterTextBox_OnKeyDown"
+                    PlaceholderText="{I18N {x:Static pixeval:DownloadPageResources.FilterAutoSuggestBoxPlaceholderText}}"
+                    Text="{Binding FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <CheckBox
+                    VerticalAlignment="Center"
+                    Content="{I18N {x:Static pixeval:DownloadPageDeleteTasksDialogResources.DeleteLocalFilesContent}}"
+                    IsChecked="{Binding #Root.DeleteLocalFiles, Mode=TwoWay}" />
+            </StackPanel>
+
+            <CommandBar IsDynamicOverflowEnabled="True">
+                <CommandBarButton
+                    Click="CancelSelectButton_OnClicked"
+                    Icon="{icons:SymbolIcon SelectAllOff}"
+                    IsEnabled="{Binding !!#Root.SelectedCount}"
+                    Label="{Binding #Root.SelectedCount, Converter={x:Static local:DownloadView.SelectionCountLabelConverter}}" />
+                <CommandBarButton
+                    Click="SelectAllButton_OnClicked"
+                    Icon="{icons:SymbolIcon SelectAllOn}"
+                    Label="{I18N {x:Static pixeval:DownloadPageResources.SelectAllButtonLabel}}" />
+                <CommandBarButton
+                    Click="ResumeAllButton_OnClicked"
+                    Icon="{icons:SymbolIcon Play}"
+                    IsEnabled="{Binding !!#Root.SelectedCount}"
+                    Label="{I18N {x:Static pixeval:DownloadPageResources.ResumeButtonLabel}}" />
+                <CommandBarButton
+                    Click="PauseAllButton_OnClicked"
+                    Icon="{icons:SymbolIcon Pause}"
+                    IsEnabled="{Binding !!#Root.SelectedCount}"
+                    Label="{I18N {x:Static pixeval:DownloadPageResources.PauseButtonLabel}}" />
+                <CommandBarButton
+                    Click="CancelAllButton_OnClicked"
+                    Icon="{icons:SymbolIcon Stop}"
+                    IsEnabled="{Binding !!#Root.SelectedCount}"
+                    Label="{I18N {x:Static pixeval:DownloadPageResources.StopButtonLabel}}" />
+                <CommandBarButton
+                    Click="ResetAllButton_OnClicked"
+                    Icon="{icons:SymbolIcon ArrowRepeatAll}"
+                    IsEnabled="{Binding !!#Root.SelectedCount}"
+                    Label="{I18N {x:Static pixeval:DownloadPageResources.ResetButtonLabel}}" />
+                <CommandBarButton
+                    Click="ClearDownloadListButton_OnClicked"
+                    Icon="{icons:SymbolIcon Delete}"
+                    IsEnabled="{Binding !!#Root.SelectedCount}"
+                    Label="{I18N {x:Static pixeval:DownloadPageResources.DeleteButtonLabel}}" />
+            </CommandBar>
+        </DockPanel>
+
+        <entry:EntryView HasNoItem="{Binding #Root.HasNoDownloadItem}">
+            <ListBox
+                x:Name="ListBox"
+                ItemsSource="{Binding #Root.DownloadItemsSource}"
+                SelectionChanged="ListBox_OnSelectionChanged"
+                SelectionMode="Multiple">
+                <ListBox.Styles>
+                    <controls:ItemsViewListBoxStyles />
+                </ListBox.Styles>
+                <ListBox.DataTemplates>
+                    <DataTemplate x:DataType="{x:Type viewModels:DownloadFolderViewModel}">
+                        <local:DownloadFolder OpenRequested="DownloadFolder_OnOpenRequested" />
+                    </DataTemplate>
+                    <DataTemplate x:DataType="{x:Type viewModels:DownloadItemViewModel}">
+                        <Border Padding="16" Background="Transparent">
+                            <local:DownloadItem OpenIllustrationRequested="DownloadItem_OnOpenIllustrationRequested" />
+                        </Border>
+                    </DataTemplate>
+                </ListBox.DataTemplates>
+            </ListBox>
+        </entry:EntryView>
+    </DockPanel>
+</ContentPage>

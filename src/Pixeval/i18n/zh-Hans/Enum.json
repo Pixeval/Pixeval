@@ -163,5 +163,13 @@
     "SingleImage": "指定插画 ID 展示单个作品。",
     "SingleNovel": "指定小说 ID 展示单个小说。",
     "SingleUser": "指定用户 ID 展示单个用户。"
+  },
+  "DownloadListOption": {
+    "AllQueued": "所有下载任务",
+    "Cancelled": "已取消",
+    "Completed": "已下载",
+    "CustomSearch": "自定义搜索",
+    "Error": "下载失败",
+    "Running": "正在下载"
   }
 }

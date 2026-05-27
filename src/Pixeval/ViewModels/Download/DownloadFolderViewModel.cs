@@ -8,7 +8,9 @@ using System.ComponentModel;
 using System.Linq;
 using Pixeval.Controls;
 using Pixeval.Download;
+using Pixeval.I18N;
 using Pixeval.Models.Database;
+using Pixeval.Models.Options;
 
 namespace Pixeval.ViewModels;
 
@@ -28,7 +30,7 @@ public sealed class DownloadFolderViewModel(WorkSubscriptionEntry subscription)
         $"{SymbolComboBoxItem.GetResource(subscription.SubscriptionType)} · " +
         $"{SymbolComboBoxItem.GetResource(subscription.WorkKind)}";
 
-    public string Subtitle => $"{Items.Count} 个下载任务";
+    public string Subtitle => I18NManager.GetResource(DownloadPageResources.FolderSubtitleFormatted, Items.Count);
 
     public bool HasItems => Items.Count is not 0;
 
@@ -51,9 +53,22 @@ public sealed class DownloadFolderViewModel(WorkSubscriptionEntry subscription)
         }
     }
 
+    public int ActiveCount => Items.Sum(t => t.DownloadTask.ActiveCount);
+
+    public int CompletedCount => Items.Sum(t => t.DownloadTask.CompletedCount);
+
+    public int ErrorCount => Items.Sum(t => t.DownloadTask.ErrorCount);
+
     public double ProgressPercentage => Items.Count is 0
         ? 100
         : Items.Average(t => t.DownloadTask.ProgressPercentage);
+
+    public string StateBrushKey => CurrentState switch
+    {
+        DownloadState.Paused => "SystemFillColorCautionBrush",
+        DownloadState.Cancelled => "SystemFillColorNeutralBrush",
+        _ => "SystemFillColorAttentionBrush",
+    };
 
     public bool MatchesSearch(string key) =>
         Title.Contains(key, StringComparison.OrdinalIgnoreCase)
@@ -85,7 +100,13 @@ public sealed class DownloadFolderViewModel(WorkSubscriptionEntry subscription)
     private void DownloadTaskOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName is nameof(IDownloadTaskBase.CurrentState))
+        {
             OnPropertyChanged(nameof(CurrentState));
+            OnPropertyChanged(nameof(StateBrushKey));
+            OnPropertyChanged(nameof(ActiveCount));
+            OnPropertyChanged(nameof(CompletedCount));
+            OnPropertyChanged(nameof(ErrorCount));
+        }
         if (e.PropertyName is nameof(IDownloadTaskBase.CurrentState)
             or nameof(IDownloadTaskBase.ProgressPercentage))
             OnPropertyChanged(nameof(ProgressPercentage));
@@ -97,6 +118,10 @@ public sealed class DownloadFolderViewModel(WorkSubscriptionEntry subscription)
         OnPropertyChanged(nameof(Subtitle));
         OnPropertyChanged(nameof(HasItems));
         OnPropertyChanged(nameof(CurrentState));
+        OnPropertyChanged(nameof(StateBrushKey));
+        OnPropertyChanged(nameof(ActiveCount));
+        OnPropertyChanged(nameof(CompletedCount));
+        OnPropertyChanged(nameof(ErrorCount));
         OnPropertyChanged(nameof(ProgressPercentage));
     }
 }
