@@ -3,16 +3,19 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Mako;
 using Mako.Global.Enum;
+using Mako.Model;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.I18N;
 using Pixeval.Models.Home;
+using Pixeval.Models.Options;
 using Pixeval.Utilities;
 
 namespace Pixeval.Views.Home;
@@ -56,7 +59,7 @@ public partial class HomePage
         HomeToolbar.IsVisible = !settings.HideHomePageToolbar;
         HomeGridBorder.Margin = settings.HideHomePageToolbar ? new Thickness(0) : new Thickness(0, 12, 0, 0);
 
-        foreach (var child in Enumerable.OfType<HomePageCardControl>(HomeGrid.Children))
+        foreach (var child in HomeGrid.Children.OfType<HomePageCardControl>())
             child.IsCardTitleVisible = !settings.HideHomePageCardTitle;
     }
 
@@ -90,29 +93,42 @@ public partial class HomePage
 
     private void AddConfiguredCardButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (_pendingTemplate is not { } template || !TryCreateCardFromSourceParameters(template, out var draft))
+        if (_isAddingConfiguredCard || _pendingTemplate is not { } template)
             return;
 
-        var width = Math.Min(template.DefaultColumnSpan, ColumnCount);
-        var height = Math.Min(template.DefaultRowSpan, RowCount);
-        if (!TryFindFreePosition(width, height, out var column, out var row)
-            && !TryFindBestFittingFreePosition(width, height, out width, out height, out column, out row))
+        _isAddingConfiguredCard = true;
+        AddConfiguredCardButton.IsEnabled = false;
+        try
         {
-            TopLevel.GetTopLevel(this)?.ViewContainer?.ShowWarning(
-                I18NManager.GetResource(HomePageResources.NoSpaceWarningTitle),
-                I18NManager.GetResource(HomePageResources.NoSpaceWarningContent));
-            return;
-        }
+            if (TryCreateCardFromSourceParameters(template) is not { } draft)
+                return;
 
-        draft.Column = column;
-        draft.Row = row;
-        draft.ColumnSpan = width;
-        draft.RowSpan = height;
-        _cards.Add(draft);
-        SelectCard(draft);
-        SaveLayout();
-        AddCardControl(draft);
-        RefreshSelectionVisuals();
+            var width = Math.Min(template.DefaultColumnSpan, ColumnCount);
+            var height = Math.Min(template.DefaultRowSpan, RowCount);
+            if (!TryFindFreePosition(width, height, out var column, out var row)
+                && !TryFindBestFittingFreePosition(width, height, out width, out height, out column, out row))
+            {
+                TopLevel.GetTopLevel(this)?.ViewContainer?.ShowWarning(
+                    I18NManager.GetResource(HomePageResources.NoSpaceWarningTitle),
+                    I18NManager.GetResource(HomePageResources.NoSpaceWarningContent));
+                return;
+            }
+
+            draft.Column = column;
+            draft.Row = row;
+            draft.ColumnSpan = width;
+            draft.RowSpan = height;
+            _cards.Add(draft);
+            SelectCard(draft);
+            SaveLayout();
+            AddCardControl(draft);
+            RefreshSelectionVisuals();
+        }
+        finally
+        {
+            _isAddingConfiguredCard = false;
+            AddConfiguredCardButton.IsEnabled = _pendingTemplate is not null;
+        }
     }
 
     private void SourceSimpleWorkTypeComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e)
@@ -255,7 +271,7 @@ public partial class HomePage
         DeleteSelectedCardButton.IsEnabled = card is not null;
         SelectedCardTextBlock.Text = card is null
             ? I18NManager.GetResource(HomePageResources.NoSelectedCardTextBlockText)
-            : GetTemplate(card).Title;
+            : card.ToString();
         UpdateSelectedCardControls();
         if (!_isRefreshingGrid)
             RefreshSelectionVisuals();
@@ -329,36 +345,38 @@ public partial class HomePage
         SourceRankOptionComboBox.SelectedValue = SourceSimpleWorkTypeComboBox.SelectedValue is SimpleWorkType.Novel
             ? App.AppViewModel.AppSettings.NovelRankOption
             : App.AppViewModel.AppSettings.IllustrationRankOption;
+        SourceUseSpecifiedRankingDateCheckBox.IsChecked = false;
         SourceRankingDatePicker.SelectedDate = MakoClient.RankingMaxDateTime.LocalDateTime;
 
-        if (template.SourceKind is HomePageCardSourceKind.WorkBookmarks or HomePageCardSourceKind.WorkPosts
-            or HomePageCardSourceKind.UserFollowing or HomePageCardSourceKind.UserMyPixiv)
+        switch (template.SourceKind)
         {
-            SourceUserIdTextBox.Text = App.AppViewModel.PixivUid.ToString();
-            SourceEntryIdTextBox.Text = "";
-            SourceSearchTextBox.Text = "";
-            if (template.SourceKind is not HomePageCardSourceKind.WorkBookmarks)
+            case HomePageCardSourceKind.WorkBookmarks or HomePageCardSourceKind.WorkPosts
+                or HomePageCardSourceKind.UserFollowing or HomePageCardSourceKind.UserMyPixiv:
+            {
+                SourceUserIdTextBox.Text = App.AppViewModel.PixivUid.ToString();
+                SourceEntryIdTextBox.Text = "";
+                SourceSearchTextBox.Text = "";
+                if (template.SourceKind is not HomePageCardSourceKind.WorkBookmarks)
+                    SourceTagTextBox.Text = "";
+                break;
+            }
+            case HomePageCardSourceKind.WorkSearch or HomePageCardSourceKind.UserSearch:
+                SourceUserIdTextBox.Text = "";
+                SourceEntryIdTextBox.Text = "";
                 SourceTagTextBox.Text = "";
-        }
-        else if (template.SourceKind is HomePageCardSourceKind.WorkSearch or HomePageCardSourceKind.UserSearch)
-        {
-            SourceUserIdTextBox.Text = "";
-            SourceEntryIdTextBox.Text = "";
-            SourceTagTextBox.Text = "";
-        }
-        else if (template.SourceKind is HomePageCardSourceKind.SingleUser)
-        {
-            SourceUserIdTextBox.Text = "";
-            SourceEntryIdTextBox.Text = "";
-            SourceSearchTextBox.Text = "";
-            SourceTagTextBox.Text = "";
-        }
-        else
-        {
-            SourceUserIdTextBox.Text = "";
-            SourceEntryIdTextBox.Text = "";
-            SourceSearchTextBox.Text = "";
-            SourceTagTextBox.Text = "";
+                break;
+            case HomePageCardSourceKind.SingleUser:
+                SourceUserIdTextBox.Text = "";
+                SourceEntryIdTextBox.Text = "";
+                SourceSearchTextBox.Text = "";
+                SourceTagTextBox.Text = "";
+                break;
+            default:
+                SourceUserIdTextBox.Text = "";
+                SourceEntryIdTextBox.Text = "";
+                SourceSearchTextBox.Text = "";
+                SourceTagTextBox.Text = "";
+                break;
         }
     }
 
@@ -384,52 +402,54 @@ public partial class HomePage
             return;
         if (SourceSimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>() is SimpleWorkType.IllustrationAndManga)
         {
-            SourceRankOptionComboBox.ItemsSource = SymbolComboBoxItem.GetValues("Illustration");
+            SourceRankOptionComboBox.ItemsSource = SymbolComboBoxItem.GetValues<RankOption>(nameof(Illustration));
             SourceRankOptionComboBox.SelectedValue = App.AppViewModel.AppSettings.IllustrationRankOption;
         }
         else
         {
-            SourceRankOptionComboBox.ItemsSource = SymbolComboBoxItem.GetValues("Novel");
+            SourceRankOptionComboBox.ItemsSource = SymbolComboBoxItem.GetValues<RankOption>(nameof(Novel));
             SourceRankOptionComboBox.SelectedValue = App.AppViewModel.AppSettings.NovelRankOption;
         }
     }
 
-    private bool TryCreateCardFromSourceParameters(HomeCardTemplate template, out HomePageCardLayout card)
+    private HomePageCardLayout? TryCreateCardFromSourceParameters(HomeCardTemplate template)
     {
-        card = CreateCard(template, 0, 0, 1, 1);
+        var card = CreateCard(template, 0, 0, 1, 1);
 
         var userId = 0L;
         var entryId = 0L;
-        if (NeedsUserId(template.SourceKind) && !TryReadPositiveInt64(SourceUserIdTextBox, out userId))
-            return ShowInvalidParameterWarning(out card);
+        if (NeedsUserId(template.SourceKind) && !TryReadUInt64(SourceUserIdTextBox, out userId))
+            return ShowInvalidParameterWarning();
 
-        if (NeedsEntryId(template.SourceKind) && !TryReadPositiveInt64(SourceEntryIdTextBox, out entryId))
-            return ShowInvalidParameterWarning(out card);
+        if (NeedsEntryId(template.SourceKind) && !TryReadUInt64(SourceEntryIdTextBox, out entryId))
+            return ShowInvalidParameterWarning();
 
         if (template.SourceKind is HomePageCardSourceKind.WorkSearch or HomePageCardSourceKind.UserSearch
             && string.IsNullOrWhiteSpace(SourceSearchTextBox.Text))
-            return ShowInvalidParameterWarning(out card);
+            return ShowInvalidParameterWarning();
 
         card.WorkType = SourceWorkTypeComboBox.SelectedValue is WorkType workType ? workType : template.WorkType;
         card.SimpleWorkType = SourceSimpleWorkTypeComboBox.SelectedValue is SimpleWorkType simpleWorkType ? simpleWorkType : template.SimpleWorkType;
         card.TemplateKind = ResolveTemplateKind(template, card.WorkType, card.SimpleWorkType);
         card.PrivacyPolicy = SourcePrivacyPolicyComboBox.SelectedValue is PrivacyPolicy privacyPolicy ? privacyPolicy : template.PrivacyPolicy;
         card.RankOption = SourceRankOptionComboBox.SelectedValue is RankOption rankOption ? rankOption : template.RankOption;
+        card.UseSpecifiedRankingDate = SourceUseSpecifiedRankingDateCheckBox.IsChecked is true;
         card.UserId = userId;
         card.EntryId = entryId;
         card.SearchText = string.IsNullOrWhiteSpace(SourceSearchTextBox.Text) ? null : SourceSearchTextBox.Text.Trim();
         card.Tag = string.IsNullOrWhiteSpace(SourceTagTextBox.Text) ? null : SourceTagTextBox.Text.Trim();
-        card.RankingDate = new(SourceRankingDatePicker.SelectedDate ?? MakoClient.RankingMaxDateTime.LocalDateTime);
-        return true;
+        card.RankingDate = card.UseSpecifiedRankingDate
+            ? new(SourceRankingDatePicker.SelectedDate ?? MakoClient.RankingMaxDateTime.LocalDateTime)
+            : MakoClient.RankingMaxDateTime;
+        return card;
     }
 
-    private bool ShowInvalidParameterWarning(out HomePageCardLayout card)
+    private HomePageCardLayout? ShowInvalidParameterWarning()
     {
-        card = new();
         TopLevel.GetTopLevel(this)?.ViewContainer?.ShowWarning(
             I18NManager.GetResource(HomePageResources.InvalidSourceParameterWarningTitle),
             I18NManager.GetResource(HomePageResources.InvalidSourceParameterWarningContent));
-        return false;
+        return null;
     }
 
     private static bool NeedsUserId(HomePageCardSourceKind sourceKind) =>
@@ -439,7 +459,7 @@ public partial class HomePage
     private static bool NeedsEntryId(HomePageCardSourceKind sourceKind) =>
         sourceKind is HomePageCardSourceKind.SingleImage or HomePageCardSourceKind.SingleNovel;
 
-    private static bool TryReadPositiveInt64(TextBox textBox, out long value) =>
+    private static bool TryReadUInt64(TextBox textBox, out long value) =>
         long.TryParse(textBox.Text, out value) && value > 0;
 
     private HomeCardTemplate GetTemplate(HomePageCardLayout card) =>

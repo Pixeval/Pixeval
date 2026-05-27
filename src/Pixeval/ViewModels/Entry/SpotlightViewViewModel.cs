@@ -10,5 +10,18 @@ namespace Pixeval.ViewModels;
 
 public sealed class SpotlightViewViewModel : EntryViewViewModel<Spotlight, SpotlightItemViewModel>
 {
-    protected override SpotlightViewDataProvider DataProvider { get; } = new();
+    public SpotlightViewViewModel(SpotlightViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef())
+    {
+    }
+
+    public SpotlightViewViewModel() : this(new SpotlightViewDataProvider())
+    {
+    }
+
+    private SpotlightViewViewModel(SpotlightViewDataProvider dataProvider)
+    {
+        DataProvider = dataProvider;
+    }
+
+    protected override SpotlightViewDataProvider DataProvider { get; }
 }

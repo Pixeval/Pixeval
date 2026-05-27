@@ -223,7 +223,7 @@ public sealed partial class HomePageCardControl
         Grid.SetRowSpan(this, Card.RowSpan);
     }
 
-    private void CompleteEdit()
+    private void CompleteEdit(bool raiseEvent = true)
     {
         if (_pointerEditState is null)
             return;
@@ -232,7 +232,8 @@ public sealed partial class HomePageCardControl
         _pointerEditState = null;
         SetPressedResizeHandle(null);
         state.Pointer.Capture(null);
-        EditCompleted?.Invoke(this, new(Card, state.HasChanged));
+        if (raiseEvent)
+            EditCompleted?.Invoke(this, new(Card, state.HasChanged));
     }
 
     private void SetPressedResizeHandle(Border? handle)

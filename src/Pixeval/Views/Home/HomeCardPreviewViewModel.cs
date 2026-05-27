@@ -19,6 +19,8 @@ public sealed partial class HomeCardPreviewViewModel(HomePageCardLayout card) : 
 {
     private readonly CancellationTokenSource _loadingCts = new();
     private INotifyCollectionChanged? _itemsCollectionChanged;
+    private Task? _loadingTask;
+    private bool _isDisposed;
 
     public HomeCardPreviewViewModel() : this(new())
     {
@@ -36,11 +38,34 @@ public sealed partial class HomeCardPreviewViewModel(HomePageCardLayout card) : 
 
     public async Task LoadAsync()
     {
+        if (_isDisposed)
+            return;
+
+        if (_loadingTask is { } loadingTask)
+        {
+            await loadingTask;
+            return;
+        }
+
+        _loadingTask = LoadCoreAsync();
+        await _loadingTask;
+    }
+
+    public Task EnsureLoadedAsync() => ViewModel is null ? LoadAsync() : Task.CompletedTask;
+
+    private async Task LoadCoreAsync()
+    {
         try
         {
             PlaceholderText = I18NManager.GetResource(HomePageResources.CardPreviewLoadingTextBlockText);
             var oldViewModel = ViewModel;
             var viewModel = await HomePageCardSourceFactory.CreateViewModelAsync(Card);
+            if (_isDisposed)
+            {
+                if (viewModel is IDisposable newDisposable)
+                    newDisposable.Dispose();
+                return;
+            }
 
             DetachItems();
             ViewModel = viewModel;
@@ -55,15 +80,19 @@ public sealed partial class HomeCardPreviewViewModel(HomePageCardLayout card) : 
         catch (OperationCanceledException)
         {
         }
+        catch (ObjectDisposedException)
+        {
+        }
         catch (Exception)
         {
-            PlaceholderText = I18NManager.GetResource(HomePageResources.CardPreviewFailedTextBlockText);
+            if (!_isDisposed)
+                PlaceholderText = I18NManager.GetResource(HomePageResources.CardPreviewFailedTextBlockText);
         }
     }
 
     private async Task LoadInitialItemsAsync()
     {
-        if (Items is IIncrementalLoading { HasMoreItems: true } incremental)
+        if (!_isDisposed && Items is IIncrementalLoading { HasMoreItems: true } incremental)
             await incremental.LoadMoreItemsAsync(0, _loadingCts.Token);
     }
 
@@ -97,11 +126,18 @@ public sealed partial class HomeCardPreviewViewModel(HomePageCardLayout card) : 
 
     public void Dispose()
     {
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
         GC.SuppressFinalize(this);
         _loadingCts.Cancel();
         _loadingCts.Dispose();
         DetachItems();
-        if (ViewModel is IDisposable disposable)
+        var viewModel = ViewModel;
+        ViewModel = null;
+        OnPropertyChanged(nameof(Items));
+        if (viewModel is IDisposable disposable)
             disposable.Dispose();
     }
 }

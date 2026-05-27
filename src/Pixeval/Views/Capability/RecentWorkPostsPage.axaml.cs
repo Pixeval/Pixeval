@@ -6,15 +6,25 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Mako.Global.Enum;
 using Pixeval.Controls;
+using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Capability;
 
 public partial class RecentWorkPostsPage : ContentPage
 {
-    public RecentWorkPostsPage()
+    public RecentWorkPostsPage() : this(PixevalSettings.SimpleWorkType, PrivacyPolicy.Public)
+    {
+    }
+
+    public RecentWorkPostsPage(SimpleWorkType simpleWorkType, PrivacyPolicy privacyPolicy, IWorkViewViewModel? viewModel = null)
     {
         InitializeComponent();
-        ChangeSource();
+        SimpleWorkTypeComboBox.SelectedValue = simpleWorkType;
+        PrivacyPolicyComboBox.SelectedValue = privacyPolicy;
+        if (viewModel is not null)
+            WorkContainer.SetViewModel(viewModel);
+        else
+            ChangeSource();
     }
 
     private void WorkTypeComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e)

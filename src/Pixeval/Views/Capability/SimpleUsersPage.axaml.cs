@@ -1,6 +1,7 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
+using System;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -22,6 +23,19 @@ public abstract partial class SimpleUsersPage : ContentPage
         InitializeComponent();
     }
 
+    protected void InitializeSource(UserViewViewModel? viewModel = null)
+    {
+        if (viewModel is null)
+        {
+            ChangeSource();
+            return;
+        }
+
+        var oldViewModel = UserContainer.UserView.DataContext as IDisposable;
+        UserContainer.UserView.DataContext = viewModel;
+        oldViewModel?.Dispose();
+    }
+
     private void UserContainer_OnRefreshRequested(object? sender, RoutedEventArgs e)
     {
         ChangeSource();
@@ -37,11 +51,15 @@ public abstract partial class SimpleUsersPage : ContentPage
 
 public class RecommendUsersPage : SimpleUsersPage
 {
-    public RecommendUsersPage()
+    public RecommendUsersPage() : this(null)
+    {
+    }
+
+    public RecommendUsersPage(UserViewViewModel? viewModel)
     {
         Header = I18NManager.GetResource(MainPageResources.RecommendUsersTabContent);
         Icon = new SymbolIcon { Symbol = Symbol.PeopleCommunity, FontSize = 16, IconVariant = IconVariant.Color };
-        ChangeSource();
+        InitializeSource(viewModel);
     }
 
     protected override IFetchEngine<User> GetFetchEngine(MakoClient makoClient)
@@ -58,12 +76,12 @@ public class SearchUsersPage : SimpleUsersPage
     {
     }
 
-    public SearchUsersPage(string? searchText)
+    public SearchUsersPage(string? searchText, UserViewViewModel? viewModel = null)
     {
         _searchText = searchText;
         Header = I18NManager.GetResource(MainPageResources.SearchResultFormatted, _searchText);
         Icon = new SymbolIcon { Symbol = Symbol.Person, FontSize = 16, IconVariant = IconVariant.Color };
-        ChangeSource();
+        InitializeSource(viewModel);
     }
 
     protected override IFetchEngine<User> GetFetchEngine(MakoClient makoClient)
@@ -83,12 +101,12 @@ public class MyPixivUsersPage : SimpleUsersPage
     {
     }
 
-    public MyPixivUsersPage(long id)
+    public MyPixivUsersPage(long id, UserViewViewModel? viewModel = null)
     {
         _userId = id;
         Header = I18NManager.GetResource(EntryViewerPageResources.MyPixivUserNavigationViewItemContent);
         Icon = new SymbolIcon { Symbol = Symbol.People, FontSize = 16, IconVariant = IconVariant.Color };
-        ChangeSource();
+        InitializeSource(viewModel);
     }
 
     /// <inheritdoc />

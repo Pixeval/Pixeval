@@ -9,16 +9,13 @@ using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.Controls;
 using Pixeval.I18N;
+using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Capability;
 
 public partial class SearchWorksPage : ContentPage
 {
-    public SearchWorksPage() : this("", null, null, default)
-    {
-    }
-
-    public SearchWorksPage(string searchText) : this(searchText, null, null, default)
+    public SearchWorksPage() : this("")
     {
     }
 
@@ -31,7 +28,7 @@ public partial class SearchWorksPage : ContentPage
     }
 
     public SearchWorksPage(IllustrationSearchArguments illustrationSearchArguments)
-        : this(illustrationSearchArguments.SearchText, illustrationSearchArguments, null, SimpleWorkType.IllustrationAndManga)
+        : this(illustrationSearchArguments.SearchText, illustrationSearchArguments)
     {
     }
 
@@ -42,9 +39,10 @@ public partial class SearchWorksPage : ContentPage
 
     public SearchWorksPage(
         string searchText,
-        IllustrationSearchArguments? illustrationSearchArguments,
-        NovelSearchArguments? novelSearchArguments,
-        SimpleWorkType preferredType)
+        IllustrationSearchArguments? illustrationSearchArguments = null,
+        NovelSearchArguments? novelSearchArguments = null,
+        SimpleWorkType preferredType = default,
+        IWorkViewViewModel? viewModel = null)
     {
         InitializeComponent();
         Header = I18NManager.GetResource(MainPageResources.SearchResultFormatted, searchText);
@@ -52,7 +50,10 @@ public partial class SearchWorksPage : ContentPage
         _illustrationArguments = illustrationSearchArguments;
         _novelArguments = novelSearchArguments;
         SetIsSwitchEnabled();
-        ChangeSource();
+        if (viewModel is not null)
+            WorkContainer.SetViewModel(viewModel);
+        else
+            ChangeSource();
     }
 
     private void WorkTypeComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e)

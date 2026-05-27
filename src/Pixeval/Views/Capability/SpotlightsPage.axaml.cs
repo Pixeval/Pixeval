@@ -10,10 +10,23 @@ namespace Pixeval.Views.Capability;
 
 public partial class SpotlightsPage : ContentPage
 {
-    public SpotlightsPage()
+    public SpotlightsPage() : this(null)
+    {
+    }
+
+    public SpotlightsPage(SpotlightViewViewModel? viewModel)
     {
         InitializeComponent();
-        ChangeSource();
+        if (viewModel is not null)
+        {
+            var oldViewModel = SpotlightView.DataContext as IDisposable;
+            SpotlightView.DataContext = viewModel;
+            oldViewModel?.Dispose();
+        }
+        else
+        {
+            ChangeSource();
+        }
     }
 
     private void SpotlightCategoryComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e)

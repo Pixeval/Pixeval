@@ -10,5 +10,18 @@ namespace Pixeval.ViewModels;
 
 public sealed class UserViewViewModel : EntryViewViewModel<User, UserItemViewModel>
 {
-    protected override UserViewDataProvider DataProvider { get; } = new();
+    public UserViewViewModel(UserViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef())
+    {
+    }
+
+    public UserViewViewModel() : this(new UserViewDataProvider())
+    {
+    }
+
+    private UserViewViewModel(UserViewDataProvider dataProvider)
+    {
+        DataProvider = dataProvider;
+    }
+
+    protected override UserViewDataProvider DataProvider { get; }
 }

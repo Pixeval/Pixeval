@@ -30,7 +30,7 @@ public partial class SettingsPage : NavigationPage
         if (DataContext is not SettingsPageViewModel vm)
             return;
         foreach (var extensionGroup in vm.ExtensionGroups)
-        foreach (var settingsEntry in extensionGroup)
-            settingsEntry.ValueSaving(extensionGroup.Model.Values);
+            foreach (var settingsEntry in extensionGroup)
+                settingsEntry.ValueSaving(extensionGroup.Model.Values);
     }
 }

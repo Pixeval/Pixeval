@@ -106,8 +106,8 @@ public partial class WorkContainer : UserControl
 
     private void ScrollToTop()
     {
-         if (WorkView.WorkListBox.Scroll is { } scrollView)
-             scrollView.Offset = new(0, 0);
+        if (WorkView.WorkListBox.Scroll is { } scrollView)
+            scrollView.Offset = new(0, 0);
     }
 
     private async void AddAllToBookmarkButton_OnClicked(object? sender, RoutedEventArgs e)
@@ -299,7 +299,7 @@ public partial class WorkContainer : UserControl
     {
         if (ReferenceEquals(_filterCompletionSource, source) && _filterCompletionSourceCount == source.Count)
             return;
-        
+
         var tags = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
         var authors = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         foreach (var work in source)
@@ -424,6 +424,11 @@ public partial class WorkContainer : UserControl
     public void SetSource(IReadOnlyCollection<IArtworkInfo> source)
     {
         WorkView.SetSource(source);
+    }
+
+    public void SetViewModel(IWorkViewViewModel viewModel)
+    {
+        WorkView.SetViewModel(viewModel);
     }
 
     public static readonly FuncValueConverter<int, string> CancelSelectionButtonConverter = new(i => i > 0

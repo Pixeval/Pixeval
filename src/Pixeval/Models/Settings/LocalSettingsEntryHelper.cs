@@ -251,7 +251,7 @@ public static class LocalSettingsEntryHelper
             string key,
             Action<EnumSettingsEntry<TSettings, object>>? config = null)
             where TEnum : struct, Enum =>
-            builder.Enum(Transform(property), SymbolComboBoxItem.GetValues(key), config);
+            builder.Enum(Transform(property), SymbolComboBoxItem.GetValues<TEnum>(key), config);
 
         public ISettingsGroupBuilder<TSettings> Enum<TEnum>(
             WorkTypeEnum workType,
@@ -266,7 +266,7 @@ public static class LocalSettingsEntryHelper
             string key,
             Action<EnumSettingsEntry<TSettings, object>>? config = null)
             where TEnum : struct, Enum =>
-            builder.Enum(workType, Transform(property), SymbolComboBoxItem.GetValues(key), config);
+            builder.Enum(workType, Transform(property), SymbolComboBoxItem.GetValues<TEnum>(key), config);
 
         public ISettingsGroupBuilder<TSettings> Enum<TEnum>(
             WorkTypeEnum workType,

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Mako.Global.Enum;
@@ -12,12 +13,14 @@ using Pixeval.I18N;
 using Pixeval.Models.Options;
 using Pixeval.Models.Subscriptions;
 using Pixeval.Utilities;
+using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Capability;
 
 public partial class BookmarksPage : ContentPage
 {
     private readonly UserBasicInfo _user;
+    private readonly string? _initialTag;
     private bool _suppressChangeSource;
 
     public static IReadOnlyList<BookmarkTag> DefaultTags { get; } = [AllBookmarkTag.Instance];
@@ -26,16 +29,22 @@ public partial class BookmarksPage : ContentPage
     {
     }
 
-    public BookmarksPage(UserBasicInfo user)
+    public BookmarksPage(UserBasicInfo user, SimpleWorkType simpleWorkType = SimpleWorkType.IllustrationAndManga, PrivacyPolicy privacyPolicy = PrivacyPolicy.Public, string? tag = null, IWorkViewViewModel? viewModel = null)
     {
         InitializeComponent();
 
         _user = user;
+        _initialTag = tag;
+        SimpleWorkTypeComboBox.SelectedValue = simpleWorkType;
+        PrivacyPolicyComboBox.SelectedValue = privacyPolicy;
         if (_user.Id != App.AppViewModel.PixivUid)
             PrivacyPolicyComboBox.IsEnabled = PrivacyPolicyComboBox.IsVisible = false;
 
         FetchTags();
-        ChangeSource();
+        if (viewModel is not null)
+            WorkContainer.SetViewModel(viewModel);
+        else
+            ChangeSource();
     }
 
     private void WorkTypeComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e)
@@ -66,7 +75,7 @@ public partial class BookmarksPage : ContentPage
 
         _suppressChangeSource = true;
         TagComboBox.ItemsSource = tags;
-        TagComboBox.SelectedIndex = 0;
+        TagComboBox.SelectedItem = tags.FirstOrDefault(tag => tag.Name == _initialTag) ?? AllBookmarkTag.Instance;
         _suppressChangeSource = false;
     }
 

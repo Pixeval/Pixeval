@@ -2,23 +2,30 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using FluentIcons.Common;
+using Mako;
+using Mako.Engine.Implements;
 using Mako.Model;
 using Pixeval.Models.Home;
+using Pixeval.Models.Options;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
+using Pixeval.Views.Capability;
 using Pixeval.Views.Viewers;
 
 namespace Pixeval.Views.Home;
 
-public sealed partial class HomePageCardControl : TemplatedControl
+public sealed partial class HomePageCardControl : TemplatedControl, IDisposable
 {
     private const string PcEditing = ":editing";
     private const string PcSelected = ":selected";
@@ -58,16 +65,13 @@ public sealed partial class HomePageCardControl : TemplatedControl
     private static readonly HomeCardTemplate _PlaceholderTemplate = new(
         HomePageCardSourceKind.WorkRecommended,
         HomePageCardTemplateKind.WorkList,
-        Symbol.Board,
-        "",
-        "");
+        Symbol.Board);
 
     private Panel? _rootGrid;
     private Panel? _resizeHandlesLayer;
     private Button? _quickDeleteButton;
     private PointerEditState? _pointerEditState;
-
-    public IAsyncRelayCommand<object?> OpenPreviewItemCommand { get; }
+    private bool _isDisposed;
 
     public HomePageCardControl(
         HomePageCardLayout card,
@@ -75,7 +79,6 @@ public sealed partial class HomePageCardControl : TemplatedControl
         int rowCount,
         int columnCount)
     {
-        OpenPreviewItemCommand = new AsyncRelayCommand<object?>(OpenPreviewItemAsync);
         Card = card;
         CardTemplate = template;
         RowCount = rowCount;
@@ -86,7 +89,6 @@ public sealed partial class HomePageCardControl : TemplatedControl
 
     public HomePageCardControl()
     {
-        OpenPreviewItemCommand = new AsyncRelayCommand<object?>(OpenPreviewItemAsync);
         PreviewViewModel = new(Card);
     }
 
@@ -101,7 +103,12 @@ public sealed partial class HomePageCardControl : TemplatedControl
     public HomePageCardLayout Card
     {
         get;
-        private set => SetAndRaise(CardProperty, ref field, value);
+        private set
+        {
+            var oldTitle = CardTitle;
+            SetAndRaise(CardProperty, ref field, value);
+            RaisePropertyChanged(CardTitleProperty, oldTitle, CardTitle);
+        }
     } = new();
 
     public HomeCardTemplate CardTemplate
@@ -130,7 +137,7 @@ public sealed partial class HomePageCardControl : TemplatedControl
         private set => SetAndRaise(ColumnCountProperty, ref field, value);
     } = 1;
 
-    public string CardTitle => CardTemplate.Title;
+    public string CardTitle => Card.ToString();
 
     public Symbol CardSymbol => CardTemplate.Symbol;
 
@@ -166,10 +173,7 @@ public sealed partial class HomePageCardControl : TemplatedControl
         }
     }
 
-    public void CancelEdit()
-    {
-        CompleteEdit();
-    }
+    public void CancelEdit() => CompleteEdit();
 
     public void UpdateGridSize(int rowCount, int columnCount)
     {
@@ -202,6 +206,13 @@ public sealed partial class HomePageCardControl : TemplatedControl
 
         _resizeHandlesLayer?.PointerPressed += ResizeHandle_OnPointerPressed;
         _quickDeleteButton?.Click += QuickDeleteButton_OnClick;
+    }
+
+    private async void HomePageCardControl_OnLoaded(object? sender, RoutedEventArgs e)
+    {
+        Loaded -= HomePageCardControl_OnLoaded;
+        if (PreviewViewModel is not null)
+            await PreviewViewModel.LoadAsync();
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -243,6 +254,7 @@ public sealed partial class HomePageCardControl : TemplatedControl
         e.Handled = true;
     }
 
+    [RelayCommand]
     private async Task OpenPreviewItemAsync(object? parameter)
     {
         if (TopLevel.GetTopLevel(this) is not { } topLevel)
@@ -266,6 +278,103 @@ public sealed partial class HomePageCardControl : TemplatedControl
                 break;
         }
     }
+
+    [RelayCommand]
+    private async Task OpenCardPageAsync()
+    {
+        if (PreviewViewModel is null)
+            return;
+
+        await PreviewViewModel.EnsureLoadedAsync();
+        if (TopLevel.GetTopLevel(this) is not { ViewContainer: { } viewContainer })
+            return;
+
+        switch (Card.SourceKind)
+        {
+            case HomePageCardSourceKind.WorkRecommended:
+                viewContainer.NavigateTo(new RecommendWorksPage(Card.WorkType, CloneWorkViewModel()));
+                break;
+            case HomePageCardSourceKind.WorkNew:
+                viewContainer.NavigateTo(new NewWorksPage(Card.WorkType, CloneWorkViewModel()));
+                break;
+            case HomePageCardSourceKind.WorkPosts:
+                viewContainer.NavigateTo(new UserWorkPostsPage(CreateUserBasicInfo(Card), Card.WorkType, CloneWorkViewModel()));
+                break;
+            case HomePageCardSourceKind.WorkBookmarks:
+                viewContainer.NavigateTo(new BookmarksPage(
+                    CreateUserBasicInfo(Card),
+                    Card.SimpleWorkType,
+                    Card.PrivacyPolicy,
+                    Card.Tag,
+                    CloneWorkViewModel()));
+                break;
+            case HomePageCardSourceKind.WorkRanking:
+                viewContainer.NavigateTo(new RankingsPage(
+                    Card.SimpleWorkType,
+                    Card.RankOption,
+                    Card.GetRankingDate().LocalDateTime,
+                    CloneWorkViewModel()));
+                break;
+            case HomePageCardSourceKind.WorkFollowing:
+                viewContainer.NavigateTo(new RecentWorkPostsPage(Card.SimpleWorkType, Card.PrivacyPolicy, CloneWorkViewModel()));
+                break;
+            case HomePageCardSourceKind.WorkSearch:
+                var searchText = Card.SearchText ?? "";
+                viewContainer.NavigateTo(new SearchWorksPage(
+                    searchText,
+                    new IllustrationSearchArguments(searchText),
+                    new NovelSearchArguments(searchText),
+                    Card.SimpleWorkType,
+                    CloneWorkViewModel()));
+                break;
+            case HomePageCardSourceKind.UserRecommended:
+                viewContainer.NavigateTo(new RecommendUsersPage(CloneUserViewModel()));
+                break;
+            case HomePageCardSourceKind.UserSearch:
+                viewContainer.NavigateTo(new SearchUsersPage(Card.SearchText, CloneUserViewModel()));
+                break;
+            case HomePageCardSourceKind.UserFollowing:
+                viewContainer.NavigateTo(new FollowingsPage(Card.UserId, Card.PrivacyPolicy, CloneUserViewModel()));
+                break;
+            case HomePageCardSourceKind.UserMyPixiv:
+                viewContainer.NavigateTo(new MyPixivUsersPage(Card.UserId, CloneUserViewModel()));
+                break;
+            case HomePageCardSourceKind.Spotlight:
+                viewContainer.NavigateTo(new SpotlightsPage(CloneSpotlightViewModel()));
+                break;
+            case HomePageCardSourceKind.SingleImage:
+            case HomePageCardSourceKind.SingleNovel:
+            case HomePageCardSourceKind.SingleUser:
+                await OpenFirstPreviewItemAsync();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(Card.SourceKind));
+        }
+    }
+
+    private Task OpenFirstPreviewItemAsync() =>
+        PreviewViewModel?.Items.FirstOrDefault() is { } item
+            ? OpenPreviewItemAsync(item)
+            : Task.CompletedTask;
+
+    private IWorkViewViewModel? CloneWorkViewModel() =>
+        PreviewViewModel?.ViewModel switch
+        {
+            IllustrationViewViewModel viewModel => new IllustrationViewViewModel(viewModel),
+            NovelViewViewModel viewModel => new NovelViewViewModel(viewModel),
+            _ => null
+        };
+
+    private UserViewViewModel? CloneUserViewModel() =>
+        PreviewViewModel?.ViewModel is UserViewViewModel viewModel ? new(viewModel) : null;
+
+    private SpotlightViewViewModel? CloneSpotlightViewModel() =>
+        PreviewViewModel?.ViewModel is SpotlightViewViewModel viewModel ? new(viewModel) : null;
+
+    private static UserBasicInfo CreateUserBasicInfo(HomePageCardLayout card) =>
+        App.AppViewModel.MakoClient.Me is { Id: var meId } me && card.UserId == meId
+            ? me
+            : new HomeCardUserBasicInfo(card.UserId, card.ToString());
 
     private async Task OpenNovelAsync(TopLevel topLevel, NovelItemViewModel viewModel)
     {
@@ -296,9 +405,28 @@ public sealed partial class HomePageCardControl : TemplatedControl
         }
     }
 
-    protected override void OnDetachedFromLogicalTree(Avalonia.LogicalTree.LogicalTreeAttachmentEventArgs e)
+    protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromLogicalTree(e);
+        Dispose();
+    }
+
+    public void Dispose()
+    {
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
+        GC.SuppressFinalize(this);
+        Loaded -= HomePageCardControl_OnLoaded;
+        CompleteEdit(false);
+        DetachTemplateHandlers();
+        CardSelected = null;
+        EditPreview = null;
+        EditCompleted = null;
+        DeleteRequested = null;
         PreviewViewModel = null;
     }
+
+    ~HomePageCardControl() => Dispatcher.UIThread.InvokeAsync(Dispose);
 }

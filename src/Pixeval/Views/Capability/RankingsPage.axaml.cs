@@ -6,48 +6,58 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Mako;
 using Mako.Global.Enum;
+using Mako.Model;
 using Pixeval.Controls;
+using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Capability;
 
 public partial class RankingsPage : ContentPage
 {
-    private bool _suppressChangeSource;
+    public RankingsPage() : this(PixevalSettings.SimpleWorkType, App.AppViewModel.AppSettings.IllustrationRankOption, MaxDate)
+    {
+    }
 
-    public RankingsPage()
+    public RankingsPage(SimpleWorkType simpleWorkType, RankOption rankOption, DateTime rankingDate, IWorkViewViewModel? viewModel = null)
     {
         InitializeComponent();
+        SimpleWorkTypeComboBox.SelectedValue = simpleWorkType;
         ChangeEnumSource();
-        ChangeSource();
+        RankOptionComboBox.SelectedValue = rankOption;
+        RankDateTimeCalendarDatePicker.SelectedDate = rankingDate;
+        if (viewModel is not null)
+            WorkContainer.SetViewModel(viewModel);
+        else
+            ChangeSource();
     }
 
     public static DateTime MaxDate => MakoClient.RankingMaxDateTime.LocalDateTime;
 
     private void SimpleWorkTypeComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e)
     {
+        var oldRankOption = RankOptionComboBox.SelectedValue;
         ChangeEnumSource();
-        ChangeSource();
+        if (Equals(oldRankOption, RankOptionComboBox.SelectedValue))
+            ChangeSource();
     }
 
     private void ChangeEnumSource()
     {
-        _suppressChangeSource = true;
         if (SimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>() is SimpleWorkType.IllustrationAndManga)
         {
-            RankOptionComboBox.ItemsSource = SymbolComboBoxItem.GetValues("Illustration");
+            RankOptionComboBox.ItemsSource = SymbolComboBoxItem.GetValues<RankOption>(nameof(Illustration));
             RankOptionComboBox.SelectedValue = App.AppViewModel.AppSettings.IllustrationRankOption;
         }
         else
         {
-            RankOptionComboBox.ItemsSource = SymbolComboBoxItem.GetValues("Novel");
+            RankOptionComboBox.ItemsSource = SymbolComboBoxItem.GetValues<RankOption>(nameof(Novel));
             RankOptionComboBox.SelectedValue = App.AppViewModel.AppSettings.NovelRankOption;
         }
-        _suppressChangeSource = false;
     }
 
     private void RankOptionComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e)
     {
-        if (!_suppressChangeSource && RankOptionComboBox.SelectedValue is not null)
+        if (RankOptionComboBox.SelectedValue is not null)
             ChangeSource();
     }
 

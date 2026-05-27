@@ -8,22 +8,24 @@ using Pixeval.I18N;
 // ReSharper disable once CheckNamespace
 namespace Pixeval.Attributes;
 
-[AttributeUsage(AttributeTargets.Field)]
+[AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
 public class LocalizedResourceAttribute(Symbol symbol = default) : Attribute
 {
-    public LocalizedResourceAttribute(Symbol symbol, string key)
+    public LocalizedResourceAttribute(Symbol symbol, string resource)
         : this(symbol)
     {
-        Resource = I18NManager.GetResource(key);
+        Resource = I18NManager.GetResource(resource);
     }
     
-    public LocalizedResourceAttribute(string key)
+    public LocalizedResourceAttribute(string resource)
         : this()
     {
-        Resource = I18NManager.GetResource(key);
+        Resource = I18NManager.GetResource(resource);
     }
     
     public Symbol Symbol { get; } = symbol;
 
     public string Resource { get; init; } = "";
+
+    public string? Key { get; init; }
 }

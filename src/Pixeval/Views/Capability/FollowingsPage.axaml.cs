@@ -18,13 +18,23 @@ public partial class FollowingsPage : ContentPage
     {
     }
 
-    public FollowingsPage(long id)
+    public FollowingsPage(long id, PrivacyPolicy privacyPolicy = PrivacyPolicy.Public, UserViewViewModel? viewModel = null)
     {
         InitializeComponent();
         _userId = id;
+        PrivacyPolicyComboBox.SelectedValue = privacyPolicy;
         if (id != App.AppViewModel.PixivUid)
             PrivacyPolicyComboBox.IsEnabled = PrivacyPolicyComboBox.IsVisible = false;
-        ChangeSource();
+        if (viewModel is not null)
+        {
+            var oldViewModel = UserContainer.UserView.DataContext as IDisposable;
+            UserContainer.UserView.DataContext = viewModel;
+            oldViewModel?.Dispose();
+        }
+        else
+        {
+            ChangeSource();
+        }
     }
 
     private void WorkTypeComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e)

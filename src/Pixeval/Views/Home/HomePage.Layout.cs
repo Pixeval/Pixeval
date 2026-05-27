@@ -20,7 +20,7 @@ public partial class HomePage
             EnsureGridDefinitions(HomeGrid);
             EnsureGuideGrid();
             foreach (var child in HomeGrid.Children.OfType<HomePageCardControl>())
-                DetachCardControl(child);
+                DisposeCardControl(child);
 
             HomeGrid.Children.Clear();
 
@@ -94,7 +94,7 @@ public partial class HomePage
         for (var i = HomeGrid.Children.Count - 1; i >= 0; i--)
             if (HomeGrid.Children[i] is HomePageCardControl control && !_cards.Any(card => ReferenceEquals(card, control.Card)))
             {
-                DetachCardControl(control);
+                DisposeCardControl(control);
                 HomeGrid.Children.RemoveAt(i);
             }
 
@@ -122,7 +122,7 @@ public partial class HomePage
             if (HomeGrid.Children[i] is HomePageCardControl control && control.Card == card)
             {
                 control.CancelEdit();
-                DetachCardControl(control);
+                DisposeCardControl(control);
                 HomeGrid.Children.RemoveAt(i);
                 return;
             }
@@ -159,6 +159,12 @@ public partial class HomePage
         control.EditPreview -= HomeCardControl_OnEditPreview;
         control.EditCompleted -= HomeCardControl_OnEditCompleted;
         control.DeleteRequested -= HomeCardControl_OnDeleteRequested;
+    }
+
+    private void DisposeCardControl(HomePageCardControl control)
+    {
+        DetachCardControl(control);
+        control.Dispose();
     }
 
     private static void ApplyCardLayout(HomePageCardControl control)

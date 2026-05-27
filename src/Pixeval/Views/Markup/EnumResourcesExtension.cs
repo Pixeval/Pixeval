@@ -11,15 +11,18 @@ namespace Pixeval.Views.Markup;
 
 public class EnumResourcesExtension<T> : MarkupExtension where T : struct, Enum
 {
-    /// <inheritdoc />
-    public override IReadOnlyList<SymbolComboBoxItem> ProvideValue(IServiceProvider serviceProvider) => SymbolComboBoxItem.GetValues<T>();
-}
+    public EnumResourcesExtension()
+    {
+    }
 
-public class EnumKeyedResourcesExtension(string key) : MarkupExtension
-{
+    public EnumResourcesExtension(string key)
+    {
+        Key = key;
+    }
+
     [ConstructorArgument("key")]
-    public string Key { get; set; } = key;
+    public string? Key { get; set; }
 
     /// <inheritdoc />
-    public override IReadOnlyList<SymbolComboBoxItem> ProvideValue(IServiceProvider serviceProvider) => SymbolComboBoxItem.GetValues(Key);
+    public override IReadOnlyList<SymbolComboBoxItem> ProvideValue(IServiceProvider serviceProvider) => SymbolComboBoxItem.GetValues<T>(Key);
 }

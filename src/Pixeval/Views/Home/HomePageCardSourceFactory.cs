@@ -12,6 +12,7 @@ using Mako.Global.Enum;
 using Mako.Model;
 using Misaki;
 using Pixeval.Models.Home;
+using Pixeval.Models.Options;
 using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Home;
@@ -78,7 +79,7 @@ public static class HomePageCardSourceFactory
                 ? client.MangaRecommended()
                 : client.IllustrationRecommended(),
             HomePageCardSourceKind.WorkBookmarks => client.IllustrationBookmarks(card.UserId, card.Tag, card.PrivacyPolicy),
-            HomePageCardSourceKind.WorkRanking => client.IllustrationRanking(card.RankOption, GetRankingDate(card)),
+            HomePageCardSourceKind.WorkRanking => client.IllustrationRanking(card.RankOption, card.GetRankingDate()),
             HomePageCardSourceKind.WorkNew => client.IllustrationNew(card.WorkType is WorkType.Manga, null),
             HomePageCardSourceKind.WorkFollowing => client.IllustrationFollowing(card.PrivacyPolicy),
             HomePageCardSourceKind.WorkPosts => client.IllustrationPosted(card.UserId, card.WorkType is WorkType.Manga ? WorkType.Manga : WorkType.Illustration),
@@ -96,7 +97,7 @@ public static class HomePageCardSourceFactory
         {
             HomePageCardSourceKind.WorkRecommended => client.NovelRecommended(),
             HomePageCardSourceKind.WorkBookmarks => client.NovelBookmarks(card.UserId, card.Tag, card.PrivacyPolicy),
-            HomePageCardSourceKind.WorkRanking => client.NovelRanking(card.RankOption, GetRankingDate(card)),
+            HomePageCardSourceKind.WorkRanking => client.NovelRanking(card.RankOption, card.GetRankingDate()),
             HomePageCardSourceKind.WorkNew => client.NovelNew(null),
             HomePageCardSourceKind.WorkFollowing => client.NovelFollowing(card.PrivacyPolicy),
             HomePageCardSourceKind.WorkPosts => client.NovelPosted(card.UserId),
@@ -145,6 +146,4 @@ public static class HomePageCardSourceFactory
         await Task.CompletedTask;
     }
 
-    private static DateTimeOffset GetRankingDate(HomePageCardLayout card) =>
-        card.RankingDate == default ? MakoClient.RankingMaxDateTime : card.RankingDate;
 }

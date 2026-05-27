@@ -113,16 +113,21 @@ public partial class WorkView : UserControl, IDisposable
             default:
                 IWorkViewViewModel newViewModel = isNovelEngine ? new NovelViewViewModel() : new IllustrationViewViewModel();
                 newViewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
-                DataContext = newViewModel;
-                WorkListBox.ItemsSource = newViewModel.View;
-                viewModel?.Dispose();
+                SetViewModel(newViewModel);
                 break;
         }
     }
 
     public void SetSource(IReadOnlyCollection<IArtworkInfo> source)
     {
-        DataContext = new SimpleOperableViewViewModel(source);
+        SetViewModel(new SimpleOperableViewViewModel(source));
+    }
+
+    public void SetViewModel(ISimpleViewViewModel viewModel)
+    {
+        var oldViewModel = DataContext as IDisposable;
+        DataContext = viewModel;
+        oldViewModel?.Dispose();
     }
 
     private void WorkItem_OnRequestAddToBookmark(Control sender, IWorkViewModel e) => RequestAddToBookmark?.Invoke(sender, e);

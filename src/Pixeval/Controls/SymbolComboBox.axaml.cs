@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using AutoSettingsPage;
 using Avalonia;
 using Avalonia.Controls;
@@ -23,26 +24,41 @@ public record SymbolComboBoxItem(object Value, string Description, Symbol Symbol
     /// <inheritdoc />
     public override string ToString() => Description;
 
-    public static IReadOnlyList<SymbolComboBoxItem> GetValues<TEnum>()
+    private static void RegisterValues<TEnum>()
         where TEnum : struct, Enum
     {
-        if (LocalSettingsEntryHelper.RegisteredAttach.TryGetValue(typeof(TEnum), out var value))
-            return value;
-
-        var list = new List<SymbolComboBoxItem>();
+        var dict = new Dictionary<object, List<SymbolComboBoxItem>>();
         var fieldInfos = typeof(TEnum).GetFields(BindingFlags.Public | BindingFlags.Static);
         foreach (var fieldInfo in fieldInfos)
-            if (fieldInfo.GetCustomAttribute<LocalizedResourceAttribute>() is { } attribute)
+            foreach (var attribute in fieldInfo.GetCustomAttributes<LocalizedResourceAttribute>())
+            {
+                object? key = attribute.Key;
+                key ??= typeof(TEnum);
+                if (!dict.TryGetValue(key, out var list))
+                    dict[key] = list = [];
                 list.Add(new SymbolComboBoxItem(fieldInfo.GetValue(null)!, attribute.Resource, attribute.Symbol));
-        LocalSettingsEntryHelper.RegisteredAttach[typeof(TEnum)] = list;
-        return list;
+            }
+
+        foreach (var (key, list) in dict)
+            LocalSettingsEntryHelper.RegisteredAttach[key] = list;
     }
 
-    public static IReadOnlyList<SymbolComboBoxItem> GetValues(object key) => LocalSettingsEntryHelper.RegisteredAttach[key];
+    public static IReadOnlyList<SymbolComboBoxItem> GetValues<TEnum>(object? key = null)
+        where TEnum : struct, Enum
+    {
+        key ??= typeof(TEnum);
 
-    public static string GetResource<TEnum>(TEnum e)
+        if (LocalSettingsEntryHelper.RegisteredAttach.TryGetValue(key, out var value))
+            return value;
+
+        RegisterValues<TEnum>();
+
+        return LocalSettingsEntryHelper.RegisteredAttach[key];
+    }
+
+    public static string GetResource<TEnum>(TEnum e, object? key = null)
         where TEnum : struct, Enum =>
-        GetValues<TEnum>().First(t => t.Value.Equals(e)).Description;
+        GetValues<TEnum>(key).First(t => t.Value.Equals(e)).Description;
 }
 
 /// <summary>

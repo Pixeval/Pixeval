@@ -100,9 +100,9 @@
                                 <TextBlock
                                     Grid.Column="0"
                                     VerticalAlignment="Center"
-                                    Text="{I18N {x:Static pixeval:HomePageResources.GridRowsTextBlockText}}" />
+                                    Text="{I18N {x:Static pixeval:HomePageResources.GridColumnsTextBlockText}}" />
                                 <NumericUpDown
-                                    x:Name="GridRowsBox"
+                                    x:Name="GridColumnsBox"
                                     Grid.Column="1"
                                     AllowSpin="True"
                                     ClipValueToMinMax="True"
@@ -114,9 +114,9 @@
                                 <TextBlock
                                     Grid.Column="2"
                                     VerticalAlignment="Center"
-                                    Text="{I18N {x:Static pixeval:HomePageResources.GridColumnsTextBlockText}}" />
+                                    Text="{I18N {x:Static pixeval:HomePageResources.GridRowsTextBlockText}}" />
                                 <NumericUpDown
-                                    x:Name="GridColumnsBox"
+                                    x:Name="GridRowsBox"
                                     Grid.Column="3"
                                     AllowSpin="True"
                                     ClipValueToMinMax="True"
@@ -141,7 +141,10 @@
                                 Text="{I18N {x:Static pixeval:HomePageResources.NoSelectedCardTextBlockText}}"
                                 TextWrapping="Wrap" />
                             <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8">
-                                <TextBlock VerticalAlignment="Center" Text="{I18N {x:Static pixeval:HomePageResources.PositionXTextBlockText}}" />
+                                <TextBlock
+                                    Grid.Column="0"
+                                    VerticalAlignment="Center"
+                                    Text="{I18N {x:Static pixeval:HomePageResources.PositionXTextBlockText}}" />
                                 <NumericUpDown
                                     x:Name="SelectedColumnBox"
                                     Grid.Column="1"
@@ -166,7 +169,10 @@
                                     ValueChanged="SelectedCardNumericBox_OnValueChanged" />
                             </Grid>
                             <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8">
-                                <TextBlock VerticalAlignment="Center" Text="{I18N {x:Static pixeval:HomePageResources.WidthTextBlockText}}" />
+                                <TextBlock
+                                    Grid.Column="0"
+                                    VerticalAlignment="Center"
+                                    Text="{I18N {x:Static pixeval:HomePageResources.WidthTextBlockText}}" />
                                 <NumericUpDown
                                     x:Name="SelectedWidthBox"
                                     Grid.Column="1"
@@ -276,10 +282,12 @@
 
                             <StackPanel x:Name="SourceRankingDatePanel" Spacing="4">
                                 <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceRankingDateTextBlockText}}" />
+                                <CheckBox x:Name="SourceUseSpecifiedRankingDateCheckBox" Content="{I18N {x:Static pixeval:HomePageResources.SourceUseSpecifiedRankingDateCheckBoxContent}}" />
                                 <CalendarDatePicker
                                     x:Name="SourceRankingDatePicker"
                                     HorizontalAlignment="Stretch"
                                     DisplayDateEnd="{x:Static capability:RankingsPage.MaxDate}"
+                                    IsEnabled="{Binding #SourceUseSpecifiedRankingDateCheckBox.IsChecked}"
                                     SelectedDate="{x:Static capability:RankingsPage.MaxDate}"
                                     SelectedDateFormat="Short" />
                             </StackPanel>

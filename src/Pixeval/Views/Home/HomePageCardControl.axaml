@@ -1,4 +1,4 @@
-﻿<ResourceDictionary
+<ResourceDictionary
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
@@ -34,13 +34,27 @@
                                 Background="{DynamicResource ControlOnImageFillColorDefaultBrush}"
                                 DockPanel.Dock="Bottom"
                                 IsVisible="{TemplateBinding IsCardTitleVisible}">
-                                <TextBlock
-                                    FontSize="12"
-                                    FontWeight="SemiBold"
-                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                    MaxLines="1"
-                                    Text="{TemplateBinding CardTitle}"
-                                    TextTrimming="CharacterEllipsis" />
+                                <DockPanel VerticalSpacing="5">
+                                    <Button
+                                        Width="28"
+                                        Height="28"
+                                        Padding="0"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Command="{Binding $parent[home:HomePageCardControl].OpenCardPageCommand}"
+                                        Content="{markup:SymbolIcon Open}"
+                                        DockPanel.Dock="Right"
+                                        Theme="{StaticResource TransparentButtonStyle}"
+                                        ToolTip.Tip="{I18N {x:Static pixeval:HomePageResources.OpenCardPageButtonToolTip}}" />
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        FontSize="12"
+                                        FontWeight="SemiBold"
+                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                        MaxLines="1"
+                                        Text="{TemplateBinding CardTitle}"
+                                        TextTrimming="CharacterEllipsis" />
+                                </DockPanel>
                             </Border>
 
                             <Panel>

@@ -1,7 +1,8 @@
 <ResourceDictionary
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:SmoothScroll.Avalonia.Controls">
+    xmlns:controls="using:SmoothScroll.Avalonia.Controls"
+    xmlns:fluent="using:FluentIcons.Avalonia">
 
     <ResourceDictionary.MergedDictionaries>
         <MergeResourceInclude Source="/Controls/AvatarImage.axaml" />

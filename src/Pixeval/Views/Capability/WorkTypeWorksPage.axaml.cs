@@ -15,6 +15,7 @@ using Pixeval.I18N;
 using Pixeval.Models.Options;
 using Pixeval.Models.Subscriptions;
 using Pixeval.Utilities;
+using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Capability;
 
@@ -23,6 +24,16 @@ public abstract partial class WorkTypeWorksPage : ContentPage
     public WorkTypeWorksPage()
     {
         InitializeComponent();
+    }
+
+    protected void InitializeSource(WorkType workType, IWorkViewViewModel? viewModel = null)
+    {
+        WorkTypeComboBox.SelectedValue = workType;
+
+        if (viewModel is not null)
+            WorkContainer.SetViewModel(viewModel);
+        else
+            ChangeSource();
     }
 
     private void WorkTypeComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e)
@@ -60,11 +71,15 @@ public abstract partial class WorkTypeWorksPage : ContentPage
 
 public class RecommendWorksPage : WorkTypeWorksPage
 {
-    public RecommendWorksPage()
+    public RecommendWorksPage() : this(PixevalSettings.WorkType)
+    {
+    }
+
+    public RecommendWorksPage(WorkType workType, IWorkViewViewModel? viewModel = null)
     {
         Header = I18NManager.GetResource(MainPageResources.RecommendationsTabContent);
         Icon = new SymbolIcon { Symbol = Symbol.Calendar, FontSize = 16, IconVariant = IconVariant.Color };
-        ChangeSource();
+        InitializeSource(workType, viewModel);
     }
 
     protected override IFetchEngine<IWorkEntry> GetFetchEngine(MakoClient makoClient, WorkType workType)
@@ -75,11 +90,15 @@ public class RecommendWorksPage : WorkTypeWorksPage
 
 public class NewWorksPage : WorkTypeWorksPage
 {
-    public NewWorksPage()
+    public NewWorksPage() : this(PixevalSettings.WorkType)
+    {
+    }
+
+    public NewWorksPage(WorkType workType, IWorkViewViewModel? viewModel = null)
     {
         Header = I18NManager.GetResource(MainPageResources.NewWorksTabContent);
         Icon = new SymbolIcon { Symbol = Symbol.ArrowSync, FontSize = 16, IconVariant = IconVariant.Color };
-        ChangeSource();
+        InitializeSource(workType, viewModel);
     }
 
     protected override IFetchEngine<IWorkEntry> GetFetchEngine(MakoClient makoClient, WorkType workType)
@@ -96,13 +115,17 @@ public class UserWorkPostsPage : WorkTypeWorksPage
     {
     }
 
-    public UserWorkPostsPage(UserBasicInfo user)
+    public UserWorkPostsPage(UserBasicInfo user) : this(user, PixevalSettings.WorkType)
+    {
+    }
+
+    public UserWorkPostsPage(UserBasicInfo user, WorkType workType, IWorkViewViewModel? viewModel = null)
     {
         _user = user;
         Header = I18NManager.GetResource(EntryViewerPageResources.WorkNavigationViewItemContent);
         Icon = new SymbolIcon { Symbol = Symbol.Image, FontSize = 16, IconVariant = IconVariant.Color };
         EnableAddSubscriptionButton();
-        ChangeSource();
+        InitializeSource(workType, viewModel);
     }
 
     protected override IFetchEngine<IWorkEntry> GetFetchEngine(MakoClient makoClient, WorkType workType)
