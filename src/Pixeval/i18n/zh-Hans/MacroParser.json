@@ -8,7 +8,7 @@
   "UnknownArtist": "未知作者",
   "UnknownIllustrationTitle": "未知作品",
   "UnknownMacroNameFormatted": "未知的宏名称：{0}",
-  "FilterQueryError": "过滤查询语句错误",
+  "FilterQueryError": "筛选查询语句错误",
   "FilterTokenFinishedFormatted": "期望获取的符号：{0}，实际访问到语句末尾",
   "UnexpactedTokenFormatted": "期望获取的符号：{0}，实际获取到的符号：{1}",
   "UnbalancedParFormatted": "括号不匹配，首个不匹配括号：{0}",

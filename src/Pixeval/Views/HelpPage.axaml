@@ -8,7 +8,7 @@
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
-    Header="{I18N {x:Static pixeval:MainPageResources.HelpTabContent}}"
+    Header="{I18N {x:Static pixeval:MainPageResources.TabHelp}}"
     Icon="{markup:SymbolIcon ChatBubblesQuestion,
                              FontSize=16,
                              IconVariant=Color}"

@@ -1,7 +1,8 @@
-﻿<ContentPage
-    x:Class="Pixeval.Views.Capability.RecentWorkPostsPage"
+<ContentPage
+    x:Class="Pixeval.Views.Capability.WorkBookmarksPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:capability="using:Pixeval.Views.Capability"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:enum="using:Mako.Global.Enum"
@@ -11,8 +12,8 @@
     xmlns:pixeval="using:Pixeval"
     xmlns:views="using:Pixeval.Views"
     xmlns:work="using:Pixeval.Views.Work"
-    Header="{I18N {x:Static pixeval:MainPageResources.RecentPostsTabContent}}"
-    Icon="{markup:SymbolIcon AlertUrgent,
+    Header="{I18N {x:Static pixeval:MainPageResources.TabWorkBookmarks}}"
+    Icon="{markup:SymbolIcon Library,
                              FontSize=16,
                              IconVariant=Color}"
     mc:Ignorable="d"
@@ -20,6 +21,12 @@
     d:DesignWidth="800">
     <work:WorkContainer x:Name="WorkContainer" RefreshRequested="WorkContainer_OnRefreshRequested">
         <work:WorkContainer.CommandBarElements>
+            <ComboBox
+                x:Name="TagComboBox"
+                VerticalAlignment="Stretch"
+                ItemsSource="{x:Static capability:WorkBookmarksPage.DefaultTags}"
+                SelectedIndex="0"
+                SelectionChanged="TagComboBox_OnSelectionChanged" />
             <controls:SymbolComboBox
                 x:Name="PrivacyPolicyComboBox"
                 ItemsSource="{markup1:EnumResources x:TypeArguments=enum:PrivacyPolicy}"
@@ -30,5 +37,13 @@
                 SelectedValue="{x:Static views:PixevalSettings.SimpleWorkType}"
                 SelectionChanged="WorkTypeComboBox_OnSelectionChanged" />
         </work:WorkContainer.CommandBarElements>
+        <work:WorkContainer.CommandBarSubElements>
+            <CommandBarButton
+                x:Name="AddSubscriptionButton"
+                VerticalAlignment="Stretch"
+                Click="AddSubscriptionButton_OnClicked"
+                Icon="{markup:SymbolIcon Alert}"
+                Label="{I18N {x:Static pixeval:WorkSubscriptionsSettingsExpanderResources.AddSubscriptionButtonLabel}}" />
+        </work:WorkContainer.CommandBarSubElements>
     </work:WorkContainer>
 </ContentPage>

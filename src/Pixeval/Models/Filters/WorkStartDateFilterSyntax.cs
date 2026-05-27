@@ -9,7 +9,7 @@ namespace Pixeval.Models.Filters;
 internal sealed class WorkStartDateFilterSyntax : FilterDateSyntax
 {
     /// <summary>
-    /// 起始日期过滤语法。
+    /// 起始日期筛选语法。
     /// </summary>
     public override string Key => WorkFilterSyntaxKeys.StartDate;
 

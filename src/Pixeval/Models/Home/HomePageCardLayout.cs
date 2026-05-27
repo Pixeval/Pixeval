@@ -10,12 +10,29 @@ using Mako.Model;
 using Pixeval.Controls;
 using Pixeval.I18N;
 using Pixeval.Models.Options;
+using Pixeval.Views.Home;
 
 namespace Pixeval.Models.Home;
 
 public record HomePageCardLayout
 {
-    public HomePageCardTemplateKind TemplateKind { get; set; }
+    public HomePageCardLayout()
+    {
+    }
+
+    public HomePageCardLayout(HomeCardTemplate template, int column, int row, int columnSpan = 1, int rowSpan = 1)
+    {
+        SourceKind = template.SourceKind;
+        WorkType = template.WorkType;
+        SimpleWorkType = template.SimpleWorkType;
+        PrivacyPolicy = template.PrivacyPolicy;
+        RankOption = template.RankOption;
+        RankingDate = MakoClient.RankingMaxDateTime;
+        Column = column;
+        Row = row;
+        ColumnSpan = columnSpan;
+        RowSpan = rowSpan;
+    }
 
     public HomePageCardSourceKind SourceKind { get; set; }
 
@@ -48,6 +65,28 @@ public record HomePageCardLayout
     public int ColumnSpan { get; set; } = 1;
 
     public int RowSpan { get; set; } = 1;
+
+    public HomePageCardTemplateKind TemplateKind => SourceKind switch
+    {
+        HomePageCardSourceKind.WorkRecommended
+            or HomePageCardSourceKind.WorkBookmarks
+            or HomePageCardSourceKind.WorkRanking
+            or HomePageCardSourceKind.WorkNew
+            or HomePageCardSourceKind.WorkFollowing
+            or HomePageCardSourceKind.WorkPosts
+            or HomePageCardSourceKind.WorkSearch
+            =>  HomePageCardTemplateKind.WorkList,
+        HomePageCardSourceKind.UserRecommended
+            or HomePageCardSourceKind.UserSearch
+            or HomePageCardSourceKind.UserFollowing
+            or HomePageCardSourceKind.UserMyPixiv
+            => HomePageCardTemplateKind.UserList,
+        HomePageCardSourceKind.Spotlight => HomePageCardTemplateKind.SpotlightList,
+        HomePageCardSourceKind.SingleImage => HomePageCardTemplateKind.SingleImage,
+        HomePageCardSourceKind.SingleNovel => HomePageCardTemplateKind.SingleNovel,
+        HomePageCardSourceKind.SingleUser => HomePageCardTemplateKind.SingleUser,
+        _ => throw new ArgumentOutOfRangeException(nameof(SourceKind), SourceKind, null)
+    };
 
     public override string ToString()
     {

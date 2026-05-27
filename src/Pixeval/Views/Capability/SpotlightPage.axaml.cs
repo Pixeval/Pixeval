@@ -8,13 +8,13 @@ using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Capability;
 
-public partial class SpotlightsPage : ContentPage
+public partial class SpotlightPage : ContentPage
 {
-    public SpotlightsPage() : this(null)
+    public SpotlightPage() : this(null)
     {
     }
 
-    public SpotlightsPage(SpotlightViewViewModel? viewModel)
+    public SpotlightPage(SpotlightViewViewModel? viewModel)
     {
         InitializeComponent();
         if (viewModel is not null)

@@ -9,7 +9,7 @@
     xmlns:viewModels="using:Pixeval.ViewModels"
     xmlns:views="using:Pixeval.Views.Download"
     x:DataType="{x:Type viewModels:DownloadViewViewModel}"
-    Header="{I18N {x:Static pixeval:MainPageResources.DownloadListTabContent}}"
+    Header="{I18N {x:Static pixeval:MainPageResources.TabDownload}}"
     Icon="{markup:SymbolIcon ArrowSquareDown,
                              FontSize=16,
                              IconVariant=Color}"

@@ -10,13 +10,13 @@ using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Capability;
 
-public partial class RecentWorkPostsPage : ContentPage
+public partial class WorkFollowingPage : ContentPage
 {
-    public RecentWorkPostsPage() : this(PixevalSettings.SimpleWorkType, PrivacyPolicy.Public)
+    public WorkFollowingPage() : this(PixevalSettings.SimpleWorkType, PrivacyPolicy.Public)
     {
     }
 
-    public RecentWorkPostsPage(SimpleWorkType simpleWorkType, PrivacyPolicy privacyPolicy, IWorkViewViewModel? viewModel = null)
+    public WorkFollowingPage(SimpleWorkType simpleWorkType, PrivacyPolicy privacyPolicy, IWorkViewViewModel? viewModel = null)
     {
         InitializeComponent();
         SimpleWorkTypeComboBox.SelectedValue = simpleWorkType;

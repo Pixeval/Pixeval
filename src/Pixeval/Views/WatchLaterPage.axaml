@@ -5,8 +5,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
     xmlns:work="using:Pixeval.Views.Work"
-    Header="{I18N MainPage.WatchLaterTab.Content}"
+    Header="{I18N {x:Static pixeval:MainPageResources.TabWatchLater}}"
     Icon="{markup:SymbolIcon Clock,
                              FontSize=16,
                              IconVariant=Color}"

@@ -59,14 +59,11 @@ public record AppSettings
     [SettingsEntry(Symbol.TextFont, AppFontFamilyEntryHeader, AppFontFamilyEntryDescription, AppFontFamilyEntryPlaceholder)]
     public ObservableCollection<string> AppFontFamily { get; set; }
 
-    [SettingsEntry(Symbol.Checkmark, DefaultSelectedTabEntryHeader, DefaultSelectedTabEntryDescription)]
-    public MainPageTabItem DefaultSelectedTabItem { get; set; }
-
     [SettingsEntry(Symbol.Table, HomePageRowsEntryHeader, HomePageRowsEntryDescription)]
-    public int HomePageRows { get; set; } = 6;
+    public int HomePageRows { get; set; } = 7;
 
     [SettingsEntry(Symbol.Table, HomePageColumnsEntryHeader, HomePageColumnsEntryDescription)]
-    public int HomePageColumns { get; set; } = 6;
+    public int HomePageColumns { get; set; } = 1;
 
     [SettingsEntry(Symbol.WindowHeaderHorizontal, HideHomePageToolbarEntryHeader, HideHomePageToolbarEntryDescription)]
     public bool HideHomePageToolbar { get; set; }
@@ -74,7 +71,14 @@ public record AppSettings
     [SettingsEntry(Symbol.AppTitle, HideHomePageCardTitleEntryHeader, HideHomePageCardTitleEntryDescription)]
     public bool HideHomePageCardTitle { get; set; }
 
-    public ObservableCollection<HomePageCardLayout> HomePageCards { get; set; } = [];
+    public ObservableCollection<HomePageCardLayout> HomePageCards { get; set; } = [
+        new(new(HomePageCardSourceKind.Spotlight), 0, 0, 1, 2),
+        new(new(HomePageCardSourceKind.UserRecommended), 0, 2, 1, 2),
+        new(new(HomePageCardSourceKind.WorkRecommended), 0, 4, 1, 3)
+        {
+            SimpleWorkType = SimpleWorkType.IllustrationAndManga
+        }
+    ];
 
     [SettingsEntry(Symbol.Rename, DownloadPathMacroEntryHeader, DownloadPathMacroEntryDescription)]
     public string DownloadPathMacro { get; set; } = GetSpecialFolder() + @"\@{if_pic_set?[@{artist_name}] @{title}:}\[@{artist_name}] @{id}@{if_pic_set?p@{pic_set_index}:}@{ext}";
@@ -195,8 +199,6 @@ public record AppSettings
         "210.140.139.137"
     ];
 
-    public string TagsManagerWorkingPath { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures, Environment.SpecialFolderOption.Create);
-
     public uint NovelFontColorInDarkMode { get; set; } = 0xFFFFFFFF;
 
     public uint NovelFontColorInLightMode { get; set; } = 0xFF000000;
@@ -282,7 +284,6 @@ public record AppSettings
 [JsonSerializable(typeof(string[]))]
 [JsonSerializable(typeof(HashSet<string>))]
 [JsonSerializable(typeof(Dictionary<string, Dictionary<string, JsonElement>>))]
-// MultiStringsAppSettingsEntry 使用 ObservableCollection<string>
 [JsonSerializable(typeof(ObservableCollection<string>))]
 [JsonSerializable(typeof(ObservableCollection<HomePageCardLayout>))]
 public partial class SettingsSerializerContext : JsonSerializerContext;

@@ -9,7 +9,7 @@ namespace Pixeval.Models.Filters;
 internal sealed class WorkAiFilterSyntax : FilterFlagSyntax
 {
     /// <summary>
-    /// AI 作品布尔过滤语法。
+    /// AI 作品布尔筛选语法。
     /// </summary>
     public override string Key => WorkFilterSyntaxKeys.Ai;
 

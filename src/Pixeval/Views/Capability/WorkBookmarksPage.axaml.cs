@@ -17,7 +17,7 @@ using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Capability;
 
-public partial class BookmarksPage : ContentPage
+public partial class WorkBookmarksPage : ContentPage
 {
     private readonly UserBasicInfo _user;
     private readonly string? _initialTag;
@@ -25,11 +25,11 @@ public partial class BookmarksPage : ContentPage
 
     public static IReadOnlyList<BookmarkTag> DefaultTags { get; } = [AllBookmarkTag.Instance];
 
-    public BookmarksPage() : this(App.AppViewModel.MakoClient.Me!)
+    public WorkBookmarksPage() : this(App.AppViewModel.MakoClient.Me!)
     {
     }
 
-    public BookmarksPage(UserBasicInfo user, SimpleWorkType simpleWorkType = SimpleWorkType.IllustrationAndManga, PrivacyPolicy privacyPolicy = PrivacyPolicy.Public, string? tag = null, IWorkViewViewModel? viewModel = null)
+    public WorkBookmarksPage(UserBasicInfo user, SimpleWorkType simpleWorkType = SimpleWorkType.IllustrationAndManga, PrivacyPolicy privacyPolicy = PrivacyPolicy.Public, string? tag = null, IWorkViewViewModel? viewModel = null)
     {
         InitializeComponent();
 

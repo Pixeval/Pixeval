@@ -39,8 +39,6 @@ namespace Pixeval
         public const string BrowseDirectionHeader = "AppSettings.BrowseDirection.Header";
         public const string BrowseModeDescription = "AppSettings.BrowseMode.Description";
         public const string BrowseModeHeader = "AppSettings.BrowseMode.Header";
-        public const string DefaultSelectedTabEntryDescription = "AppSettings.DefaultSelectedTabEntry.Description";
-        public const string DefaultSelectedTabEntryHeader = "AppSettings.DefaultSelectedTabEntry.Header";
         public const string DomainFrontingTypeEntryDescription = "AppSettings.DomainFrontingTypeEntry.Description";
         public const string DomainFrontingTypeEntryHeader = "AppSettings.DomainFrontingTypeEntry.Header";
         public const string DownloadPathMacroEntryDescription = "AppSettings.DownloadPathMacroEntry.Description";
@@ -220,10 +218,8 @@ namespace Pixeval
         public const string AddedToBookmark = "EntryViewerPage.AddedToBookmark";
         public const string AddToBookmarkTeachingTipCloseButtonContent = "EntryViewerPage.AddToBookmarkTeachingTip.CloseButtonContent";
         public const string Background = "EntryViewerPage.Background";
-        public const string BookmarksNavigationViewItemContent = "EntryViewerPage.BookmarksNavigationViewItem.Content";
         public const string CommentsTabContent = "EntryViewerPage.CommentsTab.Content";
         public const string Copy = "EntryViewerPage.Copy";
-        public const string FollowingsNavigationViewItemContent = "EntryViewerPage.FollowingsNavigationViewItem.Content";
         public const string FollowingUserItemTitle = "EntryViewerPage.FollowingUserItem.Title";
         public const string IllustrationCountItemTitle = "EntryViewerPage.IllustrationCountItem.Title";
         public const string InfoAndComments = "EntryViewerPage.InfoAndComments";
@@ -233,7 +229,6 @@ namespace Pixeval
         public const string MangaCountItemTitle = "EntryViewerPage.MangaCountItem.Title";
         public const string Mirror = "EntryViewerPage.Mirror";
         public const string MyPixivUserItemTitle = "EntryViewerPage.MyPixivUserItem.Title";
-        public const string MyPixivUserNavigationViewItemContent = "EntryViewerPage.MyPixivUserNavigationViewItem.Content";
         public const string NextPage = "EntryViewerPage.Next.Page";
         public const string NextPageOrWork = "EntryViewerPage.Next.PageOrWork";
         public const string NextWork = "EntryViewerPage.Next.Work";
@@ -244,7 +239,6 @@ namespace Pixeval
         public const string PrevPage = "EntryViewerPage.Prev.Page";
         public const string PrevPageOrWork = "EntryViewerPage.Prev.PageOrWork";
         public const string PrevWork = "EntryViewerPage.Prev.Work";
-        public const string RelatedUserNavigationViewItemContent = "EntryViewerPage.RelatedUserNavigationViewItem.Content";
         public const string RelatedWorksTabContent = "EntryViewerPage.RelatedWorksTab.Content";
         public const string RotateClockwise = "EntryViewerPage.RotateClockwise";
         public const string RotateCounterclockwise = "EntryViewerPage.RotateCounterclockwise";
@@ -256,7 +250,6 @@ namespace Pixeval
         public const string SetAsSucceededTitle = "EntryViewerPage.SetAsSucceededTitle";
         public const string Share = "EntryViewerPage.Share";
         public const string ShareTitleFormatted = "EntryViewerPage.ShareTitleFormatted";
-        public const string WorkNavigationViewItemContent = "EntryViewerPage.WorkNavigationViewItem.Content";
         public const string ZoomIn = "EntryViewerPage.ZoomIn";
         public const string ZoomOut = "EntryViewerPage.ZoomOut";
         public const string ZoomToFit = "EntryViewerPage.ZoomToFit";
@@ -290,36 +283,21 @@ namespace Pixeval
         public const string FontWeightSemiBold = "Enum.FontWeight.SemiBold";
         public const string FontWeightSemiLight = "Enum.FontWeight.SemiLight";
         public const string FontWeightThin = "Enum.FontWeight.Thin";
-        public const string HomePageCardSourceKindSingleImageDescription = "Enum.HomePageCardSourceKind.SingleImage.Description";
-        public const string HomePageCardSourceKindSingleImageTitle = "Enum.HomePageCardSourceKind.SingleImage.Title";
-        public const string HomePageCardSourceKindSingleNovelDescription = "Enum.HomePageCardSourceKind.SingleNovel.Description";
-        public const string HomePageCardSourceKindSingleNovelTitle = "Enum.HomePageCardSourceKind.SingleNovel.Title";
-        public const string HomePageCardSourceKindSingleUserDescription = "Enum.HomePageCardSourceKind.SingleUser.Description";
-        public const string HomePageCardSourceKindSingleUserTitle = "Enum.HomePageCardSourceKind.SingleUser.Title";
-        public const string HomePageCardSourceKindSpotlightDescription = "Enum.HomePageCardSourceKind.Spotlight.Description";
-        public const string HomePageCardSourceKindSpotlightTitle = "Enum.HomePageCardSourceKind.Spotlight.Title";
-        public const string HomePageCardSourceKindUserFollowingDescription = "Enum.HomePageCardSourceKind.UserFollowing.Description";
-        public const string HomePageCardSourceKindUserFollowingTitle = "Enum.HomePageCardSourceKind.UserFollowing.Title";
-        public const string HomePageCardSourceKindUserMyPixivDescription = "Enum.HomePageCardSourceKind.UserMyPixiv.Description";
-        public const string HomePageCardSourceKindUserMyPixivTitle = "Enum.HomePageCardSourceKind.UserMyPixiv.Title";
-        public const string HomePageCardSourceKindUserRecommendedDescription = "Enum.HomePageCardSourceKind.UserRecommended.Description";
-        public const string HomePageCardSourceKindUserRecommendedTitle = "Enum.HomePageCardSourceKind.UserRecommended.Title";
-        public const string HomePageCardSourceKindUserSearchDescription = "Enum.HomePageCardSourceKind.UserSearch.Description";
-        public const string HomePageCardSourceKindUserSearchTitle = "Enum.HomePageCardSourceKind.UserSearch.Title";
-        public const string HomePageCardSourceKindWorkBookmarksDescription = "Enum.HomePageCardSourceKind.WorkBookmarks.Description";
-        public const string HomePageCardSourceKindWorkBookmarksTitle = "Enum.HomePageCardSourceKind.WorkBookmarks.Title";
-        public const string HomePageCardSourceKindWorkFollowingDescription = "Enum.HomePageCardSourceKind.WorkFollowing.Description";
-        public const string HomePageCardSourceKindWorkFollowingTitle = "Enum.HomePageCardSourceKind.WorkFollowing.Title";
-        public const string HomePageCardSourceKindWorkNewDescription = "Enum.HomePageCardSourceKind.WorkNew.Description";
-        public const string HomePageCardSourceKindWorkNewTitle = "Enum.HomePageCardSourceKind.WorkNew.Title";
-        public const string HomePageCardSourceKindWorkPostsDescription = "Enum.HomePageCardSourceKind.WorkPosts.Description";
-        public const string HomePageCardSourceKindWorkPostsTitle = "Enum.HomePageCardSourceKind.WorkPosts.Title";
-        public const string HomePageCardSourceKindWorkRankingDescription = "Enum.HomePageCardSourceKind.WorkRanking.Description";
-        public const string HomePageCardSourceKindWorkRankingTitle = "Enum.HomePageCardSourceKind.WorkRanking.Title";
-        public const string HomePageCardSourceKindWorkRecommendedDescription = "Enum.HomePageCardSourceKind.WorkRecommended.Description";
-        public const string HomePageCardSourceKindWorkRecommendedTitle = "Enum.HomePageCardSourceKind.WorkRecommended.Title";
-        public const string HomePageCardSourceKindWorkSearchDescription = "Enum.HomePageCardSourceKind.WorkSearch.Description";
-        public const string HomePageCardSourceKindWorkSearchTitle = "Enum.HomePageCardSourceKind.WorkSearch.Title";
+        public const string HomePageCardSourceKindDescriptionSingleImage = "Enum.HomePageCardSourceKindDescription.SingleImage";
+        public const string HomePageCardSourceKindDescriptionSingleNovel = "Enum.HomePageCardSourceKindDescription.SingleNovel";
+        public const string HomePageCardSourceKindDescriptionSingleUser = "Enum.HomePageCardSourceKindDescription.SingleUser";
+        public const string HomePageCardSourceKindDescriptionSpotlight = "Enum.HomePageCardSourceKindDescription.Spotlight";
+        public const string HomePageCardSourceKindDescriptionUserFollowing = "Enum.HomePageCardSourceKindDescription.UserFollowing";
+        public const string HomePageCardSourceKindDescriptionUserMyPixiv = "Enum.HomePageCardSourceKindDescription.UserMyPixiv";
+        public const string HomePageCardSourceKindDescriptionUserRecommended = "Enum.HomePageCardSourceKindDescription.UserRecommended";
+        public const string HomePageCardSourceKindDescriptionUserSearch = "Enum.HomePageCardSourceKindDescription.UserSearch";
+        public const string HomePageCardSourceKindDescriptionWorkBookmarks = "Enum.HomePageCardSourceKindDescription.WorkBookmarks";
+        public const string HomePageCardSourceKindDescriptionWorkFollowing = "Enum.HomePageCardSourceKindDescription.WorkFollowing";
+        public const string HomePageCardSourceKindDescriptionWorkNew = "Enum.HomePageCardSourceKindDescription.WorkNew";
+        public const string HomePageCardSourceKindDescriptionWorkPosts = "Enum.HomePageCardSourceKindDescription.WorkPosts";
+        public const string HomePageCardSourceKindDescriptionWorkRanking = "Enum.HomePageCardSourceKindDescription.WorkRanking";
+        public const string HomePageCardSourceKindDescriptionWorkRecommended = "Enum.HomePageCardSourceKindDescription.WorkRecommended";
+        public const string HomePageCardSourceKindDescriptionWorkSearch = "Enum.HomePageCardSourceKindDescription.WorkSearch";
         public const string IllustrationDownloadFormatOriginal = "Enum.IllustrationDownloadFormat.Original";
         public const string LocalSortOptionDoNotSort = "Enum.LocalSortOption.DoNotSort";
         public const string LocalSortOptionPopularityDescending = "Enum.LocalSortOption.PopularityDescending";
@@ -602,31 +580,16 @@ namespace Pixeval
     }
     public static class MainPageResources
     {
-        public const string AboutTabContent = "MainPage.AboutTab.Content";
         public const string AiShowItemText = "MainPage.AiShowItem.Text";
-        public const string BookmarksTabContent = "MainPage.BookmarksTab.Content";
-        public const string DownloadListTabContent = "MainPage.DownloadListTab.Content";
-        public const string ExtensionsTabContent = "MainPage.ExtensionsTab.Content";
-        public const string FeedTabContent = "MainPage.FeedTab.Content";
         public const string FeedTabCannotBeOpenedContent = "MainPage.FeedTabCannotBeOpenedContent";
         public const string FeedTabCannotBeOpenedTitle = "MainPage.FeedTabCannotBeOpenedTitle";
-        public const string FollowingsTabContent = "MainPage.FollowingsTab.Content";
-        public const string HelpTabContent = "MainPage.HelpTab.Content";
-        public const string HistoriesTabContent = "MainPage.HistoriesTab.Content";
-        public const string HomeTabContent = "MainPage.HomeTab.Content";
         public const string IllustrationHeaderSuggestionTextBlockText = "MainPage.IllustrationHeaderSuggestionTextBlock.Text";
-        public const string LoginTabContent = "MainPage.LoginTab.Content";
         public const string MainPageAutoSuggestionBoxPlaceholderText = "MainPage.MainPageAutoSuggestionBox.PlaceholderText";
         public const string MoreViewingSettingsItemText = "MainPage.MoreViewingSettingsItem.Text";
-        public const string NewWorksTabContent = "MainPage.NewWorksTab.Content";
         public const string NovelHeaderSuggestionTextBlockText = "MainPage.NovelHeaderSuggestionTextBlock.Text";
         public const string OpenMyPageInBrowserItemText = "MainPage.OpenMyPageInBrowserItem.Text";
         public const string OpenMyPageItemText = "MainPage.OpenMyPageItem.Text";
         public const string OpenSearchSettingButtonToolTip = "MainPage.OpenSearchSettingButton.ToolTip";
-        public const string RankingsTabContent = "MainPage.RankingsTab.Content";
-        public const string RecentPostsTabContent = "MainPage.RecentPostsTab.Content";
-        public const string RecommendationsTabContent = "MainPage.RecommendationsTab.Content";
-        public const string RecommendUsersTabContent = "MainPage.RecommendUsersTab.Content";
         public const string RefreshingSessionFailedContent = "MainPage.RefreshingSessionFailedContent";
         public const string RefreshingSessionFailedTitle = "MainPage.RefreshingSessionFailedTitle";
         public const string RestrictedModeItemText = "MainPage.RestrictedModeItem.Text";
@@ -643,14 +606,35 @@ namespace Pixeval
         public const string SearchKeywordCannotBeBlankContent = "MainPage.SearchKeywordCannotBeBlank.Content";
         public const string SearchKeywordCannotBeBlankTitle = "MainPage.SearchKeywordCannotBeBlank.Title";
         public const string SearchResultFormatted = "MainPage.SearchResultFormatted";
-        public const string SearchTabContent = "MainPage.SearchTab.Content";
         public const string SettingsEntryHeaderSuggestionTextBlockText = "MainPage.SettingsEntryHeaderSuggestionTextBlock.Text";
-        public const string SettingsTabContent = "MainPage.SettingsTab.Content";
-        public const string SpotlightsTabContent = "MainPage.SpotlightsTab.Content";
         public const string SwitchAccountItemText = "MainPage.SwitchAccountItem.Text";
+        public const string TabBrowsingHistory = "MainPage.Tab.BrowsingHistory";
+        public const string TabDownload = "MainPage.Tab.Download";
+        public const string TabExtensions = "MainPage.Tab.Extensions";
+        public const string TabFeed = "MainPage.Tab.Feed";
+        public const string TabHelp = "MainPage.Tab.Help";
+        public const string TabHome = "MainPage.Tab.Home";
+        public const string TabLogin = "MainPage.Tab.Login";
+        public const string TabRelatedUser = "MainPage.Tab.RelatedUser";
+        public const string TabSearch = "MainPage.Tab.Search";
+        public const string TabSettings = "MainPage.Tab.Settings";
+        public const string TabSingleImage = "MainPage.Tab.SingleImage";
+        public const string TabSingleNovel = "MainPage.Tab.SingleNovel";
+        public const string TabSingleUser = "MainPage.Tab.SingleUser";
+        public const string TabSpotlight = "MainPage.Tab.Spotlight";
+        public const string TabUserFollowing = "MainPage.Tab.UserFollowing";
+        public const string TabUserMyPixiv = "MainPage.Tab.UserMyPixiv";
+        public const string TabUserRecommended = "MainPage.Tab.UserRecommended";
+        public const string TabUserSearch = "MainPage.Tab.UserSearch";
+        public const string TabWatchLater = "MainPage.Tab.WatchLater";
+        public const string TabWorkBookmarks = "MainPage.Tab.WorkBookmarks";
+        public const string TabWorkFollowing = "MainPage.Tab.WorkFollowing";
+        public const string TabWorkNew = "MainPage.Tab.WorkNew";
+        public const string TabWorkPosts = "MainPage.Tab.WorkPosts";
+        public const string TabWorkRanking = "MainPage.Tab.WorkRanking";
+        public const string TabWorkRecommended = "MainPage.Tab.WorkRecommended";
+        public const string TabWorkSearch = "MainPage.Tab.WorkSearch";
         public const string TagAutoCompletionSuggestionTextBlockText = "MainPage.TagAutoCompletionSuggestionTextBlock.Text";
-        public const string TagsTabContent = "MainPage.TagsTab.Content";
-        public const string WatchLaterTabContent = "MainPage.WatchLaterTab.Content";
     }
     public static class MiscResources
     {
@@ -898,7 +882,7 @@ namespace Pixeval
     }
     public static class WorkSubscriptionsSettingsExpanderResources
     {
-        public const string AddSubscriptionButtonToolTip = "WorkSubscriptionsSettingsExpander.AddSubscriptionButton.ToolTip";
+        public const string AddSubscriptionButtonLabel = "WorkSubscriptionsSettingsExpander.AddSubscriptionButton.Label";
         public const string InvalidUserId = "WorkSubscriptionsSettingsExpander.InvalidUserId";
         public const string SubscriptionAdded = "WorkSubscriptionsSettingsExpander.SubscriptionAdded";
         public const string UserIdTextBoxPlaceholderText = "WorkSubscriptionsSettingsExpander.UserIdTextBox.PlaceholderText";

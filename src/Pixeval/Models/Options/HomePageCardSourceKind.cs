@@ -9,63 +9,63 @@ namespace Pixeval.Models.Options;
 [LocalizationMetadata]
 public enum HomePageCardSourceKind
 {
-    [LocalizedResource(EnumResources.HomePageCardSourceKindWorkRecommendedTitle)]
-    [LocalizedResource(EnumResources.HomePageCardSourceKindWorkRecommendedDescription, Key = nameof(HomeCardTemplate.Description))]
+    [LocalizedResource(MainPageResources.TabWorkRecommended)]
+    [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionWorkRecommended, Key = nameof(HomeCardTemplate.Description))]
     WorkRecommended,
 
-    [LocalizedResource(EnumResources.HomePageCardSourceKindWorkBookmarksTitle)]
-    [LocalizedResource(EnumResources.HomePageCardSourceKindWorkBookmarksDescription, Key = nameof(HomeCardTemplate.Description))]
+    [LocalizedResource(MainPageResources.TabWorkBookmarks)]
+    [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionWorkBookmarks, Key = nameof(HomeCardTemplate.Description))]
     WorkBookmarks,
 
-    [LocalizedResource(EnumResources.HomePageCardSourceKindWorkRankingTitle)]
-    [LocalizedResource(EnumResources.HomePageCardSourceKindWorkRankingDescription, Key = nameof(HomeCardTemplate.Description))]
+    [LocalizedResource(MainPageResources.TabWorkRanking)]
+    [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionWorkRanking, Key = nameof(HomeCardTemplate.Description))]
     WorkRanking,
 
-    [LocalizedResource(EnumResources.HomePageCardSourceKindWorkNewTitle)]
-    [LocalizedResource(EnumResources.HomePageCardSourceKindWorkNewDescription, Key = nameof(HomeCardTemplate.Description))]
+    [LocalizedResource(MainPageResources.TabWorkNew)]
+    [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionWorkNew, Key = nameof(HomeCardTemplate.Description))]
     WorkNew,
 
-    [LocalizedResource(EnumResources.HomePageCardSourceKindWorkFollowingTitle)]
-    [LocalizedResource(EnumResources.HomePageCardSourceKindWorkFollowingDescription, Key = nameof(HomeCardTemplate.Description))]
+    [LocalizedResource(MainPageResources.TabWorkFollowing)]
+    [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionWorkFollowing, Key = nameof(HomeCardTemplate.Description))]
     WorkFollowing,
 
-    [LocalizedResource(EnumResources.HomePageCardSourceKindWorkPostsTitle)]
-    [LocalizedResource(EnumResources.HomePageCardSourceKindWorkPostsDescription, Key = nameof(HomeCardTemplate.Description))]
+    [LocalizedResource(MainPageResources.TabWorkPosts)]
+    [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionWorkPosts, Key = nameof(HomeCardTemplate.Description))]
     WorkPosts,
 
-    [LocalizedResource(EnumResources.HomePageCardSourceKindWorkSearchTitle)]
-    [LocalizedResource(EnumResources.HomePageCardSourceKindWorkSearchDescription, Key = nameof(HomeCardTemplate.Description))]
+    [LocalizedResource(MainPageResources.TabWorkSearch)]
+    [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionWorkSearch, Key = nameof(HomeCardTemplate.Description))]
     WorkSearch,
 
-    [LocalizedResource(EnumResources.HomePageCardSourceKindUserRecommendedTitle)]
-    [LocalizedResource(EnumResources.HomePageCardSourceKindUserRecommendedDescription, Key = nameof(HomeCardTemplate.Description))]
+    [LocalizedResource(MainPageResources.TabUserRecommended)]
+    [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionUserRecommended, Key = nameof(HomeCardTemplate.Description))]
     UserRecommended,
 
-    [LocalizedResource(EnumResources.HomePageCardSourceKindUserSearchTitle)]
-    [LocalizedResource(EnumResources.HomePageCardSourceKindUserSearchDescription, Key = nameof(HomeCardTemplate.Description))]
+    [LocalizedResource(MainPageResources.TabUserSearch)]
+    [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionUserSearch, Key = nameof(HomeCardTemplate.Description))]
     UserSearch,
 
-    [LocalizedResource(EnumResources.HomePageCardSourceKindUserFollowingTitle)]
-    [LocalizedResource(EnumResources.HomePageCardSourceKindUserFollowingDescription, Key = nameof(HomeCardTemplate.Description))]
+    [LocalizedResource(MainPageResources.TabUserFollowing)]
+    [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionUserFollowing, Key = nameof(HomeCardTemplate.Description))]
     UserFollowing,
 
-    [LocalizedResource(EnumResources.HomePageCardSourceKindUserMyPixivTitle)]
-    [LocalizedResource(EnumResources.HomePageCardSourceKindUserMyPixivDescription, Key = nameof(HomeCardTemplate.Description))]
+    [LocalizedResource(MainPageResources.TabUserMyPixiv)]
+    [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionUserMyPixiv, Key = nameof(HomeCardTemplate.Description))]
     UserMyPixiv,
 
-    [LocalizedResource(EnumResources.HomePageCardSourceKindSpotlightTitle)]
-    [LocalizedResource(EnumResources.HomePageCardSourceKindSpotlightDescription, Key = nameof(HomeCardTemplate.Description))]
+    [LocalizedResource(MainPageResources.TabSpotlight)]
+    [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionSpotlight, Key = nameof(HomeCardTemplate.Description))]
     Spotlight,
 
-    [LocalizedResource(EnumResources.HomePageCardSourceKindSingleImageTitle)]
-    [LocalizedResource(EnumResources.HomePageCardSourceKindSingleImageDescription, Key = nameof(HomeCardTemplate.Description))]
+    [LocalizedResource(MainPageResources.TabSingleImage)]
+    [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionSingleImage, Key = nameof(HomeCardTemplate.Description))]
     SingleImage,
 
-    [LocalizedResource(EnumResources.HomePageCardSourceKindSingleNovelTitle)]
-    [LocalizedResource(EnumResources.HomePageCardSourceKindSingleNovelDescription, Key = nameof(HomeCardTemplate.Description))]
+    [LocalizedResource(MainPageResources.TabSingleNovel)]
+    [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionSingleNovel, Key = nameof(HomeCardTemplate.Description))]
     SingleNovel,
 
-    [LocalizedResource(EnumResources.HomePageCardSourceKindSingleUserTitle)]
-    [LocalizedResource(EnumResources.HomePageCardSourceKindSingleUserDescription, Key = nameof(HomeCardTemplate.Description))]
+    [LocalizedResource(MainPageResources.TabSingleUser)]
+    [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionSingleUser, Key = nameof(HomeCardTemplate.Description))]
     SingleUser
 }

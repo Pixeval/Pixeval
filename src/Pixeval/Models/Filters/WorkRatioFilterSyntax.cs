@@ -9,7 +9,7 @@ namespace Pixeval.Models.Filters;
 internal sealed class WorkRatioFilterSyntax : FilterDoubleRangeSyntax
 {
     /// <summary>
-    /// 宽高比过滤语法，支持整数、小数和分数范围。
+    /// 宽高比筛选语法，支持整数、小数和分数范围。
     /// </summary>
     public override string Key => WorkFilterSyntaxKeys.Ratio;
 

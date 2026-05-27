@@ -79,7 +79,7 @@
                 DisplayMemberBinding="{Binding Name}"
                 ItemsSource="{Binding LanguageItems}"
                 SelectedIndex="0"
-                SelectedValue="{Binding Language, Mode=TwoWay}"
+                SelectedValue="{Binding Language, Mode=TwoWay, TargetNullValue=''}"
                 SelectedValueBinding="{Binding Code}" />
         </Grid>
         <Grid ColumnDefinitions="180,*" ColumnSpacing="12">

@@ -23,14 +23,14 @@
                 <Panel x:Name="PART_RootPanel" ClipToBounds="False">
                     <Border
                         x:Name="PART_CardBorder"
+                        Padding="8"
                         Background="{TemplateBinding Background}"
                         BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                         BorderThickness="2"
                         ClipToBounds="True"
                         CornerRadius="8">
-                        <DockPanel>
+                        <DockPanel VerticalSpacing="8">
                             <Border
-                                Padding="12,8"
                                 Background="{DynamicResource ControlOnImageFillColorDefaultBrush}"
                                 DockPanel.Dock="Bottom"
                                 IsVisible="{TemplateBinding IsCardTitleVisible}">
@@ -61,7 +61,6 @@
                                 <ItemsControl
                                     x:DataType="{x:Type home:HomeCardPreviewViewModel}"
                                     x:Name="PART_ContentItemsControl"
-                                    Margin="10"
                                     controls:AdaptiveGridIncrementalLoadingBehavior.IsEnabled="True"
                                     ClipToBounds="True"
                                     DataContext="{TemplateBinding PreviewViewModel}"
@@ -137,18 +136,15 @@
                                                 CommandParameter="{Binding}"
                                                 Theme="{StaticResource TransparentButtonStyle}">
                                                 <DockPanel VerticalSpacing="6">
-                                                    <Image
-                                                        Height="56"
-                                                        controls:Source.Cache="{Binding ThumbnailUrl}"
-                                                        DockPanel.Dock="Top"
-                                                        Stretch="UniformToFill" />
                                                     <TextBlock
+                                                        DockPanel.Dock="Bottom"
                                                         FontSize="12"
                                                         Foreground="{DynamicResource TextOnAccentFillColorSelectedTextBrush}"
                                                         MaxLines="2"
                                                         Text="{Binding Entry.PureTitle}"
                                                         TextTrimming="CharacterEllipsis"
                                                         TextWrapping="Wrap" />
+                                                    <Image controls:Source.Cache="{Binding ThumbnailUrl}" Stretch="UniformToFill" />
                                                 </DockPanel>
                                             </Button>
                                         </DataTemplate>

@@ -16,6 +16,7 @@ using Avalonia.Interactivity;
 using Avalonia.VisualTree;
 using Mako.Engine;
 using Mako.Global.Enum;
+using Mako.Model;
 using Misaki;
 using Pixeval.Collections;
 using Pixeval.Controls;
@@ -64,6 +65,8 @@ public partial class WorkContainer : UserControl
     /// </summary>
     public AvaloniaList<Control> CommandBarElements { get; } = [];
 
+    public AvaloniaList<ICommandBarElement> CommandBarSubElements { get; } = [];
+
     public WorkContainer()
     {
         InitializeComponent();
@@ -75,6 +78,15 @@ public partial class WorkContainer : UserControl
             if (e is { Action: NotifyCollectionChangedAction.Add, NewItems: { } newItems })
                 foreach (Control argsNewItem in newItems)
                     ExtraCommandsBar.Children.Insert(0, argsNewItem);
+            else
+                throw new ArgumentException("This collection does not support operations except the Add");
+        };
+
+        CommandBarSubElements.CollectionChanged += (_, e) =>
+        {
+            if (e is { Action: NotifyCollectionChangedAction.Add, NewItems: { } newItems })
+                foreach (ICommandBarElement argsNewItem in newItems)
+                    RightToolBar.SecondaryCommands.Add(argsNewItem);
             else
                 throw new ArgumentException("This collection does not support operations except the Add");
         };
@@ -301,11 +313,11 @@ public partial class WorkContainer : UserControl
             return;
 
         var tags = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
-        var authors = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var authors = new HashSet<IUser>();
         foreach (var work in source)
         {
             foreach (var author in work.Entry.Authors)
-                _ = authors.Add(author.Name);
+                _ = authors.Add(author);
 
             foreach (var tagGroup in work.Entry.Tags)
             {
@@ -325,7 +337,7 @@ public partial class WorkContainer : UserControl
         }
 
         _tagValueCompletions = [.. tags.OrderBy(pair => pair.Key, StringComparer.OrdinalIgnoreCase).Select(pair => new FilterCompletionDefinition($"tag:{pair.Key}", pair.Key, pair.Key, pair.Value))];
-        _authorValueCompletions = [.. authors.OrderBy(name => name, StringComparer.OrdinalIgnoreCase).Select(name => new FilterCompletionDefinition($"author:{name}", name, name))];
+        _authorValueCompletions = [.. authors.OrderBy(a => a.Name, StringComparer.OrdinalIgnoreCase).Select(a => new FilterCompletionDefinition($"author:{a.Name}", a.Name, a.Name, a is UserInfo user ? user.Account : null))];
         _filterCompletionSource = source;
         _filterCompletionSourceCount = source.Count;
     }

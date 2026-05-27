@@ -1,0 +1,28 @@
+<ContentPage
+    x:Class="Pixeval.Views.Capability.UserFollowingPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:entry="using:Pixeval.Views.Entry"
+    xmlns:enum="using:Mako.Global.Enum"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:markup1="using:Pixeval.Views.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
+    Header="{I18N {x:Static pixeval:MainPageResources.TabUserFollowing}}"
+    Icon="{markup:SymbolIcon PersonHeart,
+                             FontSize=16,
+                             IconVariant=Color}"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
+    <entry:UserContainer x:Name="UserContainer" RefreshRequested="UserContainer_OnRefreshRequested">
+        <entry:UserContainer.CommandBarElements>
+            <controls:SymbolComboBox
+                x:Name="PrivacyPolicyComboBox"
+                ItemsSource="{markup1:EnumResources x:TypeArguments=enum:PrivacyPolicy}"
+                SelectionChanged="WorkTypeComboBox_OnSelectionChanged" />
+        </entry:UserContainer.CommandBarElements>
+    </entry:UserContainer>
+</ContentPage>

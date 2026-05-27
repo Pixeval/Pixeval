@@ -10,7 +10,7 @@
     xmlns:pixeval="using:Pixeval"
     xmlns:viewModels="using:Pixeval.ViewModels"
     x:DataType="{x:Type viewModels:LoginPageViewModel}"
-    Header="{I18N {x:Static pixeval:MainPageResources.LoginTabContent}}"
+    Header="{I18N {x:Static pixeval:MainPageResources.TabLogin}}"
     Icon="{markup:SymbolIcon PersonKey,
                              FontSize=16,
                              IconVariant=Color}"

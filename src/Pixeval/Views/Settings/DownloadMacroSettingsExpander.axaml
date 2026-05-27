@@ -6,7 +6,7 @@
     xmlns:controls="using:CommunityToolkit.Avalonia.Controls"
     xmlns:controls2="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:edit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+    xmlns:edit="using:AvaloniaEdit"
     xmlns:entries="using:Pixeval.Models.Settings.Entries"
     xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"

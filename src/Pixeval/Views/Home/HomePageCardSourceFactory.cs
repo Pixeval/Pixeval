@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Mako;
 using Mako.Engine;
 using Mako.Engine.Implements;
 using Mako.Global.Enum;
@@ -24,7 +23,7 @@ public static class HomePageCardSourceFactory
         var client = App.AppViewModel.MakoClient;
         return card.TemplateKind switch
         {
-            HomePageCardTemplateKind.WorkList or HomePageCardTemplateKind.NovelList => CreateWorkViewModel(card),
+            HomePageCardTemplateKind.WorkList => CreateWorkViewModel(card),
             HomePageCardTemplateKind.UserList => CreateUserViewModel(CreateUserEngine(card)),
             HomePageCardTemplateKind.SpotlightList => CreateSpotlightViewModel(client.Spotlight()),
             HomePageCardTemplateKind.SingleImage => CreateIllustrationViewModel(
@@ -124,8 +123,7 @@ public static class HomePageCardSourceFactory
     }
 
     private static bool UsesNovelEngine(HomePageCardLayout card) =>
-        card.TemplateKind is HomePageCardTemplateKind.NovelList or HomePageCardTemplateKind.SingleNovel
-        || card.SourceKind switch
+        card.SourceKind switch
         {
             HomePageCardSourceKind.WorkRecommended or HomePageCardSourceKind.WorkNew or HomePageCardSourceKind.WorkPosts => card.WorkType is WorkType.Novel,
             HomePageCardSourceKind.WorkBookmarks or HomePageCardSourceKind.WorkRanking or HomePageCardSourceKind.WorkFollowing or HomePageCardSourceKind.WorkSearch => card.SimpleWorkType is SimpleWorkType.Novel,

@@ -49,15 +49,15 @@ public abstract partial class SimpleUsersPage : ContentPage
     protected abstract IFetchEngine<User> GetFetchEngine(MakoClient makoClient);
 }
 
-public class RecommendUsersPage : SimpleUsersPage
+public class UserRecommendPage : SimpleUsersPage
 {
-    public RecommendUsersPage() : this(null)
+    public UserRecommendPage() : this(null)
     {
     }
 
-    public RecommendUsersPage(UserViewViewModel? viewModel)
+    public UserRecommendPage(UserViewViewModel? viewModel)
     {
-        Header = I18NManager.GetResource(MainPageResources.RecommendUsersTabContent);
+        Header = I18NManager.GetResource(MainPageResources.TabUserRecommended);
         Icon = new SymbolIcon { Symbol = Symbol.PeopleCommunity, FontSize = 16, IconVariant = IconVariant.Color };
         InitializeSource(viewModel);
     }
@@ -68,15 +68,15 @@ public class RecommendUsersPage : SimpleUsersPage
     }
 }
 
-public class SearchUsersPage : SimpleUsersPage
+public class UserSearchPage : SimpleUsersPage
 {
     private readonly string? _searchText;
 
-    public SearchUsersPage() : this(null)
+    public UserSearchPage() : this(null)
     {
     }
 
-    public SearchUsersPage(string? searchText, UserViewViewModel? viewModel = null)
+    public UserSearchPage(string? searchText, UserViewViewModel? viewModel = null)
     {
         _searchText = searchText;
         Header = I18NManager.GetResource(MainPageResources.SearchResultFormatted, _searchText);
@@ -93,18 +93,18 @@ public class SearchUsersPage : SimpleUsersPage
     }
 }
 
-public class MyPixivUsersPage : SimpleUsersPage
+public class UserMyPixivPage : SimpleUsersPage
 {
     private readonly long _userId;
 
-    public MyPixivUsersPage() : this(App.AppViewModel.PixivUid)
+    public UserMyPixivPage() : this(App.AppViewModel.PixivUid)
     {
     }
 
-    public MyPixivUsersPage(long id, UserViewViewModel? viewModel = null)
+    public UserMyPixivPage(long id, UserViewViewModel? viewModel = null)
     {
         _userId = id;
-        Header = I18NManager.GetResource(EntryViewerPageResources.MyPixivUserNavigationViewItemContent);
+        Header = I18NManager.GetResource(MainPageResources.TabUserMyPixiv);
         Icon = new SymbolIcon { Symbol = Symbol.People, FontSize = 16, IconVariant = IconVariant.Color };
         InitializeSource(viewModel);
     }
@@ -127,7 +127,7 @@ public class RelatedUsersPage : SimpleUsersPage
     public RelatedUsersPage(long id)
     {
         _userId = id;
-        Header = I18NManager.GetResource(EntryViewerPageResources.RelatedUserNavigationViewItemContent);
+        Header = I18NManager.GetResource(MainPageResources.TabRelatedUser);
         Icon = new SymbolIcon { Symbol = Symbol.PeopleCommunity, FontSize = 16, IconVariant = IconVariant.Color };
         ChangeSource();
     }

@@ -7,7 +7,7 @@ using Pixeval.I18N;
 namespace Pixeval.Models.Filters;
 
 /// <summary>
-/// 提供作品列表使用的过滤语言单例。
+/// 提供作品列表使用的筛选语言单例。
 /// </summary>
 internal static class WorkFilterLanguage
 {
@@ -19,7 +19,7 @@ internal static class WorkFilterLanguage
     ];
 
     /// <summary>
-    /// 汇总所有作品过滤语法后的语言实例。
+    /// 汇总所有作品筛选语法后的语言实例。
     /// </summary>
     public static FilterLanguage Instance { get; } = new(FilterSyntaxAttributeHelper.GetIWorkViewModelInstances(), _IntrinsicCompletions);
 }

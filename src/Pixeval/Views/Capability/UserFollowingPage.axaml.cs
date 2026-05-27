@@ -10,15 +10,15 @@ using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Capability;
 
-public partial class FollowingsPage : ContentPage
+public partial class UserFollowingPage : ContentPage
 {
     private readonly long _userId;
 
-    public FollowingsPage() : this(App.AppViewModel.PixivUid)
+    public UserFollowingPage() : this(App.AppViewModel.PixivUid)
     {
     }
 
-    public FollowingsPage(long id, PrivacyPolicy privacyPolicy = PrivacyPolicy.Public, UserViewViewModel? viewModel = null)
+    public UserFollowingPage(long id, PrivacyPolicy privacyPolicy = PrivacyPolicy.Public, UserViewViewModel? viewModel = null)
     {
         InitializeComponent();
         _userId = id;

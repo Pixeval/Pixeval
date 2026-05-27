@@ -5,9 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Avalonia.Controls;
-using FluentIcons.Common;
 using Mako.Global.Enum;
-using Pixeval.I18N;
 using Pixeval.Models.Home;
 using Pixeval.Models.Options;
 
@@ -50,20 +48,20 @@ public partial class HomePage : ContentPage
 
     private static IReadOnlyList<HomeCardTemplate> CreateCardTemplates() =>
     [
-        new(HomePageCardSourceKind.WorkRecommended, HomePageCardTemplateKind.WorkList, Symbol.Calendar),
-        new(HomePageCardSourceKind.WorkBookmarks, HomePageCardTemplateKind.WorkList, Symbol.Library),
-        new(HomePageCardSourceKind.WorkRanking, HomePageCardTemplateKind.WorkList, Symbol.ArrowTrendingLines),
-        new(HomePageCardSourceKind.WorkNew, HomePageCardTemplateKind.WorkList, Symbol.ArrowSync),
-        new(HomePageCardSourceKind.WorkFollowing, HomePageCardTemplateKind.WorkList, Symbol.PersonHeart),
-        new(HomePageCardSourceKind.WorkPosts, HomePageCardTemplateKind.WorkList, Symbol.AlertUrgent),
-        new(HomePageCardSourceKind.WorkSearch, HomePageCardTemplateKind.WorkList, Symbol.SearchSparkle),
-        new(HomePageCardSourceKind.UserRecommended, HomePageCardTemplateKind.UserList, Symbol.PeopleCommunity),
-        new(HomePageCardSourceKind.UserSearch, HomePageCardTemplateKind.UserList, Symbol.SearchSparkle),
-        new(HomePageCardSourceKind.UserFollowing, HomePageCardTemplateKind.UserList, Symbol.PersonHeart),
-        new(HomePageCardSourceKind.UserMyPixiv, HomePageCardTemplateKind.UserList, Symbol.People),
-        new(HomePageCardSourceKind.Spotlight, HomePageCardTemplateKind.SpotlightList, Symbol.SlideTextSparkle),
-        new(HomePageCardSourceKind.SingleImage, HomePageCardTemplateKind.SingleImage, Symbol.Image),
-        new(HomePageCardSourceKind.SingleNovel, HomePageCardTemplateKind.SingleNovel, Symbol.BookOpen, WorkType.Novel, SimpleWorkType.Novel),
-        new(HomePageCardSourceKind.SingleUser, HomePageCardTemplateKind.SingleUser, Symbol.Person)
+        new(HomePageCardSourceKind.WorkRecommended),
+        new(HomePageCardSourceKind.WorkBookmarks),
+        new(HomePageCardSourceKind.WorkRanking),
+        new(HomePageCardSourceKind.WorkNew),
+        new(HomePageCardSourceKind.WorkFollowing),
+        new(HomePageCardSourceKind.WorkPosts),
+        new(HomePageCardSourceKind.WorkSearch),
+        new(HomePageCardSourceKind.UserRecommended),
+        new(HomePageCardSourceKind.UserSearch),
+        new(HomePageCardSourceKind.UserFollowing),
+        new(HomePageCardSourceKind.UserMyPixiv),
+        new(HomePageCardSourceKind.Spotlight),
+        new(HomePageCardSourceKind.SingleImage),
+        new(HomePageCardSourceKind.SingleNovel, WorkType.Novel, SimpleWorkType.Novel),
+        new(HomePageCardSourceKind.SingleUser)
     ];
 }

@@ -13,7 +13,6 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using FluentIcons.Common;
-using Mako;
 using Mako.Engine.Implements;
 using Mako.Model;
 using Pixeval.Models.Home;
@@ -21,6 +20,7 @@ using Pixeval.Models.Options;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
 using Pixeval.Views.Capability;
+using Pixeval.Views.Search;
 using Pixeval.Views.Viewers;
 
 namespace Pixeval.Views.Home;
@@ -63,9 +63,7 @@ public sealed partial class HomePageCardControl : TemplatedControl, IDisposable
             (control, value) => control.PreviewViewModel = value);
 
     private static readonly HomeCardTemplate _PlaceholderTemplate = new(
-        HomePageCardSourceKind.WorkRecommended,
-        HomePageCardTemplateKind.WorkList,
-        Symbol.Board);
+        HomePageCardSourceKind.WorkRecommended);
 
     private Panel? _rootGrid;
     private Panel? _resizeHandlesLayer;
@@ -292,16 +290,16 @@ public sealed partial class HomePageCardControl : TemplatedControl, IDisposable
         switch (Card.SourceKind)
         {
             case HomePageCardSourceKind.WorkRecommended:
-                viewContainer.NavigateTo(new RecommendWorksPage(Card.WorkType, CloneWorkViewModel()));
+                viewContainer.NavigateTo(new WorkRecommendedPage(Card.WorkType, CloneWorkViewModel()));
                 break;
             case HomePageCardSourceKind.WorkNew:
-                viewContainer.NavigateTo(new NewWorksPage(Card.WorkType, CloneWorkViewModel()));
+                viewContainer.NavigateTo(new WorkNewPage(Card.WorkType, CloneWorkViewModel()));
                 break;
             case HomePageCardSourceKind.WorkPosts:
-                viewContainer.NavigateTo(new UserWorkPostsPage(CreateUserBasicInfo(Card), Card.WorkType, CloneWorkViewModel()));
+                viewContainer.NavigateTo(new WorkPostsPage(CreateUserBasicInfo(Card), Card.WorkType, CloneWorkViewModel()));
                 break;
             case HomePageCardSourceKind.WorkBookmarks:
-                viewContainer.NavigateTo(new BookmarksPage(
+                viewContainer.NavigateTo(new WorkBookmarksPage(
                     CreateUserBasicInfo(Card),
                     Card.SimpleWorkType,
                     Card.PrivacyPolicy,
@@ -309,18 +307,18 @@ public sealed partial class HomePageCardControl : TemplatedControl, IDisposable
                     CloneWorkViewModel()));
                 break;
             case HomePageCardSourceKind.WorkRanking:
-                viewContainer.NavigateTo(new RankingsPage(
+                viewContainer.NavigateTo(new WorkRankingPage(
                     Card.SimpleWorkType,
                     Card.RankOption,
                     Card.GetRankingDate().LocalDateTime,
                     CloneWorkViewModel()));
                 break;
             case HomePageCardSourceKind.WorkFollowing:
-                viewContainer.NavigateTo(new RecentWorkPostsPage(Card.SimpleWorkType, Card.PrivacyPolicy, CloneWorkViewModel()));
+                viewContainer.NavigateTo(new WorkFollowingPage(Card.SimpleWorkType, Card.PrivacyPolicy, CloneWorkViewModel()));
                 break;
             case HomePageCardSourceKind.WorkSearch:
                 var searchText = Card.SearchText ?? "";
-                viewContainer.NavigateTo(new SearchWorksPage(
+                viewContainer.NavigateTo(new WorkSearchPage(
                     searchText,
                     new IllustrationSearchArguments(searchText),
                     new NovelSearchArguments(searchText),
@@ -328,19 +326,19 @@ public sealed partial class HomePageCardControl : TemplatedControl, IDisposable
                     CloneWorkViewModel()));
                 break;
             case HomePageCardSourceKind.UserRecommended:
-                viewContainer.NavigateTo(new RecommendUsersPage(CloneUserViewModel()));
+                viewContainer.NavigateTo(new UserRecommendPage(CloneUserViewModel()));
                 break;
             case HomePageCardSourceKind.UserSearch:
-                viewContainer.NavigateTo(new SearchUsersPage(Card.SearchText, CloneUserViewModel()));
+                viewContainer.NavigateTo(new UserSearchPage(Card.SearchText, CloneUserViewModel()));
                 break;
             case HomePageCardSourceKind.UserFollowing:
-                viewContainer.NavigateTo(new FollowingsPage(Card.UserId, Card.PrivacyPolicy, CloneUserViewModel()));
+                viewContainer.NavigateTo(new UserFollowingPage(Card.UserId, Card.PrivacyPolicy, CloneUserViewModel()));
                 break;
             case HomePageCardSourceKind.UserMyPixiv:
-                viewContainer.NavigateTo(new MyPixivUsersPage(Card.UserId, CloneUserViewModel()));
+                viewContainer.NavigateTo(new UserMyPixivPage(Card.UserId, CloneUserViewModel()));
                 break;
             case HomePageCardSourceKind.Spotlight:
-                viewContainer.NavigateTo(new SpotlightsPage(CloneSpotlightViewModel()));
+                viewContainer.NavigateTo(new SpotlightPage(CloneSpotlightViewModel()));
                 break;
             case HomePageCardSourceKind.SingleImage:
             case HomePageCardSourceKind.SingleNovel:

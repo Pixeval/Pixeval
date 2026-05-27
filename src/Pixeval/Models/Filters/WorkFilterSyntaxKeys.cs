@@ -1,7 +1,7 @@
 namespace Pixeval.Models.Filters;
 
 /// <summary>
-/// 统一定义作品过滤语法的语义键。
+/// 统一定义作品筛选语法的语义键。
 /// </summary>
 internal static class WorkFilterSyntaxKeys
 {

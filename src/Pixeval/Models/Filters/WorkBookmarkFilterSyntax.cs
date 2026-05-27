@@ -9,7 +9,7 @@ namespace Pixeval.Models.Filters;
 internal sealed class WorkBookmarkFilterSyntax : FilterLongRangeSyntax
 {
     /// <summary>
-    /// 收藏数过滤语法，使用简单的整数范围表达式。
+    /// 收藏数筛选语法，使用简单的整数范围表达式。
     /// </summary>
     protected override FilterLongRangeBindingMode BindingMode => FilterLongRangeBindingMode.Inclusive;
 

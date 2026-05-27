@@ -13,7 +13,7 @@ using Mako.Model;
 using Misaki;
 using Pixeval.AppManagement;
 using Pixeval.Utilities;
-using Pixeval.Views.Capability;
+using Pixeval.Views.Search;
 
 namespace Pixeval.Views.Viewers;
 
@@ -81,7 +81,7 @@ public class WorkInfoPane : TemplatedControl
 
         var type = entry is Illustration ? SimpleWorkType.IllustrationAndManga : SimpleWorkType.Novel;
         App.AppViewModel.HistoryPersistHelper.AddSearchHistory(tag.Name, tag.TranslatedName);
-        viewContainer.NavigateTo(new SearchWorksPage(tag.Name, type));
+        viewContainer.NavigateTo(new WorkSearchPage(tag.Name, type));
     }
     
     private void BlockTag(ITag? tag)

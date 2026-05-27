@@ -9,7 +9,7 @@ namespace Pixeval.Models.Filters;
 internal sealed class WorkGifFilterSyntax : FilterFlagSyntax
 {
     /// <summary>
-    /// 动图布尔过滤语法。
+    /// 动图布尔筛选语法。
     /// </summary>
     public override string Key => WorkFilterSyntaxKeys.Gif;
 

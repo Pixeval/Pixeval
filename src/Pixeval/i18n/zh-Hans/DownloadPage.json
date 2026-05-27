@@ -22,7 +22,7 @@
   },
   "FilterAutoSuggestBoxNoResultFound": "未找到任何结果",
   "ModeFilterComboBox": {
-    "PlaceholderText": "过滤选项"
+    "PlaceholderText": "筛选选项"
   },
   "PageTitleTextBlock": {
     "Text": "下载列表"

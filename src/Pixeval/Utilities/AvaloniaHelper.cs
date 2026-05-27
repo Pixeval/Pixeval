@@ -49,27 +49,27 @@ public static class AvaloniaHelper
 
     public static IReadOnlyList<NavigationInfo> HeaderItems { get; } =
     [
-        new(typeof(HomePage), Symbol.Home, MainPageResources.HomeTabContent),
-        new(typeof(SearchPage), Symbol.SearchSparkle, MainPageResources.SearchTabContent),
-        new(typeof(RecommendWorksPage), Symbol.Calendar, MainPageResources.RecommendationsTabContent),
-        new(typeof(RankingsPage), Symbol.ArrowTrendingLines, MainPageResources.RankingsTabContent),
-        new(typeof(BookmarksPage), Symbol.Library, MainPageResources.BookmarksTabContent),
-        new(typeof(FollowingsPage), Symbol.PersonHeart, MainPageResources.FollowingsTabContent),
-        new(typeof(SpotlightsPage), Symbol.SlideTextSparkle, MainPageResources.SpotlightsTabContent),
-        new(typeof(RecommendUsersPage), Symbol.PeopleCommunity, MainPageResources.RecommendUsersTabContent),
-        new(typeof(RecentWorkPostsPage), Symbol.AlertUrgent, MainPageResources.RecentPostsTabContent),
-        new(typeof(NewWorksPage), Symbol.ArrowSync, MainPageResources.NewWorksTabContent),
+        new(typeof(HomePage), Symbol.Home, MainPageResources.TabHome),
+        new(typeof(SearchPage), Symbol.SearchSparkle, MainPageResources.TabSearch),
+        new(typeof(WorkRecommendedPage), Symbol.Calendar, MainPageResources.TabWorkRecommended),
+        new(typeof(WorkRankingPage), Symbol.ArrowTrendingLines, MainPageResources.TabWorkRanking),
+        new(typeof(WorkBookmarksPage), Symbol.Library, MainPageResources.TabWorkBookmarks),
+        new(typeof(UserFollowingPage), Symbol.PersonHeart, MainPageResources.TabUserFollowing),
+        new(typeof(SpotlightPage), Symbol.SlideTextSparkle, MainPageResources.TabSpotlight),
+        new(typeof(UserRecommendPage), Symbol.PeopleCommunity, MainPageResources.TabUserRecommended),
+        new(typeof(WorkFollowingPage), Symbol.AlertUrgent, MainPageResources.TabWorkFollowing),
+        new(typeof(WorkNewPage), Symbol.ArrowSync, MainPageResources.TabWorkNew),
         // new (typeof(FeedsPage), Symbol.Molecule, MainPageResources.FeedTabContent),
     ];
 
     public static IReadOnlyList<NavigationInfo> FooterItems { get; } =
     [
-        new(typeof(BrowsingHistoryPage), Symbol.History, MainPageResources.HistoriesTabContent),
-        new(typeof(WatchLaterPage), Symbol.Clock, MainPageResources.WatchLaterTabContent),
-        new(typeof(DownloadPage), Symbol.ArrowSquareDown, MainPageResources.DownloadListTabContent),
-        new(typeof(ExtensionsPage), Symbol.PuzzlePiece, MainPageResources.ExtensionsTabContent),
-        new(typeof(HelpPage), Symbol.ChatBubblesQuestion, MainPageResources.HelpTabContent),
-        new(typeof(SettingsPage), Symbol.Settings, MainPageResources.SettingsTabContent)
+        new(typeof(BrowsingHistoryPage), Symbol.History, MainPageResources.TabBrowsingHistory),
+        new(typeof(WatchLaterPage), Symbol.Clock, MainPageResources.TabWatchLater),
+        new(typeof(DownloadPage), Symbol.ArrowSquareDown, MainPageResources.TabDownload),
+        new(typeof(ExtensionsPage), Symbol.PuzzlePiece, MainPageResources.TabExtensions),
+        new(typeof(HelpPage), Symbol.ChatBubblesQuestion, MainPageResources.TabHelp),
+        new(typeof(SettingsPage), Symbol.Settings, MainPageResources.TabSettings)
     ];
 
     public static EventHandler<RoutedEventArgs>? LaunchUriTagInWebBrowser { get; }

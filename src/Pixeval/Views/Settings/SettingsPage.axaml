@@ -1,4 +1,4 @@
-﻿<NavigationPage
+<NavigationPage
     x:Class="Pixeval.Views.Settings.SettingsPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,7 +8,7 @@
     xmlns:pixeval="using:Pixeval"
     xmlns:viewModels="using:Pixeval.ViewModels"
     x:DataType="{x:Type viewModels:SettingsPageViewModel}"
-    Header="{I18N {x:Static pixeval:MainPageResources.SettingsTabContent}}"
+    Header="{I18N {x:Static pixeval:MainPageResources.TabSettings}}"
     Icon="{markup:SymbolIcon Settings,
                              FontSize=16,
                              IconVariant=Color}"

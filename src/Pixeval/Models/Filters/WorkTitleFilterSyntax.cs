@@ -9,7 +9,7 @@ namespace Pixeval.Models.Filters;
 internal sealed class WorkTitleFilterSyntax : FilterTextSyntax
 {
     /// <summary>
-    /// 标题过滤语法，支持默认文本和 title: 前缀。
+    /// 标题筛选语法，支持默认文本和 title: 前缀。
     /// </summary>
     public override string Key => WorkFilterSyntaxKeys.Title;
 

@@ -11,15 +11,15 @@ using Pixeval.Controls;
 using Pixeval.I18N;
 using Pixeval.ViewModels;
 
-namespace Pixeval.Views.Capability;
+namespace Pixeval.Views.Search;
 
-public partial class SearchWorksPage : ContentPage
+public partial class WorkSearchPage : ContentPage
 {
-    public SearchWorksPage() : this("")
+    public WorkSearchPage() : this("")
     {
     }
 
-    public SearchWorksPage(string searchText, SimpleWorkType preferredType) : this(
+    public WorkSearchPage(string searchText, SimpleWorkType preferredType) : this(
         searchText,
         new IllustrationSearchArguments(searchText),
         new NovelSearchArguments(searchText),
@@ -27,17 +27,17 @@ public partial class SearchWorksPage : ContentPage
     {
     }
 
-    public SearchWorksPage(IllustrationSearchArguments illustrationSearchArguments)
+    public WorkSearchPage(IllustrationSearchArguments illustrationSearchArguments)
         : this(illustrationSearchArguments.SearchText, illustrationSearchArguments)
     {
     }
 
-    public SearchWorksPage(NovelSearchArguments novelSearchArguments)
+    public WorkSearchPage(NovelSearchArguments novelSearchArguments)
         : this(novelSearchArguments.SearchText, null, novelSearchArguments, SimpleWorkType.Novel)
     {
     }
 
-    public SearchWorksPage(
+    public WorkSearchPage(
         string searchText,
         IllustrationSearchArguments? illustrationSearchArguments = null,
         NovelSearchArguments? novelSearchArguments = null,

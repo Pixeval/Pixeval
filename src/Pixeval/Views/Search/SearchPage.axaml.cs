@@ -11,7 +11,6 @@ using Pixeval.I18N;
 using Pixeval.Models.Database;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
-using Pixeval.Views.Capability;
 
 namespace Pixeval.Views.Search;
 
@@ -38,7 +37,7 @@ public partial class SearchPage : ContentPage
         if (DataContext is not SearchPageViewModel viewModel)
             return;
 
-        viewContainer.NavigateTo(new SearchWorksPage(tag.Tag, viewModel.SelectedTrendingTagsType));
+        viewContainer.NavigateTo(new WorkSearchPage(tag.Tag, viewModel.SelectedTrendingTagsType));
     }
 
     private void SearchButton_OnClick(object? sender, RoutedEventArgs e)
@@ -85,7 +84,7 @@ public partial class SearchPage : ContentPage
         {
             if (!advanced)
             {
-                viewContainer.NavigateTo(new SearchWorksPage(searchText, viewModel.SelectedAdvancedOptionsType));
+                viewContainer.NavigateTo(new WorkSearchPage(searchText, viewModel.SelectedAdvancedOptionsType));
                 return;
             }
 
@@ -99,7 +98,7 @@ public partial class SearchPage : ContentPage
 
                 var arguments = viewModel.NovelForm.BuildArguments(searchText);
                 App.AppViewModel.HistoryPersistHelper.AddSearchHistory(searchText);
-                viewContainer.NavigateTo(new SearchWorksPage(arguments));
+                viewContainer.NavigateTo(new WorkSearchPage(arguments));
             }
             else
             {
@@ -111,7 +110,7 @@ public partial class SearchPage : ContentPage
 
                 var arguments = viewModel.IllustrationForm.BuildArguments(searchText);
                 App.AppViewModel.HistoryPersistHelper.AddSearchHistory(searchText);
-                viewContainer.NavigateTo(new SearchWorksPage(arguments));
+                viewContainer.NavigateTo(new WorkSearchPage(arguments));
             }
         }
         catch (Exception ex)

@@ -9,7 +9,7 @@ namespace Pixeval.Models.Filters;
 internal sealed class WorkTagFilterSyntax : FilterTextSyntax
 {
     /// <summary>
-    /// 标签过滤语法，支持 #、t: 和 tag: 写法。
+    /// 标签筛选语法，支持 #、t: 和 tag: 写法。
     /// </summary>
     public override string Key => WorkFilterSyntaxKeys.Tag;
 

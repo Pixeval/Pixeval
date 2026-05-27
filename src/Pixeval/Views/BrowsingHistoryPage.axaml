@@ -1,4 +1,4 @@
-﻿<ContentPage
+<ContentPage
     x:Class="Pixeval.Views.BrowsingHistoryPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -11,7 +11,7 @@
     xmlns:pixeval="using:Pixeval"
     xmlns:views="using:Pixeval.Views"
     xmlns:work="using:Pixeval.Views.Work"
-    Header="{I18N {x:Static pixeval:MainPageResources.HistoriesTabContent}}"
+    Header="{I18N {x:Static pixeval:MainPageResources.TabBrowsingHistory}}"
     Icon="{markup:SymbolIcon History,
                              FontSize=16,
                              IconVariant=Color}"

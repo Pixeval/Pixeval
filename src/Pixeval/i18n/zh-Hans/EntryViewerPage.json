@@ -4,21 +4,6 @@
   },
   "AddedToBookmark": "已添加收藏",
   "Share": "分享",
-  "WorkNavigationViewItem": {
-    "Content": "作品"
-  },
-  "BookmarksNavigationViewItem": {
-    "Content": "收藏作品"
-  },
-  "FollowingsNavigationViewItem": {
-    "Content": "关注的人"
-  },
-  "MyPixivUserNavigationViewItem": {
-    "Content": "好P友"
-  },
-  "RelatedUserNavigationViewItem": {
-    "Content": "相关用户"
-  },
   "FollowingUserItem": {
     "Title": "关注中"
   },

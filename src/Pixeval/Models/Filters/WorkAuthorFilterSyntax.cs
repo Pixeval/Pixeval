@@ -9,7 +9,7 @@ namespace Pixeval.Models.Filters;
 internal sealed class WorkAuthorFilterSyntax : FilterTextSyntax
 {
     /// <summary>
-    /// 作者过滤语法，支持 @、a: 和 artist: 写法。
+    /// 作者筛选语法，支持 @、a: 和 artist: 写法。
     /// </summary>
     public override string Key => WorkFilterSyntaxKeys.Author;
 

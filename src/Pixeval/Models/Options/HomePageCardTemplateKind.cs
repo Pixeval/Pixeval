@@ -6,7 +6,6 @@ namespace Pixeval.Models.Options;
 public enum HomePageCardTemplateKind
 {
     WorkList,
-    NovelList,
     UserList,
     SpotlightList,
     SingleImage,

@@ -10,7 +10,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Misaki;
 using Pixeval.I18N;
 using Pixeval.Utilities;
-using Pixeval.Utilities.IO;
 using Pixeval.Utilities.IO.Caching;
 
 namespace Pixeval.ViewModels.Viewers;

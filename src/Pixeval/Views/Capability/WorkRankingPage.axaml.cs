@@ -12,13 +12,13 @@ using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Capability;
 
-public partial class RankingsPage : ContentPage
+public partial class WorkRankingPage : ContentPage
 {
-    public RankingsPage() : this(PixevalSettings.SimpleWorkType, App.AppViewModel.AppSettings.IllustrationRankOption, MaxDate)
+    public WorkRankingPage() : this(PixevalSettings.SimpleWorkType, App.AppViewModel.AppSettings.IllustrationRankOption, MaxDate)
     {
     }
 
-    public RankingsPage(SimpleWorkType simpleWorkType, RankOption rankOption, DateTime rankingDate, IWorkViewViewModel? viewModel = null)
+    public WorkRankingPage(SimpleWorkType simpleWorkType, RankOption rankOption, DateTime rankingDate, IWorkViewViewModel? viewModel = null)
     {
         InitializeComponent();
         SimpleWorkTypeComboBox.SelectedValue = simpleWorkType;

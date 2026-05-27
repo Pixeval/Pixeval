@@ -7,7 +7,7 @@
     xmlns:database="using:Pixeval.Models.Database"
     xmlns:enum="using:Mako.Global.Enum"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
-    xmlns:markup1="clr-namespace:Pixeval.Views.Markup"
+    xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Mako.Model"
     xmlns:pixeval="using:Pixeval"
@@ -15,7 +15,7 @@
     xmlns:viewModels="using:Pixeval.ViewModels"
     x:DataType="{x:Type viewModels:SearchPageViewModel}"
     DataContext="{x:Static viewModels:SearchPageViewModel.Instance}"
-    Header="{I18N {x:Static pixeval:MainPageResources.SearchTabContent}}"
+    Header="{I18N {x:Static pixeval:MainPageResources.TabSearch}}"
     Icon="{markup:SymbolIcon SearchSparkle,
                              FontSize=16,
                              IconVariant=Color}"

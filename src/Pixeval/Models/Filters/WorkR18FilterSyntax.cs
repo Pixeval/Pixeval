@@ -9,7 +9,7 @@ namespace Pixeval.Models.Filters;
 internal sealed class WorkR18FilterSyntax : FilterFlagSyntax
 {
     /// <summary>
-    /// R18 布尔过滤语法。
+    /// R18 布尔筛选语法。
     /// </summary>
     public override string Key => WorkFilterSyntaxKeys.R18;
 

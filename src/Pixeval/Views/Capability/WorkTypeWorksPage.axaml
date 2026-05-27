@@ -1,12 +1,12 @@
-﻿<ContentPage
+<ContentPage
     x:Class="Pixeval.Views.Capability.WorkTypeWorksPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:enum="using:Mako.Global.Enum"
-    xmlns:fluent="using:FluentIcons.Avalonia.Markup"
-    xmlns:markup="using:Pixeval.Views.Markup"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
     xmlns:views="using:Pixeval.Views"
@@ -16,18 +16,20 @@
     d:DesignWidth="800">
     <work:WorkContainer x:Name="WorkContainer" RefreshRequested="WorkContainer_OnRefreshRequested">
         <work:WorkContainer.CommandBarElements>
-            <Button
-                x:Name="AddSubscriptionButton"
-                VerticalAlignment="Stretch"
-                Click="AddSubscriptionButton_OnClicked"
-                Content="{fluent:SymbolIcon Add}"
-                IsVisible="False"
-                ToolTip.Tip="{I18N {x:Static pixeval:WorkSubscriptionsSettingsExpanderResources.AddSubscriptionButtonToolTip}}" />
             <controls:SymbolComboBox
                 x:Name="WorkTypeComboBox"
-                ItemsSource="{markup:EnumResources x:TypeArguments=enum:WorkType}"
+                ItemsSource="{markup1:EnumResources x:TypeArguments=enum:WorkType}"
                 SelectedValue="{x:Static views:PixevalSettings.WorkType}"
                 SelectionChanged="WorkTypeComboBox_OnSelectionChanged" />
         </work:WorkContainer.CommandBarElements>
+        <work:WorkContainer.CommandBarSubElements>
+            <CommandBarButton
+                x:Name="AddSubscriptionButton"
+                VerticalAlignment="Stretch"
+                Click="AddSubscriptionButton_OnClicked"
+                Icon="{markup:SymbolIcon Alert}"
+                IsVisible="False"
+                Label="{I18N {x:Static pixeval:WorkSubscriptionsSettingsExpanderResources.AddSubscriptionButtonLabel}}" />
+        </work:WorkContainer.CommandBarSubElements>
     </work:WorkContainer>
 </ContentPage>

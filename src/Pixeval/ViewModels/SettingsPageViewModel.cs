@@ -45,7 +45,6 @@ public class SettingsPageViewModel : ViewModelBase
                     })
                 .Font(t => t.AppFontFamily, entry => entry.ValueChanged += t => Application.Current?.Resources["ContentControlThemeFontFamily"] = new FontFamily(string.Join(',', t)))
                 .Bool(t => t.UseFileCache)
-                .Enum(t => t.DefaultSelectedTabItem)
                 .Int(t => t.HomePageRows, 1, 12, 1)
                 .Int(t => t.HomePageColumns, 1, 12, 1)
                 .Bool(t => t.HideHomePageToolbar)

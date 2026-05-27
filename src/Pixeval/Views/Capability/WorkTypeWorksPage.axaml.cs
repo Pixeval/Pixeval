@@ -69,15 +69,15 @@ public abstract partial class WorkTypeWorksPage : ContentPage
     }
 }
 
-public class RecommendWorksPage : WorkTypeWorksPage
+public class WorkRecommendedPage : WorkTypeWorksPage
 {
-    public RecommendWorksPage() : this(PixevalSettings.WorkType)
+    public WorkRecommendedPage() : this(PixevalSettings.WorkType)
     {
     }
 
-    public RecommendWorksPage(WorkType workType, IWorkViewViewModel? viewModel = null)
+    public WorkRecommendedPage(WorkType workType, IWorkViewViewModel? viewModel = null)
     {
-        Header = I18NManager.GetResource(MainPageResources.RecommendationsTabContent);
+        Header = I18NManager.GetResource(MainPageResources.TabWorkRecommended);
         Icon = new SymbolIcon { Symbol = Symbol.Calendar, FontSize = 16, IconVariant = IconVariant.Color };
         InitializeSource(workType, viewModel);
     }
@@ -88,15 +88,15 @@ public class RecommendWorksPage : WorkTypeWorksPage
     }
 }
 
-public class NewWorksPage : WorkTypeWorksPage
+public class WorkNewPage : WorkTypeWorksPage
 {
-    public NewWorksPage() : this(PixevalSettings.WorkType)
+    public WorkNewPage() : this(PixevalSettings.WorkType)
     {
     }
 
-    public NewWorksPage(WorkType workType, IWorkViewViewModel? viewModel = null)
+    public WorkNewPage(WorkType workType, IWorkViewViewModel? viewModel = null)
     {
-        Header = I18NManager.GetResource(MainPageResources.NewWorksTabContent);
+        Header = I18NManager.GetResource(MainPageResources.TabWorkNew);
         Icon = new SymbolIcon { Symbol = Symbol.ArrowSync, FontSize = 16, IconVariant = IconVariant.Color };
         InitializeSource(workType, viewModel);
     }
@@ -107,22 +107,22 @@ public class NewWorksPage : WorkTypeWorksPage
     }
 }
 
-public class UserWorkPostsPage : WorkTypeWorksPage
+public class WorkPostsPage : WorkTypeWorksPage
 {
     private readonly UserBasicInfo _user;
 
-    public UserWorkPostsPage() : this(App.AppViewModel.MakoClient.Me!)
+    public WorkPostsPage() : this(App.AppViewModel.MakoClient.Me!)
     {
     }
 
-    public UserWorkPostsPage(UserBasicInfo user) : this(user, PixevalSettings.WorkType)
+    public WorkPostsPage(UserBasicInfo user) : this(user, PixevalSettings.WorkType)
     {
     }
 
-    public UserWorkPostsPage(UserBasicInfo user, WorkType workType, IWorkViewViewModel? viewModel = null)
+    public WorkPostsPage(UserBasicInfo user, WorkType workType, IWorkViewViewModel? viewModel = null)
     {
         _user = user;
-        Header = I18NManager.GetResource(EntryViewerPageResources.WorkNavigationViewItemContent);
+        Header = I18NManager.GetResource(MainPageResources.TabWorkPosts);
         Icon = new SymbolIcon { Symbol = Symbol.Image, FontSize = 16, IconVariant = IconVariant.Color };
         EnableAddSubscriptionButton();
         InitializeSource(workType, viewModel);

@@ -1,28 +1,34 @@
 <ContentPage
-    x:Class="Pixeval.Views.Capability.FollowingsPage"
+    x:Class="Pixeval.Views.Capability.WorkFollowingPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:entry="using:Pixeval.Views.Entry"
     xmlns:enum="using:Mako.Global.Enum"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
-    Header="{I18N {x:Static pixeval:MainPageResources.FollowingsTabContent}}"
-    Icon="{markup:SymbolIcon PersonHeart,
+    xmlns:views="using:Pixeval.Views"
+    xmlns:work="using:Pixeval.Views.Work"
+    Header="{I18N {x:Static pixeval:MainPageResources.TabWorkFollowing}}"
+    Icon="{markup:SymbolIcon AlertUrgent,
                              FontSize=16,
                              IconVariant=Color}"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
-    <entry:UserContainer x:Name="UserContainer" RefreshRequested="UserContainer_OnRefreshRequested">
-        <entry:UserContainer.CommandBarElements>
+    <work:WorkContainer x:Name="WorkContainer" RefreshRequested="WorkContainer_OnRefreshRequested">
+        <work:WorkContainer.CommandBarElements>
             <controls:SymbolComboBox
                 x:Name="PrivacyPolicyComboBox"
                 ItemsSource="{markup1:EnumResources x:TypeArguments=enum:PrivacyPolicy}"
                 SelectionChanged="WorkTypeComboBox_OnSelectionChanged" />
-        </entry:UserContainer.CommandBarElements>
-    </entry:UserContainer>
+            <controls:SymbolComboBox
+                x:Name="SimpleWorkTypeComboBox"
+                ItemsSource="{markup1:EnumResources x:TypeArguments=enum:SimpleWorkType}"
+                SelectedValue="{x:Static views:PixevalSettings.SimpleWorkType}"
+                SelectionChanged="WorkTypeComboBox_OnSelectionChanged" />
+        </work:WorkContainer.CommandBarElements>
+    </work:WorkContainer>
 </ContentPage>

@@ -3,7 +3,6 @@
 
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -414,7 +413,7 @@ public partial class HomePage
 
     private HomePageCardLayout? TryCreateCardFromSourceParameters(HomeCardTemplate template)
     {
-        var card = CreateCard(template, 0, 0, 1, 1);
+        var card = new HomePageCardLayout(template, 0, 0, 1, 1);
 
         var userId = 0L;
         var entryId = 0L;
@@ -430,7 +429,6 @@ public partial class HomePage
 
         card.WorkType = SourceWorkTypeComboBox.SelectedValue is WorkType workType ? workType : template.WorkType;
         card.SimpleWorkType = SourceSimpleWorkTypeComboBox.SelectedValue is SimpleWorkType simpleWorkType ? simpleWorkType : template.SimpleWorkType;
-        card.TemplateKind = ResolveTemplateKind(template, card.WorkType, card.SimpleWorkType);
         card.PrivacyPolicy = SourcePrivacyPolicyComboBox.SelectedValue is PrivacyPolicy privacyPolicy ? privacyPolicy : template.PrivacyPolicy;
         card.RankOption = SourceRankOptionComboBox.SelectedValue is RankOption rankOption ? rankOption : template.RankOption;
         card.UseSpecifiedRankingDate = SourceUseSpecifiedRankingDateCheckBox.IsChecked is true;
@@ -463,43 +461,11 @@ public partial class HomePage
         long.TryParse(textBox.Text, out value) && value > 0;
 
     private HomeCardTemplate GetTemplate(HomePageCardLayout card) =>
-        NormalizeTemplateForCard(
-            _cardTemplates.FirstOrDefault(template => template.SourceKind == card.SourceKind && template.TemplateKind == card.TemplateKind)
-            ?? _cardTemplates.FirstOrDefault(template => template.SourceKind == card.SourceKind)
-            ?? _cardTemplates[0],
-            card);
-
-    private static HomeCardTemplate NormalizeTemplateForCard(HomeCardTemplate template, HomePageCardLayout card) =>
-        template.TemplateKind == card.TemplateKind ? template : template with { TemplateKind = card.TemplateKind };
-
-    private static HomePageCardTemplateKind ResolveTemplateKind(HomeCardTemplate template, WorkType workType, SimpleWorkType simpleWorkType) =>
-        template.SourceKind switch
-        {
-            HomePageCardSourceKind.WorkRecommended or HomePageCardSourceKind.WorkNew or HomePageCardSourceKind.WorkPosts
-                => workType is WorkType.Novel ? HomePageCardTemplateKind.NovelList : HomePageCardTemplateKind.WorkList,
-            HomePageCardSourceKind.WorkBookmarks or HomePageCardSourceKind.WorkRanking or HomePageCardSourceKind.WorkFollowing or HomePageCardSourceKind.WorkSearch
-                => simpleWorkType is SimpleWorkType.Novel ? HomePageCardTemplateKind.NovelList : HomePageCardTemplateKind.WorkList,
-            _ => template.TemplateKind
-        };
+        _cardTemplates.FirstOrDefault(template => template.SourceKind == card.SourceKind) ?? _cardTemplates[0];
 
     private static int DecimalToZeroBasedInt(decimal? value) => Math.Max(0, DecimalToPositiveInt(value) - 1);
 
     private static int DecimalToPositiveInt(decimal? value) => Math.Max(1, (int) (value ?? 1));
-
-    private static HomePageCardLayout CreateCard(HomeCardTemplate template, int column, int row, int columnSpan, int rowSpan) => new()
-    {
-        TemplateKind = template.TemplateKind,
-        SourceKind = template.SourceKind,
-        WorkType = template.WorkType,
-        SimpleWorkType = template.SimpleWorkType,
-        PrivacyPolicy = template.PrivacyPolicy,
-        RankOption = template.RankOption,
-        RankingDate = MakoClient.RankingMaxDateTime,
-        Column = column,
-        Row = row,
-        ColumnSpan = columnSpan,
-        RowSpan = rowSpan
-    };
 
     private static void SaveLayout() => AppInfo.SaveSettings(App.AppViewModel.AppSettings);
 }

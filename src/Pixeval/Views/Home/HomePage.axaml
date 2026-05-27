@@ -12,7 +12,7 @@
     xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
-    Header="{I18N {x:Static pixeval:MainPageResources.HomeTabContent}}"
+    Header="{I18N {x:Static pixeval:MainPageResources.TabHome}}"
     Icon="{markup:SymbolIcon Home,
                              FontSize=16,
                              IconVariant=Color}"
@@ -286,9 +286,9 @@
                                 <CalendarDatePicker
                                     x:Name="SourceRankingDatePicker"
                                     HorizontalAlignment="Stretch"
-                                    DisplayDateEnd="{x:Static capability:RankingsPage.MaxDate}"
+                                    DisplayDateEnd="{x:Static capability:WorkRankingPage.MaxDate}"
                                     IsEnabled="{Binding #SourceUseSpecifiedRankingDateCheckBox.IsChecked}"
-                                    SelectedDate="{x:Static capability:RankingsPage.MaxDate}"
+                                    SelectedDate="{x:Static capability:WorkRankingPage.MaxDate}"
                                     SelectedDateFormat="Short" />
                             </StackPanel>
 

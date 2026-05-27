@@ -9,7 +9,7 @@ namespace Pixeval.Models.Filters;
 internal sealed class WorkEndDateFilterSyntax : FilterDateSyntax
 {
     /// <summary>
-    /// 结束日期过滤语法。
+    /// 结束日期筛选语法。
     /// </summary>
     public override string Key => WorkFilterSyntaxKeys.EndDate;
 
