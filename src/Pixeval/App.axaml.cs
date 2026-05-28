@@ -12,7 +12,6 @@ using Avalonia.Media;
 using Pixeval.AppManagement;
 using Pixeval.I18N;
 using Pixeval.Utilities;
-using Pixeval.ViewModels;
 using Pixeval.Views.Home;
 using Pixeval.Views.Login;
 using Pixeval.Views.ViewContainers;

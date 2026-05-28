@@ -101,8 +101,7 @@ public abstract partial class ImageViewerBase : UserControl
         if (e.PropertyName is nameof(SingleViewerViewModel.LoadSuccessfully)
             or nameof(SingleViewerViewModel.OriginalSource)
             or nameof(SingleViewerViewModel.DisplaySource)
-            or nameof(SingleViewerViewModel.IsGifLoadSuccessfully)
-            or nameof(SingleViewerViewModel.IsPicGif))
+            or nameof(SingleViewerViewModel.IsGifLoadSuccessfully))
             NotifyCommandCanExecuteChanged();
     }
 

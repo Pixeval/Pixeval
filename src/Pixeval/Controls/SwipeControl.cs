@@ -2,7 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
@@ -16,9 +16,9 @@ public class SwipeControl : TransitioningContentControl
 
     public event EventHandler<Control, ImageViewerSelectionChangedEventArgs>? SelectionChanged; 
 
-    public static readonly StyledProperty<IList> ItemsSourceProperty = AvaloniaProperty.Register<SwipeControl, IList>(nameof(ItemsSource));
+    public static readonly StyledProperty<IReadOnlyList<object>?> ItemsSourceProperty = AvaloniaProperty.Register<SwipeControl, IReadOnlyList<object>>(nameof(ItemsSource));
 
-    public IList ItemsSource
+    public IReadOnlyList<object>? ItemsSource
     {
         get => GetValue(ItemsSourceProperty);
         set => SetValue(ItemsSourceProperty, value);

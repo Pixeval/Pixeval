@@ -40,14 +40,13 @@ public partial class SingleViewerViewModel : ViewModelBase, IDisposable
     /// </summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(DisplaySource))]
-    [NotifyPropertyChangedFor(nameof(IsPicGif))]
     [NotifyPropertyChangedFor(nameof(IsGifLoadSuccessfully))]
     public partial IAnimatedBitmap? OriginalSource { get; private set; }
 
     [ObservableProperty]
     public partial Bitmap? ThumbnailSource { get; private set; }
 
-    public bool IsPicGif => DisplaySource is { IsFailed: false, IsInitialized: true, Frames.Count: > 1 };
+    public bool IsPicGif => _entry.ImageType is ImageType.SingleAnimatedImage;
 
     public bool IsGifLoadSuccessfully => LoadSuccessfully && IsPicGif;
 

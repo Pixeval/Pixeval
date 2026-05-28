@@ -2,6 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Text.RegularExpressions;
 using AutoSettingsPage.Avalonia;
@@ -20,6 +21,12 @@ public static partial class PixevalConverters
     public static readonly NumberEllipsisConverter NumberEllipsis = NumberEllipsisConverter.Instance;
 
     public static readonly DateTimeShortDateConverter DateTimeShortDate = DateTimeShortDateConverter.Instance;
+
+    public static readonly FuncValueConverter<object, object> DebugHelper = new(i =>
+    {
+        Debugger.Break();
+        return i!;
+    });
 
     public static readonly FuncValueConverter<int, int> PlusOne = new(i => i + 1);
 

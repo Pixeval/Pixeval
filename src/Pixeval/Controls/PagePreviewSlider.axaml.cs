@@ -2,7 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using Avalonia;
 using Avalonia.Controls;
@@ -15,8 +15,8 @@ namespace Pixeval.Controls;
 
 public class PagePreviewSlider : TemplatedControl
 {
-    public static readonly StyledProperty<IList?> ItemsSourceProperty =
-        AvaloniaProperty.Register<PagePreviewSlider, IList?>(nameof(ItemsSource));
+    public static readonly StyledProperty<IReadOnlyList<object>?> ItemsSourceProperty =
+        AvaloniaProperty.Register<PagePreviewSlider, IReadOnlyList<object>?>(nameof(ItemsSource));
 
     public static readonly StyledProperty<int> SelectedIndexProperty =
         AvaloniaProperty.Register<PagePreviewSlider, int>(
@@ -41,7 +41,7 @@ public class PagePreviewSlider : TemplatedControl
             nameof(PreviewItem),
             o => o.PreviewItem);
 
-    private IList? _itemsSource;
+    private IReadOnlyList<object>? _itemsSource;
     private INotifyCollectionChanged? _notifyCollectionChanged;
     private Border? _track;
     private Border? _selectedTrack;
@@ -54,7 +54,7 @@ public class PagePreviewSlider : TemplatedControl
     private bool _isHovering;
     private double _previewPointerX;
 
-    public IList? ItemsSource
+    public IReadOnlyList<object>? ItemsSource
     {
         get => GetValue(ItemsSourceProperty);
         set => SetValue(ItemsSourceProperty, value);
@@ -190,7 +190,7 @@ public class PagePreviewSlider : TemplatedControl
             if (!ReferenceEquals(_itemsSource, change.OldValue))
                 UnsubscribeFromItemsSource();
 
-            _itemsSource = change.GetNewValue<IList?>();
+            _itemsSource = change.GetNewValue<IReadOnlyList<object>?>();
             SubscribeToItemsSource();
             SynchronizeState();
         }
