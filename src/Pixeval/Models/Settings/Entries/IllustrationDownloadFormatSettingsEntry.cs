@@ -1,7 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoSettingsPage;
@@ -23,7 +22,7 @@ public class IllustrationDownloadFormatSettingsEntry(AppSettings settings)
     : SingleValueSettingsEntry<AppSettings, object>(
         settings,
         nameof(AppSettings.IllustrationDownloadFormat),
-        "",
+        I18NManager.GetResource(EnumResources.WorkTypeEnumIllustration),
         "",
         Symbol.Image,
         null,
@@ -31,18 +30,6 @@ public class IllustrationDownloadFormatSettingsEntry(AppSettings settings)
         static (appSettings, value) => appSettings.IllustrationDownloadFormat = ((IllustrationDownloadFormatToken) value).Value),
         IEnumSettingsEntry<object>
 {
-    public IllustrationDownloadFormatSettingsEntry(AppSettings settings, WorkTypeEnum workType) : this(settings)
-    {
-        Description = "";
-        (Icon, var header) = workType switch
-        {
-            WorkTypeEnum.Illustration => (Symbol.Image, EnumResources.WorkTypeIllustration),
-            WorkTypeEnum.Manga => (Symbol.ImageMultiple, EnumResources.WorkTypeManga),
-            _ => throw new ArgumentOutOfRangeException(nameof(workType))
-        };
-        Header = I18NManager.GetResource(header);
-    }
-
     public IReadOnlyList<IReadOnlyStringPair<object>> EnumItems { get; } = CreateEnumItems();
 
     private static IReadOnlyList<IReadOnlyStringPair<object>> CreateEnumItems()

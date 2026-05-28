@@ -11,9 +11,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Collections;
 using Pixeval.I18N;
 using Pixeval.Models.Home;
-using Pixeval.ViewModels;
+using Pixeval.Views.Home;
 
-namespace Pixeval.Views.Home;
+namespace Pixeval.ViewModels.Home;
 
 public sealed partial class HomeCardPreviewViewModel(HomePageCardLayout card) : ObservableObject, IDisposable
 {

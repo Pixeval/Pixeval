@@ -37,10 +37,9 @@
                 Symbol="ChevronRight" />
             <StackPanel Grid.Column="1" Spacing="4">
                 <TextBlock
-                    FontSize="16"
-                    FontWeight="SemiBold"
                     Text="{Binding Title}"
-                    TextTrimming="CharacterEllipsis" />
+                    TextTrimming="CharacterEllipsis"
+                    Theme="{StaticResource BodyLargeStrongTextBlockStyle}" />
                 <ProgressBar Maximum="100" Value="{Binding ProgressPercentage}" />
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                     <TextBlock

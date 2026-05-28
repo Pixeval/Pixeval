@@ -74,7 +74,6 @@ public class App : Application
             case ISingleViewApplicationLifetime singleViewPlatform:
                 singleViewPlatform.MainView = viewContainer = new SingleViewContainer
                 {
-                    DataContext = new MainViewModel()
                 };
                 break;
         }

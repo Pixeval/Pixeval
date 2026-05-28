@@ -26,10 +26,10 @@
             ItemsSource="{Binding View}">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel
+                    <controls:AdaptiveGrid
+                        ItemSize="300"
                         ItemSpacing="5"
-                        ItemWidth="300"
-                        ItemsAlignment="Start"
+                        LineSize="250"
                         LineSpacing="5" />
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>

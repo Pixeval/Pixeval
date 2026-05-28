@@ -19,6 +19,7 @@ using Pixeval.Models.Home;
 using Pixeval.Models.Options;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
+using Pixeval.ViewModels.Home;
 using Pixeval.Views.Capability;
 using Pixeval.Views.Search;
 using Pixeval.Views.Viewers;

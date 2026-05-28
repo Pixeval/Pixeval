@@ -10,6 +10,7 @@ using Avalonia;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Mako;
+using Mako.Global.Enum;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
 using Pixeval.Models.Extensions;
@@ -84,11 +85,11 @@ public class SettingsPageViewModel : ViewModelBase
                     entry.Enum(
                             WorkTypeEnum.Illustration,
                             t => t.IllustrationRankOption,
-                            "Illustration")
+                            SimpleWorkType.IllustrationAndManga)
                         .Enum(
                             WorkTypeEnum.Novel,
                             t => t.NovelRankOption,
-                            "Novel")))
+                            SimpleWorkType.Novel)))
             .NewGroup(SettingsEntryCategory.Download)
             .Config(group => group
                 .Bool(t => t.OverwriteDownloadedFile)
@@ -96,9 +97,9 @@ public class SettingsPageViewModel : ViewModelBase
                     entry => entry.ValueChanged += t => App.AppViewModel.HistoryPersistHelper.DownloadManager.ConcurrencyDegree = t)
                 .DownloadMacro()
                 .MultiValues(t => t.IllustrationDownloadFormat, entry =>
-                    entry.IllustrationDownloadFormat(WorkTypeEnum.Illustration)
-                        .UgoiraDownloadFormat(WorkTypeEnum.Ugoira)
-                        .NovelDownloadFormat(WorkTypeEnum.Novel))
+                    entry.IllustrationDownloadFormat()
+                        .UgoiraDownloadFormat()
+                        .NovelDownloadFormat())
                 .WorkSubscriptions())
             //.NewGroup(SettingsEntryCategory.Misc)
             //.Config(group => group)

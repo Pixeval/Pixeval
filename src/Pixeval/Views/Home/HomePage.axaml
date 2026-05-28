@@ -1,7 +1,8 @@
-<ContentPage
+<DrawerPage
     x:Class="Pixeval.Views.Home.HomePage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:appManagement="using:Pixeval.AppManagement"
     xmlns:capability="using:Pixeval.Views.Capability"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -12,371 +13,371 @@
     xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
+    xmlns:viewModels="using:Pixeval.ViewModels.Home"
+    x:DataType="{x:Type viewModels:HomePageViewModel}"
+    DrawerIcon="{markup:SymbolIcon Edit}"
+    DrawerLayoutBehavior="Split"
+    DrawerPlacement="Right"
     Header="{I18N {x:Static pixeval:MainPageResources.TabHome}}"
     Icon="{markup:SymbolIcon Home,
                              FontSize=16,
                              IconVariant=Color}"
+    IsOpen="{Binding IsEditMode}"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
-    <Grid ColumnDefinitions="*,Auto">
-        <DockPanel Margin="20">
+    <DrawerPage.Styles>
+        <Style Selector="DrawerPage /template/ Border#PART_TopBar">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </DrawerPage.Styles>
+    <DockPanel x:DataType="{x:Type viewModels:HomePageViewModel}" DataContext="{Binding $parent[home:HomePage].DataContext}">
+        <DockPanel DockPanel.Dock="Top" HorizontalSpacing="10">
+            <Image
+                Width="30"
+                Height="30"
+                Margin="10,0,0,0"
+                DockPanel.Dock="Left"
+                Source="{SvgImage avares://Pixeval/Assets/logo.svg}" />
+            <TextBlock
+                VerticalAlignment="Center"
+                DockPanel.Dock="Left"
+                Text="{x:Static appManagement:AppInfo.AppIdentifier}"
+                Theme="{StaticResource SubtitleTextBlockStyle}" />
             <CommandBar
-                x:Name="HomeToolbar"
                 HorizontalAlignment="Right"
                 DefaultLabelPosition="Right"
-                DockPanel.Dock="Top"
-                IsDynamicOverflowEnabled="True">
+                IsDynamicOverflowEnabled="True"
+                IsVisible="{Binding !IsToolbarHidden}">
                 <CommandBarToggleButton
-                    x:Name="HideCardTitleButton"
-                    Click="HideCardTitleButton_OnClick"
                     Icon="{markup:SymbolIcon AppTitle}"
+                    IsChecked="{Binding IsCardTitleHidden, Mode=TwoWay}"
                     Label="{I18N {x:Static pixeval:HomePageResources.HideCardTitleButtonLabel}}" />
                 <CommandBarToggleButton
-                    x:Name="HideToolbarButton"
-                    Click="HideToolbarButton_OnClick"
                     Icon="{markup:SymbolIcon WindowHeaderHorizontal}"
+                    IsChecked="{Binding IsToolbarHidden, Mode=TwoWay}"
                     Label="{I18N {x:Static pixeval:HomePageResources.HideToolbarButtonLabel}}" />
                 <CommandBarToggleButton
-                    x:Name="EditModeButton"
-                    Click="EditModeButton_OnClick"
                     Icon="{markup:SymbolIcon Edit}"
+                    IsChecked="{Binding IsEditMode, Mode=TwoWay}"
                     Label="{I18N {x:Static pixeval:HomePageResources.EditButtonLabel}}" />
             </CommandBar>
-
-            <Border
-                x:Name="HomeGridBorder"
-                Margin="0,12,0,0"
-                Background="{DynamicResource SolidBackgroundFillColorBaseBrush}"
-                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                BorderThickness="1"
-                ClipToBounds="True"
-                CornerRadius="{DynamicResource ControlCornerRadius}">
-                <Grid>
-                    <Grid
-                        x:Name="GuideGrid"
-                        Margin="12"
-                        ColumnSpacing="12"
-                        IsHitTestVisible="False"
-                        IsVisible="{Binding #EditModeButton.IsChecked}"
-                        RowSpacing="12" />
-                    <Grid
-                        x:Name="HomeGrid"
-                        Margin="12"
-                        ColumnSpacing="12"
-                        RowSpacing="12" />
-                </Grid>
-            </Border>
         </DockPanel>
 
         <Border
-            x:Name="EditPane"
-            Grid.Column="1"
-            Width="320"
-            Background="{DynamicResource SolidBackgroundFillColorTertiaryBrush}"
+            Background="{DynamicResource SolidBackgroundFillColorBaseBrush}"
             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-            BorderThickness="1,0,0,0"
-            IsVisible="False">
-            <ScrollViewer>
-                <StackPanel Margin="16" Spacing="16">
-                    <StackPanel Spacing="4">
-                        <TextBlock
-                            FontSize="16"
-                            FontWeight="SemiBold"
-                            Text="{I18N {x:Static pixeval:HomePageResources.EditPaneTitleTextBlockText}}" />
+            BorderThickness="1"
+            ClipToBounds="True"
+            CornerRadius="{DynamicResource ControlCornerRadius}">
+            <Grid>
+                <Grid
+                    x:Name="GuideGrid"
+                    Margin="12"
+                    ColumnSpacing="12"
+                    IsHitTestVisible="False"
+                    IsVisible="{Binding IsEditMode}"
+                    RowSpacing="12" />
+                <Grid
+                    x:Name="HomeGrid"
+                    Margin="12"
+                    ColumnSpacing="12"
+                    RowSpacing="12" />
+            </Grid>
+        </Border>
+    </DockPanel>
+
+    <DrawerPage.Drawer>
+        <ScrollViewer>
+            <StackPanel Margin="16" Spacing="16">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.EditPaneTitleTextBlockText}}" Theme="{StaticResource BodyLargeStrongTextBlockStyle}" />
+                    <TextBlock
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="{I18N {x:Static pixeval:HomePageResources.EditPaneDescriptionTextBlockText}}"
+                        TextWrapping="Wrap" />
+                </StackPanel>
+
+                <Border
+                    Padding="12"
+                    Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    CornerRadius="{DynamicResource ControlCornerRadius}">
+                    <StackPanel Spacing="10">
+                        <TextBlock FontWeight="SemiBold" Text="{I18N {x:Static pixeval:HomePageResources.GridSizeTitleTextBlockText}}" />
+                        <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8">
+                            <TextBlock
+                                Grid.Column="0"
+                                VerticalAlignment="Center"
+                                Text="{I18N {x:Static pixeval:HomePageResources.GridColumnsTextBlockText}}" />
+                            <NumericUpDown
+                                Grid.Column="1"
+                                AllowSpin="True"
+                                ClipValueToMinMax="True"
+                                FormatString="F0"
+                                Increment="1"
+                                Maximum="{x:Static home:HomePage.MaximumGridSize}"
+                                Minimum="{x:Static home:HomePage.MinimumGridSize}"
+                                Value="{Binding GridColumnsValue, Mode=TwoWay}" />
+                            <TextBlock
+                                Grid.Column="2"
+                                VerticalAlignment="Center"
+                                Text="{I18N {x:Static pixeval:HomePageResources.GridRowsTextBlockText}}" />
+                            <NumericUpDown
+                                Grid.Column="3"
+                                AllowSpin="True"
+                                ClipValueToMinMax="True"
+                                FormatString="F0"
+                                Increment="1"
+                                Maximum="{x:Static home:HomePage.MaximumGridSize}"
+                                Minimum="{x:Static home:HomePage.MinimumGridSize}"
+                                Value="{Binding GridRowsValue, Mode=TwoWay}" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border
+                    Padding="12"
+                    Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    CornerRadius="{DynamicResource ControlCornerRadius}">
+                    <StackPanel Spacing="10">
+                        <TextBlock FontWeight="SemiBold" Text="{I18N {x:Static pixeval:HomePageResources.SelectedCardTitleTextBlockText}}" />
                         <TextBlock
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="{I18N {x:Static pixeval:HomePageResources.EditPaneDescriptionTextBlockText}}"
+                            Text="{Binding SelectedCardDescription}"
                             TextWrapping="Wrap" />
-                    </StackPanel>
-
-                    <Border
-                        Padding="12"
-                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                        CornerRadius="{DynamicResource ControlCornerRadius}">
-                        <StackPanel Spacing="10">
-                            <TextBlock FontWeight="SemiBold" Text="{I18N {x:Static pixeval:HomePageResources.GridSizeTitleTextBlockText}}" />
-                            <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8">
-                                <TextBlock
-                                    Grid.Column="0"
-                                    VerticalAlignment="Center"
-                                    Text="{I18N {x:Static pixeval:HomePageResources.GridColumnsTextBlockText}}" />
-                                <NumericUpDown
-                                    x:Name="GridColumnsBox"
-                                    Grid.Column="1"
-                                    AllowSpin="True"
-                                    ClipValueToMinMax="True"
-                                    FormatString="F0"
-                                    Increment="1"
-                                    Maximum="{x:Static home:HomePage.MaximumGridSize}"
-                                    Minimum="{x:Static home:HomePage.MinimumGridSize}"
-                                    ValueChanged="GridSizeBox_OnValueChanged" />
-                                <TextBlock
-                                    Grid.Column="2"
-                                    VerticalAlignment="Center"
-                                    Text="{I18N {x:Static pixeval:HomePageResources.GridRowsTextBlockText}}" />
-                                <NumericUpDown
-                                    x:Name="GridRowsBox"
-                                    Grid.Column="3"
-                                    AllowSpin="True"
-                                    ClipValueToMinMax="True"
-                                    FormatString="F0"
-                                    Increment="1"
-                                    Maximum="{x:Static home:HomePage.MaximumGridSize}"
-                                    Minimum="{x:Static home:HomePage.MinimumGridSize}"
-                                    ValueChanged="GridSizeBox_OnValueChanged" />
-                            </Grid>
-                        </StackPanel>
-                    </Border>
-
-                    <Border
-                        Padding="12"
-                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                        CornerRadius="{DynamicResource ControlCornerRadius}">
-                        <StackPanel Spacing="10">
-                            <TextBlock FontWeight="SemiBold" Text="{I18N {x:Static pixeval:HomePageResources.SelectedCardTitleTextBlockText}}" />
+                        <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8">
                             <TextBlock
-                                x:Name="SelectedCardTextBlock"
-                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                Text="{I18N {x:Static pixeval:HomePageResources.NoSelectedCardTextBlockText}}"
-                                TextWrapping="Wrap" />
-                            <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8">
-                                <TextBlock
-                                    Grid.Column="0"
-                                    VerticalAlignment="Center"
-                                    Text="{I18N {x:Static pixeval:HomePageResources.PositionXTextBlockText}}" />
-                                <NumericUpDown
-                                    x:Name="SelectedColumnBox"
-                                    Grid.Column="1"
-                                    AllowSpin="True"
-                                    ClipValueToMinMax="True"
-                                    FormatString="F0"
-                                    Increment="1"
-                                    Minimum="1"
-                                    ValueChanged="SelectedCardNumericBox_OnValueChanged" />
-                                <TextBlock
-                                    Grid.Column="2"
-                                    VerticalAlignment="Center"
-                                    Text="{I18N {x:Static pixeval:HomePageResources.PositionYTextBlockText}}" />
-                                <NumericUpDown
-                                    x:Name="SelectedRowBox"
-                                    Grid.Column="3"
-                                    AllowSpin="True"
-                                    ClipValueToMinMax="True"
-                                    FormatString="F0"
-                                    Increment="1"
-                                    Minimum="1"
-                                    ValueChanged="SelectedCardNumericBox_OnValueChanged" />
-                            </Grid>
-                            <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8">
-                                <TextBlock
-                                    Grid.Column="0"
-                                    VerticalAlignment="Center"
-                                    Text="{I18N {x:Static pixeval:HomePageResources.WidthTextBlockText}}" />
-                                <NumericUpDown
-                                    x:Name="SelectedWidthBox"
-                                    Grid.Column="1"
-                                    AllowSpin="True"
-                                    ClipValueToMinMax="True"
-                                    FormatString="F0"
-                                    Increment="1"
-                                    Minimum="1"
-                                    ValueChanged="SelectedCardNumericBox_OnValueChanged" />
-                                <TextBlock
-                                    Grid.Column="2"
-                                    VerticalAlignment="Center"
-                                    Text="{I18N {x:Static pixeval:HomePageResources.HeightTextBlockText}}" />
-                                <NumericUpDown
-                                    x:Name="SelectedHeightBox"
-                                    Grid.Column="3"
-                                    AllowSpin="True"
-                                    ClipValueToMinMax="True"
-                                    FormatString="F0"
-                                    Increment="1"
-                                    Minimum="1"
-                                    ValueChanged="SelectedCardNumericBox_OnValueChanged" />
-                            </Grid>
-                            <StackPanel Spacing="4">
-                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.CardBackgroundTextBlockText}}" />
-                                <ColorPicker
-                                    x:Name="SelectedBackgroundColorPicker"
-                                    HorizontalAlignment="Stretch"
-                                    ColorChanged="SelectedBackgroundColorPicker_OnColorChanged"
-                                    IsAlphaEnabled="True"
-                                    IsAlphaVisible="True"
-                                    IsColorModelVisible="False"
-                                    IsColorPaletteVisible="False"
-                                    IsComponentSliderVisible="False"
-                                    IsComponentTextInputVisible="False"
-                                    IsHexInputVisible="True" />
-                            </StackPanel>
-                            <Button
-                                x:Name="DeleteSelectedCardButton"
+                                Grid.Column="0"
+                                VerticalAlignment="Center"
+                                Text="{I18N {x:Static pixeval:HomePageResources.PositionXTextBlockText}}" />
+                            <NumericUpDown
+                                Grid.Column="1"
+                                AllowSpin="True"
+                                ClipValueToMinMax="True"
+                                FormatString="F0"
+                                Increment="1"
+                                IsEnabled="{Binding HasSelectedCard}"
+                                Maximum="{Binding ColumnCount}"
+                                Minimum="1"
+                                Value="{Binding SelectedColumnValue, Mode=TwoWay}" />
+                            <TextBlock
+                                Grid.Column="2"
+                                VerticalAlignment="Center"
+                                Text="{I18N {x:Static pixeval:HomePageResources.PositionYTextBlockText}}" />
+                            <NumericUpDown
+                                Grid.Column="3"
+                                AllowSpin="True"
+                                ClipValueToMinMax="True"
+                                FormatString="F0"
+                                Increment="1"
+                                IsEnabled="{Binding HasSelectedCard}"
+                                Maximum="{Binding RowCount}"
+                                Minimum="1"
+                                Value="{Binding SelectedRowValue, Mode=TwoWay}" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8">
+                            <TextBlock
+                                Grid.Column="0"
+                                VerticalAlignment="Center"
+                                Text="{I18N {x:Static pixeval:HomePageResources.WidthTextBlockText}}" />
+                            <NumericUpDown
+                                Grid.Column="1"
+                                AllowSpin="True"
+                                ClipValueToMinMax="True"
+                                FormatString="F0"
+                                Increment="1"
+                                IsEnabled="{Binding HasSelectedCard}"
+                                Maximum="{Binding ColumnCount}"
+                                Minimum="1"
+                                Value="{Binding SelectedWidthValue, Mode=TwoWay}" />
+                            <TextBlock
+                                Grid.Column="2"
+                                VerticalAlignment="Center"
+                                Text="{I18N {x:Static pixeval:HomePageResources.HeightTextBlockText}}" />
+                            <NumericUpDown
+                                Grid.Column="3"
+                                AllowSpin="True"
+                                ClipValueToMinMax="True"
+                                FormatString="F0"
+                                Increment="1"
+                                IsEnabled="{Binding HasSelectedCard}"
+                                Maximum="{Binding RowCount}"
+                                Minimum="1"
+                                Value="{Binding SelectedHeightValue, Mode=TwoWay}" />
+                        </Grid>
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.CardBackgroundTextBlockText}}" />
+                            <ColorPicker
                                 HorizontalAlignment="Stretch"
-                                Click="DeleteSelectedCardButton_OnClick"
-                                IsEnabled="False">
-                                <StackPanel
-                                    HorizontalAlignment="Center"
-                                    Orientation="Horizontal"
-                                    Spacing="8">
-                                    <ContentControl Content="{markup:SymbolIcon Delete}" />
-                                    <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.DeleteSelectedCardButtonContent}}" />
-                                </StackPanel>
-                            </Button>
+                                IsAlphaEnabled="True"
+                                IsAlphaVisible="True"
+                                IsColorModelVisible="False"
+                                IsColorPaletteVisible="False"
+                                IsComponentSliderVisible="False"
+                                IsComponentTextInputVisible="False"
+                                IsEnabled="{Binding HasSelectedCard}"
+                                IsHexInputVisible="True"
+                                Color="{Binding SelectedBackgroundColor, Mode=TwoWay}" />
                         </StackPanel>
-                    </Border>
-
-                    <Border
-                        x:Name="SourceParametersPane"
-                        Padding="12"
-                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                        CornerRadius="{DynamicResource ControlCornerRadius}">
-                        <StackPanel Spacing="10">
-                            <StackPanel Spacing="4">
-                                <TextBlock
-                                    x:Name="SourceParameterTitleTextBlock"
-                                    FontWeight="SemiBold"
-                                    Text="{I18N {x:Static pixeval:HomePageResources.SourceParametersTitleTextBlockText}}" />
-                                <TextBlock
-                                    x:Name="SourceParameterDescriptionTextBlock"
-                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                    Text="{I18N {x:Static pixeval:HomePageResources.SelectCardSourcePromptTextBlockText}}"
-                                    TextWrapping="Wrap" />
+                        <Button
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding $parent[home:HomePage].DeleteSelectedCardCommand}"
+                            IsEnabled="{Binding HasSelectedCard}">
+                            <StackPanel
+                                HorizontalAlignment="Center"
+                                Orientation="Horizontal"
+                                Spacing="8">
+                                <ContentControl Content="{markup:SymbolIcon Delete}" />
+                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.DeleteSelectedCardButtonContent}}" />
                             </StackPanel>
-
-                            <StackPanel x:Name="SourceWorkTypePanel" Spacing="4">
-                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceWorkTypeTextBlockText}}" />
-                                <controls:SymbolComboBox
-                                    x:Name="SourceWorkTypeComboBox"
-                                    HorizontalAlignment="Stretch"
-                                    IconMode="False"
-                                    ItemsSource="{markup1:EnumResources x:TypeArguments=enum:WorkType}" />
-                            </StackPanel>
-
-                            <StackPanel x:Name="SourceSimpleWorkTypePanel" Spacing="4">
-                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceSimpleWorkTypeTextBlockText}}" />
-                                <controls:SymbolComboBox
-                                    x:Name="SourceSimpleWorkTypeComboBox"
-                                    HorizontalAlignment="Stretch"
-                                    IconMode="False"
-                                    ItemsSource="{markup1:EnumResources x:TypeArguments=enum:SimpleWorkType}"
-                                    SelectionChanged="SourceSimpleWorkTypeComboBox_OnSelectionChanged" />
-                            </StackPanel>
-
-                            <StackPanel x:Name="SourcePrivacyPolicyPanel" Spacing="4">
-                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourcePrivacyPolicyTextBlockText}}" />
-                                <controls:SymbolComboBox
-                                    x:Name="SourcePrivacyPolicyComboBox"
-                                    HorizontalAlignment="Stretch"
-                                    IconMode="False"
-                                    ItemsSource="{markup1:EnumResources x:TypeArguments=enum:PrivacyPolicy}" />
-                            </StackPanel>
-
-                            <StackPanel x:Name="SourceRankOptionPanel" Spacing="4">
-                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceRankOptionTextBlockText}}" />
-                                <controls:SymbolComboBox
-                                    x:Name="SourceRankOptionComboBox"
-                                    HorizontalAlignment="Stretch"
-                                    IconMode="False" />
-                            </StackPanel>
-
-                            <StackPanel x:Name="SourceRankingDatePanel" Spacing="4">
-                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceRankingDateTextBlockText}}" />
-                                <CheckBox x:Name="SourceUseSpecifiedRankingDateCheckBox" Content="{I18N {x:Static pixeval:HomePageResources.SourceUseSpecifiedRankingDateCheckBoxContent}}" />
-                                <CalendarDatePicker
-                                    x:Name="SourceRankingDatePicker"
-                                    HorizontalAlignment="Stretch"
-                                    DisplayDateEnd="{x:Static capability:WorkRankingPage.MaxDate}"
-                                    IsEnabled="{Binding #SourceUseSpecifiedRankingDateCheckBox.IsChecked}"
-                                    SelectedDate="{x:Static capability:WorkRankingPage.MaxDate}"
-                                    SelectedDateFormat="Short" />
-                            </StackPanel>
-
-                            <StackPanel x:Name="SourceUserIdPanel" Spacing="4">
-                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceUserIdTextBlockText}}" />
-                                <TextBox x:Name="SourceUserIdTextBox" />
-                            </StackPanel>
-
-                            <StackPanel x:Name="SourceEntryIdPanel" Spacing="4">
-                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceEntryIdTextBlockText}}" />
-                                <TextBox x:Name="SourceEntryIdTextBox" />
-                            </StackPanel>
-
-                            <StackPanel x:Name="SourceSearchTextPanel" Spacing="4">
-                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceSearchTextTextBlockText}}" />
-                                <TextBox x:Name="SourceSearchTextBox" />
-                            </StackPanel>
-
-                            <StackPanel x:Name="SourceTagPanel" Spacing="4">
-                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceTagTextBlockText}}" />
-                                <TextBox x:Name="SourceTagTextBox" />
-                            </StackPanel>
-
-                            <Button
-                                x:Name="AddConfiguredCardButton"
-                                HorizontalAlignment="Stretch"
-                                Click="AddConfiguredCardButton_OnClick"
-                                IsEnabled="False">
-                                <StackPanel
-                                    HorizontalAlignment="Center"
-                                    Orientation="Horizontal"
-                                    Spacing="8">
-                                    <ContentControl Content="{markup:SymbolIcon Add}" />
-                                    <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.AddConfiguredCardButtonContent}}" />
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
-                    </Border>
-
-                    <StackPanel Spacing="8">
-                        <TextBlock FontWeight="SemiBold" Text="{I18N {x:Static pixeval:HomePageResources.CardLibraryTitleTextBlockText}}" />
-                        <ItemsControl x:Name="CardLibraryItemsControl">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate x:DataType="{x:Type home:HomeCardTemplate}">
-                                    <Button
-                                        Margin="0,0,0,8"
-                                        Padding="0"
-                                        HorizontalAlignment="Stretch"
-                                        Background="Transparent"
-                                        Click="CardTemplateButton_OnClick">
-                                        <Border
-                                            Padding="12"
-                                            Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                                            CornerRadius="{DynamicResource ControlCornerRadius}">
-                                            <Grid ColumnDefinitions="44,*" ColumnSpacing="12">
-                                                <Border
-                                                    Width="44"
-                                                    Height="44"
-                                                    Background="{DynamicResource ControlFillColorDefaultBrush}"
-                                                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                                                    BorderThickness="1"
-                                                    CornerRadius="{DynamicResource ControlCornerRadius}">
-                                                    <fluent:SymbolIcon
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"
-                                                        FontSize="20"
-                                                        IconVariant="Color"
-                                                        Symbol="{Binding Symbol}" />
-                                                </Border>
-                                                <StackPanel Grid.Column="1" Spacing="3">
-                                                    <TextBlock
-                                                        FontWeight="SemiBold"
-                                                        Text="{Binding Title}"
-                                                        TextTrimming="CharacterEllipsis" />
-                                                    <TextBlock
-                                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                        Text="{Binding Description}"
-                                                        TextWrapping="Wrap" />
-                                                </StackPanel>
-                                            </Grid>
-                                        </Border>
-                                    </Button>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                        </Button>
                     </StackPanel>
+                </Border>
+
+                <Border
+                    Padding="12"
+                    Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    CornerRadius="{DynamicResource ControlCornerRadius}">
+                    <StackPanel Spacing="10">
+                        <StackPanel Spacing="4">
+                            <TextBlock FontWeight="SemiBold" Text="{Binding SourceParameterTitle}" />
+                            <TextBlock
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Text="{Binding SourceParameterDescription}"
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+
+                        <StackPanel IsVisible="{Binding IsSourceWorkTypePanelVisible}" Spacing="4">
+                            <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceWorkTypeTextBlockText}}" />
+                            <controls:SymbolComboBox
+                                HorizontalAlignment="Stretch"
+                                IconMode="False"
+                                ItemsSource="{markup1:EnumResources x:TypeArguments=enum:WorkType}"
+                                SelectedValue="{Binding SelectedSourceWorkType, Mode=TwoWay}" />
+                        </StackPanel>
+
+                        <StackPanel IsVisible="{Binding IsSourceSimpleWorkTypePanelVisible}" Spacing="4">
+                            <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceSimpleWorkTypeTextBlockText}}" />
+                            <controls:SymbolComboBox
+                                HorizontalAlignment="Stretch"
+                                IconMode="False"
+                                ItemsSource="{markup1:EnumResources x:TypeArguments=enum:SimpleWorkType}"
+                                SelectedValue="{Binding SelectedSourceSimpleWorkType, Mode=TwoWay}" />
+                        </StackPanel>
+
+                        <StackPanel IsVisible="{Binding IsSourcePrivacyPolicyPanelVisible}" Spacing="4">
+                            <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourcePrivacyPolicyTextBlockText}}" />
+                            <controls:SymbolComboBox
+                                HorizontalAlignment="Stretch"
+                                IconMode="False"
+                                ItemsSource="{markup1:EnumResources x:TypeArguments=enum:PrivacyPolicy}"
+                                SelectedValue="{Binding SelectedSourcePrivacyPolicy, Mode=TwoWay}" />
+                        </StackPanel>
+
+                        <StackPanel IsVisible="{Binding IsSourceRankOptionPanelVisible}" Spacing="4">
+                            <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceRankOptionTextBlockText}}" />
+                            <controls:SymbolComboBox
+                                HorizontalAlignment="Stretch"
+                                IconMode="False"
+                                ItemsSource="{Binding SourceRankOptionItems}"
+                                SelectedValue="{Binding SelectedSourceRankOption, Mode=TwoWay}" />
+                        </StackPanel>
+
+                        <StackPanel IsVisible="{Binding IsSourceRankingDatePanelVisible}" Spacing="4">
+                            <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceRankingDateTextBlockText}}" />
+                            <CheckBox Content="{I18N {x:Static pixeval:HomePageResources.SourceUseSpecifiedRankingDateCheckBoxContent}}" IsChecked="{Binding UseSpecifiedRankingDate, Mode=TwoWay}" />
+                            <CalendarDatePicker
+                                HorizontalAlignment="Stretch"
+                                DisplayDateEnd="{x:Static capability:WorkRankingPage.MaxDate}"
+                                IsEnabled="{Binding UseSpecifiedRankingDate}"
+                                SelectedDate="{Binding SelectedRankingDate, Mode=TwoWay}"
+                                SelectedDateFormat="Short" />
+                        </StackPanel>
+
+                        <StackPanel IsVisible="{Binding IsSourceUserIdPanelVisible}" Spacing="4">
+                            <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceUserIdTextBlockText}}" />
+                            <TextBox Text="{Binding SourceUserIdText, Mode=TwoWay}" />
+                        </StackPanel>
+
+                        <StackPanel IsVisible="{Binding IsSourceEntryIdPanelVisible}" Spacing="4">
+                            <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceEntryIdTextBlockText}}" />
+                            <TextBox Text="{Binding SourceEntryIdText, Mode=TwoWay}" />
+                        </StackPanel>
+
+                        <StackPanel IsVisible="{Binding IsSourceSearchTextPanelVisible}" Spacing="4">
+                            <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceSearchTextTextBlockText}}" />
+                            <TextBox Text="{Binding SourceSearchText, Mode=TwoWay}" />
+                        </StackPanel>
+
+                        <StackPanel IsVisible="{Binding IsSourceTagPanelVisible}" Spacing="4">
+                            <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceTagTextBlockText}}" />
+                            <TextBox Text="{Binding SourceTagText, Mode=TwoWay}" />
+                        </StackPanel>
+
+                        <Button
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding $parent[home:HomePage].AddConfiguredCardCommand}"
+                            IsEnabled="{Binding CanAddConfiguredCard}">
+                            <StackPanel
+                                HorizontalAlignment="Center"
+                                Orientation="Horizontal"
+                                Spacing="8">
+                                <ContentControl Content="{markup:SymbolIcon Add}" />
+                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.AddConfiguredCardButtonContent}}" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Border>
+
+                <StackPanel Spacing="8">
+                    <TextBlock FontWeight="SemiBold" Text="{I18N {x:Static pixeval:HomePageResources.CardLibraryTitleTextBlockText}}" />
+                    <ItemsControl ItemsSource="{Binding CardTemplates}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="{x:Type home:HomeCardTemplate}">
+                                <Button
+                                    Margin="0,0,0,8"
+                                    Padding="0"
+                                    HorizontalAlignment="Stretch"
+                                    Background="Transparent"
+                                    Command="{Binding $parent[home:HomePage].ViewModel.SelectTemplateCommand}"
+                                    CommandParameter="{Binding}">
+                                    <Border
+                                        Padding="12"
+                                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                        CornerRadius="{DynamicResource ControlCornerRadius}">
+                                        <Grid ColumnDefinitions="44,*" ColumnSpacing="12">
+                                            <Border
+                                                Width="44"
+                                                Height="44"
+                                                Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                                BorderThickness="1"
+                                                CornerRadius="{DynamicResource ControlCornerRadius}">
+                                                <fluent:SymbolIcon
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="20"
+                                                    IconVariant="Color"
+                                                    Symbol="{Binding Symbol}" />
+                                            </Border>
+                                            <StackPanel Grid.Column="1" Spacing="3">
+                                                <TextBlock
+                                                    FontWeight="SemiBold"
+                                                    Text="{Binding Title}"
+                                                    TextTrimming="CharacterEllipsis" />
+                                                <TextBlock
+                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                    Text="{Binding Description}"
+                                                    TextWrapping="Wrap" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </StackPanel>
-            </ScrollViewer>
-        </Border>
-    </Grid>
-</ContentPage>
+            </StackPanel>
+        </ScrollViewer>
+    </DrawerPage.Drawer>
+</DrawerPage>

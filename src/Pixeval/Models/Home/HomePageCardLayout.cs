@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using Mako;
 using Mako.Global.Enum;
-using Mako.Model;
 using Pixeval.Controls;
 using Pixeval.I18N;
 using Pixeval.Models.Options;
@@ -142,19 +141,13 @@ public record HomePageCardLayout
                 default:
                     break;
             }
-
-            yield break;
         }
 
         static string GetDescription<TEnum>(TEnum value)
             where TEnum : struct, Enum =>
             SymbolComboBoxItem.GetResource(value);
 
-        static string GetRankOptionDescription(HomePageCardLayout card)
-        {
-            var key = card.SimpleWorkType is SimpleWorkType.Novel ? nameof(Novel) : nameof(Illustration);
-            return SymbolComboBoxItem.GetResource(card.RankOption, key);
-        }
+        static string GetRankOptionDescription(HomePageCardLayout card) => SymbolComboBoxItem.GetResource(card.RankOption, card.SimpleWorkType);
     }
 
     public DateTimeOffset GetRankingDate() =>

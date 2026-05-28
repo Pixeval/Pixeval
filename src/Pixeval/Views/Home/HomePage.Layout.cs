@@ -64,7 +64,7 @@ public partial class HomePage
 
     private void RefreshEditModeVisuals()
     {
-        var isEditing = EditModeButton.IsChecked is true;
+        var isEditing = ViewModel.IsEditMode;
         foreach (var child in HomeGrid.Children)
             if (child is HomePageCardControl control)
                 control.IsEditing = isEditing;
@@ -72,10 +72,10 @@ public partial class HomePage
 
     private void AddCardControl(HomePageCardLayout card)
     {
-        var control = new HomePageCardControl(card, GetTemplate(card), RowCount, ColumnCount)
+        var control = new HomePageCardControl(card, ViewModel.GetTemplate(card), RowCount, ColumnCount)
         {
-            IsCardTitleVisible = !App.AppViewModel.AppSettings.HideHomePageCardTitle,
-            IsEditing = EditModeButton.IsChecked is true,
+            IsCardTitleVisible = !ViewModel.IsCardTitleHidden,
+            IsEditing = ViewModel.IsEditMode,
             IsSelected = card == _selectedCard
         };
         control.CardSelected += HomeCardControl_OnCardSelected;
@@ -104,8 +104,8 @@ public partial class HomePage
             {
                 control.UpdateGridSize(RowCount, ColumnCount);
                 control.UpdateBackground();
-                control.IsCardTitleVisible = !App.AppViewModel.AppSettings.HideHomePageCardTitle;
-                control.IsEditing = EditModeButton.IsChecked is true;
+                control.IsCardTitleVisible = !ViewModel.IsCardTitleHidden;
+                control.IsEditing = ViewModel.IsEditMode;
                 control.IsSelected = card == _selectedCard;
                 ApplyCardLayout(control);
             }

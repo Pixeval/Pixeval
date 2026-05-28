@@ -12,10 +12,7 @@
                         Background="{DynamicResource SystemRegionBrush}"
                         CornerRadius="20">
                         <StackPanel Background="{DynamicResource SystemRegionBrush}" Spacing="10">
-                            <TextBlock
-                                FontSize="16"
-                                FontWeight="Bold"
-                                Text="Light Theme" />
+                            <TextBlock Text="Light Theme" Theme="{StaticResource BodyLargeStrongTextBlockStyle}" />
                             <ItemsControl ItemsSource="{markup:EnumValues x:TypeArguments=local:BadgeMode}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -38,10 +35,7 @@
                         Background="{DynamicResource SystemRegionBrush}"
                         CornerRadius="20">
                         <StackPanel Spacing="10">
-                            <TextBlock
-                                FontSize="16"
-                                FontWeight="Bold"
-                                Text="Dark Theme" />
+                            <TextBlock Text="Dark Theme" Theme="{StaticResource BodyLargeStrongTextBlockStyle}" />
                             <ItemsControl ItemsSource="{markup:EnumValues x:TypeArguments=local:BadgeMode}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>

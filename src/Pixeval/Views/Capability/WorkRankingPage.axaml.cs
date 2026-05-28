@@ -6,7 +6,6 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Mako;
 using Mako.Global.Enum;
-using Mako.Model;
 using Pixeval.Controls;
 using Pixeval.ViewModels;
 
@@ -43,16 +42,11 @@ public partial class WorkRankingPage : ContentPage
 
     private void ChangeEnumSource()
     {
-        if (SimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>() is SimpleWorkType.IllustrationAndManga)
-        {
-            RankOptionComboBox.ItemsSource = SymbolComboBoxItem.GetValues<RankOption>(nameof(Illustration));
-            RankOptionComboBox.SelectedValue = App.AppViewModel.AppSettings.IllustrationRankOption;
-        }
-        else
-        {
-            RankOptionComboBox.ItemsSource = SymbolComboBoxItem.GetValues<RankOption>(nameof(Novel));
-            RankOptionComboBox.SelectedValue = App.AppViewModel.AppSettings.NovelRankOption;
-        }
+        var selectedWorkType = SimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>();
+        RankOptionComboBox.ItemsSource = SymbolComboBoxItem.GetValues<RankOption>(selectedWorkType);
+        RankOptionComboBox.SelectedValue = selectedWorkType is SimpleWorkType.IllustrationAndManga
+            ? App.AppViewModel.AppSettings.IllustrationRankOption
+            : App.AppViewModel.AppSettings.NovelRankOption;
     }
 
     private void RankOptionComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e)

@@ -1,4 +1,4 @@
-﻿<entry:EntryItem
+<entry:EntryItem
     x:Class="Pixeval.Views.Entry.SpotlightItem"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -14,14 +14,11 @@
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
-    <DockPanel LastChildFill="False">
-        <controls:ConstrainedBox AspectRatio="40:21" DockPanel.Dock="Top">
-            <Image controls:Source.Cache="{Binding ThumbnailUrl}" Stretch="Uniform" />
-        </controls:ConstrainedBox>
+    <DockPanel>
         <Grid
             Margin="20"
             ColumnDefinitions="Auto,*,Auto"
-            DockPanel.Dock="Top"
+            DockPanel.Dock="Bottom"
             RowDefinitions="Auto,Auto"
             RowSpacing="10">
             <ContentControl
@@ -44,9 +41,11 @@
                 Grid.Column="0"
                 Grid.ColumnSpan="3"
                 DockPanel.Dock="Bottom"
+                MaxLines="1"
                 Text="{Binding Entry.Title}"
                 TextTrimming="WordEllipsis"
-                Theme="{StaticResource SubtitleTextBlockStyle}" />
+                Theme="{StaticResource BodyLargeStrongTextBlockStyle}" />
         </Grid>
+        <Image controls:Source.Cache="{Binding ThumbnailUrl}" Stretch="UniformToFill" />
     </DockPanel>
 </entry:EntryItem>

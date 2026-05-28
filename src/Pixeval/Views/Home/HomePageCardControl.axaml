@@ -8,6 +8,7 @@
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
+    xmlns:homeViewModels="using:Pixeval.ViewModels.Home"
     xmlns:viewModels="using:Pixeval.ViewModels"
     mc:Ignorable="d"
     d:DesignHeight="240"
@@ -59,8 +60,7 @@
 
                             <Panel>
                                 <ItemsControl
-                                    x:DataType="{x:Type home:HomeCardPreviewViewModel}"
-                                    x:Name="PART_ContentItemsControl"
+                                    x:DataType="{x:Type homeViewModels:HomeCardPreviewViewModel}"
                                     controls:AdaptiveGridIncrementalLoadingBehavior.IsEnabled="True"
                                     ClipToBounds="True"
                                     DataContext="{TemplateBinding PreviewViewModel}"
@@ -152,8 +152,7 @@
                                 </ItemsControl>
 
                                 <StackPanel
-                                    x:DataType="{x:Type home:HomeCardPreviewViewModel}"
-                                    x:Name="PART_PlaceholderPanel"
+                                    x:DataType="{x:Type homeViewModels:HomeCardPreviewViewModel}"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     DataContext="{TemplateBinding PreviewViewModel}"

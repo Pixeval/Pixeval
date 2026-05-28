@@ -144,7 +144,7 @@ public static class LocalSettingsEntryHelper
             t.Register(SimpleWorkType.Novel, Symbol.Book, EnumResources.SimpleWorkTypeNovel);
         });
 
-        RegisterAttach<RankOption>("Illustration", t =>
+        RegisterAttach<RankOption>(SimpleWorkType.IllustrationAndManga, t =>
         {
             t.Register(RankOption.Day, EnumResources.RankOptionDay);
             t.Register(RankOption.Week, EnumResources.RankOptionWeek);
@@ -164,7 +164,7 @@ public static class LocalSettingsEntryHelper
             t.Register(RankOption.DayAi, EnumResources.RankOptionDayAi);
             t.Register(RankOption.DayR18Ai, EnumResources.RankOptionDayR18Ai);
         });
-        RegisterAttach<RankOption>("Novel", t =>
+        RegisterAttach<RankOption>(SimpleWorkType.Novel, t =>
         {
             t.Register(RankOption.Day, EnumResources.RankOptionDay);
             t.Register(RankOption.Week, EnumResources.RankOptionWeek);
@@ -192,7 +192,7 @@ public static class LocalSettingsEntryHelper
         RegisteredAttach[typeof(TEnum)] = list;
     }
 
-    public static void RegisterAttach<TEnum>(string key, Action<RegisterAttachHelper<TEnum>> config)
+    public static void RegisterAttach<TEnum>(object key, Action<RegisterAttachHelper<TEnum>> config)
         where TEnum : struct, Enum
     {
         var list = new List<SymbolComboBoxItem>();
@@ -248,7 +248,7 @@ public static class LocalSettingsEntryHelper
 
         public ISettingsGroupBuilder<TSettings> Enum<TEnum>(
             Expression<Func<TSettings, TEnum>> property,
-            string key,
+            object key,
             Action<EnumSettingsEntry<TSettings, object>>? config = null)
             where TEnum : struct, Enum =>
             builder.Enum(Transform(property), SymbolComboBoxItem.GetValues<TEnum>(key), config);
@@ -263,7 +263,7 @@ public static class LocalSettingsEntryHelper
         public ISettingsGroupBuilder<TSettings> Enum<TEnum>(
             WorkTypeEnum workType,
             Expression<Func<TSettings, TEnum>> property,
-            string key,
+            object key,
             Action<EnumSettingsEntry<TSettings, object>>? config = null)
             where TEnum : struct, Enum =>
             builder.Enum(workType, Transform(property), SymbolComboBoxItem.GetValues<TEnum>(key), config);
@@ -279,10 +279,10 @@ public static class LocalSettingsEntryHelper
                 entry.Description = "";
                 (entry.Icon, var header) = workType switch
                 {
-                    WorkTypeEnum.Illustration => (Symbol.Image, EnumResources.WorkTypeIllustration),
-                    WorkTypeEnum.Manga => (Symbol.ImageMultiple, EnumResources.WorkTypeManga),
+                    WorkTypeEnum.Illustration => (Symbol.Image, EnumResources.WorkTypeEnumIllustration),
+                    WorkTypeEnum.Manga => (Symbol.ImageMultiple, EnumResources.WorkTypeEnumManga),
                     WorkTypeEnum.Ugoira => (Symbol.Gif, EnumResources.WorkTypeEnumUgoira),
-                    WorkTypeEnum.Novel => (Symbol.BookOpen, EnumResources.WorkTypeNovel),
+                    WorkTypeEnum.Novel => (Symbol.BookOpen, EnumResources.WorkTypeEnumNovel),
                     _ => throw new ArgumentOutOfRangeException(nameof(workType))
                 };
                 entry.Header = I18NManager.GetResource(header);
@@ -337,19 +337,16 @@ public static class LocalSettingsEntryHelper
             builder.Add(new(builder.Settings), config);
 
         public ISettingsGroupBuilder<AppSettings> IllustrationDownloadFormat(
-            WorkTypeEnum workType = WorkTypeEnum.Illustration,
             Action<IllustrationDownloadFormatSettingsEntry>? config = null) =>
-            builder.Add(new IllustrationDownloadFormatSettingsEntry(builder.Settings, workType), config);
+            builder.Add(new IllustrationDownloadFormatSettingsEntry(builder.Settings), config);
 
         public ISettingsGroupBuilder<AppSettings> NovelDownloadFormat(
-            WorkTypeEnum workType = WorkTypeEnum.Novel,
             Action<NovelDownloadFormatSettingsEntry>? config = null) =>
-            builder.Add(new NovelDownloadFormatSettingsEntry(builder.Settings, workType), config);
+            builder.Add(new NovelDownloadFormatSettingsEntry(builder.Settings), config);
 
         public ISettingsGroupBuilder<AppSettings> UgoiraDownloadFormat(
-            WorkTypeEnum workType = WorkTypeEnum.Ugoira,
             Action<UgoiraDownloadFormatSettingsEntry>? config = null) =>
-            builder.Add(new UgoiraDownloadFormatSettingsEntry(builder.Settings, workType), config);
+            builder.Add(new UgoiraDownloadFormatSettingsEntry(builder.Settings), config);
 
         public ISettingsGroupBuilder<AppSettings> WorkSubscriptions(
             Action<WorkSubscriptionsSettingsEntry>? config = null) =>

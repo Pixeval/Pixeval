@@ -1,7 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoSettingsPage;
@@ -23,7 +22,7 @@ public class UgoiraDownloadFormatSettingsEntry(AppSettings settings)
     : SingleValueSettingsEntry<AppSettings, object>(
         settings,
         nameof(AppSettings.UgoiraDownloadFormat),
-        "",
+        I18NManager.GetResource(EnumResources.WorkTypeEnumUgoira),
         "",
         Symbol.Gif,
         null,
@@ -31,17 +30,6 @@ public class UgoiraDownloadFormatSettingsEntry(AppSettings settings)
         static (appSettings, value) => appSettings.UgoiraDownloadFormat = ((UgoiraDownloadFormatToken) value).Value),
         IEnumSettingsEntry<object>
 {
-    public UgoiraDownloadFormatSettingsEntry(AppSettings settings, WorkTypeEnum workType) : this(settings)
-    {
-        Description = "";
-        (Icon, var header) = workType switch
-        {
-            WorkTypeEnum.Ugoira => (Symbol.Gif, EnumResources.WorkTypeEnumUgoira),
-            _ => throw new ArgumentOutOfRangeException(nameof(workType))
-        };
-        Header = I18NManager.GetResource(header);
-    }
-
     public IReadOnlyList<IReadOnlyStringPair<object>> EnumItems { get; } = CreateEnumItems();
 
     private static IReadOnlyList<IReadOnlyStringPair<object>> CreateEnumItems()

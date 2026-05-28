@@ -24,17 +24,17 @@ public partial class HomePage : IDisposable
 
         _isDisposed = true;
         GC.SuppressFinalize(this);
+        ViewModel.PropertyChanged -= ViewModel_OnPropertyChanged;
         _activeCardControl?.CancelEdit();
         _activeCardControl = null;
         _selectedCard = null;
-        _pendingTemplate = null;
 
         foreach (var control in HomeGrid.Children.OfType<HomePageCardControl>().ToList())
             DisposeCardControl(control);
 
         HomeGrid.Children.Clear();
         GuideGrid.Children.Clear();
-        CardLibraryItemsControl.ItemsSource = null;
+        DataContext = null;
     }
 
     ~HomePage() => Dispatcher.UIThread.InvokeAsync(Dispose);
