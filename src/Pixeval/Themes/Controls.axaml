@@ -17,6 +17,7 @@
         <MergeResourceInclude Source="/Controls/FloatingPaneView.axaml" />
         <MergeResourceInclude Source="/Controls/ContentDialog/ContentDialog.axaml" />
         <MergeResourceInclude Source="/Controls/TokenizingBox.axaml" />
+        <MergeResourceInclude Source="/Controls/IPBox.axaml" />
         <MergeResourceInclude Source="/Views/Entry/EntryView.axaml" />
         <MergeResourceInclude Source="/Views/Work/AddNewBookmarkTagItem.axaml" />
         <MergeResourceInclude Source="/Views/Home/HomePageCardControl.axaml" />

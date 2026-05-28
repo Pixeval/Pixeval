@@ -17,9 +17,7 @@ public record DependencyViewModel(string Name, string Author, string Url, string
         ("whistyun/Markdown.Avalonia", LicenseTexts.MIT("2020", "Whistyun")),
         ("praeclarum/sqlite-net", LicenseTexts.MIT("2019", "Krueger Systems, Inc.")),
         ("zxbmmmmmmmmm/SmoothScroll.Avalonia", LicenseTexts.MIT("2026", "zxbmmmmmmmmm")),
-        ("wieslawsoltes/Svg.Skia", LicenseTexts.MIT("2020", "Wiesław Šoltés")),
-        ("irihitech/Ursa.Avalonia", LicenseTexts.MIT("2025", ".NET Foundation and Contributors")),
-        ("irihitech/Semi.Avalonia", LicenseTexts.MIT("2022", "IRIHI Technology"))
+        ("wieslawsoltes/Svg.Skia", LicenseTexts.MIT("2020", "Wiesław Šoltés"))
     ];
     // ReSharper restore StringLiteralTypo
 

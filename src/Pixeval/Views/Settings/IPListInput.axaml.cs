@@ -20,15 +20,15 @@ public partial class IPListInput : StackPanel, IEntryControl<ISingleValueSetting
 
     private void AddButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (DataContext is not ISingleValueSettingsEntry<ObservableCollection<string>> entry || IPv4Box.IPAddress is not { } ip)
+        if (DataContext is not ISingleValueSettingsEntry<ObservableCollection<string>> entry || IPBox.IPAddress is not { } ip)
             return;
         var value = ip.ToString();
         if (entry.Value.Contains(value))
         {
-            ErrorInfoBar.IsVisible = true;
+            DuplicatesInfoBar.IsVisible = true;
             return;
         }
-        ErrorInfoBar.IsVisible = false;
+        DuplicatesInfoBar.IsVisible = false;
         entry.Value.Add(value);
     }
 

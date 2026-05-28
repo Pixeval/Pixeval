@@ -8,8 +8,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:AutoSettingsPage.Models"
     xmlns:pixeval="using:Pixeval"
+    xmlns:pixevalControls="using:Pixeval.Controls"
     xmlns:sco="using:System.Collections.ObjectModel"
-    xmlns:u="https://irihi.tech/ursa"
     x:DataType="{x:Type models:ISingleValueSettingsEntry,
                         x:TypeArguments=sco:ObservableCollection(x:String)}"
     Spacing="5"
@@ -22,14 +22,18 @@
             Click="AddButton_OnClick"
             Content="{markup:SymbolIcon Add}"
             DockPanel.Dock="Right" />
-        <u:IPv4Box
-            x:Name="IPv4Box"
-            MinWidth="160"
-            InputMode="Fast"
-            ShowLeadingZero="False" />
+        <pixevalControls:IPBox
+            x:Name="IPBox"
+            MinWidth="160" />
     </DockPanel>
     <TextBlock
-        x:Name="ErrorInfoBar"
+        x:Name="InvalidFormatInfoBar"
+        Foreground="Yellow"
+        IsVisible="{Binding #IPBox.IsValid,
+                            Converter={x:Static BoolConverters.Not}}"
+        Text="{I18N {x:Static pixeval:IPListInputResources.InvalidIPFormat}}" />
+    <TextBlock
+        x:Name="DuplicatesInfoBar"
         Foreground="Yellow"
         IsVisible="False"
         Text="{I18N {x:Static pixeval:IPListInputResources.DuplicatesWithExistingIP}}" />
