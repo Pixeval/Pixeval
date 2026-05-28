@@ -2,17 +2,20 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Numerics;
 using Avalonia;
+using Avalonia.Animation.Easings;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Media;
-using Avalonia.Threading;
+using Avalonia.Rendering.Composition;
+using Avalonia.Rendering.Composition.Animations;
 
 namespace Pixeval.Controls;
 
 public sealed class ProgressRing : Control
 {
-    private readonly DispatcherTimer _timer;
-    private int _frame;
+    private const int Dots = 12;
 
     public static readonly StyledProperty<bool> IsActiveProperty =
         AvaloniaProperty.Register<ProgressRing, bool>(nameof(IsActive));
@@ -34,18 +37,9 @@ public sealed class ProgressRing : Control
 
     public ProgressRing()
     {
-        _timer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromMilliseconds(80)
-        };
-        _timer.Tick += OnTimerTick;
-
         Width = 16;
         Height = 16;
         Focusable = false;
-
-        Loaded += (_, _) => UpdateTimer();
-        Unloaded += (_, _) => _timer.Stop();
     }
 
     public override void Render(DrawingContext context)
@@ -63,13 +57,11 @@ public sealed class ProgressRing : Control
         var center = new Point(Bounds.Width / 2, Bounds.Height / 2);
         var dotRadius = Math.Max(1, size * 0.08);
         var orbitRadius = Math.Max(0, (size / 2) - dotRadius);
-        const int dots = 12;
 
-        for (var i = 0; i < dots; ++i)
+        for (var i = 0; i < Dots; ++i)
         {
-            var distanceFromHead = (i - _frame + dots) % dots;
-            var opacity = 1 - (distanceFromHead / (double)dots * 0.75);
-            var angle = (Math.Tau * i / dots) - (Math.PI / 2);
+            var opacity = 1 - (i / (double) Dots * 0.75);
+            var angle = (Math.Tau * i / Dots) - (Math.PI / 2);
             var point = new Point(
                 center.X + (Math.Cos(angle) * orbitRadius),
                 center.Y + (Math.Sin(angle) * orbitRadius));
@@ -83,24 +75,53 @@ public sealed class ProgressRing : Control
     {
         base.OnPropertyChanged(e);
 
-        if (e.Property == IsActiveProperty)
-            UpdateTimer();
+        if (e.Property == IsActiveProperty || e.Property == BoundsProperty || e.Property == IsVisibleProperty)
+            UpdateAnimation();
 
         if (e.Property == IsActiveProperty || e.Property == ForegroundProperty)
             InvalidateVisual();
     }
 
-    private void UpdateTimer()
+    protected override void OnLoaded(RoutedEventArgs e)
     {
-        if (IsActive && IsLoaded)
-            _timer.Start();
-        else
-            _timer.Stop();
+        base.OnLoaded(e);
+        UpdateAnimation();
     }
 
-    private void OnTimerTick(object? sender, EventArgs e)
+    protected override void OnUnloaded(RoutedEventArgs e)
     {
-        _frame = (_frame + 1) % 12;
-        InvalidateVisual();
+        base.OnUnloaded(e);
+        StopAnimation();
+    }
+
+    private void UpdateAnimation()
+    {
+        if (!IsLoaded || !IsActive || !IsVisible || Bounds is not { Width: > 0, Height: > 0 })
+        {
+            StopAnimation();
+            return;
+        }
+
+        if (ElementComposition.GetElementVisual(this) is not { } visual)
+            return;
+
+        visual.CenterPoint = new Vector3((float) Bounds.Width / 2, (float) Bounds.Height / 2, 0);
+
+        var animation = visual.Compositor.CreateScalarKeyFrameAnimation();
+        animation.InsertKeyFrame(0f, 0, new LinearEasing());
+        animation.InsertKeyFrame(1f, (float) Math.Tau, new LinearEasing());
+        animation.Duration = TimeSpan.FromMilliseconds(960);
+        animation.IterationBehavior = AnimationIterationBehavior.Forever;
+
+        visual.StartAnimation(nameof(CompositionVisual.RotationAngle), animation);
+    }
+
+    private void StopAnimation()
+    {
+        if (ElementComposition.GetElementVisual(this) is not { } visual)
+            return;
+
+        visual.StopAnimation(nameof(CompositionVisual.RotationAngle));
+        visual.RotationAngle = 0;
     }
 }

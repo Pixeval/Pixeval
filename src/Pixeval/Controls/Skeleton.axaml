@@ -1,0 +1,62 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls">
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+            <SolidColorBrush x:Key="SkeletonBackgroundBrush" Color="#26000000" />
+            <Color x:Key="SkeletonShimmerEdgeColor">#00FFFFFF</Color>
+            <Color x:Key="SkeletonShimmerShoulderColor">#33FFFFFF</Color>
+            <Color x:Key="SkeletonShimmerCenterColor">#80FFFFFF</Color>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+            <SolidColorBrush x:Key="SkeletonBackgroundBrush" Color="#18FFFFFF" />
+            <Color x:Key="SkeletonShimmerEdgeColor">#00FFFFFF</Color>
+            <Color x:Key="SkeletonShimmerShoulderColor">#14FFFFFF</Color>
+            <Color x:Key="SkeletonShimmerCenterColor">#2EFFFFFF</Color>
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+
+    <Design.PreviewWith>
+        <StackPanel
+            Width="320"
+            Height="220"
+            Background="{DynamicResource SystemRegionBrush}">
+            <controls:Skeleton />
+        </StackPanel>
+    </Design.PreviewWith>
+
+    <ControlTheme x:Key="{x:Type controls:Skeleton}" TargetType="{x:Type controls:Skeleton}">
+        <Setter Property="Background" Value="{DynamicResource SkeletonBackgroundBrush}" />
+        <Setter Property="CornerRadius" Value="{StaticResource ControlCornerRadius}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="{x:Type controls:Skeleton}">
+                <Border
+                    Background="{TemplateBinding Background}"
+                    ClipToBounds="True"
+                    CornerRadius="{TemplateBinding CornerRadius}">
+                    <Panel>
+                        <Border
+                            Name="PART_Shimmer"
+                            HorizontalAlignment="Left"
+                            IsHitTestVisible="False"
+                            RenderTransform="skew(-18deg)"
+                            RenderTransformOrigin="50%,50%">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                                    <GradientStop Offset="0" Color="{DynamicResource SkeletonShimmerEdgeColor}" />
+                                    <GradientStop Offset="0.25" Color="{DynamicResource SkeletonShimmerShoulderColor}" />
+                                    <GradientStop Offset="0.5" Color="{DynamicResource SkeletonShimmerCenterColor}" />
+                                    <GradientStop Offset="0.75" Color="{DynamicResource SkeletonShimmerShoulderColor}" />
+                                    <GradientStop Offset="1" Color="{DynamicResource SkeletonShimmerEdgeColor}" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

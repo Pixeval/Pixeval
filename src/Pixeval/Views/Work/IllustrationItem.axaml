@@ -89,7 +89,7 @@
                         controls:Source.Cache="{Binding ThumbnailUrl}"
                         Stretch="UniformToFill" />
                 </controls:ConstrainedBox>
-                <!--<u:Skeleton IsVisible="{Binding ThumbnailSource, Converter={x:Static ObjectConverters.IsNull}}" />-->
+                <controls:Skeleton IsVisible="{Binding !#ThumbnailImage.(controls:Source.Loaded)}" />
                 <controls:HeartButton
                     Width="30"
                     Height="30"
