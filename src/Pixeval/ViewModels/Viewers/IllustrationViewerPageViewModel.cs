@@ -6,15 +6,20 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Avalonia.Controls;
 using Avalonia.Layout;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Mako.Global.Enum;
 using Mako.Model;
+using Pixeval.AppManagement;
+using Pixeval.Models.Options;
 using Pixeval.Views.Viewers;
 
 namespace Pixeval.ViewModels.Viewers;
 
 public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewModel, IDisposable
 {
+    private readonly DispatcherTimer _autoPlayTimer = new();
+
     /// <summary>
     /// 
     /// </summary>
@@ -23,6 +28,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
     public IllustrationViewerPageViewModel(IEnumerable<IllustrationItemViewModel> illustrationViewModels, int currentIllustrationIndex)
     {
         IllustrationsSource = [.. illustrationViewModels];
+        InitializeAutoPlayTimer();
         CurrentWorkIndex = currentIllustrationIndex;
     }
 
@@ -39,6 +45,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
     {
         ViewModelSource = new IllustrationViewViewModel(viewModel);
         ViewModelSource.View.FilterChanged += (_, _) => CurrentWorkIndex = Illustrations.IndexOf(CurrentIllustration);
+        InitializeAutoPlayTimer();
         CurrentWorkIndex = currentIllustrationIndex;
     }
 
@@ -49,6 +56,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
     public void Dispose()
     {
         GC.SuppressFinalize(this);
+        IsAutoPlaying = false;
         CurrentImage = null!;
         ViewModelSource?.Dispose();
     }
@@ -176,6 +184,116 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
     /// 插画列表
     /// </summary>
     public IList<IllustrationItemViewModel> Illustrations => ViewModelSource?.View ?? (IList<IllustrationItemViewModel>) IllustrationsSource!;
+
+    #endregion
+
+    #region AutoPlay
+
+    public int AutoPlayInterval
+    {
+        get => App.AppViewModel.AppSettings.IllustrationViewerAutoPlayInterval;
+        set
+        {
+            value = Math.Clamp(value, 1, 60);
+            if (App.AppViewModel.AppSettings.IllustrationViewerAutoPlayInterval == value)
+                return;
+
+            App.AppViewModel.AppSettings.IllustrationViewerAutoPlayInterval = value;
+            SaveAutoPlaySettings();
+            OnPropertyChanged();
+            UpdateAutoPlayTimerInterval();
+        }
+    }
+
+    public IllustrationViewerAutoPlayMode AutoPlayMode
+    {
+        get => App.AppViewModel.AppSettings.IllustrationViewerAutoPlayMode;
+        set
+        {
+            if (App.AppViewModel.AppSettings.IllustrationViewerAutoPlayMode == value)
+                return;
+
+            App.AppViewModel.AppSettings.IllustrationViewerAutoPlayMode = value;
+            SaveAutoPlaySettings();
+            OnPropertyChanged();
+        }
+    }
+
+    public IllustrationViewerAutoPlayScope AutoPlayScope
+    {
+        get => App.AppViewModel.AppSettings.IllustrationViewerAutoPlayScope;
+        set
+        {
+            if (App.AppViewModel.AppSettings.IllustrationViewerAutoPlayScope == value)
+                return;
+
+            App.AppViewModel.AppSettings.IllustrationViewerAutoPlayScope = value;
+            SaveAutoPlaySettings();
+            OnPropertyChanged();
+        }
+    }
+
+    [ObservableProperty]
+    public partial bool IsAutoPlaying { get; set; }
+
+    partial void OnIsAutoPlayingChanged(bool value)
+    {
+        if (value)
+            StartAutoPlay();
+        else
+            StopAutoPlay();
+        return;
+
+        void StartAutoPlay()
+        {
+            UpdateAutoPlayTimerInterval();
+            _autoPlayTimer.Start();
+        }
+
+        void StopAutoPlay() => _autoPlayTimer.Stop();
+    }
+
+    private void InitializeAutoPlayTimer()
+    {
+        _autoPlayTimer.Tick += AutoPlayTimerOnTick;
+        UpdateAutoPlayTimerInterval();
+    }
+
+    private void UpdateAutoPlayTimerInterval() => _autoPlayTimer.Interval = TimeSpan.FromSeconds(AutoPlayInterval);
+
+    private void AutoPlayTimerOnTick(object? sender, EventArgs e) => MoveAutoPlayNext();
+
+    private void MoveAutoPlayNext()
+    {
+        switch (AutoPlayScope, AutoPlayMode)
+        {
+            case (IllustrationViewerAutoPlayScope.CurrentWork, IllustrationViewerAutoPlayMode.Sequential):
+                if (CurrentPageIndex < PageCount - 1)
+                    CurrentPageIndex++;
+                else
+                    IsAutoPlaying = false;
+                break;
+            case (IllustrationViewerAutoPlayScope.CurrentWork, IllustrationViewerAutoPlayMode.Loop):
+                CurrentPageIndex = (CurrentPageIndex + 1) % PageCount;
+                break;
+            case (IllustrationViewerAutoPlayScope.AllWorks, IllustrationViewerAutoPlayMode.Sequential):
+                if (NextAction is PagedBehavior.None)
+                    IsAutoPlaying = false;
+                else
+                    NextCommand.Execute(null);
+                break;
+            case (IllustrationViewerAutoPlayScope.AllWorks, IllustrationViewerAutoPlayMode.Loop):
+                if (NextAction is PagedBehavior.None)
+                    CurrentWorkIndex = 0;
+                else
+                    NextCommand.Execute(null);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
+    private static void SaveAutoPlaySettings() => AppInfo.SaveSettings(App.AppViewModel.AppSettings);
 
     #endregion
 }

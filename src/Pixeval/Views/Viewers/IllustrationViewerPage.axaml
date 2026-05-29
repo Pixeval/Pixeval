@@ -9,6 +9,7 @@
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:options="using:Pixeval.Models.Options"
     xmlns:pixeval="using:Pixeval"
     xmlns:ss="using:SmoothScroll.Avalonia.Controls"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
@@ -304,6 +305,90 @@
                                         IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}"
                                         ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomToFit}}" />
                                     <CommandBarSeparator />
+                                    <CommandBarToggleButton
+                                        Icon="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding IsAutoPlaying},
+                                                                                                  Pause,
+                                                                                                  Play,
+                                                                                                  x:TypeArguments=common:Symbol}}"
+                                        IsChecked="{Binding IsAutoPlaying}"
+                                        ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.AutoPlay}}">
+                                        <CommandBarToggleButton.ContextFlyout>
+                                            <MenuFlyout Opened="AutoPlayMenuFlyout_OnOpened">
+                                                <MenuItem
+                                                    x:Name="AutoPlayInterval1SecondMenuItem"
+                                                    Click="AutoPlayIntervalMenuItem_OnClick"
+                                                    GroupName="AutoPlayInterval"
+                                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources.AutoPlayInterval1Second}}"
+                                                    Tag="{markup1:Int32 1}"
+                                                    ToggleType="Radio" />
+                                                <MenuItem
+                                                    x:Name="AutoPlayInterval3SecondsMenuItem"
+                                                    Click="AutoPlayIntervalMenuItem_OnClick"
+                                                    GroupName="AutoPlayInterval"
+                                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources.AutoPlayInterval3Seconds}}"
+                                                    Tag="{markup1:Int32 3}"
+                                                    ToggleType="Radio" />
+                                                <MenuItem
+                                                    x:Name="AutoPlayInterval5SecondsMenuItem"
+                                                    Click="AutoPlayIntervalMenuItem_OnClick"
+                                                    GroupName="AutoPlayInterval"
+                                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources.AutoPlayInterval5Seconds}}"
+                                                    Tag="{markup1:Int32 5}"
+                                                    ToggleType="Radio" />
+                                                <MenuItem
+                                                    x:Name="AutoPlayInterval10SecondsMenuItem"
+                                                    Click="AutoPlayIntervalMenuItem_OnClick"
+                                                    GroupName="AutoPlayInterval"
+                                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources.AutoPlayInterval10Seconds}}"
+                                                    Tag="{markup1:Int32 10}"
+                                                    ToggleType="Radio" />
+                                                <MenuItem
+                                                    x:Name="AutoPlayInterval15SecondsMenuItem"
+                                                    Click="AutoPlayIntervalMenuItem_OnClick"
+                                                    GroupName="AutoPlayInterval"
+                                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources.AutoPlayInterval15Seconds}}"
+                                                    Tag="{markup1:Int32 15}"
+                                                    ToggleType="Radio" />
+                                                <MenuItem
+                                                    x:Name="AutoPlayInterval30SecondsMenuItem"
+                                                    Click="AutoPlayIntervalMenuItem_OnClick"
+                                                    GroupName="AutoPlayInterval"
+                                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources.AutoPlayInterval30Seconds}}"
+                                                    Tag="{markup1:Int32 30}"
+                                                    ToggleType="Radio" />
+                                                <MenuItem Header="-" />
+                                                <MenuItem
+                                                    x:Name="AutoPlaySequentialModeMenuItem"
+                                                    Click="AutoPlayModeMenuItem_OnClick"
+                                                    GroupName="AutoPlayMode"
+                                                    Header="{I18N {x:Static pixeval:EnumResources.IllustrationViewerAutoPlayModeSequential}}"
+                                                    Tag="{x:Static options:IllustrationViewerAutoPlayMode.Sequential}"
+                                                    ToggleType="Radio" />
+                                                <MenuItem
+                                                    x:Name="AutoPlayLoopPlaybackModeMenuItem"
+                                                    Click="AutoPlayModeMenuItem_OnClick"
+                                                    GroupName="AutoPlayMode"
+                                                    Header="{I18N {x:Static pixeval:EnumResources.IllustrationViewerAutoPlayModeLoop}}"
+                                                    Tag="{x:Static options:IllustrationViewerAutoPlayMode.Loop}"
+                                                    ToggleType="Radio" />
+                                                <MenuItem Header="-" />
+                                                <MenuItem
+                                                    x:Name="AutoPlayCurrentWorkScopeMenuItem"
+                                                    Click="AutoPlayScopeMenuItem_OnClick"
+                                                    GroupName="AutoPlayScope"
+                                                    Header="{I18N {x:Static pixeval:EnumResources.IllustrationViewerAutoPlayScopeCurrentWork}}"
+                                                    Tag="{x:Static options:IllustrationViewerAutoPlayScope.CurrentWork}"
+                                                    ToggleType="Radio" />
+                                                <MenuItem
+                                                    x:Name="AutoPlayAllWorksScopeMenuItem"
+                                                    Click="AutoPlayScopeMenuItem_OnClick"
+                                                    GroupName="AutoPlayScope"
+                                                    Header="{I18N {x:Static pixeval:EnumResources.IllustrationViewerAutoPlayScopeAllWorks}}"
+                                                    Tag="{x:Static options:IllustrationViewerAutoPlayScope.AllWorks}"
+                                                    ToggleType="Radio" />
+                                            </MenuFlyout>
+                                        </CommandBarToggleButton.ContextFlyout>
+                                    </CommandBarToggleButton>
                                     <CommandBarButton
                                         Command="{Binding PrevCommand}"
                                         Icon="{markup:SymbolIcon ChevronLeft}"

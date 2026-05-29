@@ -26,15 +26,9 @@ public partial class NovelViewerPage : ContentPage
         DataContext = viewModel;
         InitializeComponent();
     }
-    private void PrevButton_OnRightClick(object? sender, TappedEventArgs e)
-    {
-        ViewModel.CurrentWorkIndex--;
-    }
+    private void PrevButton_OnRightClick(object? sender, TappedEventArgs e) => ViewModel.PrevWorkCommand.Execute(null);
 
-    private void NextButton_OnRightClick(object? sender, TappedEventArgs e)
-    {
-        ViewModel.CurrentWorkIndex++;
-    }
+    private void NextButton_OnRightClick(object? sender, TappedEventArgs e) => ViewModel.NextWorkCommand.Execute(null);
 
     private async void AddToBookmarkButton_OnClick(object? sender, RoutedEventArgs e)
     {

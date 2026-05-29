@@ -8,6 +8,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Pixeval.Controls;
+using Pixeval.Models.Options;
 using Pixeval.Utilities;
 using Pixeval.ViewModels.Viewers;
 
@@ -33,9 +34,45 @@ public partial class IllustrationViewerPage : ContentPage
         }
     }
 
-    private void PrevButton_OnRightClick(object? sender, TappedEventArgs e) => ViewModel.PrevCommand.Execute(null);
+    private void PrevButton_OnRightClick(object? sender, TappedEventArgs e) => ViewModel.PrevWorkCommand.Execute(null);
 
-    private void NextButton_OnRightClick(object? sender, TappedEventArgs e) => ViewModel.NextCommand.Execute(null);
+    private void NextButton_OnRightClick(object? sender, TappedEventArgs e) => ViewModel.NextWorkCommand.Execute(null);
+
+    private void AutoPlayMenuFlyout_OnOpened(object? sender, EventArgs e)
+    {
+        SetMenuItem(AutoPlayInterval1SecondMenuItem, ViewModel.AutoPlayInterval);
+        SetMenuItem(AutoPlayInterval3SecondsMenuItem, ViewModel.AutoPlayInterval);
+        SetMenuItem(AutoPlayInterval5SecondsMenuItem, ViewModel.AutoPlayInterval);
+        SetMenuItem(AutoPlayInterval10SecondsMenuItem, ViewModel.AutoPlayInterval);
+        SetMenuItem(AutoPlayInterval15SecondsMenuItem, ViewModel.AutoPlayInterval);
+        SetMenuItem(AutoPlayInterval30SecondsMenuItem, ViewModel.AutoPlayInterval);
+
+        SetMenuItem(AutoPlaySequentialModeMenuItem, ViewModel.AutoPlayMode);
+        SetMenuItem(AutoPlayLoopPlaybackModeMenuItem, ViewModel.AutoPlayMode);
+        SetMenuItem(AutoPlayCurrentWorkScopeMenuItem, ViewModel.AutoPlayScope);
+        SetMenuItem(AutoPlayAllWorksScopeMenuItem, ViewModel.AutoPlayScope);
+        return;
+
+        static void SetMenuItem(MenuItem menuItem, object value) => menuItem.IsChecked = Equals(value, menuItem.Tag);
+    }
+
+    private void AutoPlayIntervalMenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem { Tag: int interval })
+            ViewModel.AutoPlayInterval = interval;
+    }
+
+    private void AutoPlayModeMenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem { Tag: IllustrationViewerAutoPlayMode mode })
+            ViewModel.AutoPlayMode = mode;
+    }
+
+    private void AutoPlayScopeMenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem { Tag: IllustrationViewerAutoPlayScope scope })
+            ViewModel.AutoPlayScope = scope;
+    }
 
     private void ImageViewerPage_OnSelectionChanged(Control sender, ImageViewerSelectionChangedEventArgs e)
     {

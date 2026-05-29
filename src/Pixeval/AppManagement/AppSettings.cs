@@ -131,6 +131,15 @@ public record AppSettings
     [SettingsEntry(Symbol.ArrowBetweenDown, BrowseDirectionHeader, BrowseDirectionDescription)]
     public BrowseDirection BrowseDirection { get; set; } = BrowseDirection.LeftRight;
 
+    [SettingsEntry(Symbol.SlideMultipleArrowRight, IllustrationViewerAutoPlayIntervalEntryHeader, IllustrationViewerAutoPlayIntervalEntryDescription)]
+    public int IllustrationViewerAutoPlayInterval { get; set; } = 5;
+
+    [SettingsEntry(Symbol.ArrowShuffle, IllustrationViewerAutoPlayModeEntryHeader, IllustrationViewerAutoPlayModeEntryDescription)]
+    public IllustrationViewerAutoPlayMode IllustrationViewerAutoPlayMode { get; set; }
+
+    [SettingsEntry(Symbol.ImageMultiple, IllustrationViewerAutoPlayScopeEntryHeader, IllustrationViewerAutoPlayScopeEntryDescription)]
+    public IllustrationViewerAutoPlayScope IllustrationViewerAutoPlayScope { get; set; }
+
     [SettingsEntry(Symbol.TagDismiss, BlockedTagsEntryHeader, BlockedTagsEntryDescription, BlockedTagsEntryPlaceholder)]
     public ObservableCollection<string> BlockedTags { get; set; } = [];
 

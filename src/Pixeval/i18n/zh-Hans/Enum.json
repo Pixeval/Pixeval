@@ -137,6 +137,14 @@
     "TopDown": "从上到下",
     "BottomUp": "从下到上"
   },
+  "IllustrationViewerAutoPlayMode": {
+    "Sequential": "顺序播放",
+    "Loop": "循环播放"
+  },
+  "IllustrationViewerAutoPlayScope": {
+    "CurrentWork": "当前画集",
+    "AllWorks": "全部画集"
+  },
   "WorkSubscriptionType": {
     "Bookmarks": "收藏",
     "Posts": "发布作品"
