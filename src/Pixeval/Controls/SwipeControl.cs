@@ -16,7 +16,7 @@ public class SwipeControl : TransitioningContentControl
 
     public event EventHandler<Control, ImageViewerSelectionChangedEventArgs>? SelectionChanged; 
 
-    public static readonly StyledProperty<IReadOnlyList<object>?> ItemsSourceProperty = AvaloniaProperty.Register<SwipeControl, IReadOnlyList<object>>(nameof(ItemsSource));
+    public static readonly StyledProperty<IReadOnlyList<object>?> ItemsSourceProperty = AvaloniaProperty.Register<SwipeControl, IReadOnlyList<object>?>(nameof(ItemsSource));
 
     public IReadOnlyList<object>? ItemsSource
     {

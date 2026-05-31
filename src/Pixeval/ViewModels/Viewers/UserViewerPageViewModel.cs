@@ -5,25 +5,16 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mako.Global.Enum;
 using Mako.Net.Response;
-using Misaki;
-using Pixeval.Utilities.IO.Caching;
 using Pixeval.Views.Capability;
 
 namespace Pixeval.ViewModels.Viewers;
 
-public partial class UserViewerPageViewModel : ViewModelBase, IDisposable
+public partial class UserViewerPageViewModel : ViewModelBase
 {
-    [ObservableProperty]
-    public partial Bitmap? AvatarSource { get; set; }
-
-    [ObservableProperty]
-    public partial Bitmap? BackgroundSource { get; set; }
-
     [ObservableProperty]
     public partial bool IsFollowed { get; set; }
 
@@ -45,9 +36,9 @@ public partial class UserViewerPageViewModel : ViewModelBase, IDisposable
 
     public Uri AppUri => UserDetail.UserEntity.AppUri;
 
-    private string AvatarUrl => UserDetail.UserEntity.ProfileImageUrls.Medium;
+    public string AvatarUrl => UserDetail.UserEntity.ProfileImageUrls.Medium;
 
-    private string? BackgroundUrl => UserDetail.UserProfile.BackgroundImageUrl;
+    public string? BackgroundUrl => UserDetail.UserProfile.BackgroundImageUrl ?? AvatarUrl;
 
     public IReadOnlyList<ContentPage> TabPages { get; }
 
@@ -64,16 +55,6 @@ public partial class UserViewerPageViewModel : ViewModelBase, IDisposable
             new UserMyPixivPage(Id),
             new RelatedUsersPage(Id),
         ];
-
-        _ = SetAvatarAndBackgroundAsync();
-    }
-
-    private async Task SetAvatarAndBackgroundAsync()
-    {
-        AvatarSource = await CacheHelper.GetBitmapAsync(IPlatformInfo.Pixiv, AvatarUrl);
-        BackgroundSource = BackgroundUrl is not null
-            ? await CacheHelper.GetBitmapAsync(IPlatformInfo.Pixiv, BackgroundUrl)
-            : AvatarSource;
     }
 
     private bool CanFollow => Id != App.AppViewModel.PixivUid;
@@ -109,13 +90,5 @@ public partial class UserViewerPageViewModel : ViewModelBase, IDisposable
             UserDetail.UserEntity.IsFollowed = false;
             IsFollowed = false;
         }
-    }
-
-    public void Dispose()
-    {
-        GC.SuppressFinalize(this);
-        AvatarSource?.Dispose();
-        if (!ReferenceEquals(AvatarSource, BackgroundSource))
-            BackgroundSource?.Dispose();
     }
 }

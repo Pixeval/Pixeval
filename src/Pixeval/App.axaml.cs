@@ -9,8 +9,10 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using Avalonia.Styling;
 using Pixeval.AppManagement;
 using Pixeval.I18N;
+using Pixeval.Models.Options;
 using Pixeval.Utilities;
 using Pixeval.Views.Home;
 using Pixeval.Views.Login;
@@ -36,6 +38,12 @@ public class App : Application
         
         AvaloniaXamlLoader.Load(this);
         Resources["ContentControlThemeFontFamily"] = new FontFamily(string.Join(',', AppViewModel.AppSettings.AppFontFamily));
+        RequestedThemeVariant = AppViewModel.AppSettings.Theme switch
+        {
+            ApplicationTheme.Light => ThemeVariant.Light,
+            ApplicationTheme.Dark => ThemeVariant.Dark,
+            _ => ThemeVariant.Default
+        };
 
 #if DEBUG
         this.AttachDeveloperTools();

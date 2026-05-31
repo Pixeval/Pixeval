@@ -1,4 +1,4 @@
-﻿<ResourceDictionary
+<ResourceDictionary
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:avconv="using:Avalonia.Controls.Converters">
@@ -435,7 +435,7 @@
     <Thickness x:Key="TabItemHeaderMargin">12,0</Thickness>
     <x:Double x:Key="TabItemHeaderFontSize">24</x:Double>
     <Thickness x:Key="TabItemMargin">12,0</Thickness>
-    <FontWeight x:Key="TabItemHeaderThemeFontWeight">SemiLight</FontWeight>    -->
+    <FontWeight x:Key="TabItemHeaderThemeFontWeight">SemiLight</FontWeight>-->
     <!--  Flyouts  -->
     <Thickness x:Key="FlyoutBorderThemeThickness">1</Thickness>
     <Thickness x:Key="FlyoutContentPadding">16,15,16,17</Thickness>

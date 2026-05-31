@@ -5,8 +5,7 @@
     xmlns:autoSettingsPage="using:AutoSettingsPage.Avalonia"
     xmlns:custom="using:Tabalonia.Themes.Custom"
     xmlns:smoothScroll="using:SmoothScroll.Avalonia.Controls"
-    xmlns:ui="using:FluentAvalonia.UI.Themes"
-    RequestedThemeVariant="Default">
+    xmlns:ui="using:FluentAvalonia.UI.Themes">
 
     <Application.Styles>
         <FluentTheme />

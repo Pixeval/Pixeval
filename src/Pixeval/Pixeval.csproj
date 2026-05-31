@@ -20,7 +20,7 @@
 	<ItemGroup>
 		<PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
 		<PackageReference Include="Avalonia.AvaloniaEdit" Version="12.0.0" />
-		<PackageReference Include="Avalonia.Controls.WebView" Version="12.0.0" />
+		<PackageReference Include="Avalonia.Controls.WebView" Version="12.0.1" />
 		<PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
 		<PackageReference Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />
 		<PackageReference Include="Avalonia.Controls.ColorPicker" Version="$(AvaloniaVersion)" />
@@ -32,9 +32,9 @@
 		
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
 		<PackageReference Include="Markdown.Avalonia" Version="12.0.0-a3" />
-		<PackageReference Include="SmoothScroll.Avalonia" Version="12.0.0.9" />
+		<PackageReference Include="SmoothScroll.Avalonia" Version="12.0.0.10" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.10.196-beta" />
-		<PackageReference Include="Svg.Controls.Skia.Avalonia" Version="12.0.0.6" />
+		<PackageReference Include="Svg.Controls.Skia.Avalonia" Version="12.0.0.11" />
 	</ItemGroup>
 
 	<ItemGroup>

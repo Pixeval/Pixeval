@@ -1,4 +1,4 @@
-﻿<ContentPage
+<ContentPage
     x:Class="Pixeval.Views.Viewers.UserViewerPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -22,11 +22,8 @@
     </ContentPage.Icon>
     <DockPanel>
         <!--  顶部信息区域  -->
-        <Border DockPanel.Dock="Top">
-            <Border.Background>
-                <ImageBrush Source="{Binding BackgroundSource}" Stretch="UniformToFill" />
-            </Border.Background>
-            <Grid Background="{DynamicResource AcrylicInAppFillColorDefaultBrush}" RowDefinitions="Auto,Auto">
+        <Border controls:Source.BackgroundCache="{Binding BackgroundUrl}" DockPanel.Dock="Top">
+            <Grid RowDefinitions="Auto,Auto">
 
                 <!--  用户信息  -->
                 <StackPanel
@@ -40,7 +37,7 @@
                         Height="80"
                         ClipToBounds="True"
                         CornerRadius="40">
-                        <Image Source="{Binding AvatarSource}" Stretch="UniformToFill" />
+                        <Image controls:Source.Cache="{Binding AvatarUrl}" Stretch="UniformToFill" />
                     </Border>
 
                     <!--  用户名、ID、简介  -->

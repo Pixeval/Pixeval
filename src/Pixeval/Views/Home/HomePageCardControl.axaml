@@ -5,10 +5,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:home="using:Pixeval.Views.Home"
+    xmlns:homeViewModels="using:Pixeval.ViewModels.Home"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
-    xmlns:homeViewModels="using:Pixeval.ViewModels.Home"
     xmlns:viewModels="using:Pixeval.ViewModels"
     mc:Ignorable="d"
     d:DesignHeight="240"
@@ -31,10 +31,7 @@
                         ClipToBounds="True"
                         CornerRadius="8">
                         <DockPanel VerticalSpacing="8">
-                            <Border
-                                Background="{DynamicResource ControlOnImageFillColorDefaultBrush}"
-                                DockPanel.Dock="Bottom"
-                                IsVisible="{TemplateBinding IsCardTitleVisible}">
+                            <Border DockPanel.Dock="Bottom" IsVisible="{TemplateBinding IsCardTitleVisible}">
                                 <DockPanel VerticalSpacing="5">
                                     <Button
                                         Width="28"
@@ -99,16 +96,14 @@
                                                 Command="{Binding $parent[home:HomePageCardControl].OpenPreviewItemCommand}"
                                                 CommandParameter="{Binding}"
                                                 Theme="{StaticResource TransparentButtonStyle}">
-                                                <DockPanel>
+                                                <DockPanel VerticalSpacing="6">
                                                     <Image
                                                         Height="64"
                                                         controls:Source.Cache="{Binding ThumbnailUrl}"
                                                         DockPanel.Dock="Top"
                                                         Stretch="UniformToFill" />
                                                     <TextBlock
-                                                        Margin="0,6,0,0"
                                                         FontSize="12"
-                                                        Foreground="{DynamicResource TextOnAccentFillColorSelectedTextBrush}"
                                                         MaxLines="2"
                                                         Text="{Binding Entry.Title}"
                                                         TextTrimming="CharacterEllipsis"
@@ -139,8 +134,7 @@
                                                     <TextBlock
                                                         DockPanel.Dock="Bottom"
                                                         FontSize="12"
-                                                        Foreground="{DynamicResource TextOnAccentFillColorSelectedTextBrush}"
-                                                        MaxLines="2"
+                                                        MaxLines="1"
                                                         Text="{Binding Entry.PureTitle}"
                                                         TextTrimming="CharacterEllipsis"
                                                         TextWrapping="Wrap" />
@@ -166,7 +160,6 @@
                                         Opacity="0.92"
                                         Symbol="{TemplateBinding CardSymbol}" />
                                     <TextBlock
-                                        Foreground="{DynamicResource TextOnAccentFillColorSelectedTextBrush}"
                                         Opacity="0.84"
                                         Text="{Binding PlaceholderText}"
                                         TextAlignment="Center"
@@ -178,7 +171,7 @@
 
                     <Panel x:Name="PART_ResizeHandlesLayer" IsVisible="{TemplateBinding IsEditing}">
                         <Panel.Styles>
-                            <Style Selector="Panel &gt; Border">
+                            <Style Selector="Panel > Border">
                                 <Setter Property="CornerRadius" Value="5" />
                                 <Setter Property="BorderThickness" Value="1" />
                                 <Setter Property="Background" Value="{DynamicResource ControlOnImageFillColorDefaultBrush}" />
@@ -195,14 +188,14 @@
                                 </Setter>
                             </Style>
 
-                            <Style Selector="Panel &gt; Border:pointerover">
+                            <Style Selector="Panel > Border:pointerover">
                                 <Setter Property="Background" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
                                 <Setter Property="BoxShadow" Value="0 3 12 0 #66000000" />
                                 <Setter Property="Opacity" Value="1" />
                                 <Setter Property="RenderTransform" Value="scale(1.05)" />
                             </Style>
 
-                            <Style Selector="Panel &gt; Border.pressed">
+                            <Style Selector="Panel > Border.pressed">
                                 <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}" />
                                 <Setter Property="BorderBrush" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
                                 <Setter Property="BoxShadow" Value="0 1 5 0 #73000000" />
