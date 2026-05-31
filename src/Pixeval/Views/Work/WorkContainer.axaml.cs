@@ -124,6 +124,11 @@ public partial class WorkContainer : UserControl
 
     private async void AddAllToBookmarkButton_OnClicked(object? sender, RoutedEventArgs e)
     {
+        await AddToBookmarkAsync(null, (false, null)).ConfigureAwait(false);
+    }
+
+    private async void AddAllToBookmarkButton_OnRightClicked(object? sender, ContextRequestedEventArgs e)
+    {
         await ShowBookmarkTagSelectorAsync(AddAllToBookmarkButton, null).ConfigureAwait(false);
     }
 
@@ -144,11 +149,11 @@ public partial class WorkContainer : UserControl
             PlacementMode.Bottom);
     }
 
-    private async Task AddToBookmarkAsync(IWorkViewModel? target, (bool isPrivate, IReadOnlyList<string> tags) e)
+    private async Task AddToBookmarkAsync(IWorkViewModel? target, (bool IsPrivate, IReadOnlyList<string>? Tags) e)
     {
-        if (target is { } current)
+        if (target is not null)
         {
-            await current.AddToBookmarkCommand.ExecuteAsync((e.tags, e.isPrivate, this));
+            await target.AddToBookmarkCommand.ExecuteAsync((e.Tags, e.IsPrivate, this));
             TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(I18NManager.GetResource(EntryViewResources.AddedToBookmark));
             return;
         }
@@ -164,7 +169,7 @@ public partial class WorkContainer : UserControl
             return;
 
         foreach (var i in viewModel.SelectedEntries)
-            await i.AddToBookmarkCommand.ExecuteAsync((e.tags, e.isPrivate, this));
+            await i.AddToBookmarkCommand.ExecuteAsync((e.Tags, e.IsPrivate, this));
         if (viewModel.SelectedEntries.Count is var c and > 0)
             TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(I18NManager.GetResource(WorkContainerResources.AddedAllToBookmarkContentFormatted, c));
     }

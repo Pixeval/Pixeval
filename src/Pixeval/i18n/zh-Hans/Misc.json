@@ -1,6 +1,4 @@
 {
-  "AddBookmark": "收藏",
-  "RemoveBookmark": "取消收藏",
   "AddedToWatchLater": "已添加到稍后再看",
   "RemovedFromWatchLater": "已从稍后再看移除",
   "Follow": "关注",
@@ -8,10 +6,6 @@
   "Unfollow": "取消关注",
   "Pause": "暂停",
   "Play": "播放",
-  "RestoreOriginalResolution": "缩放到图片实际大小",
-  "UniformToFillResolution": "缩放到适应窗口大小",
-  "FullScreen": "全屏",
-  "BackToWindow": "恢复窗口化",
   "OpenBottomList": "打开底部图片列表",
   "CloseBottomList": "关闭底部图片列表",
   "ExceptionEncountered": "应用程序遇到了异常",

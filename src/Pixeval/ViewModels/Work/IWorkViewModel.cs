@@ -20,7 +20,7 @@ public interface IWorkViewModel : INotifyPropertyChanged
     IArtworkInfo Entry { get; }
 
     /// <inheritdoc cref="WorkEntryViewModel{T}.AddToBookmarkCommand"/>
-    IAsyncRelayCommand<(IReadOnlyList<string> Tags, bool IsPrivate, Control? Control)> AddToBookmarkCommand { get; }
+    IAsyncRelayCommand<(IReadOnlyList<string>? Tags, bool IsPrivate, Control? Control)> AddToBookmarkCommand { get; }
 
     /// <inheritdoc cref="WorkEntryViewModel{T}.BookmarkCommand"/>
     IAsyncRelayCommand<Control?> BookmarkCommand { get; }
@@ -62,10 +62,10 @@ public interface IWorkViewModel : INotifyPropertyChanged
             WorkFilterSyntaxKeys.Ratio => Entry is not IImageSize image || ((FilterDoubleRange)predicate.Value!).Contains(image.AspectRatio),
             WorkFilterSyntaxKeys.StartDate => Entry.CreateDate >= (DateTimeOffset)predicate.Value!,
             WorkFilterSyntaxKeys.EndDate => Entry.CreateDate < (DateTimeOffset)predicate.Value!,
-            WorkFilterSyntaxKeys.R18 => ((bool)predicate.Value!) ^ Entry.SafeRating.IsR18,
-            WorkFilterSyntaxKeys.R18G => ((bool)predicate.Value!) ^ Entry.SafeRating.IsR18G,
-            WorkFilterSyntaxKeys.Ai => ((bool)predicate.Value!) ^ Entry.IsAiGenerated,
-            WorkFilterSyntaxKeys.Gif => ((bool)predicate.Value!) ^ Entry.ImageType is ImageType.SingleAnimatedImage,
+            WorkFilterSyntaxKeys.R18 => (bool)predicate.Value! ^ Entry.SafeRating.IsR18,
+            WorkFilterSyntaxKeys.R18G => (bool)predicate.Value! ^ Entry.SafeRating.IsR18G,
+            WorkFilterSyntaxKeys.Ai => (bool)predicate.Value! ^ Entry.IsAiGenerated,
+            WorkFilterSyntaxKeys.Gif => (bool)predicate.Value! ^ Entry.ImageType is ImageType.SingleAnimatedImage,
             _ => throw new ArgumentOutOfRangeException(nameof(predicate))
         };
 

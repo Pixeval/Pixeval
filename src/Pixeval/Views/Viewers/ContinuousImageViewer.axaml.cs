@@ -363,4 +363,9 @@ public partial class ContinuousImageViewer : ImageViewerBase
     private void ImageItemsControl_OnContainerPrepared(object? sender, ContainerPreparedEventArgs e) => ViewerScrollView.RegisterAnchorCandidate(e.Container);
 
     private void ImageItemsControl_OnContainerClearing(object? sender, ContainerClearingEventArgs e) => ViewerScrollView.UnregisterAnchorCandidate(e.Container);
+
+    private async void SaveButton_OnRightClick(object? sender, ContextRequestedEventArgs e)
+    {
+        await SaveAsCommand.ExecuteAsync(null);
+    }
 }

@@ -27,15 +27,9 @@
                 <MenuItem
                     Command="{Binding BookmarkCommand}"
                     CommandParameter="{Binding $self, Mode=OneTime}"
-                    Header="{I18N {x:Static pixeval:MiscResources.AddBookmark}}"
-                    Icon="{markup1:SymbolIconEx Heart,
-                                                IconVariant={Binding IsBookmarkedDisplay,
-                                                                     Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
-                    IsVisible="{Binding IsBookmarkSupported}" />
-                <MenuItem
-                    Click="AddToBookmark_OnClicked"
+                    ContextRequested="AddToBookmark_OnRightClick"
                     Header="{I18N {x:Static pixeval:EntryItemResources.AddToBookmark}}"
-                    Icon="{markup1:SymbolIconEx Bookmark,
+                    Icon="{markup1:SymbolIconEx Heart,
                                                 IconVariant={Binding IsBookmarkedDisplay,
                                                                      Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
                     IsVisible="{Binding IsBookmarkSupported}" />

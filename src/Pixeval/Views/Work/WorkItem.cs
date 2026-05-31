@@ -4,6 +4,7 @@
 using System;
 using Avalonia.Animation.Easings;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Rendering.Composition;
 using Pixeval.ViewModels;
@@ -17,7 +18,7 @@ public class WorkItem : EntryItem, IWorkAnimatable
 
     public event EventHandler<Control, IWorkViewModel>? RequestAddToBookmark;
 
-    protected void AddToBookmark_OnClicked(object sender, RoutedEventArgs e)
+    protected void AddToBookmark_OnRightClick(object sender, ContextRequestedEventArgs e)
     {
         RequestAddToBookmark?.Invoke(this, (IWorkViewModel) DataContext!);
     }

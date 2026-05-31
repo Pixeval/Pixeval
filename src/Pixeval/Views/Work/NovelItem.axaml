@@ -5,12 +5,12 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:Pixeval.Views.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:Pixeval"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Mako.Model"
     xmlns:novel="using:Pixeval.ViewModels"
+    xmlns:pixeval="using:Pixeval"
     xmlns:utilities="using:Pixeval.Utilities"
     xmlns:work="using:Pixeval.Views.Work"
     x:DataType="{x:Type novel:NovelItemViewModel}"
@@ -27,49 +27,43 @@
                     <MenuItem
                         Command="{Binding BookmarkCommand}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
-                        Header="{I18N {x:Static local:MiscResources.AddBookmark}}"
+                        ContextRequested="AddToBookmark_OnRightClick"
+                        Header="{I18N {x:Static pixeval:EntryItemResources.AddToBookmark}}"
                         Icon="{markup1:SymbolIconEx Heart,
-                                                    IconVariant={Binding IsBookmarkedDisplay,
-                                                                         Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
-                        IsVisible="{Binding IsBookmarkSupported}" />
-                    <MenuItem
-                        Click="AddToBookmark_OnClicked"
-                        Header="{I18N {x:Static local:EntryItemResources.AddToBookmark}}"
-                        Icon="{markup1:SymbolIconEx Bookmark,
                                                     IconVariant={Binding IsBookmarkedDisplay,
                                                                          Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
                         IsVisible="{Binding IsBookmarkSupported}" />
                     <MenuItem
                         Command="{Binding AddToWatchLaterCommand}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
-                        Header="{I18N {x:Static local:EntryItemResources.AddToWatchLater}}"
+                        Header="{I18N {x:Static pixeval:EntryItemResources.AddToWatchLater}}"
                         Icon="{markup1:SymbolIconEx Clock,
                                                     IconVariant={Binding IsInWatchLater,
                                                                          Converter={x:Static converters:PixevalConverters.BoolToIconVariant}}}" />
                     <MenuItem
                         Click="OpenUserInfoPage_OnClicked"
-                        Header="{I18N {x:Static local:EntryItemResources.OpenUserInfoPage}}"
+                        Header="{I18N {x:Static pixeval:EntryItemResources.OpenUserInfoPage}}"
                         Icon="{markup:SymbolIcon Person}" />
                     <MenuItem Header="-" />
                     <MenuItem
                         Command="{Binding SaveCommand}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
-                        Header="{I18N {x:Static local:EntryItemResources.Save}}"
+                        Header="{I18N {x:Static pixeval:EntryItemResources.Save}}"
                         Icon="{markup:SymbolIcon Save}" />
                     <MenuItem Header="-" />
                     <MenuItem
                         Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
-                        Header="{I18N {x:Static local:EntryItemResources.OpenInWebBrowser}}"
+                        Header="{I18N {x:Static pixeval:EntryItemResources.OpenInWebBrowser}}"
                         Icon="{markup:SymbolIcon GlobeArrowUp}"
                         Tag="{Binding WebsiteUri}" />
                     <MenuItem
                         Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
-                        Header="{I18N {x:Static local:EntryItemResources.GenerateWebLink}}"
+                        Header="{I18N {x:Static pixeval:EntryItemResources.GenerateWebLink}}"
                         Icon="{markup:SymbolIcon LinkMultiple}"
                         Tag="{Binding WebsiteUri}" />
                     <MenuItem
                         Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
-                        Header="{I18N {x:Static local:EntryItemResources.GenerateLink}}"
+                        Header="{I18N {x:Static pixeval:EntryItemResources.GenerateLink}}"
                         Icon="{markup:SymbolIcon Link}"
                         Tag="{Binding AppUri}" />
                 </MenuFlyout>

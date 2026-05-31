@@ -50,7 +50,6 @@
             <StackPanel ClipToBounds="True" DockPanel.Dock="Bottom">
                 <ListBox
                     x:Name="ThumbnailListBox"
-                    Grid.Row="2"
                     Height="90"
                     Margin="5,0"
                     Padding="0,0,0,5"
@@ -86,32 +85,20 @@
                     <CommandBarButton
                         Command="{Binding CurrentIllustration.BookmarkCommand}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
+                        ContextRequested="AddToBookmarkButton_OnRightClick"
                         Icon="{markup1:SymbolIconEx Heart,
                                                     IconVariant={Binding CurrentIllustration.IsBookmarkedDisplay,
                                                                          Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
                         IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
-                        Label="{I18N {x:Static pixeval:MiscResources.AddBookmark}}" />
+                        Label="{I18N {x:Static pixeval:EntryItemResources.AddToBookmark}}" />
                     <CommandBarButton
                         Command="{Binding CurrentIllustration.SaveCommand}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
+                        ContextRequested="SaveButton_OnRightClick"
                         Icon="{markup:SymbolIcon SaveMultiple}"
                         IsVisible="{Binding CurrentIllustration.IsPicSet}"
                         Label="{I18N {x:Static pixeval:EntryItemResources.MangaSave}}" />
-                    <CommandBarButton
-                        Command="{Binding CurrentIllustration.SaveAsCommand}"
-                        CommandParameter="{Binding $self, Mode=OneTime}"
-                        Icon="{markup:SymbolIcon SaveEdit}"
-                        IsVisible="{Binding CurrentIllustration.IsPicSet}"
-                        Label="{I18N {x:Static pixeval:EntryItemResources.MangaSaveAs}}" />
                     <CommandBarSeparator />
-                    <CommandBarButton
-                        x:Name="AddToBookmarkButton"
-                        Click="AddToBookmarkButton_OnClick"
-                        Icon="{markup1:SymbolIconEx Bookmark,
-                                                    IconVariant={Binding CurrentIllustration.IsBookmarkedDisplay,
-                                                                         Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
-                        IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
-                        Label="{I18N {x:Static pixeval:EntryItemResources.AddToBookmark}}" />
                     <CommandBarButton
                         Command="{Binding CurrentIllustration.AddToWatchLaterCommand}"
                         CommandParameter="{Binding $self, Mode=OneTime}"

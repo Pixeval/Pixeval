@@ -93,7 +93,7 @@
                         Margin="16,12"
                         DataContext="{TemplateBinding ArtworkInfo}"
                         Spacing="5">
-                        <Grid ColumnDefinitions="* Auto">
+                        <Grid ColumnDefinitions="*,Auto">
                             <SelectableTextBlock
                                 HorizontalAlignment="Left"
                                 controls:TranslatableTextBlockBehavior.IsEnabled="True"
@@ -152,6 +152,11 @@
                             ItemTemplate="{StaticResource UserCardDataTemplate}"
                             ItemsPanel="{StaticResource StackLayout}"
                             ItemsSource="{Binding Uploaders}" />
+
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <controls:PixevalBadge IsVisible="{Binding IsAiGenerated}" Mode="Ai" />
+                            <controls:PixevalBadge Mode="{Binding SafeRating, Converter={x:Static converters:PixevalConverters.SafeBadgeModeConverter}}" />
+                        </StackPanel>
 
                         <ItemsControl ItemsPanel="{StaticResource StackLayout}" ItemsSource="{Binding Tags}">
                             <ItemsControl.ItemTemplate>
@@ -263,6 +268,11 @@
                             ItemTemplate="{StaticResource LiteUserCardDataTemplate}"
                             ItemsPanel="{StaticResource StackLayout}"
                             ItemsSource="{Binding Uploaders}" />
+
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <controls:PixevalBadge IsVisible="{Binding IsAiGenerated}" Mode="Ai" />
+                            <controls:PixevalBadge Mode="{Binding SafeRating, Converter={x:Static converters:PixevalConverters.SafeBadgeModeConverter}}" />
+                        </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
             </ControlTemplate>

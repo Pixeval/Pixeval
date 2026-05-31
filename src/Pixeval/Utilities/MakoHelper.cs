@@ -68,7 +68,7 @@ public static class MakoHelper
         return id.UserInfo.IsFollowed;
     }
 
-    public static async Task<bool> SetIllustrationBookmarkAsync(Illustration id, bool favorite, bool privately = false, IEnumerable<string>? tags = null)
+    public static async Task<bool> SetIllustrationBookmarkAsync(Illustration id, bool favorite, bool privately = false, IReadOnlyCollection<string>? tags = null)
     {
         try
         {
@@ -86,7 +86,7 @@ public static class MakoHelper
         }
     }
 
-    public static async Task<bool> SetNovelBookmarkAsync(Novel id, bool favorite, bool privately = false, IEnumerable<string>? tags = null)
+    public static async Task<bool> SetNovelBookmarkAsync(Novel id, bool favorite, bool privately = false, IReadOnlyCollection<string>? tags = null)
     {
         var result = await (favorite
             ? App.AppViewModel.MakoClient.PostNovelBookmarkAsync(id.Id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public, tags)

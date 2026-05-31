@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Input.Platform;
 using CommunityToolkit.Mvvm.Input;
 using Pixeval.I18N;
@@ -250,5 +251,10 @@ public partial class SingleImageViewer : UserControl
     {
         if (e.Property == ScrollView.ZoomFactorProperty)
             RaisePropertyChanged(ZoomFactorProperty, e.GetOldValue<double>(), e.GetNewValue<double>());
+    }
+
+    private async void SaveButton_OnRightClick(object? sender, ContextRequestedEventArgs e)
+    {
+        await SaveAsCommand.ExecuteAsync(null);
     }
 }

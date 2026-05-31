@@ -34,9 +34,9 @@ public partial class IllustrationViewerPage : ContentPage
         }
     }
 
-    private void PrevButton_OnRightClick(object? sender, TappedEventArgs e) => ViewModel.PrevWorkCommand.Execute(null);
+    private void PrevButton_OnRightClick(object? sender, ContextRequestedEventArgs e) => ViewModel.PrevWorkCommand.Execute(null);
 
-    private void NextButton_OnRightClick(object? sender, TappedEventArgs e) => ViewModel.NextWorkCommand.Execute(null);
+    private void NextButton_OnRightClick(object? sender, ContextRequestedEventArgs e) => ViewModel.NextWorkCommand.Execute(null);
 
     private void AutoPlayMenuFlyout_OnOpened(object? sender, EventArgs e)
     {

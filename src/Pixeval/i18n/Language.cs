@@ -188,13 +188,11 @@ namespace Pixeval
         public const string GenerateLink = "EntryItem.GenerateLink";
         public const string GenerateWebLink = "EntryItem.GenerateWebLink";
         public const string MangaSave = "EntryItem.MangaSave";
-        public const string MangaSaveAs = "EntryItem.MangaSaveAs";
         public const string OpenInWebBrowser = "EntryItem.OpenInWebBrowser";
         public const string OpenNovel = "EntryItem.OpenNovel";
         public const string OpenUserInfoPage = "EntryItem.OpenUserInfoPage";
         public const string RemoveFromWatchLater = "EntryItem.RemoveFromWatchLater";
         public const string Save = "EntryItem.Save";
-        public const string SaveAs = "EntryItem.SaveAs";
         public const string SaveAsCancelled = "EntryItem.SaveAsCancelled";
         public const string Saved = "EntryItem.Saved";
         public const string TheIllustrationIsAMangaFormatted = "EntryItem.TheIllustrationIsAMangaFormatted";
@@ -225,7 +223,6 @@ namespace Pixeval
         public const string AutoPlayInterval30Seconds = "EntryViewerPage.AutoPlayInterval30Seconds";
         public const string AutoPlayInterval3Seconds = "EntryViewerPage.AutoPlayInterval3Seconds";
         public const string AutoPlayInterval5Seconds = "EntryViewerPage.AutoPlayInterval5Seconds";
-        public const string Background = "EntryViewerPage.Background";
         public const string CommentsTabContent = "EntryViewerPage.CommentsTab.Content";
         public const string Copy = "EntryViewerPage.Copy";
         public const string FollowingUserItemTitle = "EntryViewerPage.FollowingUserItem.Title";
@@ -233,7 +230,6 @@ namespace Pixeval
         public const string InfoAndComments = "EntryViewerPage.InfoAndComments";
         public const string InfoTabContent = "EntryViewerPage.InfoTab.Content";
         public const string LoadingNovelTextBlockText = "EntryViewerPage.LoadingNovelTextBlock.Text";
-        public const string LockScreen = "EntryViewerPage.LockScreen";
         public const string MangaCountItemTitle = "EntryViewerPage.MangaCountItem.Title";
         public const string Mirror = "EntryViewerPage.Mirror";
         public const string MyPixivUserItemTitle = "EntryViewerPage.MyPixivUserItem.Title";
@@ -251,10 +247,6 @@ namespace Pixeval
         public const string RotateClockwise = "EntryViewerPage.RotateClockwise";
         public const string RotateCounterclockwise = "EntryViewerPage.RotateCounterclockwise";
         public const string Save = "EntryViewerPage.Save";
-        public const string SaveAs = "EntryViewerPage.SaveAs";
-        public const string SetAs = "EntryViewerPage.SetAs";
-        public const string SetAsBackgroundSucceededTitle = "EntryViewerPage.SetAsBackgroundSucceededTitle";
-        public const string SetAsLockScreenSucceededTitle = "EntryViewerPage.SetAsLockScreenSucceededTitle";
         public const string SetAsSucceededTitle = "EntryViewerPage.SetAsSucceededTitle";
         public const string Share = "EntryViewerPage.Share";
         public const string ShareTitleFormatted = "EntryViewerPage.ShareTitleFormatted";
@@ -657,10 +649,8 @@ namespace Pixeval
     }
     public static class MiscResources
     {
-        public const string AddBookmark = "Misc.AddBookmark";
         public const string AddedToWatchLater = "Misc.AddedToWatchLater";
         public const string AllCountedTagName = "Misc.AllCountedTagName";
-        public const string BackToWindow = "Misc.BackToWindow";
         public const string BookmarkTagSelectorPrivateCheckBoxContent = "Misc.BookmarkTagSelectorPrivateCheckBox.Content";
         public const string CannotFindLoginProxyServerExecutable = "Misc.CannotFindLoginProxyServerExecutable";
         public const string CloseBottomList = "Misc.CloseBottomList";
@@ -670,7 +660,6 @@ namespace Pixeval
         public const string ExceptionEncountered = "Misc.ExceptionEncountered";
         public const string Follow = "Misc.Follow";
         public const string FollowPrivately = "Misc.FollowPrivately";
-        public const string FullScreen = "Misc.FullScreen";
         public const string GoToPageFormatted = "Misc.GoToPageFormatted";
         public const string OpenBottomList = "Misc.OpenBottomList";
         public const string OpenIllustId = "Misc.OpenIllustId";
@@ -680,15 +669,12 @@ namespace Pixeval
         public const string PixevalBadgeFollowing = "Misc.PixevalBadge.Following";
         public const string Play = "Misc.Play";
         public const string PrivacyPolicyComboBoxPlaceholderText = "Misc.PrivacyPolicyComboBox.PlaceholderText";
-        public const string RemoveBookmark = "Misc.RemoveBookmark";
         public const string RemovedFromWatchLater = "Misc.RemovedFromWatchLater";
         public const string ReplyContentTooLong = "Misc.ReplyContentTooLong";
-        public const string RestoreOriginalResolution = "Misc.RestoreOriginalResolution";
         public const string SearchUser = "Misc.SearchUser";
         public const string SortOptionComboBoxPlaceholderText = "Misc.SortOptionComboBox.PlaceholderText";
         public const string UnexpectedBehavior = "Misc.UnexpectedBehavior";
         public const string Unfollow = "Misc.Unfollow";
-        public const string UniformToFillResolution = "Misc.UniformToFillResolution";
         public const string WorkTypeComboBoxPlaceholderText = "Misc.WorkTypeComboBox.PlaceholderText";
     }
     public static class NovelViewerPageResources
@@ -871,7 +857,6 @@ namespace Pixeval
     }
     public static class WorkContainerResources
     {
-        public const string AddAllToBookmarkButtonLabel = "WorkContainer.AddAllToBookmarkButton.Label";
         public const string AddAllToBookmarkTitle = "WorkContainer.AddAllToBookmarkTitle";
         public const string AddedAllToBookmarkContentFormatted = "WorkContainer.AddedAllToBookmarkContentFormatted";
         public const string AddToBookmarkTeachingTipCloseButtonContent = "WorkContainer.AddToBookmarkTeachingTip.CloseButtonContent";
@@ -879,10 +864,8 @@ namespace Pixeval
         public const string CancelSelectionButtonFormatted = "WorkContainer.CancelSelectionButtonFormatted";
         public const string DownloadItemsQueuedFormatted = "WorkContainer.DownloadItemsQueuedFormatted";
         public const string FilterAutoSuggestBoxPlaceholderText = "WorkContainer.FilterAutoSuggestBox.PlaceholderText";
-        public const string OpenAllInBrowserButtonLabel = "WorkContainer.OpenAllInBrowserButton.Label";
         public const string OpenConditionDialogButtonLabel = "WorkContainer.OpenConditionDialogButton.Label";
         public const string RefreshButtonLabel = "WorkContainer.RefreshButton.Label";
-        public const string SaveAllButtonLabel = "WorkContainer.SaveAllButton.Label";
         public const string SelectAllButtonLabel = "WorkContainer.SelectAllButton.Label";
         public const string SelectedTooManyItemsForBookmarkContent = "WorkContainer.SelectedTooManyItemsForBookmarkContent";
         public const string SelectedTooManyItemsForBookmarkTitle = "WorkContainer.SelectedTooManyItemsForBookmarkTitle";

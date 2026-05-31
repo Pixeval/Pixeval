@@ -2,9 +2,11 @@
 // Licensed under the GPL-3.0 License.
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Mako.Global.Enum;
 using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
@@ -26,32 +28,33 @@ public partial class NovelViewerPage : ContentPage
         DataContext = viewModel;
         InitializeComponent();
     }
-    private void PrevButton_OnRightClick(object? sender, TappedEventArgs e) => ViewModel.PrevWorkCommand.Execute(null);
+    private void PrevButton_OnRightClick(object? sender, ContextRequestedEventArgs e) => ViewModel.PrevWorkCommand.Execute(null);
 
-    private void NextButton_OnRightClick(object? sender, TappedEventArgs e) => ViewModel.NextWorkCommand.Execute(null);
+    private void NextButton_OnRightClick(object? sender, ContextRequestedEventArgs e) => ViewModel.NextWorkCommand.Execute(null);
 
-    private async void AddToBookmarkButton_OnClick(object? sender, RoutedEventArgs e)
+    private async void SaveButton_OnRightClick(object? sender, ContextRequestedEventArgs e)
     {
-        if (BookmarkTagSelector.IsVisible)
-        {
-            BookmarkTagSelector.IsVisible = false;
-            return;
-        }
-
-        BookmarkTagSelector.IsVisible = true;
-        await BookmarkTagSelector.ResetSourceAsync();
+        await ViewModel.CurrentNovel.SaveAsCommand.ExecuteAsync(sender);
     }
 
-    private async void BookmarkTagSelector_OnTagsSelected(TagSelector sender, (bool isPrivate, IReadOnlyList<string> tags) e)
+    private async void AddToBookmarkButton_OnClick(object? sender, ContextRequestedEventArgs e)
     {
-        if (ViewModel.CurrentNovel is IWorkViewModel current)
+        if (sender is Control c)
+            await BookmarkTagSelectorFlyoutHelper.ShowAsync(
+                c,
+                SimpleWorkType.Novel,
+                AddToBookmarkAsync,
+                PlacementMode.Bottom);
+    }
+
+    private async Task AddToBookmarkAsync((bool IsPrivate, IReadOnlyList<string>? Tags) e)
+    {
+        if (ViewModel.CurrentNovel is { } current)
         {
-            await current.AddToBookmarkCommand.ExecuteAsync((e.tags, e.isPrivate, this));
+            await current.AddToBookmarkCommand.ExecuteAsync((e.Tags, e.IsPrivate, this));
             TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(
                 I18NManager.GetResource(EntryViewerPageResources.AddedToBookmark));
         }
-
-        BookmarkTagSelector.IsVisible = false;
     }
 
     #region Disposal

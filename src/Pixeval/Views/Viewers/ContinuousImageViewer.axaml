@@ -93,13 +93,10 @@
                                     IsVisible="{Binding IsPicGif, Converter={x:Static BoolConverters.Not}}" />
                                 <MenuItem
                                     Command="{Binding $parent[local:ContinuousImageViewer].SaveCommand}"
+                                    ContextRequested="SaveButton_OnRightClick"
                                     Header="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}"
                                     Icon="{markup:SymbolIcon Save}"
                                     InputGesture="Ctrl+S" />
-                                <MenuItem
-                                    Command="{Binding $parent[local:ContinuousImageViewer].SaveAsCommand}"
-                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources.SaveAs}}"
-                                    Icon="{markup:SymbolIcon SaveEdit}" />
                             </MenuFlyout>
                         </Border.ContextFlyout>
                     </Border>

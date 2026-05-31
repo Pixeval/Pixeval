@@ -27,17 +27,12 @@
   "InfoTab": {
     "Content": "详情"
   },
-  "LockScreen": "锁屏",
-  "Background": "壁纸",
   "RelatedWorksTab": {
     "Content": "推荐作品"
   },
   "RotateClockwise": "顺时针旋转",
   "RotateCounterclockwise": "逆时针旋转",
   "Mirror": "镜像翻转",
-  "SetAs": "设置显示的图片为",
-  "SetAsBackgroundSucceededTitle": "已设置背景",
-  "SetAsLockScreenSucceededTitle": "已设置锁屏",
   "Next": {
     "Page": "L/R：下一页",
     "PageOrWork": "L：下一页\nR：下一篇",
@@ -69,6 +64,5 @@
     "Text": "小说设置"
   },
   "Copy": "复制显示的图片",
-  "Save": "保存显示的图片",
-  "SaveAs": "另存为显示的图片"
+  "Save": "保存显示的图片"
 }

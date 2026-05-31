@@ -97,19 +97,20 @@
                 <CommandBarButton
                     x:Name="AddAllToBookmarkButton"
                     Click="AddAllToBookmarkButton_OnClicked"
+                    ContextRequested="AddAllToBookmarkButton_OnRightClicked"
                     Icon="{markup:SymbolIcon Bookmark}"
                     IsEnabled="{Binding !!SelectedEntries.Count}"
-                    Label="{I18N {x:Static local:WorkContainerResources.AddAllToBookmarkButtonLabel}}" />
+                    Label="{I18N {x:Static local:EntryItemResources.AddToBookmark}}" />
                 <CommandBarButton
                     Click="SaveAllButton_OnClicked"
                     Icon="{markup:SymbolIcon Save}"
                     IsEnabled="{Binding !!SelectedEntries.Count}"
-                    Label="{I18N {x:Static local:WorkContainerResources.SaveAllButtonLabel}}" />
+                    Label="{I18N {x:Static local:EntryItemResources.Save}}" />
                 <CommandBarButton
                     Click="OpenAllInBrowserButton_OnClicked"
                     Icon="{markup:SymbolIcon GlobeArrowUp}"
                     IsEnabled="{Binding !!SelectedEntries.Count}"
-                    Label="{I18N {x:Static local:WorkContainerResources.OpenAllInBrowserButtonLabel}}" />
+                    Label="{I18N {x:Static local:EntryItemResources.OpenInWebBrowser}}" />
             </CommandBar>
         </DockPanel>
 

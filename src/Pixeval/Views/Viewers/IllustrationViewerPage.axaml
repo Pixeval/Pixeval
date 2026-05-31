@@ -187,7 +187,7 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Stretch"
                         Command="{Binding PrevCommand}"
-                        RightTapped="PrevButton_OnRightClick"
+                        ContextRequested="PrevButton_OnRightClick"
                         Symbol="ChevronLeft"
                         ToolTipText="{Binding PrevButtonText}">
                         <controls:PageButton.IsVisible>
@@ -203,7 +203,7 @@
                         HorizontalAlignment="Right"
                         VerticalAlignment="Stretch"
                         Command="{Binding NextCommand}"
-                        RightTapped="NextButton_OnRightClick"
+                        ContextRequested="NextButton_OnRightClick"
                         Symbol="ChevronRight"
                         ToolTipText="{Binding NextButtonText}">
                         <controls:PageButton.IsVisible>
@@ -259,7 +259,7 @@
                                                                                                   Pause,
                                                                                                   Play,
                                                                                                   x:TypeArguments=common:Symbol}}"
-                                        ToolTip.Tip="{I18N {x:Static pixeval:MiscResources.Play}}">
+                                        Label="{I18N {x:Static pixeval:MiscResources.Play}}">
                                         <CommandBarButton.IsVisible>
                                             <MultiBinding Converter="{x:Static BoolConverters.And}">
                                                 <Binding Path="CurrentIllustration.IsPicGif" />
@@ -271,39 +271,39 @@
                                         Command="{Binding #I.SwipeImageViewer.RotateCounterclockwiseCommand, FallbackValue={x:Null}}"
                                         Icon="{markup:SymbolIcon ArrowRotateCounterclockwise}"
                                         IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}"
-                                        ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.RotateCounterclockwise}}" />
+                                        Label="{I18N {x:Static pixeval:EntryViewerPageResources.RotateCounterclockwise}}" />
                                     <CommandBarToggleButton
                                         Command="{Binding #I.SwipeImageViewer.MirrorCommand, FallbackValue={x:Null}}"
                                         Icon="{markup:SymbolIcon FlipHorizontal}"
                                         IsChecked="{Binding #I.SwipeImageViewer.IsMirrored, Mode=TwoWay, FallbackValue={x:False}}"
                                         IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}"
-                                        ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.Mirror}}" />
+                                        Label="{I18N {x:Static pixeval:EntryViewerPageResources.Mirror}}" />
                                     <CommandBarButton
                                         Command="{Binding #I.SwipeImageViewer.RotateClockwiseCommand, FallbackValue={x:Null}}"
                                         Icon="{markup:SymbolIcon ArrowRotateClockwise}"
                                         IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}"
-                                        ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.RotateClockwise}}" />
+                                        Label="{I18N {x:Static pixeval:EntryViewerPageResources.RotateClockwise}}" />
                                     <CommandBarSeparator x:Name="SwipeTransformSeparator" IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}" />
                                     <CommandBarButton
                                         Command="{Binding #I.ImageViewer.ZoomOutCommand}"
                                         Icon="{markup:SymbolIcon ZoomOut}"
-                                        ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomOut}}" />
+                                        Label="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomOut}}" />
                                     <controls:CommandBarElementContainer>
                                         <TextBlock x:Name="ZoomFactorTextBlock" Text="{Binding #I.ImageViewer.ZoomFactor, StringFormat={}{0:P0}}" />
                                     </controls:CommandBarElementContainer>
                                     <CommandBarButton
                                         Command="{Binding #I.ImageViewer.ZoomInCommand}"
                                         Icon="{markup:SymbolIcon ZoomIn}"
-                                        ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomIn}}" />
+                                        Label="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomIn}}" />
                                     <CommandBarButton
                                         Command="{Binding #I.ImageViewer.ZoomToOriginalCommand}"
                                         Icon="{markup:SymbolIcon RatioOneToOne}"
-                                        ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomToOriginal}}" />
+                                        Label="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomToOriginal}}" />
                                     <CommandBarButton
                                         Command="{Binding #I.SwipeImageViewer.CurrentPage.ZoomToFitCommand, FallbackValue={x:Null}}"
                                         Icon="{markup:SymbolIcon PageFit}"
                                         IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}"
-                                        ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomToFit}}" />
+                                        Label="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomToFit}}" />
                                     <CommandBarSeparator />
                                     <CommandBarToggleButton
                                         Icon="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding IsAutoPlaying},
@@ -311,7 +311,7 @@
                                                                                                   Play,
                                                                                                   x:TypeArguments=common:Symbol}}"
                                         IsChecked="{Binding IsAutoPlaying}"
-                                        ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.AutoPlay}}">
+                                        Label="{I18N {x:Static pixeval:EntryViewerPageResources.AutoPlay}}">
                                         <CommandBarToggleButton.ContextFlyout>
                                             <MenuFlyout Opened="AutoPlayMenuFlyout_OnOpened">
                                                 <MenuItem
@@ -391,16 +391,16 @@
                                     </CommandBarToggleButton>
                                     <CommandBarButton
                                         Command="{Binding PrevCommand}"
+                                        ContextRequested="PrevButton_OnRightClick"
                                         Icon="{markup:SymbolIcon ChevronLeft}"
                                         IsEnabled="{Binding PrevButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                                        RightTapped="PrevButton_OnRightClick"
-                                        ToolTip.Tip="{Binding PrevButtonText}" />
+                                        Label="{Binding PrevButtonText}" />
                                     <CommandBarButton
                                         Command="{Binding NextCommand}"
+                                        ContextRequested="NextButton_OnRightClick"
                                         Icon="{markup:SymbolIcon ChevronRight}"
                                         IsEnabled="{Binding NextButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                                        RightTapped="NextButton_OnRightClick"
-                                        ToolTip.Tip="{Binding NextButtonText}" />
+                                        Label="{Binding NextButtonText}" />
                                 </CommandBar.PrimaryCommands>
                             </CommandBar>
                         </StackPanel>

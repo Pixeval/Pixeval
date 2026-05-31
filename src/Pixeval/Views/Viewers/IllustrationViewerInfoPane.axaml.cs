@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Mako.Global.Enum;
 using Pixeval.I18N;
@@ -53,20 +54,21 @@ public partial class IllustrationViewerInfoPane : UserControl
             PseudoClasses.Set(":locked", IsLocked);
     }
 
-    private async void AddToBookmarkButton_OnClick(object? sender, RoutedEventArgs e)
+    private async void AddToBookmarkButton_OnRightClick(object? sender, ContextRequestedEventArgs e)
     {
-        await BookmarkTagSelectorFlyoutHelper.ShowAsync(
-            AddToBookmarkButton,
-            SimpleWorkType.IllustrationAndManga,
-            AddToBookmarkAsync,
-            PlacementMode.TopEdgeAlignedRight);
+        if (sender is Control c)
+            await BookmarkTagSelectorFlyoutHelper.ShowAsync(
+                c,
+                SimpleWorkType.IllustrationAndManga,
+                AddToBookmarkAsync,
+                PlacementMode.TopEdgeAlignedRight);
     }
 
-    private async Task AddToBookmarkAsync((bool isPrivate, IReadOnlyList<string> tags) e)
+    private async Task AddToBookmarkAsync((bool IsPrivate, IReadOnlyList<string>? Tags) e)
     {
         if (ViewModel.CurrentIllustration is IWorkViewModel current)
         {
-            await current.AddToBookmarkCommand.ExecuteAsync((e.tags, e.isPrivate, this));
+            await current.AddToBookmarkCommand.ExecuteAsync((e.Tags, e.IsPrivate, this));
             TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(
                 I18NManager.GetResource(EntryViewerPageResources.AddedToBookmark));
         }
@@ -75,5 +77,10 @@ public partial class IllustrationViewerInfoPane : UserControl
     private void ChevronButtonClicked(object? sender, RoutedEventArgs e)
     {
         IsDocked = !IsDocked;
+    }
+
+    private async void SaveButton_OnRightClick(object? sender, ContextRequestedEventArgs e)
+    {
+        await ViewModel.CurrentIllustration.SaveAsCommand.ExecuteAsync(sender);
     }
 }

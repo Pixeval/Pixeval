@@ -49,29 +49,20 @@
                     <CommandBarButton
                         Command="{Binding CurrentNovel.BookmarkCommand}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
+                        ContextRequested="AddToBookmarkButton_OnClick"
                         Icon="{markup1:SymbolIconEx Heart,
                                                     IconVariant={Binding CurrentNovel.IsBookmarkedDisplay,
                                                                          Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
                         IsVisible="{Binding CurrentNovel.IsBookmarkSupported}"
-                        Label="{I18N {x:Static pixeval:MiscResources.AddBookmark}}" />
+                        Label="{I18N {x:Static pixeval:EntryItemResources.AddToBookmark}}" />
                     <CommandBarSeparator />
                     <CommandBarButton
                         Command="{Binding CurrentNovel.SaveCommand}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
+                        ContextRequested="SaveButton_OnRightClick"
                         Icon="{markup:SymbolIcon Save}"
                         Label="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}" />
-                    <CommandBarButton
-                        Command="{Binding CurrentNovel.SaveAsCommand}"
-                        CommandParameter="{Binding $self, Mode=OneTime}"
-                        Icon="{markup:SymbolIcon SaveEdit}"
-                        Label="{I18N {x:Static pixeval:EntryViewerPageResources.SaveAs}}" />
                     <CommandBarSeparator />
-                    <CommandBarButton
-                        x:Name="AddToBookmarkButton"
-                        Click="AddToBookmarkButton_OnClick"
-                        Icon="{markup:SymbolIcon Bookmark}"
-                        IsVisible="{Binding CurrentNovel.IsBookmarkSupported}"
-                        Label="{I18N {x:Static pixeval:EntryItemResources.AddToBookmark}}" />
                     <CommandBarButton
                         Command="{Binding CurrentNovel.AddToWatchLaterCommand}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
@@ -96,13 +87,6 @@
                         Tag="{Binding CurrentNovel.WebsiteUri}" />
                 </CommandBar>
 
-                <work:TagSelector
-                    x:Name="BookmarkTagSelector"
-                    Margin="5"
-                    DockPanel.Dock="Top"
-                    IsVisible="False"
-                    TagsSelected="BookmarkTagSelector_OnTagsSelected" />
-
                 <Border Background="{Binding NovelBackgroundBrush}">
                     <Panel>
                         <controls:MarkdownBox
@@ -124,16 +108,16 @@
                             HorizontalAlignment="Left"
                             VerticalAlignment="Stretch"
                             Command="{Binding PrevCommand}"
+                            ContextRequested="PrevButton_OnRightClick"
                             IsVisible="{Binding PrevButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                            RightTapped="PrevButton_OnRightClick"
                             Symbol="ChevronLeft"
                             ToolTipText="{Binding PrevButtonText}" />
                         <controls:PageButton
                             HorizontalAlignment="Right"
                             VerticalAlignment="Stretch"
                             Command="{Binding NextCommand}"
+                            ContextRequested="NextButton_OnRightClick"
                             IsVisible="{Binding NextButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                            RightTapped="NextButton_OnRightClick"
                             Symbol="ChevronRight"
                             ToolTipText="{Binding NextButtonText}" />
                     </Panel>

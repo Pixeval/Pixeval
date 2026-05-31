@@ -25,7 +25,7 @@ public partial class WorkEntryViewModel<T>
     }
 
     [RelayCommand(CanExecute = nameof(IsBookmarkSupported))]
-    private async Task AddToBookmarkAsync((IReadOnlyList<string> Tags, bool IsPrivate, Control? Control) parameter)
+    private async Task AddToBookmarkAsync((IReadOnlyList<string>? Tags, bool IsPrivate, Control? Control) parameter)
     {
         if ((IsBookmarkedDisplay & HeartButtonState.Pending) is not 0)
             return;
@@ -56,7 +56,7 @@ public partial class WorkEntryViewModel<T>
             I18NManager.GetResource(target ? MiscResources.AddedToWatchLater : MiscResources.RemovedFromWatchLater));
     }
 
-    protected abstract Task<bool> SetBookmarkAsync(bool favorite, bool privately = false, IEnumerable<string>? tags = null);
+    protected abstract Task<bool> SetBookmarkAsync(bool favorite, bool privately = false, IReadOnlyCollection<string>? tags = null);
 
     [RelayCommand]
     protected abstract Task SaveAsync(Control? parameter);

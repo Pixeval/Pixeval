@@ -15,7 +15,7 @@ public static class BookmarkTagSelectorFlyoutHelper
     public static async Task ShowAsync(
         Control placementTarget,
         SimpleWorkType workType,
-        Func<(bool isPrivate, IReadOnlyList<string> tags), Task> onTagsSelected,
+        Func<(bool IsPrivate, IReadOnlyList<string>? Tags), Task> onTagsSelected,
         PlacementMode placement = PlacementMode.Bottom)
     {
         var flyout = new Flyout
@@ -40,7 +40,7 @@ public static class BookmarkTagSelectorFlyoutHelper
         await tagSelector.ResetSourceAsync();
         return;
 
-        async void OnTagsSelected(TagSelector sender, (bool isPrivate, IReadOnlyList<string> tags) e)
+        async void OnTagsSelected(TagSelector sender, (bool IsPrivate, IReadOnlyList<string>? Tags) e)
         {
             await onTagsSelected(e);
             flyout.Hide();
