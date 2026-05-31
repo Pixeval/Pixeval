@@ -81,7 +81,12 @@ public record AppSettings
     ];
 
     [SettingsEntry(Symbol.Rename, DownloadPathMacroEntryHeader, DownloadPathMacroEntryDescription)]
-    public string DownloadPathMacro { get; set; } = GetSpecialFolder() + @"\@{if_pic_set?[@{artist_name}] @{title}:}\[@{artist_name}] @{id}@{if_pic_set?p@{pic_set_index}:}@{ext}";
+    public string DownloadPathMacro { get; set; } = Path.Join(
+        GetSpecialFolder(),
+        "@{if_pic_set?[@{artist_name}] @{title}:}",
+        "[@{artist_name}] @{id}@{if_pic_set?p@{pic_set_index}:}@{ext}"
+    );
+        
 
     [SettingsEntry(Symbol.TextPeriodAsterisk, WorkDownloadFormatEntryHeader, WorkDownloadFormatEntryDescription)]
     public string IllustrationDownloadFormat { get; set; } = Models.Download.IllustrationDownloadFormatToken.DefaultToken;
@@ -282,8 +287,8 @@ public record AppSettings
         var docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments, Environment.SpecialFolderOption.None);
         var picDirectory = Path.GetDirectoryName(picPath);
         return picDirectory == Path.GetDirectoryName(docPath)
-            ? picDirectory +
-              @$"\@{{if_novel?{Path.GetFileName(docPath)}:{Path.GetFileName(picPath)}}}"
+            ? Path.Combine(picDirectory!,
+                $"@{{if_novel?{Path.GetFileName(docPath)}:{Path.GetFileName(picPath)}}}")
             : $"@{{if_novel?{docPath}:{picPath}}}";
     }
 }
