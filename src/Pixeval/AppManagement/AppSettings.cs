@@ -287,7 +287,7 @@ public record AppSettings
         var docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments, Environment.SpecialFolderOption.None);
         var picDirectory = Path.GetDirectoryName(picPath);
         return picDirectory == Path.GetDirectoryName(docPath)
-            ? Path.Combine(picDirectory!,
+            ? Path.Join(picDirectory!,
                 $"@{{if_novel?{Path.GetFileName(docPath)}:{Path.GetFileName(picPath)}}}")
             : $"@{{if_novel?{docPath}:{picPath}}}";
     }
