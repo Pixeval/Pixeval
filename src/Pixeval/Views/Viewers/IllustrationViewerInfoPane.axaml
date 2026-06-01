@@ -54,12 +54,19 @@
                     Margin="5,0"
                     Padding="0,0,0,5"
                     HorizontalAlignment="Stretch"
+                    controls:IncrementalLoadingBehavior.IsEnabled="True"
+                    controls:IncrementalLoadingBehavior.Threshold="100"
                     IsVisible="{Binding #InfoPaneRoot.IsDocked}"
                     ItemsSource="{Binding Illustrations}"
                     ScrollViewer.HorizontalScrollBarVisibility="Visible"
                     ScrollViewer.VerticalScrollBarVisibility="Disabled"
                     SelectedIndex="{Binding CurrentWorkIndex}"
                     SelectionMode="Single">
+                    <ListBox.Styles>
+                        <Style Selector="ListBox controls1|ScrollPresenter">
+                            <Setter Property="ContentOrientation" Value="Horizontal" />
+                        </Style>
+                    </ListBox.Styles>
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Horizontal" Spacing="5" />
