@@ -64,5 +64,6 @@
     "Text": "小说设置"
   },
   "Copy": "复制显示的图片",
-  "Save": "保存显示的图片"
+  "Save": "保存显示的图片",
+  "OtherImageTransformerExtensions": "其他图片转换扩展"
 }

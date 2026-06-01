@@ -62,6 +62,30 @@
                         Icon="{markup:SymbolIcon Save}"
                         InputGesture="Ctrl+S" />
                     <MenuItem Header="-" />
+                    <MenuItem
+                        Command="{Binding PrimaryTransformerExtensionItem.Command, FallbackValue={x:Null}}"
+                        CommandParameter="{Binding $self}"
+                        Header="{Binding PrimaryTransformerExtensionItem.Label, FallbackValue={x:Null}}"
+                        Icon="{Binding PrimaryTransformerExtensionItem.Icon, FallbackValue={x:Null}}"
+                        IsVisible="{x:Static vm:SingleViewerViewModel.HasTransformerExtensions}"
+                        ToolTip.Tip="{Binding PrimaryTransformerExtensionItem.Description, FallbackValue={x:Null}}" />
+                    <MenuItem
+                        Header="{I18N {x:Static pixeval:EntryViewerPageResources.OtherImageTransformerExtensions}}"
+                        Icon="{markup:SymbolIcon ImageMultiple}"
+                        IsVisible="{x:Static vm:SingleViewerViewModel.HasTransformerExtensions}"
+                        ItemsSource="{Binding TransformerExtensionItems}">
+                        <MenuItem.ItemTemplate>
+                            <DataTemplate x:DataType="{x:Type vm:ImageTransformerExtensionCommandItem}">
+                                <MenuItem
+                                    Command="{Binding Command}"
+                                    CommandParameter="{Binding $self}"
+                                    Header="{Binding Label}"
+                                    Icon="{Binding Icon}"
+                                    ToolTip.Tip="{Binding Description}" />
+                            </DataTemplate>
+                        </MenuItem.ItemTemplate>
+                    </MenuItem>
+                    <MenuItem Header="-" IsVisible="{x:Static vm:SingleViewerViewModel.HasTransformerExtensions}" />
                     <!--  旋转/镜像  -->
                     <MenuItem
                         Command="{Binding $parent[viewers:SingleImageViewer].RotateClockwiseCommand}"

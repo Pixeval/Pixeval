@@ -2,13 +2,24 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AnimatedControls.Avalonia;
+using Avalonia.Controls;
 using Avalonia.Media.Imaging;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
+using FluentIcons.Avalonia;
+using FluentIcons.Common;
+using Microsoft.Extensions.DependencyInjection;
 using Misaki;
+using Pixeval.Extensions.Common;
+using Pixeval.Extensions.Common.Commands.Transformers;
 using Pixeval.I18N;
+using Pixeval.Models.Extensions;
 using Pixeval.Utilities;
 using Pixeval.Utilities.IO.Caching;
 
@@ -16,6 +27,10 @@ namespace Pixeval.ViewModels.Viewers;
 
 public partial class SingleViewerViewModel : ViewModelBase, IDisposable
 {
+    public static ObservableCollection<IImageTransformerCommandExtension> TransformerExtensions { get; } = [.. ExtensionService.ActiveImageTransformerCommands];
+
+    public static bool HasTransformerExtensions => TransformerExtensions.Count is not 0;
+
     // Multiple viewer interactions can request the same page concurrently; share one load task to keep progress stable.
     private readonly Lock _loadOriginalImageTaskGate = new();
     private Task? _loadOriginalImageTask;
@@ -28,12 +43,21 @@ public partial class SingleViewerViewModel : ViewModelBase, IDisposable
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsGifLoadSuccessfully))]
+    [NotifyCanExecuteChangedFor(nameof(TransformExtensionCommand))]
     public partial bool LoadSuccessfully { get; private set; }
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(TransformExtensionCommand))]
+    public partial bool IsTransforming { get; private set; }
 
     /// <summary>
     /// 显示用图源
     /// </summary>
-    public IAnimatedBitmap? DisplaySource => OriginalSource; // TODO: 扩展用
+    public IAnimatedBitmap? DisplaySource => TransformedSource ?? OriginalSource;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DisplaySource))]
+    public partial IAnimatedBitmap? TransformedSource { get; private set; }
 
     /// <summary>
     /// 原图源（处理前的图片）
@@ -41,6 +65,7 @@ public partial class SingleViewerViewModel : ViewModelBase, IDisposable
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(DisplaySource))]
     [NotifyPropertyChangedFor(nameof(IsGifLoadSuccessfully))]
+    [NotifyCanExecuteChangedFor(nameof(TransformExtensionCommand))]
     public partial IAnimatedBitmap? OriginalSource { get; private set; }
 
     [ObservableProperty]
@@ -49,6 +74,13 @@ public partial class SingleViewerViewModel : ViewModelBase, IDisposable
     public bool IsPicGif => _entry.ImageType is ImageType.SingleAnimatedImage;
 
     public bool IsGifLoadSuccessfully => LoadSuccessfully && IsPicGif;
+
+    public bool CanTransformExtension => !IsPicGif && !IsTransforming && LoadSuccessfully && OriginalSource is not null;
+
+    public IReadOnlyList<ImageTransformerExtensionCommandItem> TransformerExtensionItems { get; }
+
+    public ImageTransformerExtensionCommandItem? PrimaryTransformerExtensionItem =>
+        TransformerExtensionItems is [{ } first, ..] ? first : null;
 
     private bool _disposed;
 
@@ -64,6 +96,7 @@ public partial class SingleViewerViewModel : ViewModelBase, IDisposable
         _platform = platform;
         _entry = entry;
         Index = index;
+        TransformerExtensionItems = [.. TransformerExtensions.Select(extension => new ImageTransformerExtensionCommandItem(this, extension))];
         _ = LoadThumbnailImageAsync();
     }
 
@@ -73,6 +106,7 @@ public partial class SingleViewerViewModel : ViewModelBase, IDisposable
         if (_disposed)
             return;
         _disposed = true;
+        TransformedSource?.Dispose();
         OriginalSource?.Dispose();
         ThumbnailSource?.Dispose();
     }
@@ -221,6 +255,70 @@ public partial class SingleViewerViewModel : ViewModelBase, IDisposable
 
         return null;
     }
+
+    partial void OnTransformedSourceChanging(IAnimatedBitmap? value)
+    {
+        if (!ReferenceEquals(value, TransformedSource))
+            TransformedSource?.Dispose();
+    }
+
+    internal static object CreateTransformerExtensionIcon(IImageTransformerCommandExtension extension) => new SymbolIcon
+    {
+        Symbol = Enum.IsDefined(extension.Icon) ? extension.Icon : Symbol.ImageEdit
+    };
+
+    internal async Task ExecuteTransformerExtensionAsync(IImageTransformerCommandExtension extension, Control? control)
+    {
+        var viewContainer = control is null ? null : TopLevel.GetTopLevel(control)?.ViewContainer;
+        try
+        {
+            viewContainer?.ShowInformation(I18NManager.GetResource(ImageViewerPageResources.ApplyingTransformerExtensions));
+            await TransformExtensionCommand.ExecuteAsync(extension);
+            viewContainer?.ShowSuccess(I18NManager.GetResource(ImageViewerPageResources.TransformerExtensionFinishedSuccessfully));
+        }
+        catch
+        {
+            viewContainer?.ShowError(I18NManager.GetResource(ImageViewerPageResources.TransformerExtensionFailed));
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(CanTransformExtension))]
+    private async Task TransformExtensionAsync(IImageTransformerCommandExtension? extension)
+    {
+        if (extension is null || OriginalSource is not { } originalSource)
+            return;
+
+        IsTransforming = true;
+        try
+        {
+            originalSource.Init();
+            if (originalSource.Frames is not [var frame, ..])
+                return;
+
+            await using var source = Streams.RentStream();
+            frame.Save(source);
+            source.Position = 0;
+
+            var destination = Streams.RentStream();
+            try
+            {
+                await extension.TransformAsync(source, destination);
+                destination.Position = 0;
+                TransformedSource = IAnimatedBitmap.Load(destination, true);
+            }
+            catch
+            {
+                await destination.DisposeAsync();
+                throw;
+            }
+        }
+        finally
+        {
+            IsTransforming = false;
+        }
+    }
+
+    private static ExtensionService ExtensionService => App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
 }
 
 public enum LoadingPhase
@@ -230,4 +328,29 @@ public enum LoadingPhase
     MergingUgoiraFrames,
     DownloadingImage,
     LoadingImage,
+}
+
+public sealed class ImageTransformerExtensionCommandItem
+{
+    public ImageTransformerExtensionCommandItem(SingleViewerViewModel viewModel, IImageTransformerCommandExtension extension)
+    {
+        Extension = extension;
+        Label = extension.Label;
+        Description = extension.Description;
+        Icon = SingleViewerViewModel.CreateTransformerExtensionIcon(extension);
+        Command = new AsyncRelayCommand<Control?>(
+            control => viewModel.ExecuteTransformerExtensionAsync(extension, control),
+            _ => viewModel.TransformExtensionCommand.CanExecute(extension));
+        viewModel.TransformExtensionCommand.CanExecuteChanged += (_, _) => Command.NotifyCanExecuteChanged();
+    }
+
+    public IImageTransformerCommandExtension Extension { get; }
+
+    public string Label { get; }
+
+    public string Description { get; }
+
+    public object Icon { get; }
+
+    public IAsyncRelayCommand<Control?> Command { get; }
 }

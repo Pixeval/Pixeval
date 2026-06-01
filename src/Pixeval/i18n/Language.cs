@@ -239,6 +239,7 @@ namespace Pixeval
         public const string NovelCountItemTitle = "EntryViewerPage.NovelCountItem.Title";
         public const string NovelSettings = "EntryViewerPage.NovelSettings";
         public const string NovelSettingsHeaderTextBlockText = "EntryViewerPage.NovelSettingsHeaderTextBlock.Text";
+        public const string OtherImageTransformerExtensions = "EntryViewerPage.OtherImageTransformerExtensions";
         public const string Pin = "EntryViewerPage.Pin";
         public const string PrevPage = "EntryViewerPage.Prev.Page";
         public const string PrevPageOrWork = "EntryViewerPage.Prev.PageOrWork";

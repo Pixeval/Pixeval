@@ -10,8 +10,8 @@
     xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:pixeval="using:Pixeval"
     xmlns:scroll="using:SmoothScroll.Avalonia.Controls"
-    xmlns:viewers="using:Pixeval.ViewModels.Viewers"
-    x:DataType="{x:Type viewers:ImageViewerViewModel}"
+    xmlns:vm="using:Pixeval.ViewModels.Viewers"
+    x:DataType="{x:Type vm:ImageViewerViewModel}"
     x:Name="Root">
     <scroll:ScrollView
         x:Name="ViewerScrollView"
@@ -35,7 +35,7 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type viewers:SingleViewerViewModel}">
+                <DataTemplate DataType="{x:Type vm:SingleViewerViewModel}">
                     <Border
                         MinWidth="200"
                         MinHeight="200"
@@ -97,6 +97,30 @@
                                     Header="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}"
                                     Icon="{markup:SymbolIcon Save}"
                                     InputGesture="Ctrl+S" />
+                                <MenuItem Header="-" IsVisible="{x:Static vm:SingleViewerViewModel.HasTransformerExtensions}" />
+                                <MenuItem
+                                    Command="{Binding PrimaryTransformerExtensionItem.Command, FallbackValue={x:Null}}"
+                                    CommandParameter="{Binding $self}"
+                                    Header="{Binding PrimaryTransformerExtensionItem.Label, FallbackValue={x:Null}}"
+                                    Icon="{Binding PrimaryTransformerExtensionItem.Icon, FallbackValue={x:Null}}"
+                                    IsVisible="{x:Static vm:SingleViewerViewModel.HasTransformerExtensions}"
+                                    ToolTip.Tip="{Binding PrimaryTransformerExtensionItem.Description, FallbackValue={x:Null}}" />
+                                <MenuItem
+                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources.OtherImageTransformerExtensions}}"
+                                    Icon="{markup:SymbolIcon ImageMultiple}"
+                                    IsVisible="{x:Static vm:SingleViewerViewModel.HasTransformerExtensions}"
+                                    ItemsSource="{Binding TransformerExtensionItems}">
+                                    <MenuItem.ItemTemplate>
+                                        <DataTemplate x:DataType="{x:Type vm:ImageTransformerExtensionCommandItem}">
+                                            <MenuItem
+                                                Command="{Binding Command}"
+                                                CommandParameter="{Binding $self}"
+                                                Header="{Binding Label}"
+                                                Icon="{Binding Icon}"
+                                                ToolTip.Tip="{Binding Description}" />
+                                        </DataTemplate>
+                                    </MenuItem.ItemTemplate>
+                                </MenuItem>
                             </MenuFlyout>
                         </Border.ContextFlyout>
                     </Border>
