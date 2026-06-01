@@ -77,6 +77,12 @@ jobs:
         with:
           global-json-file: global.json
 
+      - name: Resolve package version
+        id: package-version
+        run: |
+          $version = "5.0.0-ci.$env:GITHUB_RUN_NUMBER"
+          "version=$version" >> $env:GITHUB_OUTPUT
+
       - name: Restore workload
         run: dotnet workload restore ${{ matrix.project }}
 
@@ -100,11 +106,29 @@ jobs:
             --no-restore `
             -o ${{ matrix.output }}
 
+      - name: Package AppImage
+        if: ${{ matrix.target == 'linux' }}
+        shell: bash
+        run: |
+          bash scripts/package-appimage.sh \
+            "${{ matrix.output }}" \
+            artifacts/linux-appimage \
+            "${{ steps.package-version.outputs.version }}"
+
       - name: Upload artifact
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: Pixeval ${{ matrix.target }}
+          name: Pixeval-${{ matrix.target }}
           path: ${{ matrix.output }}
           if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload AppImage artifact
+        if: ${{ always() && matrix.target == 'linux' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: Pixeval-linux-appimage
+          path: artifacts/linux-appimage/*.AppImage
+          if-no-files-found: error
           retention-days: 14
