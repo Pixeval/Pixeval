@@ -70,29 +70,5 @@
 			<AutoGen>True</AutoGen>
 			<DependentUpon>Language.tt</DependentUpon>
 		</Compile>
-
-		<Compile Update="Views\Capability\WorkFollowingPage.axaml.cs">
-		  <DependentUpon>WorkFollowingPage.axaml</DependentUpon>
-		</Compile>
-
-		<Compile Update="Views\Capability\SpotlightPage.axaml.cs">
-		  <DependentUpon>SpotlightPage.axaml</DependentUpon>
-		</Compile>
-
-		<Compile Update="Views\Capability\WorkBookmarksPage.axaml.cs">
-		  <DependentUpon>WorkBookmarksPage.axaml</DependentUpon>
-		</Compile>
-
-		<Compile Update="Views\Capability\UserFollowingPage.axaml.cs">
-		  <DependentUpon>UserFollowingPage.axaml</DependentUpon>
-		</Compile>
-
-		<Compile Update="Views\Capability\WorkRankingPage.axaml.cs">
-		  <DependentUpon>WorkRankingPage.axaml</DependentUpon>
-		</Compile>
-
-		<Compile Update="Views\Search\WorkSearchPage.axaml.cs">
-		  <DependentUpon>WorkSearchPage.axaml</DependentUpon>
-		</Compile>
 	</ItemGroup>
 </Project>

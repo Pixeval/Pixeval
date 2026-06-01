@@ -1,0 +1,110 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/*.md'
+  pull_request:
+    branches-ignore:
+      - l10n_main
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  build:
+    name: Build ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - target: windows
+            os: windows-latest
+            project: src/Pixeval.Desktop/Pixeval.Desktop.csproj
+            runtime: win-x64
+            command: publish
+            output: artifacts/windows
+          - target: android
+            os: windows-latest
+            project: src/Pixeval.Android/Pixeval.Android.csproj
+            runtime: android-arm64
+            command: publish
+            output: artifacts/android
+          - target: macos
+            os: macos-latest
+            project: src/Pixeval.Desktop/Pixeval.Desktop.csproj
+            runtime: osx-arm64
+            command: publish
+            output: artifacts/macos
+          - target: linux
+            os: ubuntu-latest
+            project: src/Pixeval.Desktop/Pixeval.Desktop.csproj
+            runtime: linux-x64
+            command: publish
+            output: artifacts/linux
+          - target: browser
+            os: ubuntu-latest
+            project: src/Pixeval.Browser/Pixeval.Browser.csproj
+            runtime: browser-wasm
+            command: publish
+            output: artifacts/browser
+
+        # GitHub-hosted macOS runners currently expose Xcode 16.4, while
+        # net10.0-ios from SDK 10.0.300 requires Xcode 26.5. Keep the iOS build
+        # out of the default matrix until the runner image catches up or a
+        # compatible self-hosted runner is introduced.
+
+    env:
+      CONFIGURATION: Release
+      MINVERBUILDMETADATA: build.${{ github.run_id }}.${{ github.run_attempt }}
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          filter: tree:0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore workload
+        run: dotnet workload restore ${{ matrix.project }}
+
+      - name: Restore files
+        run: dotnet restore ${{ matrix.project }} -r ${{ matrix.runtime }} -p:Configuration=$env:CONFIGURATION
+
+      - name: Build
+        if: ${{ matrix.command == 'build' }}
+        run: |
+          dotnet build ${{ matrix.project }} `
+            -c $env:CONFIGURATION `
+            -r ${{ matrix.runtime }} `
+            --no-restore
+
+      - name: Publish
+        if: ${{ matrix.command == 'publish' }}
+        run: |
+          dotnet publish ${{ matrix.project }} `
+            -c $env:CONFIGURATION `
+            -r ${{ matrix.runtime }} `
+            --no-restore `
+            -o ${{ matrix.output }}
+
+      - name: Upload artifact
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: Pixeval ${{ matrix.target }}
+          path: ${{ matrix.output }}
+          if-no-files-found: warn
+          retention-days: 14

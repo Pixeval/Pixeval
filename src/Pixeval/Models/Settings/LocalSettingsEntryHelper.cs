@@ -71,8 +71,8 @@ public static class LocalSettingsEntryHelper
         RegisterAttach<DomainFrontingType>(t =>
         {
             t.Register(DomainFrontingType.Fragmentation, EnumResources.DomainFrontingTypeFragmentation);
-            t.RegisterDirect(DomainFrontingType.Ech, "ECH");
-            t.Register(DomainFrontingType.Desync, EnumResources.DomainFrontingTypeDesync);
+            // t.RegisterDirect(DomainFrontingType.Ech, "ECH");
+            // t.Register(DomainFrontingType.Desync, EnumResources.DomainFrontingTypeDesync);
         });
         RegisterAttach<SearchIllustrationTagMatchOption>(t =>
         {
