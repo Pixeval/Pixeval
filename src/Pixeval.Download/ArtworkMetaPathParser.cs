@@ -16,20 +16,33 @@ public class ArtworkMetaPathParser : IMetaPathParser<IArtworkInfo>
 
     public static IMetaPathParser<IArtworkInfo> Instance { get; } = new ArtworkMetaPathParser();
 
-    private readonly MacroParser<IArtworkInfo> _parser = new();
-
     public IReadOnlyList<IMacro> MacroProvider { get; } = MetaPathMacroAttributeHelper.GetIArtworkInfoInstances();
 
     public string Reduce(string raw, IArtworkInfo context)
     {
-        _parser.SetupParsingEnvironment(new(raw));
-        if (_parser.Parse() is { } root)
+        var result = new MacroParser<IArtworkInfo>(raw).Parse();
+        if (result.Diagnostics is [{ } diagnostic, ..])
+            throw CreateException(diagnostic);
+
+        if (result.Root is { } root)
         {
-            var result = root.Evaluate(MacroProvider, context);
-            if (!string.IsNullOrWhiteSpace(result))
-                return result;
+            var reduced = root.Evaluate(MacroProvider, context);
+            if (!string.IsNullOrWhiteSpace(reduced))
+                return reduced;
         }
 
         throw new MacroParseException(MacroParseException.ErrorType.ResultIsEmpty);
+    }
+
+    private static MacroParseException CreateException(MacroDiagnostic diagnostic)
+    {
+        var type = diagnostic.Kind switch
+        {
+            MacroDiagnosticKind.UnknownMacroName => MacroParseException.ErrorType.UnknownMacroName,
+            MacroDiagnosticKind.NonParameterizedMacroBearingParameter => MacroParseException.ErrorType.NonParameterizedMacroBearingParameter,
+            MacroDiagnosticKind.ConditionalBranchesMissing => MacroParseException.ErrorType.ParameterizedMacroMissingParameter,
+            _ => MacroParseException.ErrorType.UnexpectedToken
+        };
+        return new(type, diagnostic.PrimaryParameter, diagnostic.Span);
     }
 }

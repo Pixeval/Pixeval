@@ -36,6 +36,10 @@ public sealed record MacroHighlightSpan(MacroTextSpan Span, MacroHighlightKind K
 public enum MacroDiagnosticKind
 {
     UnexpectedToken,
+    ExpectedLeftBraceAfterAt,
+    ExpectedMacroName,
+    MissingRightBrace,
+    MissingConditionalSeparator,
     UnknownMacroName,
     NonParameterizedMacroBearingParameter,
     ConditionalBranchesMissing,
@@ -49,9 +53,12 @@ public sealed record MacroDiagnostic(
     string? PrimaryParameter = null,
     string? SecondaryParameter = null);
 
-public sealed record MacroAnalysisResult(
+public sealed record MacroParseResult<TContext>(
+    Ast.Sequence<TContext>? Root,
     IReadOnlyList<MacroHighlightSpan> Highlights,
     IReadOnlyList<MacroDiagnostic> Diagnostics)
 {
-    public static MacroAnalysisResult Empty { get; } = new([], []);
+    public bool IsSuccess => Diagnostics.Count is 0;
+
+    public static MacroParseResult<TContext> Empty { get; } = new(null, [], []);
 }

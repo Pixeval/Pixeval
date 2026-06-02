@@ -26,7 +26,7 @@ public sealed class MacroEditorColorizer : DocumentColorizingTransformer
     private IReadOnlyList<MacroDiagnostic> _diagnostics = [];
     private int _documentLength;
 
-    public void Update(MacroAnalysisResult analysis, int documentLength)
+    public void Update(MacroParseResult<string> analysis, int documentLength)
     {
         _highlights = analysis.Highlights;
         _diagnostics = analysis.Diagnostics;

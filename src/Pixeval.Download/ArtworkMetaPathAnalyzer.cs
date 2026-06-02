@@ -13,34 +13,19 @@ namespace Pixeval.Download;
 
 public static class ArtworkMetaPathAnalyzer
 {
-    public static MacroAnalysisResult Analyze(string text)
+    public static MacroParseResult<string> Analyze(string text)
     {
         if (string.IsNullOrWhiteSpace(text))
-            return MacroAnalysisResult.Empty;
+            return MacroParseResult<string>.Empty;
 
-        var highlights = CollectHighlights(text);
+        var result = new MacroParser<string>(text).Parse();
+        if (result.Diagnostics.Count > 0 || result.Root is not { } root)
+            return result;
 
-        try
-        {
-            var parser = new MacroParser<string>();
-            parser.SetupParsingEnvironment(new Lexer(text));
-            if (parser.Parse() is not { } root)
-                return new MacroAnalysisResult(highlights, []);
-
-            var diagnostic = Validate(root, ArtworkMetaPathParser.Instance);
-            return diagnostic is null
-                ? new MacroAnalysisResult(highlights, [])
-                : new MacroAnalysisResult(highlights, [diagnostic]);
-        }
-        catch (MacroParseException exception)
-        {
-            return new MacroAnalysisResult(
-                highlights,
-                [new MacroDiagnostic(
-                    MacroDiagnosticKind.UnexpectedToken,
-                    exception.Span ?? new MacroTextSpan(0, 1),
-                    exception.Parameter)]);
-        }
+        var diagnostic = Validate(root, ArtworkMetaPathParser.Instance);
+        return diagnostic is null
+            ? result
+            : result with { Diagnostics = [diagnostic] };
     }
 
     private static MacroDiagnostic? Validate(
@@ -133,88 +118,4 @@ public static class ArtworkMetaPathAnalyzer
         return true;
     }
 
-    private static IReadOnlyList<MacroHighlightSpan> CollectHighlights(string text)
-    {
-        var highlights = new List<MacroHighlightSpan>();
-        ScanSequence(text, 0, 0, false, false, highlights, out _);
-        return highlights;
-    }
-
-    private static void ScanSequence(
-        string text,
-        int start,
-        int nestingDepth,
-        bool stopAtRightBrace,
-        bool stopAtColon,
-        ICollection<MacroHighlightSpan> highlights,
-        out int nextIndex)
-    {
-        var index = start;
-        while (index < text.Length)
-        {
-            if (stopAtRightBrace && text[index] == '}')
-                break;
-
-            if (stopAtColon && text[index] == ':')
-                break;
-
-            if (index + 1 < text.Length && text[index] == '@' && text[index + 1] == '{')
-            {
-                var scannedIndex = ScanMacro(text, index, nestingDepth, highlights);
-                index = scannedIndex > index ? scannedIndex : index + 1;
-                continue;
-            }
-
-            index++;
-        }
-
-        nextIndex = index;
-    }
-
-    private static int ScanMacro(
-        string text,
-        int start,
-        int nestingDepth,
-        ICollection<MacroHighlightSpan> highlights)
-    {
-        var index = start;
-        highlights.Add(new MacroHighlightSpan(new MacroTextSpan(index, 2), MacroHighlightKind.Delimiter, nestingDepth));
-        index += 2;
-
-        var nameStart = index;
-        while (index < text.Length && IsMacroNameCharacter(text[index]))
-            index++;
-
-        if (index > nameStart)
-            highlights.Add(new MacroHighlightSpan(new MacroTextSpan(nameStart, index - nameStart), MacroHighlightKind.Name, nestingDepth));
-
-        if (index >= text.Length)
-            return index;
-
-        if (text[index] == '?')
-        {
-            highlights.Add(new MacroHighlightSpan(new MacroTextSpan(index, 1), MacroHighlightKind.Separator, nestingDepth));
-            index++;
-            ScanSequence(text, index, nestingDepth + 1, true, true, highlights, out index);
-            if (index < text.Length && text[index] == ':')
-            {
-                highlights.Add(new MacroHighlightSpan(new MacroTextSpan(index, 1), MacroHighlightKind.Separator, nestingDepth));
-                index++;
-                ScanSequence(text, index, nestingDepth + 1, true, false, highlights, out index);
-            }
-        }
-
-        if (index < text.Length && text[index] == '}')
-        {
-            highlights.Add(new MacroHighlightSpan(new MacroTextSpan(index, 1), MacroHighlightKind.Delimiter, nestingDepth));
-            return index + 1;
-        }
-
-        return index;
-    }
-
-    private static bool IsMacroNameCharacter(char character)
-    {
-        return char.IsAsciiLetterOrDigit(character) || character == '_';
-    }
 }

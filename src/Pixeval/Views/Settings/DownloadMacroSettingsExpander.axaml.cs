@@ -74,6 +74,13 @@ public partial class DownloadMacroSettingsExpander : SettingsExpander, IEntryCon
             return;
         }
 
+        if (analysis.Root is null)
+        {
+            DownloadMacroInvalidInfoBar.Text = SettingsMainViewResources.DownloadMacroInvalidInfoBarInputCannotBeBlank;
+            DownloadMacroInvalidInfoBar.IsVisible = true;
+            return;
+        }
+
         try
         {
             SetExamplePaths(normalized);
@@ -122,6 +129,19 @@ public partial class DownloadMacroSettingsExpander : SettingsExpander, IEntryCon
         {
             MacroDiagnosticKind.UnexpectedToken => I18NManager.GetResource(
                 MacroParserResources.UnexpectedTokenFormatted,
+                diagnostic.Span.Start + 1),
+            MacroDiagnosticKind.ExpectedLeftBraceAfterAt => I18NManager.GetResource(
+                MacroParserResources.ExpectedTokenAfterAtMarkFormatted,
+                diagnostic.Span.Start + 1),
+            MacroDiagnosticKind.ExpectedMacroName => I18NManager.GetResource(
+                MacroParserResources.ExpectedTokenAfterAtMarkFormatted,
+                diagnostic.Span.Start + 1),
+            MacroDiagnosticKind.MissingRightBrace => I18NManager.GetResource(
+                MacroParserResources.UnbalancedParFormatted,
+                diagnostic.Span.Start + 1),
+            MacroDiagnosticKind.MissingConditionalSeparator => I18NManager.GetResource(
+                MacroParserResources.UnexpactedTokenFormatted,
+                ":",
                 diagnostic.Span.Start + 1),
             MacroDiagnosticKind.UnknownMacroName => I18NManager.GetResource(
                 MacroParserResources.UnknownMacroNameFormatted,

@@ -1,121 +1,205 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
+using System;
+using System.Collections.Generic;
+using System.IO;
 using Pixeval.Download.MacroParser.Ast;
 
 namespace Pixeval.Download.MacroParser;
 
-public class MacroParser<TContext>
+public sealed class MacroParser<TContext>(string text)
 {
-    private TokenInfo? _currentToken;
-    private Lexer? _lexer;
+    private static readonly char[] _InvalidPathChars = Path.GetInvalidPathChars();
 
-    public void SetupParsingEnvironment(Lexer lexer)
+    private readonly List<MacroDiagnostic> _diagnostics = [];
+    private readonly List<MacroHighlightSpan> _highlights = [];
+    private int _position;
+
+    public MacroParseResult<TContext> Parse()
     {
-        _lexer = lexer;
-        _currentToken = _lexer.NextToken();
+        var root = ParseSequence(stopAtColon: false, stopAtRightBrace: false, nestingDepth: 0);
+        if (_diagnostics.Count is 0 && !IsAtEnd)
+            AddDiagnostic(MacroDiagnosticKind.UnexpectedToken, CurrentSpan());
+
+        return new(root, _highlights, _diagnostics);
     }
 
-    private TokenInfo EatToken(TokenKind kind)
+    private Sequence<TContext>? ParseSequence(bool stopAtColon, bool stopAtRightBrace, int nestingDepth)
     {
-        if (_currentToken is { TokenKind: var tokenKind } token && tokenKind == kind)
+        var nodes = new List<SingleNode<TContext>>();
+        var plainTextStart = _position;
+        while (!IsAtEnd)
         {
-            _currentToken = _lexer!.NextToken();
-            return token;
-        }
-        
-        throw new MacroParseException(
-            MacroParseException.ErrorType.UnexpectedToken,
-            _currentToken?.Position.Start.Value.ToString() ?? "EOF",
-            _currentToken?.Position.ToTextSpan() ?? new MacroTextSpan(0, 1));
-    }
+            if (stopAtRightBrace && Current is '}')
+                break;
 
-    // ReSharper disable once OutParameterValueIsAlwaysDiscarded.Local
-    private bool TryEatToken(TokenKind kind, out TokenInfo token)
-    {
-        if (_currentToken is { TokenKind: var tokenKind } t && tokenKind == kind)
-        {
-            _currentToken = _lexer!.NextToken();
-            token = t;
-            return true;
-        }
+            if (stopAtColon && Current is ':')
+                break;
 
-        token = TokenInfo.Empty;
-        return false;
-    }
+            if (Current is '}')
+            {
+                AddPlainText(nodes, plainTextStart, _position);
+                AddDiagnostic(MacroDiagnosticKind.UnexpectedToken, CurrentSpan());
+                break;
+            }
 
-    public Sequence<TContext>? Parse()
-    {
-        var root = Path();
-        return _lexer!.NextToken() is { } token
-            ? throw new MacroParseException(
-                MacroParseException.ErrorType.UnexpectedToken,
-                (token.Position.Start.Value - 1).ToString(),
-                token.Position.ToTextSpan())
-            : root;
-    }
+            if (Current is '@')
+            {
+                AddPlainText(nodes, plainTextStart, _position);
+                var macro = ParseMacro(nestingDepth);
+                if (macro is not null)
+                    nodes.Add(macro);
 
-    private Sequence<TContext>? Path()
-    {
-        return Sequence(null);
-    }
+                plainTextStart = _position;
+                continue;
+            }
 
-    private Sequence<TContext>? Sequence(TokenKind? stopToken)
-    {
-        if (_currentToken is not null
-            && _currentToken.TokenKind != TokenKind.RBrace
-            && _currentToken.TokenKind != stopToken
-            && SingleNode(stopToken) is { } node)
-        {
-            return new(node, Sequence(stopToken));
+            if (IsInvalidPathChar(Current))
+            {
+                AddPlainText(nodes, plainTextStart, _position);
+                AddDiagnostic(MacroDiagnosticKind.UnexpectedToken, CurrentSpan());
+                ++_position;
+                plainTextStart = _position;
+                continue;
+            }
+
+            ++_position;
         }
 
-        return null;
+        AddPlainText(nodes, plainTextStart, _position);
+        return CreateSequence(nodes);
     }
 
-    private SingleNode<TContext>? SingleNode(TokenKind? stopToken)
+    private Macro<TContext>? ParseMacro(int nestingDepth)
     {
-        return _currentToken switch
+        var macroStart = _position;
+        AddHighlight(macroStart, 1, MacroHighlightKind.Delimiter, nestingDepth);
+        ++_position;
+
+        if (IsAtEnd || Current is not '{')
         {
-            { TokenKind: TokenKind.At } => Macro(),
-            { TokenKind: TokenKind.PlainText or TokenKind.Colon } => PlainText(),
-            { TokenKind: var tokenKind } when tokenKind == stopToken || tokenKind == TokenKind.RBrace => null,
-            _ => throw new MacroParseException(MacroParseException.ErrorType.UnexpectedToken,
-                (_currentToken?.Position.Start.Value + 1)?.ToString() ?? "EOF",
-                _currentToken?.Position.ToTextSpan() ?? new MacroTextSpan(0, 1))
-        };
+            AddDiagnostic(MacroDiagnosticKind.ExpectedLeftBraceAfterAt, MacroTextSpan.FromBounds(macroStart, Math.Min(macroStart + 1, text.Length)));
+            RecoverAfterBrokenMacro(stopAtColon: false, stopAtRightBrace: false);
+            return null;
+        }
+
+        AddHighlight(_position, 1, MacroHighlightKind.Delimiter, nestingDepth);
+        ++_position;
+
+        var nameStart = _position;
+        while (!IsAtEnd && IsMacroNameCharacter(Current))
+            ++_position;
+
+        if (_position == nameStart)
+        {
+            AddDiagnostic(MacroDiagnosticKind.ExpectedMacroName, MacroTextSpan.FromBounds(nameStart, Math.Min(nameStart + 1, text.Length)));
+            RecoverAfterBrokenMacro(stopAtColon: false, stopAtRightBrace: true);
+            return null;
+        }
+
+        AddHighlight(nameStart, _position - nameStart, MacroHighlightKind.Name, nestingDepth);
+        var macroName = new PlainText<TContext>(text[nameStart.._position], nameStart.._position);
+        var diagnosticStart = _diagnostics.Count;
+        var branches = ParseConditionalBranches(nestingDepth);
+        if (_diagnostics.Count > diagnosticStart)
+        {
+            RecoverAfterBrokenMacro(stopAtColon: false, stopAtRightBrace: true);
+            return null;
+        }
+
+        if (IsAtEnd || Current is not '}')
+        {
+            AddDiagnostic(MacroDiagnosticKind.MissingRightBrace, MacroTextSpan.FromBounds(macroStart, Math.Min(macroStart + 2, text.Length)));
+            RecoverAfterBrokenMacro(stopAtColon: false, stopAtRightBrace: true);
+            return null;
+        }
+
+        AddHighlight(_position, 1, MacroHighlightKind.Delimiter, nestingDepth);
+        ++_position;
+        return new(macroName, branches);
     }
 
-    private Macro<TContext> Macro()
+    private ConditionalMacroBranches<TContext>? ParseConditionalBranches(int nestingDepth)
     {
-        _ = EatToken(TokenKind.At);
-        _ = EatToken(TokenKind.LBrace);
-        var macroName = PlainText();
-        var node = new Macro<TContext>(macroName, ConditionalBranches());
-        _ = EatToken(TokenKind.RBrace);
-        return node;
-    }
-
-    private ConditionalMacroBranches<TContext>? ConditionalBranches()
-    {
-        if (!TryEatToken(TokenKind.Question, out _))
+        if (IsAtEnd || Current is not '?')
             return null;
 
-        var whenTrue = Sequence(TokenKind.Colon);
-        _ = EatToken(TokenKind.Colon);
-        var whenFalse = Sequence(TokenKind.RBrace);
-        return new ConditionalMacroBranches<TContext>(whenTrue, whenFalse);
-    }
+        AddHighlight(_position, 1, MacroHighlightKind.Separator, nestingDepth);
+        ++_position;
+        var diagnosticStart = _diagnostics.Count;
+        var whenTrue = ParseSequence(stopAtColon: true, stopAtRightBrace: true, nestingDepth + 1);
+        if (_diagnostics.Count > diagnosticStart)
+            return null;
 
-    private PlainText<TContext> PlainText()
-    {
-        if (_currentToken?.TokenKind is TokenKind.Colon)
+        if (IsAtEnd || Current is not ':')
         {
-            var colon = EatToken(TokenKind.Colon);
-            return new(":", colon.Position);
+            AddDiagnostic(MacroDiagnosticKind.MissingConditionalSeparator, CurrentSpan());
+            return null;
         }
 
-        var text = EatToken(TokenKind.PlainText);
-        return new(text.Text, text.Position);
+        AddHighlight(_position, 1, MacroHighlightKind.Separator, nestingDepth);
+        ++_position;
+        var whenFalse = ParseSequence(stopAtColon: false, stopAtRightBrace: true, nestingDepth + 1);
+        return new(whenTrue, whenFalse);
     }
+
+    private void RecoverAfterBrokenMacro(bool stopAtColon, bool stopAtRightBrace)
+    {
+        while (!IsAtEnd)
+        {
+            if (stopAtRightBrace && Current is '}')
+            {
+                AddHighlight(_position, 1, MacroHighlightKind.Delimiter, 0);
+                ++_position;
+                return;
+            }
+
+            if (stopAtColon && Current is ':')
+                return;
+
+            if (Current is '@' or '}')
+                return;
+
+            ++_position;
+        }
+    }
+
+    private void AddPlainText(ICollection<SingleNode<TContext>> nodes, int start, int end)
+    {
+        if (end <= start)
+            return;
+
+        nodes.Add(new PlainText<TContext>(text[start..end], start..end));
+    }
+
+    private static Sequence<TContext>? CreateSequence(IReadOnlyList<SingleNode<TContext>> nodes)
+    {
+        Sequence<TContext>? sequence = null;
+        for (var i = nodes.Count - 1; i >= 0; --i)
+            sequence = new(nodes[i], sequence);
+
+        return sequence;
+    }
+
+    private void AddHighlight(int start, int length, MacroHighlightKind kind, int nestingDepth)
+        => _highlights.Add(new(new(start, length), kind, nestingDepth));
+
+    private void AddDiagnostic(MacroDiagnosticKind kind, MacroTextSpan span)
+        => _diagnostics.Add(new(kind, span));
+
+    private MacroTextSpan CurrentSpan()
+        => IsAtEnd
+            ? MacroTextSpan.FromBounds(Math.Max(text.Length - 1, 0), text.Length)
+            : new(_position, 1);
+
+    private static bool IsMacroNameCharacter(char character)
+        => char.IsAsciiLetterOrDigit(character) || character is '_';
+
+    private static bool IsInvalidPathChar(char character)
+        => _InvalidPathChars.AsSpan().IndexOf(character) >= 0;
+
+    private bool IsAtEnd => _position >= text.Length;
+
+    private char Current => text[_position];
 }

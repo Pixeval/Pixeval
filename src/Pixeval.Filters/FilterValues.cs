@@ -126,7 +126,7 @@ public readonly record struct FilterLongRange(long Start, long End, bool IsOpenE
     {
         range = Range.All;
 
-        if (raw.Start is { } startLiteral && startLiteral < 1 || raw.End is { } endLiteral && endLiteral < 1)
+        if (raw.Start is < 1 || raw.End is < 1)
         {
             diagnostic = new(FilterDiagnosticKind.IndexRangeStartsFromOne, span);
             return false;
