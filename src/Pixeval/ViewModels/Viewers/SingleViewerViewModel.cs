@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AnimatedControls.Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input.Platform;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -25,7 +26,7 @@ using Pixeval.Utilities.IO.Caching;
 
 namespace Pixeval.ViewModels.Viewers;
 
-public partial class SingleViewerViewModel : ViewModelBase, IDisposable
+public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
 {
     public static ObservableCollection<IImageTransformerCommandExtension> TransformerExtensions { get; } = [.. ExtensionService.ActiveImageTransformerCommands];
 
@@ -42,8 +43,14 @@ public partial class SingleViewerViewModel : ViewModelBase, IDisposable
     public partial string? LoadingText { get; private set; }
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsGifLoadSuccessfully))]
     [NotifyCanExecuteChangedFor(nameof(TransformExtensionCommand))]
+    [NotifyCanExecuteChangedFor(nameof(PlayPauseCommand))]
+    [NotifyCanExecuteChangedFor(nameof(MirrorCommand))]
+    [NotifyCanExecuteChangedFor(nameof(RotateClockwiseCommand))]
+    [NotifyCanExecuteChangedFor(nameof(RotateCounterclockwiseCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ZoomInCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ZoomOutCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ZoomToOriginalCommand))]
     public partial bool LoadSuccessfully { get; private set; }
 
     [ObservableProperty]
@@ -64,7 +71,6 @@ public partial class SingleViewerViewModel : ViewModelBase, IDisposable
     /// </summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(DisplaySource))]
-    [NotifyPropertyChangedFor(nameof(IsGifLoadSuccessfully))]
     [NotifyCanExecuteChangedFor(nameof(TransformExtensionCommand))]
     public partial IAnimatedBitmap? OriginalSource { get; private set; }
 
@@ -73,7 +79,7 @@ public partial class SingleViewerViewModel : ViewModelBase, IDisposable
 
     public bool IsPicGif => _entry.ImageType is ImageType.SingleAnimatedImage;
 
-    public bool IsGifLoadSuccessfully => LoadSuccessfully && IsPicGif;
+    private bool IsGifLoadSuccessfully => LoadSuccessfully && IsPicGif;
 
     public bool CanTransformExtension => !IsPicGif && !IsTransforming && LoadSuccessfully && OriginalSource is not null;
 
@@ -89,6 +95,24 @@ public partial class SingleViewerViewModel : ViewModelBase, IDisposable
     private readonly IArtworkInfo _entry;
 
     public int Index { get; }
+
+    [ObservableProperty]
+    public partial double ZoomFactor { get; set; } = 1;
+
+    [ObservableProperty]
+    public partial bool IsPlaying { get; set; } = true;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(MirrorScaleX))]
+    public partial bool IsMirrored { get; set; }
+
+    [ObservableProperty]
+    public partial int RotationDegree { get; set; }
+
+    /// <summary>
+    /// 镜像时为-1，否则为1
+    /// </summary>
+    public double MirrorScaleX => IsMirrored ? -1 : 1;
 
     /// <inheritdoc/>
     public SingleViewerViewModel(string platform, IArtworkInfo entry, int index)
@@ -316,6 +340,66 @@ public partial class SingleViewerViewModel : ViewModelBase, IDisposable
         {
             IsTransforming = false;
         }
+    }
+
+    [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
+    private void ZoomIn() => ZoomFactor *= 1.2;
+
+    [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
+    private void ZoomOut() => ZoomFactor /= 1.2;
+
+    [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
+    private void ZoomToOriginal() => ZoomFactor = 1;
+
+    [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
+    private void Mirror()
+    {
+        // 仅做IsEnabled绑定，实际逻辑修改IsMirrored属性
+    }
+
+    [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
+    private void RotateClockwise() => RotationDegree = (RotationDegree + 90) % 360;
+
+    [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
+    private void RotateCounterclockwise() => RotationDegree = (RotationDegree - 90 + 360) % 360;
+
+    [RelayCommand(CanExecute = nameof(IsGifLoadSuccessfully))]
+    private void PlayPause() => IsPlaying = !IsPlaying;
+
+    [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
+    private async Task CopyAsync(Control control)
+    {
+        if (DisplaySource?.Frames is not [var singleFrame])
+            return;
+        if (TopLevel.GetTopLevel(control) is not
+            { ViewContainer: { } viewContainer, Clipboard: { } clipboard })
+            return;
+        await clipboard.SetBitmapAsync(singleFrame);
+        viewContainer?.ShowSuccess(I18NManager.GetResource(MiscResources.Copied));
+    }
+
+    [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
+    private async Task SaveAsync(Control control)
+    {
+        if (DisplaySource?.Frames is not [var singleFrame])
+            return;
+        if (TopLevel.GetTopLevel(control) is not
+            { ViewContainer: { } viewContainer, Clipboard: { } clipboard })
+            return;
+        await clipboard.SetBitmapAsync(singleFrame);
+        viewContainer?.ShowSuccess(I18NManager.GetResource(MiscResources.Copied));
+    }
+
+    [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
+    private async Task SaveAsAsync(Control control)
+    {
+        if (DisplaySource?.Frames is not [var singleFrame])
+            return;
+        if (TopLevel.GetTopLevel(control) is not
+            { ViewContainer: { } viewContainer, Clipboard: { } clipboard })
+            return;
+        await clipboard.SetBitmapAsync(singleFrame);
+        viewContainer?.ShowSuccess(I18NManager.GetResource(MiscResources.Copied));
     }
 
     private static ExtensionService ExtensionService => App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();

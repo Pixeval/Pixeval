@@ -2,13 +2,8 @@
     x:Class="Pixeval.Views.Viewers.ContinuousImageViewer"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:ai="using:AnimatedControls.Avalonia"
-    xmlns:common="using:FluentIcons.Common"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:local="using:Pixeval.Views.Viewers"
-    xmlns:markup="using:FluentIcons.Avalonia.Markup"
-    xmlns:markup1="using:Pixeval.Views.Markup"
-    xmlns:pixeval="using:Pixeval"
     xmlns:scroll="using:SmoothScroll.Avalonia.Controls"
     xmlns:vm="using:Pixeval.ViewModels.Viewers"
     x:DataType="{x:Type vm:ImageViewerViewModel}"
@@ -36,94 +31,14 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type vm:SingleViewerViewModel}">
-                    <Border
+                    <local:SingleImageViewer
                         MinWidth="200"
                         MinHeight="200"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
-                        Background="Transparent"
                         PointerPressed="ImageItem_OnPointerPressed"
-                        SizeChanged="ImageItem_OnSizeChanged">
-                        <Panel>
-                            <ai:AnimatedImage
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch"
-                                IsPlaying="{Binding $parent[local:ContinuousImageViewer].IsPlaying}"
-                                IsVisible="{Binding LoadSuccessfully}"
-                                Source="{Binding DisplaySource}"
-                                Stretch="Uniform" />
-
-                            <Border
-                                Padding="20"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Background="Gray"
-                                CornerRadius="{StaticResource ControlCornerRadius}"
-                                IsVisible="{Binding LoadSuccessfully, Converter={x:Static BoolConverters.Not}}">
-                                <StackPanel Spacing="10">
-                                    <ProgressBar
-                                        Width="200"
-                                        IsIndeterminate="{Binding LoadingProgress, Converter={x:Static ObjectConverters.IsNull}}"
-                                        Maximum="100"
-                                        Value="{Binding LoadingProgress}" />
-                                    <TextBlock
-                                        HorizontalAlignment="Center"
-                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                        Text="{Binding LoadingText}" />
-                                </StackPanel>
-                            </Border>
-                        </Panel>
-                        <Border.ContextFlyout>
-                            <MenuFlyout>
-                                <MenuItem
-                                    Command="{Binding $parent[local:ContinuousImageViewer].PlayPauseCommand}"
-                                    Header="{I18N {x:Static pixeval:MiscResources.Play}}"
-                                    Icon="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding $parent[local:ContinuousImageViewer].IsPlaying},
-                                                                                              Pause,
-                                                                                              Play,
-                                                                                              x:TypeArguments=common:Symbol}}"
-                                    InputGesture="Space"
-                                    IsEnabled="{Binding IsGifLoadSuccessfully}"
-                                    IsVisible="{Binding IsPicGif}" />
-                                <MenuItem
-                                    Command="{Binding $parent[local:ContinuousImageViewer].CopyCommand}"
-                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources.Copy}}"
-                                    Icon="{markup:SymbolIcon Copy}"
-                                    InputGesture="Ctrl+C"
-                                    IsVisible="{Binding IsPicGif, Converter={x:Static BoolConverters.Not}}" />
-                                <MenuItem
-                                    Command="{Binding $parent[local:ContinuousImageViewer].SaveCommand}"
-                                    ContextRequested="SaveButton_OnRightClick"
-                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}"
-                                    Icon="{markup:SymbolIcon Save}"
-                                    InputGesture="Ctrl+S" />
-                                <MenuItem Header="-" IsVisible="{x:Static vm:SingleViewerViewModel.HasTransformerExtensions}" />
-                                <MenuItem
-                                    Command="{Binding PrimaryTransformerExtensionItem.Command, FallbackValue={x:Null}}"
-                                    CommandParameter="{Binding $self}"
-                                    Header="{Binding PrimaryTransformerExtensionItem.Label, FallbackValue={x:Null}}"
-                                    Icon="{Binding PrimaryTransformerExtensionItem.Icon, FallbackValue={x:Null}}"
-                                    IsVisible="{x:Static vm:SingleViewerViewModel.HasTransformerExtensions}"
-                                    ToolTip.Tip="{Binding PrimaryTransformerExtensionItem.Description, FallbackValue={x:Null}}" />
-                                <MenuItem
-                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources.OtherImageTransformerExtensions}}"
-                                    Icon="{markup:SymbolIcon ImageMultiple}"
-                                    IsVisible="{x:Static vm:SingleViewerViewModel.HasTransformerExtensions}"
-                                    ItemsSource="{Binding TransformerExtensionItems}">
-                                    <MenuItem.ItemTemplate>
-                                        <DataTemplate x:DataType="{x:Type vm:ImageTransformerExtensionCommandItem}">
-                                            <MenuItem
-                                                Command="{Binding Command}"
-                                                CommandParameter="{Binding $self}"
-                                                Header="{Binding Label}"
-                                                Icon="{Binding Icon}"
-                                                ToolTip.Tip="{Binding Description}" />
-                                        </DataTemplate>
-                                    </MenuItem.ItemTemplate>
-                                </MenuItem>
-                            </MenuFlyout>
-                        </Border.ContextFlyout>
-                    </Border>
+                        SizeChanged="ImageItem_OnSizeChanged"
+                        UseScrollView="False" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

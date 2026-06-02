@@ -10,101 +10,135 @@
     xmlns:scroll="using:SmoothScroll.Avalonia.Controls"
     xmlns:viewers="using:Pixeval.Views.Viewers"
     xmlns:vm="using:Pixeval.ViewModels.Viewers"
-    x:DataType="{x:Type vm:SingleViewerViewModel}">
+    x:DataType="{x:Type vm:SingleViewerViewModel}"
+    x:Name="Root">
+    <UserControl.Styles>
+        <Style Selector="viewers|SingleImageViewer:scrollable ContentPresenter#ImagePresenter">
+            <Setter Property="ContentTemplate">
+                <DataTemplate DataType="{x:Type vm:SingleViewerViewModel}">
+                    <!--  图片查看器（缩放/平移）  -->
+                    <scroll:ScrollView
+                        ContentOrientation="Both"
+                        HorizontalScrollBarVisibility="Auto"
+                        Theme="{StaticResource ViewerScrollViewTheme}"
+                        VerticalScrollBarVisibility="Auto"
+                        ZoomFactor="{Binding ZoomFactor, Mode=OneWayToSource}">
+                        <ai:AnimatedImage
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            IsPlaying="{Binding IsPlaying}"
+                            RenderTransformOrigin="50%,50%"
+                            Source="{Binding DisplaySource}">
+                            <ai:AnimatedImage.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform ScaleX="{Binding MirrorScaleX}" />
+                                    <RotateTransform Angle="{Binding RotationDegree}" />
+                                </TransformGroup>
+                            </ai:AnimatedImage.RenderTransform>
+                        </ai:AnimatedImage>
+                    </scroll:ScrollView>
+                </DataTemplate>
+            </Setter>
+        </Style>
+
+        <Style Selector="viewers|SingleImageViewer:plain ContentPresenter#ImagePresenter">
+            <Setter Property="ContentTemplate">
+                <DataTemplate DataType="{x:Type vm:SingleViewerViewModel}">
+                    <ai:AnimatedImage
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        IsPlaying="{Binding IsPlaying}"
+                        RenderTransformOrigin="50%,50%"
+                        Source="{Binding DisplaySource}"
+                        Stretch="Uniform">
+                        <ai:AnimatedImage.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="{Binding MirrorScaleX}" />
+                                <RotateTransform Angle="{Binding RotationDegree}" />
+                            </TransformGroup>
+                        </ai:AnimatedImage.RenderTransform>
+                    </ai:AnimatedImage>
+                </DataTemplate>
+            </Setter>
+        </Style>
+    </UserControl.Styles>
+
+    <UserControl.ContextFlyout>
+        <MenuFlyout>
+            <!--  播放/暂停（仅动图可见）  -->
+            <MenuItem
+                Command="{Binding PlayPauseCommand}"
+                Header="{I18N {x:Static pixeval:MiscResources.Play}}"
+                Icon="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding IsPlaying},
+                                                                          Pause,
+                                                                          Play,
+                                                                          x:TypeArguments=common:Symbol}}"
+                InputGesture="Space"
+                IsChecked="{Binding IsPlaying, Mode=TwoWay}"
+                IsVisible="{Binding IsPicGif}" />
+            <!--  保存  -->
+            <MenuItem
+                Command="{Binding CopyCommand}"
+                CommandParameter="{Binding $self}"
+                Header="{I18N {x:Static pixeval:EntryViewerPageResources.Copy}}"
+                Icon="{markup:SymbolIcon Copy}"
+                InputGesture="Ctrl+C"
+                IsVisible="{Binding IsPicGif, Converter={x:Static BoolConverters.Not}}" />
+            <MenuItem
+                Command="{Binding SaveCommand}"
+                CommandParameter="{Binding $self}"
+                ContextRequested="SaveButton_OnRightClick"
+                Header="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}"
+                Icon="{markup:SymbolIcon Save}"
+                InputGesture="Ctrl+S" />
+            <MenuItem Header="-" IsVisible="{x:Static vm:SingleViewerViewModel.HasTransformerExtensions}" />
+            <MenuItem
+                Command="{Binding PrimaryTransformerExtensionItem.Command, FallbackValue={x:Null}}"
+                CommandParameter="{Binding $self}"
+                Header="{Binding PrimaryTransformerExtensionItem.Label, FallbackValue={x:Null}}"
+                Icon="{Binding PrimaryTransformerExtensionItem.Icon, FallbackValue={x:Null}}"
+                IsVisible="{x:Static vm:SingleViewerViewModel.HasTransformerExtensions}"
+                ToolTip.Tip="{Binding PrimaryTransformerExtensionItem.Description, FallbackValue={x:Null}}" />
+            <MenuItem
+                Header="{I18N {x:Static pixeval:EntryViewerPageResources.OtherImageTransformerExtensions}}"
+                Icon="{markup:SymbolIcon ImageMultiple}"
+                IsVisible="{x:Static vm:SingleViewerViewModel.HasTransformerExtensions}"
+                ItemsSource="{Binding TransformerExtensionItems}">
+                <MenuItem.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type vm:ImageTransformerExtensionCommandItem}">
+                        <MenuItem
+                            Command="{Binding Command}"
+                            CommandParameter="{Binding $self}"
+                            Header="{Binding Label}"
+                            Icon="{Binding Icon}"
+                            ToolTip.Tip="{Binding Description}" />
+                    </DataTemplate>
+                </MenuItem.ItemTemplate>
+            </MenuItem>
+            <MenuItem Header="-" />
+            <!--  旋转/镜像  -->
+            <MenuItem
+                Command="{Binding RotateClockwiseCommand}"
+                Header="{I18N {x:Static pixeval:EntryViewerPageResources.RotateClockwise}}"
+                Icon="{markup:SymbolIcon ArrowRotateClockwise}" />
+            <MenuItem
+                Command="{Binding RotateCounterclockwiseCommand}"
+                Header="{I18N {x:Static pixeval:EntryViewerPageResources.RotateCounterclockwise}}"
+                Icon="{markup:SymbolIcon ArrowRotateCounterclockwise}" />
+            <MenuItem
+                Command="{Binding MirrorCommand}"
+                Header="{I18N {x:Static pixeval:EntryViewerPageResources.Mirror}}"
+                Icon="{markup:SymbolIcon FlipHorizontal}"
+                IsChecked="{Binding IsMirrored, Mode=TwoWay}"
+                ToggleType="CheckBox" />
+        </MenuFlyout>
+    </UserControl.ContextFlyout>
     <Panel>
-        <!--  图片查看器（缩放/平移）  -->
-        <scroll:ScrollView
-            x:Name="ViewerScrollView"
-            ContentOrientation="Both"
-            HorizontalScrollBarVisibility="Auto"
+        <ContentPresenter
+            x:Name="ImagePresenter"
+            Content="{Binding}"
             IsVisible="{Binding LoadSuccessfully}"
-            PropertyChanged="ViewerScrollView_OnPropertyChanged"
-            Theme="{StaticResource ViewerScrollViewTheme}"
-            VerticalScrollBarVisibility="Auto">
-            <ai:AnimatedImage
-                x:Name="ImageViewer"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                IsPlaying="{Binding $parent[viewers:SingleImageViewer].IsPlaying}"
-                RenderTransformOrigin="50%,50%"
-                SizeChanged="ImageViewerOnSizeChanged"
-                Source="{Binding DisplaySource}">
-                <ai:AnimatedImage.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform ScaleX="{Binding $parent[viewers:SingleImageViewer].MirrorScaleX}" />
-                        <RotateTransform Angle="{Binding $parent[viewers:SingleImageViewer].RotationDegree}" />
-                    </TransformGroup>
-                </ai:AnimatedImage.RenderTransform>
-            </ai:AnimatedImage>
-            <scroll:ScrollView.ContextFlyout>
-                <MenuFlyout>
-                    <!--  播放/暂停（仅动图可见）  -->
-                    <MenuItem
-                        Command="{Binding $parent[viewers:SingleImageViewer].PlayPauseCommand}"
-                        Header="{I18N {x:Static pixeval:MiscResources.Play}}"
-                        Icon="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding $parent[viewers:SingleImageViewer].IsPlaying},
-                                                                                  Pause,
-                                                                                  Play,
-                                                                                  x:TypeArguments=common:Symbol}}"
-                        InputGesture="Space"
-                        IsVisible="{Binding IsPicGif}" />
-                    <!--  保存  -->
-                    <MenuItem
-                        Command="{Binding $parent[viewers:SingleImageViewer].CopyCommand}"
-                        Header="{I18N {x:Static pixeval:EntryViewerPageResources.Copy}}"
-                        Icon="{markup:SymbolIcon Copy}"
-                        InputGesture="Ctrl+C"
-                        IsVisible="{Binding IsPicGif, Converter={x:Static BoolConverters.Not}}" />
-                    <MenuItem
-                        Command="{Binding $parent[viewers:SingleImageViewer].SaveCommand}"
-                        ContextRequested="SaveButton_OnRightClick"
-                        Header="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}"
-                        Icon="{markup:SymbolIcon Save}"
-                        InputGesture="Ctrl+S" />
-                    <MenuItem Header="-" />
-                    <MenuItem
-                        Command="{Binding PrimaryTransformerExtensionItem.Command, FallbackValue={x:Null}}"
-                        CommandParameter="{Binding $self}"
-                        Header="{Binding PrimaryTransformerExtensionItem.Label, FallbackValue={x:Null}}"
-                        Icon="{Binding PrimaryTransformerExtensionItem.Icon, FallbackValue={x:Null}}"
-                        IsVisible="{x:Static vm:SingleViewerViewModel.HasTransformerExtensions}"
-                        ToolTip.Tip="{Binding PrimaryTransformerExtensionItem.Description, FallbackValue={x:Null}}" />
-                    <MenuItem
-                        Header="{I18N {x:Static pixeval:EntryViewerPageResources.OtherImageTransformerExtensions}}"
-                        Icon="{markup:SymbolIcon ImageMultiple}"
-                        IsVisible="{x:Static vm:SingleViewerViewModel.HasTransformerExtensions}"
-                        ItemsSource="{Binding TransformerExtensionItems}">
-                        <MenuItem.ItemTemplate>
-                            <DataTemplate x:DataType="{x:Type vm:ImageTransformerExtensionCommandItem}">
-                                <MenuItem
-                                    Command="{Binding Command}"
-                                    CommandParameter="{Binding $self}"
-                                    Header="{Binding Label}"
-                                    Icon="{Binding Icon}"
-                                    ToolTip.Tip="{Binding Description}" />
-                            </DataTemplate>
-                        </MenuItem.ItemTemplate>
-                    </MenuItem>
-                    <MenuItem Header="-" IsVisible="{x:Static vm:SingleViewerViewModel.HasTransformerExtensions}" />
-                    <!--  旋转/镜像  -->
-                    <MenuItem
-                        Command="{Binding $parent[viewers:SingleImageViewer].RotateClockwiseCommand}"
-                        Header="{I18N {x:Static pixeval:EntryViewerPageResources.RotateClockwise}}"
-                        Icon="{markup:SymbolIcon ArrowRotateClockwise}" />
-                    <MenuItem
-                        Command="{Binding $parent[viewers:SingleImageViewer].RotateCounterclockwiseCommand}"
-                        Header="{I18N {x:Static pixeval:EntryViewerPageResources.RotateCounterclockwise}}"
-                        Icon="{markup:SymbolIcon ArrowRotateCounterclockwise}" />
-                    <MenuItem
-                        Command="{Binding $parent[viewers:SingleImageViewer].MirrorCommand}"
-                        Header="{I18N {x:Static pixeval:EntryViewerPageResources.Mirror}}"
-                        Icon="{markup:SymbolIcon FlipHorizontal}"
-                        IsChecked="{Binding $parent[viewers:SingleImageViewer].IsMirrored, Mode=TwoWay}"
-                        IsEnabled="{Binding LoadSuccessfully}"
-                        ToggleType="CheckBox" />
-                </MenuFlyout>
-            </scroll:ScrollView.ContextFlyout>
-        </scroll:ScrollView>
+            PropertyChanged="ImagePresenter_OnPropertyChanged" />
 
         <!--  加载中遮罩  -->
         <Border

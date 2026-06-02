@@ -22,11 +22,7 @@
         </controls:SwipeControl.PageTransition>
         <controls:SwipeControl.ItemTemplate>
             <DataTemplate DataType="{x:Type viewers:SingleViewerViewModel}">
-                <viewers1:SingleImageViewer
-                    IsMirrored="{Binding $parent[viewers1:SwipeImageViewer].IsMirrored, Mode=TwoWay}"
-                    IsPlaying="{Binding $parent[viewers1:SwipeImageViewer].IsPlaying, Mode=TwoWay}"
-                    RotationDegree="{Binding $parent[viewers1:SwipeImageViewer].RotationDegree, Mode=TwoWay}"
-                    ZoomFactor="{Binding $parent[viewers1:SwipeImageViewer].ZoomFactor, Mode=TwoWay}" />
+                <viewers1:SingleImageViewer UseScrollView="True" />
             </DataTemplate>
         </controls:SwipeControl.ItemTemplate>
     </controls:SwipeControl>

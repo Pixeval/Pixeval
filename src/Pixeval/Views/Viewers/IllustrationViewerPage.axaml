@@ -142,7 +142,6 @@
             需要等Avalonia行为改了，或者用其它workaround修复
             因为是局部的KeyBindings，目前快捷键需要焦点在该ContentPage内部才会激活
         -->
-        <KeyBinding Command="{Binding #I.ImageViewer.PlayPauseCommand}" Gesture="Space" />
         <KeyBinding Command="{Binding #I.ImageViewer.CopyCommand}" Gesture="Ctrl+C" />
         <KeyBinding Command="{Binding #I.ImageViewer.SaveCommand}" Gesture="Ctrl+S" />
     </ContentPage.KeyBindings>
@@ -253,51 +252,79 @@
                                 CornerRadius="0"
                                 Theme="{StaticResource FloatingCommandBarTheme}">
                                 <CommandBar.PrimaryCommands>
-                                    <CommandBarButton
-                                        Command="{Binding #I.SwipeImageViewer.CurrentPage.PlayPauseCommand, FallbackValue={x:Null}}"
-                                        Icon="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding #I.SwipeImageViewer.CurrentPage.IsPlaying, FallbackValue={x:False}},
+                                    <CommandBarToggleButton
+                                        Command="{Binding CurrentImage.CurrentPage.PlayPauseCommand, FallbackValue={x:Null}}"
+                                        Icon="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding CurrentImage.CurrentPage.IsPlaying, FallbackValue={x:False}},
                                                                                                   Pause,
                                                                                                   Play,
                                                                                                   x:TypeArguments=common:Symbol}}"
+                                        IsChecked="{Binding CurrentImage.CurrentPage.IsPlaying, Mode=TwoWay, FallbackValue={x:False}}"
                                         Label="{I18N {x:Static pixeval:MiscResources.Play}}">
-                                        <CommandBarButton.IsVisible>
+                                        <CommandBarToggleButton.IsVisible>
                                             <MultiBinding Converter="{x:Static BoolConverters.And}">
                                                 <Binding Path="CurrentIllustration.IsPicGif" />
                                                 <Binding Mode="OneTime" Path="#I.IsSwipeMode" />
                                             </MultiBinding>
-                                        </CommandBarButton.IsVisible>
-                                    </CommandBarButton>
+                                        </CommandBarToggleButton.IsVisible>
+                                    </CommandBarToggleButton>
                                     <CommandBarButton
-                                        Command="{Binding #I.SwipeImageViewer.RotateCounterclockwiseCommand, FallbackValue={x:Null}}"
+                                        Command="{Binding CurrentImage.CurrentPage.RotateCounterclockwiseCommand, FallbackValue={x:Null}}"
                                         Icon="{markup:SymbolIcon ArrowRotateCounterclockwise}"
                                         IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}"
                                         Label="{I18N {x:Static pixeval:EntryViewerPageResources.RotateCounterclockwise}}" />
                                     <CommandBarToggleButton
-                                        Command="{Binding #I.SwipeImageViewer.MirrorCommand, FallbackValue={x:Null}}"
+                                        Command="{Binding CurrentImage.CurrentPage.MirrorCommand, FallbackValue={x:Null}}"
                                         Icon="{markup:SymbolIcon FlipHorizontal}"
-                                        IsChecked="{Binding #I.SwipeImageViewer.IsMirrored, Mode=TwoWay, FallbackValue={x:False}}"
+                                        IsChecked="{Binding CurrentImage.CurrentPage.IsMirrored, Mode=TwoWay, FallbackValue={x:False}}"
                                         IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}"
                                         Label="{I18N {x:Static pixeval:EntryViewerPageResources.Mirror}}" />
                                     <CommandBarButton
-                                        Command="{Binding #I.SwipeImageViewer.RotateClockwiseCommand, FallbackValue={x:Null}}"
+                                        Command="{Binding CurrentImage.CurrentPage.RotateClockwiseCommand, FallbackValue={x:Null}}"
                                         Icon="{markup:SymbolIcon ArrowRotateClockwise}"
                                         IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}"
                                         Label="{I18N {x:Static pixeval:EntryViewerPageResources.RotateClockwise}}" />
                                     <CommandBarSeparator x:Name="SwipeTransformSeparator" IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}" />
                                     <CommandBarButton
+                                        Command="{Binding CurrentImage.CurrentPage.ZoomOutCommand, FallbackValue={x:Null}}"
+                                        Icon="{markup:SymbolIcon ZoomOut}"
+                                        IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}"
+                                        Label="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomOut}}" />
+                                    <CommandBarButton
                                         Command="{Binding #I.ImageViewer.ZoomOutCommand}"
                                         Icon="{markup:SymbolIcon ZoomOut}"
+                                        IsVisible="{Binding #I.IsSwipeMode, Converter={x:Static BoolConverters.Not}, Mode=OneTime}"
                                         Label="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomOut}}" />
-                                    <controls:CommandBarElementContainer>
-                                        <TextBlock x:Name="ZoomFactorTextBlock" Text="{Binding #I.ImageViewer.ZoomFactor, StringFormat={}{0:P0}}" />
+                                    <controls:CommandBarElementContainer IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}">
+                                        <TextBlock Text="{Binding CurrentImage.CurrentPage.ZoomFactor, StringFormat={}{0:P0}, FallbackValue=100%}" />
                                     </controls:CommandBarElementContainer>
+                                    <controls:CommandBarElementContainer>
+                                        <controls:CommandBarElementContainer.IsVisible>
+                                            <Binding
+                                                Converter="{x:Static BoolConverters.Not}"
+                                                Mode="OneTime"
+                                                Path="#I.IsSwipeMode" />
+                                        </controls:CommandBarElementContainer.IsVisible>
+                                        <TextBlock Text="{Binding #I.ImageViewer.ZoomFactor, StringFormat={}{0:P0}}" />
+                                    </controls:CommandBarElementContainer>
+                                    <CommandBarButton
+                                        Command="{Binding CurrentImage.CurrentPage.ZoomInCommand, FallbackValue={x:Null}}"
+                                        Icon="{markup:SymbolIcon ZoomIn}"
+                                        IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}"
+                                        Label="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomIn}}" />
                                     <CommandBarButton
                                         Command="{Binding #I.ImageViewer.ZoomInCommand}"
                                         Icon="{markup:SymbolIcon ZoomIn}"
+                                        IsVisible="{Binding #I.IsSwipeMode, Converter={x:Static BoolConverters.Not}, Mode=OneTime}"
                                         Label="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomIn}}" />
+                                    <CommandBarButton
+                                        Command="{Binding CurrentImage.CurrentPage.ZoomToOriginalCommand, FallbackValue={x:Null}}"
+                                        Icon="{markup:SymbolIcon RatioOneToOne}"
+                                        IsVisible="{Binding #I.IsSwipeMode, Mode=OneTime}"
+                                        Label="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomToOriginal}}" />
                                     <CommandBarButton
                                         Command="{Binding #I.ImageViewer.ZoomToOriginalCommand}"
                                         Icon="{markup:SymbolIcon RatioOneToOne}"
+                                        IsVisible="{Binding #I.IsSwipeMode, Converter={x:Static BoolConverters.Not}, Mode=OneTime}"
                                         Label="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomToOriginal}}" />
                                     <CommandBarButton
                                         Command="{Binding #I.SwipeImageViewer.CurrentPage.ZoomToFitCommand, FallbackValue={x:Null}}"
@@ -306,10 +333,7 @@
                                         Label="{I18N {x:Static pixeval:EntryViewerPageResources.ZoomToFit}}" />
                                     <CommandBarSeparator />
                                     <CommandBarToggleButton
-                                        Icon="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding IsAutoPlaying},
-                                                                                                  Pause,
-                                                                                                  Play,
-                                                                                                  x:TypeArguments=common:Symbol}}"
+                                        Icon="{markup:SymbolIcon SlidePlay}"
                                         IsChecked="{Binding IsAutoPlaying}"
                                         Label="{I18N {x:Static pixeval:EntryViewerPageResources.AutoPlay}}">
                                         <CommandBarToggleButton.ContextFlyout>

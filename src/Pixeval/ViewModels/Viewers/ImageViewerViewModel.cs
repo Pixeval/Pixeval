@@ -32,7 +32,11 @@ public partial class ImageViewerViewModel : ViewModelBase, IDisposable
     public IReadOnlyList<SingleViewerViewModel> Images { get; }
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CurrentPage))]
     public partial int SelectedPageIndex { get; set; }
+
+    public SingleViewerViewModel? CurrentPage =>
+        Images.Count is 0 ? null : Images[Math.Clamp(SelectedPageIndex, 0, Images.Count - 1)];
 
     public int PageCount { get; }
 

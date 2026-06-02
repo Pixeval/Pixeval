@@ -6,7 +6,6 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Animation;
 using Avalonia.Controls;
-using CommunityToolkit.Mvvm.Input;
 using Pixeval.Controls;
 using Pixeval.Models.Options;
 using Pixeval.ViewModels.Viewers;
@@ -21,23 +20,6 @@ public partial class SwipeImageViewer : ImageViewerBase
         AvaloniaProperty.RegisterDirect<SwipeImageViewer, SingleImageViewer?>(
             nameof(CurrentPage),
             o => o.CurrentPage);
-
-    public static readonly DirectProperty<SwipeImageViewer, double> MirrorScaleXProperty =
-        AvaloniaProperty.RegisterDirect<SwipeImageViewer, double>(
-            nameof(MirrorScaleX),
-            o => o.MirrorScaleX);
-
-    public static readonly DirectProperty<SwipeImageViewer, bool> IsMirroredProperty =
-        AvaloniaProperty.RegisterDirect<SwipeImageViewer, bool>(
-            nameof(IsMirrored),
-            o => o.IsMirrored,
-            (o, v) => o.IsMirrored = v);
-
-    public static readonly DirectProperty<SwipeImageViewer, int> RotationDegreeProperty =
-        AvaloniaProperty.RegisterDirect<SwipeImageViewer, int>(
-            nameof(RotationDegree),
-            o => o.RotationDegree,
-            (o, v) => o.RotationDegree = v);
 
     public SingleImageViewer? CurrentPage
     {
@@ -86,14 +68,6 @@ public partial class SwipeImageViewer : ImageViewerBase
         set => SetAndRaise(ZoomFactorProperty, ref field, value);
     }
 
-    protected override void NotifyCommandCanExecuteChanged()
-    {
-        base.NotifyCommandCanExecuteChanged();
-        MirrorCommand.NotifyCanExecuteChanged();
-        RotateClockwiseCommand.NotifyCanExecuteChanged();
-        RotateCounterclockwiseCommand.NotifyCanExecuteChanged();
-    }
-
     private void SwipeContent_OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
         if (e.Property == ContentProperty)
@@ -112,49 +86,15 @@ public partial class SwipeImageViewer : ImageViewerBase
 
         RaiseSelectionChanged(e.NewIndex, e.NewItem);
     }
-
-    [RelayCommand(CanExecute = nameof(CanManipulateCurrentImage))]
-    private void Mirror()
-    {
-        // 仅做IsEnabled绑定，实际逻辑修改IsMirrored属性
-    }
-
-    [RelayCommand(CanExecute = nameof(CanManipulateCurrentImage))]
-    private void RotateClockwise() => RotationDegree = (RotationDegree + 90) % 360;
-
-    [RelayCommand(CanExecute = nameof(CanManipulateCurrentImage))]
-    private void RotateCounterclockwise() => RotationDegree = (RotationDegree - 90 + 360) % 360;
-
-    public bool IsMirrored
-    {
-        get;
-        set
-        {
-            if (field == value)
-                return;
-
-            var mirrorScaleX = MirrorScaleX;
-            SetAndRaise(IsMirroredProperty, ref field, value);
-            RaisePropertyChanged(MirrorScaleXProperty, mirrorScaleX, MirrorScaleX);
-        }
-    }
-
-    public int RotationDegree
-    {
-        get;
-        set => SetAndRaise(RotationDegreeProperty, ref field, value);
-    }
-
-    /// <summary>
-    /// 镜像时为-1，否则为1
-    /// </summary>
-    public double MirrorScaleX => IsMirrored ? -1 : 1;
 }
 
 file static class BrowseDirectionExtensions
 {
-    public static PageSlide.SlideAxis ToSlideAxis(this BrowseDirection direction) =>
-        direction is BrowseDirection.TopDown or BrowseDirection.BottomUp
-            ? PageSlide.SlideAxis.Vertical
-            : PageSlide.SlideAxis.Horizontal;
+    extension(BrowseDirection direction)
+    {
+        public PageSlide.SlideAxis ToSlideAxis() =>
+            direction is BrowseDirection.TopDown or BrowseDirection.BottomUp
+                ? PageSlide.SlideAxis.Vertical
+                : PageSlide.SlideAxis.Horizontal;
+    }
 }

@@ -3,14 +3,13 @@
 
 using System;
 using System.ComponentModel;
-using System.Threading.Tasks;
+using AnimatedControls.Avalonia;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Presenters;
 using Avalonia.Input;
-using Avalonia.Input.Platform;
 using CommunityToolkit.Mvvm.Input;
-using Pixeval.I18N;
-using Pixeval.Utilities;
 using Pixeval.ViewModels.Viewers;
 using SmoothScroll.Avalonia.Controls;
 
@@ -19,42 +18,25 @@ namespace Pixeval.Views.Viewers;
 /// <summary>
 /// <see cref="SwipeImageViewer"/> 内部使用
 /// </summary>
+[PseudoClasses(PcScrollable, PcPlain)]
 public partial class SingleImageViewer : UserControl
 {
-    public static readonly DirectProperty<SingleImageViewer, double> MirrorScaleXProperty =
-        AvaloniaProperty.RegisterDirect<SingleImageViewer, double>(
-            nameof(MirrorScaleX),
-            o => o.MirrorScaleX);
+    private const string PcScrollable = ":scrollable";
+    private const string PcPlain = ":plain";
 
-    public static readonly DirectProperty<SingleImageViewer, bool> IsMirroredProperty =
-        AvaloniaProperty.RegisterDirect<SingleImageViewer, bool>(
-            nameof(IsMirrored),
-            o => o.IsMirrored,
-            (o, v) => o.IsMirrored = v);
-
-    public static readonly DirectProperty<SingleImageViewer, bool> IsPlayingProperty =
-        AvaloniaProperty.RegisterDirect<SingleImageViewer, bool>(
-            nameof(IsPlaying),
-            o => o.IsPlaying,
-            (o, v) => o.IsPlaying = v);
-
-    public static readonly DirectProperty<SingleImageViewer, int> RotationDegreeProperty =
-        AvaloniaProperty.RegisterDirect<SingleImageViewer, int>(
-            nameof(RotationDegree),
-            o => o.RotationDegree,
-            (o, v) => o.RotationDegree = v);
-
-    public static readonly DirectProperty<SingleImageViewer, double> ZoomFactorProperty =
-        AvaloniaProperty.RegisterDirect<SingleImageViewer, double>(
-            nameof(ZoomFactor),
-            o => o.ZoomFactor,
-            (o, v) => o.ZoomFactor = v);
+    public static readonly StyledProperty<bool> UseScrollViewProperty =
+        AvaloniaProperty.Register<SingleImageViewer, bool>(
+            nameof(UseScrollView),
+            defaultValue: true);
 
     private SingleViewerViewModel? _subscribedViewModel;
+    internal AnimatedImage? ImageViewer;
+    internal ScrollView? ViewerScrollView;
 
     public SingleImageViewer()
     {
         InitializeComponent();
+        UpdateViewMode();
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -75,6 +57,15 @@ public partial class SingleImageViewer : UserControl
         base.OnDataContextChanged(e);
         UpdateViewModelSubscription();
         NotifyCommandCanExecuteChanged();
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == UseScrollViewProperty)
+        {
+            UpdateViewMode();
+        }
     }
 
     private void UpdateViewModelSubscription()
@@ -102,159 +93,97 @@ public partial class SingleImageViewer : UserControl
 
     private void ViewModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName is nameof(SingleViewerViewModel.LoadSuccessfully)
-            or nameof(SingleViewerViewModel.OriginalSource)
-            or nameof(SingleViewerViewModel.DisplaySource)
-            or nameof(SingleViewerViewModel.IsGifLoadSuccessfully)
-            or nameof(SingleViewerViewModel.IsPicGif))
-            NotifyCommandCanExecuteChanged();
+        switch (e.PropertyName)
+        {
+            case nameof(SingleViewerViewModel.ZoomFactor):
+                ApplyViewModelZoomFactor();
+                break;
+            case nameof(SingleViewerViewModel.LoadSuccessfully):
+                NotifyCommandCanExecuteChanged();
+                break;
+        }
     }
 
-    private void NotifyCommandCanExecuteChanged()
-    {
-        MirrorCommand.NotifyCanExecuteChanged();
-        RotateClockwiseCommand.NotifyCanExecuteChanged();
-        RotateCounterclockwiseCommand.NotifyCanExecuteChanged();
-        ZoomInCommand.NotifyCanExecuteChanged();
-        ZoomOutCommand.NotifyCanExecuteChanged();
-        ZoomToOriginalCommand.NotifyCanExecuteChanged();
-        ZoomToFitCommand.NotifyCanExecuteChanged();
-        PlayPauseCommand.NotifyCanExecuteChanged();
-        MirrorCommand.NotifyCanExecuteChanged();
-        CopyCommand.NotifyCanExecuteChanged();
-        SaveCommand.NotifyCanExecuteChanged();
-        SaveAsCommand.NotifyCanExecuteChanged();
-    }
+    private void NotifyCommandCanExecuteChanged() => ZoomToFitCommand.NotifyCanExecuteChanged();
 
     private bool CanManipulateImage => DataContext is SingleViewerViewModel { LoadSuccessfully: true };
 
-    private bool CanPlayGif => DataContext is SingleViewerViewModel { IsGifLoadSuccessfully: true };
-
-    [RelayCommand(CanExecute = nameof(CanManipulateImage))]
-    private void Mirror()
-    {
-        // 仅做IsEnabled绑定，实际逻辑修改IsMirrored属性
-    }
-
-    [RelayCommand(CanExecute = nameof(CanManipulateImage))]
-    private void RotateClockwise() => RotationDegree = (RotationDegree + 90) % 360;
-
-    [RelayCommand(CanExecute = nameof(CanManipulateImage))]
-    private void RotateCounterclockwise() => RotationDegree = (RotationDegree - 90 + 360) % 360;
-
-    [RelayCommand(CanExecute = nameof(CanManipulateImage))]
-    private void ZoomIn() => ZoomFactor *= 1.2;
-
-    [RelayCommand(CanExecute = nameof(CanManipulateImage))]
-    private void ZoomOut() => ZoomFactor /= 1.2;
-
-    [RelayCommand(CanExecute = nameof(CanManipulateImage))]
-    private void ZoomToOriginal() => ZoomFactor = 1;
-
     [RelayCommand(CanExecute = nameof(CanManipulateImage))]
     private void ZoomToFit() => ZoomToFitCore(true);
-
-    [RelayCommand(CanExecute = nameof(CanPlayGif))]
-    private void PlayPause() => IsPlaying = !IsPlaying;
-
-    [RelayCommand(CanExecute = nameof(CanManipulateImage))]
-    private async Task CopyAsync()
-    {
-        if ((DataContext as SingleViewerViewModel)?.DisplaySource?.Frames is not [var singleFrame])
-            return;
-        if (TopLevel.GetTopLevel(this) is not
-            { ViewContainer: { } viewContainer, Clipboard: { } clipboard })
-            return;
-        await clipboard.SetBitmapAsync(singleFrame);
-        viewContainer?.ShowSuccess(I18NManager.GetResource(MiscResources.Copied));
-    }
-
-    [RelayCommand(CanExecute = nameof(CanManipulateImage))]
-    private async Task SaveAsync()
-    {
-        if ((DataContext as SingleViewerViewModel)?.DisplaySource?.Frames is not [var singleFrame])
-            return;
-        if (TopLevel.GetTopLevel(this) is not
-            { ViewContainer: { } viewContainer, Clipboard: { } clipboard })
-            return;
-        await clipboard.SetBitmapAsync(singleFrame);
-        viewContainer?.ShowSuccess(I18NManager.GetResource(MiscResources.Copied));
-    }
-
-    [RelayCommand(CanExecute = nameof(CanManipulateImage))]
-    private async Task SaveAsAsync()
-    {
-        if ((DataContext as SingleViewerViewModel)?.DisplaySource?.Frames is not [var singleFrame])
-            return;
-        if (TopLevel.GetTopLevel(this) is not
-            { ViewContainer: { } viewContainer, Clipboard: { } clipboard })
-            return;
-        await clipboard.SetBitmapAsync(singleFrame);
-        viewContainer?.ShowSuccess(I18NManager.GetResource(MiscResources.Copied));
-    }
 
     /// <summary>
     /// 默认缩放到适应窗口大小（Uniform）
     /// </summary>
     private void ImageViewerOnSizeChanged(object? sender, SizeChangedEventArgs e) => ZoomToFitCore(false);
 
+    private void ImagePresenter_OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property == ContentPresenter.ChildProperty)
+            switch (e.GetNewValue<Control?>())
+            {
+                case null:
+                    SetViewerControls(null, null);
+                    break;
+                case ScrollView { Content: AnimatedImage animatedImage } scrollView:
+                    SetViewerControls(animatedImage, scrollView);
+                    break;
+                case AnimatedImage animatedImage2:
+                    SetViewerControls(animatedImage2, null);
+                    break;
+            }
+    }
+
+    private void UpdateViewMode()
+    {
+        PseudoClasses.Set(PcScrollable, UseScrollView);
+        PseudoClasses.Set(PcPlain, !UseScrollView);
+    }
+
+    private void SetViewerControls(AnimatedImage? imageViewer, ScrollView? scrollView)
+    {
+        if (ReferenceEquals(ImageViewer, imageViewer) && ReferenceEquals(ViewerScrollView, scrollView))
+            return;
+
+        ImageViewer?.SizeChanged -= ImageViewerOnSizeChanged;
+
+        ImageViewer = imageViewer;
+        ViewerScrollView = scrollView;
+
+        ImageViewer?.SizeChanged += ImageViewerOnSizeChanged;
+
+        ApplyViewModelZoomFactor();
+    }
+
     private void ZoomToFitCore(bool animation)
     {
         if (ImageViewer is not Control { Bounds.Size: { Width: not 0, Height: not 0 } imageSize }
-            || ViewerScrollView is not { Bounds.Size: { Width: not 0, Height: not 0 } panelSize })
+            || ViewerScrollView is not { Bounds.Size: { Width: not 0, Height: not 0 } panelSize } scrollView)
             return;
 
         var ratio = panelSize / imageSize;
-        ViewerScrollView.ZoomTo(Math.Min(ratio.X, ratio.Y), animation);
+        scrollView.ZoomTo(Math.Min(ratio.X, ratio.Y), animation);
     }
 
-    public bool IsMirrored
+    public bool UseScrollView
     {
-        get;
-        set
-        {
-            var mirrorScaleX = MirrorScaleX;
-            SetAndRaise(IsMirroredProperty, ref field, value);
-            RaisePropertyChanged(MirrorScaleXProperty, mirrorScaleX, MirrorScaleX);
-        }
+        get => GetValue(UseScrollViewProperty);
+        set => SetValue(UseScrollViewProperty, value);
     }
 
-    public bool IsPlaying
+    private void ApplyViewModelZoomFactor()
     {
-        get;
-        set => SetAndRaise(IsPlayingProperty, ref field, value);
-    }
+        if (DataContext is not SingleViewerViewModel viewModel
+            || ViewerScrollView is not { } scrollView
+            // 防止绑定反向影响
+            || scrollView.ZoomFactor == viewModel.ZoomFactor)
+            return;
 
-    public int RotationDegree
-    {
-        get;
-        set => SetAndRaise(RotationDegreeProperty, ref field, value);
-    }
-
-    public double ZoomFactor
-    {
-        get => ViewerScrollView?.ZoomFactor ?? 1;
-        set
-        {
-            var old = ZoomFactor;
-            if (old != value)
-                ViewerScrollView?.ZoomTo(value);
-        }
-    }
-
-    /// <summary>
-    /// 镜像时为-1，否则为1
-    /// </summary>
-    public double MirrorScaleX => IsMirrored ? -1 : 1;
-
-    private void ViewerScrollView_OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
-    {
-        if (e.Property == ScrollView.ZoomFactorProperty)
-            RaisePropertyChanged(ZoomFactorProperty, e.GetOldValue<double>(), e.GetNewValue<double>());
+        scrollView.ZoomTo(viewModel.ZoomFactor);
     }
 
     private async void SaveButton_OnRightClick(object? sender, ContextRequestedEventArgs e)
     {
-        await SaveAsCommand.ExecuteAsync(null);
+        if (DataContext is SingleViewerViewModel viewModel)
+            await viewModel.SaveAsCommand.ExecuteAsync(sender as Control);
     }
 }

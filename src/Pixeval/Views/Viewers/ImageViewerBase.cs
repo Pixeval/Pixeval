@@ -20,12 +20,6 @@ public abstract partial class ImageViewerBase : UserControl
 {
     public event EventHandler<Control, ImageViewerSelectionChangedEventArgs>? SelectionChanged;
 
-    public static readonly DirectProperty<ImageViewerBase, bool> IsPlayingProperty =
-        AvaloniaProperty.RegisterDirect<ImageViewerBase, bool>(
-            nameof(IsPlaying),
-            o => o.IsPlaying,
-            (o, v) => o.IsPlaying = v);
-
     public static readonly DirectProperty<ImageViewerBase, double> ZoomFactorProperty =
         AvaloniaProperty.RegisterDirect<ImageViewerBase, double>(
             nameof(ZoomFactor),
@@ -37,12 +31,6 @@ public abstract partial class ImageViewerBase : UserControl
             nameof(BrowseDirection),
             o => o.BrowseDirection,
             (o, v) => o.BrowseDirection = v);
-
-    public bool IsPlaying
-    {
-        get;
-        set => SetAndRaise(IsPlayingProperty, ref field, value);
-    } = true;
 
     public abstract double ZoomFactor { get; set; }
 
@@ -62,9 +50,7 @@ public abstract partial class ImageViewerBase : UserControl
 
     protected SingleViewerViewModel? CurrentPageViewModel { get; private set; }
 
-    protected bool CanManipulateCurrentImage => CurrentPageViewModel?.LoadSuccessfully == true;
-
-    protected bool CanPlayCurrentGif => CurrentPageViewModel?.IsGifLoadSuccessfully == true;
+    protected bool CanManipulateCurrentImage => CurrentPageViewModel?.LoadSuccessfully is true;
 
     protected void SetCurrentPageViewModel(SingleViewerViewModel? currentPage)
     {
@@ -86,7 +72,6 @@ public abstract partial class ImageViewerBase : UserControl
         ZoomInCommand.NotifyCanExecuteChanged();
         ZoomOutCommand.NotifyCanExecuteChanged();
         ZoomToOriginalCommand.NotifyCanExecuteChanged();
-        PlayPauseCommand.NotifyCanExecuteChanged();
         CopyCommand.NotifyCanExecuteChanged();
         SaveCommand.NotifyCanExecuteChanged();
         SaveAsCommand.NotifyCanExecuteChanged();
@@ -100,8 +85,7 @@ public abstract partial class ImageViewerBase : UserControl
     {
         if (e.PropertyName is nameof(SingleViewerViewModel.LoadSuccessfully)
             or nameof(SingleViewerViewModel.OriginalSource)
-            or nameof(SingleViewerViewModel.DisplaySource)
-            or nameof(SingleViewerViewModel.IsGifLoadSuccessfully))
+            or nameof(SingleViewerViewModel.DisplaySource))
             NotifyCommandCanExecuteChanged();
     }
 
@@ -113,9 +97,6 @@ public abstract partial class ImageViewerBase : UserControl
 
     [RelayCommand(CanExecute = nameof(CanManipulateCurrentImage))]
     private void ZoomToOriginal() => ZoomFactor = 1;
-
-    [RelayCommand(CanExecute = nameof(CanPlayCurrentGif))]
-    private void PlayPause() => IsPlaying = !IsPlaying;
 
     [RelayCommand(CanExecute = nameof(CanManipulateCurrentImage))]
     private async Task CopyAsync() => await CopyCurrentImageToClipboardAsync();
