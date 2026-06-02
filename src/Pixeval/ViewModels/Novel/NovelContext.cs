@@ -60,48 +60,12 @@ public class NovelContext(NovelContent novelContent) : INovelContext<Stream>, ID
         return sb;
     }
 
-    //TODO PDF support
-    //public Document LoadPdfContent()
-    //{
-    //    var index = 0;
-    //    var length = NovelContent.Text.Length;
-
-    //    PixivNovelPdfParser.Init();
-
-    //    return
-    //        Document.Create(t =>
-    //            t.Page(p =>
-    //            {
-    //                p.MarginHorizontal(90);
-    //                p.MarginVertical(72);
-    //                p.DefaultTextStyle(new TextStyle().LineHeight(2));
-    //                p.Content().Column(c =>
-    //                {
-    //                    for (var i = 0; index < length; ++i)
-    //                    {
-    //                        var parser = new PixivNovelPdfParser(c, i);
-    //                        _ = parser.Parse(NovelContent.Text, ref index, this);
-    //                        if (LoadingCancellationTokenSource.IsCancellationRequested)
-    //                            break;
-    //                    }
-    //                });
-    //            }));
-    //}
-
-    public (long Id, IEnumerable<string> Tags)? GetIdTags(int index)
-    {
-        if (index < NovelContent.Images.Count)
-            return null;
-        var illust = NovelContent.Illustrations[index - NovelContent.Images.Count];
-        return (illust.Id, illust.Illustration.Tags.Select(t => t.Tag));
-    }
-
     public Stream? TryGetStream(int index)
     {
         if (index < NovelContent.Images.Count)
             return UploadedImages.GetValueOrDefault(NovelContent.Images[index].NovelImageId);
-        var illust = NovelContent.Illustrations[index - NovelContent.Images.Count];
-        return IllustrationImages.GetValueOrDefault((illust.Id, illust.Page));
+        var illustration = NovelContent.Illustrations[index - NovelContent.Images.Count];
+        return IllustrationImages.GetValueOrDefault((illustration.Id, illustration.Page));
     }
 
     public void SetStream(int index, Stream? stream)
@@ -112,8 +76,8 @@ public class NovelContext(NovelContent novelContent) : INovelContext<Stream>, ID
         }
         else
         {
-            var illust = NovelContent.Illustrations[index - NovelContent.Images.Count];
-            IllustrationImages[(illust.Id, illust.Page)] = stream ?? AppInfo.GetImageNotAvailableStream();
+            var illustration = NovelContent.Illustrations[index - NovelContent.Images.Count];
+            IllustrationImages[(illustration.Id, illustration.Page)] = stream ?? AppInfo.GetImageNotAvailableStream();
         }
     }
 

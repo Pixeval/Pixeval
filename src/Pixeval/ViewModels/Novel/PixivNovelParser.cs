@@ -38,257 +38,242 @@ public abstract class PixivNovelParser<T, TImage, TViewModel> where TViewModel :
     {
         var result = Vector;
 
-        var currentIndex = 0;
-        var span = text.AsSpan(startIndex);
-        var currentSpan = span;
-        var loopSpan = span;
+        var position = startIndex;
+        var runStart = startIndex;
 
-        while (loopSpan.Length is not 0)
+        while (position < text.Length)
         {
-            var breakForEach = false;
-
-            var next = loopSpan.IndexOf('[');
+            var next = text.AsSpan(position).IndexOf('[');
             if (next is -1)
                 break;
 
-            Skip(ref loopSpan, ref currentSpan, ref startIndex, next);
-            AddLastRun(ref currentSpan);
+            position += next;
+            AddLastRun(position);
 
-            foreach (var token in PixivTokens.Tokens)
+            var tokenSpan = text.AsSpan(position);
+            var token = PixivTokens.Match(tokenSpan);
+            var tokenLength = PixivTokens.GetLength(token);
+            switch (token)
             {
-                if (breakForEach)
+                case PixivToken.None:
+                    ++position;
                     break;
-                if (!loopSpan.StartsWith(token))
-                    continue;
-
-                switch (token)
-                {
-                    case PixivTokens.NewPageToken:
-                    {
-                        AddLastRun(ref currentSpan);
-                        Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length, true);
-                        NewPage(result);
-                        return result;
-                    }
-                    case PixivTokens.RubyToken:
-                    {
-                        var separatorIndex = loopSpan.IndexOf(PixivTokens.SeparatorToken);
-                        if (separatorIndex is -1)
-                        {
-                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
-                            break;
-                        }
-
-                        var endIndex = loopSpan.IndexOf(PixivTokens.EndDoubleToken);
-                        if (endIndex is -1)
-                        {
-                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
-                            break;
-                        }
-
-                        var kanji = loopSpan[token.Length..separatorIndex].Trim();
-                        var ruby = loopSpan[(separatorIndex + 1)..endIndex].Trim();
-                        AddLastRun(ref currentSpan);
-                        AddRuby(result, kanji.ToString(), ruby.ToString());
-
-                        var end = endIndex + PixivTokens.EndDoubleToken.Length;
-                        Skip(ref loopSpan, ref currentSpan, ref startIndex, end, true);
-                        breakForEach = true;
-                        break;
-                    }
-                    case PixivTokens.JumpUriToken:
-                    {
-                        var separatorIndex = loopSpan.IndexOf(PixivTokens.SeparatorToken);
-                        if (separatorIndex is -1)
-                        {
-                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
-                            break;
-                        }
-
-                        var endIndex = loopSpan.IndexOf(PixivTokens.EndDoubleToken);
-                        if (endIndex is -1)
-                        {
-                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
-                            break;
-                        }
-
-                        var content = loopSpan[token.Length..separatorIndex].Trim();
-                        var uriText = loopSpan[(separatorIndex + 1)..endIndex].Trim();
-                        AddLastRun(ref currentSpan);
-                        if (!Uri.TryCreate(uriText.ToString(), UriKind.Absolute, out var uri)
-                            || uri.Scheme is not ("http" or "https"))
-                        {
-                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
-                            break;
-                        }
-
-                        AddHyperlink(result, content.ToString(), uri);
-
-                        var end = endIndex + PixivTokens.EndDoubleToken.Length;
-                        Skip(ref loopSpan, ref currentSpan, ref startIndex, end, true);
-                        breakForEach = true;
-                        break;
-                    }
-                    case PixivTokens.JumpToken:
-                    {
-                        var endIndex = loopSpan.IndexOf(PixivTokens.EndSingleToken);
-                        if (endIndex is -1)
-                        {
-                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
-                            break;
-                        }
-
-                        // Pixiv也没有Trim
-                        var pageText = loopSpan[token.Length..endIndex];
-                        AddLastRun(ref currentSpan);
-                        if (!uint.TryParse(pageText, null, out var page))
-                        {
-                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
-                            break;
-                        }
-
-                        AddInlineHyperlink(result, page, viewModel);
-
-                        var end = endIndex + 1;
-                        Skip(ref loopSpan, ref currentSpan, ref startIndex, end, true);
-                        breakForEach = true;
-                        break;
-                    }
-                    case PixivTokens.ChapterToken:
-                    {
-                        var endIndex = loopSpan.IndexOf(PixivTokens.EndSingleToken);
-                        if (endIndex is -1)
-                        {
-                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
-                            break;
-                        }
-
-                        var chapterText = loopSpan[token.Length..endIndex].Trim();
-                        AddLastRun(ref currentSpan);
-
-                        AddChapter(result, chapterText.ToString());
-
-                        var end = endIndex + 1;
-                        Skip(ref loopSpan, ref currentSpan, ref startIndex, end, true);
-                        breakForEach = true;
-                        break;
-                    }
-                    case PixivTokens.UploadedImageToken:
-                    {
-                        var endIndex = loopSpan.IndexOf(PixivTokens.EndSingleToken);
-                        if (endIndex is -1)
-                        {
-                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
-                            break;
-                        }
-
-                        // Pixiv也没有Trim
-                        var imageIdText = loopSpan[token.Length..endIndex];
-                        if (!long.TryParse(imageIdText, null, out var imageId))
-                        {
-                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
-                            break;
-                        }
-
-                        if (!viewModel.UploadedImages.ContainsKey(imageId))
-                        {
-                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
-                            break;
-                        }
-                        AddLastRun(ref currentSpan);
-
-                        AddUploadedImage(result, viewModel, imageId);
-
-                        var end = endIndex + 1;
-                        Skip(ref loopSpan, ref currentSpan, ref startIndex, end, true);
-                        breakForEach = true;
-                        break;
-                    }
-                    case PixivTokens.PixivImageToken:
-                    {
-                        var endIndex = loopSpan.IndexOf(PixivTokens.EndSingleToken);
-                        if (endIndex is -1)
-                        {
-                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
-                            break;
-                        }
-
-                        // Pixiv也没有Trim
-                        var imageIdText = loopSpan[token.Length..endIndex];
-                        var dest = new Span<Range>([new(), new(), new()]);
-                        var page = 1;
-                        var length = imageIdText.Split(dest, '-');
-                        var imageId = 0L;
-                        // 只有不包含空白字符的纯数字，或者被'-'分割的两个数字才能解析（后者序号从1开始）
-                        // 例如："12345678"、"12345678-2"
-                        // 反例："12345678-1-1"、" 12345678"、"12345678-1 "、"12345678-"
-                        if (length is not (1 or 2)
-                            || (length is 2 && (!long.TryParse(imageIdText[dest[0]], null, out imageId) || !int.TryParse(imageIdText[dest[1]], null, out page)))
-                            || (length is 1 && !long.TryParse(imageIdText, null, out imageId))
-                            || (imageId, page) is var key && !viewModel.IllustrationImages.ContainsKey(key))
-                        {
-                            Skip(ref loopSpan, ref currentSpan, ref startIndex, token.Length);
-                            break;
-                        }
-
-                        AddLastRun(ref currentSpan);
-
-                        AddPixivImage(result, viewModel, imageId, page);
-
-                        var end = endIndex + 1;
-                        Skip(ref loopSpan, ref currentSpan, ref startIndex, end, true);
-                        breakForEach = true;
-                        break;
-                    }
-                }
+                case PixivToken.NewPage:
+                    position += tokenLength;
+                    runStart = position;
+                    startIndex = position;
+                    NewPage(result);
+                    return result;
+                case PixivToken.Ruby:
+                    ParseRuby(tokenSpan, tokenLength);
+                    break;
+                case PixivToken.JumpUri:
+                    ParseJumpUri(tokenSpan, tokenLength);
+                    break;
+                case PixivToken.Jump:
+                    ParseJump(tokenSpan, tokenLength);
+                    break;
+                case PixivToken.Chapter:
+                    ParseChapter(tokenSpan, tokenLength);
+                    break;
+                case PixivToken.UploadedImage:
+                    ParseUploadedImage(tokenSpan, tokenLength);
+                    break;
+                case PixivToken.PixivImage:
+                    ParsePixivImage(tokenSpan, tokenLength);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(token));
             }
-
-            if (!breakForEach)
-                Skip(ref loopSpan, ref currentSpan, ref startIndex, 1);
         }
 
         startIndex = text.Length;
-        currentIndex = currentSpan.Length;
-        AddLastRun(ref currentSpan);
+        AddLastRun(text.Length);
         Finish(result);
         return result;
 
-        void AddLastRun(ref ReadOnlySpan<char> currentSpan)
+        void ParseRuby(ReadOnlySpan<char> tokenSpan, int tokenLength)
         {
-            var lastRun = currentSpan[..currentIndex];
-            currentSpan = currentSpan[currentIndex..];
-            currentIndex = 0;
-            if (lastRun.Length is not 0)
-                AddLastSpan(result, lastRun.ToString());
+            var separatorIndex = tokenSpan.IndexOf(PixivTokens.SeparatorToken);
+            if (separatorIndex is -1)
+            {
+                position += tokenLength;
+                return;
+            }
+
+            var endIndex = tokenSpan.IndexOf(PixivTokens.EndDoubleToken);
+            if (endIndex is -1)
+            {
+                position += tokenLength;
+                return;
+            }
+
+            var kanji = tokenSpan[tokenLength..separatorIndex].Trim();
+            var ruby = tokenSpan[(separatorIndex + 1)..endIndex].Trim();
+            AddRuby(result, kanji.ToString(), ruby.ToString());
+
+            var end = endIndex + PixivTokens.EndDoubleToken.Length;
+            position += end;
+            runStart = position;
         }
 
-        void Skip(ref ReadOnlySpan<char> loopSpan, ref ReadOnlySpan<char> currentSpan, ref int startIndex, int count, bool resetCurrent = false)
+        void ParseJumpUri(ReadOnlySpan<char> tokenSpan, int tokenLength)
         {
-            startIndex += count;
-            currentIndex += count;
-            loopSpan = loopSpan[count..];
-            if (resetCurrent)
+            var separatorIndex = tokenSpan.IndexOf(PixivTokens.SeparatorToken);
+            if (separatorIndex is -1)
             {
-                currentSpan = currentSpan[currentIndex..];
-                currentIndex = 0;
+                position += tokenLength;
+                return;
             }
+
+            var endIndex = tokenSpan.IndexOf(PixivTokens.EndDoubleToken);
+            if (endIndex is -1)
+            {
+                position += tokenLength;
+                return;
+            }
+
+            var content = tokenSpan[tokenLength..separatorIndex].Trim();
+            var uriText = tokenSpan[(separatorIndex + 1)..endIndex].Trim();
+            if (!Uri.TryCreate(uriText.ToString(), UriKind.Absolute, out var uri)
+                || uri.Scheme is not ("http" or "https"))
+            {
+                position += tokenLength;
+                return;
+            }
+
+            AddHyperlink(result, content.ToString(), uri);
+
+            var end = endIndex + PixivTokens.EndDoubleToken.Length;
+            position += end;
+            runStart = position;
+        }
+
+        void ParseJump(ReadOnlySpan<char> tokenSpan, int tokenLength)
+        {
+            var endIndex = tokenSpan.IndexOf(PixivTokens.EndSingleToken);
+            if (endIndex is -1)
+            {
+                position += tokenLength;
+                return;
+            }
+
+            // Pixiv也没有Trim
+            var pageText = tokenSpan[tokenLength..endIndex];
+            if (!uint.TryParse(pageText, null, out var page))
+            {
+                position += tokenLength;
+                return;
+            }
+
+            AddInlineHyperlink(result, page, viewModel);
+
+            var end = endIndex + 1;
+            position += end;
+            runStart = position;
+        }
+
+        void ParseChapter(ReadOnlySpan<char> tokenSpan, int tokenLength)
+        {
+            var endIndex = tokenSpan.IndexOf(PixivTokens.EndSingleToken);
+            if (endIndex is -1)
+            {
+                position += tokenLength;
+                return;
+            }
+
+            var chapterText = tokenSpan[tokenLength..endIndex].Trim();
+
+            AddChapter(result, chapterText.ToString());
+
+            var end = endIndex + 1;
+            position += end;
+            runStart = position;
+        }
+
+        void ParseUploadedImage(ReadOnlySpan<char> tokenSpan, int tokenLength)
+        {
+            var endIndex = tokenSpan.IndexOf(PixivTokens.EndSingleToken);
+            if (endIndex is -1)
+            {
+                position += tokenLength;
+                return;
+            }
+
+            // Pixiv也没有Trim
+            var imageIdText = tokenSpan[tokenLength..endIndex];
+            if (!long.TryParse(imageIdText, null, out var imageId) || !viewModel.UploadedImages.ContainsKey(imageId))
+            {
+                position += tokenLength;
+                return;
+            }
+
+            AddUploadedImage(result, viewModel, imageId);
+
+            var end = endIndex + 1;
+            position += end;
+            runStart = position;
+        }
+
+        void ParsePixivImage(ReadOnlySpan<char> tokenSpan, int tokenLength)
+        {
+            var endIndex = tokenSpan.IndexOf(PixivTokens.EndSingleToken);
+            if (endIndex is -1)
+            {
+                position += tokenLength;
+                return;
+            }
+
+            // Pixiv也没有Trim
+            var imageIdText = tokenSpan[tokenLength..endIndex];
+            var dest = new Span<Range>([new(), new(), new()]);
+            var page = 1;
+            var length = imageIdText.Split(dest, '-');
+            var imageId = 0L;
+            // 只有不包含空白字符的纯数字，或者被'-'分割的两个数字才能解析（后者序号从1开始）
+            // 例如："12345678"、"12345678-2"
+            // 反例："12345678-1-1"、" 12345678"、"12345678-1 "、"12345678-"
+            if (length is not (1 or 2)
+                || (length is 2 && (!long.TryParse(imageIdText[dest[0]], null, out imageId) || !int.TryParse(imageIdText[dest[1]], null, out page)))
+                || (length is 1 && !long.TryParse(imageIdText, null, out imageId))
+                || (imageId, page) is var key && !viewModel.IllustrationImages.ContainsKey(key))
+            {
+                position += tokenLength;
+                return;
+            }
+
+            AddPixivImage(result, viewModel, imageId, page);
+
+            var end = endIndex + 1;
+            position += end;
+            runStart = position;
+        }
+
+        void AddLastRun(int end)
+        {
+            if (end <= runStart)
+                return;
+
+            AddLastSpan(result, text[runStart..end]);
+            runStart = end;
         }
     }
 }
 
-static file class PixivTokens
+file enum PixivToken
 {
-    public static readonly string[] Tokens =
-    [
-        PixivImageToken,
-        UploadedImageToken,
-        ChapterToken,
-        JumpToken,
-        JumpUriToken,
-        RubyToken,
-        NewPageToken
-    ];
+    None,
+    PixivImage,
+    UploadedImage,
+    Chapter,
+    Jump,
+    JumpUri,
+    Ruby,
+    NewPage
+}
 
+file static class PixivTokens
+{
     public const string PixivImageToken = "[pixivimage:";
     public const string UploadedImageToken = "[uploadedimage:";
     public const string ChapterToken = "[chapter:";
@@ -299,4 +284,43 @@ static file class PixivTokens
     public const char SeparatorToken = '>';
     public const char EndSingleToken = ']';
     public const string EndDoubleToken = "]]";
+
+    public static PixivToken Match(ReadOnlySpan<char> text)
+    {
+        if (text.Length < 2)
+            return PixivToken.None;
+
+        if (text[1] is '[')
+        {
+            if (text.StartsWith(JumpUriToken, StringComparison.Ordinal))
+                return PixivToken.JumpUri;
+            if (text.StartsWith(RubyToken, StringComparison.Ordinal))
+                return PixivToken.Ruby;
+
+            return PixivToken.None;
+        }
+
+        return text[1] switch
+        {
+            'p' when text.StartsWith(PixivImageToken, StringComparison.Ordinal) => PixivToken.PixivImage,
+            'u' when text.StartsWith(UploadedImageToken, StringComparison.Ordinal) => PixivToken.UploadedImage,
+            'c' when text.StartsWith(ChapterToken, StringComparison.Ordinal) => PixivToken.Chapter,
+            'j' when text.StartsWith(JumpToken, StringComparison.Ordinal) => PixivToken.Jump,
+            'n' when text.StartsWith(NewPageToken, StringComparison.Ordinal) => PixivToken.NewPage,
+            _ => PixivToken.None
+        };
+    }
+
+    public static int GetLength(PixivToken token)
+        => token switch
+        {
+            PixivToken.PixivImage => PixivImageToken.Length,
+            PixivToken.UploadedImage => UploadedImageToken.Length,
+            PixivToken.Chapter => ChapterToken.Length,
+            PixivToken.Jump => JumpToken.Length,
+            PixivToken.JumpUri => JumpUriToken.Length,
+            PixivToken.Ruby => RubyToken.Length,
+            PixivToken.NewPage => NewPageToken.Length,
+            _ => 0
+        };
 }
