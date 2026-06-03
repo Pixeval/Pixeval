@@ -1,0 +1,36 @@
+<UserControl
+    x:Class="Pixeval.Views.Work.WorkFilterAutoSuggestBox"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:filters="using:Pixeval.Filters"
+    xmlns:local="using:Pixeval"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="32"
+    d:DesignWidth="250">
+    <UserControl.Resources>
+        <DataTemplate x:DataType="filters:FilterCompletionItem" x:Key="FilterCompletionTemplate">
+            <StackPanel Margin="12,6" Spacing="1">
+                <TextBlock FontWeight="SemiBold" Text="{Binding DisplayText}" />
+                <TextBlock
+                    FontSize="11"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    Text="{Binding Description}"
+                    TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <AutoCompleteBox
+        x:Name="FilterAutoSuggestBox"
+        VerticalAlignment="Stretch"
+        FilterMode="None"
+        GotFocus="FilterAutoSuggestBox_OnGotFocus"
+        IsTextCompletionEnabled="False"
+        ItemTemplate="{StaticResource FilterCompletionTemplate}"
+        MinimumPrefixLength="0"
+        PlaceholderText="{I18N {x:Static local:WorkContainerResources.FilterAutoSuggestBoxPlaceholderText}}"
+        TemplateApplied="FilterAutoSuggestBox_OnTemplateApplied"
+        TextChanged="FilterAutoSuggestBox_OnTextChanged" />
+</UserControl>

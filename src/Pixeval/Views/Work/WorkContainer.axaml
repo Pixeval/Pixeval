@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:filters="using:Pixeval.Filters"
     xmlns:local="using:Pixeval"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:markup1="using:Pixeval.Views.Markup"
@@ -17,18 +16,6 @@
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
-    <UserControl.Resources>
-        <DataTemplate x:DataType="filters:FilterCompletionItem" x:Key="FilterCompletionTemplate">
-            <StackPanel Margin="12,6" Spacing="1">
-                <TextBlock FontWeight="SemiBold" Text="{Binding DisplayText}" />
-                <TextBlock
-                    FontSize="11"
-                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                    Text="{Binding Description}"
-                    TextTrimming="CharacterEllipsis" />
-            </StackPanel>
-        </DataTemplate>
-    </UserControl.Resources>
     <DockPanel>
         <DockPanel DockPanel.Dock="Top">
             <!--  Non-selection toolbar (right side)  -->
@@ -66,17 +53,11 @@
                     x:Name="SortOptionComboBox"
                     ItemsSource="{markup1:EnumResources x:TypeArguments=options:LocalSortOption}"
                     SelectionChanged="SortOptionComboBox_OnSelectionChanged" />
-                <AutoCompleteBox
-                    x:Name="FilterAutoSuggestBox"
+                <work:WorkFilterAutoSuggestBox
+                    x:Name="WorkFilterAutoSuggestBox"
                     Width="250"
-                    VerticalAlignment="Stretch"
-                    FilterMode="Custom"
-                    GotFocus="FilterAutoSuggestBox_OnGotFocus"
-                    IsTextCompletionEnabled="False"
-                    ItemTemplate="{StaticResource FilterCompletionTemplate}"
-                    KeyDown="FilterAutoSuggestBox_OnKeyDown"
-                    PlaceholderText="{I18N {x:Static local:WorkContainerResources.FilterAutoSuggestBoxPlaceholderText}}"
-                    TextChanged="FilterAutoSuggestBox_OnTextChanged" />
+                    Analyze="AnalyzeFilter"
+                    SearchRequested="WorkFilterAutoSuggestBox_OnSearchRequested" />
             </StackPanel>
 
             <!--  Selection toolbar (visible when selecting)  -->
