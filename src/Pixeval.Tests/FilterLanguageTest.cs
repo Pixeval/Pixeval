@@ -15,6 +15,7 @@ public sealed class FilterLanguageTest
         new TagSyntax(),
         new BookmarkSyntax(),
         new IndexSyntax(),
+        new StartDateSyntax(),
         new GifSyntax()
     ],
     [
@@ -43,6 +44,8 @@ public sealed class FilterLanguageTest
         var result = _Language.Analyze("#", 1);
 
         Assert.IsFalse(result.IsSuccess);
+        Assert.AreEqual(FilterDiagnosticKind.MissingTextValue, result.Diagnostics[0].Kind);
+        Assert.AreEqual("#", result.Diagnostics[0].Arguments[0]);
         CollectionAssert.Contains(result.Completions.Select(t => t.DisplayText).ToArray(), "#tag");
     }
 
@@ -120,6 +123,8 @@ public sealed class FilterLanguageTest
         var result = _Language.Analyze("keyword)", 8);
 
         Assert.IsFalse(result.IsSuccess);
+        Assert.AreEqual(FilterDiagnosticKind.UnexpectedToken, result.Diagnostics[0].Kind);
+        Assert.AreEqual(")", result.Diagnostics[0].Arguments[0]);
         CollectionAssert.IsSubsetOf(new[] { "and", "or", "!" }, result.Completions.Select(t => t.DisplayText).ToArray());
         Assert.IsTrue(result.Completions.Any(t => t.DisplayText.Contains("artist", StringComparison.OrdinalIgnoreCase)));
     }
@@ -179,6 +184,41 @@ public sealed class FilterLanguageTest
 
         Assert.IsFalse(result.IsSuccess);
         Assert.AreEqual(FilterDiagnosticKind.InvalidLongRangeFormat, result.Diagnostics[0].Kind);
+        Assert.AreEqual("l:", result.Diagnostics[0].Arguments[0]);
+        Assert.AreEqual("[", result.Diagnostics[0].Arguments[1]);
+    }
+
+    [TestMethod]
+    public void DuplicateViewRangeShouldIncludeSyntaxArgument()
+    {
+        var result = _Language.Analyze("i:1-3 i:4-6");
+
+        Assert.IsFalse(result.IsSuccess);
+        Assert.AreEqual(FilterDiagnosticKind.DuplicateViewRange, result.Diagnostics[0].Kind);
+        Assert.AreEqual("i:", result.Diagnostics[0].Arguments[0]);
+    }
+
+    [TestMethod]
+    public void RangeOrderDiagnosticShouldIncludeSyntaxAndBounds()
+    {
+        var result = _Language.Analyze("l:200-100");
+
+        Assert.IsFalse(result.IsSuccess);
+        Assert.AreEqual(FilterDiagnosticKind.RangeMinimumGreaterThanMaximum, result.Diagnostics[0].Kind);
+        Assert.AreEqual("l:", result.Diagnostics[0].Arguments[0]);
+        Assert.AreEqual(200L, result.Diagnostics[0].Arguments[1]);
+        Assert.AreEqual(100L, result.Diagnostics[0].Arguments[2]);
+    }
+
+    [TestMethod]
+    public void InvalidDateShouldIncludeSyntaxAndDateLiteral()
+    {
+        var result = _Language.Analyze("s:2024-2-31");
+
+        Assert.IsFalse(result.IsSuccess);
+        Assert.AreEqual(FilterDiagnosticKind.InvalidDate, result.Diagnostics[0].Kind);
+        Assert.AreEqual("s:", result.Diagnostics[0].Arguments[0]);
+        Assert.AreEqual("2024-2-31", result.Diagnostics[0].Arguments[1]?.ToString());
     }
 
     private sealed class TitleSyntax : FilterTextSyntax
@@ -234,6 +274,15 @@ public sealed class FilterLanguageTest
         public override string? ExampleValue => "1-3";
 
         public override IReadOnlyList<FilterSyntaxPattern> Patterns { get; } = [FilterSyntaxPattern.Keyword("i", exampleValue: "1-3")];
+    }
+
+    private sealed class StartDateSyntax : FilterDateSyntax
+    {
+        public override string Key => "StartDate";
+
+        public override string? ExampleValue => "2024-1-1";
+
+        public override IReadOnlyList<FilterSyntaxPattern> Patterns { get; } = [FilterSyntaxPattern.Keyword("s", exampleValue: "2024-1-1")];
     }
 
     private sealed class GifSyntax : FilterFlagSyntax

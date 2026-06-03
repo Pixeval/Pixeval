@@ -75,17 +75,22 @@
                 </ItemsControl>
             </ScrollViewer>
             <DockPanel VerticalSpacing="5">
-                <TabStrip
-                    DockPanel.Dock="Top"
-                    ItemsSource="{markup1:EnumResources x:TypeArguments=enum:SimpleWorkType}"
-                    SelectedValue="{Binding SelectedTrendingTagsType, Mode=TwoWay}"
-                    SelectedValueBinding="{Binding Value}">
-                    <TabStrip.ItemTemplate>
-                        <DataTemplate DataType="{x:Type controls:SymbolComboBoxItem}">
-                            <controls:IconText Symbol="{Binding Symbol}" Text="{Binding Description}" />
-                        </DataTemplate>
-                    </TabStrip.ItemTemplate>
-                </TabStrip>
+                <DockPanel DockPanel.Dock="Top" HorizontalSpacing="10">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Text="{I18N {x:Static pixeval:SearchResources.TrendingHeaderTextBlockText}}"
+                        Theme="{StaticResource SubtitleTextBlockStyle}" />
+                    <TabStrip
+                        ItemsSource="{markup1:EnumResources x:TypeArguments=enum:SimpleWorkType}"
+                        SelectedValue="{Binding SelectedTrendingTagsType, Mode=TwoWay}"
+                        SelectedValueBinding="{Binding Value}">
+                        <TabStrip.ItemTemplate>
+                            <DataTemplate DataType="{x:Type controls:SymbolComboBoxItem}">
+                                <controls:IconText Symbol="{Binding Symbol}" Text="{Binding Description}" />
+                            </DataTemplate>
+                        </TabStrip.ItemTemplate>
+                    </TabStrip>
+                </DockPanel>
                 <ItemsControl ItemsSource="{Binding TrendingTags}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>

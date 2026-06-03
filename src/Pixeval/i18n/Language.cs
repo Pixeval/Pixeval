@@ -103,8 +103,6 @@ namespace Pixeval
         public const string TargetAPIPlatformEntryHeader = "AppSettings.TargetAPIPlatformEntry.Header";
         public const string ThemeEntryDescription = "AppSettings.ThemeEntry.Description";
         public const string ThemeEntryHeader = "AppSettings.ThemeEntry.Header";
-        public const string ThumbnailDirectionEntryDescription = "AppSettings.ThumbnailDirectionEntry.Description";
-        public const string ThumbnailDirectionEntryHeader = "AppSettings.ThumbnailDirectionEntry.Header";
         public const string ThumbnailLayoutTypeEntryDescription = "AppSettings.ThumbnailLayoutTypeEntry.Description";
         public const string ThumbnailLayoutTypeEntryHeader = "AppSettings.ThumbnailLayoutTypeEntry.Header";
         public const string UseFileCacheEntryDescription = "AppSettings.UseFileCacheEntry.Description";
@@ -135,7 +133,6 @@ namespace Pixeval
     {
         public const string ActionButtonContentOpen = "DownloadItem.ActionButtonContentOpen";
         public const string ActionButtonContentPause = "DownloadItem.ActionButtonContentPause";
-        public const string ActionButtonContentRedownload = "DownloadItem.ActionButtonContentRedownload";
         public const string ActionButtonContentResume = "DownloadItem.ActionButtonContentResume";
         public const string ActionButtonContentRetry = "DownloadItem.ActionButtonContentRetry";
         public const string ActionDownloadCancelled = "DownloadItem.ActionDownloadCancelled";
@@ -155,29 +152,18 @@ namespace Pixeval
     }
     public static class DownloadPageResources
     {
-        public const string CancelAllButtonContent = "DownloadPage.CancelAllButton.Content";
         public const string CancelSelectionButtonDefaultLabel = "DownloadPage.CancelSelectionButtonDefaultLabel";
         public const string CancelSelectionButtonFormatted = "DownloadPage.CancelSelectionButtonFormatted";
-        public const string ClearDownloadListButtonContent = "DownloadPage.ClearDownloadListButton.Content";
         public const string DeleteButtonLabel = "DownloadPage.DeleteButton.Label";
         public const string DeleteDownloadHistoryRecordsFormatted = "DownloadPage.DeleteDownloadHistoryRecordsFormatted";
+        public const string DeleteLocalFilesContent = "DownloadPage.DeleteLocalFiles.Content";
         public const string FilterAutoSuggestBoxPlaceholderText = "DownloadPage.FilterAutoSuggestBox.PlaceholderText";
-        public const string FilterAutoSuggestBoxNoResultFound = "DownloadPage.FilterAutoSuggestBoxNoResultFound";
         public const string FolderSubtitleFormatted = "DownloadPage.FolderSubtitleFormatted";
-        public const string ModeFilterComboBoxPlaceholderText = "DownloadPage.ModeFilterComboBox.PlaceholderText";
-        public const string PageTitleTextBlockText = "DownloadPage.PageTitleTextBlock.Text";
-        public const string PauseAllButtonContent = "DownloadPage.PauseAllButton.Content";
         public const string PauseButtonLabel = "DownloadPage.PauseButton.Label";
         public const string ResetButtonLabel = "DownloadPage.ResetButton.Label";
-        public const string ResumeAllButtonContent = "DownloadPage.ResumeAllButton.Content";
         public const string ResumeButtonLabel = "DownloadPage.ResumeButton.Label";
         public const string SelectAllButtonLabel = "DownloadPage.SelectAllButton.Label";
         public const string StopButtonLabel = "DownloadPage.StopButton.Label";
-    }
-    public static class DownloadPageDeleteTasksDialogResources
-    {
-        public const string DeleteLocalFilesContent = "DownloadPageDeleteTasksDialog.DeleteLocalFiles.Content";
-        public const string MessageTextBlockText = "DownloadPageDeleteTasksDialog.MessageTextBlock.Text";
     }
     public static class EntryItemResources
     {
@@ -189,28 +175,17 @@ namespace Pixeval
         public const string GenerateWebLink = "EntryItem.GenerateWebLink";
         public const string MangaSave = "EntryItem.MangaSave";
         public const string OpenInWebBrowser = "EntryItem.OpenInWebBrowser";
-        public const string OpenNovel = "EntryItem.OpenNovel";
         public const string OpenUserInfoPage = "EntryItem.OpenUserInfoPage";
         public const string RemoveFromWatchLater = "EntryItem.RemoveFromWatchLater";
         public const string Save = "EntryItem.Save";
         public const string SaveAsCancelled = "EntryItem.SaveAsCancelled";
-        public const string Saved = "EntryItem.Saved";
         public const string TheIllustrationIsAMangaFormatted = "EntryItem.TheIllustrationIsAMangaFormatted";
         public const string TheIllustrationIsAnUgoira = "EntryItem.TheIllustrationIsAnUgoira";
-        public const string UserMetricsFollowingsTextBlockText = "EntryItem.UserMetrics.FollowingsTextBlock.Text";
-        public const string UserMetricsIllustrationCountTextBlockText = "EntryItem.UserMetrics.IllustrationCountTextBlock.Text";
-        public const string UserMetricsMyPixivUsersTextBlockText = "EntryItem.UserMetrics.MyPixivUsersTextBlock.Text";
     }
     public static class EntryViewResources
     {
         public const string AddedToBookmark = "EntryView.AddedToBookmark";
-        public const string AddToBookmarkContextItemText = "EntryView.AddToBookmarkContextItem.Text";
-        public const string AddToBookmarkTeachingTipCloseButtonContent = "EntryView.AddToBookmarkTeachingTip.CloseButtonContent";
-        public const string CopyAppLinkContextItemText = "EntryView.CopyAppLinkContextItem.Text";
-        public const string CopyWebLinkContextItemText = "EntryView.CopyWebLinkContextItem.Text";
-        public const string OpenInBrowserContextItemText = "EntryView.OpenInBrowserContextItem.Text";
         public const string ResultIsEmptyTextBlock = "EntryView.ResultIsEmptyTextBlock";
-        public const string SaveContextItemText = "EntryView.SaveContextItem.Text";
     }
     public static class EntryViewerPageResources
     {
@@ -477,6 +452,7 @@ namespace Pixeval
         public const string DiagnosticsUnexpectedToken = "Filter.Diagnostics.UnexpectedToken";
         public const string DiagnosticsUnsupportedNegation = "Filter.Diagnostics.UnsupportedNegation";
         public const string DiagnosticsUnsupportedValueKind = "Filter.Diagnostics.UnsupportedValueKind";
+        public const string FilterQueryError = "Filter.FilterQueryError";
     }
     public static class HelpPageResources
     {
@@ -555,57 +531,36 @@ namespace Pixeval
     {
         public const string FetchingSessionFailedContent = "LoginPage.FetchingSessionFailedContent";
         public const string FetchingSessionFailedTitle = "LoginPage.FetchingSessionFailedTitle";
-        public const string LoginPhaseRefreshing = "LoginPage.LoginPhaseRefreshing";
-        public const string LoginPhaseSuccessNavigating = "LoginPage.LoginPhaseSuccessNavigating";
-        public const string LoginPhaseWaitingForUserInput = "LoginPage.LoginPhaseWaitingForUserInput";
         public const string RefreshTokenBoxPlaceholderText = "LoginPage.RefreshTokenBox.PlaceholderText";
         public const string RefreshTokenButtonContent = "LoginPage.RefreshTokenButton.Content";
-        public const string SubmitButtonContent = "LoginPage.SubmitButton.Content";
         public const string WebViewButtonContent = "LoginPage.WebViewButton.Content";
     }
     public static class MacroParserResources
     {
-        public const string ExpectedAndOrAfterLeftParFormatted = "MacroParser.ExpectedAndOrAfterLeftParFormatted";
-        public const string ExpectedAtLeastTwoNumericInDateFormatted = "MacroParser.ExpectedAtLeastTwoNumericInDateFormatted";
-        public const string ExpectedRightBracketOrParenInRangeFormatted = "MacroParser.ExpectedRightBracketOrParenInRangeFormatted";
-        public const string ExpectedTokenAfterAtMarkFormatted = "MacroParser.ExpectedTokenAfterAtMarkFormatted";
-        public const string FilterQueryError = "MacroParser.FilterQueryError";
-        public const string FilterTokenFinishedFormatted = "MacroParser.FilterTokenFinishedFormatted";
-        public const string IndexRangeUsedMoreThanOnce = "MacroParser.IndexRangeUsedMoreThanOnce";
-        public const string InvalidConstraintFormatted = "MacroParser.InvalidConstraintFormatted";
-        public const string MacroShouldBeContainedFormatted = "MacroParser.MacroShouldBeContainedFormatted";
-        public const string MacroShouldBeInLastSegmentFormatted = "MacroParser.MacroShouldBeInLastSegmentFormatted";
-        public const string MinimumShouldBeSmallerThanMaximiumFormatted = "MacroParser.MinimumShouldBeSmallerThanMaximiumFormatted";
-        public const string NonParameterizedMacroBearingParameterFormatted = "MacroParser.NonParameterizedMacroBearingParameterFormatted";
-        public const string NumericTooLargeFormatted = "MacroParser.NumericTooLargeFormatted";
-        public const string NumericTooSmallInRangeFormatted = "MacroParser.NumericTooSmallInRangeFormatted";
-        public const string ParameterizedMacroMissingParameterFormatted = "MacroParser.ParameterizedMacroMissingParameterFormatted";
-        public const string ParserOutOfRange = "MacroParser.ParserOutOfRange";
-        public const string ResultIsEmpty = "MacroParser.ResultIsEmpty";
-        public const string UnbalancedParFormatted = "MacroParser.UnbalancedParFormatted";
-        public const string UnexpactedTokenFormatted = "MacroParser.UnexpactedTokenFormatted";
-        public const string UnexpectedTokenFormatted = "MacroParser.UnexpectedTokenFormatted";
-        public const string UnknownArtist = "MacroParser.UnknownArtist";
-        public const string UnknownIllustrationTitle = "MacroParser.UnknownIllustrationTitle";
-        public const string UnknownMacroNameFormatted = "MacroParser.UnknownMacroNameFormatted";
+        public const string ConditionalBranchesMissing = "MacroParser.ConditionalBranchesMissing";
+        public const string ExpectedLeftBraceAfterAt = "MacroParser.ExpectedLeftBraceAfterAt";
+        public const string ExpectedMacroName = "MacroParser.ExpectedMacroName";
+        public const string MacroShouldBeContained = "MacroParser.MacroShouldBeContained";
+        public const string MacroShouldBeInLastSegment = "MacroParser.MacroShouldBeInLastSegment";
+        public const string MessageWithPositionFormatted = "MacroParser.MessageWithPositionFormatted";
+        public const string MissingConditionalSeparator = "MacroParser.MissingConditionalSeparator";
+        public const string MissingRightBrace = "MacroParser.MissingRightBrace";
+        public const string NonParameterizedMacroBearingParameter = "MacroParser.NonParameterizedMacroBearingParameter";
+        public const string UnexpectedToken = "MacroParser.UnexpectedToken";
+        public const string UnknownMacroName = "MacroParser.UnknownMacroName";
     }
     public static class MainPageResources
     {
         public const string AiShowItemText = "MainPage.AiShowItem.Text";
         public const string FeedTabCannotBeOpenedContent = "MainPage.FeedTabCannotBeOpenedContent";
         public const string FeedTabCannotBeOpenedTitle = "MainPage.FeedTabCannotBeOpenedTitle";
-        public const string IllustrationHeaderSuggestionTextBlockText = "MainPage.IllustrationHeaderSuggestionTextBlock.Text";
-        public const string MainPageAutoSuggestionBoxPlaceholderText = "MainPage.MainPageAutoSuggestionBox.PlaceholderText";
         public const string MoreViewingSettingsItemText = "MainPage.MoreViewingSettingsItem.Text";
-        public const string NovelHeaderSuggestionTextBlockText = "MainPage.NovelHeaderSuggestionTextBlock.Text";
         public const string OpenMyPageInBrowserItemText = "MainPage.OpenMyPageInBrowserItem.Text";
         public const string OpenMyPageItemText = "MainPage.OpenMyPageItem.Text";
-        public const string OpenSearchSettingButtonToolTip = "MainPage.OpenSearchSettingButton.ToolTip";
         public const string RefreshingSessionFailedContent = "MainPage.RefreshingSessionFailedContent";
         public const string RefreshingSessionFailedTitle = "MainPage.RefreshingSessionFailedTitle";
         public const string RestrictedModeItemText = "MainPage.RestrictedModeItem.Text";
         public const string ReverseSearchApiKeyNotPresentTitle = "MainPage.ReverseSearchApiKeyNotPresentTitle";
-        public const string ReverseSearchButtonToolTip = "MainPage.ReverseSearchButton.ToolTip";
         public const string ReverseSearchClientSideErrorContent = "MainPage.ReverseSearchClientSideErrorContent";
         public const string ReverseSearchDropHintTextBlockText = "MainPage.ReverseSearchDropHintTextBlock.Text";
         public const string ReverseSearchErrorTitle = "MainPage.ReverseSearchErrorTitle";
@@ -652,31 +607,23 @@ namespace Pixeval
     {
         public const string AddedToWatchLater = "Misc.AddedToWatchLater";
         public const string AllCountedTagName = "Misc.AllCountedTagName";
-        public const string BookmarkTagSelectorPrivateCheckBoxContent = "Misc.BookmarkTagSelectorPrivateCheckBox.Content";
-        public const string CannotFindLoginProxyServerExecutable = "Misc.CannotFindLoginProxyServerExecutable";
         public const string CloseBottomList = "Misc.CloseBottomList";
         public const string Copied = "Misc.Copied";
         public const string DownloadItemMaybeDeleted = "Misc.DownloadItemMaybeDeleted";
         public const string DownloadItemOpenFailed = "Misc.DownloadItemOpenFailed";
         public const string ExceptionEncountered = "Misc.ExceptionEncountered";
-        public const string Follow = "Misc.Follow";
-        public const string FollowPrivately = "Misc.FollowPrivately";
         public const string GoToPageFormatted = "Misc.GoToPageFormatted";
         public const string OpenBottomList = "Misc.OpenBottomList";
-        public const string OpenIllustId = "Misc.OpenIllustId";
+        public const string OpenIllustrationId = "Misc.OpenIllustrationId";
         public const string OpenNovelId = "Misc.OpenNovelId";
         public const string OpenUserId = "Misc.OpenUserId";
         public const string Pause = "Misc.Pause";
         public const string PixevalBadgeFollowing = "Misc.PixevalBadge.Following";
         public const string Play = "Misc.Play";
-        public const string PrivacyPolicyComboBoxPlaceholderText = "Misc.PrivacyPolicyComboBox.PlaceholderText";
         public const string RemovedFromWatchLater = "Misc.RemovedFromWatchLater";
         public const string ReplyContentTooLong = "Misc.ReplyContentTooLong";
         public const string SearchUser = "Misc.SearchUser";
-        public const string SortOptionComboBoxPlaceholderText = "Misc.SortOptionComboBox.PlaceholderText";
         public const string UnexpectedBehavior = "Misc.UnexpectedBehavior";
-        public const string Unfollow = "Misc.Unfollow";
-        public const string WorkTypeComboBoxPlaceholderText = "Misc.WorkTypeComboBox.PlaceholderText";
     }
     public static class NovelViewerPageResources
     {
@@ -728,6 +675,7 @@ namespace Pixeval
         public const string SectionsCommon = "Search.Sections.Common";
         public const string SectionsIllustration = "Search.Sections.Illustration";
         public const string SectionsNovel = "Search.Sections.Novel";
+        public const string TrendingHeaderTextBlockText = "Search.TrendingHeaderTextBlock.Text";
         public const string ValidationInvalidDateRangeContent = "Search.Validation.InvalidDateRange.Content";
         public const string ValidationInvalidDateRangeTitle = "Search.Validation.InvalidDateRange.Title";
         public const string ValidationInvalidNumericRangeContent = "Search.Validation.InvalidNumericRange.Content";
@@ -745,7 +693,6 @@ namespace Pixeval
         public const string ArtistNameMacroTooltip = "SettingsMainView.ArtistNameMacroTooltip";
         public const string BackupSettingsEntryDescription = "SettingsMainView.BackupSettingsEntry.Description";
         public const string BackupSettingsEntryHeader = "SettingsMainView.BackupSettingsEntry.Header";
-        public const string BlockedTagsTokenizingTextBoxPlaceholderText = "SettingsMainView.BlockedTagsTokenizingTextBox.PlaceholderText";
         public const string BrowsingExperienceSettingsGroupText = "SettingsMainView.BrowsingExperienceSettingsGroup.Text";
         public const string BugReportChannelsEntryDescription = "SettingsMainView.BugReportChannelsEntry.Description";
         public const string BugReportChannelsEntryHeader = "SettingsMainView.BugReportChannelsEntry.Header";
@@ -764,8 +711,6 @@ namespace Pixeval
         public const string DeleteSearchHistoriesEntryDescription = "SettingsMainView.DeleteSearchHistoriesEntry.Description";
         public const string DeleteSearchHistoriesEntryHeader = "SettingsMainView.DeleteSearchHistoriesEntry.Header";
         public const string DonateDeveloperHyperlinkButtonContent = "SettingsMainView.DonateDeveloperHyperlinkButton.Content";
-        public const string DownloadedAndWaitingToInstall = "SettingsMainView.DownloadedAndWaitingToInstall";
-        public const string DownloadingUpdate = "SettingsMainView.DownloadingUpdate";
         public const string DownloadMacroInvalidInfoBarTitle = "SettingsMainView.DownloadMacroInvalidInfoBar.Title";
         public const string DownloadMacroInvalidInfoBarInputCannotBeBlank = "SettingsMainView.DownloadMacroInvalidInfoBarInputCannotBeBlank";
         public const string DownloadMacroInvalidInfoBarMacroInvalidFormatted = "SettingsMainView.DownloadMacroInvalidInfoBarMacroInvalidFormatted";
@@ -788,18 +733,15 @@ namespace Pixeval
         public const string IfPicSetMacroTooltip = "SettingsMainView.IfPicSetMacroTooltip";
         public const string IfR18GMacroTooltip = "SettingsMainView.IfR18GMacroTooltip";
         public const string IfR18MacroTooltip = "SettingsMainView.IfR18MacroTooltip";
-        public const string ImageMirrorServerTextBoxPlaceholderText = "SettingsMainView.ImageMirrorServerTextBox.PlaceholderText";
         public const string ImportSessionSuccess = "SettingsMainView.ImportSessionSuccess";
         public const string ImportSettingsPlaintextEntryDescription = "SettingsMainView.ImportSettingsPlaintextEntry.Description";
         public const string ImportSettingsPlaintextEntryHeader = "SettingsMainView.ImportSettingsPlaintextEntry.Header";
         public const string ImportSettingsSuccess = "SettingsMainView.ImportSettingsSuccess";
-        public const string InstallCanceled = "SettingsMainView.InstallCanceled";
         public const string IsInsider = "SettingsMainView.IsInsider";
         public const string IsUpToDate = "SettingsMainView.IsUpToDate";
         public const string JoinFeedbackGroupHyperlinkButtonContent = "SettingsMainView.JoinFeedbackGroupHyperlinkButton.Content";
         public const string LanguageSystemDefault = "SettingsMainView.LanguageSystemDefault";
         public const string LastCheckedPrefix = "SettingsMainView.LastCheckedPrefix";
-        public const string MacroCopiedToClipboard = "SettingsMainView.MacroCopiedToClipboard";
         public const string MajorUpdateAvailable = "SettingsMainView.MajorUpdateAvailable";
         public const string MinorUpdateAvailable = "SettingsMainView.MinorUpdateAvailable";
         public const string MiscSettingsGroupText = "SettingsMainView.MiscSettingsGroup.Text";
@@ -808,7 +750,6 @@ namespace Pixeval
         public const string NovelPathBlockText = "SettingsMainView.NovelPathBlock.Text";
         public const string OpenExtensionsEntryDescription = "SettingsMainView.OpenExtensionsEntry.Description";
         public const string OpenExtensionsEntryHeader = "SettingsMainView.OpenExtensionsEntry.Header";
-        public const string OpenLanguageSettingsHyperlinkButtonContent = "SettingsMainView.OpenLanguageSettingsHyperlinkButton.Content";
         public const string OpenLocalEntryDescription = "SettingsMainView.OpenLocalEntry.Description";
         public const string OpenLocalEntryHeader = "SettingsMainView.OpenLocalEntry.Header";
         public const string OpenLogEntryDescription = "SettingsMainView.OpenLogEntry.Description";
@@ -818,8 +759,6 @@ namespace Pixeval
         public const string OpenTempEntryDescription = "SettingsMainView.OpenTempEntry.Description";
         public const string OpenTempEntryHeader = "SettingsMainView.OpenTempEntry.Header";
         public const string PicSetIndexMacroTooltip = "SettingsMainView.PicSetIndexMacroTooltip";
-        public const string PixivNameResolverDescriptionText = "SettingsMainView.PixivNameResolverDescription.Text";
-        public const string PixivNameResolverHeaderText = "SettingsMainView.PixivNameResolverHeader.Text";
         public const string ProxyTextBoxErrorUri = "SettingsMainView.ProxyTextBoxErrorUri";
         public const string PublishDayMacroTooltip = "SettingsMainView.PublishDayMacroTooltip";
         public const string PublishMonthMacroTooltip = "SettingsMainView.PublishMonthMacroTooltip";
@@ -829,7 +768,6 @@ namespace Pixeval
         public const string RateEntryHeader = "SettingsMainView.RateEntry.Header";
         public const string ReleaseNotesHyperlinkButtonContent = "SettingsMainView.ReleaseNotesHyperlinkButton.Content";
         public const string ReportBugHyperlinkButtonContent = "SettingsMainView.ReportBugHyperlinkButton.Content";
-        public const string ResetDefaultSettingsButtonContent = "SettingsMainView.ResetDefaultSettingsButton.Content";
         public const string ResetDefaultSettingsEntryDescription = "SettingsMainView.ResetDefaultSettingsEntry.Description";
         public const string ResetDefaultSettingsEntryHeader = "SettingsMainView.ResetDefaultSettingsEntry.Header";
         public const string ResetSettingConfirmationDialogContent = "SettingsMainView.ResetSettingConfirmationDialogContent";
@@ -843,10 +781,6 @@ namespace Pixeval
         public const string TitleMacroTooltip = "SettingsMainView.TitleMacroTooltip";
         public const string TitleTextBlockText = "SettingsMainView.TitleTextBlock.Text";
         public const string UnknownUpdateState = "SettingsMainView.UnknownUpdateState";
-        public const string Unzipping = "SettingsMainView.Unzipping";
-        public const string UpdateApp = "SettingsMainView.UpdateApp";
-        public const string UpdateFailed = "SettingsMainView.UpdateFailed";
-        public const string UpdateFailedInTempFolder = "SettingsMainView.UpdateFailedInTempFolder";
         public const string VersionSettingsGroupText = "SettingsMainView.VersionSettingsGroup.Text";
         public const string ViewPixevalWebsiteHyperlinkButtonContent = "SettingsMainView.ViewPixevalWebsiteHyperlinkButton.Content";
     }
@@ -858,21 +792,18 @@ namespace Pixeval
     }
     public static class WorkContainerResources
     {
-        public const string AddAllToBookmarkTitle = "WorkContainer.AddAllToBookmarkTitle";
         public const string AddedAllToBookmarkContentFormatted = "WorkContainer.AddedAllToBookmarkContentFormatted";
-        public const string AddToBookmarkTeachingTipCloseButtonContent = "WorkContainer.AddToBookmarkTeachingTip.CloseButtonContent";
         public const string CancelSelectionButtonDefaultLabel = "WorkContainer.CancelSelectionButtonDefaultLabel";
         public const string CancelSelectionButtonFormatted = "WorkContainer.CancelSelectionButtonFormatted";
         public const string DownloadItemsQueuedFormatted = "WorkContainer.DownloadItemsQueuedFormatted";
         public const string FilterAutoSuggestBoxPlaceholderText = "WorkContainer.FilterAutoSuggestBox.PlaceholderText";
-        public const string OpenConditionDialogButtonLabel = "WorkContainer.OpenConditionDialogButton.Label";
         public const string RefreshButtonLabel = "WorkContainer.RefreshButton.Label";
         public const string SelectAllButtonLabel = "WorkContainer.SelectAllButton.Label";
-        public const string SelectedTooManyItemsForBookmarkContent = "WorkContainer.SelectedTooManyItemsForBookmarkContent";
-        public const string SelectedTooManyItemsForBookmarkTitle = "WorkContainer.SelectedTooManyItemsForBookmarkTitle";
-        public const string SelectedTooManyItemsForOpenInBrowserContent = "WorkContainer.SelectedTooManyItemsForOpenInBrowserContent";
-        public const string SelectedTooManyItemsForSaveContent = "WorkContainer.SelectedTooManyItemsForSaveContent";
-        public const string SelectedTooManyItemsTitle = "WorkContainer.SelectedTooManyItemsTitle";
+        public const string SelectedTooManyItemsContent = "WorkContainer.SelectedTooManyItems.Content";
+        public const string SelectedTooManyItemsForBookmarkTitle = "WorkContainer.SelectedTooManyItems.ForBookmarkTitle";
+        public const string SelectedTooManyItemsForOpenInBrowserContent = "WorkContainer.SelectedTooManyItems.ForOpenInBrowser.Content";
+        public const string SelectedTooManyItemsForOpenInBrowserTitle = "WorkContainer.SelectedTooManyItems.ForOpenInBrowser.Title";
+        public const string SelectedTooManyItemsForSaveTitle = "WorkContainer.SelectedTooManyItems.ForSaveTitle";
         public const string SelectionButtonLabel = "WorkContainer.SelectionButton.Label";
     }
     public static class WorkInfoPageResources
@@ -880,7 +811,6 @@ namespace Pixeval
         public const string BlockTagMenuItemText = "WorkInfoPage.BlockTagMenuItem.Text";
         public const string CopyOriginalTagMenuItemText = "WorkInfoPage.CopyOriginalTagMenuItem.Text";
         public const string CopyTranslatedTagMenuItemText = "WorkInfoPage.CopyTranslatedTagMenuItem.Text";
-        public const string WorkCaptionEmpty = "WorkInfoPage.WorkCaptionEmpty";
         public const string WorkTagListTextBlockText = "WorkInfoPage.WorkTagListTextBlock.Text";
     }
     public static class WorkSubscriptionsSettingsExpanderResources

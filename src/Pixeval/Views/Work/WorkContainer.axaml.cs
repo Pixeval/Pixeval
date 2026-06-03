@@ -165,7 +165,7 @@ public partial class WorkContainer : UserControl
             && viewModel.SelectedEntries.Count >= 20
             && await viewContainer.CreateOkCancelAsync(
                 I18NManager.GetResource(WorkContainerResources.SelectedTooManyItemsForBookmarkTitle),
-                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItemsForBookmarkContent)) is not ContentDialogResult.Primary)
+                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItemsContent)) is not ContentDialogResult.Primary)
             return;
 
         foreach (var i in viewModel.SelectedEntries)
@@ -187,8 +187,8 @@ public partial class WorkContainer : UserControl
         if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer
             && viewModel.SelectedEntries.Count >= 20
             && await viewContainer.CreateOkCancelAsync(
-                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItemsTitle),
-                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItemsForSaveContent)) is not ContentDialogResult.Primary)
+                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItemsForSaveTitle),
+                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItemsContent)) is not ContentDialogResult.Primary)
             return;
 
         foreach (var i in viewModel.SelectedEntries)
@@ -206,7 +206,7 @@ public partial class WorkContainer : UserControl
         if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer
             && viewModel.SelectedEntries.Count > 15
             && await viewContainer.CreateOkCancelAsync(
-                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItemsTitle),
+                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItemsForOpenInBrowserTitle),
                 I18NManager.GetResource(WorkContainerResources.SelectedTooManyItemsForOpenInBrowserContent)) is not ContentDialogResult.Primary)
             return;
 
@@ -278,7 +278,7 @@ public partial class WorkContainer : UserControl
             {
                 HighlightFilterDiagnostic(analysis.Diagnostics[0].Span);
                 TopLevel.GetTopLevel(this)?.ViewContainer?.ShowError(
-                    I18NManager.GetResource(MacroParserResources.FilterQueryError),
+                    I18NManager.GetResource(FilterResources.FilterQueryError),
                     FormatDiagnosticMessage(analysis));
             }
 

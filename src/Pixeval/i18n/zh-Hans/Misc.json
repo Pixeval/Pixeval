@@ -1,9 +1,6 @@
 {
   "AddedToWatchLater": "已添加到稍后再看",
   "RemovedFromWatchLater": "已从稍后再看移除",
-  "Follow": "关注",
-  "FollowPrivately": "悄悄关注",
-  "Unfollow": "取消关注",
   "Pause": "暂停",
   "Play": "播放",
   "OpenBottomList": "打开底部图片列表",
@@ -12,25 +9,12 @@
   "AllCountedTagName": "所有标签",
   "DownloadItemOpenFailed": "打开文件（夹）失败",
   "DownloadItemMaybeDeleted": "可能你已经删除了该作品",
-  "SortOptionComboBox": {
-    "PlaceholderText": "排序选项"
-  },
-  "PrivacyPolicyComboBox": {
-    "PlaceholderText": "公开选项"
-  },
-  "WorkTypeComboBox": {
-    "PlaceholderText": "作品类型"
-  },
   "OpenUserId": "打开用户主页",
   "OpenNovelId": "打开小说页面",
-  "OpenIllustId": "打开图片页面",
+  "OpenIllustrationId": "打开图片页面",
   "SearchUser": "搜索作者",
-  "CannotFindLoginProxyServerExecutable": "找不到用于登录的可执行文件，请重新打开应用或者联系开发者",
   "UnexpectedBehavior": "发生了未定义的行为，如果你看到了该信息，请联系开发者寻求帮助",
   "ReplyContentTooLong": "回复内容超过140字，请重新编辑",
-  "BookmarkTagSelectorPrivateCheckBox": {
-    "Content": "私人"
-  },
   "GoToPageFormatted": "去{0}页",
   "Copied": "已复制",
   "PixevalBadge": {

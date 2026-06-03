@@ -98,6 +98,8 @@ public sealed record FilterSyntaxMatch(
 {
     public string HeaderText { get; } = Prefix + Alias + Suffix;
 
+    public string DiagnosticText => HeaderText.Length > 0 ? HeaderText : Syntax.Key;
+
     public string CompletionText { get; } = Prefix + Alias + Suffix + (Syntax.ValueKind is FilterValueKind.None ? "" : ExampleValue ?? "");
 }
 
@@ -129,7 +131,8 @@ public abstract class FilterSyntax
 
         diagnostic ??= new(
             FilterDiagnosticKind.InvalidValue,
-            rawValue.Span.Length > 0 ? rawValue.Span : termSpan);
+            rawValue.Span.Length > 0 ? rawValue.Span : termSpan,
+            match.DiagnosticText);
         return false;
     }
 
@@ -177,7 +180,7 @@ public abstract class FilterTextSyntax : FilterSyntax
         }
 
         value = null;
-        diagnostic = new(FilterDiagnosticKind.InternalExpectedTextValue, rawValue.Span);
+        diagnostic = new(FilterDiagnosticKind.InternalExpectedTextValue, rawValue.Span, match.DiagnosticText);
         return false;
     }
 }
@@ -199,14 +202,14 @@ public abstract class FilterLongRangeSyntax : FilterSyntax
         if (rawValue is not FilterRawLongRangeValue range)
         {
             value = null;
-            diagnostic = new(FilterDiagnosticKind.InternalExpectedLongRangeValue, rawValue.Span);
+            diagnostic = new(FilterDiagnosticKind.InternalExpectedLongRangeValue, rawValue.Span, match.DiagnosticText);
             return false;
         }
 
         switch (BindingMode)
         {
             case FilterLongRangeBindingMode.Inclusive:
-                if (FilterLongRange.TryCreate(range.Value, rawValue.Span, out var inclusiveRange, out diagnostic))
+                if (FilterLongRange.TryCreate(range.Value, rawValue.Span, match.DiagnosticText, out var inclusiveRange, out diagnostic))
                 {
                     value = inclusiveRange;
                     return true;
@@ -215,7 +218,7 @@ public abstract class FilterLongRangeSyntax : FilterSyntax
                 value = null;
                 return false;
             case FilterLongRangeBindingMode.OneBasedIndex:
-                if (FilterLongRange.TryCreateIndexRange(range.Value, rawValue.Span, out var viewRange, out diagnostic))
+                if (FilterLongRange.TryCreateIndexRange(range.Value, rawValue.Span, match.DiagnosticText, out var viewRange, out diagnostic))
                 {
                     value = viewRange;
                     return true;
@@ -225,7 +228,7 @@ public abstract class FilterLongRangeSyntax : FilterSyntax
                 return false;
             default:
                 value = null;
-                diagnostic = new(FilterDiagnosticKind.InternalUnsupportedLongRangeBindingMode, rawValue.Span);
+                diagnostic = new(FilterDiagnosticKind.InternalUnsupportedLongRangeBindingMode, rawValue.Span, match.DiagnosticText, BindingMode);
                 return false;
         }
     }
@@ -246,11 +249,11 @@ public abstract class FilterDoubleRangeSyntax : FilterSyntax
         if (rawValue is not FilterRawDoubleRangeValue range)
         {
             value = null;
-            diagnostic = new(FilterDiagnosticKind.InternalExpectedDoubleRangeValue, rawValue.Span);
+            diagnostic = new(FilterDiagnosticKind.InternalExpectedDoubleRangeValue, rawValue.Span, match.DiagnosticText);
             return false;
         }
 
-        if (FilterDoubleRange.TryCreate(range.Value, rawValue.Span, out var decimalRange, out diagnostic))
+        if (FilterDoubleRange.TryCreate(range.Value, rawValue.Span, match.DiagnosticText, out var decimalRange, out diagnostic))
         {
             value = decimalRange;
             return true;
@@ -278,7 +281,7 @@ public abstract class FilterDateSyntax : FilterSyntax
         if (rawValue is not FilterRawDateValue date)
         {
             value = null;
-            diagnostic = new(FilterDiagnosticKind.InternalExpectedDateValue, rawValue.Span);
+            diagnostic = new(FilterDiagnosticKind.InternalExpectedDateValue, rawValue.Span, match.DiagnosticText);
             return false;
         }
 
@@ -291,7 +294,7 @@ public abstract class FilterDateSyntax : FilterSyntax
         catch (ArgumentOutOfRangeException)
         {
             value = null;
-            diagnostic = new(FilterDiagnosticKind.InvalidDate, rawValue.Span, date.Value);
+            diagnostic = new(FilterDiagnosticKind.InvalidDate, rawValue.Span, match.DiagnosticText, date.Value);
             return false;
         }
     }

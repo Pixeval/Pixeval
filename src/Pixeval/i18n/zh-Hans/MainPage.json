@@ -29,15 +29,6 @@
     "SingleUser": "单独用户"
   },
   "SearchResultFormatted": "{0} - 搜索",
-  "OpenSearchSettingButton": {
-    "ToolTip": "搜索设置"
-  },
-  "ReverseSearchButton": {
-    "ToolTip": "以图搜图"
-  },
-  "MainPageAutoSuggestionBox": {
-    "PlaceholderText": "请输入作品ID/作品名/作者ID/作者名"
-  },
   "SearchKeywordCannotBeBlank": {
     "Title": "输入非法",
     "Content": "关键字的长度不能为空"
@@ -53,12 +44,6 @@
   "ReverseSearchNotFoundTitle": "未找到任何结果",
   "ReverseSearchResponseContentIsEmpty": "返回结果为空",
   "ReverseSearchServerSideErrorContent": "服务器端发生错误",
-  "IllustrationHeaderSuggestionTextBlock": {
-    "Text": "插画趋势"
-  },
-  "NovelHeaderSuggestionTextBlock": {
-    "Text": "小说趋势"
-  },
   "SettingsEntryHeaderSuggestionTextBlock": {
     "Text": "相关设置项"
   },

@@ -38,7 +38,7 @@
                     Text="{Binding FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
                     VerticalAlignment="Center"
-                    Content="{I18N {x:Static pixeval:DownloadPageDeleteTasksDialogResources.DeleteLocalFilesContent}}"
+                    Content="{I18N {x:Static pixeval:DownloadPageResources.DeleteLocalFilesContent}}"
                     IsChecked="{Binding #Root.DeleteLocalFiles, Mode=TwoWay}" />
             </StackPanel>
 
@@ -73,7 +73,7 @@
                     IsEnabled="{Binding !!#Root.SelectedCount}"
                     Label="{I18N {x:Static pixeval:DownloadPageResources.ResetButtonLabel}}" />
                 <CommandBarButton
-                    Click="ClearDownloadListButton_OnClicked"
+                    Click="DeleteAllButton_OnClicked"
                     Icon="{icons:SymbolIcon Delete}"
                     IsEnabled="{Binding !!#Root.SelectedCount}"
                     Label="{I18N {x:Static pixeval:DownloadPageResources.DeleteButtonLabel}}" />

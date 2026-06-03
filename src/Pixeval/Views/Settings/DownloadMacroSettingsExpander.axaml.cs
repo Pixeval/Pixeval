@@ -23,7 +23,10 @@ public partial class DownloadMacroSettingsExpander : SettingsExpander, IEntryCon
     private bool _isSynchronizingText;
 
     private static readonly ISingleImage _SingleImage = DesignHelper.DownloadParserSampleWork(ImageType.SingleImage);
-    private static readonly ISingleImage _SingleAnimatedImage = DesignHelper.DownloadParserSampleWork(ImageType.SingleAnimatedImage);
+
+    private static readonly ISingleImage _SingleAnimatedImage =
+        DesignHelper.DownloadParserSampleWork(ImageType.SingleAnimatedImage);
+
     private static readonly ISingleImage _ImageSet = DesignHelper.DownloadParserSampleWork(ImageType.ImageSet);
     private static readonly ISingleImage _Novel = DesignHelper.DownloadParserSampleWork(ImageType.Other);
 
@@ -89,7 +92,8 @@ public partial class DownloadMacroSettingsExpander : SettingsExpander, IEntryCon
         }
         catch (Exception exception)
         {
-            DownloadMacroInvalidInfoBar.Text = I18NManager.GetResource(SettingsMainViewResources.DownloadMacroInvalidInfoBarMacroInvalidFormatted, exception.Message);
+            DownloadMacroInvalidInfoBar.Text = I18NManager.GetResource(
+                SettingsMainViewResources.DownloadMacroInvalidInfoBarMacroInvalidFormatted, exception.Message);
             DownloadMacroInvalidInfoBar.IsVisible = true;
         }
     }
@@ -125,41 +129,17 @@ public partial class DownloadMacroSettingsExpander : SettingsExpander, IEntryCon
 
     private static string FormatDiagnostic(MacroDiagnostic diagnostic)
     {
-        return diagnostic.Kind switch
-        {
-            MacroDiagnosticKind.UnexpectedToken => I18NManager.GetResource(
-                MacroParserResources.UnexpectedTokenFormatted,
-                diagnostic.Span.Start + 1),
-            MacroDiagnosticKind.ExpectedLeftBraceAfterAt => I18NManager.GetResource(
-                MacroParserResources.ExpectedTokenAfterAtMarkFormatted,
-                diagnostic.Span.Start + 1),
-            MacroDiagnosticKind.ExpectedMacroName => I18NManager.GetResource(
-                MacroParserResources.ExpectedTokenAfterAtMarkFormatted,
-                diagnostic.Span.Start + 1),
-            MacroDiagnosticKind.MissingRightBrace => I18NManager.GetResource(
-                MacroParserResources.UnbalancedParFormatted,
-                diagnostic.Span.Start + 1),
-            MacroDiagnosticKind.MissingConditionalSeparator => I18NManager.GetResource(
-                MacroParserResources.UnexpactedTokenFormatted,
-                ":",
-                diagnostic.Span.Start + 1),
-            MacroDiagnosticKind.UnknownMacroName => I18NManager.GetResource(
-                MacroParserResources.UnknownMacroNameFormatted,
-                diagnostic.PrimaryParameter),
-            MacroDiagnosticKind.NonParameterizedMacroBearingParameter => I18NManager.GetResource(
-                MacroParserResources.NonParameterizedMacroBearingParameterFormatted,
-                diagnostic.PrimaryParameter),
-            MacroDiagnosticKind.ConditionalBranchesMissing => I18NManager.GetResource(
-                MacroParserResources.ParameterizedMacroMissingParameterFormatted,
-                diagnostic.PrimaryParameter),
-            MacroDiagnosticKind.MacroShouldBeContained => I18NManager.GetResource(
-                MacroParserResources.MacroShouldBeContainedFormatted,
-                diagnostic.PrimaryParameter,
-                diagnostic.SecondaryParameter),
-            MacroDiagnosticKind.MacroShouldBeInLastSegment => I18NManager.GetResource(
-                MacroParserResources.MacroShouldBeInLastSegmentFormatted,
-                diagnostic.PrimaryParameter),
-            _ => throw new ArgumentOutOfRangeException(nameof(diagnostic))
-        };
+        var arguments = diagnostic.Arguments;
+        var formattedDiagnostic = arguments.Count > 0
+            ? I18NManager.GetResource(GetFilterDiagnosticResourceKey(diagnostic.Kind), [.. arguments])
+            : I18NManager.GetResource(GetFilterDiagnosticResourceKey(diagnostic.Kind));
+        return I18NManager.GetResource(
+            MacroParserResources.MessageWithPositionFormatted,
+            formattedDiagnostic,
+            diagnostic.Span.Start + 1);
     }
-}
+
+    private static string GetFilterDiagnosticResourceKey(MacroDiagnosticKind kind) => FilterDiagnosticResourcePrefix + kind;
+
+    private const string FilterDiagnosticResourcePrefix = "MacroParser.";
+}    

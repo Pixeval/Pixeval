@@ -98,7 +98,7 @@
                     x:Name="AddAllToBookmarkButton"
                     Click="AddAllToBookmarkButton_OnClicked"
                     ContextRequested="AddAllToBookmarkButton_OnRightClicked"
-                    Icon="{markup:SymbolIcon Bookmark}"
+                    Icon="{markup:SymbolIcon Heart}"
                     IsEnabled="{Binding !!SelectedEntries.Count}"
                     Label="{I18N {x:Static local:EntryItemResources.AddToBookmark}}" />
                 <CommandBarButton

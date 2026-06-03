@@ -10,20 +10,7 @@
   "MangaSave": "保存漫画",
   "Copy": "复制图片到剪切板",
   "SaveAsCancelled": "已取消另存为操作",
-  "Saved": "已保存",
   "DownloadTaskCreated": "已创建下载任务",
   "TheIllustrationIsAMangaFormatted": "这是一副图集，内含{0}张图片",
-  "TheIllustrationIsAnUgoira": "这是一张动图",
-  "OpenNovel": "阅读小说",
-  "UserMetrics": {
-    "FollowingsTextBlock": {
-      "Text": "正在关注"
-    },
-    "IllustrationCountTextBlock": {
-      "Text": "作品数"
-    },
-    "MyPixivUsersTextBlock": {
-      "Text": "好P友"
-    }
-  }
+  "TheIllustrationIsAnUgoira": "这是一张动图"
 }

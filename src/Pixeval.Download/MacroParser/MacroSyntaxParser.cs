@@ -8,7 +8,7 @@ using Pixeval.Download.MacroParser.Ast;
 
 namespace Pixeval.Download.MacroParser;
 
-public sealed class MacroParser<TContext>(string text)
+public sealed class MacroSyntaxParser(string text)
 {
     private static readonly char[] _InvalidPathChars = Path.GetInvalidPathChars();
 
@@ -16,7 +16,7 @@ public sealed class MacroParser<TContext>(string text)
     private readonly List<MacroHighlightSpan> _highlights = [];
     private int _position;
 
-    public MacroParseResult<TContext> Parse()
+    public MacroParseResult Parse()
     {
         var root = ParseSequence(stopAtColon: false, stopAtRightBrace: false, nestingDepth: 0);
         if (_diagnostics.Count is 0 && !IsAtEnd)
@@ -25,9 +25,9 @@ public sealed class MacroParser<TContext>(string text)
         return new(root, _highlights, _diagnostics);
     }
 
-    private Sequence<TContext>? ParseSequence(bool stopAtColon, bool stopAtRightBrace, int nestingDepth)
+    private Sequence? ParseSequence(bool stopAtColon, bool stopAtRightBrace, int nestingDepth)
     {
-        var nodes = new List<SingleNode<TContext>>();
+        var nodes = new List<SingleNode>();
         var plainTextStart = _position;
         while (!IsAtEnd)
         {
@@ -71,7 +71,7 @@ public sealed class MacroParser<TContext>(string text)
         return CreateSequence(nodes);
     }
 
-    private Macro<TContext>? ParseMacro(int nestingDepth)
+    private Macro? ParseMacro(int nestingDepth)
     {
         var macroStart = _position;
         AddHighlight(macroStart, 1, MacroHighlightKind.Delimiter, nestingDepth);
@@ -99,7 +99,7 @@ public sealed class MacroParser<TContext>(string text)
         }
 
         AddHighlight(nameStart, _position - nameStart, MacroHighlightKind.Name, nestingDepth);
-        var macroName = new PlainText<TContext>(text[nameStart.._position], nameStart.._position);
+        var macroName = new PlainText(text[nameStart.._position], nameStart.._position);
         var diagnosticStart = _diagnostics.Count;
         var branches = ParseConditionalBranches(nestingDepth);
         if (_diagnostics.Count > diagnosticStart)
@@ -120,7 +120,7 @@ public sealed class MacroParser<TContext>(string text)
         return new(macroName, branches);
     }
 
-    private ConditionalMacroBranches<TContext>? ParseConditionalBranches(int nestingDepth)
+    private ConditionalMacroBranches? ParseConditionalBranches(int nestingDepth)
     {
         if (IsAtEnd || Current is not '?')
             return null;
@@ -165,17 +165,17 @@ public sealed class MacroParser<TContext>(string text)
         }
     }
 
-    private void AddPlainText(ICollection<SingleNode<TContext>> nodes, int start, int end)
+    private void AddPlainText(ICollection<SingleNode> nodes, int start, int end)
     {
         if (end <= start)
             return;
 
-        nodes.Add(new PlainText<TContext>(text[start..end], start..end));
+        nodes.Add(new PlainText(text[start..end], start..end));
     }
 
-    private static Sequence<TContext>? CreateSequence(IReadOnlyList<SingleNode<TContext>> nodes)
+    private static Sequence? CreateSequence(IReadOnlyList<SingleNode> nodes)
     {
-        Sequence<TContext>? sequence = null;
+        Sequence? sequence = null;
         for (var i = nodes.Count - 1; i >= 0; --i)
             sequence = new(nodes[i], sequence);
 

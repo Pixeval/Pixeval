@@ -54,6 +54,9 @@
 		
 	<ItemGroup>
 		<!-- 字符串资源相关 -->
+		<AdditionalFiles Include="i18n\**\*.json" />
+		<AdditionalFiles Include="Views\**\*.axaml" />
+
 		<None Update="i18n\**">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>

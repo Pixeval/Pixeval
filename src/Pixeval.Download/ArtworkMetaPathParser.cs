@@ -20,29 +20,21 @@ public class ArtworkMetaPathParser : IMetaPathParser<IArtworkInfo>
 
     public string Reduce(string raw, IArtworkInfo context)
     {
-        var result = new MacroParser<IArtworkInfo>(raw).Parse();
-        if (result.Diagnostics is [{ } diagnostic, ..])
-            throw CreateException(diagnostic);
+        var parseResult = new MacroSyntaxParser(raw).Parse();
+        if (parseResult.Diagnostics is [{ } diagnostic, ..])
+            throw MacroParseException.FromDiagnostic(diagnostic);
 
-        if (result.Root is { } root)
+        var bindingResult = new MacroBinder<IArtworkInfo>(MacroProvider).Bind(parseResult.Root);
+        if (bindingResult.Diagnostics is [{ } bindingDiagnostic, ..])
+            throw MacroParseException.FromDiagnostic(bindingDiagnostic);
+
+        if (bindingResult.Root is { } root)
         {
-            var reduced = root.Evaluate(MacroProvider, context);
+            var reduced = root.Evaluate(context);
             if (!string.IsNullOrWhiteSpace(reduced))
                 return reduced;
         }
 
-        throw new MacroParseException(MacroParseException.ErrorType.ResultIsEmpty);
-    }
-
-    private static MacroParseException CreateException(MacroDiagnostic diagnostic)
-    {
-        var type = diagnostic.Kind switch
-        {
-            MacroDiagnosticKind.UnknownMacroName => MacroParseException.ErrorType.UnknownMacroName,
-            MacroDiagnosticKind.NonParameterizedMacroBearingParameter => MacroParseException.ErrorType.NonParameterizedMacroBearingParameter,
-            MacroDiagnosticKind.ConditionalBranchesMissing => MacroParseException.ErrorType.ParameterizedMacroMissingParameter,
-            _ => MacroParseException.ErrorType.UnexpectedToken
-        };
-        return new(type, diagnostic.PrimaryParameter, diagnostic.Span);
+        throw MacroParseException.ResultIsEmpty();
     }
 }

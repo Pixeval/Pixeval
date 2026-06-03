@@ -57,5 +57,8 @@
     "SearchFailed": {
       "Title": "搜索失败"
     }
+  },
+  "TrendingHeaderTextBlock": {
+    "Text": "标签趋势"
   }
 }

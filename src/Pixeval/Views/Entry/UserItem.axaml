@@ -84,7 +84,7 @@
                 <MenuFlyout>
                     <MenuItem
                         Command="{Binding FollowCommand, Mode=OneWay}"
-                        Header="{I18N {x:Static pixeval:MiscResources.Follow}}"
+                        Header="{I18N {x:Static pixeval:UserViewerPageResources.Follow}}"
                         Icon="{markup1:SymbolIconEx Person,
                                                     IconVariant={Binding IsFollowedDisplay,
                                                                          Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}" />

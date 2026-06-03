@@ -57,12 +57,14 @@
                             Icon="{markup:SymbolIcon GlobeArrowUp}"
                             Tag="{Binding Url}" />
                         <MenuItem Header="-" />
-                        <!--<MenuItem
+                        <!--  该项不显示  -->
+                        <MenuItem
                             Command="{Binding ToggleRestrictedModeCommand, Mode=OneTime}"
                             Header="{I18N {x:Static pixeval:MainPageResources.RestrictedModeItemText}}"
                             Icon="{markup:SymbolIcon PersonProhibited}"
                             IsChecked="{Binding RestrictedCache}"
-                            ToggleType="CheckBox" />-->
+                            IsVisible="False"
+                            ToggleType="CheckBox" />
                         <MenuItem
                             Command="{Binding ToggleAiShowCommand, Mode=OneTime}"
                             Header="{I18N {x:Static pixeval:MainPageResources.AiShowItemText}}"

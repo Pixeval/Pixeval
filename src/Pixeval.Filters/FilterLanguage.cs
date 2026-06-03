@@ -273,7 +273,7 @@ public sealed class FilterLanguage
             var children = ParseTerms(expectRightParenthesis: false, groupStart: -1);
             SkipWhiteSpace();
             if (_diagnostics.Count is 0 && !IsAtEnd)
-                AddDiagnostic(FilterDiagnosticKind.UnexpectedToken, CurrentTokenSpan());
+                AddUnexpectedTokenDiagnostic(CurrentTokenSpan());
 
             return _diagnostics.Count is 0
                 ? new(new(FilterLogicalOperator.And, children.ToArray(), FilterTextSpan.FromBounds(0, text.Length)), _viewRangeAssigned ? _viewRange : Range.All)
@@ -292,7 +292,10 @@ public sealed class FilterLanguage
                 if (IsAtEnd)
                 {
                     if (expectRightParenthesis)
-                        AddDiagnostic(FilterDiagnosticKind.MissingRightParenthesis, FilterTextSpan.FromBounds(groupStart, Math.Min(groupStart + 1, text.Length)));
+                        AddDiagnostic(
+                            FilterDiagnosticKind.MissingRightParenthesis,
+                            FilterTextSpan.FromBounds(groupStart, Math.Min(groupStart + 1, text.Length)),
+                            "(");
                     break;
                 }
 
@@ -324,7 +327,7 @@ public sealed class FilterLanguage
                 SkipWhiteSpace();
                 if (IsAtEnd)
                 {
-                    AddDiagnostic(FilterDiagnosticKind.MissingPredicateAfterNegation, FilterTextSpan.FromBounds(termStart, _position));
+                    AddDiagnostic(FilterDiagnosticKind.MissingPredicateAfterNegation, FilterTextSpan.FromBounds(termStart, _position), "!");
                     return false;
                 }
             }
@@ -357,7 +360,7 @@ public sealed class FilterLanguage
                 return true;
             }
 
-            AddDiagnostic(FilterDiagnosticKind.UnexpectedToken, CurrentTokenSpan());
+            AddUnexpectedTokenDiagnostic(CurrentTokenSpan());
             return false;
         }
 
@@ -402,7 +405,8 @@ public sealed class FilterLanguage
 
             AddDiagnostic(
                 FilterDiagnosticKind.MissingGroupOperator,
-                FilterTextSpan.FromBounds(operatorStart, Math.Max(operatorStart + Math.Max(_position - operatorStart, 1), operatorStart + 1)));
+                FilterTextSpan.FromBounds(operatorStart, Math.Max(operatorStart + Math.Max(_position - operatorStart, 1), operatorStart + 1)),
+                GetDiagnosticArgument(FilterTextSpan.FromBounds(wordStart, Math.Max(_position, wordStart + 1))));
             return null;
         }
 
@@ -419,7 +423,7 @@ public sealed class FilterLanguage
             if (match is null)
             {
                 if (language._specialStarters.Contains(Current) || Current is ']' or ')')
-                    AddDiagnostic(FilterDiagnosticKind.UnexpectedToken, CurrentTokenSpan());
+                    AddUnexpectedTokenDiagnostic(CurrentTokenSpan());
                 return false;
             }
 
@@ -439,19 +443,19 @@ public sealed class FilterLanguage
             {
                 if (isNegated)
                 {
-                    AddDiagnostic(FilterDiagnosticKind.UnsupportedNegation, termSpan);
+                    AddDiagnostic(FilterDiagnosticKind.UnsupportedNegation, termSpan, match.DiagnosticText, "!");
                     return false;
                 }
 
                 if (_viewRangeAssigned)
                 {
-                    AddDiagnostic(FilterDiagnosticKind.DuplicateViewRange, termSpan);
+                    AddDiagnostic(FilterDiagnosticKind.DuplicateViewRange, termSpan, match.DiagnosticText);
                     return false;
                 }
 
                 if (boundValue is not Range viewRange)
                 {
-                    AddDiagnostic(FilterDiagnosticKind.InternalViewRangeBindingFailed, termSpan);
+                    AddDiagnostic(FilterDiagnosticKind.InternalViewRangeBindingFailed, termSpan, match.DiagnosticText);
                     return false;
                 }
 
@@ -484,7 +488,11 @@ public sealed class FilterLanguage
                     return TryParseDateValue(match, out value);
                 default:
                     value = new FilterNoneValue(FilterTextSpan.EmptyAt(_position));
-                    AddDiagnostic(FilterDiagnosticKind.UnsupportedValueKind, FilterTextSpan.FromBounds(termStart, _position));
+                    AddDiagnostic(
+                        FilterDiagnosticKind.UnsupportedValueKind,
+                        FilterTextSpan.FromBounds(termStart, _position),
+                        match.DiagnosticText,
+                        match.Syntax.ValueKind);
                     return false;
             }
         }
@@ -497,7 +505,7 @@ public sealed class FilterLanguage
             if (IsAtEnd || Current is ')')
             {
                 value = new FilterNoneValue(FilterTextSpan.EmptyAt(_position));
-                AddDiagnostic(FilterDiagnosticKind.MissingTextValue, FilterTextSpan.FromBounds(termStart, _position), match.HeaderText);
+                AddDiagnostic(FilterDiagnosticKind.MissingTextValue, FilterTextSpan.FromBounds(termStart, _position), match.DiagnosticText);
                 return false;
             }
 
@@ -512,7 +520,10 @@ public sealed class FilterLanguage
                 if (IsAtEnd)
                 {
                     value = new FilterNoneValue(FilterTextSpan.FromBounds(quotedStart, _position));
-                    AddDiagnostic(FilterDiagnosticKind.MissingStringQuote, FilterTextSpan.FromBounds(quotedStart, _position));
+                    AddDiagnostic(
+                        FilterDiagnosticKind.MissingStringQuote,
+                        FilterTextSpan.FromBounds(quotedStart, _position),
+                        GetDiagnosticArgument(FilterTextSpan.FromBounds(quotedStart, _position)));
                     return false;
                 }
 
@@ -537,7 +548,7 @@ public sealed class FilterLanguage
             if (contentEndUnquoted <= start)
             {
                 value = new FilterNoneValue(FilterTextSpan.FromBounds(start, end));
-                AddDiagnostic(FilterDiagnosticKind.MissingTextValue, FilterTextSpan.FromBounds(termStart, end), match.HeaderText);
+                AddDiagnostic(FilterDiagnosticKind.MissingTextValue, FilterTextSpan.FromBounds(termStart, end), match.DiagnosticText);
                 return false;
             }
 
@@ -558,14 +569,18 @@ public sealed class FilterLanguage
             if (IsAtEnd || Current is ')')
             {
                 value = new FilterNoneValue(FilterTextSpan.EmptyAt(_position));
-                AddDiagnostic(FilterDiagnosticKind.MissingRangeValue, FilterTextSpan.FromBounds(rangeStart, _position), match.HeaderText);
+                AddDiagnostic(FilterDiagnosticKind.MissingRangeValue, FilterTextSpan.FromBounds(rangeStart, _position), match.DiagnosticText);
                 return false;
             }
 
             if (Current is '[' or '(')
             {
                 value = new FilterNoneValue(FilterTextSpan.FromBounds(rangeStart, _position + 1));
-                AddDiagnostic(FilterDiagnosticKind.InvalidLongRangeFormat, FilterTextSpan.FromBounds(rangeStart, _position + 1));
+                AddDiagnostic(
+                    FilterDiagnosticKind.InvalidLongRangeFormat,
+                    FilterTextSpan.FromBounds(rangeStart, _position + 1),
+                    match.DiagnosticText,
+                    GetDiagnosticArgument(FilterTextSpan.FromBounds(rangeStart, _position + 1)));
                 return true;
             }
 
@@ -593,7 +608,11 @@ public sealed class FilterLanguage
             if (!TryConsume('-'))
             {
                 value = new FilterNoneValue(FilterTextSpan.FromBounds(rangeStart, _position));
-                AddDiagnostic(FilterDiagnosticKind.InvalidLongRangeFormat, FilterTextSpan.FromBounds(rangeStart, _position));
+                AddDiagnostic(
+                    FilterDiagnosticKind.InvalidLongRangeFormat,
+                    FilterTextSpan.FromBounds(rangeStart, _position),
+                    match.DiagnosticText,
+                    GetDiagnosticArgument(FilterTextSpan.FromBounds(rangeStart, _position)));
                 return false;
             }
 
@@ -623,14 +642,18 @@ public sealed class FilterLanguage
             if (IsAtEnd || Current is ')')
             {
                 value = new FilterNoneValue(FilterTextSpan.EmptyAt(_position));
-                AddDiagnostic(FilterDiagnosticKind.MissingRangeValue, FilterTextSpan.FromBounds(rangeStart, _position), match.HeaderText);
+                AddDiagnostic(FilterDiagnosticKind.MissingRangeValue, FilterTextSpan.FromBounds(rangeStart, _position), match.DiagnosticText);
                 return false;
             }
 
             if (Current is '[' or '(')
             {
                 value = new FilterNoneValue(FilterTextSpan.FromBounds(rangeStart, _position + 1));
-                AddDiagnostic(FilterDiagnosticKind.InvalidDoubleRangeFormat, FilterTextSpan.FromBounds(rangeStart, _position + 1));
+                AddDiagnostic(
+                    FilterDiagnosticKind.InvalidDoubleRangeFormat,
+                    FilterTextSpan.FromBounds(rangeStart, _position + 1),
+                    match.DiagnosticText,
+                    GetDiagnosticArgument(FilterTextSpan.FromBounds(rangeStart, _position + 1)));
                 return false;
             }
 
@@ -658,7 +681,11 @@ public sealed class FilterLanguage
             if (!TryConsume('-'))
             {
                 value = new FilterNoneValue(FilterTextSpan.FromBounds(rangeStart, _position));
-                AddDiagnostic(FilterDiagnosticKind.InvalidDoubleRangeFormat, FilterTextSpan.FromBounds(rangeStart, _position));
+                AddDiagnostic(
+                    FilterDiagnosticKind.InvalidDoubleRangeFormat,
+                    FilterTextSpan.FromBounds(rangeStart, _position),
+                    match.DiagnosticText,
+                    GetDiagnosticArgument(FilterTextSpan.FromBounds(rangeStart, _position)));
                 return false;
             }
 
@@ -688,7 +715,7 @@ public sealed class FilterLanguage
             if (IsAtEnd || Current is ')')
             {
                 value = new FilterNoneValue(FilterTextSpan.EmptyAt(_position));
-                AddDiagnostic(FilterDiagnosticKind.MissingDateValue, FilterTextSpan.FromBounds(dateStart, _position), match.HeaderText);
+                AddDiagnostic(FilterDiagnosticKind.MissingDateValue, FilterTextSpan.FromBounds(dateStart, _position), match.DiagnosticText);
                 return false;
             }
 
@@ -701,7 +728,11 @@ public sealed class FilterLanguage
             if (!TryConsumeDateSeparator())
             {
                 value = new FilterNoneValue(FilterTextSpan.FromBounds(dateStart, _position));
-                AddDiagnostic(FilterDiagnosticKind.DateRequiresMonthAndDay, FilterTextSpan.FromBounds(dateStart, _position));
+                AddDiagnostic(
+                    FilterDiagnosticKind.DateRequiresMonthAndDay,
+                    FilterTextSpan.FromBounds(dateStart, _position),
+                    match.DiagnosticText,
+                    GetDiagnosticArgument(FilterTextSpan.FromBounds(dateStart, _position)));
                 return false;
             }
 
@@ -749,14 +780,14 @@ public sealed class FilterLanguage
             {
                 span = FilterTextSpan.EmptyAt(_position);
                 value = 0;
-                AddDiagnostic(FilterDiagnosticKind.ExpectedInteger, span);
+                AddDiagnostic(FilterDiagnosticKind.ExpectedInteger, span, GetDiagnosticArgument(CurrentTokenSpan()));
                 return false;
             }
 
             span = FilterTextSpan.FromBounds(start, _position);
             if (!long.TryParse(text.AsSpan(start, _position - start), NumberStyles.None, CultureInfo.InvariantCulture, out value))
             {
-                AddDiagnostic(FilterDiagnosticKind.IntegerOutOfRange, span);
+                AddDiagnostic(FilterDiagnosticKind.IntegerOutOfRange, span, GetDiagnosticArgument(span));
                 return false;
             }
 
@@ -790,7 +821,7 @@ public sealed class FilterLanguage
                 {
                     span = FilterTextSpan.FromBounds(literalStart, _position);
                     value = 0;
-                    AddDiagnostic(FilterDiagnosticKind.DenominatorCannotBeZero, span);
+                    AddDiagnostic(FilterDiagnosticKind.DenominatorCannotBeZero, span, GetDiagnosticArgument(span));
                     return false;
                 }
 
@@ -810,14 +841,14 @@ public sealed class FilterLanguage
                 {
                     span = FilterTextSpan.FromBounds(literalStart, _position);
                     value = 0;
-                    AddDiagnostic(FilterDiagnosticKind.MissingFractionalPart, span);
+                    AddDiagnostic(FilterDiagnosticKind.MissingFractionalPart, span, GetDiagnosticArgument(span));
                     return false;
                 }
 
                 span = FilterTextSpan.FromBounds(literalStart, _position);
                 if (!double.TryParse(text.AsSpan(literalStart, _position - literalStart), NumberStyles.Float, CultureInfo.InvariantCulture, out value))
                 {
-                    AddDiagnostic(FilterDiagnosticKind.InvalidDoubleValue, span);
+                    AddDiagnostic(FilterDiagnosticKind.InvalidDoubleValue, span, GetDiagnosticArgument(span));
                     return false;
                 }
 
@@ -863,7 +894,7 @@ public sealed class FilterLanguage
             if (value > int.MaxValue)
             {
                 narrowed = 0;
-                AddDiagnostic(FilterDiagnosticKind.DateValueTooLarge, CurrentTokenSpan());
+                AddDiagnostic(FilterDiagnosticKind.DateValueTooLarge, CurrentTokenSpan(), value);
                 return false;
             }
 
@@ -899,8 +930,17 @@ public sealed class FilterLanguage
         /// <summary>
         /// 记录一条结构化过滤诊断。
         /// </summary>
-        private void AddDiagnostic(FilterDiagnosticKind kind, FilterTextSpan span, params object?[] arguments)
+        private void AddDiagnostic(FilterDiagnosticKind kind, FilterTextSpan span, params IReadOnlyList<object?> arguments)
             => _diagnostics.Add(new(kind, span, arguments));
+
+        private void AddUnexpectedTokenDiagnostic(FilterTextSpan span)
+            => AddDiagnostic(FilterDiagnosticKind.UnexpectedToken, span, GetDiagnosticArgument(span));
+
+        private string GetDiagnosticArgument(FilterTextSpan span)
+        {
+            var value = span.GetText(text);
+            return value.Length > 0 ? value : "";
+        }
 
         private bool IsAtEnd => _position >= text.Length;
 

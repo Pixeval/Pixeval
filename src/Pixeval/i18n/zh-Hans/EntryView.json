@@ -1,22 +1,4 @@
 {
-  "AddToBookmarkContextItem": {
-    "Text": "添加到收藏夹"
-  },
-  "CopyAppLinkContextItem": {
-    "Text": "复制应用链接"
-  },
-  "CopyWebLinkContextItem": {
-    "Text": "复制网页链接"
-  },
-  "OpenInBrowserContextItem": {
-    "Text": "在浏览器中打开"
-  },
   "ResultIsEmptyTextBlock": "这里空空如也",
-  "SaveContextItem": {
-    "Text": "保存"
-  },
-  "AddToBookmarkTeachingTip": {
-    "CloseButtonContent": "添加收藏"
-  },
   "AddedToBookmark": "已添加收藏"
 }

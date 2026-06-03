@@ -204,7 +204,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
         }
     }
 
-    protected void AdvancePhase(LoadingPhase phase, double progress = 0)
+    private void AdvancePhase(LoadingPhase phase, double progress = 0)
     {
         LoadingProgress = progress;
         LoadingText = phase is LoadingPhase.DownloadingImage

@@ -125,12 +125,14 @@ public static class LocalSettingsEntryHelper
             t.Register(FontWeight.Thin, Symbol.TextFont, EnumResources.FontWeightThin);
             t.Register(FontWeight.ExtraLight, Symbol.TextFont, EnumResources.FontWeightExtraLight);
             t.Register(FontWeight.Light, Symbol.TextFont, EnumResources.FontWeightLight);
+            t.Register(FontWeight.SemiLight, Symbol.TextFont, EnumResources.FontWeightSemiLight);
             t.Register(FontWeight.Normal, Symbol.TextFont, EnumResources.FontWeightNormal);
             t.Register(FontWeight.Medium, Symbol.TextFont, EnumResources.FontWeightMedium);
             t.Register(FontWeight.SemiBold, Symbol.TextFont, EnumResources.FontWeightSemiBold);
             t.Register(FontWeight.Bold, Symbol.TextFont, EnumResources.FontWeightBold);
             t.Register(FontWeight.ExtraBold, Symbol.TextFont, EnumResources.FontWeightExtraBold);
             t.Register(FontWeight.Black, Symbol.TextFont, EnumResources.FontWeightBlack);
+            t.Register(FontWeight.ExtraBlack, Symbol.TextFont, EnumResources.FontWeightExtraBlack);
         });
         RegisterAttach<WorkType>(t =>
         {

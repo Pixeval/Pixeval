@@ -37,6 +37,7 @@
   <Project Path="src/Pixeval.I18N/Pixeval.I18N.csproj" />
   <Project Path="src/Pixeval.iOS/Pixeval.iOS.csproj" />
   <Project Path="src/Pixeval.SourceGen/Pixeval.SourceGen.csproj" />
+  <Project Path="src/Pixeval.SourceGen.Tests/Pixeval.SourceGen.Tests.csproj" />
   <Project Path="src/Pixeval.Utilities/Pixeval.Utilities.csproj" />
   <Project Path="src/Pixeval/Pixeval.csproj" />
 </Solution>

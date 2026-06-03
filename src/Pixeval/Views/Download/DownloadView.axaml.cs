@@ -186,11 +186,11 @@ public partial class DownloadView : ContentPage
         ExecuteForSelectedDownloadTasks(t => t.DownloadTask.Reset());
     }
 
-    private void ClearDownloadListButton_OnClicked(object? sender, RoutedEventArgs e)
+    private void DeleteAllButton_OnClicked(object? sender, RoutedEventArgs e)
     {
         if (SelectedCount is var count and not 0)
         {
-            foreach (var item in GetSelectedEntries().SelectMany(t => t.DownloadItems).ToArray())
+            foreach (var item in GetSelectedEntries().SelectMany(t => t.DownloadItems))
             {
                 if (DeleteLocalFiles)
                 {
@@ -230,14 +230,12 @@ public partial class DownloadView : ContentPage
 
         UnsubscribeFromViewModel();
         _subscribedViewModel = DataContext as DownloadViewViewModel;
-        if (_subscribedViewModel is not null)
-            _subscribedViewModel.PropertyChanged += ViewModelOnPropertyChanged;
+        _subscribedViewModel?.PropertyChanged += ViewModelOnPropertyChanged;
     }
 
     private void UnsubscribeFromViewModel()
     {
-        if (_subscribedViewModel is not null)
-            _subscribedViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
+        _subscribedViewModel?.PropertyChanged -= ViewModelOnPropertyChanged;
         _subscribedViewModel = null;
     }
 
@@ -253,7 +251,7 @@ public partial class DownloadView : ContentPage
 
     private void ItemsSourceOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName is nameof(AdvancedObservableCollection<DownloadItemViewModel>.Count))
+        if (e.PropertyName is nameof(AdvancedObservableCollection<>.Count))
             UpdateHasNoDownloadItem();
     }
 
@@ -300,14 +298,12 @@ public partial class DownloadView : ContentPage
         UnsubscribeFromItemsSource();
         DownloadItemsSource = source;
         _subscribedItemsSource = source as INotifyPropertyChanged;
-        if (_subscribedItemsSource is not null)
-            _subscribedItemsSource.PropertyChanged += ItemsSourceOnPropertyChanged;
+        _subscribedItemsSource?.PropertyChanged += ItemsSourceOnPropertyChanged;
     }
 
     private void UnsubscribeFromItemsSource()
     {
-        if (_subscribedItemsSource is not null)
-            _subscribedItemsSource.PropertyChanged -= ItemsSourceOnPropertyChanged;
+        _subscribedItemsSource?.PropertyChanged -= ItemsSourceOnPropertyChanged;
         _subscribedItemsSource = null;
     }
 

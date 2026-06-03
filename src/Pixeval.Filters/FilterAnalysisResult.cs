@@ -49,24 +49,10 @@ public enum FilterDiagnosticKind
 /// <summary>
 /// 表示一条带位置的结构化诊断信息。
 /// </summary>
-public sealed record FilterDiagnostic
-{
-    /// <summary>
-    /// 创建一条过滤诊断。
-    /// </summary>
-    public FilterDiagnostic(FilterDiagnosticKind kind, FilterTextSpan span, params object?[] arguments)
-    {
-        Kind = kind;
-        Span = span;
-        Arguments = arguments;
-    }
-
-    public FilterDiagnosticKind Kind { get; }
-
-    public FilterTextSpan Span { get; }
-
-    public IReadOnlyList<object?> Arguments { get; }
-}
+public sealed record FilterDiagnostic(
+    FilterDiagnosticKind Kind,
+    FilterTextSpan Span,
+    params IReadOnlyList<object?> Arguments);
 
 /// <summary>
 /// 表示一条可用于自动补全的候选项。

@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using Pixeval.Download.MacroParser.Ast;
+using Pixeval.Download.MacroParser.Bound;
 
 namespace Pixeval.Download.MacroParser;
 
@@ -50,15 +52,21 @@ public enum MacroDiagnosticKind
 public sealed record MacroDiagnostic(
     MacroDiagnosticKind Kind,
     MacroTextSpan Span,
-    string? PrimaryParameter = null,
-    string? SecondaryParameter = null);
+    params IReadOnlyList<object?> Arguments);
 
-public sealed record MacroParseResult<TContext>(
-    Ast.Sequence<TContext>? Root,
+public sealed record MacroParseResult(
+    Sequence? Root,
     IReadOnlyList<MacroHighlightSpan> Highlights,
     IReadOnlyList<MacroDiagnostic> Diagnostics)
 {
     public bool IsSuccess => Diagnostics.Count is 0;
 
-    public static MacroParseResult<TContext> Empty { get; } = new(null, [], []);
+    public static MacroParseResult Empty { get; } = new(null, [], []);
+}
+
+public sealed record MacroBindingResult<TContext>(
+    BoundSequence<TContext>? Root,
+    IReadOnlyList<MacroDiagnostic> Diagnostics)
+{
+    public bool IsSuccess => Diagnostics.Count is 0;
 }
