@@ -79,32 +79,11 @@ public class AdvancedObservableCollection<T>
 
     #region IList<T>
 
-    private List<T> RangedView
-    {
-        get
-        {
-            if (Equals(Range, Range.All))
-                return _view;
-            var viewCount = _view.Count;
-            var start = Range.Start.GetOffset(viewCount);
-            if (start > viewCount)
-                return [];
-            var end = Range.End.GetOffset(viewCount);
-            if (end < 0)
-                return [];
-            if (start > end)
-                return [];
-            start = Math.Max(0, start);
-            end = Math.Min(viewCount, end);
-            return _view[start..end];
-        }
-    }
+    /// <inheritdoc />
+    public IEnumerator<T> GetEnumerator() => _view.GetEnumerator();
 
     /// <inheritdoc />
-    public IEnumerator<T> GetEnumerator() => RangedView.GetEnumerator();
-
-    /// <inheritdoc />
-    IEnumerator IEnumerable.GetEnumerator() => RangedView.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => _view.GetEnumerator();
 
     /// <inheritdoc />
     public void Add(T item) => Source.Add(item);
@@ -113,34 +92,43 @@ public class AdvancedObservableCollection<T>
     public void Clear() => Source.Clear();
 
     /// <inheritdoc />
-    public bool Contains(T item) => RangedView.Contains(item);
+    public bool Contains(T item) => _view.Contains(item);
 
     /// <inheritdoc />
-    public void CopyTo(T[] array, int arrayIndex) => RangedView.CopyTo(array, arrayIndex);
+    public void CopyTo(T[] array, int arrayIndex) => _view.CopyTo(array, arrayIndex);
 
     /// <inheritdoc />
     public bool Remove(T item) => Source.Remove(item);
 
     /// <inheritdoc cref="ICollection{T}.Count"/> />
-    public int Count => RangedView.Count;
+    public int Count => _view.Count;
 
     /// <inheritdoc />
     public bool IsReadOnly => false;
 
     /// <inheritdoc />
-    public int IndexOf(T item) => RangedView.IndexOf(item);
+    public int IndexOf(T item) => _view.IndexOf(item);
 
     /// <inheritdoc />
-    public void Insert(int index, T item) => Source.Insert(index, item);
+    public void Insert(int index, T item)
+    {
+        var sourceIndex = index < _view.Count ? Source.IndexOf(_view[index]) : Source.Count;
+        Source.Insert(sourceIndex, item);
+    }
 
     /// <inheritdoc cref="IList{T}.RemoveAt"/> />
-    public void RemoveAt(int index) => Source.Remove(RangedView[index]);
+    public void RemoveAt(int index) => Source.Remove(_view[index]);
 
     /// <inheritdoc cref="List{T}.this[int]"/>
     public T this[int index]
     {
-        get => RangedView[index];
-        set => RangedView[index] = value;
+        get => _view[index];
+        set
+        {
+            var sourceIndex = Source.IndexOf(_view[index]);
+            if (sourceIndex >= 0)
+                Source[sourceIndex] = value;
+        }
     }
 
     #endregion
@@ -160,8 +148,7 @@ public class AdvancedObservableCollection<T>
                 return;
 
             field = value;
-            OnCollectionChanged(new(NotifyCollectionChangedAction.Reset));
-            OnPropertyChanged(EventArgsCache.CountPropertyChanged);
+            HandleSourceChanged();
         }
     } = Range.All;
 
@@ -235,7 +222,7 @@ public class AdvancedObservableCollection<T>
                 var viewIndex = _view.IndexOf(item);
                 if (viewIndex is not -1 && !filterResult)
                     RemoveFromView(viewIndex, item);
-                else if (viewIndex is -1 && filterResult)
+                else if (viewIndex is -1 && filterResult && IsSourceIndexInRange(sourceIndex))
                     _ = HandleItemAdded(sourceIndex, item);
             }
 
@@ -310,9 +297,8 @@ public class AdvancedObservableCollection<T>
         }
 
         var remaining = new List<T>(_view);
-        for (var index = 0; index < Source.Count; ++index)
+        foreach (var (index, item) in EnumerateRangedSource())
         {
-            var item = Source[index];
             if (!MatchesFilter(item))
                 continue;
 
@@ -336,7 +322,7 @@ public class AdvancedObservableCollection<T>
     private List<T> CreateOrderedVisibleView()
     {
         var orderedView = new List<T>();
-        foreach (var item in Source)
+        foreach (var (_, item) in EnumerateRangedSource())
         {
             if (!MatchesFilter(item))
                 continue;
@@ -357,6 +343,36 @@ public class AdvancedObservableCollection<T>
             orderedView.Reverse();
 
         return orderedView;
+    }
+
+    private (int Start, int End) GetSourceRangeBounds()
+    {
+        if (Equals(Range, Range.All))
+            return (0, Source.Count);
+
+        var sourceCount = Source.Count;
+        var start = Range.Start.GetOffset(sourceCount);
+        if (start > sourceCount)
+            return (0, 0);
+
+        var end = Range.End.GetOffset(sourceCount);
+        if (end < 0 || start > end)
+            return (0, 0);
+
+        return (Math.Max(0, start), Math.Min(sourceCount, end));
+    }
+
+    private bool IsSourceIndexInRange(int sourceIndex)
+    {
+        var (start, end) = GetSourceRangeBounds();
+        return sourceIndex >= start && sourceIndex < end;
+    }
+
+    private IEnumerable<(int Index, T Item)> EnumerateRangedSource()
+    {
+        var (start, end) = GetSourceRangeBounds();
+        for (var index = start; index < end; ++index)
+            yield return (index, Source[index]);
     }
 
     private void ResetView(List<T> orderedView)
@@ -403,6 +419,12 @@ public class AdvancedObservableCollection<T>
             case NotifyCollectionChangedAction.Add:
             {
                 AttachPropertyChangedHandler(e.NewItems);
+                if (!Equals(Range, Range.All))
+                {
+                    HandleSourceChanged();
+                    break;
+                }
+
                 if (e.NewItems is [T item])
                     _ = HandleItemAdded(e.NewStartingIndex, item);
                 else
@@ -413,6 +435,12 @@ public class AdvancedObservableCollection<T>
             case NotifyCollectionChangedAction.Remove:
             {
                 DetachPropertyChangedHandler(e.OldItems);
+                if (!Equals(Range, Range.All))
+                {
+                    HandleSourceChanged();
+                    break;
+                }
+
                 if (e.OldItems is [T item])
                     HandleItemRemoved(e.OldStartingIndex, item);
                 else
@@ -422,6 +450,12 @@ public class AdvancedObservableCollection<T>
             }
             case NotifyCollectionChangedAction.Move:
             {
+                if (!Equals(Range, Range.All))
+                {
+                    HandleSourceChanged();
+                    break;
+                }
+
                 if (e.OldStartingIndex >= 0 && e.NewStartingIndex >= 0 && e.NewItems is [T item])
                     HandleItemMoved(e.OldStartingIndex, e.NewStartingIndex, item);
                 else
@@ -433,6 +467,12 @@ public class AdvancedObservableCollection<T>
             {
                 DetachPropertyChangedHandler(e.OldItems);
                 AttachPropertyChangedHandler(e.NewItems);
+                if (!Equals(Range, Range.All))
+                {
+                    HandleSourceChanged();
+                    break;
+                }
+
                 if (e.OldStartingIndex >= 0 && e.OldItems is [T oldItem] && e.NewItems is [T newItem])
                     HandleItemReplaced(e.OldStartingIndex, oldItem, newItem);
                 else
@@ -452,7 +492,7 @@ public class AdvancedObservableCollection<T>
 
     private bool HandleItemAdded(int sourceIndex, T newItem)
     {
-        if (!MatchesFilter(newItem))
+        if (!IsSourceIndexInRange(sourceIndex) || !MatchesFilter(newItem))
             return false;
 
         var newViewIndex = SortDescriptions.Count is not 0
@@ -479,9 +519,10 @@ public class AdvancedObservableCollection<T>
     {
         if (!IsReversed)
         {
-            for (int i = 0, j = 0; i < Source.Count; ++i)
+            var (start, end) = GetSourceRangeBounds();
+            for (int i = start, j = 0; i < end; ++i)
             {
-                if (i == sourceIndex || j >= _view.Count)
+                if (i == sourceIndex)
                     return j;
 
                 if (MatchesFilter(Source[i]))
@@ -491,9 +532,10 @@ public class AdvancedObservableCollection<T>
             return _view.Count;
         }
 
-        for (int i = Source.Count - 1, j = 0; i >= 0; --i)
+        var (rangeStart, rangeEnd) = GetSourceRangeBounds();
+        for (int i = rangeEnd - 1, j = 0; i >= rangeStart; --i)
         {
-            if (i == sourceIndex || j >= _view.Count)
+            if (i == sourceIndex)
                 return j;
 
             if (MatchesFilter(Source[i]))
@@ -514,7 +556,7 @@ public class AdvancedObservableCollection<T>
 
     private void HandleItemMoved(int oldStartingIndex, int newStartingIndex, T item)
     {
-        if (SortDescriptions.Count is not 0 || !MatchesFilter(item))
+        if (SortDescriptions.Count is not 0 || !IsSourceIndexInRange(newStartingIndex) || !MatchesFilter(item))
             return;
 
         var oldViewIndex = _view.IndexOf(item);
@@ -534,13 +576,13 @@ public class AdvancedObservableCollection<T>
         var oldViewIndex = _view.IndexOf(oldItem);
         if (oldViewIndex < 0)
         {
-            if (MatchesFilter(newItem))
+            if (IsSourceIndexInRange(sourceIndex) && MatchesFilter(newItem))
                 _ = HandleItemAdded(sourceIndex, newItem);
 
             return;
         }
 
-        if (!MatchesFilter(newItem))
+        if (!IsSourceIndexInRange(sourceIndex) || !MatchesFilter(newItem))
         {
             RemoveFromView(oldViewIndex, oldItem);
             return;
@@ -578,14 +620,14 @@ public class AdvancedObservableCollection<T>
         return Source.Count - 1;
     }
 
-    bool IList.Contains(object? value) => value is T item && RangedView.Contains(item);
+    bool IList.Contains(object? value) => value is T item && _view.Contains(item);
 
-    int IList.IndexOf(object? value) => value is T item ? RangedView.IndexOf(item) : -1;
+    int IList.IndexOf(object? value) => value is T item ? _view.IndexOf(item) : -1;
 
     void IList.Insert(int index, object? value)
     {
         ArgumentNullException.ThrowIfNull(value);
-        Source.Insert(index, (T)value);
+        Insert(index, (T)value);
     }
 
     void IList.Remove(object? value)
@@ -594,7 +636,7 @@ public class AdvancedObservableCollection<T>
             _ = Source.Remove(item);
     }
 
-    void ICollection.CopyTo(Array array, int index) => ((ICollection)RangedView).CopyTo(array, index);
+    void ICollection.CopyTo(Array array, int index) => ((ICollection)_view).CopyTo(array, index);
 
     bool ICollection.IsSynchronized => false;
 
@@ -604,11 +646,11 @@ public class AdvancedObservableCollection<T>
 
     object? IList.this[int index]
     {
-        get => RangedView[index];
+        get => _view[index];
         set
         {
             ArgumentNullException.ThrowIfNull(value);
-            Source[index] = (T)value;
+            this[index] = (T)value;
         }
     }
 

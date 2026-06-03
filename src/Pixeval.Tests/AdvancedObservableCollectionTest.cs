@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -331,6 +332,120 @@ public sealed class AdvancedObservableCollectionTest
 
         col.Insert(0, new(0));
         CollectionAssert.AreEqual((int[]) [3, 2, 1, 0], aoc.Select(item => item.Val).ToArray());
+    }
+
+    [TestMethod]
+    public void Test_Collection_Range_ResetsWhenSourceChanges()
+    {
+        var col = new ObservableCollection<SampleClass>
+        {
+            new(1),
+            new(2),
+            new(3),
+            new(4),
+            new(5)
+        };
+
+        var aoc = new AdvancedObservableCollection<SampleClass>(col)
+        {
+            Range = 1..4
+        };
+        var changes = new List<NotifyCollectionChangedEventArgs>();
+        aoc.CollectionChanged += (_, e) => changes.Add(e);
+
+        col.Insert(0, new(0));
+        col.Insert(3, new(30));
+        col.RemoveAt(2);
+
+        CollectionAssert.AreEqual((int[]) [1, 30, 3], aoc.Select(item => item.Val).ToArray());
+        Assert.AreEqual(3, changes.Count);
+        Assert.IsTrue(changes.All(change => change.Action is NotifyCollectionChangedAction.Reset));
+    }
+
+    [TestMethod]
+    public void Test_Collection_Range_AppliesBeforeFilterAndSort()
+    {
+        var col = new ObservableCollection<SampleClass>
+        {
+            new(4),
+            new(3),
+            new(2),
+            new(1),
+            new(0)
+        };
+
+        var aoc = new AdvancedObservableCollection<SampleClass>(col)
+        {
+            Range = 1..4
+        };
+        aoc.Filters.Add(IFilter<SampleClass>.Create(item => item.Val is not 2, false));
+        aoc.SortDescriptions.Add(ISortDescription<SampleClass>.Create(item => item.Val, true));
+
+        CollectionAssert.AreEqual((int[]) [3, 1], aoc.Select(item => item.Val).ToArray());
+    }
+
+    [TestMethod]
+    public void Test_Adaptor_Range_AppliesBeforeFilterAndSort()
+    {
+        var col = new ObservableCollection<SampleClass>
+        {
+            new(4),
+            new(3),
+            new(2),
+            new(1),
+            new(0)
+        };
+
+        var adaptor = new AdvancedObservableAdaptor<SampleClass, SampleViewModel>(col, item => new(item))
+        {
+            Range = 1..4
+        };
+        adaptor.Filters.Add(IFilter<SampleViewModel>.Create(item => item.Val is not 2, false));
+        adaptor.SortDescriptions.Add(ISortDescription<SampleViewModel>.Create(item => item.Val, true));
+
+        CollectionAssert.AreEqual((int[]) [3, 1], adaptor.Select(item => item.Val).ToArray());
+    }
+
+    [TestMethod]
+    public void Test_Adaptor_Range_UsesViewIndexForInsertAndRemove()
+    {
+        var col = new ObservableCollection<SampleClass>
+        {
+            new(0),
+            new(1),
+            new(2),
+            new(3)
+        };
+
+        var adaptor = new AdvancedObservableAdaptor<SampleClass, SampleViewModel>(col, item => new(item))
+        {
+            Range = 1..3
+        };
+
+        adaptor.Insert(1, new(10));
+        adaptor.RemoveAt(0);
+
+        CollectionAssert.AreEqual((int[]) [0, 10, 2, 3], col.Select(item => item.Val).ToArray());
+        CollectionAssert.AreEqual((int[]) [10, 2], adaptor.Select(item => item.Val).ToArray());
+    }
+
+    [TestMethod]
+    public void Test_Collection_Range_AllowsIncrementalChangesWhenInactive()
+    {
+        var col = new ObservableCollection<SampleClass>
+        {
+            new(1)
+        };
+
+        var aoc = new AdvancedObservableCollection<SampleClass>(col);
+        NotifyCollectionChangedEventArgs? change = null;
+        aoc.CollectionChanged += (_, e) => change = e;
+
+        col.Add(new(2));
+
+        Assert.IsNotNull(change);
+        Assert.AreEqual(NotifyCollectionChangedAction.Add, change.Action);
+        Assert.AreEqual(1, change.NewStartingIndex);
     }
 
     [TestMethod]

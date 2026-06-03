@@ -103,9 +103,18 @@ public class AdvancedObservableAdaptor<TIn, TOut>
 
     public int IndexOf(TOut item) => _inner.IndexOf(item);
 
-    public void Insert(int index, TIn item) => Source.Insert(index, item);
+    public void Insert(int index, TIn item)
+    {
+        var sourceIndex = index < _inner.Count ? MappedSource.IndexOf(_inner[index]) : Source.Count;
+        Source.Insert(sourceIndex, item);
+    }
 
-    public void RemoveAt(int index) => Source.RemoveAt(index);
+    public void RemoveAt(int index)
+    {
+        var mappedIndex = MappedSource.IndexOf(_inner[index]);
+        if (mappedIndex >= 0)
+            Source.RemoveAt(mappedIndex);
+    }
 
     public TOut this[int index] => _inner[index];
 
