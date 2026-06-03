@@ -13,7 +13,7 @@ public class CommentsViewViewModel(SimpleWorkType parentType, long parentId) : E
 
     public SimpleWorkType ParentType { get; } = parentType;
 
-    protected override SimpleViewDataProvider<Comment, CommentItemViewModel> DataProvider { get; } = new();
+    public override SimpleViewDataProvider<Comment, CommentItemViewModel> DataProvider { get; } = new();
 
     public virtual async Task<Comment> AddCommentAsync(string content)
     {

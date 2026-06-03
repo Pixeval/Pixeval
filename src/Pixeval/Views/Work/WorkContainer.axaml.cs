@@ -18,12 +18,7 @@ using Mako.Model;
 using Misaki;
 using Pixeval.Collections;
 using Pixeval.Controls;
-using Pixeval.Filters;
 using Pixeval.Filters.Analysis;
-using Pixeval.Filters.Nodes;
-using Pixeval.Filters.Syntax;
-using Pixeval.Filters.Text;
-using Pixeval.Filters.Values;
 using Pixeval.I18N;
 using Pixeval.Models.Filters;
 using Pixeval.Models.Options;
@@ -170,7 +165,7 @@ public partial class WorkContainer : UserControl
     }
 
     private SimpleWorkType GetTagSelectorWorkType(IWorkViewModel? target)
-        => target is NovelItemViewModel || DataContext is NovelViewViewModel
+        => target is NovelItemViewModel || DataContext is NovelViewViewModel or SimpleOperableViewViewModel<NovelItemViewModel>
             ? SimpleWorkType.Novel
             : SimpleWorkType.IllustrationAndManga;
 
@@ -354,9 +349,9 @@ public partial class WorkContainer : UserControl
         WorkView.SetSource(source);
     }
 
-    public void SetViewModel(IWorkViewViewModel viewModel)
+    public void SetViewModel(ISimpleViewViewModel viewModel, bool ownsViewModel = true)
     {
-        WorkView.SetViewModel(viewModel);
+        WorkView.SetViewModel(viewModel, ownsViewModel);
     }
 
     public static readonly FuncValueConverter<int, string> CancelSelectionButtonConverter = new(i => i > 0

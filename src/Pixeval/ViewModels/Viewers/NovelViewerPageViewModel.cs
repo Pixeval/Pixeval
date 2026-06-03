@@ -36,18 +36,17 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
         CurrentWorkIndex = currentNovelIndex;
     }
 
-    public NovelViewerPageViewModel(NovelViewViewModel viewModel, int currentNovelIndex)
+    public NovelViewerPageViewModel(ISourceView<NovelItemViewModel> dataProvider, int currentNovelIndex)
     {
-        ViewModelSource = new NovelViewViewModel(viewModel);
-        ViewModelSource.View.FilterChanged += (_, _) => CurrentWorkIndex = Novels.IndexOf(CurrentNovel);
+        DataProviderSource = dataProvider;
         CurrentWorkIndex = currentNovelIndex;
     }
 
-    private NovelViewViewModel? ViewModelSource { get; }
+    private ISourceView<NovelItemViewModel>? DataProviderSource { get; }
 
     public NovelItemViewModel[]? NovelsSource { get; }
 
-    public IList<NovelItemViewModel> Novels => ViewModelSource?.View ?? (IList<NovelItemViewModel>) NovelsSource!;
+    public IReadOnlyList<NovelItemViewModel> Novels => DataProviderSource?.View is { } view ? view : NovelsSource!;
 
     public NovelItemViewModel CurrentNovel => Novels[CurrentWorkIndex];
 
@@ -148,7 +147,7 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
     {
         GC.SuppressFinalize(this);
         _loadingCts.Cancel();
-        ViewModelSource?.Dispose();
+        DataProviderSource?.Dispose();
     }
 
     ~NovelViewerPageViewModel() => Dispose();

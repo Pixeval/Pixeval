@@ -23,5 +23,5 @@ public sealed class SpotlightViewViewModel : EntryViewViewModel<Spotlight, Spotl
         DataProvider = dataProvider;
     }
 
-    protected override SpotlightViewDataProvider DataProvider { get; }
+    public override SpotlightViewDataProvider DataProvider { get; }
 }

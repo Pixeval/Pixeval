@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Mako.Engine;
 using Misaki;
@@ -15,11 +16,11 @@ public abstract class EntryViewViewModel<T, TViewModel>
     where T : class, IIdentityInfo
     where TViewModel : ViewModelBase
 {
-    protected abstract IDataProvider<T, TViewModel> DataProvider { get; }
+    public abstract IDataProvider<T, TViewModel> DataProvider { get; }
 
     public AdvancedObservableCollection<TViewModel> View => DataProvider.View;
 
-    public IncrementalLoadingCollection<TViewModel> Source => DataProvider.Source;
+    public ObservableCollection<TViewModel> Source => DataProvider.Source;
 
     public void Dispose()
     {

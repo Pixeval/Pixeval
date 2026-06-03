@@ -381,7 +381,7 @@ public sealed partial class HomePageCardControl : TemplatedControl, IDisposable
             return;
 
         if (PreviewViewModel?.ViewModel is NovelViewViewModel viewViewModel)
-            viewContainer.CreateNovelPage(viewModel, viewViewModel);
+            viewContainer.CreateNovelPage(viewModel, viewViewModel.DataProvider.CloneRef());
         else
             await viewContainer.CreateNovelPageAsync(viewModel.Entry.Id);
     }
@@ -393,7 +393,7 @@ public sealed partial class HomePageCardControl : TemplatedControl, IDisposable
 
         if (PreviewViewModel?.ViewModel is IllustrationViewViewModel viewViewModel)
         {
-            viewContainer.CreateIllustrationPage(viewModel, viewViewModel);
+            viewContainer.CreateIllustrationPage(viewModel, viewViewModel.DataProvider.CloneRef());
             return;
         }
 

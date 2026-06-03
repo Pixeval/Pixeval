@@ -14,7 +14,6 @@ public sealed class IllustrationViewViewModel : WorkViewViewModelBase<IArtworkIn
     public IllustrationViewViewModel(IllustrationViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef(), viewModel.CachedBlockedTags)
     {
         UserFilter = viewModel.UserFilter;
-        View.Range = viewModel.View.Range;
     }
 
     public IllustrationViewViewModel() : this(new IllustrationViewDataProvider(), null)
@@ -27,7 +26,7 @@ public sealed class IllustrationViewViewModel : WorkViewViewModelBase<IArtworkIn
         SetFilters();
     }
 
-    protected override IllustrationViewDataProvider DataProvider { get; }
+    public override IllustrationViewDataProvider DataProvider { get; }
 
     public override bool RequireAdaptiveGrid => false;
 }

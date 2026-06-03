@@ -22,6 +22,8 @@ namespace Pixeval.Views.Work;
 
 public partial class WorkView : UserControl, IDisposable
 {
+    private bool _ownsDataContext = true;
+
     public event EventHandler<Control, IWorkViewModel>? RequestAddToBookmark;
 
     public ThumbnailLayoutType LayoutType
@@ -43,7 +45,7 @@ public partial class WorkView : UserControl, IDisposable
 
     private void UpdateLayoutPseudoClasses()
     {
-        var actualLayoutType = DataContext is IWorkViewViewModel { RequireAdaptiveGrid: true } ? ThumbnailLayoutType.Grid : LayoutType;
+        var actualLayoutType = DataContext is IOperableViewViewModel { RequireAdaptiveGrid: true } ? ThumbnailLayoutType.Grid : LayoutType;
         PseudoClasses.Set(":linedFlow", actualLayoutType is ThumbnailLayoutType.LinedFlow);
         PseudoClasses.Set(":verticalStack", actualLayoutType is ThumbnailLayoutType.VerticalStack);
         PseudoClasses.Set(":grid", actualLayoutType is ThumbnailLayoutType.Grid);
@@ -82,10 +84,16 @@ public partial class WorkView : UserControl, IDisposable
         switch (vm, DataContext)
         {
             case (NovelItemViewModel viewModel, NovelViewViewModel viewViewModel):
-                viewContainer.CreateNovelPage(viewModel, viewViewModel);
+                viewContainer.CreateNovelPage(viewModel, viewViewModel.DataProvider.CloneRef());
+                break;
+            case (NovelItemViewModel viewModel, SimpleOperableViewViewModel<NovelItemViewModel> viewViewModel):
+                viewContainer.CreateNovelPage(viewModel, viewViewModel.SourceView.CloneSourceView());
                 break;
             case (IllustrationItemViewModel viewModel, IllustrationViewViewModel viewViewModel):
-                viewContainer.CreateIllustrationPage(viewModel, viewViewModel);
+                viewContainer.CreateIllustrationPage(viewModel, viewViewModel.DataProvider.CloneRef());
+                break;
+            case (IllustrationItemViewModel viewModel, SimpleOperableViewViewModel<IllustrationItemViewModel> viewViewModel):
+                viewContainer.CreateIllustrationPage(viewModel, viewViewModel.SourceView.CloneSourceView());
                 break;
             case (NovelItemViewModel { Entry.Id: var id }, _):
                 await viewContainer.CreateNovelPageAsync(id);
@@ -120,14 +128,17 @@ public partial class WorkView : UserControl, IDisposable
 
     public void SetSource(IReadOnlyCollection<IArtworkInfo> source)
     {
-        SetViewModel(new SimpleOperableViewViewModel(source));
+        SetViewModel(new SimpleOperableViewViewModel<IWorkViewModel>(source));
     }
 
-    public void SetViewModel(ISimpleViewViewModel viewModel)
+    public void SetViewModel(ISimpleViewViewModel viewModel, bool ownsViewModel = true)
     {
         var oldViewModel = DataContext as IDisposable;
+        var oldOwnsDataContext = _ownsDataContext;
         DataContext = viewModel;
-        oldViewModel?.Dispose();
+        _ownsDataContext = ownsViewModel;
+        if (oldOwnsDataContext)
+            oldViewModel?.Dispose();
     }
 
     private void WorkItem_OnRequestAddToBookmark(Control sender, IWorkViewModel e) => RequestAddToBookmark?.Invoke(sender, e);
@@ -164,8 +175,9 @@ public partial class WorkView : UserControl, IDisposable
         GC.SuppressFinalize(this);
         var d = DataContext;
         DataContext = null!;
-        if (d is IDisposable viewModel)
+        if (_ownsDataContext && d is IDisposable viewModel)
             viewModel.Dispose();
+        _ownsDataContext = true;
     }
 
     ~WorkView() => Dispatcher.UIThread.InvokeAsync(Dispose);

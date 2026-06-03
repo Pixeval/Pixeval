@@ -21,8 +21,10 @@ namespace Pixeval.Views.Capability;
 
 public abstract partial class WorkTypeWorksPage : ContentPage
 {
-    public WorkTypeWorksPage()
+    protected WorkTypeWorksPage(string header, Symbol symbol)
     {
+        Header = header;
+        Icon = new SymbolIcon { Symbol = symbol, FontSize = 16, IconVariant = IconVariant.Color };
         InitializeComponent();
     }
 
@@ -75,10 +77,8 @@ public class WorkRecommendedPage : WorkTypeWorksPage
     {
     }
 
-    public WorkRecommendedPage(WorkType workType, IWorkViewViewModel? viewModel = null)
+    public WorkRecommendedPage(WorkType workType, IWorkViewViewModel? viewModel = null) : base(I18NManager.GetResource(MainPageResources.TabWorkRecommended), Symbol.Calendar)
     {
-        Header = I18NManager.GetResource(MainPageResources.TabWorkRecommended);
-        Icon = new SymbolIcon { Symbol = Symbol.Calendar, FontSize = 16, IconVariant = IconVariant.Color };
         InitializeSource(workType, viewModel);
     }
 
@@ -94,10 +94,8 @@ public class WorkNewPage : WorkTypeWorksPage
     {
     }
 
-    public WorkNewPage(WorkType workType, IWorkViewViewModel? viewModel = null)
+    public WorkNewPage(WorkType workType, IWorkViewViewModel? viewModel = null) : base(I18NManager.GetResource(MainPageResources.TabWorkNew), Symbol.ArrowSync)
     {
-        Header = I18NManager.GetResource(MainPageResources.TabWorkNew);
-        Icon = new SymbolIcon { Symbol = Symbol.ArrowSync, FontSize = 16, IconVariant = IconVariant.Color };
         InitializeSource(workType, viewModel);
     }
 
@@ -119,11 +117,9 @@ public class WorkPostsPage : WorkTypeWorksPage
     {
     }
 
-    public WorkPostsPage(UserBasicInfo user, WorkType workType, IWorkViewViewModel? viewModel = null)
+    public WorkPostsPage(UserBasicInfo user, WorkType workType, IWorkViewViewModel? viewModel = null) : base(string.Format(I18NManager.GetResource(MainPageResources.TabWorkPosts)), Symbol.Image)
     {
         _user = user;
-        Header = I18NManager.GetResource(MainPageResources.TabWorkPosts);
-        Icon = new SymbolIcon { Symbol = Symbol.Image, FontSize = 16, IconVariant = IconVariant.Color };
         EnableAddSubscriptionButton();
         InitializeSource(workType, viewModel);
     }

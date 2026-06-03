@@ -2,8 +2,11 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 
 namespace Pixeval.Collections;
@@ -19,6 +22,16 @@ public interface IDeferredCollection<T>
     SimpleDefer<T> DeferSortDescriptionsChange();
 
     SimpleDefer<T> DeferFiltersChange();
+}
+
+public interface IAdvancedObservableView<T>
+    : IDeferredCollection<T>, IReadOnlyList<T>, IList, INotifyCollectionChanged, INotifyPropertyChanged, IIncrementalLoading, IDisposable
+{
+    bool IsReversed { get; set; }
+
+    Range Range { get; set; }
+
+    int IndexOf(T item);
 }
 
 public abstract class DeferredCollectionBase<T> : IComparer<T>, IDeferredCollection<T>

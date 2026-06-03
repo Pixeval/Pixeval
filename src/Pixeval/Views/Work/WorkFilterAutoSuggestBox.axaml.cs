@@ -10,12 +10,8 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
-using Pixeval.Filters;
 using Pixeval.Filters.Analysis;
-using Pixeval.Filters.Nodes;
-using Pixeval.Filters.Syntax;
 using Pixeval.Filters.Text;
-using Pixeval.Filters.Values;
 
 namespace Pixeval.Views.Work;
 

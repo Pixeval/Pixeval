@@ -12,7 +12,6 @@ using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Pixeval.Collections;
-using Pixeval.Utilities;
 using SmoothScroll.Avalonia.Controls;
 
 namespace Pixeval.Controls;

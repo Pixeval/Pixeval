@@ -4,29 +4,32 @@
 using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using Avalonia.Collections;
-using Mako.Model;
 using Misaki;
 using Pixeval.Collections;
 using Pixeval.Utilities;
 
 namespace Pixeval.ViewModels;
 
-public class SimpleOperableViewViewModel : ViewModelBase, IOperableViewViewModel
+public class SimpleOperableViewViewModel<TViewModel> : ViewModelBase, IOperableViewViewModel, IDisposable
+    where TViewModel : class, IWorkViewModel
 {
     public SimpleOperableViewViewModel(IReadOnlyCollection<IArtworkInfo> source)
     {
-        View = new(source as ObservableCollection<IArtworkInfo> ?? [.. source], CreateWorkViewModel);
+        SourceView = new(source);
         SetFilters();
     }
+
+    public SimpleOperableSourceView<TViewModel> SourceView { get; }
 
     public FrozenSet<string> CachedBlockedTags { get; } = [.. App.AppViewModel.AppSettings.BlockedTags];
 
     public IFilter<IWorkViewModel> BlockedTagsFilter => IFilter<IWorkViewModel>.Create(
         entry => !entry.Entry.Tags.Any(t => t.Any(tag => CachedBlockedTags.Contains(tag.Name))),
         false);
+
+    private static IFilter<IWorkViewModel> TypeFilter { get; } = IFilter<IWorkViewModel>.Create(entry => entry is TViewModel, false);
 
     /// <inheritdoc />
     public bool IsSelecting { get; set; }
@@ -36,21 +39,22 @@ public class SimpleOperableViewViewModel : ViewModelBase, IOperableViewViewModel
 
     public void SetSortDescriptions(params IEnumerable<ISortDescription<IWorkViewModel>> descriptions)
     {
-        using (View.DeferSortDescriptionsChange())
+        using (SourceView.View.DeferSortDescriptionsChange())
         {
-            View.SortDescriptions.Clear();
-            View.SortDescriptions.AddRange(descriptions);
+            SourceView.View.SortDescriptions.Clear();
+            SourceView.View.SortDescriptions.AddRange(descriptions);
         }
     }
 
     private void SetFilters()
     {
-        using (View.DeferFiltersChange())
+        using (SourceView.View.DeferFiltersChange())
         {
-            View.Filters.Clear();
-            View.Filters.Add(BlockedTagsFilter);
+            SourceView.View.Filters.Clear();
+            SourceView.View.Filters.Add(TypeFilter);
+            SourceView.View.Filters.Add(BlockedTagsFilter);
             if (UserFilter is not null)
-                View.Filters.Add(UserFilter);
+                SourceView.View.Filters.Add(UserFilter);
         }
     }
 
@@ -67,23 +71,25 @@ public class SimpleOperableViewViewModel : ViewModelBase, IOperableViewViewModel
         }
     }
 
-    private AdvancedObservableAdaptor<IArtworkInfo, IWorkViewModel> View { get; }
+    /// <inheritdoc />
+    IReadOnlyCollection<IWorkViewModel> IOperableViewViewModel.View => SourceView.View;
 
     /// <inheritdoc />
-    IReadOnlyCollection<IWorkViewModel> IOperableViewViewModel.View => View;
-
-    /// <inheritdoc />
-    public IReadOnlyCollection<IWorkViewModel> Source => View.MappedSource;
+    public IReadOnlyCollection<IWorkViewModel> Source => SourceView.Source;
 
     /// <inheritdoc />
     public Range ViewRange
     {
-        get => View.Range;
-        set => View.Range = value;
+        get => SourceView.View.Range;
+        set => SourceView.View.Range = value;
     }
 
     /// <inheritdoc />
-    public bool RequireAdaptiveGrid => false;
+    public bool RequireAdaptiveGrid => typeof(TViewModel) == typeof(NovelItemViewModel);
 
-    private static IWorkViewModel CreateWorkViewModel(IArtworkInfo info) => info is Novel novel ? new NovelItemViewModel(novel) : new IllustrationItemViewModel(info);
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        SourceView.Dispose();
+    }
 }

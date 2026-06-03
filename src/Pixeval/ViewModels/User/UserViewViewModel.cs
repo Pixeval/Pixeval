@@ -23,5 +23,5 @@ public sealed class UserViewViewModel : EntryViewViewModel<User, UserItemViewMod
         DataProvider = dataProvider;
     }
 
-    protected override UserViewDataProvider DataProvider { get; }
+    public override UserViewDataProvider DataProvider { get; }
 }

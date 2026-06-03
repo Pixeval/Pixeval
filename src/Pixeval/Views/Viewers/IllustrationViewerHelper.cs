@@ -10,7 +10,6 @@ using Pixeval.Utilities;
 using Pixeval.ViewModels;
 using Pixeval.ViewModels.Viewers;
 using Pixeval.Views.ViewContainers;
-using Pixeval.Views.Work;
 
 namespace Pixeval.Views.Viewers;
 
@@ -19,29 +18,6 @@ public static class IllustrationViewerHelper
     /// <param name="control"></param>
     extension(ViewContainerBase control)
     {
-        /// <summary>
-        /// 此方法无法加载更多插画
-        /// </summary>
-        public async Task CreateIllustrationPageAsync(long id, ICollection<long> otherIds)
-        {
-            var viewModel = null as IllustrationItemViewModel;
-            var viewModels = new List<IllustrationItemViewModel>();
-            foreach (var otherId in otherIds)
-            {
-                var illustrationItemViewModel = IllustrationItemViewModel.CreateInstance(await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id));
-                viewModels.Add(illustrationItemViewModel);
-                if (otherId == id)
-                {
-                    viewModel = illustrationItemViewModel;
-                }
-            }
-
-            if (viewModel is null)
-                throw new InvalidOperationException("Specified illustration not found in the list.");
-
-            control.CreateIllustrationPage(viewModel, viewModels);
-        }
-
         /// <summary>
         /// 此方法无法加载更多插画，加载单张图使用
         /// </summary>
@@ -74,14 +50,14 @@ public static class IllustrationViewerHelper
         }
 
         /// <summary>
-        /// 此方法可以使用<paramref name="illustrationViewViewModel"/>的<see cref="IllustrationViewViewModel.DataProvider"/>来加载更多插画
+        /// 此方法可以使用<paramref name="sourceView"/>来加载更多插画
         /// </summary>
         /// <param name="illustrationViewModel">指定的插画ViewModel</param>
-        /// <param name="illustrationViewViewModel">指定的插画ViewModel所在的<see cref="WorkView"/>的ViewModel</param>
-        public void CreateIllustrationPage(IllustrationItemViewModel illustrationViewModel, IllustrationViewViewModel illustrationViewViewModel)
+        /// <param name="sourceView">指定的插画ViewModel所在的DataProvider</param>
+        public void CreateIllustrationPage(IllustrationItemViewModel illustrationViewModel, ISourceView<IllustrationItemViewModel> sourceView)
         {
-            var index = illustrationViewViewModel.View.IndexOf(illustrationViewModel);
-            CreateIllustrationPage(control, new IllustrationViewerPageViewModel(illustrationViewViewModel, index));
+            var index = sourceView.View.IndexOf(illustrationViewModel);
+            CreateIllustrationPage(control, new IllustrationViewerPageViewModel(sourceView, index));
         }
     }
 

@@ -8,11 +8,7 @@ using System.Linq;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.Input;
 using Misaki;
-using Pixeval.Filters;
-using Pixeval.Filters.Analysis;
 using Pixeval.Filters.Nodes;
-using Pixeval.Filters.Syntax;
-using Pixeval.Filters.Text;
 using Pixeval.Filters.Values;
 using Pixeval.Models.Filters;
 

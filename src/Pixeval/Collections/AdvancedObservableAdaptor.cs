@@ -17,7 +17,7 @@ namespace Pixeval.Collections;
 
 [DebuggerDisplay("Count = {Count}")]
 public class AdvancedObservableAdaptor<TIn, TOut>
-    : IDeferredCollection<TOut>, IList, IReadOnlyList<TOut>, INotifyCollectionChanged, INotifyPropertyChanged, IIncrementalLoading, IDisposable
+    : IAdvancedObservableView<TOut>
     where TIn : class
     where TOut : class
 {

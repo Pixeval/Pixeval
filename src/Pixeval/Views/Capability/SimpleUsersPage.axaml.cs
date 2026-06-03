@@ -18,8 +18,10 @@ namespace Pixeval.Views.Capability;
 
 public abstract partial class SimpleUsersPage : ContentPage
 {
-    public SimpleUsersPage()
+    protected SimpleUsersPage(string header, Symbol symbol)
     {
+        Header = header;
+        Icon = new SymbolIcon { Symbol = symbol, FontSize = 16, IconVariant = IconVariant.Color };
         InitializeComponent();
     }
 
@@ -55,10 +57,8 @@ public class UserRecommendPage : SimpleUsersPage
     {
     }
 
-    public UserRecommendPage(UserViewViewModel? viewModel)
+    public UserRecommendPage(UserViewViewModel? viewModel) : base(I18NManager.GetResource(MainPageResources.TabUserRecommended), Symbol.PeopleCommunity)
     {
-        Header = I18NManager.GetResource(MainPageResources.TabUserRecommended);
-        Icon = new SymbolIcon { Symbol = Symbol.PeopleCommunity, FontSize = 16, IconVariant = IconVariant.Color };
         InitializeSource(viewModel);
     }
 
@@ -76,11 +76,9 @@ public class UserSearchPage : SimpleUsersPage
     {
     }
 
-    public UserSearchPage(string? searchText, UserViewViewModel? viewModel = null)
+    public UserSearchPage(string? searchText, UserViewViewModel? viewModel = null) : base(I18NManager.GetResource(MainPageResources.SearchResultFormatted, searchText), Symbol.Person)
     {
         _searchText = searchText;
-        Header = I18NManager.GetResource(MainPageResources.SearchResultFormatted, _searchText);
-        Icon = new SymbolIcon { Symbol = Symbol.Person, FontSize = 16, IconVariant = IconVariant.Color };
         InitializeSource(viewModel);
     }
 
@@ -101,11 +99,9 @@ public class UserMyPixivPage : SimpleUsersPage
     {
     }
 
-    public UserMyPixivPage(long id, UserViewViewModel? viewModel = null)
+    public UserMyPixivPage(long id, UserViewViewModel? viewModel = null) : base(I18NManager.GetResource(MainPageResources.TabUserMyPixiv), Symbol.People)
     {
         _userId = id;
-        Header = I18NManager.GetResource(MainPageResources.TabUserMyPixiv);
-        Icon = new SymbolIcon { Symbol = Symbol.People, FontSize = 16, IconVariant = IconVariant.Color };
         InitializeSource(viewModel);
     }
 
@@ -124,11 +120,9 @@ public class RelatedUsersPage : SimpleUsersPage
     {
     }
 
-    public RelatedUsersPage(long id)
+    public RelatedUsersPage(long id) : base(I18NManager.GetResource(MainPageResources.TabRelatedUser), Symbol.PeopleCommunity)
     {
         _userId = id;
-        Header = I18NManager.GetResource(MainPageResources.TabRelatedUser);
-        Icon = new SymbolIcon { Symbol = Symbol.PeopleCommunity, FontSize = 16, IconVariant = IconVariant.Color };
         ChangeSource();
     }
 

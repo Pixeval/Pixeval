@@ -1,10 +1,5 @@
 using System.Collections.Generic;
-using Pixeval.Filters;
-using Pixeval.Filters.Analysis;
-using Pixeval.Filters.Nodes;
 using Pixeval.Filters.Syntax;
-using Pixeval.Filters.Text;
-using Pixeval.Filters.Values;
 using Pixeval.I18N;
 using Pixeval.ViewModels;
 

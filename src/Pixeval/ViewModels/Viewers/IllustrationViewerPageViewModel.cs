@@ -33,23 +33,22 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
     }
 
     /// <summary>
-    /// 当拥有DataProvider的时候调用这个构造函数，dispose的时候会自动dispose掉DataProvider
+    /// 当拥有独立DataProvider引用的时候调用这个构造函数，dispose的时候会自动dispose掉DataProvider
     /// </summary>
-    /// <param name="viewModel"></param>
+    /// <param name="dataProvider"></param>
     /// <param name="currentIllustrationIndex"></param>
     /// <remarks>
     /// illustrations should contain only one item if the illustration is a single
     /// otherwise it contains the entire manga data
     /// </remarks>
-    public IllustrationViewerPageViewModel(IllustrationViewViewModel viewModel, int currentIllustrationIndex)
+    public IllustrationViewerPageViewModel(ISourceView<IllustrationItemViewModel> dataProvider, int currentIllustrationIndex)
     {
-        ViewModelSource = new IllustrationViewViewModel(viewModel);
-        ViewModelSource.View.FilterChanged += (_, _) => CurrentWorkIndex = Illustrations.IndexOf(CurrentIllustration);
+        DataProviderSource = dataProvider;
         InitializeAutoPlayTimer();
         CurrentWorkIndex = currentIllustrationIndex;
     }
 
-    private IllustrationViewViewModel? ViewModelSource { get; }
+    private ISourceView<IllustrationItemViewModel>? DataProviderSource { get; }
 
     public IllustrationItemViewModel[]? IllustrationsSource { get; }
 
@@ -58,7 +57,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
         GC.SuppressFinalize(this);
         IsAutoPlaying = false;
         CurrentImage = null!;
-        ViewModelSource?.Dispose();
+        DataProviderSource?.Dispose();
     }
 
     ~IllustrationViewerPageViewModel() => Dispose();
@@ -183,7 +182,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
     /// <summary>
     /// 插画列表
     /// </summary>
-    public IList<IllustrationItemViewModel> Illustrations => ViewModelSource?.View ?? (IList<IllustrationItemViewModel>) IllustrationsSource!;
+    public IReadOnlyList<IllustrationItemViewModel> Illustrations => DataProviderSource?.View is { } view ? view : IllustrationsSource!;
 
     #endregion
 

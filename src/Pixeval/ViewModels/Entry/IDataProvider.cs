@@ -3,20 +3,30 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Misaki;
 using Pixeval.Collections;
 
 namespace Pixeval.ViewModels;
 
-public interface IDataProvider<T, TViewModel>
+public interface ISourceView<TViewModel>
     : INotifyPropertyChanged, INotifyPropertyChanging, IDisposable
+    where TViewModel : class
+{
+    IAdvancedObservableView<TViewModel> View { get; }
+
+    ObservableCollection<TViewModel> Source { get; }
+}
+
+public interface IDataProvider<T, TViewModel>
+    : ISourceView<TViewModel>
     where T : class, IIdentityInfo
     where TViewModel : class
 {
-    AdvancedObservableCollection<TViewModel> View { get; }
+    new AdvancedObservableCollection<TViewModel> View { get; }
 
-    IncrementalLoadingCollection<TViewModel> Source { get; }
+    IAdvancedObservableView<TViewModel> ISourceView<TViewModel>.View => View;
 
     void ResetEngine(IAsyncEnumerable<T>? fetchEngine, Func<T, int, TViewModel> factory, int itemsPerPage = 20, int limit = -1);
 }

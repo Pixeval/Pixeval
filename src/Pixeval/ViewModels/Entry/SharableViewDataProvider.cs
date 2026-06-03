@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Misaki;
 using Pixeval.Collections;
@@ -19,6 +20,8 @@ public class SharableViewDataProvider<T, TViewModel>
     where T : class, IIdentityInfo
     where TViewModel : EntryViewModel<T>
 {
+    private bool _isDisposed;
+
     protected SharedRef<IncrementalLoadingCollection<TViewModel>> EntrySourceRef
     {
         get;
@@ -36,7 +39,7 @@ public class SharableViewDataProvider<T, TViewModel>
 
     public AdvancedObservableCollection<TViewModel> View { get; } = [];
 
-    public IncrementalLoadingCollection<TViewModel> Source => EntrySourceRef.Value;
+    public ObservableCollection<TViewModel> Source => EntrySourceRef.Value;
 
     /// <summary>
     /// 多次释放可能导致崩溃
@@ -44,13 +47,17 @@ public class SharableViewDataProvider<T, TViewModel>
     public void Dispose()
     {
         GC.SuppressFinalize(this);
-        
+        if (_isDisposed)
+            return;
+
         DisposeEntrySourceRef();
+        View.Dispose();
+        _isDisposed = true;
     }
 
     public void ResetEngine(IAsyncEnumerable<T>? fetchEngine, Func<T, int, TViewModel> factory, int itemsPerPage = 20, int limit = -1)
     {
-        Dispose();
+        DisposeEntrySourceRef();
 
         EntrySourceRef = new(new(new IncrementalSource<T, TViewModel>(fetchEngine!, factory, limit), itemsPerPage), this);
     }
@@ -61,6 +68,7 @@ public class SharableViewDataProvider<T, TViewModel>
         dataProvider.EntrySourceRef = EntrySourceRef.MakeShared(dataProvider);
         dataProvider.View.FilterCombinationMode = View.FilterCombinationMode;
         dataProvider.View.IsReversed = View.IsReversed;
+        dataProvider.View.Range = View.Range;
         foreach (var viewSortDescription in View.SortDescriptions)
             dataProvider.View.SortDescriptions.Add(viewSortDescription);
         foreach (var viewFilter in View.Filters)

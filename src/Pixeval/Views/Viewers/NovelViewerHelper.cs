@@ -37,14 +37,14 @@ public static class NovelViewerHelper
         }
 
         /// <summary>
-        /// 此方法可以使用<paramref name="novelViewViewModel"/>的DataProvider来加载更多小说。
+        /// 此方法可以使用<paramref name="sourceView"/>来加载更多小说。
         /// </summary>
         /// <param name="novelViewModel">指定的小说ViewModel。</param>
-        /// <param name="novelViewViewModel">指定的小说ViewModel所在的WorkView的ViewModel。</param>
-        public void CreateNovelPage(NovelItemViewModel novelViewModel, NovelViewViewModel novelViewViewModel)
+        /// <param name="sourceView">指定的小说ViewModel所在的DataProvider。</param>
+        public void CreateNovelPage(NovelItemViewModel novelViewModel, ISourceView<NovelItemViewModel> sourceView)
         {
-            var index = novelViewViewModel.View.IndexOf(novelViewModel);
-            control.NavigateTo(new NovelViewerPage(new NovelViewerPageViewModel(novelViewViewModel, index)));
+            var index = sourceView.View.IndexOf(novelViewModel);
+            control.NavigateTo(new NovelViewerPage(new NovelViewerPageViewModel(sourceView, index)));
         }
     }
 }
