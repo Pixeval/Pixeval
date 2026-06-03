@@ -450,10 +450,10 @@ namespace Pixeval
         public const string DiagnosticsIndexRangeTooLarge = "Filter.Diagnostics.IndexRangeTooLarge";
         public const string DiagnosticsIntegerOutOfRange = "Filter.Diagnostics.IntegerOutOfRange";
         public const string DiagnosticsInternalExpectedDateValue = "Filter.Diagnostics.InternalExpectedDateValue";
-        public const string DiagnosticsInternalExpectedDoubleValue = "Filter.Diagnostics.InternalExpectedDoubleValue";
         public const string DiagnosticsInternalExpectedDoubleRangeValue = "Filter.Diagnostics.InternalExpectedDoubleRangeValue";
-        public const string DiagnosticsInternalExpectedLongValue = "Filter.Diagnostics.InternalExpectedLongValue";
+        public const string DiagnosticsInternalExpectedDoubleValue = "Filter.Diagnostics.InternalExpectedDoubleValue";
         public const string DiagnosticsInternalExpectedLongRangeValue = "Filter.Diagnostics.InternalExpectedLongRangeValue";
+        public const string DiagnosticsInternalExpectedLongValue = "Filter.Diagnostics.InternalExpectedLongValue";
         public const string DiagnosticsInternalExpectedTextValue = "Filter.Diagnostics.InternalExpectedTextValue";
         public const string DiagnosticsInternalUnsupportedLongRangeBindingMode = "Filter.Diagnostics.InternalUnsupportedLongRangeBindingMode";
         public const string DiagnosticsInternalViewRangeBindingFailed = "Filter.Diagnostics.InternalViewRangeBindingFailed";
@@ -640,15 +640,10 @@ namespace Pixeval
         public const string ExceptionEncountered = "Misc.ExceptionEncountered";
         public const string GoToPageFormatted = "Misc.GoToPageFormatted";
         public const string OpenBottomList = "Misc.OpenBottomList";
-        public const string OpenIllustrationId = "Misc.OpenIllustrationId";
-        public const string OpenNovelId = "Misc.OpenNovelId";
-        public const string OpenUserId = "Misc.OpenUserId";
         public const string Pause = "Misc.Pause";
         public const string PixevalBadgeFollowing = "Misc.PixevalBadge.Following";
         public const string Play = "Misc.Play";
         public const string RemovedFromWatchLater = "Misc.RemovedFromWatchLater";
-        public const string ReplyContentTooLong = "Misc.ReplyContentTooLong";
-        public const string SearchUser = "Misc.SearchUser";
         public const string UnexpectedBehavior = "Misc.UnexpectedBehavior";
     }
     public static class NovelViewerPageResources
@@ -697,7 +692,11 @@ namespace Pixeval
         public const string NovelIsReplaceableOnly = "Search.Novel.IsReplaceableOnly";
         public const string NovelLanguage = "Search.Novel.Language";
         public const string NovelMatchOption = "Search.Novel.MatchOption";
+        public const string OpenIdIllustration = "Search.OpenId.Illustration";
+        public const string OpenIdNovel = "Search.OpenId.Novel";
+        public const string OpenIdUser = "Search.OpenId.User";
         public const string SearchBoxPlaceholderText = "Search.SearchBox.PlaceholderText";
+        public const string SearchUser = "Search.SearchUser";
         public const string SectionsCommon = "Search.Sections.Common";
         public const string SectionsIllustration = "Search.Sections.Illustration";
         public const string SectionsNovel = "Search.Sections.Novel";

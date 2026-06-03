@@ -9,12 +9,7 @@
   "AllCountedTagName": "所有标签",
   "DownloadItemOpenFailed": "打开文件（夹）失败",
   "DownloadItemMaybeDeleted": "可能你已经删除了该作品",
-  "OpenUserId": "打开用户主页",
-  "OpenNovelId": "打开小说页面",
-  "OpenIllustrationId": "打开图片页面",
-  "SearchUser": "搜索作者",
   "UnexpectedBehavior": "发生了未定义的行为，如果你看到了该信息，请联系开发者寻求帮助",
-  "ReplyContentTooLong": "回复内容超过140字，请重新编辑",
   "GoToPageFormatted": "去{0}页",
   "Copied": "已复制",
   "PixevalBadge": {

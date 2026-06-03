@@ -22,6 +22,19 @@
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
+    <ContentPage.Resources>
+        <DataTemplate x:DataType="search:SearchCompletionItem" x:Key="SearchCompletionTemplate">
+            <StackPanel Margin="12,6" Spacing="1">
+                <TextBlock FontWeight="SemiBold" Text="{Binding Text}" />
+                <TextBlock
+                    FontSize="11"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    Text="{Binding Description}"
+                    TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+        </DataTemplate>
+    </ContentPage.Resources>
+
     <ScrollViewer>
         <DockPanel
             Margin="20"
@@ -34,9 +47,17 @@
                 <Expander.Header>
                     <AutoCompleteBox
                         x:Name="SearchAutoCompleteBox"
+                        FilterMode="None"
+                        GotFocus="SearchAutoCompleteBox_OnGotFocus"
+                        IsTextCompletionEnabled="False"
+                        ItemSelector="SearchAutoCompleteBox_OnSelectItem"
+                        ItemTemplate="{StaticResource SearchCompletionTemplate}"
                         KeyDown="SearchAutoCompleteBox_OnKeyDown"
+                        MinimumPrefixLength="1"
                         PlaceholderText="{I18N {x:Static pixeval:SearchResources.SearchBoxPlaceholderText}}"
-                        Text="{Binding SearchText, Mode=TwoWay}">
+                        TemplateApplied="SearchAutoCompleteBox_OnTemplateApplied"
+                        Text="{Binding SearchText, Mode=TwoWay}"
+                        TextChanged="SearchAutoCompleteBox_OnTextChanged">
                         <AutoCompleteBox.InnerRightContent>
                             <Button Click="SearchButton_OnClick" Content="{markup:SymbolIcon Search, FontSize=16}" />
                         </AutoCompleteBox.InnerRightContent>

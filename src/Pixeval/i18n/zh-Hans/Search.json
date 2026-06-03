@@ -60,5 +60,11 @@
   },
   "TrendingHeaderTextBlock": {
     "Text": "标签趋势"
-  }
+  },
+  "OpenId": {
+    "User": "打开用户主页",
+    "Illustration": "打开图片页面",
+    "Novel": "打开小说页面"
+  },
+  "SearchUser": "搜索用户"
 }
