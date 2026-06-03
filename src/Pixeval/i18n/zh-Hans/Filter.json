@@ -6,6 +6,8 @@
     "UnexpectedToken": "遇到了无法识别的内容：{0}",
     "MissingPredicateAfterNegation": "逻辑非 {0} 后缺少筛选条件",
     "MissingTextValue": "筛选条件 {0} 后缺少值",
+    "MissingLongValue": "筛选条件 {0} 后缺少整数值",
+    "MissingDoubleValue": "筛选条件 {0} 后缺少小数值",
     "MissingRangeValue": "筛选条件 {0} 后缺少范围值",
     "MissingDateValue": "筛选条件 {0} 后缺少日期值",
     "MissingGroupOperator": "在 ( 后需要 and 或 or，实际为 {0}",
@@ -32,6 +34,8 @@
     "InvalidDate": "筛选条件 {0} 的日期无效：{1}",
     "UnsupportedValueKind": "筛选条件 {0} 使用了未支持的筛选值类型：{1}",
     "InternalExpectedTextValue": "筛选器内部错误：筛选条件 {0} 期望字符串值",
+    "InternalExpectedLongValue": "筛选器内部错误：筛选条件 {0} 期望整数值",
+    "InternalExpectedDoubleValue": "筛选器内部错误：筛选条件 {0} 期望小数值",
     "InternalExpectedLongRangeValue": "筛选器内部错误：筛选条件 {0} 期望整数范围值",
     "InternalExpectedDoubleRangeValue": "筛选器内部错误：筛选条件 {0} 期望小数范围值",
     "InternalExpectedDateValue": "筛选器内部错误：筛选条件 {0} 期望日期值",
@@ -51,16 +55,52 @@
     "StartDate": "按起始发布日期筛选",
     "EndDate": "按结束发布日期筛选",
     "Include": {
-      "R18": "仅显示 R18",
+      "Constraint": "正约束",
+      "R18": "仅显示 R18（含R18G）",
       "R18G": "仅显示 R18G",
       "Gif": "仅显示动图",
       "Ai": "仅显示 AI 作品"
     },
     "Exclude": {
-      "R18": "排除 R18",
+      "Constraint": "反约束",
+      "R18": "排除 R18（含R18G）",
       "R18G": "排除 R18G",
       "Gif": "排除动图",
       "Ai": "排除 AI 作品"
+    },
+    "ValueHints": {
+      "Text": {
+        "Plain": "普通的字符串",
+        "Quoted": "带空格或转义字符的字符串",
+        "Exact": "完全匹配的字符串",
+        "QuotedExact": "完全匹配并且带空格或转义字符的字符串"
+      },
+      "Long": {
+        "Plain": "普通的整数"
+      },
+      "Double": {
+        "Integer": "整数形式的小数值",
+        "Decimal": "小数形式的小数值",
+        "Fraction": "分数形式的小数值"
+      },
+      "LongRange": {
+        "Lower": "大于等于 2",
+        "Upper": "小于等于 3",
+        "Closed": "大于等于 2 且小于等于 3"
+      },
+      "DoubleRange": {
+        "Lower": "大于等于 2",
+        "UpperDecimal": "小于等于 1.5",
+        "UpperFraction": "小于等于 1/2",
+        "ClosedFraction": "大于等于 1/2 且小于等于 3",
+        "ClosedDecimalFraction": "大于等于 0.3 且小于等于 1/2"
+      },
+      "Date": {
+        "MonthDayDash": "今年某月某日，- 分隔",
+        "MonthDayDot": "今年某月某日，. 分隔",
+        "FullDash": "某年某月某日，- 分隔",
+        "FullDot": "某年某月某日，. 分隔"
+      }
     }
   }
 }

@@ -11,6 +11,11 @@ using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Pixeval.Filters;
+using Pixeval.Filters.Analysis;
+using Pixeval.Filters.Nodes;
+using Pixeval.Filters.Syntax;
+using Pixeval.Filters.Text;
+using Pixeval.Filters.Values;
 
 namespace Pixeval.Views.Work;
 
@@ -178,11 +183,20 @@ public partial class WorkFilterAutoSuggestBox : UserControl
             _selectedFilterCompletion = null;
             FilterAutoSuggestBox.SelectedItem = null;
             FilterAutoSuggestBox.IsDropDownOpen = false;
-            Text = insertText;
+            if (!completion.IsHintOnly)
+                Text = insertText;
         }
         finally
         {
             _isCommittingFilterCompletion = false;
+        }
+
+        if (completion.IsHintOnly)
+        {
+            if (GetFilterTextBox() is { } focusedTextBox)
+                _ = focusedTextBox.Focus();
+
+            return true;
         }
 
         if (GetFilterTextBox() is { } textBox)
@@ -229,7 +243,7 @@ public partial class WorkFilterAutoSuggestBox : UserControl
         analysis ??= Analyze(normalized, GetCaretIndex(normalized));
         var suggestions = analysis.Completions
             .Select(completion => completion with { InsertText = ApplyCompletion(normalized, completion) })
-            .Where(completion => !string.Equals(completion.InsertText, normalized, StringComparison.Ordinal))
+            .Where(completion => completion.IsHintOnly || !string.Equals(completion.InsertText, normalized, StringComparison.Ordinal))
             .ToArray();
 
         var suggestionsChanged = !_filterCompletionItems.SequenceEqual(suggestions);

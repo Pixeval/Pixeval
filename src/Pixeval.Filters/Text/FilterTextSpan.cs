@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Pixeval.Filters;
+namespace Pixeval.Filters.Text;
 
 /// <summary>
 /// 表示过滤文本中的一个连续区间，用于高亮和诊断定位。

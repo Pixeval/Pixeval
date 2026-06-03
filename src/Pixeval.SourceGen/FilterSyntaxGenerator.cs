@@ -18,7 +18,7 @@ public class FilterSyntaxGenerator : IIncrementalGenerator
 {
     private const string AttributeName = "FilterSyntaxAttribute`1";
 
-    private const string AttributeNamespace = nameof(Pixeval) + ".Filters";
+    private const string AttributeNamespace = nameof(Pixeval) + ".Filters.Syntax";
 
     private const string AttributeFullName = AttributeNamespace + "." + AttributeName;
 
@@ -48,15 +48,19 @@ public class FilterSyntaxGenerator : IIncrementalGenerator
         var generatedType = ClassDeclaration("FilterSyntaxAttributeHelper")
             .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword))
             .WithOpenBraceToken(Token(SyntaxKind.OpenBraceToken))
-            .AddMembers([.. dictionary.Select(entry =>
-                    (MemberDeclarationSyntax)MethodDeclaration(
-                            ParseTypeName("global::System.Collections.Generic.IReadOnlyList<global::Pixeval.Filters.FilterSyntax>"),
+            .AddMembers([
+                .. dictionary.Select(MemberDeclarationSyntax (entry) =>
+                    MethodDeclaration(
+                            ParseTypeName(
+                                "global::System.Collections.Generic.IReadOnlyList<global::Pixeval.Filters.Syntax.FilterSyntax>"),
                             string.Format(getAttachedTypeInstances, entry.Key.Name))
                         .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
-                        .WithExpressionBody(ArrowExpressionClause(CollectionExpression(SeparatedList(entry.Value.Select(symbol =>
-                            (CollectionElementSyntax)ExpressionElement(ObjectCreationExpression(symbol.GetTypeSyntax(false))
-                                .WithArgumentList(ArgumentList())))))))
-                        .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)))] )
+                        .WithExpressionBody(ArrowExpressionClause(CollectionExpression(SeparatedList(
+                            entry.Value.Select(CollectionElementSyntax (symbol) =>
+                                ExpressionElement(ObjectCreationExpression(symbol.GetTypeSyntax(false))
+                                    .WithArgumentList(ArgumentList())))))))
+                        .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)))
+            ])
             .WithCloseBraceToken(Token(SyntaxKind.CloseBraceToken));
 
         var generatedNamespace = GetFileScopedNamespaceDeclaration(AttributeNamespace, generatedType, true);
