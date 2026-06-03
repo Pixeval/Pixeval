@@ -13,8 +13,6 @@
     "MissingGroupOperator": "在 ( 后需要 and 或 or，实际为 {0}",
     "MissingRightParenthesis": "缺少与 {0} 匹配的右括号 )",
     "InvalidValue": "筛选条件 {0} 的值无效",
-    "DuplicateViewRange": "视图范围筛选条件 {0} 最多只能指定一次",
-    "UnsupportedNegation": "视图范围筛选条件 {0} 不支持 {1}",
     "MissingStringQuote": "字符串 {0} 缺少结束引号",
     "InvalidLongRangeFormat": "筛选条件 {0} 的整数范围 {1} 无效，应使用 a-b、-b 或 a- 形式",
     "InvalidDoubleRangeFormat": "筛选条件 {0} 的小数范围 {1} 无效，应使用 a-b、-b 或 a- 形式",
@@ -27,9 +25,6 @@
     "DateValueTooLarge": "日期值 {0} 过大",
     "NegativeRangeUnsupported": "筛选条件 {0} 的范围起点不能小于 0，实际为 {1}",
     "RangeMinimumGreaterThanMaximum": "筛选条件 {0} 的范围最小值（{1}）必须小于或等于最大值（{2}）",
-    "IndexRangeStartsFromOne": "筛选条件 {0} 的索引范围从 1 开始，实际为 {1}-{2}",
-    "IndexRangeTooLarge": "筛选条件 {0} 的索引范围值过大：{1}",
-    "IndexRangeMinimumGreaterThanMaximum": "筛选条件 {0} 的索引范围最小值（{1}）必须小于最大值（{2}）",
     "DoubleRangeOpenIntervalUnsupported": "筛选条件 {0} 的小数范围暂不支持开区间写法",
     "InvalidDate": "筛选条件 {0} 的日期无效：{1}",
     "UnsupportedValueKind": "筛选条件 {0} 使用了未支持的筛选值类型：{1}",
@@ -38,9 +33,7 @@
     "InternalExpectedDoubleValue": "筛选器内部错误：筛选条件 {0} 期望小数值",
     "InternalExpectedLongRangeValue": "筛选器内部错误：筛选条件 {0} 期望整数范围值",
     "InternalExpectedDoubleRangeValue": "筛选器内部错误：筛选条件 {0} 期望小数范围值",
-    "InternalExpectedDateValue": "筛选器内部错误：筛选条件 {0} 期望日期值",
-    "InternalUnsupportedLongRangeBindingMode": "筛选器内部错误：筛选条件 {0} 不支持整数范围绑定模式 {1}",
-    "InternalViewRangeBindingFailed": "筛选器内部错误：筛选条件 {0} 视图范围绑定失败"
+    "InternalExpectedDateValue": "筛选器内部错误：筛选条件 {0} 期望日期值"
   },
   "Completions": {
     "And": "逻辑与分组，写法：(and 条件1 条件2)",
@@ -50,7 +43,6 @@
     "Tag": "按标签筛选",
     "Author": "按作者筛选",
     "Bookmark": "按收藏数筛选",
-    "Index": "限定当前页展示索引范围",
     "Ratio": "按图片比例筛选",
     "StartDate": "按起始发布日期筛选",
     "EndDate": "按结束发布日期筛选",

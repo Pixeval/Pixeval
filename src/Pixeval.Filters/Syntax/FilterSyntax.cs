@@ -15,8 +15,6 @@ public abstract class FilterSyntax
 {
     public abstract string Key { get; }
 
-    public virtual FilterTermRole Role => FilterTermRole.Predicate;
-
     public abstract FilterValueKind ValueKind { get; }
 
     public abstract IReadOnlyList<FilterSyntaxPattern> Patterns { get; }

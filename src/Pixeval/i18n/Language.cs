@@ -411,7 +411,6 @@ namespace Pixeval
         public const string CompletionsIncludeGif = "Filter.Completions.Include.Gif";
         public const string CompletionsIncludeR18 = "Filter.Completions.Include.R18";
         public const string CompletionsIncludeR18G = "Filter.Completions.Include.R18G";
-        public const string CompletionsIndex = "Filter.Completions.Index";
         public const string CompletionsNot = "Filter.Completions.Not";
         public const string CompletionsOr = "Filter.Completions.Or";
         public const string CompletionsRatio = "Filter.Completions.Ratio";
@@ -443,11 +442,7 @@ namespace Pixeval
         public const string DiagnosticsDateValueTooLarge = "Filter.Diagnostics.DateValueTooLarge";
         public const string DiagnosticsDenominatorCannotBeZero = "Filter.Diagnostics.DenominatorCannotBeZero";
         public const string DiagnosticsDoubleRangeOpenIntervalUnsupported = "Filter.Diagnostics.DoubleRangeOpenIntervalUnsupported";
-        public const string DiagnosticsDuplicateViewRange = "Filter.Diagnostics.DuplicateViewRange";
         public const string DiagnosticsExpectedInteger = "Filter.Diagnostics.ExpectedInteger";
-        public const string DiagnosticsIndexRangeMinimumGreaterThanMaximum = "Filter.Diagnostics.IndexRangeMinimumGreaterThanMaximum";
-        public const string DiagnosticsIndexRangeStartsFromOne = "Filter.Diagnostics.IndexRangeStartsFromOne";
-        public const string DiagnosticsIndexRangeTooLarge = "Filter.Diagnostics.IndexRangeTooLarge";
         public const string DiagnosticsIntegerOutOfRange = "Filter.Diagnostics.IntegerOutOfRange";
         public const string DiagnosticsInternalExpectedDateValue = "Filter.Diagnostics.InternalExpectedDateValue";
         public const string DiagnosticsInternalExpectedDoubleRangeValue = "Filter.Diagnostics.InternalExpectedDoubleRangeValue";
@@ -455,8 +450,6 @@ namespace Pixeval
         public const string DiagnosticsInternalExpectedLongRangeValue = "Filter.Diagnostics.InternalExpectedLongRangeValue";
         public const string DiagnosticsInternalExpectedLongValue = "Filter.Diagnostics.InternalExpectedLongValue";
         public const string DiagnosticsInternalExpectedTextValue = "Filter.Diagnostics.InternalExpectedTextValue";
-        public const string DiagnosticsInternalUnsupportedLongRangeBindingMode = "Filter.Diagnostics.InternalUnsupportedLongRangeBindingMode";
-        public const string DiagnosticsInternalViewRangeBindingFailed = "Filter.Diagnostics.InternalViewRangeBindingFailed";
         public const string DiagnosticsInvalidDate = "Filter.Diagnostics.InvalidDate";
         public const string DiagnosticsInvalidDoubleRangeFormat = "Filter.Diagnostics.InvalidDoubleRangeFormat";
         public const string DiagnosticsInvalidDoubleValue = "Filter.Diagnostics.InvalidDoubleValue";
@@ -476,7 +469,6 @@ namespace Pixeval
         public const string DiagnosticsNegativeRangeUnsupported = "Filter.Diagnostics.NegativeRangeUnsupported";
         public const string DiagnosticsRangeMinimumGreaterThanMaximum = "Filter.Diagnostics.RangeMinimumGreaterThanMaximum";
         public const string DiagnosticsUnexpectedToken = "Filter.Diagnostics.UnexpectedToken";
-        public const string DiagnosticsUnsupportedNegation = "Filter.Diagnostics.UnsupportedNegation";
         public const string DiagnosticsUnsupportedValueKind = "Filter.Diagnostics.UnsupportedValueKind";
         public const string FilterQueryError = "Filter.FilterQueryError";
     }

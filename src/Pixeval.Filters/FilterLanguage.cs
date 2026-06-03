@@ -160,7 +160,7 @@ public sealed class FilterLanguage
             if (completionFragment.IsEmpty && IsCoveredByFullCompletion(match))
                 continue;
 
-            var insertText = GetSyntaxInsertText(match.CompletionInsertText, match.Syntax.Role, isNegated);
+            var insertText = GetSyntaxInsertText(match.CompletionInsertText, isNegated);
             if (seen.Add(CreateCompletionGroupKey(match)))
                 completions.Add(new(completion, insertText, replacementSpan, match.Description));
         }
@@ -185,14 +185,13 @@ public sealed class FilterLanguage
         => $"full-completion|{completion.Key}";
 
     /// <summary>
-    /// 根据语法角色和取反状态生成实际插入文本。
+    /// 根据取反状态生成实际插入文本。
     /// </summary>
     /// <param name="insertText">语法定义提供的插入文本。</param>
-    /// <param name="role">语法项角色。</param>
     /// <param name="isNegated">当前补全是否位于取反前缀之后。</param>
     /// <returns>最终应插入到输入框中的文本。</returns>
-    private static string GetSyntaxInsertText(string insertText, FilterTermRole role, bool isNegated)
-        => isNegated && role is not FilterTermRole.ViewRange ? $"!{insertText}" : insertText;
+    private static string GetSyntaxInsertText(string insertText, bool isNegated)
+        => isNegated ? $"!{insertText}" : insertText;
 
     /// <summary>
     /// 判断指定语法匹配项是否已被某个全量补全项覆盖。
@@ -277,7 +276,7 @@ public sealed class FilterLanguage
             if (seen.Add(CreateFullCompletionKey(completion)))
                 completions.Add(new(
                     completion.DisplayText,
-                    GetSyntaxInsertText(completion.InsertText, completion.Role, isNegated),
+                    GetSyntaxInsertText(completion.InsertText, isNegated),
                     replacementSpan,
                     completion.Description));
         }
@@ -473,8 +472,6 @@ public sealed class FilterLanguage
     private sealed class Parser(FilterLanguage language, string text)
     {
         private int _position;
-        private bool _viewRangeAssigned;
-        private Range _viewRange = Range.All;
         private readonly List<FilterDiagnostic> _diagnostics = [];
 
         public IReadOnlyList<FilterDiagnostic> Diagnostics => _diagnostics;
@@ -491,7 +488,7 @@ public sealed class FilterLanguage
                 AddUnexpectedTokenDiagnostic(CurrentTokenSpan());
 
             return _diagnostics.Count is 0
-                ? new(new(FilterLogicalOperator.And, children.ToArray(), FilterTextSpan.FromBounds(0, text.Length)), _viewRangeAssigned ? _viewRange : Range.All)
+                ? new(new(FilterLogicalOperator.And, children.ToArray(), FilterTextSpan.FromBounds(0, text.Length)))
                 : null;
         }
 
@@ -666,31 +663,6 @@ public sealed class FilterLanguage
             {
                 _diagnostics.Add(diagnostic!);
                 return false;
-            }
-
-            if (match.Syntax.Role is FilterTermRole.ViewRange)
-            {
-                if (isNegated)
-                {
-                    AddDiagnostic(FilterDiagnosticKind.UnsupportedNegation, termSpan, match.DiagnosticText, "!");
-                    return false;
-                }
-
-                if (_viewRangeAssigned)
-                {
-                    AddDiagnostic(FilterDiagnosticKind.DuplicateViewRange, termSpan, match.DiagnosticText);
-                    return false;
-                }
-
-                if (boundValue is not Range viewRange)
-                {
-                    AddDiagnostic(FilterDiagnosticKind.InternalViewRangeBindingFailed, termSpan, match.DiagnosticText);
-                    return false;
-                }
-
-                _viewRange = viewRange;
-                _viewRangeAssigned = true;
-                return true;
             }
 
             node = new FilterPredicateNode(match.Syntax, boundValue, termSpan, isNegated);

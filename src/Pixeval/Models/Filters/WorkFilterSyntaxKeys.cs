@@ -9,7 +9,6 @@ internal static class WorkFilterSyntaxKeys
     public const string Tag = nameof(Tag);
     public const string Author = nameof(Author);
     public const string Bookmark = nameof(Bookmark);
-    public const string Index = nameof(Index);
     public const string Ratio = nameof(Ratio);
     public const string StartDate = nameof(StartDate);
     public const string EndDate = nameof(EndDate);

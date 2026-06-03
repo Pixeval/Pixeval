@@ -78,13 +78,6 @@ public class SimpleOperableViewViewModel<TViewModel> : ViewModelBase, IOperableV
     public IReadOnlyCollection<IWorkViewModel> Source => SourceView.Source;
 
     /// <inheritdoc />
-    public Range ViewRange
-    {
-        get => SourceView.View.Range;
-        set => SourceView.View.Range = value;
-    }
-
-    /// <inheritdoc />
     public bool RequireAdaptiveGrid => typeof(TViewModel) == typeof(NovelItemViewModel);
 
     public void Dispose()

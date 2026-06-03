@@ -1,7 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
-using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,12 +72,6 @@ public abstract partial class WorkViewViewModelBase<T, TViewModel>(FrozenSet<str
     IReadOnlyCollection<IWorkViewModel> IOperableViewViewModel.View => View;
 
     IReadOnlyCollection<IWorkViewModel> IOperableViewViewModel.Source => Source;
-
-    public Range ViewRange
-    {
-        get => View.Range;
-        set => View.Range = value;
-    }
 
     public abstract bool RequireAdaptiveGrid { get; }
 

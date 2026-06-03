@@ -3,21 +3,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using Misaki;
 using Pixeval.Collections;
 
 namespace Pixeval.ViewModels;
-
-public interface ISourceView<TViewModel>
-    : INotifyPropertyChanged, INotifyPropertyChanging, IDisposable
-    where TViewModel : class
-{
-    IAdvancedObservableView<TViewModel> View { get; }
-
-    ObservableCollection<TViewModel> Source { get; }
-}
 
 public interface IDataProvider<T, TViewModel>
     : ISourceView<TViewModel>

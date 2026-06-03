@@ -68,7 +68,6 @@ public class SharableViewDataProvider<T, TViewModel>
         dataProvider.EntrySourceRef = EntrySourceRef.MakeShared(dataProvider);
         dataProvider.View.FilterCombinationMode = View.FilterCombinationMode;
         dataProvider.View.IsReversed = View.IsReversed;
-        dataProvider.View.Range = View.Range;
         foreach (var viewSortDescription in View.SortDescriptions)
             dataProvider.View.SortDescriptions.Add(viewSortDescription);
         foreach (var viewFilter in View.Filters)

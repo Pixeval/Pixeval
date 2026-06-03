@@ -1,7 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Avalonia.Collections;
@@ -27,8 +26,6 @@ public interface IOperableViewViewModel : ISimpleViewViewModel
     IFilter<IWorkViewModel> BlockedTagsFilter { get; }
 
     IFilter<IWorkViewModel>? UserFilter { get; set; }
-
-    Range ViewRange { get; set; }
 
     bool RequireAdaptiveGrid { get; }
 

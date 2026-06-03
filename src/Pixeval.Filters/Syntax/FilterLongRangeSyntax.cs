@@ -11,12 +11,10 @@ namespace Pixeval.Filters.Syntax;
 /// </summary>
 public abstract class FilterLongRangeSyntax : FilterSyntax
 {
-    protected abstract FilterLongRangeBindingMode BindingMode { get; }
-
     public sealed override FilterValueKind ValueKind => FilterValueKind.LongRange;
 
     /// <summary>
-    /// 按当前绑定模式将原始整数范围转换为具体语义对象。
+    /// 将原始整数范围转换为闭区间语义对象。
     /// </summary>
     protected sealed override bool TryBindCore(FilterSyntaxMatch match, FilterValue rawValue, out object? value, out FilterDiagnostic? diagnostic)
     {
@@ -27,30 +25,13 @@ public abstract class FilterLongRangeSyntax : FilterSyntax
             return false;
         }
 
-        switch (BindingMode)
+        if (FilterLongRange.TryCreate(range.Value, rawValue.Span, match.DiagnosticText, out var inclusiveRange, out diagnostic))
         {
-            case FilterLongRangeBindingMode.Inclusive:
-                if (FilterLongRange.TryCreate(range.Value, rawValue.Span, match.DiagnosticText, out var inclusiveRange, out diagnostic))
-                {
-                    value = inclusiveRange;
-                    return true;
-                }
-
-                value = null;
-                return false;
-            case FilterLongRangeBindingMode.OneBasedIndex:
-                if (FilterLongRange.TryCreateIndexRange(range.Value, rawValue.Span, match.DiagnosticText, out var viewRange, out diagnostic))
-                {
-                    value = viewRange;
-                    return true;
-                }
-
-                value = null;
-                return false;
-            default:
-                value = null;
-                diagnostic = new(FilterDiagnosticKind.InternalUnsupportedLongRangeBindingMode, rawValue.Span, match.DiagnosticText, BindingMode);
-                return false;
+            value = inclusiveRange;
+            return true;
         }
+
+        value = null;
+        return false;
     }
 }

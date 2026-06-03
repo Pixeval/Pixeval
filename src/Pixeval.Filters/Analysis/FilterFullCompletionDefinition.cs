@@ -2,7 +2,6 @@
 // Licensed under the GPL v3 License.
 
 using System.Collections.Generic;
-using Pixeval.Filters.Syntax;
 
 namespace Pixeval.Filters.Analysis;
 
@@ -14,5 +13,4 @@ public sealed record FilterFullCompletionDefinition(
     string DisplayText,
     string InsertText,
     string? Description = null,
-    FilterTermRole Role = FilterTermRole.Predicate,
     IReadOnlyList<string>? CoveredSyntaxPrefixes = null);

@@ -226,7 +226,6 @@ public partial class WorkContainer : UserControl
         if (string.IsNullOrWhiteSpace(text))
         {
             viewModel.UserFilter = null;
-            viewModel.ViewRange = Range.All;
             WorkFilterAutoSuggestBox.ClearSelection();
             WorkFilterAutoSuggestBox.RefreshCompletions();
             return;
@@ -250,7 +249,6 @@ public partial class WorkContainer : UserControl
         viewModel.UserFilter = query.HasPredicates
             ? IFilter<IWorkViewModel>.Create(o => o.Filter(query.Root), false)
             : null;
-        viewModel.ViewRange = query.ViewRange;
         WorkFilterAutoSuggestBox.ClearSelection();
     }
 

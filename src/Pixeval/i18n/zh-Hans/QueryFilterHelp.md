@@ -9,7 +9,6 @@
 | @[str]         | 作者                         |
 | +[const]       | 正约束                       |
 | -[const]       | 反约束                       |
-| i:[int-range]  | 筛选作品的序号               |
 | l:[int-range]  | 筛选作品的收藏数             |
 | r:[frac-range] | 筛选插画的横纵比，对小说无效 |
 | s:[date]       | 开始发布日期                 |

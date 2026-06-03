@@ -18,8 +18,6 @@ public enum FilterDiagnosticKind
     MissingGroupOperator,
     MissingRightParenthesis,
     InvalidValue,
-    DuplicateViewRange,
-    UnsupportedNegation,
     MissingStringQuote,
     InvalidLongRangeFormat,
     InvalidDoubleRangeFormat,
@@ -32,9 +30,6 @@ public enum FilterDiagnosticKind
     DateValueTooLarge,
     NegativeRangeUnsupported,
     RangeMinimumGreaterThanMaximum,
-    IndexRangeStartsFromOne,
-    IndexRangeTooLarge,
-    IndexRangeMinimumGreaterThanMaximum,
     DoubleRangeOpenIntervalUnsupported,
     InvalidDate,
     UnsupportedValueKind,
@@ -43,7 +38,5 @@ public enum FilterDiagnosticKind
     InternalExpectedDoubleValue,
     InternalExpectedLongRangeValue,
     InternalExpectedDoubleRangeValue,
-    InternalExpectedDateValue,
-    InternalUnsupportedLongRangeBindingMode,
-    InternalViewRangeBindingFailed
+    InternalExpectedDateValue
 }
