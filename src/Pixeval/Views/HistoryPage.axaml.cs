@@ -42,8 +42,8 @@ public abstract partial class HistoryPage : ContentPage, IDisposable
 
     protected void SetSource()
     {
-        _illustrationViewModel = new(Source);
-        _novelViewModel = new(Source);
+        _illustrationViewModel = new(Source, needRefreshOnOpen: true);
+        _novelViewModel = new(Source, needRefreshOnOpen: true);
         SimpleWorkTypeComboBox_OnSelectionChanged(SimpleWorkTypeComboBox, EventArgs.Empty);
     }
 

@@ -24,33 +24,74 @@ namespace Pixeval.ViewModels.Viewers;
 
 public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDisposable
 {
+    private readonly Dictionary<int, NovelItemViewModel> _refreshedNovels = [];
+
+    private readonly bool _needRefresh;
+
+    private readonly ISourceView<NovelItemViewModel>? _sourceView;
+
     [ObservableProperty]
     public partial bool IsLoading { get; private set; }
 
     [ObservableProperty]
-    public partial IReadOnlyList<Page>? PanePages { get; private set; }
+    public partial string? LoadErrorMessage { get; private set; }
 
-    public NovelViewerPageViewModel(IEnumerable<NovelItemViewModel> novelViewModels, int currentNovelIndex)
+    public IReadOnlyList<Page> PanePages => CurrentNovel is { } currentNovel
+        ?
+        [
+            new WorkInfoPage(currentNovel.Entry),
+            new CommentsPage(new CommentsViewViewModel(SimpleWorkType.Novel, currentNovel.Entry.Id)),
+            SettingsPage
+        ]
+        : [];
+
+    public NovelViewerPageViewModel(NovelItemViewModel novelViewModel, bool needRefresh)
     {
-        NovelsSource = [.. novelViewModels];
+        _needRefresh = needRefresh;
+        CurrentNovel = novelViewModel;
+        CurrentWorkIndex = 0;
+    }
+
+    public NovelViewerPageViewModel(long id)
+    {
+        _ = LoadSingleNovelAsync(id, _loadingCts.Token);
+    }
+
+    public NovelViewerPageViewModel(ISourceView<NovelItemViewModel> dataProvider, int currentNovelIndex, bool needRefresh)
+    {
+        _needRefresh = needRefresh;
+        _sourceView = dataProvider;
         CurrentWorkIndex = currentNovelIndex;
     }
 
-    public NovelViewerPageViewModel(ISourceView<NovelItemViewModel> dataProvider, int currentNovelIndex)
+    public IReadOnlyList<NovelItemViewModel>? Novels => _sourceView?.View;
+
+    public NovelItemViewModel? CurrentNovel
     {
-        DataProviderSource = dataProvider;
-        CurrentWorkIndex = currentNovelIndex;
+        get
+        {
+            if (_refreshedNovels.TryGetValue(CurrentWorkIndex, out var value))
+                return value;
+
+            if (field is not null)
+                return field;
+
+            return CurrentWorkIndex < 0 || CurrentWorkIndex >= WorkCount
+                ? null
+                : _sourceView?.View[CurrentWorkIndex];
+        }
+        private set
+        {
+            if (Equals(value, field))
+                return;
+            field = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(NovelId));
+            OnPropertyChanged(nameof(PanePages));
+        }
     }
 
-    private ISourceView<NovelItemViewModel>? DataProviderSource { get; }
-
-    public NovelItemViewModel[]? NovelsSource { get; }
-
-    public IReadOnlyList<NovelItemViewModel> Novels => DataProviderSource?.View is { } view ? view : NovelsSource!;
-
-    public NovelItemViewModel CurrentNovel => Novels[CurrentWorkIndex];
-
-    public long NovelId => CurrentNovel.Entry.Id;
+    public long NovelId => CurrentNovel?.Entry.Id ?? 0;
 
     public override int CurrentWorkIndex
     {
@@ -63,11 +104,12 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
                 return;
 
             field = value;
-            BuildPanePages();
             _ = LoadCurrentNovelAsync();
 
             OnPropertyChanged();
             OnPropertyChanged(nameof(NovelId));
+            OnPropertyChanged(nameof(CurrentNovel));
+            OnPropertyChanged(nameof(PanePages));
         }
         // 第一次赋值属性时会判断 value == field，如果是0则无法进入set方法体
         // ReSharper disable once MemberInitializerValueIgnored
@@ -94,7 +136,7 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
     public override int PageCount => _pageMarkdowns.Count;
 
     /// <inheritdoc />
-    public override int WorkCount => Novels.Count;
+    public override int WorkCount => Novels?.Count ?? 1;
 
     public bool IsMultiPage => PageCount > 1;
 
@@ -143,42 +185,69 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
 
     #endregion
 
-    public void Dispose()
-    {
-        GC.SuppressFinalize(this);
-        _loadingCts.Cancel();
-        DataProviderSource?.Dispose();
-    }
-
-    ~NovelViewerPageViewModel() => Dispose();
-
     private List<string> _pageMarkdowns = [];
 
     private CancellationTokenSource _loadingCts = new();
 
+    private async Task LoadSingleNovelAsync(long id, CancellationToken token)
+    {
+        var novel = await LoadNovelAsync(id, item => CurrentNovel = item, token);
+        if (novel is null || token.IsCancellationRequested)
+        {
+            if (!token.IsCancellationRequested)
+                IsLoading = false;
+            return;
+        }
+
+        if (CurrentWorkIndex is 0)
+            await LoadCurrentNovelAsync();
+        else
+            CurrentWorkIndex = 0;
+    }
+
     private async Task LoadCurrentNovelAsync()
     {
-        await _loadingCts.CancelAsync();
-        _loadingCts = new CancellationTokenSource();
-        var token = _loadingCts.Token;
+        if (_disposed)
+            return;
+
+        var index = CurrentWorkIndex;
+        var token = ResetLoadingToken();
 
         IsLoading = true;
+        LoadErrorMessage = null;
         try
         {
-            var content = await CurrentNovel.ContentAsync;
+            var currentNovel = await GetCurrentNovelAsync(index, token);
             token.ThrowIfCancellationRequested();
+            if (currentNovel is null || index != CurrentWorkIndex || _disposed)
+                return;
 
-            App.AppViewModel.HistoryPersistHelper.AddBrowseHistory(CurrentNovel.Entry);
+            var content = await currentNovel.ContentAsync;
+            token.ThrowIfCancellationRequested();
+            if (index != CurrentWorkIndex || _disposed)
+                return;
+
+            App.AppViewModel.HistoryPersistHelper.AddBrowseHistory(currentNovel.Entry);
             var markdowns = await Task.Run(() => BuildPageMarkdowns(content), token);
             token.ThrowIfCancellationRequested();
+            if (index != CurrentWorkIndex || _disposed)
+                return;
 
             _pageMarkdowns = markdowns;
             CurrentPageIndex = 0;
             OnPropertyChanged(nameof(PageCount));
             OnPropertyChanged(nameof(IsMultiPage));
+            OnPropertyChanged(nameof(CurrentNovel));
+            OnPropertyChanged(nameof(NovelId));
+            OnPropertyChanged(nameof(PanePages));
         }
         catch (OperationCanceledException)
         {
+        }
+        catch (Exception e)
+        {
+            if (!token.IsCancellationRequested)
+                LoadErrorMessage = e.Message;
         }
         finally
         {
@@ -206,21 +275,67 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
                 pages.Add(sb.ToString());
             }
 
-            if (pages.Count == 0)
+            if (pages.Count is 0)
                 pages.Add("");
 
             return pages;
         }
     }
 
-    private void BuildPanePages()
+    private async Task<NovelItemViewModel?> GetCurrentNovelAsync(int index, CancellationToken token)
     {
-        PanePages =
-        [
-            new WorkInfoPage(CurrentNovel.Entry),
-            new CommentsPage(new CommentsViewViewModel(SimpleWorkType.Novel, NovelId)),
-            SettingsPage
-        ];
+        if (!_needRefresh)
+            return CurrentNovel;
+
+        if (_sourceView is not null && _refreshedNovels.TryGetValue(index, out var cached))
+            return cached;
+
+        if (CurrentNovel is not { Entry.Id: var id })
+            return null;
+
+        return await LoadNovelAsync(
+            id,
+            novel =>
+            {
+                // 单项刷新写回当前项，列表刷新只缓存到当前 Viewer，避免污染原始 SourceView。
+                if (_sourceView is null)
+                    CurrentNovel = novel;
+                else
+                    _refreshedNovels[index] = novel;
+            },
+            token);
+    }
+
+    private CancellationToken ResetLoadingToken()
+    {
+        _loadingCts.Cancel();
+        _loadingCts.Dispose();
+        _loadingCts = new CancellationTokenSource();
+        return _loadingCts.Token;
+    }
+
+    private async Task<NovelItemViewModel?> LoadNovelAsync(long id, Action<NovelItemViewModel> onLoaded, CancellationToken token)
+    {
+        IsLoading = true;
+        LoadErrorMessage = null;
+        try
+        {
+            var novel = await App.AppViewModel.MakoClient.GetNovelFromIdAsync(id);
+            token.ThrowIfCancellationRequested();
+            var viewModel = NovelItemViewModel.CreateInstance(novel);
+            onLoaded(viewModel);
+            return viewModel;
+        }
+        catch (OperationCanceledException)
+        {
+            return null;
+        }
+        catch (Exception e)
+        {
+            if (!token.IsCancellationRequested)
+                LoadErrorMessage = e.Message;
+            return null;
+        }
     }
 
     private sealed class NovelDisplayContext(NovelContent novelContent) : INovelContext<Bitmap>
@@ -237,4 +352,24 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
 
         public string? ImageExtension => null;
     }
+
+    #region Dispose
+
+    private bool _disposed;
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        if (_disposed)
+            return;
+
+        _disposed = true;
+        _loadingCts.Cancel();
+        _loadingCts.Dispose();
+        _sourceView?.Dispose();
+    }
+
+    ~NovelViewerPageViewModel() => Dispose();
+
+    #endregion
 }

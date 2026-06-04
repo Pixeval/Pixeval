@@ -20,10 +20,10 @@ public partial class CommentItem : UserControl
 
     public event Action<CommentItemViewModel>? DeleteButtonClick;
 
-    private async void PosterButton_OnClicked(object? sender, RoutedEventArgs e)
+    private void PosterButton_OnClicked(object? sender, RoutedEventArgs e)
     {
         if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer)
-            await viewContainer.CreateUserPageAsync(ViewModel.UserId);
+            viewContainer.CreateUserPage(ViewModel.UserId);
     }
 
     private void OpenRepliesButton_OnClicked(object? sender, RoutedEventArgs e) => OpenRepliesButtonClick?.Invoke(ViewModel);

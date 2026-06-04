@@ -174,7 +174,7 @@ public partial class SingleImageViewer : UserControl
     {
         if (DataContext is not SingleViewerViewModel viewModel
             || ViewerScrollView is not { } scrollView
-            // 防止绑定反向影响
+            // 防止动画中被绑定反向影响
             || scrollView.ZoomFactor == viewModel.ZoomFactor)
             return;
 

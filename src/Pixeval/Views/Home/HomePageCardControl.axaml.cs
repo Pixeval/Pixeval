@@ -15,6 +15,7 @@ using CommunityToolkit.Mvvm.Input;
 using FluentIcons.Common;
 using Mako.Engine.Implements;
 using Mako.Model;
+using Misaki;
 using Pixeval.Models.Home;
 using Pixeval.Models.Options;
 using Pixeval.Utilities;
@@ -262,14 +263,14 @@ public sealed partial class HomePageCardControl : TemplatedControl, IDisposable
         switch (parameter)
         {
             case NovelItemViewModel viewModel:
-                await OpenNovelAsync(topLevel, viewModel);
+                OpenNovel(topLevel, viewModel);
                 break;
             case IllustrationItemViewModel viewModel:
-                await OpenIllustrationAsync(topLevel, viewModel);
+                OpenIllustration(topLevel, viewModel);
                 break;
             case UserItemViewModel viewModel:
                 if (topLevel.ViewContainer is { } viewContainer)
-                    await viewContainer.CreateUserPageAsync(viewModel.UserId);
+                    viewContainer.CreateUserPage(viewModel.UserId);
                 break;
             case SpotlightItemViewModel viewModel:
                 if (topLevel.Launcher is { } launcher)
@@ -375,7 +376,7 @@ public sealed partial class HomePageCardControl : TemplatedControl, IDisposable
             ? me
             : new HomeCardUserBasicInfo(card.UserId, card.ToString());
 
-    private async Task OpenNovelAsync(TopLevel topLevel, NovelItemViewModel viewModel)
+    private void OpenNovel(TopLevel topLevel, NovelItemViewModel viewModel)
     {
         if (topLevel.ViewContainer is not { } viewContainer)
             return;
@@ -383,10 +384,10 @@ public sealed partial class HomePageCardControl : TemplatedControl, IDisposable
         if (PreviewViewModel?.ViewModel is NovelViewViewModel viewViewModel)
             viewContainer.CreateNovelPage(viewModel, viewViewModel.DataProvider.CloneRef());
         else
-            await viewContainer.CreateNovelPageAsync(viewModel.Entry.Id);
+            viewContainer.CreateNovelPage(viewModel.Entry.Id);
     }
 
-    private async Task OpenIllustrationAsync(TopLevel topLevel, IllustrationItemViewModel viewModel)
+    private void OpenIllustration(TopLevel topLevel, IllustrationItemViewModel viewModel)
     {
         if (topLevel.ViewContainer is not { } viewContainer)
             return;
@@ -397,10 +398,9 @@ public sealed partial class HomePageCardControl : TemplatedControl, IDisposable
             return;
         }
 
-        if (viewModel.Entry is Illustration { Id: var id })
+        if (viewModel.Entry is Illustration illustration)
         {
-            var illustration = await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id);
-            await viewContainer.CreateIllustrationPageAsync(illustration);
+            viewContainer.CreateIllustrationPage(illustration);
         }
     }
 

@@ -14,7 +14,7 @@
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
     xmlns:work="using:Pixeval.Views.Work"
     x:DataType="{x:Type viewers:NovelViewerPageViewModel}"
-    Header="{Binding CurrentNovel.Entry.Title}"
+    Header="{Binding CurrentNovel.Entry.Title, FallbackValue={x:Null}}"
     mc:Ignorable="d"
     d:DesignHeight="600"
     d:DesignWidth="1000">
@@ -47,24 +47,24 @@
                     DockPanel.Dock="Top"
                     IsDynamicOverflowEnabled="True">
                     <CommandBarButton
-                        Command="{Binding CurrentNovel.BookmarkCommand}"
+                        Command="{Binding CurrentNovel.BookmarkCommand, FallbackValue={x:Null}}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
                         ContextRequested="AddToBookmarkButton_OnClick"
                         Icon="{markup1:SymbolIconEx Heart,
                                                     IconVariant={Binding CurrentNovel.IsBookmarkedDisplay,
                                                                          Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
-                        IsVisible="{Binding CurrentNovel.IsBookmarkSupported}"
+                        IsVisible="{Binding CurrentNovel.IsBookmarkSupported, FallbackValue={x:Null}}"
                         Label="{I18N {x:Static pixeval:EntryItemResources.AddToBookmark}}" />
                     <CommandBarSeparator />
                     <CommandBarButton
-                        Command="{Binding CurrentNovel.SaveCommand}"
+                        Command="{Binding CurrentNovel.SaveCommand, FallbackValue={x:Null}}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
                         ContextRequested="SaveButton_OnRightClick"
                         Icon="{markup:SymbolIcon Save}"
                         Label="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}" />
                     <CommandBarSeparator />
                     <CommandBarButton
-                        Command="{Binding CurrentNovel.AddToWatchLaterCommand}"
+                        Command="{Binding CurrentNovel.AddToWatchLaterCommand, FallbackValue={x:Null}}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
                         Icon="{markup1:SymbolIconEx Clock,
                                                     IconVariant={Binding CurrentNovel.IsInWatchLater,
@@ -79,12 +79,12 @@
                         Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
                         Icon="{markup:SymbolIcon LinkMultiple}"
                         Label="{I18N {x:Static pixeval:EntryItemResources.GenerateWebLink}}"
-                        Tag="{Binding CurrentNovel.WebsiteUri}" />
+                        Tag="{Binding CurrentNovel.WebsiteUri, FallbackValue={x:Null}}" />
                     <CommandBarButton
                         Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                         Icon="{markup:SymbolIcon GlobeArrowUp}"
                         Label="{I18N {x:Static pixeval:EntryItemResources.OpenInWebBrowser}}"
-                        Tag="{Binding CurrentNovel.WebsiteUri}" />
+                        Tag="{Binding CurrentNovel.WebsiteUri, FallbackValue={x:Null}}" />
                 </CommandBar>
 
                 <Border Background="{Binding NovelBackgroundBrush}">
@@ -102,6 +102,16 @@
                                 <ProgressBar Width="160" IsIndeterminate="True" />
                                 <TextBlock Foreground="White" Text="{I18N {x:Static pixeval:EntryViewerPageResources.LoadingNovelTextBlockText}}" />
                             </StackPanel>
+                        </Grid>
+
+                        <Grid Background="#7F000000" IsVisible="{Binding LoadErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                            <TextBlock
+                                MaxWidth="480"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Foreground="White"
+                                Text="{Binding LoadErrorMessage}"
+                                TextWrapping="Wrap" />
                         </Grid>
 
                         <controls:PageButton
@@ -177,9 +187,9 @@
                         MaxWidth="350"
                         VerticalAlignment="Center"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        IsVisible="{Binding CurrentNovel.Entry.Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                        IsVisible="{Binding CurrentNovel.Entry.Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}, FallbackValue={x:Null}}"
                         Symbol="AppTitle"
-                        Text="{Binding CurrentNovel.Entry.Title}" />
+                        Text="{Binding CurrentNovel.Entry.Title, FallbackValue={x:Null}}" />
                 </StackPanel>
 
                 <StackPanel

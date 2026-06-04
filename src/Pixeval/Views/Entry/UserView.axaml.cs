@@ -14,12 +14,12 @@ public partial class UserView : UserControl
 {
     public UserView() => InitializeComponent();
 
-    private async void UserItem_OnTapped(object? sender, TappedEventArgs tappedEventArgs)
+    private void UserItem_OnTapped(object? sender, TappedEventArgs tappedEventArgs)
     {
         if (sender is not Control { DataContext: UserItemViewModel vm })
             return;
         if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer)
-            await viewContainer.CreateUserPageAsync(vm.UserId);
+            viewContainer.CreateUserPage(vm.UserId);
     }
 
     private void ListBox_OnContainerPrepared(object? sender, ContainerPreparedEventArgs e)

@@ -123,7 +123,7 @@ public class ContentDialogHost : TemplatedControl
         var result = ContentDialogResult.None;
         try
         {
-            using var registration = cancellationToken.Register(() =>
+            await using var registration = cancellationToken.Register(() =>
                 Dispatcher.UIThread.Post(() => _ = dialog.HideAsync()));
 
             await Dispatcher.UIThread.InvokeAsync(dialog.FocusInitialElement, DispatcherPriority.Loaded);
@@ -189,8 +189,7 @@ public class ContentDialogHost : TemplatedControl
         if (layer is null || ReferenceEquals(_adornerLayer, layer))
             return;
 
-        if (_adornerLayer is not null)
-            _adornerLayer.Children.Remove(this);
+        _adornerLayer?.Children.Remove(this);
 
         _adornerLayer = layer;
         AdornerLayer.SetAdornedElement(this, _host);
@@ -202,11 +201,9 @@ public class ContentDialogHost : TemplatedControl
 
     private void Uninstall()
     {
-        if (_host is not null)
-            _host.TemplateApplied -= HostOnTemplateApplied;
+        _host?.TemplateApplied -= HostOnTemplateApplied;
 
-        if (_adornerLayer is not null)
-            _adornerLayer.Children.Remove(this);
+        _adornerLayer?.Children.Remove(this);
 
         _host = null;
         _adornerLayer = null;

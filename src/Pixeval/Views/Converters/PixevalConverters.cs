@@ -9,6 +9,7 @@ using AutoSettingsPage.Avalonia;
 using AutoSettingsPage.Models;
 using Avalonia.Controls;
 using Avalonia.Data.Converters;
+using FluentIcons.Avalonia;
 using FluentIcons.Common;
 using Mako.Model;
 using Misaki;
@@ -71,6 +72,9 @@ public static partial class PixevalConverters
         value is null
             ? null
             : WebUtility.HtmlDecode(HtmlTagRegex.Replace(LineBreakRegex.Replace(value, "\n"), "")));
+
+    public static readonly FuncValueConverter<Symbol, SymbolIcon> SymbolIconConverter =
+        new(value => new SymbolIcon { Symbol = value });
     
     [GeneratedRegex("<br\\s*/?>", RegexOptions.IgnoreCase)]
     private static partial Regex LineBreakRegex { get; }

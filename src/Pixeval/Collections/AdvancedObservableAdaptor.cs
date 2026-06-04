@@ -17,7 +17,7 @@ namespace Pixeval.Collections;
 
 [DebuggerDisplay("Count = {Count}")]
 public class AdvancedObservableAdaptor<TIn, TOut>
-    : IAdvancedObservableView<TOut>
+    : IAdvancedObservableView<TOut>, IList // UI 绑定需要 IList 以支持只读的 IndexOf 等功能
     where TIn : class
     where TOut : class
 {

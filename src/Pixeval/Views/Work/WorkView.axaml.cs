@@ -87,20 +87,19 @@ public partial class WorkView : UserControl, IDisposable
                 viewContainer.CreateNovelPage(viewModel, viewViewModel.DataProvider.CloneRef());
                 break;
             case (NovelItemViewModel viewModel, SimpleOperableViewViewModel<NovelItemViewModel> viewViewModel):
-                viewContainer.CreateNovelPage(viewModel, viewViewModel.SourceView.CloneSourceView());
+                viewContainer.CreateNovelPage(viewModel, viewViewModel.SourceView.CloneSourceView(), viewViewModel.NeedRefreshOnOpen);
                 break;
             case (IllustrationItemViewModel viewModel, IllustrationViewViewModel viewViewModel):
                 viewContainer.CreateIllustrationPage(viewModel, viewViewModel.DataProvider.CloneRef());
                 break;
             case (IllustrationItemViewModel viewModel, SimpleOperableViewViewModel<IllustrationItemViewModel> viewViewModel):
-                viewContainer.CreateIllustrationPage(viewModel, viewViewModel.SourceView.CloneSourceView());
+                viewContainer.CreateIllustrationPage(viewModel, viewViewModel.SourceView.CloneSourceView(), viewViewModel.NeedRefreshOnOpen);
                 break;
             case (NovelItemViewModel { Entry.Id: var id }, _):
-                await viewContainer.CreateNovelPageAsync(id);
+                viewContainer.CreateNovelPage(id);
                 break;
-            case (IllustrationItemViewModel { Entry: Illustration { Id: var id } }, _):
-                var illustration = await App.AppViewModel.MakoClient.GetIllustrationFromIdAsync(id);
-                await viewContainer.CreateIllustrationPageAsync(illustration);
+            case (IllustrationItemViewModel { Entry: Illustration illustration }, _):
+                viewContainer.CreateIllustrationPage(illustration);
                 break;
         }
     }
@@ -143,12 +142,12 @@ public partial class WorkView : UserControl, IDisposable
 
     private void WorkItem_OnRequestAddToBookmark(Control sender, IWorkViewModel e) => RequestAddToBookmark?.Invoke(sender, e);
 
-    public async void WorkItem_OnRequestOpenUserInfoPage(Control sender, IWorkViewModel e)
+    public void WorkItem_OnRequestOpenUserInfoPage(Control sender, IWorkViewModel e)
     {
         if (e is { Entry: WorkBase { User.Id: var id } })
         {
             if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer)
-                await viewContainer.CreateUserPageAsync(id);
+                viewContainer.CreateUserPage(id);
         }
     }
 

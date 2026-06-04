@@ -15,13 +15,16 @@ namespace Pixeval.ViewModels;
 public class SimpleOperableViewViewModel<TViewModel> : ViewModelBase, IOperableViewViewModel, IDisposable
     where TViewModel : class, IWorkViewModel
 {
-    public SimpleOperableViewViewModel(IReadOnlyCollection<IArtworkInfo> source)
+    public SimpleOperableViewViewModel(IReadOnlyCollection<IArtworkInfo> source, bool needRefreshOnOpen = false)
     {
+        NeedRefreshOnOpen = needRefreshOnOpen;
         SourceView = new(source);
         SetFilters();
     }
 
     public SimpleOperableSourceView<TViewModel> SourceView { get; }
+
+    public bool NeedRefreshOnOpen { get; }
 
     public FrozenSet<string> CachedBlockedTags { get; } = [.. App.AppViewModel.AppSettings.BlockedTags];
 

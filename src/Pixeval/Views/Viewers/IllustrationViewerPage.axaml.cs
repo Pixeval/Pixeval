@@ -5,8 +5,6 @@ using System;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using Pixeval.Controls;
 using Pixeval.Models.Options;
 using Pixeval.Utilities;
@@ -26,12 +24,6 @@ public partial class IllustrationViewerPage : ContentPage
     {
         DataContext = viewModel;
         InitializeComponent();
-
-        if (viewModel?.CurrentIllustration.Entry.Platform is { } platform)
-        {
-            using var stream = AssetLoader.Open(new Uri($"avares://Pixeval/Assets/Platforms/{platform}.png"));
-            LogoImage.Source = new Bitmap(stream);
-        }
     }
 
     private void PrevButton_OnRightClick(object? sender, ContextRequestedEventArgs e) => ViewModel.PrevWorkCommand.Execute(null);
@@ -76,7 +68,8 @@ public partial class IllustrationViewerPage : ContentPage
 
     private void ImageViewerPage_OnSelectionChanged(Control sender, ImageViewerSelectionChangedEventArgs e)
     {
-        EntryViewerFloatingPaneView.ShowPaneTemporarily();
+        if (ViewModel.CurrentImage is not null)
+            EntryViewerFloatingPaneView.ShowPaneTemporarily();
     }
 
     #region Disposal

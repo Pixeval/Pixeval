@@ -13,7 +13,6 @@ using Avalonia.Input.Platform;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
-using FluentIcons.Avalonia;
 using FluentIcons.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
@@ -286,11 +285,6 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
             TransformedSource?.Dispose();
     }
 
-    internal static object CreateTransformerExtensionIcon(IImageTransformerCommandExtension extension) => new SymbolIcon
-    {
-        Symbol = Enum.IsDefined(extension.Icon) ? extension.Icon : Symbol.ImageEdit
-    };
-
     internal async Task ExecuteTransformerExtensionAsync(IImageTransformerCommandExtension extension, Control? control)
     {
         var viewContainer = control is null ? null : TopLevel.GetTopLevel(control)?.ViewContainer;
@@ -364,7 +358,10 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
     private void RotateCounterclockwise() => RotationDegree = (RotationDegree - 90 + 360) % 360;
 
     [RelayCommand(CanExecute = nameof(IsGifLoadSuccessfully))]
-    private void PlayPause() => IsPlaying = !IsPlaying;
+    private void PlayPause()
+    {
+        // 仅做IsEnabled绑定，实际逻辑修改IsPlaying属性
+    }
 
     [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
     private async Task CopyAsync(Control control)
@@ -421,7 +418,7 @@ public sealed class ImageTransformerExtensionCommandItem
         Extension = extension;
         Label = extension.Label;
         Description = extension.Description;
-        Icon = SingleViewerViewModel.CreateTransformerExtensionIcon(extension);
+        Symbol = extension.Icon;
         Command = new AsyncRelayCommand<Control?>(
             control => viewModel.ExecuteTransformerExtensionAsync(extension, control),
             _ => viewModel.TransformExtensionCommand.CanExecute(extension));
@@ -434,7 +431,7 @@ public sealed class ImageTransformerExtensionCommandItem
 
     public string Description { get; }
 
-    public object Icon { get; }
+    public Symbol Symbol { get; }
 
     public IAsyncRelayCommand<Control?> Command { get; }
 }

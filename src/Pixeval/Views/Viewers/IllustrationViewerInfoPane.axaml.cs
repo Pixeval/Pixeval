@@ -81,6 +81,7 @@ public partial class IllustrationViewerInfoPane : UserControl
 
     private async void SaveButton_OnRightClick(object? sender, ContextRequestedEventArgs e)
     {
-        await ViewModel.CurrentIllustration.SaveAsCommand.ExecuteAsync(sender);
+        if (ViewModel.CurrentIllustration is { } current)
+            await current.SaveAsCommand.ExecuteAsync(sender);
     }
 }

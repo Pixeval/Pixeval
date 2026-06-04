@@ -17,7 +17,7 @@ namespace Pixeval.Collections;
 
 [DebuggerDisplay("Count = {Count}")]
 public class AdvancedObservableCollection<T>
-    : DeferredCollectionBase<T>, IList<T>, IAdvancedObservableView<T>, IComparer<T> where T : class
+    : DeferredCollectionBase<T>, IList<T>, IList, IAdvancedObservableView<T>, IComparer<T> where T : class
 {
     private readonly bool _liveShapingEnabled;
 

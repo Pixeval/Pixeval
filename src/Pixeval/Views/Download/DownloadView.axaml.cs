@@ -134,15 +134,15 @@ public partial class DownloadView : ContentPage
             ApplyFolderFilter();
     }
 
-    private async void DownloadItem_OnOpenIllustrationRequested(DownloadItem sender, DownloadItemViewModel viewModel)
+    private void DownloadItem_OnOpenIllustrationRequested(DownloadItem sender, DownloadItemViewModel viewModel)
     {
         if (TopLevel.GetTopLevel(this)?.ViewContainer is not { } viewContainer)
             return;
 
         if (viewModel.Entry is Novel novel)
-            await viewContainer.CreateNovelPageAsync(novel.Id);
+            viewContainer.CreateNovelPage(novel.Id);
         else
-            await viewContainer.CreateIllustrationPageAsync(viewModel.Entry);
+            viewContainer.CreateIllustrationPage(viewModel.Entry);
     }
 
     private async void DownloadFolder_OnOpenRequested(DownloadFolder sender, DownloadFolderViewModel folder)

@@ -2,7 +2,6 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -25,7 +24,7 @@ public interface IDeferredCollection<T>
 }
 
 public interface IAdvancedObservableView<T>
-    : IDeferredCollection<T>, IReadOnlyList<T>, IList, INotifyCollectionChanged, INotifyPropertyChanged, IIncrementalLoading, IDisposable
+    : IDeferredCollection<T>, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged, IIncrementalLoading, IDisposable
 {
     bool IsReversed { get; set; }
 

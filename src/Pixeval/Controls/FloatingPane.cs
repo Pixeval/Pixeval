@@ -205,8 +205,7 @@ public static class FloatingPane
     {
         var state = element.GetValue(DelayTasksProperty);
         state?.TemporaryVisibleDelayTask?.Dispose();
-        if (state is not null)
-            state.TemporaryVisibleDelayTask = null;
+        state?.TemporaryVisibleDelayTask = null;
 
         element.Classes.Set(TemporaryVisibleClass, false);
     }

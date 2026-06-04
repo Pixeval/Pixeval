@@ -359,7 +359,7 @@ public partial class SearchPage : ContentPage
         if (!TryGetSearchId(out var id) || TopLevel.GetTopLevel(this)?.ViewContainer is not { } viewContainer)
             return false;
 
-        _ = viewContainer.CreateIllustrationPageAsync(id.ToString(), IPlatformInfo.Pixiv);
+        viewContainer.CreateIllustrationPage(id.ToString(), IPlatformInfo.Pixiv);
         return true;
     }
 
@@ -368,7 +368,7 @@ public partial class SearchPage : ContentPage
         if (!TryGetSearchId(out var id) || TopLevel.GetTopLevel(this)?.ViewContainer is not { } viewContainer)
             return false;
 
-        _ = viewContainer.CreateNovelPageAsync(id);
+        viewContainer.CreateNovelPage(id);
         return true;
     }
 
@@ -377,7 +377,7 @@ public partial class SearchPage : ContentPage
         if (!TryGetSearchId(out var id) || TopLevel.GetTopLevel(this)?.ViewContainer is not { } viewContainer)
             return false;
 
-        _ = viewContainer.CreateUserPageAsync(id);
+        viewContainer.CreateUserPage(id);
         return true;
     }
 

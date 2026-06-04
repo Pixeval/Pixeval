@@ -27,13 +27,15 @@ public partial class NovelViewerPage : ContentPage
         DataContext = viewModel;
         InitializeComponent();
     }
+
     private void PrevButton_OnRightClick(object? sender, ContextRequestedEventArgs e) => ViewModel.PrevWorkCommand.Execute(null);
 
     private void NextButton_OnRightClick(object? sender, ContextRequestedEventArgs e) => ViewModel.NextWorkCommand.Execute(null);
 
     private async void SaveButton_OnRightClick(object? sender, ContextRequestedEventArgs e)
     {
-        await ViewModel.CurrentNovel.SaveAsCommand.ExecuteAsync(sender);
+        if (ViewModel.CurrentNovel is { } current)
+            await current.SaveAsCommand.ExecuteAsync(sender);
     }
 
     private async void AddToBookmarkButton_OnClick(object? sender, ContextRequestedEventArgs e)

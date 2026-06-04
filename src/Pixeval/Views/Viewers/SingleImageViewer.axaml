@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ai="using:AnimatedControls.Avalonia"
     xmlns:common="using:FluentIcons.Common"
+    xmlns:converters="using:Pixeval.Views.Converters"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:pixeval="using:Pixeval"
@@ -96,7 +97,7 @@
                 Command="{Binding PrimaryTransformerExtensionItem.Command, FallbackValue={x:Null}}"
                 CommandParameter="{Binding $self}"
                 Header="{Binding PrimaryTransformerExtensionItem.Label, FallbackValue={x:Null}}"
-                Icon="{Binding PrimaryTransformerExtensionItem.Icon, FallbackValue={x:Null}}"
+                Icon="{markup1:SymbolIconEx Symbol={Binding PrimaryTransformerExtensionItem.Symbol}}"
                 IsVisible="{x:Static vm:SingleViewerViewModel.HasTransformerExtensions}"
                 ToolTip.Tip="{Binding PrimaryTransformerExtensionItem.Description, FallbackValue={x:Null}}" />
             <MenuItem
@@ -104,16 +105,18 @@
                 Icon="{markup:SymbolIcon ImageMultiple}"
                 IsVisible="{x:Static vm:SingleViewerViewModel.HasTransformerExtensions}"
                 ItemsSource="{Binding TransformerExtensionItems}">
-                <MenuItem.ItemTemplate>
-                    <DataTemplate x:DataType="{x:Type vm:ImageTransformerExtensionCommandItem}">
-                        <MenuItem
-                            Command="{Binding Command}"
-                            CommandParameter="{Binding $self}"
-                            Header="{Binding Label}"
-                            Icon="{Binding Icon}"
-                            ToolTip.Tip="{Binding Description}" />
-                    </DataTemplate>
-                </MenuItem.ItemTemplate>
+                <MenuItem.ItemContainerTheme>
+                    <ControlTheme
+                        x:DataType="{x:Type vm:ImageTransformerExtensionCommandItem}"
+                        BasedOn="{StaticResource {x:Type MenuItem}}"
+                        TargetType="{x:Type MenuItem}">
+                        <Setter Property="Command" Value="{Binding Command}" />
+                        <Setter Property="CommandParameter" Value="{Binding $self}" />
+                        <Setter Property="Header" Value="{Binding Label}" />
+                        <Setter Property="Icon" Value="{Binding Symbol, Converter={x:Static converters:PixevalConverters.SymbolIconConverter}}" />
+                        <Setter Property="ToolTip.Tip" Value="{Binding Description}" />
+                    </ControlTheme>
+                </MenuItem.ItemContainerTheme>
             </MenuItem>
             <MenuItem Header="-" />
             <!--  旋转/镜像  -->

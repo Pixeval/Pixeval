@@ -57,12 +57,17 @@
                     HorizontalAlignment="Stretch"
                     controls:IncrementalLoadingBehavior.IsEnabled="True"
                     controls:IncrementalLoadingBehavior.Threshold="100"
-                    IsVisible="{Binding #InfoPaneRoot.IsDocked}"
                     ItemsSource="{Binding Illustrations}"
                     ScrollViewer.HorizontalScrollBarVisibility="Visible"
                     ScrollViewer.VerticalScrollBarVisibility="Disabled"
                     SelectedIndex="{Binding CurrentWorkIndex}"
                     SelectionMode="Single">
+                    <ListBox.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="#InfoPaneRoot.IsDocked" />
+                            <Binding Converter="{x:Static ObjectConverters.IsNotNull}" Path="Illustrations" />
+                        </MultiBinding>
+                    </ListBox.IsVisible>
                     <ListBox.Styles>
                         <Style Selector="ListBox controls1|ScrollPresenter">
                             <Setter Property="ContentOrientation" Value="Horizontal" />
@@ -91,24 +96,24 @@
                     DefaultLabelPosition="Collapsed"
                     IsDynamicOverflowEnabled="False">
                     <CommandBarButton
-                        Command="{Binding CurrentIllustration.BookmarkCommand}"
+                        Command="{Binding CurrentIllustration.BookmarkCommand, FallbackValue={x:Null}}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
                         ContextRequested="AddToBookmarkButton_OnRightClick"
                         Icon="{markup1:SymbolIconEx Heart,
                                                     IconVariant={Binding CurrentIllustration.IsBookmarkedDisplay,
                                                                          Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
-                        IsVisible="{Binding CurrentIllustration.IsBookmarkSupported}"
+                        IsVisible="{Binding CurrentIllustration.IsBookmarkSupported, FallbackValue={x:Null}}"
                         Label="{I18N {x:Static pixeval:EntryItemResources.AddToBookmark}}" />
                     <CommandBarButton
-                        Command="{Binding CurrentIllustration.SaveCommand}"
+                        Command="{Binding CurrentIllustration.SaveCommand, FallbackValue={x:Null}}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
                         ContextRequested="SaveButton_OnRightClick"
                         Icon="{markup:SymbolIcon SaveMultiple}"
-                        IsVisible="{Binding CurrentIllustration.IsPicSet}"
+                        IsVisible="{Binding CurrentIllustration.IsPicSet, FallbackValue={x:False}}"
                         Label="{I18N {x:Static pixeval:EntryItemResources.MangaSave}}" />
                     <CommandBarSeparator />
                     <CommandBarButton
-                        Command="{Binding CurrentIllustration.AddToWatchLaterCommand}"
+                        Command="{Binding CurrentIllustration.AddToWatchLaterCommand, FallbackValue={x:Null}}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
                         Icon="{markup1:SymbolIconEx Clock,
                                                     IconVariant={Binding CurrentIllustration.IsInWatchLater,
@@ -118,23 +123,23 @@
                             Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
                             Icon="{markup:SymbolIcon Link}"
                             Label="{I18N {x:Static pixeval:EntryItemResources.GenerateLink}}"
-                            Tag="{Binding CurrentIllustration.AppUri}" />-->
+                            Tag="{Binding CurrentIllustration.AppUri, FallbackValue={x:Null}}" />-->
                     <CommandBarButton
                         Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
                         Icon="{markup:SymbolIcon LinkMultiple}"
                         Label="{I18N {x:Static pixeval:EntryItemResources.GenerateWebLink}}"
-                        Tag="{Binding CurrentIllustration.WebsiteUri}" />
+                        Tag="{Binding CurrentIllustration.WebsiteUri, FallbackValue={x:Null}}" />
                     <CommandBarButton
                         Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                         Icon="{markup:SymbolIcon GlobeArrowUp}"
                         Label="{I18N {x:Static pixeval:EntryItemResources.OpenInWebBrowser}}"
-                        Tag="{Binding CurrentIllustration.WebsiteUri}" />
+                        Tag="{Binding CurrentIllustration.WebsiteUri, FallbackValue={x:Null}}" />
                 </CommandBar>
             </StackPanel>
 
             <Grid VerticalAlignment="Stretch" ClipToBounds="True">
 
-                <local:WorkInfoPane Name="InfoPaneSection" ArtworkInfo="{Binding CurrentIllustration.Entry}">
+                <local:WorkInfoPane Name="InfoPaneSection" ArtworkInfo="{Binding CurrentIllustration.Entry, FallbackValue={x:Null}}">
                     <local:WorkInfoPane.ActionZone>
                         <Border
                             Width="32"

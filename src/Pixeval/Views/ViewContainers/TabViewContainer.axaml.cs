@@ -103,9 +103,9 @@ public partial class TabViewContainer : ViewContainerBase
         NavigateTo((Page) Activator.CreateInstance(type)!);
     }
 
-    private async void OpenMyPage_OnClick(object? sender, RoutedEventArgs e)
+    private void OpenMyPage_OnClick(object? sender, RoutedEventArgs e)
     {
-        await this.CreateUserPageAsync(App.AppViewModel.PixivUid);
+        this.CreateUserPage(App.AppViewModel.PixivUid);
     }
 
     private void SwitchAccount_OnClicked(object? sender, RoutedEventArgs e)

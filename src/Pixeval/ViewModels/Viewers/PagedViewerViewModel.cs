@@ -21,6 +21,9 @@ public abstract partial class PagedViewerViewModel : ViewModelBase
     {
         get
         {
+            if (CurrentWorkIndex < 0)
+                return PagedBehavior.None;
+
             var behavior = PagedBehavior.None;
             if (CurrentPageIndex > 0)
                 behavior |= PagedBehavior.Page;
@@ -34,6 +37,9 @@ public abstract partial class PagedViewerViewModel : ViewModelBase
     {
         get
         {
+            if (CurrentWorkIndex < 0)
+                return PagedBehavior.None;
+
             var behavior = PagedBehavior.None;
             if (CurrentPageIndex < PageCount - 1)
                 behavior |= PagedBehavior.Page;

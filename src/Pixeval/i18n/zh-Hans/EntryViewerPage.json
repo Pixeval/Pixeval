@@ -56,6 +56,7 @@
   "ZoomOut": "缩小",
   "ZoomToOriginal": "缩放到原始大小",
   "ZoomToFit": "缩放以适应屏幕",
+  "LoadFailed": "加载失败",
   "LoadingNovelTextBlock": {
     "Text": "正在加载小说"
   },

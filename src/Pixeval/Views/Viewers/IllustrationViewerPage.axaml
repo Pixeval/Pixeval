@@ -13,11 +13,19 @@
     xmlns:pixeval="using:Pixeval"
     xmlns:ss="using:SmoothScroll.Avalonia.Controls"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
+    x:Name="Root"
     x:DataType="{x:Type viewers:IllustrationViewerPageViewModel}"
-    Header="{Binding CurrentIllustration.Entry.Title}"
+    Header="{Binding CurrentIllustration.Entry.Title, FallbackValue={x:Null}}"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
+    <ContentPage.Icon>
+        <Image
+            Width="16"
+            Height="16"
+            DataContext="{Binding #Root.DataContext}"
+            controls:Source.Cache="{Binding LogoUri}" />
+    </ContentPage.Icon>
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -125,13 +133,6 @@
         </Style>
     </ContentPage.Styles>
 
-    <ContentPage.Icon>
-        <Image
-            x:Name="LogoImage"
-            Width="16"
-            Height="16" />
-    </ContentPage.Icon>
-
     <ContentPage.KeyBindings>
         <KeyBinding Command="{Binding PrevCommand}" Gesture="Left" />
         <KeyBinding Command="{Binding NextCommand}" Gesture="Right" />
@@ -181,6 +182,26 @@
                         DataContext="{Binding CurrentImage}"
                         SelectionChanged="ImageViewerPage_OnSelectionChanged" />
 
+                    <Grid Background="#7F000000" IsVisible="{Binding IsLoading}">
+                        <StackPanel
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Spacing="10">
+                            <ProgressBar Width="160" IsIndeterminate="True" />
+                            <TextBlock Foreground="White" Text="{I18N {x:Static pixeval:HomePageResources.CardPreviewLoadingTextBlockText}}" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid Background="#7F000000" IsVisible="{Binding LoadErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                        <TextBlock
+                            MaxWidth="480"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Foreground="White"
+                            Text="{Binding LoadErrorMessage}"
+                            TextWrapping="Wrap" />
+                    </Grid>
+
                     <!--  左翻页按钮  -->
                     <controls:PageButton
                         HorizontalAlignment="Left"
@@ -222,12 +243,13 @@
                         controls:FloatingPane.IsEnabled="True"
                         Background="{DynamicResource SystemAltMediumHighColor}"
                         ClipToBounds="False"
-                        CornerRadius="20">
+                        CornerRadius="20"
+                        IsVisible="{Binding CurrentImage, Converter={x:Static ObjectConverters.IsNotNull}}">
                         <StackPanel Spacing="8">
                             <controls:PagePreviewSlider
                                 Padding="5"
                                 HorizontalAlignment="Stretch"
-                                ItemsSource="{Binding CurrentImage.Images}"
+                                ItemsSource="{Binding CurrentImage.Images, FallbackValue={x:Null}}"
                                 SelectedIndex="{Binding CurrentPageIndex, Mode=TwoWay}">
                                 <controls:PagePreviewSlider.ItemTemplate>
                                     <DataTemplate x:DataType="{x:Type viewers:SingleViewerViewModel}">
@@ -259,10 +281,11 @@
                                                                                                   Play,
                                                                                                   x:TypeArguments=common:Symbol}}"
                                         IsChecked="{Binding CurrentImage.CurrentPage.IsPlaying, Mode=TwoWay, FallbackValue={x:False}}"
+                                        IsEnabled="{Binding CurrentImage.CurrentPage.LoadSuccessfully, FallbackValue={x:False}}"
                                         Label="{I18N {x:Static pixeval:MiscResources.Play}}">
                                         <CommandBarToggleButton.IsVisible>
                                             <MultiBinding Converter="{x:Static BoolConverters.And}">
-                                                <Binding Path="CurrentIllustration.IsPicGif" />
+                                                <Binding FallbackValue="False" Path="CurrentIllustration.IsPicGif" />
                                                 <Binding Mode="OneTime" Path="#I.IsSwipeMode" />
                                             </MultiBinding>
                                         </CommandBarToggleButton.IsVisible>
