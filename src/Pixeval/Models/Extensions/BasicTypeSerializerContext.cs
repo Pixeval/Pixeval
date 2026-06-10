@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -16,6 +17,7 @@ namespace Pixeval.Models.Extensions;
 [JsonSerializable(typeof(string))]
 [JsonSerializable(typeof(string[]))]
 [JsonSerializable(typeof(DateTimeOffset))]
+[JsonSerializable(typeof(ObservableCollection<string>))] // for string[]
 public partial class BasicTypeSerializerContext : JsonSerializerContext;
 
 public static class DictionaryExtensions

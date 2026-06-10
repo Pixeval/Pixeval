@@ -15,7 +15,6 @@ using CommunityToolkit.Mvvm.Input;
 using FluentIcons.Common;
 using Mako.Engine.Implements;
 using Mako.Model;
-using Misaki;
 using Pixeval.Models.Home;
 using Pixeval.Models.Options;
 using Pixeval.Utilities;

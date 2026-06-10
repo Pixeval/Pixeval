@@ -5,7 +5,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -46,12 +45,20 @@ public partial class ExtensionsPage : ContentPage
         if (TopLevel.GetTopLevel(this) is not { ViewContainer: { } viewContainer, StorageProvider: { } provider })
             return;
 
-        var files = await provider.OpenFilePickerAsync(new FilePickerOpenOptions
+        if (ExtensionService.NativeLibraryExtension is not { } extension)
+        {
+            viewContainer.ShowError(I18NManager.GetResource(ExtensionsPageResources.PlatformNotSupportExtensions));
+            return;
+        }
+
+        var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
+
+        var files = await provider.OpenFilePickerAsync(new()
         {
             FileTypeFilter =
             [
-                new("DLL") { Patterns = ["*.dll"] },
-                new("ZIP") { Patterns = ["*.zip"] }
+                new("Zipped Extension") { Patterns = ["*.zip"] },
+                new("Native Library Extension") { Patterns = ["*" + extension] }
             ],
             AllowMultiple = true
         });
@@ -62,85 +69,84 @@ public partial class ExtensionsPage : ContentPage
             var fileName = fileInfo.Name;
             switch (fileInfo.Extension.ToLowerInvariant())
             {
-                case ".dll":
+                case { } ext when ext == ExtensionService.NativeLibraryExtension:
                 {
-                    var newDllPath = Path.Combine(AppInfo.ExtensionsFolder, fileName);
-                    if (File.Exists(newDllPath))
+                    var newLibraryPath = Path.Combine(AppInfo.ExtensionsFolder, fileName);
+                    if (File.Exists(newLibraryPath))
                     {
-                        viewContainer.ShowError(I18NManager.GetResource(ExtensionsPageResources.DllFileExistedError), fileName);
+                        viewContainer.ShowError(I18NManager.GetResource(ExtensionsPageResources.ExtensionFileExistedError), fileName);
                         continue;
                     }
 
                     try
                     {
-                        var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
-
-                        _ = fileInfo.CopyTo(newDllPath);
-                        if (ExtensionService.TryLoadHost(newDllPath, logger, out var isOutdated))
-                        {
-                            viewContainer.ShowSuccess(I18NManager.GetResource(ExtensionsPageResources.DllLoadedSuccessfully), fileName);
-                            continue;
-                        }
-
-                        viewContainer.ShowError(
-                            I18NManager.GetResource(isOutdated
-                                ? ExtensionsPageResources.ExtensionOutdated
-                                : ExtensionsPageResources.DllLoadFailed), fileName);
+                        _ = fileInfo.CopyTo(newLibraryPath);
                     }
                     catch (Exception ex)
                     {
-                        viewContainer.ShowError(I18NManager.GetResource(ExtensionsPageResources.DllLoadFailed), $"{fileName}: {ex.Message}");
+                        viewContainer.ShowError(I18NManager.GetResource(ExtensionsPageResources.ExtensionLoadFailed), $"{fileName}: {ex.Message}");
                     }
+
+                    LoadExtension(newLibraryPath, fileName);
 
                     break;
                 }
                 case ".zip":
                     try
                     {
-                        var dllNames = await Task.Run(() =>
+                        var plan = await Task.Run(() =>
                         {
                             using var zipArchive = ZipFile.OpenRead(fileInfo.FullName);
-                            return zipArchive.Entries.Select(t => t.FullName)
-                                .Where(t => !t.Contains('\\') && !t.Contains('/') && t.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
-                                .ToArray();
+                            return ExtensionService.CreateExtensionZipExtractionPlan(
+                                zipArchive,
+                                fileInfo.FullName,
+                                AppInfo.ExtensionsFolder);
                         });
 
-                        if (dllNames.Length is not 0)
+                        if (plan.HostLibraryEntryNames.Count is not 0)
                         {
                             await Task.Run(() =>
-                                ZipFile.ExtractToDirectory(fileInfo.FullName, AppInfo.ExtensionsFolder));
+                                ZipFile.ExtractToDirectory(fileInfo.FullName, plan.DestinationDirectory));
 
-                            foreach (var dllName in dllNames)
-                                try
-                                {
-                                    var logger = App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>();
-
-                                    var newDllPath = Path.Combine(AppInfo.ExtensionsFolder, dllName);
-                                    if (ExtensionService.TryLoadHost(newDllPath, logger, out var isOutdated))
-                                    {
-                                        viewContainer.ShowSuccess(I18NManager.GetResource(ExtensionsPageResources.DllLoadedSuccessfully), fileName);
-                                        continue;
-                                    }
-
-                                    viewContainer.ShowError(
-                                        I18NManager.GetResource(isOutdated
-                                            ? ExtensionsPageResources.ExtensionOutdated
-                                            : ExtensionsPageResources.DllLoadFailed), fileName);
-                                }
-                                catch (Exception ex)
-                                {
-                                    viewContainer.ShowError(I18NManager.GetResource(ExtensionsPageResources.DllLoadFailed), $"{fileName}: {ex.Message}");
-                                }
+                            foreach (var libraryName in plan.HostLibraryEntryNames)
+                            {
+                                var newLibraryPath = Path.Combine(plan.DestinationDirectory, libraryName);
+                                LoadExtension(newLibraryPath, fileName);
+                            }
                         }
                         else
-                            viewContainer.ShowWarning(I18NManager.GetResource(ExtensionsPageResources.ZipContainsNoDll), fileName);
+                            viewContainer.ShowWarning(I18NManager.GetResource(ExtensionsPageResources.ZipContainsNoExtension), fileName);
                     }
                     catch (Exception ex)
                     {
-                        viewContainer.ShowError(I18NManager.GetResource(ExtensionsPageResources.UnzipFailed), $"{fileName}: {ex.Message}");
+                        viewContainer.ShowError(I18NManager.GetResource(ExtensionsPageResources.ExtensionLoadFailed), $"{fileName}: {ex.Message}");
                     }
 
                     break;
+            }
+        }
+
+        return;
+
+        void LoadExtension(string libraryPath, string fileName)
+        {
+            try
+            {
+                if (ExtensionService.TryLoadHost(libraryPath, logger, out var outdatedVersion))
+                {
+                    viewContainer.ShowSuccess(I18NManager.GetResource(ExtensionsPageResources.ExtensionLoadedSuccessfully), fileName);
+                    return;
+                }
+
+                viewContainer.ShowError(
+                    outdatedVersion is null
+                        ? I18NManager.GetResource(ExtensionsPageResources.ExtensionLoadFailed)
+                        : I18NManager.GetResource(ExtensionsPageResources.ExtensionOutdatedFormatted, outdatedVersion),
+                    fileName);
+            }
+            catch (Exception ex)
+            {
+                viewContainer.ShowError(I18NManager.GetResource(ExtensionsPageResources.ExtensionLoadFailed), $"{fileName}: {ex.Message}");
             }
         }
     }

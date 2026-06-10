@@ -53,7 +53,7 @@
                         Icon="{markup1:SymbolIconEx Heart,
                                                     IconVariant={Binding CurrentNovel.IsBookmarkedDisplay,
                                                                          Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
-                        IsVisible="{Binding CurrentNovel.IsBookmarkSupported, FallbackValue={x:Null}}"
+                        IsVisible="{Binding CurrentNovel.IsBookmarkSupported, FallbackValue={x:False}}"
                         Label="{I18N {x:Static pixeval:EntryItemResources.AddToBookmark}}" />
                     <CommandBarSeparator />
                     <CommandBarButton

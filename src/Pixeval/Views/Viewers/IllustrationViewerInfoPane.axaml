@@ -102,7 +102,7 @@
                         Icon="{markup1:SymbolIconEx Heart,
                                                     IconVariant={Binding CurrentIllustration.IsBookmarkedDisplay,
                                                                          Converter={x:Static converters:PixevalConverters.StateToIconVariant}}}"
-                        IsVisible="{Binding CurrentIllustration.IsBookmarkSupported, FallbackValue={x:Null}}"
+                        IsVisible="{Binding CurrentIllustration.IsBookmarkSupported, FallbackValue={x:False}}"
                         Label="{I18N {x:Static pixeval:EntryItemResources.AddToBookmark}}" />
                     <CommandBarButton
                         Command="{Binding CurrentIllustration.SaveCommand, FallbackValue={x:Null}}"

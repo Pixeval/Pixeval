@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -57,32 +58,34 @@ public class SingleAnimatedImageDownloadTaskGroup : SingleImageDownloadTaskGroup
             ?? throw new NotSupportedException(extension);
         var tempPath = sender.Destination + ".source";
         FileHelper.Move(sender.Destination, tempPath, true);
-        IReadOnlyList<Stream> streams = [];
+        IReadOnlyDictionary<Stream, int>? streams = null;
         try
         {
-            IReadOnlyList<int> delays;
             switch (Entry.PreferredAnimatedImageType)
             {
                 case SingleAnimatedImageType.SingleZipFile:
                     await Entry.ZipImageDelays!.TryPreloadListAsync(Entry);
-                    delays = Entry.ZipImageDelays!;
                     await using (var read = File.OpenAsyncRead(tempPath))
-                        streams = [.. await Streams.ReadZipAsync(read, true)];
+                        streams = (await Streams.ReadZipAsync(read, true))
+                            .ToArray<Stream>()
+                            .Zip(Entry.ZipImageDelays!)
+                            .ToDictionary(t => t.First, t => t.Second);
                     break;
                 case SingleAnimatedImageType.SingleFile:
                     await using (var read = File.OpenAsyncRead(tempPath))
-                        (streams, delays) = await IoHelper.SplitAnimatedImageStreamAsync(read);
+                        streams = await IoHelper.SplitAnimatedImageStreamAsync(read);
                     break;
                 default:
                     throw new NotSupportedException(Entry.PreferredAnimatedImageType.ToString());
             }
 
-            await provider.FormatImageAsync(streams, delays, sender.Destination);
+            await provider.FormatImageAsync(streams, sender.Destination);
         }
         finally
         {
-            foreach (var stream in streams)
-                await stream.DisposeAsync();
+            if (streams is not null)
+                foreach (var stream in streams.Keys)
+                    await stream.DisposeAsync();
             if (File.Exists(tempPath))
                 File.Delete(tempPath);
         }

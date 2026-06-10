@@ -14,7 +14,9 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Models.Extensions;
 
-public class ExtensionsHostModel(IExtensionsHost host) : IDisposable
+public class ExtensionsHostModel(
+    IExtensionsHost host,
+    Dictionary<string, JsonElement> values) : IDisposable
 {
     public IExtensionsHost Host { get; } = host;
 
@@ -47,21 +49,29 @@ public class ExtensionsHostModel(IExtensionsHost host) : IDisposable
     /// <summary>
     /// 不能缓存<see cref="ExtensionsHostModel.Icon"/>
     /// </summary>
-    public Control Icon => Host.Icon is { } icon
-        ? new Image { Source = new Bitmap(Streams.RentStream(icon)) }
-        : new SymbolIcon { Symbol = Symbol.PuzzlePiece };
+    public Control Icon
+    {
+        get
+        {
+            try
+            {
+                if (Host.Icon is { Length: > 0 } icon)
+                    return new Image { Source = new Bitmap(Streams.RentStream(icon)) };
+            }
+            catch
+            {
+                // ignored
+            }
 
-    public Dictionary<string, JsonElement> Values { get; } = GetValues(host);
+            return CreateFallbackIcon();
+        }
+    }
+
+    public Dictionary<string, JsonElement> Values { get; } = values;
 
     public IReadOnlyList<IExtension> Extensions { get; } = host.Extensions;
 
-    private static Dictionary<string, JsonElement> GetValues(IExtensionsHost host)
-    {
-        ref var value = ref CollectionsMarshal.GetValueRefOrAddDefault(App.AppViewModel.AppSettings.ExtensionSettings, host.ExtensionName, out var exists);
-        if (!exists)
-            value = [];
-        return value!;
-    }
+    private static SymbolIcon CreateFallbackIcon() => new() { Symbol = Symbol.PuzzlePiece };
 
     public void Dispose()
     {

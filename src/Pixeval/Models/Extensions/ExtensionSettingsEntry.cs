@@ -87,5 +87,5 @@ public class ExtensionEnumSettingsEntry(IEnumSettingsExtension extension, int va
     : ExtensionSettingsEntry<IEnumSettingsExtension, object>(extension, value, getDefaultValue, o => onValueChanged((int) o)), IEnumSettingsEntry<object>
 {
     /// <inheritdoc />
-    public IReadOnlyList<IReadOnlyStringPair<object>> EnumItems { get; } = [.. extension.GetEnumKeyValues().Select(t => new SymbolComboBoxItem(t.Value, t.Key, default))];
+    public IReadOnlyList<IReadOnlyStringPair<object>> EnumItems { get; } = [.. extension.EnumKeyValues.Select(t => new SymbolComboBoxItem(t.Value, t.Key, default))];
 }

@@ -2,10 +2,10 @@
   "AddExtensionsButton": {
     "Label": "添加扩展"
   },
-  "UnzipFailed": "解压压缩文件时出错",
-  "DllFileExistedError": "文件已在扩展文件夹中，将跳过该文件",
-  "DllLoadedSuccessfully": "已加载DLL",
-  "DllLoadFailed": "加载DLL失败",
+  "ExtensionFileExistedError": "文件已在扩展文件夹中，将跳过该文件",
+  "ExtensionLoadedSuccessfully": "已加载扩展",
+  "ExtensionLoadFailed": "加载扩展失败",
+  "PlatformNotSupportExtensions": "当前平台不支持扩展",
   "OpenExtensionsButton": {
     "Label": "打开扩展文件夹"
   },
@@ -15,10 +15,10 @@
   "UnloadExtensionsButton": {
     "Label": "卸载扩展"
   },
-  "ZipContainsNoDll": "压缩文件不包含可用的DLL",
+  "ZipContainsNoExtension": "压缩文件不包含可用的扩展库",
   "ExtensionsHelpButton": {
     "Label": "帮助文档"
   },
-  "ExtensionOutdated": "DLL加载成功，但扩展版本已过时，请从获取扩展处下载最新的版本",
+  "ExtensionOutdatedFormatted": "扩展加载成功，但扩展版本（{0}）已过时，请从获取扩展处下载最新的版本",
   "SomeExtensionsOutdatedFormatted": "有 {0} 个扩展版本已过时，请从获取扩展处下载最新的版本  "
 }

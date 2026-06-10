@@ -160,7 +160,7 @@ public static partial class IoHelper
         }
     }
 
-    public static async Task<(IReadOnlyList<Stream>, IReadOnlyList<int>)> SplitAnimatedImageStreamAsync(Stream animatedStream)
+    public static async Task<IReadOnlyDictionary<Stream, int>> SplitAnimatedImageStreamAsync(Stream animatedStream)
     {
         if (animatedStream.CanSeek)
             animatedStream.Position = 0;
@@ -174,8 +174,7 @@ public static partial class IoHelper
         var imageInfo = codec.Info;
         var targetInfo = new SKImageInfo(imageInfo.Width, imageInfo.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
         var frameInfos = codec.FrameInfo;
-        var streams = new List<Stream>(frameCount);
-        var msDelays = new List<int>(frameCount);
+        var streams = new Dictionary<Stream, int>(frameCount);
         try
         {
             for (var frameIndex = 0; frameIndex < frameCount; frameIndex++)
@@ -192,19 +191,19 @@ public static partial class IoHelper
                 var memoryStream = Streams.RentStream();
                 data.SaveTo(memoryStream);
                 memoryStream.Position = 0;
-                streams.Add(memoryStream);
 
                 var delay = frameInfos.Length > frameIndex && frameInfos[frameIndex].Duration > 0
                     ? frameInfos[frameIndex].Duration
                     : 100;
-                msDelays.Add(delay);
+
+                streams[memoryStream] = delay;
             }
 
-            return (streams, msDelays);
+            return streams;
         }
         catch
         {
-            foreach (var stream in streams) 
+            foreach (var stream in streams.Keys) 
                 await stream.DisposeAsync();
             throw;
         }

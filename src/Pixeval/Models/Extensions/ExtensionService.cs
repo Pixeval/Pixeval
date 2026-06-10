@@ -6,9 +6,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
+using System.Text.Json;
 using Pixeval.AppManagement;
 using Pixeval.Extensions.Common;
 using Pixeval.Extensions.Common.Commands.Transformers;
@@ -19,8 +21,36 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Models.Extensions;
 
+public enum ExtensionHostLoadResult
+{
+    Loaded,
+    NativeLibraryLoadFailed,
+    MissingEntryPoint,
+    EntryPointInvocationFailed,
+    OutdatedSdk,
+    InitializationFailed,
+    ExtensionLoadFailed
+}
+
 public class ExtensionService : IDisposable
 {
+    public static string? NativeLibraryExtension
+    {
+        get
+        {
+            if (OperatingSystem.IsWindows())
+                return ".dll";
+
+            if (OperatingSystem.IsLinux() || OperatingSystem.IsAndroid())
+                return ".so";
+
+            if (OperatingSystem.IsMacOS() || OperatingSystem.IsIOS() || OperatingSystem.IsMacCatalyst())
+                return ".dylib";
+
+            return null;
+        }
+    }
+
     public ObservableCollection<ExtensionsHostModel> HostModels { get; } = [];
 
     public IEnumerable<ExtensionsHostModel> ActiveModels => HostModels.Where(t => t.IsActive);
@@ -54,43 +84,115 @@ public class ExtensionService : IDisposable
 
     private readonly List<ExtensionSettingsGroup> _settingsGroups = [];
 
+    private readonly Dictionary<string, Dictionary<string, JsonElement>> _extensionSettings;
+
     public int OutDateExtensionHostsCount { get; }
 
-    public ExtensionService(FileLogger logger)
+    public ExtensionService(
+        FileLogger logger,
+        Dictionary<string, Dictionary<string, JsonElement>> extensionSettings,
+        bool loadInstalledHosts = true)
     {
-        foreach (var dll in Directory.GetFiles(AppInfo.ExtensionsFolder, "*.dll"))
+        _extensionSettings = extensionSettings;
+
+        if (!loadInstalledHosts)
+            return;
+
+        foreach (var library in EnumerateExtensionHostNativeLibraries(AppInfo.ExtensionsFolder))
         {
-            _ = TryLoadHost(dll, logger, out var isOutDate);
-            if (isOutDate)
+            _ = TryLoadHost(library, logger, out var outdatedVersion);
+            if (outdatedVersion is not null)
                 ++OutDateExtensionHostsCount;
         }
     }
 
-    public bool TryLoadHost(string path, ILogger logger, out bool isOutdated)
+    public bool TryLoadHost(string path, ILogger logger, out string? outdatedVersion)
     {
-        isOutdated = false;
+        var result = TryLoadHostWithResult(path, logger, out _, out outdatedVersion);
+        return result is ExtensionHostLoadResult.Loaded;
+    }
+
+    public static IReadOnlyList<string> EnumerateExtensionHostNativeLibraries(string directory)
+    {
+        if (!Directory.Exists(directory) || NativeLibraryExtension is not { } extension)
+            return [];
+
+        var pattern = "*" + extension;
+
+        var rootLibraries = Directory.GetFiles(directory, pattern, SearchOption.TopDirectoryOnly);
+        var childLibraries = Directory.GetDirectories(directory)
+            .SelectMany(t => Directory.GetFiles(t, pattern, SearchOption.TopDirectoryOnly));
+
+        return [.. rootLibraries.Concat(childLibraries)
+            .Where(IsExtensionHostNativeLibrary)
+            .Order(StringComparer.OrdinalIgnoreCase)];
+    }
+
+    public static IReadOnlyList<string> EnumerateExtensionHostNativeLibraryEntryNames(ZipArchive zipArchive) =>
+        [.. zipArchive.Entries
+            .Where(IsSupportedRelativeNativeLibraryPath)
+            .Where(IsExtensionHostNativeLibrary)
+            .Select(t => Path.Combine(t.FullName.Split('/', '\\')))
+            .Order(StringComparer.OrdinalIgnoreCase)];
+
+    public static (string DestinationDirectory, IReadOnlyList<string> HostLibraryEntryNames) CreateExtensionZipExtractionPlan(
+        ZipArchive zipArchive,
+        string zipFilePath,
+        string extensionsFolder)
+    {
+        var destinationDirectory = ContainsSingleTopLevelDirectory(zipArchive)
+            ? extensionsFolder
+            : Path.Combine(extensionsFolder, GetZipFolderName(zipFilePath));
+        return (destinationDirectory, EnumerateExtensionHostNativeLibraryEntryNames(zipArchive));
+
+        static bool ContainsSingleTopLevelDirectory(ZipArchive zipArchive)
+        {
+            string? rootDirectory = null;
+            var hasEntry = false;
+            foreach (var entry in zipArchive.Entries)
+            {
+                if (!TryGetZipEntrySegments(entry.FullName, out var segments))
+                    return false;
+
+                hasEntry = true;
+                rootDirectory ??= segments[0];
+                if (!string.Equals(rootDirectory, segments[0], StringComparison.OrdinalIgnoreCase))
+                    return false;
+
+                if (segments.Length is 1 && !IsDirectoryEntry(entry))
+                    return false;
+            }
+
+            return hasEntry;
+
+            static bool IsDirectoryEntry(ZipArchiveEntry entry) =>
+                entry.FullName.EndsWith('/') || entry.FullName.EndsWith('\\');
+        }
+
+        static string GetZipFolderName(string zipFilePath) =>
+            Path.GetFileNameWithoutExtension(zipFilePath) is { Length: > 0 } name
+                ? name
+                : "Extension";
+    }
+
+    public ExtensionHostLoadResult TryLoadHostWithResult(string path, ILogger logger, out ExtensionsHostModel? model, out string? outdatedVersion)
+    {
+        model = null;
+        var result = LoadHost(path, logger, _extensionSettings, out var loadedModel, out outdatedVersion);
+        if (result is not ExtensionHostLoadResult.Loaded)
+            return result;
+
         try
         {
-            if (LoadHost(path, logger, out isOutdated) is not { } model)
-                return false;
-            LoadExtensions(model);
-            var inserted = false;
-            for (var i = HostModels.Count; i > 0; --i)
-                if (HostModels[i - 1].Priority < model.Priority)
-                {
-                    HostModels.Insert(i, model);
-                    inserted = true;
-                    break;
-                }
-
-            if (!inserted)
-                HostModels.Insert(0, model);
-
-            return true;
+            LoadExtensions(loadedModel!);
+            InsertHost(loadedModel!);
+            model = loadedModel;
+            return ExtensionHostLoadResult.Loaded;
         }
         catch
         {
-            return false;
+            loadedModel?.Dispose();
+            return ExtensionHostLoadResult.ExtensionLoadFailed;
         }
     }
 
@@ -111,131 +213,250 @@ public class ExtensionService : IDisposable
         }
     }
 
-    private static ExtensionsHostModel? LoadHost(string path, ILogger logger, out bool isOutdated)
+    private static ExtensionHostLoadResult LoadHost(
+        string path,
+        ILogger logger,
+        Dictionary<string, Dictionary<string, JsonElement>> extensionSettings,
+        out ExtensionsHostModel? model,
+        out string? outdatedVersion)
     {
-        isOutdated = false;
+        model = null;
+        outdatedVersion = null;
         try
         {
-            if (!NativeLibrary.TryLoad(path, out var dllHandle))
-                return null;
+            if (!NativeLibrary.TryLoad(
+                path,
+                typeof(ExtensionService).Assembly,
+                DllImportSearchPath.UseDllDirectoryForDependencies | DllImportSearchPath.SafeDirectories,
+                out var libraryHandle))
+                return ExtensionHostLoadResult.NativeLibraryLoadFailed;
             try
             {
-                if (!NativeLibrary.TryGetExport(dllHandle, nameof(IExtensionsHost.DllGetExtensionsHost), out var dllGetExtensionsHostPtr))
-                    return null;
-                var dllGetExtensionsHost = Marshal.GetDelegateForFunctionPointer<IExtensionsHost.DllGetExtensionsHost>(dllGetExtensionsHostPtr);
-                var result = dllGetExtensionsHost(out var ppv);
+                if (!NativeLibrary.TryGetExport(libraryHandle, nameof(IExtensionsHost.DllGetExtensionsHost), out var getExtensionsHostPtr))
+                {
+                    NativeLibrary.Free(libraryHandle);
+                    return ExtensionHostLoadResult.MissingEntryPoint;
+                }
+                var getExtensionsHost = Marshal.GetDelegateForFunctionPointer<IExtensionsHost.DllGetExtensionsHost>(getExtensionsHostPtr);
+                var result = getExtensionsHost(out var ppv);
                 if (result is not 0)
-                    return null;
+                {
+                    NativeLibrary.Free(libraryHandle);
+                    return ExtensionHostLoadResult.EntryPointInvocationFailed;
+                }
                 var wrappers = new StrategyBasedComWrappers();
                 var rcw = (IExtensionsHost) wrappers.GetOrCreateObjectForComInstance(ppv, CreateObjectFlags.UniqueInstance);
                 _ = Marshal.Release(ppv);
 
                 if (rcw.SdkVersion != IExtensionsHost.CurrentSdkVersion.ToString())
                 {
-                    NativeLibrary.Free(dllHandle);
-                    isOutdated = true;
-                    return null;
+                    NativeLibrary.Free(libraryHandle);
+                    outdatedVersion = rcw.SdkVersion;
+                    return ExtensionHostLoadResult.OutdatedSdk;
                 }
-                rcw.Initialize(CultureInfo.CurrentCulture.Name, AppInfo.TempFolder, AppInfo.ExtensionsFolder, logger);
-                return new(rcw) { Handle = dllHandle };
+                rcw.Initialize(CultureInfo.CurrentCulture.Name, AppInfo.TempFolder, Path.GetDirectoryName(path) ?? AppInfo.ExtensionsFolder, logger);
+                model = new(rcw, GetValues(extensionSettings, rcw.ExtensionName)) { Handle = libraryHandle };
+                return ExtensionHostLoadResult.Loaded;
             }
             catch
             {
                 try
                 {
-                    NativeLibrary.Free(dllHandle);
+                    NativeLibrary.Free(libraryHandle);
                 }
                 catch
                 {
                     // ignored
                 }
-                return null;
+                return ExtensionHostLoadResult.InitializationFailed;
             }
         }
         catch
         {
-            return null;
+            return ExtensionHostLoadResult.NativeLibraryLoadFailed;
+        }
+
+        static Dictionary<string, JsonElement> GetValues(Dictionary<string, Dictionary<string, JsonElement>> extensionSettings, string hostName)
+        {
+            ref var value = ref CollectionsMarshal.GetValueRefOrAddDefault(extensionSettings, hostName, out var exists);
+            if (!exists)
+                value = [];
+            return value!;
         }
     }
 
-    private void LoadExtensions(ExtensionsHostModel model)
-    {
-        var extensions = model.Extensions;
-        LoadSubExtensions(extensions);
-        LoadSettingsExtension(model, extensions);
-    }
+    private static ReadOnlySpan<byte> ExtensionHostEntryPointName => "DllGetExtensionsHost"u8;
 
-    private void LoadSubExtensions(IEnumerable<IExtension> extensions)
+    private static bool IsExtensionHostNativeLibrary(string path)
     {
-        foreach (var extension in extensions)
-            extension.OnExtensionLoaded();
-    }
-
-    private void LoadSettingsExtension(ExtensionsHostModel model, IEnumerable<IExtension> extensions)
-    {
-        var extensionSettingsGroup = new ExtensionSettingsGroup(model);
-        _settingsGroups.Add(extensionSettingsGroup);
-        var values = model.Values;
-        var settingsExtensions = extensions.OfType<ISettingsExtension>();
-        foreach (var settingsExtension in settingsExtensions)
+        try
         {
-            var token = settingsExtension.Token;
-            switch (settingsExtension)
-            {
-                case IStringSettingsExtension i:
-                {
-                    var value = values.TryGetTargetOrAddDefault(token, i.DefaultValue);
-                    extensionSettingsGroup.Add(new ExtensionSettingsEntry<IStringSettingsExtension, string>(i, value, t => t.DefaultValue, i.OnValueChanged));
-                    break;
-                }
-                case IIntOrEnumSettingsExtension i:
-                {
-                    var value = values.TryGetTargetOrAddDefault(token, i.DefaultValue);
-                    switch (i)
-                    {
-                        case IIntSettingsExtension a:
-                            extensionSettingsGroup.Add(new ExtensionIntSettingsEntry(a, value, t => t.DefaultValue, a.OnValueChanged));
-                            break;
-                        case IEnumSettingsExtension b:
-                            extensionSettingsGroup.Add(new ExtensionEnumSettingsEntry(b, value, t => t.DefaultValue, i.OnValueChanged));
-                            break;
-                    }
-                    break;
-                }
-                case IColorSettingsExtension i:
-                {
-                    var value = values.TryGetTargetOrAddDefault(token, i.DefaultValue);
-                    extensionSettingsGroup.Add(new ExtensionSettingsEntry<IColorSettingsExtension, uint>(i, value, t => t.DefaultValue, i.OnValueChanged));
-                    break;
-                }
-                case IStringsArraySettingsExtension i:
-                {
-                    var value = values.TryGetTargetOrAddDefault(token, i.DefaultValue);
+            using var stream = File.OpenRead(path);
+            return ContainsExtensionHostEntryPointName(stream);
+        }
+        catch
+        {
+            return false;
+        }
+    }
 
-                    extensionSettingsGroup.Add(new ExtensionSettingsEntry<IStringsArraySettingsExtension, ObservableCollection<string>>(i, [.. value], t => [.. t.DefaultValue], t => i.OnValueChanged([.. t])));
-                    break;
-                }
-                case IDateTimeOffsetSettingsExtension i:
-                {
-                    var value = values.TryGetTargetOrAddDefault(token, i.DefaultValue);
-                    extensionSettingsGroup.Add(new ExtensionSettingsEntry<IDateTimeOffsetSettingsExtension, DateTimeOffset>(i, value, t => t.DefaultValue, i.OnValueChanged));
-                    break;
-                }
-                case IBoolSettingsExtension i:
-                {
-                    var value = values.TryGetTargetOrAddDefault(token, i.DefaultValue);
-                    extensionSettingsGroup.Add(new ExtensionSettingsEntry<IBoolSettingsExtension, bool>(i, value, t => t.DefaultValue, i.OnValueChanged));
-                    break;
-                }
-                case IDoubleSettingsExtension i:
-                {
-                    var value = values.TryGetTargetOrAddDefault(token, i.DefaultValue);
-                    extensionSettingsGroup.Add(new ExtensionDoubleSettingsEntry(i, value, t => t.DefaultValue, i.OnValueChanged));
-                    break;
-                }
-                default:
-                    break;
+    private static bool IsExtensionHostNativeLibrary(ZipArchiveEntry entry)
+    {
+        try
+        {
+            using var stream = entry.Open();
+            return ContainsExtensionHostEntryPointName(stream);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static bool IsSupportedRelativeNativeLibraryPath(ZipArchiveEntry entry)
+    {
+        if (NativeLibraryExtension is not { } extension)
+            return false;
+
+        if (!TryGetZipEntrySegments(entry.FullName, out var segments))
+            return false;
+
+        return segments.Length is 1 or 2
+            && string.Equals(Path.GetExtension(segments[^1]), extension, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool TryGetZipEntrySegments(string path, out string[] segments)
+    {
+        segments = [];
+        if (path.Length is 0 || path.StartsWith('/') || path.StartsWith('\\'))
+            return false;
+
+        var trimmedPath = path.TrimEnd('/', '\\');
+        if (trimmedPath.Length is 0)
+            return false;
+
+        segments = trimmedPath.Split('/', '\\');
+        return segments.All(t => t is { Length: > 0 } and not "." and not ".." && !t.Contains(':'));
+    }
+
+    private static bool ContainsExtensionHostEntryPointName(Stream stream)
+    {
+        var entryPointName = ExtensionHostEntryPointName;
+        Span<byte> buffer = stackalloc byte[4096 + 20];
+        var retained = 0;
+
+        while (true)
+        {
+            var read = stream.Read(buffer[retained..]);
+            if (read is 0)
+                return false;
+
+            var length = retained + read;
+            if (buffer[..length].IndexOf(entryPointName) >= 0)
+                return true;
+
+            retained = Math.Min(entryPointName.Length - 1, length);
+            buffer[(length - retained)..length].CopyTo(buffer);
+        }
+    }
+
+    private void InsertHost(ExtensionsHostModel model)
+    {
+        var inserted = false;
+        for (var i = HostModels.Count; i > 0; --i)
+            if (HostModels[i - 1].Priority < model.Priority)
+            {
+                HostModels.Insert(i, model);
+                inserted = true;
+                break;
             }
+
+        if (!inserted)
+            HostModels.Insert(0, model);
+    }
+
+    private void LoadExtensions(ExtensionsHostModel hostModel)
+    {
+        var ext = hostModel.Extensions;
+        LoadSubExtensions(ext);
+        LoadSettingsExtension(hostModel, ext);
+
+        return;
+
+        static void LoadSubExtensions(IEnumerable<IExtension> extensions)
+        {
+            foreach (var extension in extensions)
+                extension.OnExtensionLoaded();
+        }
+
+        void LoadSettingsExtension(ExtensionsHostModel model, IEnumerable<IExtension> extensions)
+        {
+            var extensionSettingsGroup = new ExtensionSettingsGroup(model);
+            var values = model.Values;
+            var settingsExtensions = extensions.OfType<ISettingsExtension>();
+            foreach (var settingsExtension in settingsExtensions)
+            {
+                var token = settingsExtension.Token;
+                switch (settingsExtension)
+                {
+                    case IStringSettingsExtension i:
+                    {
+                        var value = values.TryGetTargetOrAddDefault(token, i.DefaultValue);
+                        extensionSettingsGroup.Add(new ExtensionSettingsEntry<IStringSettingsExtension, string>(i, value, t => t.DefaultValue, i.OnValueChanged));
+                        break;
+                    }
+                    case IIntOrEnumSettingsExtension i:
+                    {
+                        var value = values.TryGetTargetOrAddDefault(token, i.DefaultValue);
+                        switch (i)
+                        {
+                            case IIntSettingsExtension a:
+                                extensionSettingsGroup.Add(new ExtensionIntSettingsEntry(a, value, t => t.DefaultValue, a.OnValueChanged));
+                                break;
+                            case IEnumSettingsExtension b:
+                                extensionSettingsGroup.Add(new ExtensionEnumSettingsEntry(b, value, t => t.DefaultValue, i.OnValueChanged));
+                                break;
+                        }
+                        break;
+                    }
+                    case IColorSettingsExtension i:
+                    {
+                        var value = values.TryGetTargetOrAddDefault(token, i.DefaultValue);
+                        extensionSettingsGroup.Add(new ExtensionSettingsEntry<IColorSettingsExtension, uint>(i, value, t => t.DefaultValue, i.OnValueChanged));
+                        break;
+                    }
+                    case IStringsArraySettingsExtension i:
+                    {
+                        var value = values.TryGetTargetOrAddDefault(token, i.DefaultValue);
+
+                        extensionSettingsGroup.Add(new ExtensionSettingsEntry<IStringsArraySettingsExtension, ObservableCollection<string>>(i, [.. value], t => [.. t.DefaultValue], t => i.OnValueChanged([.. t])));
+                        break;
+                    }
+                    case IDateTimeOffsetSettingsExtension i:
+                    {
+                        var value = values.TryGetTargetOrAddDefault(token, i.DefaultValue);
+                        extensionSettingsGroup.Add(new ExtensionSettingsEntry<IDateTimeOffsetSettingsExtension, DateTimeOffset>(i, value, t => t.DefaultValue, i.OnValueChanged));
+                        break;
+                    }
+                    case IBoolSettingsExtension i:
+                    {
+                        var value = values.TryGetTargetOrAddDefault(token, i.DefaultValue);
+                        extensionSettingsGroup.Add(new ExtensionSettingsEntry<IBoolSettingsExtension, bool>(i, value, t => t.DefaultValue, i.OnValueChanged));
+                        break;
+                    }
+                    case IDoubleSettingsExtension i:
+                    {
+                        var value = values.TryGetTargetOrAddDefault(token, i.DefaultValue);
+                        extensionSettingsGroup.Add(new ExtensionDoubleSettingsEntry(i, value, t => t.DefaultValue, i.OnValueChanged));
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            }
+
+            if (extensionSettingsGroup.Count is not 0)
+                _settingsGroups.Add(extensionSettingsGroup);
         }
     }
 

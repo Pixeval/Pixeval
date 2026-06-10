@@ -19,7 +19,6 @@ public sealed class FilterLanguageTest
         new AuthorSyntax(),
         new TagSyntax(),
         new BookmarkSyntax(),
-        new IndexSyntax(),
         new ScoreSyntax(),
         new WeightSyntax(),
         new StartDateSyntax(),
@@ -180,7 +179,6 @@ public sealed class FilterLanguageTest
         Assert.AreEqual("a:", result.Completions.Single(t => t.DisplayText == "a:artist").InsertText);
         Assert.AreEqual("#", result.Completions.Single(t => t.DisplayText == "#tag").InsertText);
         Assert.AreEqual("l:", result.Completions.Single(t => t.DisplayText == "l:100-200").InsertText);
-        Assert.AreEqual("i:", result.Completions.Single(t => t.DisplayText == "i:1-3").InsertText);
         Assert.AreEqual("s:", result.Completions.Single(t => t.DisplayText == "s:2024-1-1").InsertText);
         Assert.AreEqual("+ai", result.Completions.Single(t => t.DisplayText == "+ai").InsertText);
         Assert.AreEqual("-ai", result.Completions.Single(t => t.DisplayText == "-ai").InsertText);
@@ -194,7 +192,6 @@ public sealed class FilterLanguageTest
         AssertValueHintsOnly("score:", ["12345"]);
         AssertValueHintsOnly("weight:", ["2", "1.5", "1/2"]);
         AssertValueHintsOnly("l:", ["2-", "-3", "2-3"]);
-        AssertValueHintsOnly("i:", ["2-", "-3", "2-3"]);
         AssertValueHintsOnly("s:", ["MM-dd", "yyyy-MM-dd"]);
     }
 
@@ -334,17 +331,6 @@ public sealed class FilterLanguageTest
     }
 
     [TestMethod]
-    public void IndexRangeShouldUseOneBasedConversion()
-    {
-        var result = _Language.Analyze("i:1-3");
-
-        Assert.IsTrue(result.IsSuccess);
-        Assert.IsNotNull(result.Query);
-        Assert.AreEqual(0, result.Query.ViewRange.Start.Value);
-        Assert.AreEqual(3, result.Query.ViewRange.End.Value);
-    }
-
-    [TestMethod]
     public void BookmarkRangeShouldRemainInclusive()
     {
         var result = _Language.Analyze("l:100-200");
@@ -360,24 +346,14 @@ public sealed class FilterLanguageTest
     }
 
     [TestMethod]
-    public void IntervalRangeSyntaxShouldBeRejected()
+    public void MissingRangeDashShouldIncludeSyntaxAndLiteral()
     {
-        var result = _Language.Analyze("l:[100,200]");
+        var result = _Language.Analyze("l:100");
 
         Assert.IsFalse(result.IsSuccess);
         Assert.AreEqual(FilterDiagnosticKind.InvalidLongRangeFormat, result.Diagnostics[0].Kind);
         Assert.AreEqual("l:", result.Diagnostics[0].Arguments[0]);
-        Assert.AreEqual("[", result.Diagnostics[0].Arguments[1]);
-    }
-
-    [TestMethod]
-    public void DuplicateViewRangeShouldIncludeSyntaxArgument()
-    {
-        var result = _Language.Analyze("i:1-3 i:4-6");
-
-        Assert.IsFalse(result.IsSuccess);
-        Assert.AreEqual(FilterDiagnosticKind.DuplicateViewRange, result.Diagnostics[0].Kind);
-        Assert.AreEqual("i:", result.Diagnostics[0].Arguments[0]);
+        Assert.AreEqual("100", result.Diagnostics[0].Arguments[1]);
     }
 
     [TestMethod]
@@ -436,26 +412,11 @@ public sealed class FilterLanguageTest
 
     private sealed class BookmarkSyntax : FilterLongRangeSyntax
     {
-        protected override FilterLongRangeBindingMode BindingMode => FilterLongRangeBindingMode.Inclusive;
-
         public override string Key => "Bookmark";
 
         public override string? ExampleValue => "100-200";
 
         public override IReadOnlyList<FilterSyntaxPattern> Patterns { get; } = [FilterSyntaxPattern.Keyword("l", exampleValue: "100-200")];
-    }
-
-    private sealed class IndexSyntax : FilterLongRangeSyntax
-    {
-        protected override FilterLongRangeBindingMode BindingMode => FilterLongRangeBindingMode.OneBasedIndex;
-
-        public override string Key => "Index";
-
-        public override FilterTermRole Role => FilterTermRole.ViewRange;
-
-        public override string? ExampleValue => "1-3";
-
-        public override IReadOnlyList<FilterSyntaxPattern> Patterns { get; } = [FilterSyntaxPattern.Keyword("i", exampleValue: "1-3")];
     }
 
     private sealed class ScoreSyntax : FilterLongSyntax

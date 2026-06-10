@@ -47,7 +47,28 @@ public partial class WorkContainer : UserControl
     public bool IsRefreshEnabled
     {
         get;
-        set => SetAndRaise(IsRefreshEnabledProperty, ref field, value);
+        set
+        {
+            if (field == value)
+                return;
+
+            SetAndRaise(IsRefreshEnabledProperty, ref field, value);
+            UpdateRefreshButton();
+            return;
+
+            void UpdateRefreshButton()
+            {
+                if (IsRefreshEnabled)
+                {
+                    if (!RightToolBar.SecondaryCommands.Contains(RefreshButton))
+                        RightToolBar.SecondaryCommands.Insert(0, RefreshButton);
+
+                    return;
+                }
+
+                _ = RightToolBar.SecondaryCommands.Remove(RefreshButton);
+            }
+        }
     } = true;
 
     public event EventHandler<RoutedEventArgs>? RefreshRequested;

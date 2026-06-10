@@ -117,7 +117,10 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup
             foreach (var task in TasksSet)
                 streams.Add(File.OpenAsyncRead(task.Destination));
 
-            await provider.FormatImageAsync(streams, MsDelays, TokenizedDestination);
+            var dict = streams.Zip(Entry.ZipImageDelays!)
+                .ToDictionary(t => t.First, t => t.Second);
+
+            await provider.FormatImageAsync(dict, TokenizedDestination);
         }
         finally
         {
