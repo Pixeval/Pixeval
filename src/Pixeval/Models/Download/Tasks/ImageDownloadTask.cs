@@ -64,7 +64,7 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
     public partial double ProgressPercentage { get; protected set; }
 
     [ObservableProperty]
-    public virtual partial string? ErrorMessage { get; protected set; }
+    public partial string? ErrorMessage { get; protected set; }
 
     [ObservableProperty]
     public partial bool IsProcessing { get; private set; }

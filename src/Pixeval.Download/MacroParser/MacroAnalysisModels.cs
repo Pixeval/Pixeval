@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Pixeval.Download.MacroParser.Ast;
 using Pixeval.Download.MacroParser.Bound;
 
@@ -30,6 +31,7 @@ public enum MacroHighlightKind
 {
     Delimiter,
     Name,
+    Formatter,
     Separator
 }
 
@@ -45,6 +47,7 @@ public enum MacroDiagnosticKind
     UnknownMacroName,
     NonParameterizedMacroBearingParameter,
     ConditionalBranchesMissing,
+    InvalidFormatter,
     MacroShouldBeContained,
     MacroShouldBeInLastSegment
 }
@@ -64,7 +67,7 @@ public sealed record MacroParseResult(
     public static MacroParseResult Empty { get; } = new(null, [], []);
 }
 
-public sealed record MacroBindingResult<TContext>(
+public sealed record MacroBindingResult<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TContext>(
     BoundSequence<TContext>? Root,
     IReadOnlyList<MacroDiagnostic> Diagnostics)
 {

@@ -3,15 +3,19 @@
 
 using Misaki;
 using Pixeval.Download.MacroParser;
+using Pixeval.Download.Macros;
+using Pixeval.I18N;
 
-namespace Pixeval.Download.Macros;
+namespace Pixeval.Models.Download.Macros;
 
-[MetaPathMacro<IArtworkInfo>]
+[MetaPathMacro]
 public class IsPicSetMacro : IPredicate<IArtworkInfo>
 {
-    public const string NameConst = "if_pic_set";
+    public const string NameConst = "is_pic_set";
 
     public string Name => NameConst;
+
+    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionIsPicSet);
 
     public bool Match(IArtworkInfo context) => context.ImageType is ImageType.ImageSet;
 }

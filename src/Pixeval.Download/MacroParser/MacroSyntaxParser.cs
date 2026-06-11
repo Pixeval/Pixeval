@@ -100,6 +100,7 @@ public sealed class MacroSyntaxParser(string text)
 
         AddHighlight(nameStart, _position - nameStart, MacroHighlightKind.Name, nestingDepth);
         var macroName = new PlainText(text[nameStart.._position], nameStart.._position);
+        var formatter = ParseFormatter(nestingDepth);
         var diagnosticStart = _diagnostics.Count;
         var branches = ParseConditionalBranches(nestingDepth);
         if (_diagnostics.Count > diagnosticStart)
@@ -117,7 +118,25 @@ public sealed class MacroSyntaxParser(string text)
 
         AddHighlight(_position, 1, MacroHighlightKind.Delimiter, nestingDepth);
         ++_position;
-        return new(macroName, branches);
+        return new(macroName, formatter, branches);
+    }
+
+    private PlainText? ParseFormatter(int nestingDepth)
+    {
+        if (IsAtEnd || Current is not ':')
+            return null;
+
+        AddHighlight(_position, 1, MacroHighlightKind.Separator, nestingDepth);
+        ++_position;
+
+        var formatterStart = _position;
+        while (!IsAtEnd && Current is not '?' and not '}')
+            ++_position;
+
+        if (_position > formatterStart)
+            AddHighlight(formatterStart, _position - formatterStart, MacroHighlightKind.Formatter, nestingDepth);
+
+        return new(text[formatterStart.._position], formatterStart.._position);
     }
 
     private ConditionalMacroBranches? ParseConditionalBranches(int nestingDepth)

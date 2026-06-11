@@ -1,9 +1,8 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
-using System.IO;
+using System;
 using Mako.Model;
-using Pixeval.Download;
 using Pixeval.Models.Download.Tasks;
 using Pixeval.Utilities.IO;
 
@@ -11,15 +10,15 @@ namespace Pixeval.Models.Download;
 
 public class NovelDownloadTaskFactory : IDownloadTaskFactory<Novel, NovelDownloadTaskGroup, NovelContent>
 {
-    public NovelDownloadTaskGroup Create(Novel context, string rawPath, NovelContent? parameter)
+    public NovelDownloadTaskGroup Create(Novel context, string rawPath, NovelContent? parameter) =>
+        Create(new ParserContext(context), rawPath, parameter);
+
+    public NovelDownloadTaskGroup Create(ParserContext parserContext, string rawPath, NovelContent? parameter)
     {
-        var path = IoHelper.NormalizePath(ArtworkMetaPathParser.Instance.Reduce(rawPath, context));
-        path = IoHelper.ChangeExtension(path, IoHelper.GetNovelExtension());
-        // xxx.pdf\.png
-        // xxx.pdf\<ext>
-        // xxx\novel.txt\.png
-        // xxx\novel.md\<ext>
-        path = Path.Combine(path, IoHelper.GetIllustrationExtension());
+        if (parserContext.ArtworkInfo is not Novel context)
+            throw new ArgumentException($"The parser context must contain a {nameof(Novel)}.", nameof(parserContext));
+
+        var path = IoHelper.NormalizePath(DownloadPathMacroParser.Reduce(rawPath, parserContext));
         var task = new NovelDownloadTaskGroup(context, path, parameter);
         return task;
     }

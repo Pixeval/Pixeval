@@ -7,14 +7,11 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using Misaki;
 
 namespace Pixeval.Download;
 
-public interface IDownloadTaskGroupBase : IDownloadTaskBase, IIdentityInfo, INotifyPropertyChanged, INotifyPropertyChanging, IReadOnlyCollection<ISingleDownloadTaskBase>, IDisposable
+public interface IDownloadTaskGroupBase : IDownloadTaskBase, INotifyPropertyChanged, INotifyPropertyChanging, IReadOnlyCollection<ISingleDownloadTaskBase>, IDisposable
 {
-    string IPlatformInfo.Platform => Pixiv;
-
     ValueTask InitializeTaskGroupAsync();
 
     void SubscribeProgress(ChannelWriter<DownloadToken> writer);

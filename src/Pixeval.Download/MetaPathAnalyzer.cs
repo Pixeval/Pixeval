@@ -1,14 +1,17 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using Misaki;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Pixeval.Download.MacroParser;
 
 namespace Pixeval.Download;
 
-public static class ArtworkMetaPathAnalyzer
+public class MetaPathAnalyzer<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TContext>(IReadOnlyList<IMacro> macroProvider)
 {
-    public static MacroParseResult Analyze(string text)
+    public IReadOnlyList<IMacro> MacroProvider { get; } = macroProvider;
+
+    public MacroParseResult Analyze(string text)
     {
         if (string.IsNullOrWhiteSpace(text))
             return MacroParseResult.Empty;
@@ -17,7 +20,7 @@ public static class ArtworkMetaPathAnalyzer
         if (result.Diagnostics.Count > 0 || result.Root is not { } root)
             return result;
 
-        var bindingResult = new MacroBinder<IArtworkInfo>(ArtworkMetaPathParser.Instance.MacroProvider).Bind(root);
+        var bindingResult = new MacroBinder<TContext>(MacroProvider).Bind(root);
         return bindingResult.Diagnostics.Count is 0
             ? result
             : result with { Diagnostics = bindingResult.Diagnostics };

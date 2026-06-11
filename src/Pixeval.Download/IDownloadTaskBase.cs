@@ -1,8 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System;
-
 namespace Pixeval.Download;
 
 public interface IDownloadTaskBase
@@ -21,9 +19,11 @@ public interface IDownloadTaskBase
     /// 下载目标路径
     /// </summary>
     /// <remarks>
-    /// 表示文件所在的地址，不包含未解析的宏@{...}，但可能无法被直接解析（因为包含token"&lt;...&gt;"），<br/>
-    /// 当路径是一个文件时必须是一个有效的地址（不包含token）<br/>
-    /// 当路径是多个文件时，每个子任务通过替换token，得到每个子任务的目标路径。文件名可以包含token，但其文件夹路径不能包含token
+    /// 表示文件所在的地址，不包含未解析的宏@{...}，但可能无法被直接解析（因为包含token"&lt;name:formatter&gt;"），<br/>
+    /// 当路径是一个文件时，必须是一个有效的地址（不包含token）<br/>
+    /// 当路径是多个文件时，每个子任务通过替换token，得到每个子任务的目标路径<br/>
+    /// 文件名可以包含token，但其文件夹路径不能包含token（即所有子任务一定使用相同的文件夹路径）<br/>
+    /// 在多文件任务中使用该属性很危险，无法得到确切的目标路径
     /// </remarks>
     string Destination { get; }
 

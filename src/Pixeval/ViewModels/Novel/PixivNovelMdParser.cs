@@ -2,7 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using System.Linq;
+using System.IO;
 using System.Text;
 using Avalonia.Media.Imaging;
 using Pixeval.I18N;
@@ -10,7 +10,7 @@ using Pixeval.Utilities;
 
 namespace Pixeval.ViewModels;
 
-public class PixivNovelMdParser<T>(StringBuilder sb, int pageIndex) : PixivNovelParser<StringBuilder, T, INovelContext<T>> where T : class
+public class PixivNovelMdParser<TImage>(StringBuilder sb, int pageIndex) : PixivNovelParser<StringBuilder, TImage, INovelContext<TImage>> where TImage : class
 {
     protected override StringBuilder Vector => sb.AppendLine($"<div id=\"page{pageIndex}\" />" + Environment.NewLine);
 
@@ -29,7 +29,7 @@ public class PixivNovelMdParser<T>(StringBuilder sb, int pageIndex) : PixivNovel
         _ = currentText.Append($"[{content}]({uri.OriginalString})");
     }
 
-    protected override void AddInlineHyperlink(StringBuilder currentText, uint page, INovelContext<T> viewModel)
+    protected override void AddInlineHyperlink(StringBuilder currentText, uint page)
     {
         _ = currentText.Append($"[{I18NManager.GetResource(MiscResources.GoToPageFormatted, page)}](page{page - 1})");
     }
@@ -45,22 +45,24 @@ public class PixivNovelMdParser<T>(StringBuilder sb, int pageIndex) : PixivNovel
             .AppendLine();
     }
 
-    protected override void AddUploadedImage(StringBuilder currentText, INovelContext<T> viewModel, long imageId)
+    protected override void AddUploadedImage(StringBuilder currentText, INovelContext<TImage> viewModel, long imageId)
     {
+        var url = viewModel.ImageLookup[imageId].ThumbnailUrl;
         _ = currentText
             .AppendLine()
-            .Append($"![{imageId}]({imageId}{viewModel.ImageExtension})")
+            .Append($"![{imageId}]({imageId}{Path.GetExtension(url)})")
             .AppendLine();
     }
 
-    protected override void AddPixivImage(StringBuilder currentText, INovelContext<T> viewModel, long imageId, int page)
+    protected override void AddPixivImage(StringBuilder currentText, INovelContext<TImage> viewModel, long imageId, int page)
     {
-        // var key = (imageId, page);
+        var key = (imageId, page);
+        var url = viewModel.IllustrationLookup[key].ThumbnailUrl;
         _ = currentText
             .AppendLine()
-            .Append($"[![{imageId}-{page}]({imageId}-{page}{viewModel.ImageExtension})]({MakoHelper.GenerateIllustrationWebUri(imageId).OriginalString})")
+            .Append($"[![{imageId}-{page}]({imageId}-{page}{Path.GetExtension(url)})]({MakoHelper.GenerateIllustrationWebUri(imageId).OriginalString})")
             .AppendLine();
-        // var info = viewModel.IllustrationLookup[imageId];
+        // var info = viewModel.IllustrationLookup[key];
     }
 
     protected override void NewPage(StringBuilder currentText)
@@ -83,20 +85,22 @@ public class PixivNovelMdDisplayParser(StringBuilder sb, int pageIndex) : PixivN
 
     protected override void AddUploadedImage(StringBuilder currentText, INovelContext<Bitmap> viewModel, long imageId)
     {
+        var url = viewModel.ImageLookup[imageId].ThumbnailUrl;
         _ = currentText
             .AppendLine()
-            .Append($"![{imageId}]({viewModel.NovelContent.Images.FirstOrDefault(t => t.NovelImageId == imageId)?.ThumbnailUrl})")
+            .Append($"![{imageId}]({url})")
             .AppendLine();
     }
 
     protected override void AddPixivImage(StringBuilder currentText, INovelContext<Bitmap> viewModel, long imageId, int page)
     {
-        // var key = (imageId, page);
+        var key = (imageId, page);
+        var url = viewModel.IllustrationLookup[key].ThumbnailUrl;
         _ = currentText
             .AppendLine()
             .Append(
-                $"[![{imageId}-{page}]({viewModel.IllustrationLookup[(imageId, page)].ThumbnailUrl})]({MakoHelper.GenerateIllustrationWebUri(imageId).OriginalString})")
+                $"[![{imageId}-{page}]({url})]({MakoHelper.GenerateIllustrationWebUri(imageId).OriginalString})")
             .AppendLine();
-        // var info = viewModel.IllustrationLookup[imageId];
+        // var info = viewModel.IllustrationLookup[key];
     }
 }

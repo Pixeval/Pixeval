@@ -8,7 +8,6 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using Mako.Net;
 using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download;
@@ -21,7 +20,7 @@ public class DownloadManager : IDisposable
     private readonly Channel<DownloadToken> _downloadTaskChannel = Channel.CreateUnbounded<DownloadToken>();
 
     /// <summary>
-    /// 使用<see cref="MakoApiKind.ImageApi"/>的<see cref="HttpClient"/>
+    /// 使用图片下载接口的<see cref="HttpClient"/>
     /// </summary>
     private readonly HttpClient _httpClient;
 

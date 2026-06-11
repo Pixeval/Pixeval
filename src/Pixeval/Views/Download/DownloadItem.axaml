@@ -78,11 +78,13 @@
                 <TextBlock
                     Grid.Column="0"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    MaxLines="1"
                     Text="{Binding ProgressMessage}"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="NoWrap" />
                 <StackPanel
                     Grid.Column="1"
+                    VerticalAlignment="Top"
                     IsVisible="{Binding ShowGroupStats}"
                     Orientation="Horizontal"
                     Spacing="5">

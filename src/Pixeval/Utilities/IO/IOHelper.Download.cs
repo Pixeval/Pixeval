@@ -84,7 +84,7 @@ public static partial class IoHelper
             try
             {
                 if (0 > startPosition)
-                    return new ArgumentOutOfRangeException(nameof(startPosition), @"Too small");
+                    return new ArgumentOutOfRangeException(nameof(startPosition), "Too small");
 
                 var request = new HttpRequestMessage(HttpMethod.Get, uri);
 

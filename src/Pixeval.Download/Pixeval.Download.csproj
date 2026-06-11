@@ -7,9 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\lib\Mako\Mako\Mako.csproj" />
-	  <ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
-	  <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
+		<ProjectReference Include="..\Pixeval.Utilities\Pixeval.Utilities.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -28,9 +28,10 @@ public class DownloadHistoryEntry : ArtworkHistoryEntry
     [Indexed(Unique = true)]
     public string Destination { get; init; } = null!;
 
+    /// <summary>
+    /// 此任务的格式令牌
+    /// </summary>
     public string? FormatToken { get; set; }
-
-    public string? ImageFormatToken { get; set; }
 
     public string? ErrorMessage { get; set; }
 

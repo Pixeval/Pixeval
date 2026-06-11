@@ -3,16 +3,20 @@
 
 using Misaki;
 using Pixeval.Download.MacroParser;
+using Pixeval.Download.Macros;
+using Pixeval.I18N;
 
-namespace Pixeval.Download.Macros;
+namespace Pixeval.Models.Download.Macros;
 
-/// <summary>
+/// <remarks>
 /// 包含R18G
-/// </summary>
-[MetaPathMacro<IArtworkInfo>]
+/// </remarks>
+[MetaPathMacro]
 public class IsR18Macro : IPredicate<IArtworkInfo>
 {
-    public string Name => "if_r18";
+    public string Name => "is_r18";
+
+    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionIsR18);
 
     public bool Match(IArtworkInfo context) => context.SafeRating.IsR18 || context.SafeRating.IsR18G;
 }

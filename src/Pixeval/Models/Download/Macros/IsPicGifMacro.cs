@@ -3,13 +3,17 @@
 
 using Misaki;
 using Pixeval.Download.MacroParser;
+using Pixeval.Download.Macros;
+using Pixeval.I18N;
 
-namespace Pixeval.Download.Macros;
+namespace Pixeval.Models.Download.Macros;
 
-[MetaPathMacro<IArtworkInfo>]
+[MetaPathMacro]
 public class IsPicGifMacro : IPredicate<IArtworkInfo>
 {
-    public string Name => "if_pic_gif";
+    public string Name => "is_pic_gif";
+
+    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionIsPicGif);
 
     public bool Match(IArtworkInfo context) => context.ImageType is ImageType.SingleAnimatedImage;
 }

@@ -6,10 +6,9 @@ using AutoSettingsPage.Avalonia;
 using CommunityToolkit.Avalonia.Controls;
 using Misaki;
 using Pixeval.Controls.Settings;
-using Pixeval.Download;
 using Pixeval.Download.MacroParser;
-using Pixeval.Download.Macros;
 using Pixeval.I18N;
+using Pixeval.Models.Download;
 using Pixeval.Models.Settings.Entries;
 using Pixeval.Utilities;
 using Pixeval.Utilities.IO;
@@ -59,7 +58,7 @@ public partial class DownloadMacroSettingsExpander : SettingsExpander, IEntryCon
     private void ApplyText(string? text)
     {
         var normalized = text ?? "";
-        var analysis = ArtworkMetaPathAnalyzer.Analyze(normalized);
+        var analysis = DownloadPathMacroParser.Analyze(normalized);
         _colorizer.Update(analysis, normalized.Length);
         DownloadPathMacroTextBox.TextArea.TextView.InvalidateVisual();
 
@@ -123,8 +122,9 @@ public partial class DownloadMacroSettingsExpander : SettingsExpander, IEntryCon
         return;
 
         string GetPath(IArtworkInfo info) =>
-            IoHelper.NormalizePath(ArtworkMetaPathParser.Instance.Reduce(text, info))
-                .Replace(FileExtensionMacro.NameConstToken, ".png");
+            IoHelper.ChangeExtension(
+                IoHelper.NormalizePath(DownloadPathMacroParser.Reduce(text, new ParserContext(info))),
+                ".png");
     }
 
     private static string FormatDiagnostic(MacroDiagnostic diagnostic)

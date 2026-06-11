@@ -83,8 +83,8 @@ public record AppSettings
     [SettingsEntry(Symbol.Rename, DownloadPathMacroEntryHeader, DownloadPathMacroEntryDescription)]
     public string DownloadPathMacro { get; set; } = Path.Join(
         GetSpecialFolder(),
-        "@{if_pic_set?[@{artist_name}] @{title}:}",
-        "[@{artist_name}] @{id}@{if_pic_set?p@{pic_set_index}:}@{ext}"
+        "@{is_pic_set?[@{artist_name}] @{title}:}",
+        "[@{artist_name}] @{id}@{is_pic_set?p@{pic_set_index}:}@{ext}"
     );
         
 
@@ -288,8 +288,8 @@ public record AppSettings
         var picDirectory = Path.GetDirectoryName(picPath);
         return picDirectory == Path.GetDirectoryName(docPath)
             ? Path.Join(picDirectory!,
-                $"@{{if_novel?{Path.GetFileName(docPath)}:{Path.GetFileName(picPath)}}}")
-            : $"@{{if_novel?{docPath}:{picPath}}}";
+                $"@{{is_novel?{Path.GetFileName(docPath)}:{Path.GetFileName(picPath)}}}")
+            : $"@{{is_novel?{docPath}:{picPath}}}";
     }
 }
 

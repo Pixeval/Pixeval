@@ -9,13 +9,15 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Pixeval.SourceGen;
 
-namespace Pixeval.SourceGen.Tests;
+namespace Pixeval.Tests;
 
 [TestClass]
 public sealed class UnusedI18NResourceAnalyzerTest
 {
-    private const string ResourceDefinitions = """
+    private const string ResourceDefinitions =
+        """
         namespace Pixeval;
 
         public static class TestResources
@@ -36,11 +38,14 @@ public sealed class UnusedI18NResourceAnalyzerTest
 
             _ = TestResources.Used;
             """,
-            [Json("zh-Hans", """
-                {
-                  "Used": "used"
-                }
-                """)]);
+            [
+                Json("zh-Hans",
+                    """
+                    {
+                      "Used": "used"
+                    }
+                    """)
+            ]);
 
         Assert.IsEmpty(diagnostics);
     }
@@ -51,12 +56,14 @@ public sealed class UnusedI18NResourceAnalyzerTest
         var diagnostics = await GetAnalyzerDiagnosticsAsync(
             "",
             [
-                Json("zh-Hans", """
+                Json("zh-Hans",
+                    """
                     {
                       "XamlUsed": "used"
                     }
                     """),
-                Xaml("""
+                Xaml(
+                    """
                     <TextBlock Text="{I18N {x:Static pixeval:TestResources.XamlUsed}}" />
                     """)
             ]);
@@ -69,7 +76,8 @@ public sealed class UnusedI18NResourceAnalyzerTest
     {
         var diagnostics = await GetAnalyzerDiagnosticsAsync(
             "",
-            [Json("zh-Hans", """
+            [Json("zh-Hans",
+                """
                 {
                   "Parent": {
                     "Unused": "unused"
@@ -90,7 +98,8 @@ public sealed class UnusedI18NResourceAnalyzerTest
     {
         var diagnostics = await GetAnalyzerDiagnosticsAsync(
             "",
-            [Json("zh-Hans", """
+            [Json("zh-Hans",
+                """
                 {
                   "Parent": {
                     "Unused": "unused"
@@ -108,14 +117,16 @@ public sealed class UnusedI18NResourceAnalyzerTest
         var diagnostics = await GetAnalyzerDiagnosticsAsync(
             "",
             [
-                Json("zh-Hans", """
+                Json("zh-Hans",
+                    """
                     {
                       "Parent": {
                         "Unused": "unused"
                       }
                     }
                     """),
-                Json("en-US", """
+                Json("en-US",
+                    """
                     {
                       "Parent": {
                         "Unused": "unused"
@@ -137,7 +148,7 @@ public sealed class UnusedI18NResourceAnalyzerTest
     private static async Task<IReadOnlyList<Diagnostic>> GetAnalyzerDiagnosticsAsync(string userSource, IReadOnlyList<AdditionalText> additionalTexts)
     {
         var compilation = CSharpCompilation.Create(
-            "Pixeval.SourceGen.Tests.Target",
+            "Pixeval.Tests.SourceGen.Target",
             [
                 CSharpSyntaxTree.ParseText(SourceText.From(ResourceDefinitions, Encoding.UTF8)),
                 CSharpSyntaxTree.ParseText(SourceText.From(userSource, Encoding.UTF8))

@@ -4,13 +4,13 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using Pixeval.Download.MacroParser.Ast;
 using Pixeval.Download.MacroParser.Bound;
-using Pixeval.Download.Macros;
 
 namespace Pixeval.Download.MacroParser;
 
-public sealed class MacroBinder<TContext>(IReadOnlyList<IMacro> macroProvider)
+public sealed class MacroBinder<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TContext>(IReadOnlyList<IMacro> macroProvider)
 {
     public MacroBindingResult<TContext> Bind(Sequence? root)
     {
@@ -48,8 +48,8 @@ public sealed class MacroBinder<TContext>(IReadOnlyList<IMacro> macroProvider)
         return node switch
         {
             PlainText(var text, _) => BindPlainText(text, context, lastSegmentContexts, diagnostics),
-            Macro({ Text: var name, Position: var position }, var branches) =>
-                BindMacro(name, position, branches, context, lastSegmentContexts, diagnostics),
+            Macro({ Text: var name, Position: var position }, var formatter, var branches) =>
+                BindMacro(name, position, formatter, branches, context, lastSegmentContexts, diagnostics),
             _ => throw new ArgumentOutOfRangeException(nameof(node))
         };
     }
@@ -69,28 +69,35 @@ public sealed class MacroBinder<TContext>(IReadOnlyList<IMacro> macroProvider)
     private BoundSingleNode<TContext>? BindMacro(
         string name,
         Range position,
+        PlainText? formatter,
         ConditionalMacroBranches? branches,
         ImmutableDictionary<string, bool> context,
         List<LastSegmentContext> lastSegmentContexts,
         List<MacroDiagnostic> diagnostics)
     {
         var span = position.ToTextSpan();
+        var formatterText = formatter?.Text;
+        var formatterSpan = formatter?.Position.ToTextSpan() ?? span;
         var macro = macroProvider.TryResolve(name);
         return macro switch
         {
             Unknown => AddDiagnostic(diagnostics, MacroDiagnosticKind.UnknownMacroName, span, name),
+            ITransducer transducer when !transducer.IsFormatterValid(formatterText)
+                => AddDiagnostic(diagnostics, MacroDiagnosticKind.InvalidFormatter, formatterSpan, name, formatterText),
             ITransducer when branches is not null => AddDiagnostic(diagnostics, MacroDiagnosticKind.NonParameterizedMacroBearingParameter, span, name),
-            PicSetIndexMacro picSetIndex when !(context.TryGetValue(IsPicSetMacro.NameConst, out var value) && value)
-                => AddDiagnostic(diagnostics, MacroDiagnosticKind.MacroShouldBeContained, span, picSetIndex.Name, IsPicSetMacro.NameConst),
-            ITransducer<TContext> transducer => BindTransducer(transducer, context, span, lastSegmentContexts),
+            IContextRestrictedMacro restricted when !(context.TryGetValue(restricted.RequiredPredicateName, out var value) && value)
+                => AddDiagnostic(diagnostics, MacroDiagnosticKind.MacroShouldBeContained, span, restricted.Name, restricted.RequiredPredicateName),
+            ITransducer transducer => BindTransducer(transducer, formatterText, context, span, lastSegmentContexts),
+            IPredicate when formatter is not null => AddDiagnostic(diagnostics, MacroDiagnosticKind.InvalidFormatter, formatterSpan, name, formatterText),
             IPredicate when branches is null => AddDiagnostic(diagnostics, MacroDiagnosticKind.ConditionalBranchesMissing, span, name),
-            IPredicate<TContext> predicate when branches is not null => BindPredicate(predicate, branches, context, lastSegmentContexts, diagnostics),
+            IPredicate predicate when branches is not null => BindPredicate(predicate, branches, context, lastSegmentContexts, diagnostics),
             _ => AddDiagnostic(diagnostics, MacroDiagnosticKind.UnknownMacroName, span, name)
         };
     }
 
     private static BoundSingleNode<TContext> BindTransducer(
-        ITransducer<TContext> transducer,
+        ITransducer transducer,
+        string? formatter,
         ImmutableDictionary<string, bool> context,
         MacroTextSpan span,
         List<LastSegmentContext> lastSegmentContexts)
@@ -98,11 +105,11 @@ public sealed class MacroBinder<TContext>(IReadOnlyList<IMacro> macroProvider)
         if (transducer is ILastSegment lastSegment)
             lastSegmentContexts.Add(new(lastSegment.Name, span, context));
 
-        return new BoundTransducer<TContext>(transducer);
+        return new BoundTransducer<TContext>(transducer, formatter);
     }
 
     private BoundSingleNode<TContext> BindPredicate(
-        IPredicate<TContext> predicate,
+        IPredicate predicate,
         ConditionalMacroBranches branches,
         ImmutableDictionary<string, bool> context,
         List<LastSegmentContext> lastSegmentContexts,

@@ -14,8 +14,6 @@ namespace Pixeval.ViewModels;
 
 public class NovelContext(NovelContent novelContent) : INovelContext<Stream>, IDisposable
 {
-    public string? ImageExtension { get; set; }
-
     public int TotalImagesCount { get; } = novelContent.Images.Count + novelContent.Illustrations.Count;
 
     /// <summary>
@@ -92,6 +90,7 @@ public class NovelContext(NovelContent novelContent) : INovelContext<Stream>, ID
             value.Dispose();
         UploadedImages.Clear();
         IllustrationLookup.Clear();
+        ImageLookup.Clear();
     }
 
     public NovelContent NovelContent { get; } = novelContent;
@@ -99,6 +98,8 @@ public class NovelContext(NovelContent novelContent) : INovelContext<Stream>, ID
     public Dictionary<(long, int), NovelIllustration> IllustrationLookup { get; } = [];
 
     public Dictionary<(long, int), Stream> IllustrationImages { get; } = [];
+
+    public Dictionary<long, NovelImage> ImageLookup { get; } = [];
 
     public Dictionary<long, Stream> UploadedImages { get; } = [];
 

@@ -5,36 +5,36 @@ using System;
 
 namespace Pixeval.ViewModels;
 
-public abstract class PixivNovelParser<T, TImage, TViewModel> where TViewModel : INovelContext<TImage> where TImage : class
+public abstract class PixivNovelParser<TText, TImage, TViewModel> where TViewModel : INovelContext<TImage> where TImage : class
 {
-    protected abstract T Vector { get; }
+    protected abstract TText Vector { get; }
 
-    protected abstract void AddLastSpan(T result, string lastSpan);
+    protected abstract void AddLastSpan(TText result, string lastSpan);
 
-    protected abstract void AddRuby(T result, string kanji, string ruby);
+    protected abstract void AddRuby(TText result, string kanji, string ruby);
 
-    protected abstract void AddHyperlink(T result, string content, Uri page);
+    protected abstract void AddHyperlink(TText result, string content, Uri page);
 
-    protected abstract void AddInlineHyperlink(T result, uint uri, TViewModel viewModel);
+    protected abstract void AddInlineHyperlink(TText result, uint uri);
 
-    protected abstract void AddChapter(T result, string chapterText);
+    protected abstract void AddChapter(TText result, string chapterText);
 
-    protected abstract void AddUploadedImage(T result, TViewModel viewModel, long imageId);
+    protected abstract void AddUploadedImage(TText result, TViewModel viewModel, long imageId);
 
     /// <summary>
     /// 此处<paramref name="page"/>是从1开始的
     /// </summary>
-    protected abstract void AddPixivImage(T paragraphs, TViewModel viewModel, long imageId, int page);
+    protected abstract void AddPixivImage(TText paragraphs, TViewModel viewModel, long imageId, int page);
 
-    protected virtual void Finish(T result)
+    protected virtual void Finish(TText result)
     {
     }
 
-    protected virtual void NewPage(T result)
+    protected virtual void NewPage(TText result)
     {
     }
 
-    public T Parse(string text, ref int startIndex, TViewModel viewModel)
+    public TText Parse(string text, ref int startIndex, TViewModel viewModel)
     {
         var result = Vector;
 
@@ -166,7 +166,7 @@ public abstract class PixivNovelParser<T, TImage, TViewModel> where TViewModel :
                 return;
             }
 
-            AddInlineHyperlink(result, page, viewModel);
+            AddInlineHyperlink(result, page);
 
             var end = endIndex + 1;
             position += end;
@@ -236,7 +236,7 @@ public abstract class PixivNovelParser<T, TImage, TViewModel> where TViewModel :
             if (length is not (1 or 2)
                 || (length is 2 && (!long.TryParse(imageIdText[dest[0]], null, out imageId) || !int.TryParse(imageIdText[dest[1]], null, out page)))
                 || (length is 1 && !long.TryParse(imageIdText, null, out imageId))
-                || (imageId, page) is var key && !viewModel.IllustrationImages.ContainsKey(key))
+                || ((imageId, page) is var key && !viewModel.IllustrationImages.ContainsKey(key)))
             {
                 position += tokenLength;
                 return;

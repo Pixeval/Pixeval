@@ -3,7 +3,6 @@
 
 using System;
 using Misaki;
-using Pixeval.Download;
 using Pixeval.Models.Download.Tasks;
 using Pixeval.Utilities.IO;
 
@@ -11,12 +10,13 @@ namespace Pixeval.Models.Download;
 
 public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IArtworkInfo, IDownloadTaskGroup, object>
 {
-    public IDownloadTaskGroup Create(IArtworkInfo context, string rawPath, object? parameter = null)
+    public IDownloadTaskGroup Create(IArtworkInfo context, string rawPath, object? parameter = null) =>
+        Create(new ParserContext(context), rawPath, parameter);
+
+    public IDownloadTaskGroup Create(ParserContext parserContext, string rawPath, object? parameter = null)
     {
-        var path = IoHelper.NormalizePath(ArtworkMetaPathParser.Instance.Reduce(rawPath, context));
-        path = IoHelper.ChangeExtension(path, context.ImageType is ImageType.SingleAnimatedImage
-            ? IoHelper.GetUgoiraExtension()
-            : IoHelper.GetIllustrationExtension());
+        var context = parserContext.ArtworkInfo;
+        var path = IoHelper.NormalizePath(DownloadPathMacroParser.Reduce(rawPath, parserContext));
 
         IDownloadTaskGroup task = context switch
         {

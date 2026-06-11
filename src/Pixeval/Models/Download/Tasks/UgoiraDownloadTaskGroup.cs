@@ -25,9 +25,21 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup
 {
     public ISingleAnimatedImage Entry => (ISingleAnimatedImage) DatabaseEntry.Entry;
 
-    private string TempFolderPath { get; set; } = null!;
+    /// <summary>
+    /// 表示将每张图下载到的目标文件夹。
+    /// 其中如果是原始格式（不打包），则表示目标路径的文件夹，否则表示临时文件夹
+    /// </summary>
+    private string FolderPath { get; }
 
-    private string CsvPath => Path.Combine(TempFolderPath, "intervals in milliseconds.csv");
+    /// <summary>
+    /// 非原始格式时的目标文件
+    /// </summary>
+    private string DestinationFile { get; } = null!;
+
+    /// <summary>
+    /// 原始格式时，记录图片间隔的文件
+    /// </summary>
+    private string CsvFile => Path.Combine(FolderPath, "intervals in milliseconds.csv");
 
     private IReadOnlyList<int> MsDelays { get; set; } = null!;
 
@@ -35,16 +47,13 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup
     {
         if (TasksSet.Count > 0)
             return;
-        TempFolderPath = DestinationUgoiraFormat.BuiltInFormat is UgoiraDownloadFormat.Original
-            ? IoHelper.RemoveTokenExtension(TokenizedDestination)
-            : TokenizedDestination + ".tmp";
         var msDelays = new int[Entry.MultiImageUris!.Count];
         for (var i = 0; i < Entry.MultiImageUris.Count; ++i)
         {
             var (uri, msDelay) = Entry.MultiImageUris[i];
             msDelays[i] = msDelay;
             var imageDownloadTask = new ImageDownloadTask(uri,
-                Path.Combine(TempFolderPath, $"{i}{Path.GetExtension(uri.OriginalString)}"), DatabaseEntry.State);
+                Path.Combine(FolderPath, $"{i}{Path.GetExtension(uri.OriginalString)}"), DatabaseEntry.State);
             AddToTasksSet(imageDownloadTask);
         }
         MsDelays = msDelays;
@@ -54,6 +63,17 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup
     public UgoiraDownloadTaskGroup(DownloadHistoryEntry entry) : base(entry)
     {
         DestinationUgoiraFormat = GetFormatToken(entry);
+
+        // --- 设置只读路径
+        if (DestinationUgoiraFormat.BuiltInFormat is UgoiraDownloadFormat.Original
+            || IoHelper.GetUgoiraExtension(DestinationUgoiraFormat) is not { } extension)
+            FolderPath = IoHelper.RemoveTokenExtension(TokenizedDestination);
+        else
+        {
+            DestinationFile = IoHelper.ChangeExtension(TokenizedDestination, extension);
+            FolderPath = DestinationFile + IoHelper.PixevalTempExtension;
+        }
+        // ---
     }
 
     public UgoiraDownloadTaskGroup(ISingleAnimatedImage entry, string destination) : base(entry, destination, DownloadItemType.Ugoira)
@@ -64,6 +84,17 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup
             throw new InvalidOperationException($"{nameof(ISingleAnimatedImage.MultiImageUris)} should be preloaded");
         DestinationUgoiraFormat = IoHelper.GetAvailableUgoiraDownloadFormatToken();
         DatabaseEntry.FormatToken = DestinationUgoiraFormat.Value;
+
+        // --- 设置只读路径
+        if (DestinationUgoiraFormat.BuiltInFormat is UgoiraDownloadFormat.Original
+            || IoHelper.GetUgoiraExtension(DestinationUgoiraFormat) is not { } extension)
+            FolderPath = IoHelper.RemoveTokenExtension(TokenizedDestination);
+        else
+        {
+            DestinationFile = IoHelper.ChangeExtension(TokenizedDestination, extension);
+            FolderPath = DestinationFile + IoHelper.PixevalTempExtension;
+        }
+        // ---
     }
 
     public override ValueTask InitializeTaskGroupAsync()
@@ -84,13 +115,13 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup
         if (builtInFormat is not UgoiraDownloadFormat.Original)
             throw new NotSupportedException(builtInFormat.ToString());
 
-        await File.WriteAllTextAsync(CsvPath,
+        await File.WriteAllTextAsync(CsvFile,
             string.Join(',', MsDelays.Select(t => t.ToString())), token);
     }
 
     private UgoiraDownloadFormatToken DestinationUgoiraFormat { get; }
 
-    public override string OpenLocalDestination => DestinationUgoiraFormat.BuiltInFormat is UgoiraDownloadFormat.Original ? TempFolderPath : TokenizedDestination;
+    public override string OpenLocalDestination => DestinationUgoiraFormat.BuiltInFormat is UgoiraDownloadFormat.Original ? FolderPath : DestinationFile;
 
     public override void Delete()
     {
@@ -98,13 +129,13 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup
             task.Delete();
         if (DestinationUgoiraFormat.BuiltInFormat is UgoiraDownloadFormat.Original)
         {
-            if (File.Exists(CsvPath))
-                File.Delete(CsvPath);
+            if (File.Exists(CsvFile))
+                File.Delete(CsvFile);
         }
-        else if (File.Exists(TokenizedDestination))
-            File.Delete(TokenizedDestination);
+        else if (File.Exists(DestinationFile))
+            File.Delete(DestinationFile);
 
-        FileHelper.DeleteEmptyFolder(TempFolderPath);
+        FileHelper.DeleteEmptyFolder(FolderPath);
     }
 
     private async Task FormatByExtensionAsync(string extension)
@@ -117,10 +148,9 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup
             foreach (var task in TasksSet)
                 streams.Add(File.OpenAsyncRead(task.Destination));
 
-            var dict = streams.Zip(Entry.ZipImageDelays!)
-                .ToDictionary(t => t.First, t => t.Second);
+            var dict = streams.Zip(MsDelays).ToDictionary(t => t.First, t => t.Second);
 
-            await provider.FormatImageAsync(dict, TokenizedDestination);
+            await provider.FormatImageAsync(dict, DestinationFile);
         }
         finally
         {
@@ -130,7 +160,7 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup
 
         foreach (var imageDownloadTask in TasksSet)
             imageDownloadTask.Delete();
-        FileHelper.DeleteEmptyFolder(TempFolderPath);
+        FileHelper.DeleteEmptyFolder(FolderPath);
     }
 
     private static UgoiraDownloadFormatToken GetFormatToken(DownloadHistoryEntry entry)

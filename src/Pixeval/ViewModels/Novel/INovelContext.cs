@@ -15,29 +15,24 @@ public interface INovelContext<TImage> where TImage : class
 
     Dictionary<(long, int), TImage> IllustrationImages { get; }
 
+    Dictionary<long, NovelImage> ImageLookup { get; }
+
     Dictionary<long, TImage> UploadedImages { get; }
 
     CancellationTokenSource LoadingCts { get; }
 
-    /// <summary>
-    /// 此处默认所有图片扩展名都相同
-    /// </summary>
-    /// <remarks>
-    /// 包含前缀点，例如".png"
-    /// </remarks>
-    string? ImageExtension { get; }
-
     void InitImages()
     {
-        foreach (var illust in NovelContent.Illustrations)
+        foreach (var illustration in NovelContent.Illustrations)
         {
-            var key = (illust.Id, illust.Page);
-            IllustrationLookup[key] = illust;
+            var key = (illustration.Id, illustration.Page);
+            IllustrationLookup[key] = illustration;
             IllustrationImages[key] = null!;
         }
 
         foreach (var image in NovelContent.Images)
         {
+            ImageLookup[image.NovelImageId] = image;
             UploadedImages[image.NovelImageId] = null!;
         }
     }

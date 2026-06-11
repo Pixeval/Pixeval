@@ -5,5 +5,5 @@ using System.Diagnostics;
 
 namespace Pixeval.Download.MacroParser.Ast;
 
-[DebuggerDisplay("@{{{MacroName}{ConditionalBranches}}}")]
-public record Macro(PlainText MacroName, ConditionalMacroBranches? ConditionalBranches) : SingleNode;
+[DebuggerDisplay("@{{{MacroName}:{Formatter}{ConditionalBranches}}}")]
+public record Macro(PlainText MacroName, PlainText? Formatter, ConditionalMacroBranches? ConditionalBranches) : SingleNode;

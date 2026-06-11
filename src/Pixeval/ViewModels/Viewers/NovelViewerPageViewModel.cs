@@ -346,11 +346,11 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
 
         public Dictionary<(long, int), Bitmap> IllustrationImages { get; } = [];
 
+        public Dictionary<long, NovelImage> ImageLookup { get; } = [];
+
         public Dictionary<long, Bitmap> UploadedImages { get; } = [];
 
         public CancellationTokenSource LoadingCts { get; } = new();
-
-        public string? ImageExtension => null;
     }
 
     #region Dispose

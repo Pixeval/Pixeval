@@ -16,7 +16,7 @@ namespace Pixeval.SourceGen;
 [Generator]
 public class MetaPathMacroGenerator : IIncrementalGenerator
 {
-    private const string AttributeName = "MetaPathMacroAttribute`1";
+    private const string AttributeName = "MetaPathMacroAttribute";
 
     private const string AttributeNamespace = nameof(Pixeval) + ".Download.Macros";
 
@@ -24,38 +24,38 @@ public class MetaPathMacroGenerator : IIncrementalGenerator
 
     internal string TypeWithAttribute(ImmutableArray<GeneratorAttributeSyntaxContext> gas, out string fileName)
     {
-        var dictionary = new Dictionary<ITypeSymbol, List<INamedTypeSymbol>>(SymbolEqualityComparer.Default);
+        var list = new List<INamedTypeSymbol>();
         foreach (var ga in gas)
         {
-            if (ga is not { TargetSymbol: INamedTypeSymbol symbol, Attributes: var attributeList })
-                continue;
-            foreach (var attributeData in attributeList)
-                if (attributeData.AttributeClass?.TypeArguments is [{ } type])
-                    if (dictionary.TryGetValue(type, out var list))
-                        list.Add(symbol);
-                    else
-                        dictionary[type] = [symbol];
+            if (ga is { TargetSymbol: INamedTypeSymbol symbol })
+            {
+                list.Add(symbol);
+            }
         }
 
-        const string getAttachedTypeInstances = "Get{0}Instances";
-
-        fileName = "MetaPathMacroAttributeHelper.g.cs";
-        var generatedType = ClassDeclaration("MetaPathMacroAttributeHelper")
-            .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword))
+        fileName = "DownloadPathMacroParser.g.cs";
+        var generatedType = ClassDeclaration("DownloadPathMacroParser")
+            .AddModifiers(Token(SyntaxKind.PartialKeyword))
             .WithOpenBraceToken(Token(SyntaxKind.OpenBraceToken))
-            .AddMembers([.. dictionary.Select(t =>
-                    (MemberDeclarationSyntax) MethodDeclaration(
-                            ParseTypeName("global::System.Collections.Generic.IReadOnlyList<global::Pixeval.Download.MacroParser.IMacro>"),
-                            string.Format(getAttachedTypeInstances, t.Key.Name))
-                        .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
-                        .WithExpressionBody(ArrowExpressionClause(CollectionExpression(SeparatedList(t.Value.Select(v =>
-                            (CollectionElementSyntax) ExpressionElement(ObjectCreationExpression(v.GetTypeSyntax(false))
+            .AddMembers(
+                PropertyDeclaration(
+                        ParseTypeName(
+                            "global::System.Collections.Generic.IReadOnlyList<global::Pixeval.Download.MacroParser.IMacro>"),
+                        "MacroProvider")
+                    .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
+                    .WithAccessorList(AccessorList([
+                        AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
+                    ]))
+                    .WithInitializer(EqualsValueClause(CollectionExpression(SeparatedList(
+                        list.Select(CollectionElementSyntax (v) =>
+                            ExpressionElement(ObjectCreationExpression(v.GetTypeSyntax(false))
                                 .WithArgumentList(ArgumentList()))))
-                        )))
-                        .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)))]
+                    )))
+                    .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
             )
             .WithCloseBraceToken(Token(SyntaxKind.CloseBraceToken));
-        var generatedNamespace = GetFileScopedNamespaceDeclaration(AttributeNamespace, generatedType, true);
+        var generatedNamespace = GetFileScopedNamespaceDeclaration("Pixeval.Models.Download", generatedType, true);
         var compilationUnit = CompilationUnit()
             .AddMembers(generatedNamespace)
             .NormalizeWhitespace();

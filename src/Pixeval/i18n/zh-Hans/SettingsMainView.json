@@ -139,22 +139,7 @@
   "ViewPixevalWebsiteHyperlinkButton": {
     "Content": "介绍网页"
   },
-  "ExtMacroTooltip": "文件后缀名，类似 .jpg, .png 等，注意该宏已经包含了后缀名前面的点号\".\"；必须在文件名上使用",
-  "IdMacroTooltip": "作品ID",
-  "TitleMacroTooltip": "作品标题",
-  "ArtistIdMacroTooltip": "作者ID",
-  "ArtistNameMacroTooltip": "作者名",
-  "PublishYearMacroTooltip": "作品发布年份",
-  "PublishMonthMacroTooltip": "作品发布月份",
-  "PublishDayMacroTooltip": "作品发布日期",
-  "IfPicSetMacroTooltip": "如果是多图，会替换为 ? 后面的内容，否则替换为 : 后面的内容",
-  "IfR18MacroTooltip": "如果是限制级的（包括R18及R18G），会替换为 ? 后面的内容，否则替换为 : 后面的内容",
-  "IfR18GMacroTooltip": "如果是R18G的，会替换为 ? 后面的内容，否则替换为 : 后面的内容",
-  "IfAiMacroTooltip": "如果是 AI 生成的，会替换为 ? 后面的内容，否则替换为 : 后面的内容",
-  "IfPicOneMacroTooltip": "如果是静态单图，会替换为 ? 后面的内容，否则替换为 : 后面的内容",
-  "IfNovelMacroTooltip": "如果是小说，会替换为 ? 后面的内容，否则替换为 : 后面的内容",
-  "IfPicGifMacroTooltip": "如果是动图，会替换为 ? 后面的内容，否则替换为 : 后面的内容",
-  "PicSetIndexMacroTooltip": "如果是多图，该宏会被替换为当前图片在多图中的索引（第几张）；必须与 @{if_pic_set?:} 宏配合使用，必须在文件名上使用",
+  "PredicateMacroHeader": "以下条件宏，格式为 @{is_xxx?<正分支>:<反分支>}，如果条件成立则替换为<正分支>，否则替换为<反分支>",
   "OpenExtensionsEntry": {
     "Header": "打开扩展文件夹",
     "Description": "此处存储了软件会加载的扩展DLL文件"

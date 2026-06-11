@@ -28,18 +28,9 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
 
     private NovelContext DocumentViewModel { get; set; } = null!;
 
-    /// <summary>
-    /// 小说正文的保存路径
-    /// </summary>
-    /// <remarks>
-    /// ..\[ID] NovelName.pdf<br/>
-    /// ..\[ID] NovelName\novel.txt
-    /// </remarks>
-    private string DocPath { get; }
-
-    private IllustrationDownloadFormatToken DestinationIllustrationFormat { get; }
-
     private NovelDownloadFormatToken DestinationNovelFormat { get; }
+
+    private string NovelFile { get; }
 
     private string TempImageFolderPath { get; }
 
@@ -48,24 +39,15 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
     {
         NovelContent = novelContent;
         DocumentViewModel = new NovelContext(novelContent);
-        var directory = DestinationNovelFormat.IsExtension
-            ? TempImageFolderPath
-            : Path.GetDirectoryName(DocPath)!;
+        var directory = DestinationNovelFormat.BuiltInFormat is null
+            ? Path.GetDirectoryName(NovelFile)!
+            : TempImageFolderPath;
 
-        var imageFormat = DestinationNovelFormat.IsExtension
-            ? IllustrationDownloadFormatToken.Default
-            : DestinationIllustrationFormat;
-        var imgExt = IoHelper.GetIllustrationExtension(imageFormat.Value);
-        if (imageFormat.BuiltInFormat is not IllustrationDownloadFormat.Original)
-            DocumentViewModel.ImageExtension = imgExt;
         for (var i = 0; i < DocumentViewModel.TotalImagesCount; ++i)
         {
             var url = DocumentViewModel.AllUrls[i];
             var name = Path.Combine(directory, DocumentViewModel.AllTokens[i]);
-            var imageDownloadTask = new ImageDownloadTask(new(url),
-                imageFormat.BuiltInFormat is IllustrationDownloadFormat.Original
-                    ? IoHelper.ReplaceTokenExtensionFromUrl(name, url, -1)
-                    : name + imgExt,
+            var imageDownloadTask = new ImageDownloadTask(new(url), IoHelper.ReplaceTokenExtensionFromUrl(name, url, -1),
                 DatabaseEntry.State);
             AddToTasksSet(imageDownloadTask);
         }
@@ -75,13 +57,12 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
 
     public NovelDownloadTaskGroup(DownloadHistoryEntry entry) : base(entry)
     {
-        var separatorIndex = TokenizedDestination.LastIndexOfAny([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar]);
-        DocPath = TokenizedDestination[..separatorIndex];
-        TempImageFolderPath = $"{DocPath}.tmp";
-        // .<ext> or .png or .etc 
-        var imgExt = TokenizedDestination[(separatorIndex + 1)..];
-        DestinationIllustrationFormat = GetIllustrationFormat(entry, imgExt);
-        DestinationNovelFormat = GetNovelFormat(entry, DocPath);
+        DestinationNovelFormat = GetNovelFormat(entry);
+
+        // --- 设置只读路径
+        NovelFile = IoHelper.ChangeExtension(TokenizedDestination, IoHelper.GetNovelExtension(DestinationNovelFormat));
+        TempImageFolderPath = NovelFile + IoHelper.PixevalTempExtension;
+        // ---
     }
 
     public NovelDownloadTaskGroup(
@@ -89,15 +70,14 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
         string destination,
         NovelContent? novelContent) : base(entry, destination, DownloadItemType.Novel)
     {
-        var separatorIndex = TokenizedDestination.LastIndexOfAny([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar]);
-        DocPath = TokenizedDestination[..separatorIndex];
-        TempImageFolderPath = $"{DocPath}.tmp";
-        // .<ext> or .png or .etc 
-        var imgExt = TokenizedDestination[(separatorIndex + 1)..];
-        DestinationIllustrationFormat = IoHelper.GetAvailableIllustrationDownloadFormatToken();
         DestinationNovelFormat = IoHelper.GetAvailableNovelDownloadFormatToken();
         DatabaseEntry.FormatToken = DestinationNovelFormat.Value;
-        DatabaseEntry.ImageFormatToken = DestinationIllustrationFormat.Value;
+
+        // --- 设置只读路径
+        NovelFile = IoHelper.ChangeExtension(TokenizedDestination, IoHelper.GetNovelExtension(DestinationNovelFormat));
+        TempImageFolderPath = NovelFile + IoHelper.PixevalTempExtension;
+        // ---
+
         if (novelContent is not null)
             SetNovelContent(novelContent);
     }
@@ -121,9 +101,6 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
             return;
         }
 
-        if (DestinationIllustrationFormat.ExtensionFormatExtension is { } imageExtension)
-            await FormatBuiltInImagesByExtensionAsync(imageExtension);
-
         await FormatBuiltInAsync(token);
     }
 
@@ -138,8 +115,8 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
             _ => throw new ArgumentOutOfRangeException(nameof(format))
         };
 
-        FileHelper.CreateParentDirectory(DocPath);
-        await File.WriteAllTextAsync(DocPath, content, token);
+        FileHelper.CreateParentDirectory(NovelFile);
+        await File.WriteAllTextAsync(NovelFile, content, token);
     }
 
     private async Task FormatByExtensionAsync(string extension)
@@ -158,8 +135,8 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
                 DocumentViewModel.SetStream(i, imageStream);
             }
 
-            FileHelper.CreateParentDirectory(DocPath);
-            await provider.FormatNovelAsync(NovelContent.Text, DocPath, streams);
+            FileHelper.CreateParentDirectory(NovelFile);
+            await provider.FormatNovelAsync(NovelContent.Text, NovelFile, streams);
         }
         finally
         {
@@ -180,56 +157,25 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
         FileHelper.DeleteEmptyFolder(TempImageFolderPath);
     }
 
-    public override string OpenLocalDestination => DocPath;
+    public override string OpenLocalDestination => NovelFile;
 
     public override void Delete()
     {
         foreach (var task in TasksSet)
             task.Delete();
-        if (File.Exists(DocPath))
-            File.Delete(DocPath);
-        FileHelper.DeleteEmptyFolder(DestinationNovelFormat.IsExtension ? TempImageFolderPath : Path.GetDirectoryName(DocPath));
+        if (File.Exists(NovelFile))
+            File.Delete(NovelFile);
+        FileHelper.DeleteEmptyFolder(DestinationNovelFormat.BuiltInFormat is null
+            ? Path.GetDirectoryName(NovelFile)
+            : TempImageFolderPath);
     }
 
-    private async Task FormatBuiltInImagesByExtensionAsync(string extension)
-    {
-        var provider = GetExtensionService().GetStaticImageFormatProvider(extension)
-            ?? throw new NotSupportedException(extension);
-        foreach (var task in TasksSet)
-        {
-            var tempPath = task.Destination + ".source";
-            FileHelper.Move(task.Destination, tempPath, true);
-            try
-            {
-                await using var stream = File.OpenAsyncRead(tempPath);
-                await provider.FormatImageAsync(stream, task.Destination);
-            }
-            finally
-            {
-                if (File.Exists(tempPath))
-                    File.Delete(tempPath);
-            }
-        }
-    }
-
-    private static NovelDownloadFormatToken GetNovelFormat(DownloadHistoryEntry entry, string docPath)
+    private static NovelDownloadFormatToken GetNovelFormat(DownloadHistoryEntry entry)
     {
         if (!string.IsNullOrWhiteSpace(entry.FormatToken))
             return IoHelper.GetAvailableNovelDownloadFormatToken(entry.FormatToken);
 
-        var extension = Path.GetExtension(docPath);
-        if (IoHelper.TryGetNovelFormat(extension, out var builtInFormat))
-            return NovelDownloadFormatToken.BuiltIn(builtInFormat);
-
-        return NovelDownloadFormatToken.ExtensionPrefix + extension;
-    }
-
-    private static IllustrationDownloadFormatToken GetIllustrationFormat(DownloadHistoryEntry entry, string imgExt)
-    {
-        if (!string.IsNullOrWhiteSpace(entry.ImageFormatToken))
-            return IoHelper.GetAvailableIllustrationDownloadFormatToken(entry.ImageFormatToken);
-
-        return IllustrationDownloadFormatToken.Default;
+        return NovelDownloadFormatToken.Default;
     }
 
     private static ExtensionService GetExtensionService() =>

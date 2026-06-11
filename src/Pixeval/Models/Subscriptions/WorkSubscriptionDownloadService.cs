@@ -124,7 +124,7 @@ public class WorkSubscriptionDownloadService(
                 continue;
             }
 
-            var task = await CreateDownloadTaskAsync(entry, subscription.HistoryEntryId);
+            var task = await CreateDownloadTaskAsync(entry, subscription);
             if (!IsEngineUsable(engine))
                 return;
 
@@ -195,16 +195,19 @@ public class WorkSubscriptionDownloadService(
         return keys;
     }
 
-    private async Task<IDownloadTaskGroup> CreateDownloadTaskAsync(IArtworkInfo entry, int subscriptionEntryId)
+    private async Task<IDownloadTaskGroup> CreateDownloadTaskAsync(IArtworkInfo entry, WorkSubscriptionEntry subscription)
     {
-        var task = entry is Novel novel
-            ? novelDownloadTaskFactory.Create(novel, App.AppViewModel.AppSettings.DownloadPathMacro, null)
-            : await CreateIllustrationDownloadTaskAsync();
+        var parserContext = new ParserContext(
+            entry,
+            WorkSubscriptionDownloadContext.FromSubscriptionType(subscription.SubscriptionType));
+        var task = entry is Novel
+            ? novelDownloadTaskFactory.Create(parserContext, App.AppViewModel.AppSettings.DownloadPathMacro, null)
+            : await CreateIllustrationDownloadTaskAsync(parserContext);
 
-        task.DatabaseEntry.WorkSubscriptionId = subscriptionEntryId;
+        task.DatabaseEntry.WorkSubscriptionId = subscription.HistoryEntryId;
         return task;
 
-        async Task<IDownloadTaskGroup> CreateIllustrationDownloadTaskAsync()
+        async Task<IDownloadTaskGroup> CreateIllustrationDownloadTaskAsync(ParserContext context)
         {
             if (entry is ISingleAnimatedImage
                 {
@@ -216,7 +219,7 @@ public class WorkSubscriptionDownloadService(
             }
 
             return illustrationDownloadTaskFactory.Create(
-                entry,
+                context,
                 App.AppViewModel.AppSettings.DownloadPathMacro);
         }
     }

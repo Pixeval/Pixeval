@@ -45,11 +45,13 @@
                     <TextBlock
                         Grid.Column="0"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        MaxLines="1"
                         Text="{Binding Subtitle}"
                         TextTrimming="CharacterEllipsis" />
                     <StackPanel
                         Grid.Column="1"
                         HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
                         Orientation="Horizontal"
                         Spacing="5">
                         <controls:DigitalSignalItem

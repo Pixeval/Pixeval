@@ -42,7 +42,8 @@ public class MangaDownloadTaskGroup : DownloadTaskGroup
             return;
         foreach (var page in Entry.Pages)
         {
-            var imageDownloadTask = new ImageDownloadTask(page.ImageUri, IoHelper.ReplaceTokenExtensionFromUrl(TokenizedDestination, page.ImageUri, page.SetIndex), DatabaseEntry.State);
+            var path = IoHelper.ReplaceTokenExtensionFromUrl(TokenizedDestination, page.ImageUri, page.SetIndex);
+            var imageDownloadTask = new ImageDownloadTask(page.ImageUri, path, DatabaseEntry.State);
             AddToTasksSet(imageDownloadTask);
         }
         SetNotCreateFromEntry();

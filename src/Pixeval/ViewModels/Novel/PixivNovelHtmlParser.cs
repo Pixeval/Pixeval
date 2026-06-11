@@ -2,13 +2,14 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.IO;
 using System.Text;
 using Pixeval.I18N;
 using Pixeval.Utilities;
 
 namespace Pixeval.ViewModels;
 
-public class PixivNovelHtmlParser<T>(StringBuilder sb, int pageIndex) : PixivNovelParser<StringBuilder, T, INovelContext<T>> where T : class
+public class PixivNovelHtmlParser<TImage>(StringBuilder sb, int pageIndex) : PixivNovelParser<StringBuilder, TImage, INovelContext<TImage>> where TImage : class
 {
     protected override StringBuilder Vector => sb.AppendLine($"<div id=\"page{pageIndex}\" /><br/>");
 
@@ -27,7 +28,7 @@ public class PixivNovelHtmlParser<T>(StringBuilder sb, int pageIndex) : PixivNov
         _ = currentText.Append($"<a href=\"{uri.OriginalString}\">{content}</a>");
     }
 
-    protected override void AddInlineHyperlink(StringBuilder currentText, uint page, INovelContext<T> viewModel)
+    protected override void AddInlineHyperlink(StringBuilder currentText, uint page)
     {
         _ = currentText.Append($"<a href=\"page{page - 1}\">{I18NManager.GetResource(MiscResources.GoToPageFormatted, page)}</a>");
     }
@@ -43,22 +44,24 @@ public class PixivNovelHtmlParser<T>(StringBuilder sb, int pageIndex) : PixivNov
             .AppendLine("<br/><br/>");
     }
 
-    protected override void AddUploadedImage(StringBuilder currentText, INovelContext<T> viewModel, long imageId)
+    protected override void AddUploadedImage(StringBuilder currentText, INovelContext<TImage> viewModel, long imageId)
     {
+        var url = viewModel.ImageLookup[imageId].ThumbnailUrl;
         _ = currentText
         .AppendLine("<br/><br/>")
-            .AppendLine($"<img src=\"{imageId}{viewModel.ImageExtension}\" alt=\"{imageId}\" />")
+            .AppendLine($"<img src=\"{imageId}{Path.GetExtension(url)}\" alt=\"{imageId}\" />")
             .AppendLine("<br/><br/>");
     }
 
-    protected override void AddPixivImage(StringBuilder currentText, INovelContext<T> viewModel, long imageId, int page)
+    protected override void AddPixivImage(StringBuilder currentText, INovelContext<TImage> viewModel, long imageId, int page)
     {
-        // var key = (imageId, page);
+        var key = (imageId, page);
+        var url = viewModel.IllustrationLookup[key].ThumbnailUrl;
         _ = currentText
             .AppendLine("<br/><br/>")
-            .AppendLine($"<a href=\"{MakoHelper.GenerateIllustrationWebUri(imageId).OriginalString}\"><img src=\"{imageId}-{page}{viewModel.ImageExtension}\" alt=\"{imageId}-{page}\" /></a>")
+            .AppendLine($"<a href=\"{MakoHelper.GenerateIllustrationWebUri(imageId).OriginalString}\"><img src=\"{imageId}-{page}{Path.GetExtension(url)}\" alt=\"{imageId}-{page}\" /></a>")
             .AppendLine("<br/><br/>");
-        // var info = viewModel.IllustrationLookup[imageId];
+        // var info = viewModel.IllustrationLookup[key];
     }
 
     protected override void NewPage(StringBuilder currentText)

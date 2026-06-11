@@ -24,22 +24,27 @@
     <controls:SettingsExpander.Items>
         <controls:SettingsCard ContentAlignment="Left">
             <StackPanel Spacing="6">
-                <ItemsControl ItemsSource="{x:Static entries:DownloadMacroAppSettingsEntry.AvailableMacros}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel ItemSpacing="5" LineSpacing="5" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate x:DataType="{x:Type controls2:SymbolComboBoxItem}">
-                            <Button
-                                Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
-                                Content="{Binding Value}"
-                                Tag="{Binding Value}"
-                                ToolTip.Tip="{Binding Description}" />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                <StackPanel.Resources>
+                    <ItemsPanelTemplate x:Key="WrapPanelTemplate">
+                        <WrapPanel ItemSpacing="5" LineSpacing="5" />
+                    </ItemsPanelTemplate>
+                </StackPanel.Resources>
+                <StackPanel.DataTemplates>
+                    <DataTemplate x:DataType="{x:Type controls2:SymbolComboBoxItem}">
+                        <Button
+                            Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
+                            Content="{Binding Value}"
+                            Tag="{Binding Value}"
+                            ToolTip.Tip="{Binding Description}" />
+                    </DataTemplate>
+                </StackPanel.DataTemplates>
+                <ItemsControl ItemsPanel="{StaticResource WrapPanelTemplate}" ItemsSource="{x:Static entries:DownloadMacroAppSettingsEntry.AvailableTransducerMacros}" />
+                <TextBlock Text="{I18N {x:Static pixeval:SettingsMainViewResources.PredicateMacroHeader}}" TextWrapping="Wrap" />
+                <ItemsControl ItemsPanel="{StaticResource WrapPanelTemplate}" ItemsSource="{x:Static entries:DownloadMacroAppSettingsEntry.AvailablePredicateMacros}" />
+            </StackPanel>
+        </controls:SettingsCard>
+        <controls:SettingsCard ContentAlignment="Left">
+            <StackPanel Spacing="6">
                 <TextBlock
                     Opacity="0.7"
                     Text="{I18N {x:Static pixeval:SettingsMainViewResources.DownloadPathMacroTextBoxPlaceholderText}}"

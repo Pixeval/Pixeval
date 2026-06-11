@@ -4,12 +4,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
-using Pixeval.Download.Macros;
 using Pixeval.Models.Download;
+using Pixeval.Models.Download.Macros;
 using Pixeval.Models.Extensions;
 using Pixeval.Models.Options;
 using SkiaSharp;
@@ -57,24 +58,6 @@ public static partial class IoHelper
         return UgoiraDownloadFormatToken.Default;
     }
 
-    public static string GetUgoiraExtension(string? ugoiraDownloadFormat = null)
-    {
-        var token = GetAvailableUgoiraDownloadFormatToken(ugoiraDownloadFormat);
-        if (token.ExtensionFormatExtension is { } extension)
-            return extension;
-
-        return GetUgoiraBuiltInExtension(token.BuiltInFormat ?? UgoiraDownloadFormatToken.DefaultBuiltInFormat);
-    }
-
-    private static string GetUgoiraBuiltInExtension(UgoiraDownloadFormat ugoiraDownloadFormat)
-    {
-        return ugoiraDownloadFormat switch
-        {
-            UgoiraDownloadFormat.Original => FileExtensionMacro.NameConstToken,
-            _ => throw new ArgumentOutOfRangeException(nameof(ugoiraDownloadFormat))
-        };
-    }
-
     public static IllustrationDownloadFormatToken GetAvailableIllustrationDownloadFormatToken(string? illustrationDownloadFormat = null)
     {
         illustrationDownloadFormat ??= App.AppViewModel.AppSettings.IllustrationDownloadFormat;
@@ -89,38 +72,6 @@ public static partial class IoHelper
         return IllustrationDownloadFormatToken.Default;
     }
 
-    public static string GetIllustrationExtension(string? illustrationDownloadFormat = null)
-    {
-        var token = GetAvailableIllustrationDownloadFormatToken(illustrationDownloadFormat);
-        if (token.ExtensionFormatExtension is { } extension)
-            return extension;
-
-        return GetIllustrationBuiltInExtension(token.BuiltInFormat ?? IllustrationDownloadFormatToken.DefaultBuiltInFormat);
-    }
-
-    private static string GetIllustrationBuiltInExtension(IllustrationDownloadFormat illustrationDownloadFormat)
-    {
-        return illustrationDownloadFormat switch
-        {
-            IllustrationDownloadFormat.Original => FileExtensionMacro.NameConstToken,
-            _ => throw new ArgumentOutOfRangeException(nameof(illustrationDownloadFormat))
-        };
-    }
-
-    public static string GetNovelExtension(string? novelDownloadFormat = null)
-    {
-        var token = GetAvailableNovelDownloadFormatToken(novelDownloadFormat);
-        if (token.ExtensionFormatExtension is { } extension)
-            return extension;
-
-        return token.BuiltInFormat switch
-        {
-            NovelDownloadFormat.OriginalTxt => "novel.txt",
-            NovelDownloadFormat.Html or NovelDownloadFormat.Md => "\\novel." + token.BuiltInFormat.ToString()!.ToLowerInvariant(),
-            _ => throw new ArgumentOutOfRangeException(nameof(novelDownloadFormat))
-        };
-    }
-
     public static NovelDownloadFormatToken GetAvailableNovelDownloadFormatToken(string? novelDownloadFormat = null)
     {
         novelDownloadFormat ??= App.AppViewModel.AppSettings.NovelDownloadFormat;
@@ -133,6 +84,54 @@ public static partial class IoHelper
             return token;
 
         return NovelDownloadFormatToken.Default;
+    }
+
+    /// <summary>
+    /// 返回null表示<see cref="UgoiraDownloadFormat.Original"/>
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    public static string? GetUgoiraExtension(string? ugoiraDownloadFormat = null)
+    {
+        var token = GetAvailableUgoiraDownloadFormatToken(ugoiraDownloadFormat);
+        if (token.ExtensionFormatExtension is { } extension)
+            return extension;
+
+        return (token.BuiltInFormat ?? UgoiraDownloadFormatToken.DefaultBuiltInFormat) switch
+        {
+            UgoiraDownloadFormat.Original => null,
+            _ => throw new ArgumentOutOfRangeException(nameof(ugoiraDownloadFormat))
+        };
+    }
+
+    /// <summary>
+    /// 返回null表示<see cref="IllustrationDownloadFormat.Original"/>
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    public static string? GetIllustrationExtension(string? illustrationDownloadFormat = null)
+    {
+        var token = GetAvailableIllustrationDownloadFormatToken(illustrationDownloadFormat);
+        if (token.ExtensionFormatExtension is { } extension)
+            return extension;
+
+        return (token.BuiltInFormat ?? IllustrationDownloadFormatToken.DefaultBuiltInFormat) switch
+        {
+            IllustrationDownloadFormat.Original => null,
+            _ => throw new ArgumentOutOfRangeException(nameof(illustrationDownloadFormat))
+        };
+    }
+
+    public static string GetNovelExtension(string? novelDownloadFormat = null)
+    {
+        var token = GetAvailableNovelDownloadFormatToken(novelDownloadFormat);
+        if (token.ExtensionFormatExtension is { } extension)
+            return extension;
+
+        return (token.BuiltInFormat ?? NovelDownloadFormatToken.DefaultBuiltInFormat) switch
+        {
+            NovelDownloadFormat.OriginalTxt => "novel.txt",
+            NovelDownloadFormat.Html or NovelDownloadFormat.Md => "\\novel." + token.BuiltInFormat.ToString()!.ToLowerInvariant(),
+            _ => throw new ArgumentOutOfRangeException(nameof(novelDownloadFormat))
+        };
     }
 
     public static NovelDownloadFormat GetNovelFormat(string extension)
@@ -211,7 +210,7 @@ public static partial class IoHelper
 
     public static string ChangeExtension(string path, string extension)
     {
-        return path.Replace(FileExtensionMacro.NameConstToken, extension);
+        return ReplaceFileExtensionTokens(path, extension);
     }
 
     public static string ReplaceTokenExtensionFromUrl(string path, Uri uri, int setIndex)
@@ -222,8 +221,7 @@ public static partial class IoHelper
 
     public static string ReplaceTokenExtensionFromUrl(string path, string url, int setIndex)
     {
-        var index = url.LastIndexOf('.');
-        return ReplaceTokenSetIndex(path.Replace(FileExtensionMacro.NameConstToken, url[index..]), setIndex);
+        return ReplaceTokenSetIndex(ReplaceFileExtensionTokens(path, Path.GetExtension(url)), setIndex);
     }
 
     public static Task<string> ReplaceTempExtensionFromStreamAsync(string path, Stream stream, int setIndex)
@@ -237,7 +235,7 @@ public static partial class IoHelper
             using var codec = SKCodec.Create(stream)
                 ?? throw new InvalidOperationException($"Unable to create {nameof(SKCodec)} from the provided stream.");
             var extension = GetEncodedImageExtension(codec.EncodedFormat);
-            return Task.FromResult(ReplaceTokenSetIndex(path.Replace(FileExtensionMacro.NameConstToken, extension), setIndex));
+            return Task.FromResult(ReplaceTokenSetIndex(ReplaceFileExtensionTokens(path, extension), setIndex));
         }
         finally
         {
@@ -248,18 +246,81 @@ public static partial class IoHelper
 
     public static string ReplaceTokenExtensionWithTempExtension(string path, int setIndex)
     {
-        return ReplaceTokenSetIndex(path.Replace(FileExtensionMacro.NameConstToken, PixevalTempExtension), setIndex);
+        return ReplaceTokenSetIndex(ReplaceFileExtensionTokens(path, PixevalTempExtension), setIndex);
     }
 
     public static string ReplaceTokenSetIndex(string path, int setIndex)
     {
-        // 替换完<token>之后必须清除其他尖括号
-        return path.Replace(PicSetIndexMacro.NameConstToken, setIndex.ToString()).Replace("<", null).Replace(">", null);
+        return ReplaceTokenValues(
+                path,
+                "<" + PicSetIndexMacro.NameConst,
+                formatter => MacroHelper.FormatInteger(setIndex, formatter));
+    }
+
+    private static string ReplaceFileExtensionTokens(string path, string extension)
+    {
+        return ReplaceTokenValues(
+            path,
+            "<" + FileExtensionMacro.NameConst,
+            formatter => MacroHelper.FormatString(extension, formatter));
+    }
+
+    private static string ReplaceTokenValues(string path, string tokenPrefix, Func<string?, string> valueFactory)
+    {
+        var start = path.IndexOf(tokenPrefix, StringComparison.Ordinal);
+        if (start < 0)
+            return path;
+
+        var builder = new StringBuilder(path.Length);
+        var position = 0;
+        while (start >= 0)
+        {
+            _ = builder.Append(path, position, start - position);
+
+            var afterName = start + tokenPrefix.Length;
+            if (afterName >= path.Length)
+            {
+                _ = builder.Append(path, start, path.Length - start);
+                break;
+            }
+
+            switch (path[afterName])
+            {
+                case '>':
+                    _ = builder.Append(valueFactory(null));
+                    position = afterName + 1;
+                    break;
+                case ':':
+                    var formatterStart = afterName + 1;
+                    var tokenEnd = path.IndexOf('>', formatterStart);
+                    if (tokenEnd < 0)
+                    {
+                        _ = builder.Append(path, start, path.Length - start);
+                        position = path.Length;
+                        break;
+                    }
+
+                    _ = builder.Append(valueFactory(path[formatterStart..tokenEnd]));
+                    position = tokenEnd + 1;
+                    break;
+                default:
+                    _ = builder.Append(path, start, tokenPrefix.Length);
+                    position = afterName;
+                    break;
+            }
+
+            start = path.IndexOf(tokenPrefix, position, StringComparison.Ordinal);
+        }
+
+        if (position < path.Length)
+            _ = builder.Append(path, position, path.Length - position);
+
+        return builder.ToString();
     }
 
     public static string RemoveTokenExtension(string path)
     {
-        return path.Replace(FileExtensionMacro.NameConstToken, null).Replace("<", null).Replace(">", null);
+        return ReplaceFileExtensionTokens(path, "");
     }
 
     private static string GetEncodedImageExtension(SKEncodedImageFormat encodedFormat) =>
