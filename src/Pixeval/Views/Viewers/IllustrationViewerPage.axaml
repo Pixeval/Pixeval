@@ -13,8 +13,8 @@
     xmlns:pixeval="using:Pixeval"
     xmlns:ss="using:SmoothScroll.Avalonia.Controls"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
-    x:Name="Root"
     x:DataType="{x:Type viewers:IllustrationViewerPageViewModel}"
+    x:Name="Root"
     Header="{Binding CurrentIllustration.Entry.Title, FallbackValue={x:Null}}"
     mc:Ignorable="d"
     d:DesignHeight="450"
@@ -23,8 +23,8 @@
         <Image
             Width="16"
             Height="16"
-            DataContext="{Binding #Root.DataContext}"
-            controls:Source.Cache="{Binding LogoUri}" />
+            controls:Source.Cache="{Binding LogoUri}"
+            DataContext="{Binding #Root.DataContext}" />
     </ContentPage.Icon>
 
     <ContentPage.Resources>
@@ -359,8 +359,8 @@
                                         Icon="{markup:SymbolIcon SlidePlay}"
                                         IsChecked="{Binding IsAutoPlaying}"
                                         Label="{I18N {x:Static pixeval:EntryViewerPageResources.AutoPlay}}">
-                                        <CommandBarToggleButton.ContextFlyout>
-                                            <MenuFlyout Opened="AutoPlayMenuFlyout_OnOpened">
+                                        <CommandBarToggleButton.ContextMenu>
+                                            <ContextMenu Opened="AutoPlayMenuFlyout_OnOpened">
                                                 <MenuItem
                                                     x:Name="AutoPlayInterval1SecondMenuItem"
                                                     Click="AutoPlayIntervalMenuItem_OnClick"
@@ -403,7 +403,7 @@
                                                     Header="{I18N {x:Static pixeval:EntryViewerPageResources.AutoPlayInterval30Seconds}}"
                                                     Tag="{markup1:Int32 30}"
                                                     ToggleType="Radio" />
-                                                <MenuItem Header="-" />
+                                                <Separator />
                                                 <MenuItem
                                                     x:Name="AutoPlaySequentialModeMenuItem"
                                                     Click="AutoPlayModeMenuItem_OnClick"
@@ -418,7 +418,7 @@
                                                     Header="{I18N {x:Static pixeval:EnumResources.IllustrationViewerAutoPlayModeLoop}}"
                                                     Tag="{x:Static options:IllustrationViewerAutoPlayMode.Loop}"
                                                     ToggleType="Radio" />
-                                                <MenuItem Header="-" />
+                                                <Separator />
                                                 <MenuItem
                                                     x:Name="AutoPlayCurrentWorkScopeMenuItem"
                                                     Click="AutoPlayScopeMenuItem_OnClick"
@@ -433,8 +433,8 @@
                                                     Header="{I18N {x:Static pixeval:EnumResources.IllustrationViewerAutoPlayScopeAllWorks}}"
                                                     Tag="{x:Static options:IllustrationViewerAutoPlayScope.AllWorks}"
                                                     ToggleType="Radio" />
-                                            </MenuFlyout>
-                                        </CommandBarToggleButton.ContextFlyout>
+                                            </ContextMenu>
+                                        </CommandBarToggleButton.ContextMenu>
                                     </CommandBarToggleButton>
                                     <CommandBarButton
                                         Command="{Binding PrevCommand}"

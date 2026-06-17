@@ -50,21 +50,21 @@ public sealed class ProgressRing : Control
             return;
 
         var brush = Foreground ?? Brushes.Gray;
-        var size = Math.Min(Bounds.Width, Bounds.Height);
+        var size = double.Min(Bounds.Width, Bounds.Height);
         if (size <= 0)
             return;
 
         var center = new Point(Bounds.Width / 2, Bounds.Height / 2);
-        var dotRadius = Math.Max(1, size * 0.08);
-        var orbitRadius = Math.Max(0, (size / 2) - dotRadius);
+        var dotRadius = double.Max(1, size * 0.08);
+        var orbitRadius = double.Max(0, (size / 2) - dotRadius);
 
         for (var i = 0; i < Dots; ++i)
         {
             var opacity = 1 - (i / (double) Dots * 0.75);
-            var angle = (Math.Tau * i / Dots) - (Math.PI / 2);
+            var angle = (double.Tau * i / Dots) - (double.Pi / 2);
             var point = new Point(
-                center.X + (Math.Cos(angle) * orbitRadius),
-                center.Y + (Math.Sin(angle) * orbitRadius));
+                center.X + (double.Cos(angle) * orbitRadius),
+                center.Y + (double.Sin(angle) * orbitRadius));
 
             using (context.PushOpacity(opacity))
                 context.DrawEllipse(brush, null, point, dotRadius, dotRadius);
@@ -109,7 +109,7 @@ public sealed class ProgressRing : Control
 
         var animation = visual.Compositor.CreateScalarKeyFrameAnimation();
         animation.InsertKeyFrame(0f, 0, new LinearEasing());
-        animation.InsertKeyFrame(1f, (float) Math.Tau, new LinearEasing());
+        animation.InsertKeyFrame(1f, float.Tau, new LinearEasing());
         animation.Duration = TimeSpan.FromMilliseconds(960);
         animation.IterationBehavior = AnimationIterationBehavior.Forever;
 

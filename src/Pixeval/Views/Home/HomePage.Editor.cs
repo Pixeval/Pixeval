@@ -35,8 +35,8 @@ public partial class HomePage
                 return;
             }
 
-            var width = Math.Min(template.DefaultColumnSpan, ColumnCount);
-            var height = Math.Min(template.DefaultRowSpan, RowCount);
+            var width = int.Min(template.DefaultColumnSpan, ColumnCount);
+            var height = int.Min(template.DefaultRowSpan, RowCount);
             if (!TryFindFreePosition(width, height, out var column, out var row)
                 && !TryFindBestFittingFreePosition(width, height, out width, out height, out column, out row))
             {
@@ -71,8 +71,8 @@ public partial class HomePage
 
     private void ApplyGridSizeFromViewModel()
     {
-        var rows = DecimalToPositiveInt(Math.Clamp(ViewModel.GridRowsValue, MinimumGridSize, MaximumGridSize));
-        var columns = DecimalToPositiveInt(Math.Clamp(ViewModel.GridColumnsValue, MinimumGridSize, MaximumGridSize));
+        var rows = DecimalToPositiveInt(decimal.Clamp(ViewModel.GridRowsValue, MinimumGridSize, MaximumGridSize));
+        var columns = DecimalToPositiveInt(decimal.Clamp(ViewModel.GridColumnsValue, MinimumGridSize, MaximumGridSize));
         var settings = App.AppViewModel.AppSettings;
         if (settings.HomePageRows == rows && settings.HomePageColumns == columns)
             return;
@@ -241,9 +241,9 @@ public partial class HomePage
         return null;
     }
 
-    private static int DecimalToZeroBasedInt(decimal? value) => Math.Max(0, DecimalToPositiveInt(value) - 1);
+    private static int DecimalToZeroBasedInt(decimal? value) => int.Max(0, DecimalToPositiveInt(value) - 1);
 
-    private static int DecimalToPositiveInt(decimal? value) => Math.Max(1, (int) (value ?? 1));
+    private static int DecimalToPositiveInt(decimal? value) => int.Max(1, (int) (value ?? 1));
 
     private static void SaveLayout() => AppInfo.SaveSettings(App.AppViewModel.AppSettings);
 }

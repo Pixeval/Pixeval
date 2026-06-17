@@ -232,12 +232,12 @@ public class ExtensionService : IDisposable
                 return ExtensionHostLoadResult.NativeLibraryLoadFailed;
             try
             {
-                if (!NativeLibrary.TryGetExport(libraryHandle, nameof(IExtensionsHost.DllGetExtensionsHost), out var getExtensionsHostPtr))
+                if (!NativeLibrary.TryGetExport(libraryHandle, nameof(GetExtensionsHost), out var getExtensionsHostPtr))
                 {
                     NativeLibrary.Free(libraryHandle);
                     return ExtensionHostLoadResult.MissingEntryPoint;
                 }
-                var getExtensionsHost = Marshal.GetDelegateForFunctionPointer<IExtensionsHost.DllGetExtensionsHost>(getExtensionsHostPtr);
+                var getExtensionsHost = Marshal.GetDelegateForFunctionPointer<GetExtensionsHost>(getExtensionsHostPtr);
                 var result = getExtensionsHost(out var ppv);
                 if (result is not 0)
                 {
@@ -248,7 +248,7 @@ public class ExtensionService : IDisposable
                 var rcw = (IExtensionsHost) wrappers.GetOrCreateObjectForComInstance(ppv, CreateObjectFlags.UniqueInstance);
                 _ = Marshal.Release(ppv);
 
-                if (rcw.SdkVersion != IExtensionsHost.CurrentSdkVersion.ToString())
+                if (rcw.SdkVersion != ExtensionsHostStatics.CurrentSdkVersion.ToString())
                 {
                     NativeLibrary.Free(libraryHandle);
                     outdatedVersion = rcw.SdkVersion;
@@ -285,7 +285,7 @@ public class ExtensionService : IDisposable
         }
     }
 
-    private static ReadOnlySpan<byte> ExtensionHostEntryPointName => "DllGetExtensionsHost"u8;
+    private static ReadOnlySpan<byte> ExtensionHostEntryPointName => "GetExtensionsHost"u8;
 
     private static bool IsExtensionHostNativeLibrary(string path)
     {
@@ -355,7 +355,7 @@ public class ExtensionService : IDisposable
             if (buffer[..length].IndexOf(entryPointName) >= 0)
                 return true;
 
-            retained = Math.Min(entryPointName.Length - 1, length);
+            retained = int.Min(entryPointName.Length - 1, length);
             buffer[(length - retained)..length].CopyTo(buffer);
         }
     }

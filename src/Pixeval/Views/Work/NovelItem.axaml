@@ -22,8 +22,8 @@
     d:DesignWidth="400">
     <ContentControl>
         <Grid ClipToBounds="True" ColumnDefinitions="Auto,*">
-            <Grid.ContextFlyout>
-                <MenuFlyout>
+            <Grid.ContextMenu>
+                <ContextMenu>
                     <MenuItem
                         Command="{Binding BookmarkCommand}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
@@ -44,13 +44,13 @@
                         Click="OpenUserInfoPage_OnClicked"
                         Header="{I18N {x:Static pixeval:EntryItemResources.OpenUserInfoPage}}"
                         Icon="{markup:SymbolIcon Person}" />
-                    <MenuItem Header="-" />
+                    <Separator />
                     <MenuItem
                         Command="{Binding SaveCommand}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
                         Header="{I18N {x:Static pixeval:EntryItemResources.Save}}"
                         Icon="{markup:SymbolIcon Save}" />
-                    <MenuItem Header="-" />
+                    <Separator />
                     <MenuItem
                         Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                         Header="{I18N {x:Static pixeval:EntryItemResources.OpenInWebBrowser}}"
@@ -66,8 +66,8 @@
                         Header="{I18N {x:Static pixeval:EntryItemResources.GenerateLink}}"
                         Icon="{markup:SymbolIcon Link}"
                         Tag="{Binding AppUri}" />
-                </MenuFlyout>
-            </Grid.ContextFlyout>
+                </ContextMenu>
+            </Grid.ContextMenu>
             <controls:ConstrainedBox
                 Grid.Column="0"
                 AspectRatio="427:600"

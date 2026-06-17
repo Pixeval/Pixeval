@@ -59,15 +59,15 @@ public sealed class MacroEditorColorizer : DocumentColorizingTransformer
         if (documentLength <= 0)
             return new MacroTextSpan(0, 0);
 
-        var safeStart = Math.Clamp(span.Start, 0, documentLength - 1);
-        var safeEnd = Math.Clamp(Math.Max(span.End, safeStart + 1), safeStart + 1, documentLength);
+        var safeStart = int.Clamp(span.Start, 0, documentLength - 1);
+        var safeEnd = int.Clamp(int.Max(span.End, safeStart + 1), safeStart + 1, documentLength);
         return new MacroTextSpan(safeStart, safeEnd - safeStart);
     }
 
     private static bool TryIntersect(MacroTextSpan span, DocumentLine line, out int start, out int end)
     {
-        start = Math.Max(span.Start, line.Offset);
-        end = Math.Min(span.End, line.EndOffset);
+        start = int.Max(span.Start, line.Offset);
+        end = int.Min(span.End, line.EndOffset);
         return start < end;
     }
 }

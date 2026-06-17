@@ -700,8 +700,8 @@ public class TabsControl : TabControl
         double newWidth, newHeight;
         if (sourceWindow.WindowState is WindowState.Maximized)
         {
-            newWidth = Math.Min(800, sourceWindow.Bounds.Width);
-            newHeight = Math.Min(600, sourceWindow.Bounds.Height);
+            newWidth = double.Min(800, sourceWindow.Bounds.Width);
+            newHeight = double.Min(600, sourceWindow.Bounds.Height);
         }
         else
         {

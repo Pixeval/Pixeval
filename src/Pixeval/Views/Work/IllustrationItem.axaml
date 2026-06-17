@@ -22,8 +22,8 @@
     d:DesignHeight="250"
     d:DesignWidth="300">
     <ContentControl ClipToBounds="True">
-        <ContentControl.ContextFlyout>
-            <MenuFlyout>
+        <ContentControl.ContextMenu>
+            <ContextMenu>
                 <MenuItem
                     Command="{Binding BookmarkCommand}"
                     CommandParameter="{Binding $self, Mode=OneTime}"
@@ -44,7 +44,7 @@
                     Click="OpenUserInfoPage_OnClicked"
                     Header="{I18N {x:Static pixeval:EntryItemResources.OpenUserInfoPage}}"
                     Icon="{markup:SymbolIcon Person}" />
-                <MenuItem Header="-" />
+                <Separator />
                 <MenuItem
                     Command="{Binding CopyCommand}"
                     CommandParameter="{Binding #ThumbnailImage, Mode=OneTime}"
@@ -57,7 +57,7 @@
                     CommandParameter="{Binding $self, Mode=OneTime}"
                     Header="{I18N {x:Static pixeval:EntryItemResources.Save}}"
                     Icon="{markup:SymbolIcon Save}" />
-                <MenuItem Header="-" />
+                <Separator />
                 <MenuItem
                     Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                     Header="{I18N {x:Static pixeval:EntryItemResources.OpenInWebBrowser}}"
@@ -73,8 +73,8 @@
                     Header="{I18N {x:Static pixeval:EntryItemResources.GenerateLink}}"
                     Icon="{markup:SymbolIcon Link}"
                     Tag="{Binding AppUri}" />
-            </MenuFlyout>
-        </ContentControl.ContextFlyout>
+            </ContextMenu>
+        </ContentControl.ContextMenu>
         <Border HorizontalAlignment="Stretch">
             <Panel>
                 <controls:ConstrainedBox AspectRatio="{Binding AspectRatio, Converter={x:Static converters:PixevalConverters.ToAspectRatio}}" RestrictArrange="False">

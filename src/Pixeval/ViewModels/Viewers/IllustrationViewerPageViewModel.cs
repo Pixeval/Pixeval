@@ -346,7 +346,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
         get => App.AppViewModel.AppSettings.IllustrationViewerAutoPlayInterval;
         set
         {
-            value = Math.Clamp(value, 1, 60);
+            value = int.Clamp(value, 1, 60);
             if (App.AppViewModel.AppSettings.IllustrationViewerAutoPlayInterval == value)
                 return;
 

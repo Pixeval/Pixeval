@@ -148,7 +148,7 @@ public static class Objects
         public double CoerceIn((double, double) range)
         {
             var (startInclusive, endInclusive) = range;
-            return Math.Max(startInclusive, Math.Min(i, endInclusive));
+            return double.Max(startInclusive, double.Min(i, endInclusive));
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ public static class Objects
     public static int CoerceIn(this int i, (int, int) range)
     {
         var (startInclusive, endInclusive) = range;
-        return Math.Max(startInclusive, Math.Min(i, endInclusive));
+        return int.Max(startInclusive, int.Min(i, endInclusive));
     }
 
     public static bool Inverse(ref this bool b)

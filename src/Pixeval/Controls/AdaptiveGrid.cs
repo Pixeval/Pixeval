@@ -7,7 +7,6 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Pixeval.Utilities;
-using static System.Math;
 
 namespace Pixeval.Controls;
 
@@ -297,9 +296,9 @@ public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasure
 
             visibleIndices.Add(i);
             if (!itemSizeSet)
-                baseMinor = Max(baseMinor, this.Minor(child.DesiredSize));
+                baseMinor = double.Max(baseMinor, this.Minor(child.DesiredSize));
             if (!lineSizeSet)
-                baseMajor = Max(baseMajor, this.Major(child.DesiredSize));
+                baseMajor = double.Max(baseMajor, this.Major(child.DesiredSize));
         }
 
         if (visibleIndices.Count is 0)
@@ -331,7 +330,7 @@ public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasure
             : GetLineCount(availableMajor, baseMajor, lineSpacing, int.MaxValue);
         var visibleLineCount = double.IsPositiveInfinity(availableMajor)
             ? totalLineCount
-            : Min(totalLineCount, lineCapacity);
+            : int.Min(totalLineCount, lineCapacity);
         var normalAllocatedLineCount = double.IsPositiveInfinity(availableMajor)
             ? totalLineCount
             : lineCapacity;
@@ -342,14 +341,14 @@ public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasure
             return new LayoutState([], [], 0, 0, itemsPerLine, lineSpacing, itemSpacing, baseMajor, baseMinor,
                 WrapPanelItemsAlignment.Start, WrapPanelItemsAlignment.Start, this, availableSize, new Size());
 
-        var displayedItemCount = Min(visibleIndices.Count, allocatedLineCount * itemsPerLine);
+        var displayedItemCount = int.Min(visibleIndices.Count, allocatedLineCount * itemsPerLine);
         var actualLineCount = GetLineCountForItems(displayedItemCount, itemsPerLine);
 
         var lines = new LineState[actualLineCount];
         for (var lineIndex = 0; lineIndex < actualLineCount; ++lineIndex)
         {
             var start = lineIndex * itemsPerLine;
-            lines[lineIndex] = new LineState(start, Min(itemsPerLine, displayedItemCount - start));
+            lines[lineIndex] = new LineState(start, int.Min(itemsPerLine, displayedItemCount - start));
         }
 
         var measuredLineCount = majorAlignment is WrapPanelItemsAlignment.Justify or WrapPanelItemsAlignment.Stretch
@@ -382,7 +381,7 @@ public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasure
         if (!MathUtilities.GreaterThan(itemMinor, 0))
             return 1;
 
-        return Max(1, (int)Floor((availableMinor + itemSpacing) / (itemMinor + itemSpacing)));
+        return int.Max(1, (int) double.Floor((availableMinor + itemSpacing) / (itemMinor + itemSpacing)));
     }
 
     private static int GetLineCountForItems(int itemCount, int itemsPerLine)
@@ -399,15 +398,15 @@ public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasure
         var effectiveMin = minCount;
 
         if (effectiveMax >= 0)
-            effectiveMin = effectiveMin >= 0 ? Min(effectiveMin, effectiveMax) : effectiveMin;
+            effectiveMin = effectiveMin >= 0 ? int.Min(effectiveMin, effectiveMax) : effectiveMin;
 
         if (effectiveMax >= 0)
-            normalCount = Min(normalCount, effectiveMax);
+            normalCount = int.Min(normalCount, effectiveMax);
 
         if (effectiveMin >= 0)
-            normalCount = Max(normalCount, effectiveMin);
+            normalCount = int.Max(normalCount, effectiveMin);
 
-        return Max(0, normalCount);
+        return int.Max(0, normalCount);
     }
 
     private static int GetLineCount(double availableMajor, double lineMajor, double lineSpacing, int fallbackCount)
@@ -421,11 +420,11 @@ public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasure
         if (!MathUtilities.GreaterThan(lineMajor, 0))
             return 0;
 
-        var lineCount = Floor((availableMajor + lineSpacing) / (lineMajor + lineSpacing));
+        var lineCount = double.Floor((availableMajor + lineSpacing) / (lineMajor + lineSpacing));
         if (lineCount >= fallbackCount)
             return fallbackCount;
 
-        return Max(0, (int)lineCount);
+        return int.Max(0, (int)lineCount);
     }
 
     private static double GetStackedSize(int itemCount, double spacing, double baseSize)
@@ -433,7 +432,7 @@ public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasure
         if (itemCount <= 0)
             return 0;
 
-        return (itemCount * baseSize) + (Max(0, itemCount - 1) * spacing);
+        return (itemCount * baseSize) + (int.Max(0, itemCount - 1) * spacing);
     }
 
     private static double GetAlignedStart(double availableSize, int itemCount, double spacing, double baseSize, WrapPanelItemsAlignment itemsAlignment)
@@ -458,7 +457,7 @@ public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasure
         return itemsAlignment switch
         {
             WrapPanelItemsAlignment.Stretch when itemCount > 0 =>
-                LayoutAlignmentHelper.GetDistributableSpace(availableSize, Max(0, itemCount - 1) * spacing) / itemCount,
+                LayoutAlignmentHelper.GetDistributableSpace(availableSize, int.Max(0, itemCount - 1) * spacing) / itemCount,
             _ => baseSize
         };
     }
@@ -468,7 +467,7 @@ public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasure
         return itemsAlignment switch
         {
             WrapPanelItemsAlignment.Justify when itemCount > 1 =>
-                LayoutAlignmentHelper.GetDistributableSpace(availableSize, itemCount * baseSize) / (itemCount - 1),
+                LayoutAlignmentHelper.GetDistributableSpace(availableSize, double.Max(0, itemCount * baseSize)) / (itemCount - 1),
             _ => spacing
         };
     }

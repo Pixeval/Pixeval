@@ -161,7 +161,7 @@ public partial class SingleImageViewer : UserControl
             return;
 
         var ratio = panelSize / imageSize;
-        scrollView.ZoomTo(Math.Min(ratio.X, ratio.Y), animation);
+        scrollView.ZoomTo(double.Min(ratio.X, ratio.Y), animation);
     }
 
     public bool UseScrollView

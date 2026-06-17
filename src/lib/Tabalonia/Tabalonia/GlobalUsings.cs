@@ -1,4 +1,4 @@
-﻿// Global using directives
+// Global using directives
 
 global using Avalonia;
 global using Avalonia.Animation;

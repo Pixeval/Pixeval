@@ -263,7 +263,7 @@ public class ContentDialogHost : TemplatedControl
             ? hostSize.Height
             : size.Height;
 
-        return new(Math.Max(0, width), Math.Max(0, height));
+        return new(double.Max(0, width), double.Max(0, height));
     }
 
     private void UpdateOpenState()

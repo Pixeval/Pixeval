@@ -79,7 +79,7 @@ public sealed class MacroSyntaxParser(string text)
 
         if (IsAtEnd || Current is not '{')
         {
-            AddDiagnostic(MacroDiagnosticKind.ExpectedLeftBraceAfterAt, MacroTextSpan.FromBounds(macroStart, Math.Min(macroStart + 1, text.Length)));
+            AddDiagnostic(MacroDiagnosticKind.ExpectedLeftBraceAfterAt, MacroTextSpan.FromBounds(macroStart, int.Min(macroStart + 1, text.Length)));
             RecoverAfterBrokenMacro(stopAtColon: false, stopAtRightBrace: false);
             return null;
         }
@@ -93,7 +93,7 @@ public sealed class MacroSyntaxParser(string text)
 
         if (_position == nameStart)
         {
-            AddDiagnostic(MacroDiagnosticKind.ExpectedMacroName, MacroTextSpan.FromBounds(nameStart, Math.Min(nameStart + 1, text.Length)));
+            AddDiagnostic(MacroDiagnosticKind.ExpectedMacroName, MacroTextSpan.FromBounds(nameStart, int.Min(nameStart + 1, text.Length)));
             RecoverAfterBrokenMacro(stopAtColon: false, stopAtRightBrace: true);
             return null;
         }
@@ -111,7 +111,7 @@ public sealed class MacroSyntaxParser(string text)
 
         if (IsAtEnd || Current is not '}')
         {
-            AddDiagnostic(MacroDiagnosticKind.MissingRightBrace, MacroTextSpan.FromBounds(macroStart, Math.Min(macroStart + 2, text.Length)));
+            AddDiagnostic(MacroDiagnosticKind.MissingRightBrace, MacroTextSpan.FromBounds(macroStart, int.Min(macroStart + 2, text.Length)));
             RecoverAfterBrokenMacro(stopAtColon: false, stopAtRightBrace: true);
             return null;
         }
@@ -209,7 +209,7 @@ public sealed class MacroSyntaxParser(string text)
 
     private MacroTextSpan CurrentSpan()
         => IsAtEnd
-            ? MacroTextSpan.FromBounds(Math.Max(text.Length - 1, 0), text.Length)
+            ? MacroTextSpan.FromBounds(int.Max(text.Length - 1, 0), text.Length)
             : new(_position, 1);
 
     private static bool IsMacroNameCharacter(char character)

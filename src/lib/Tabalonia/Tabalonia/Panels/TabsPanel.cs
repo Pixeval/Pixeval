@@ -1,5 +1,4 @@
 using Tabalonia.Controls;
-using static System.Math;
 
 
 namespace Tabalonia.Panels;
@@ -82,7 +81,7 @@ public class TabsPanel : Panel
             tabItem.Measure(new Size(_itemWidth, availableSize.Height));
 
             width += _itemWidth;
-            height = Max(tabItem.DesiredSize.Height, height);
+            height = double.Max(tabItem.DesiredSize.Height, height);
 
             if (!isFirst)
                 width += ItemOffset;
@@ -106,7 +105,7 @@ public class TabsPanel : Panel
             tabItem.Measure(new Size(_itemWidth, availableSize.Height));
                 
             width += _itemWidth;
-            height = Max(tabItem.DesiredSize.Height, height);
+            height = double.Max(tabItem.DesiredSize.Height, height);
 
             if (!isFirst)
                 width += ItemOffset;
@@ -129,7 +128,7 @@ public class TabsPanel : Panel
 
         _itemsLocations.Clear();
             
-        foreach (Control? child in Children)
+        foreach (var child in Children)
         {
             if (child is not DragTabItem tabItem)
                 continue;
@@ -234,7 +233,7 @@ public class TabsPanel : Panel
 
         double itemWidth = availableSize.Width / tabsCount - ItemOffset * (tabsCount - 1) / tabsCount;
 
-        return Min(ItemWidth, itemWidth);
+        return double.Min(ItemWidth, itemWidth);
     }
 
         
@@ -271,7 +270,7 @@ public class TabsPanel : Panel
             return;
         }
         
-        if (Abs(item.X - location) < 1.0 || itemIsAnimating && Abs(activeTarget - location) < 1.0)
+        if (double.Abs(item.X - location) < 1.0 || itemIsAnimating && double.Abs(activeTarget - location) < 1.0)
         {
             return;
         }
@@ -322,7 +321,7 @@ public class TabsPanel : Panel
     {
         double size = item.Bounds.Width;
             
-        if (!_activeStoryboardTargetLocations.TryGetValue(item, out double startLocation))
+        if (!_activeStoryboardTargetLocations.TryGetValue(item, out var startLocation))
             startLocation = item.X;
             
         double midLocation = startLocation + size / 2;

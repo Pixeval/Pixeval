@@ -129,7 +129,7 @@ public partial class ContinuousImageViewer : ImageViewerBase
         if (ViewModel is not { Images.Count: > 0 } viewModel)
             return null;
 
-        var index = Math.Clamp(viewModel.SelectedPageIndex, 0, viewModel.Images.Count - 1);
+        var index = int.Clamp(viewModel.SelectedPageIndex, 0, viewModel.Images.Count - 1);
         return viewModel.Images[index];
     }
 
@@ -138,7 +138,7 @@ public partial class ContinuousImageViewer : ImageViewerBase
         if (ViewModel is not { Images.Count: > 0 } viewModel)
             return;
 
-        index = Math.Clamp(index, 0, viewModel.Images.Count - 1);
+        index = int.Clamp(index, 0, viewModel.Images.Count - 1);
         if (viewModel.SelectedPageIndex == index)
         {
             SetCurrentPage(viewModel.Images[index]);
@@ -191,7 +191,7 @@ public partial class ContinuousImageViewer : ImageViewerBase
             if (ViewModel is not { Images.Count: > 0 } viewModel)
                 return;
 
-            var index = Math.Clamp(viewModel.SelectedPageIndex, 0, viewModel.Images.Count - 1);
+            var index = int.Clamp(viewModel.SelectedPageIndex, 0, viewModel.Images.Count - 1);
             if (ImageItemsControl.ContainerFromIndex(index) is not { } container)
                 return;
 
@@ -201,7 +201,7 @@ public partial class ContinuousImageViewer : ImageViewerBase
                 return;
             }
 
-            var offset = Math.Clamp(
+            var offset = double.Clamp(
                 GetScrollOffset(origin, container.Bounds.Size),
                 0,
                 IsHorizontal ? ViewerScrollView.ScrollBarMaximum.X : ViewerScrollView.ScrollBarMaximum.Y);
@@ -248,10 +248,10 @@ public partial class ContinuousImageViewer : ImageViewerBase
 
                 var pageStart = GetStart(bounds);
                 var pageEnd = GetEnd(bounds);
-                var visibleStart = Math.Max(pageStart, 0);
-                var visibleEnd = Math.Min(pageEnd, viewportLength);
-                var visibleLength = Math.Max(0, visibleEnd - visibleStart);
-                var anchorDistance = Math.Abs(GetPageAnchor(bounds) - viewportAnchor);
+                var visibleStart = double.Max(pageStart, 0);
+                var visibleEnd = double.Min(pageEnd, viewportLength);
+                var visibleLength = double.Max(0, visibleEnd - visibleStart);
+                var anchorDistance = double.Abs(GetPageAnchor(bounds) - viewportAnchor);
 
                 if (visibleLength > 0 && anchorDistance < bestAnchorDistance)
                 {
@@ -289,14 +289,14 @@ public partial class ContinuousImageViewer : ImageViewerBase
                 if (GetEnd(bounds) < -viewportLength || GetStart(bounds) > viewportLength * 2)
                     continue;
 
-                startIndex = Math.Min(startIndex, i);
-                endIndex = Math.Max(endIndex, i);
+                startIndex = int.Min(startIndex, i);
+                endIndex = int.Max(endIndex, i);
             }
 
             if (endIndex < 0)
             {
-                startIndex = Math.Max(0, viewModel.SelectedPageIndex - 1);
-                endIndex = Math.Min(viewModel.Images.Count - 1, viewModel.SelectedPageIndex + 1);
+                startIndex = int.Max(0, viewModel.SelectedPageIndex - 1);
+                endIndex = int.Min(viewModel.Images.Count - 1, viewModel.SelectedPageIndex + 1);
             }
 
             if (startIndex == _preloadedStartIndex && endIndex == _preloadedEndIndex)
@@ -340,7 +340,7 @@ public partial class ContinuousImageViewer : ImageViewerBase
     private double GetEnd(Rect bounds) => IsHorizontal ? bounds.Right : bounds.Bottom;
 
     private double GetPageAnchor(Rect bounds) => IsReversed ? GetEnd(bounds) : GetStart(bounds);
-
+    
     private void ViewerScrollView_OnSizeChanged(object? sender, SizeChangedEventArgs e) => QueueViewportUpdate();
 
     private void ImageItem_OnSizeChanged(object? sender, SizeChangedEventArgs e) => QueueViewportUpdate();

@@ -197,17 +197,17 @@ public sealed partial class HomePageCardControl
         {
             var width = right - left;
             var height = bottom - top;
-            left = Math.Clamp(left, 0, ColumnCount - width);
-            top = Math.Clamp(top, 0, RowCount - height);
+            left = int.Clamp(left, 0, ColumnCount - width);
+            top = int.Clamp(top, 0, RowCount - height);
             right = left + width;
             bottom = top + height;
             return;
         }
 
-        left = Math.Clamp(left, 0, ColumnCount - MinimumSpan);
-        top = Math.Clamp(top, 0, RowCount - MinimumSpan);
-        right = Math.Clamp(right, left + MinimumSpan, ColumnCount);
-        bottom = Math.Clamp(bottom, top + MinimumSpan, RowCount);
+        left = int.Clamp(left, 0, ColumnCount - MinimumSpan);
+        top = int.Clamp(top, 0, RowCount - MinimumSpan);
+        right = int.Clamp(right, left + MinimumSpan, ColumnCount);
+        bottom = int.Clamp(bottom, top + MinimumSpan, RowCount);
     }
 
     private void ApplyBounds(HomeCardBounds bounds)
@@ -251,8 +251,8 @@ public sealed partial class HomePageCardControl
         if (extent <= 0 || count <= 0)
             return 0;
 
-        var cellExtent = Math.Max(1, (extent - (spacing * Math.Max(0, count - 1))) / count);
-        return (int) Math.Round(delta / (cellExtent + spacing), MidpointRounding.AwayFromZero);
+        var cellExtent = int.Max(1, (int) (extent - (spacing * int.Max(0, count - 1))) / count);
+        return (int) double.Round(delta / (cellExtent + spacing), MidpointRounding.AwayFromZero);
     }
 
     private sealed class PointerEditState(

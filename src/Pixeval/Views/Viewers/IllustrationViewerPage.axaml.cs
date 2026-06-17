@@ -30,7 +30,7 @@ public partial class IllustrationViewerPage : ContentPage
 
     private void NextButton_OnRightClick(object? sender, ContextRequestedEventArgs e) => ViewModel.NextWorkCommand.Execute(null);
 
-    private void AutoPlayMenuFlyout_OnOpened(object? sender, EventArgs e)
+    private void AutoPlayMenuFlyout_OnOpened(object? sender, RoutedEventArgs e)
     {
         SetMenuItem(AutoPlayInterval1SecondMenuItem, ViewModel.AutoPlayInterval);
         SetMenuItem(AutoPlayInterval3SecondsMenuItem, ViewModel.AutoPlayInterval);

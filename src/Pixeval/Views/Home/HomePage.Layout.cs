@@ -215,19 +215,18 @@ public partial class HomePage
         out int column,
         out int row)
     {
-        var maxColumnSpan = Math.Min(preferredColumnSpan, ColumnCount);
-        var maxRowSpan = Math.Min(preferredRowSpan, RowCount);
+        var maxColumnSpan = int.Min(preferredColumnSpan, ColumnCount);
+        var maxRowSpan = int.Min(preferredRowSpan, RowCount);
         var candidates = Enumerable.Range(1, maxRowSpan)
             .SelectMany(height => Enumerable.Range(1, maxColumnSpan), (height, width) => new
             {
-                height,
-                width
+                Width = width,
+                Height = height
             })
-            .OrderByDescending(t => t.width * t.height)
-            .ThenBy(t => Math.Abs(preferredColumnSpan - t.width) + Math.Abs(preferredRowSpan - t.height))
-            .ThenByDescending(t => t.height)
-            .ThenByDescending(t => t.width)
-            .Select(t => (Width: t.width, Height: t.height));
+            .OrderByDescending(t => t.Width * t.Height)
+            .ThenBy(t => int.Abs(preferredColumnSpan - t.Width) + int.Abs(preferredRowSpan - t.Height))
+            .ThenByDescending(t => t.Height)
+            .ThenByDescending(t => t.Width);
 
         foreach (var candidate in candidates)
         {
@@ -294,10 +293,10 @@ public partial class HomePage
     private bool ClampCard(HomePageCardLayout card)
     {
         var old = card with { };
-        card.ColumnSpan = Math.Clamp(card.ColumnSpan, 1, ColumnCount);
-        card.RowSpan = Math.Clamp(card.RowSpan, 1, RowCount);
-        card.Column = Math.Clamp(card.Column, 0, ColumnCount - card.ColumnSpan);
-        card.Row = Math.Clamp(card.Row, 0, RowCount - card.RowSpan);
+        card.ColumnSpan = int.Clamp(card.ColumnSpan, 1, ColumnCount);
+        card.RowSpan = int.Clamp(card.RowSpan, 1, RowCount);
+        card.Column = int.Clamp(card.Column, 0, ColumnCount - card.ColumnSpan);
+        card.Row = int.Clamp(card.Row, 0, RowCount - card.RowSpan);
         return old != card;
     }
 

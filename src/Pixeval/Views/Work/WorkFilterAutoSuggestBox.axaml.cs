@@ -61,8 +61,8 @@ public partial class WorkFilterAutoSuggestBox : UserControl
             return;
 
         var textLength = Text?.Length ?? 0;
-        var start = Math.Clamp(span.Start, 0, textLength);
-        var end = Math.Clamp(span.End, start, textLength);
+        var start = int.Clamp(span.Start, 0, textLength);
+        var end = int.Clamp(span.End, start, textLength);
         if (start == end && start < textLength)
             ++end;
 
@@ -77,7 +77,7 @@ public partial class WorkFilterAutoSuggestBox : UserControl
         if (GetFilterTextBox() is not { } textBox)
             return;
 
-        var caret = Math.Clamp(textBox.CaretIndex, 0, Text?.Length ?? 0);
+        var caret = int.Clamp(textBox.CaretIndex, 0, Text?.Length ?? 0);
         textBox.SelectionStart = caret;
         textBox.SelectionEnd = caret;
     }
@@ -260,7 +260,7 @@ public partial class WorkFilterAutoSuggestBox : UserControl
     }
 
     private int GetCaretIndex(string text)
-        => Math.Clamp(GetFilterTextBox()?.CaretIndex ?? text.Length, 0, text.Length);
+        => int.Clamp(GetFilterTextBox()?.CaretIndex ?? text.Length, 0, text.Length);
 
     private void ClearFilterCompletionItems()
     {
@@ -281,8 +281,8 @@ public partial class WorkFilterAutoSuggestBox : UserControl
 
     private static string ApplyCompletion(string source, FilterCompletionItem completion)
     {
-        var start = Math.Clamp(completion.ReplacementSpan.Start, 0, source.Length);
-        var end = Math.Clamp(completion.ReplacementSpan.End, start, source.Length);
+        var start = int.Clamp(completion.ReplacementSpan.Start, 0, source.Length);
+        var end = int.Clamp(completion.ReplacementSpan.End, start, source.Length);
         return string.Concat(source.AsSpan(0, start), completion.InsertText, source.AsSpan(end));
     }
 

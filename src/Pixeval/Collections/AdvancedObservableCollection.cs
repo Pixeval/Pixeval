@@ -359,7 +359,7 @@ public class AdvancedObservableCollection<T>
         if (end < 0 || start > end)
             return (0, 0);
 
-        return (Math.Max(0, start), Math.Min(sourceCount, end));
+        return (int.Max(0, start), int.Min(sourceCount, end));
     }
 
     private bool IsSourceIndexInRange(int sourceIndex)

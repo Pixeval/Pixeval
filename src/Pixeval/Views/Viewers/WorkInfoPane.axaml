@@ -186,8 +186,8 @@
                                                             controls:TranslatableTextBlockBehavior.TextType="WorkTag"
                                                             Text="{Binding Name}"
                                                             TextWrapping="NoWrap" />
-                                                        <Button.ContextFlyout>
-                                                            <MenuFlyout>
+                                                        <Button.ContextMenu>
+                                                            <ContextMenu>
                                                                 <MenuItem
                                                                     Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
                                                                     Header="{I18N {x:Static pixeval:WorkInfoPageResources.CopyOriginalTagMenuItemText}}"
@@ -204,8 +204,8 @@
                                                                     CommandParameter="{Binding}"
                                                                     Header="{I18N {x:Static pixeval:WorkInfoPageResources.BlockTagMenuItemText}}"
                                                                     Icon="{markup:SymbolIcon TagDismiss}" />
-                                                            </MenuFlyout>
-                                                        </Button.ContextFlyout>
+                                                            </ContextMenu>
+                                                        </Button.ContextMenu>
                                                     </Button>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>

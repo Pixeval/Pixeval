@@ -36,7 +36,7 @@ public partial class ImageViewerViewModel : ViewModelBase, IDisposable
     public partial int SelectedPageIndex { get; set; }
 
     public SingleViewerViewModel? CurrentPage =>
-        Images.Count is 0 ? null : Images[Math.Clamp(SelectedPageIndex, 0, Images.Count - 1)];
+        Images.Count is 0 ? null : Images[int.Clamp(SelectedPageIndex, 0, Images.Count - 1)];
 
     public int PageCount { get; }
 

@@ -8,7 +8,6 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Pixeval.Utilities;
-using static System.Math;
 
 namespace Pixeval.Controls;
 
@@ -267,8 +266,7 @@ public class WrapPanel : Panel, INavigableContainer, IOrientationBasedMeasures
             if (MathUtilities.GreaterThan(this.Minor(curLineSize) + this.Minor(childSize) + nextSpacing,
                     this.Minor(constraint))) // Need to switch to another line
             {
-                panelSize = this.MinorMajorSize(
-                    Max(this.Minor(curLineSize), this.Minor(panelSize)),
+                panelSize = this.MinorMajorSize(double.Max(this.Minor(curLineSize), this.Minor(panelSize)),
                     this.Major(panelSize) + this.Major(curLineSize) + (lineExists ? lineSpacing : 0));
                 curLineSize = childSize;
 
@@ -278,8 +276,7 @@ public class WrapPanel : Panel, INavigableContainer, IOrientationBasedMeasures
             else // Continue to accumulate a line
             {
                 curLineSize = this.MinorMajorSize(
-                    this.Minor(curLineSize) + this.Minor(childSize) + nextSpacing,
-                    Max(this.Major(childSize), this.Major(curLineSize)));
+                    this.Minor(curLineSize) + this.Minor(childSize) + nextSpacing, double.Max(this.Major(childSize), this.Major(curLineSize)));
 
                 itemExists |= child.IsVisible; // keep true
             }
@@ -290,8 +287,7 @@ public class WrapPanel : Panel, INavigableContainer, IOrientationBasedMeasures
             this.SetMinor(ref panelSize, this.Minor(constraint));
 
         // The last line size, if any should be added
-        panelSize = this.MinorMajorSize(
-            Max(this.Minor(curLineSize), this.Minor(panelSize)),
+        panelSize = this.MinorMajorSize(double.Max(this.Minor(curLineSize), this.Minor(panelSize)),
             this.Major(panelSize) + this.Major(curLineSize) + (lineExists ? lineSpacing : 0));
 
         return panelSize;
@@ -342,8 +338,7 @@ public class WrapPanel : Panel, INavigableContainer, IOrientationBasedMeasures
             else // Continue to accumulate a line
             {
                 curLineSize = this.MinorMajorSize(
-                    this.Minor(curLineSize) + this.Minor(childSize) + nextSpacing,
-                    Max(this.Major(childSize), this.Major(curLineSize)));
+                    this.Minor(curLineSize) + this.Minor(childSize) + nextSpacing, double.Max(this.Major(childSize), this.Major(curLineSize)));
 
                 itemExists |= child.IsVisible; // keep true
             }

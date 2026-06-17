@@ -63,8 +63,8 @@ public class ReversibleStackPanel : StackPanel, INavigableContainer
             position -= childLength;
 
             var rect = IsHorizontal
-                ? new Rect(position, 0, childLength, Math.Max(finalSize.Height, child.DesiredSize.Height))
-                : new Rect(0, position, Math.Max(finalSize.Width, child.DesiredSize.Width), childLength);
+                ? new Rect(position, 0, childLength, double.Max(finalSize.Height, child.DesiredSize.Height))
+                : new Rect(0, position, double.Max(finalSize.Width, child.DesiredSize.Width), childLength);
 
             child.Arrange(rect);
             position -= spacing;

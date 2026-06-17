@@ -36,6 +36,7 @@
                                 Margin="{TemplateBinding Padding}"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
+                                Background="{TemplateBinding Background}"
                                 Content="{TemplateBinding Content}" />
                             <controls:ListBoxItemCheckBox
                                 Name="SelectionCheckBox"
@@ -90,6 +91,7 @@
     </Style>
 
     <Style Selector="ListBox[SelectionMode=Multiple] ListBoxItem:selected">
-        <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemFillColorAttentionBrush}" />
+        <Setter Property="Background" Value="{DynamicResource SystemFillColorAttentionBackgroundBrush}" />
     </Style>
 </Styles>

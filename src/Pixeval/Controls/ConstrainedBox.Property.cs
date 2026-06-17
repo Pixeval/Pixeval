@@ -69,7 +69,7 @@ public partial class ConstrainedBox
         get;
         set
         {
-            value = Math.Max(-1, value);
+            value = int.Max(-1, value);
             SetAndRaise(MultipleXProperty, ref field, value);
         }
     } = -1;
@@ -88,7 +88,7 @@ public partial class ConstrainedBox
         get;
         set
         {
-            value = Math.Max(-1, value);
+            value = int.Max(-1, value);
             SetAndRaise(MultipleYProperty, ref field, value);
         }
     } = -1;

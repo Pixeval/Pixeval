@@ -101,17 +101,17 @@ public class FloatingDockHost : Panel
 
         var content = GetContent();
         var reservedWidth = dockedPaneWidth * progress;
-        content?.Measure(new Size(Math.Max(0, availableSize.Width - reservedWidth), availableSize.Height));
+        content?.Measure(new Size(double.Max(0, availableSize.Width - reservedWidth), availableSize.Height));
 
         var desiredWidth = double.IsInfinity(availableSize.Width)
-            ? Math.Max((content?.DesiredSize.Width ?? 0) + reservedWidth, pane?.DesiredSize.Width ?? 0)
+            ? double.Max((content?.DesiredSize.Width ?? 0) + reservedWidth, pane?.DesiredSize.Width ?? 0)
             : availableSize.Width;
 
         // var desiredHeight = double.IsInfinity(availableSize.Height)
-        //     ? Math.Max(content?.DesiredSize.Height ?? 0, pane?.DesiredSize.Height ?? 0)
+        //     ? double.Max(content?.DesiredSize.Height ?? 0, pane?.DesiredSize.Height ?? 0)
         //     : availableSize.Height;
 
-        var desiredHeight = Math.Max(content?.DesiredSize.Height ?? 0, pane?.DesiredSize.Height ?? 0);
+        var desiredHeight = double.Max(content?.DesiredSize.Height ?? 0, pane?.DesiredSize.Height ?? 0);
 
         return new Size(desiredWidth, desiredHeight);
     }
@@ -119,7 +119,7 @@ public class FloatingDockHost : Panel
     protected override Size ArrangeOverride(Size finalSize)
     {
         var progress = CoerceProgress(DockProgress);
-        var dockedPaneWidth = Math.Min(CoerceLength(DockedPaneWidth), finalSize.Width);
+        var dockedPaneWidth = double.Min(CoerceLength(DockedPaneWidth), finalSize.Width);
 
         if (GetContent() is { } content)
         {
@@ -129,7 +129,7 @@ public class FloatingDockHost : Panel
                 0,
                 // progress < 1-ProgressEpsilon? finalSize.Width : finalSize.Width - dockedPaneWidth, 
                 // finalSize.Width,
-                Math.Max(0, finalSize.Width - contentX),
+                double.Max(0, finalSize.Width - contentX),
                 finalSize.Height));
         }
 
@@ -180,13 +180,13 @@ public class FloatingDockHost : Panel
         
         Rect CalculateFloatingPaneRect(Control pane, Size finalSize)
         {
-            var margin = Math.Max(0, FloatingPaneMargin);
-            var width = Math.Min(
+            var margin = double.Max(0, FloatingPaneMargin);
+            var width = double.Min(
                 CoerceLength(FloatingPaneWidth),
-                Math.Max(0, finalSize.Width - margin * 2));
-            var height = Math.Min(
+                double.Max(0, finalSize.Width - margin * 2));
+            var height = double.Min(
                 pane.DesiredSize.Height > 0 ? pane.DesiredSize.Height : pane.Bounds.Height,
-                Math.Max(0, finalSize.Height - margin * 2));
+                double.Max(0, finalSize.Height - margin * 2));
 
             var y = FloatingPaneVerticalAlignment switch
             {
@@ -195,23 +195,23 @@ public class FloatingDockHost : Panel
                 _ => finalSize.Height - height - margin,
             };
 
-            return new Rect(margin, Math.Max(0, y), width, height);
+            return new Rect(margin, double.Max(0, y), width, height);
         }
         
         static bool IsTransitioning(double progress)
         {
-            return progress > ProgressEpsilon && progress < 1 - ProgressEpsilon;
+            return progress is > ProgressEpsilon and < 1 - ProgressEpsilon;
         }
         
         static Rect GetCurrentPaneRectOrFallback(Control pane, Rect fallback)
         {
-            return pane.Bounds.Width > 0 && pane.Bounds.Height > 0
+            return pane.Bounds is { Width: > 0, Height: > 0 }
                 ? pane.Bounds
                 : fallback;
         }
     }
 
-    private static double CoerceProgress(double value) => double.IsNaN(value) ? 0 : Math.Clamp(value, 0, 1);
+    private static double CoerceProgress(double value) => double.IsNaN(value) ? 0 : double.Clamp(value, 0, 1);
 
     private static double CoerceLength(double value)
     {

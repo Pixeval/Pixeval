@@ -166,7 +166,7 @@ public static partial class IoHelper
 
         using var codec = SKCodec.Create(animatedStream)
             ?? throw new InvalidOperationException($"Unable to create {nameof(SKCodec)} from the provided stream.");
-        var frameCount = Math.Max(codec.FrameCount, 1);
+        var frameCount = int.Max(codec.FrameCount, 1);
         if (frameCount <= 1)
             throw new ArgumentException("Not animated image");
 

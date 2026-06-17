@@ -288,7 +288,7 @@ public class PagePreviewSlider : TemplatedControl
             return;
 
         var point = e.GetPosition(_track);
-        _previewPointerX = Math.Clamp(point.X, 0, _track.Bounds.Width);
+        _previewPointerX = double.Clamp(point.X, 0, _track.Bounds.Width);
         var index = GetIndexFromTrackX(_previewPointerX);
         _isHovering = true;
         PreviewIndex = index;
@@ -361,10 +361,10 @@ public class PagePreviewSlider : TemplatedControl
             : SelectedIndex;
         var center = GetCenterX(CoerceIndex(activeIndex), trackWidth);
 
-        _selectedTrack?.Width = Math.Clamp(center, 0, trackWidth);
+        _selectedTrack?.Width = double.Clamp(center, 0, trackWidth);
 
         var thumbLeft = center - (_thumb.Bounds.Width / 2d);
-        Canvas.SetLeft(_thumb, Math.Clamp(thumbLeft, 0, Math.Max(0, _thumbCanvas.Bounds.Width - _thumb.Bounds.Width)));
+        Canvas.SetLeft(_thumb, double.Clamp(thumbLeft, 0, double.Max(0, _thumbCanvas.Bounds.Width - _thumb.Bounds.Width)));
 
         UpdatePreviewPopupPosition();
     }
@@ -382,8 +382,8 @@ public class PagePreviewSlider : TemplatedControl
         if (ItemsCount <= 1 || _track is null || _track.Bounds.Width <= 0)
             return 0;
 
-        var normalized = Math.Clamp(trackX / _track.Bounds.Width, 0, 1);
-        return CoerceIndex((int)Math.Round(normalized * (ItemsCount - 1), MidpointRounding.AwayFromZero));
+        var normalized = double.Clamp(trackX / _track.Bounds.Width, 0, 1);
+        return CoerceIndex((int)double.Round(normalized * (ItemsCount - 1), MidpointRounding.AwayFromZero));
     }
 
     private int CoerceIndex(int index)
@@ -391,7 +391,7 @@ public class PagePreviewSlider : TemplatedControl
         if (ItemsCount <= 0)
             return 0;
 
-        return Math.Clamp(index, 0, ItemsCount - 1);
+        return int.Clamp(index, 0, ItemsCount - 1);
     }
 
     private object? GetItem(int index)

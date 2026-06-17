@@ -64,8 +64,8 @@
         </Style>
     </UserControl.Styles>
 
-    <UserControl.ContextFlyout>
-        <MenuFlyout>
+    <UserControl.ContextMenu>
+        <ContextMenu>
             <!--  播放/暂停（仅动图可见）  -->
             <MenuItem
                 Command="{Binding PlayPauseCommand}"
@@ -92,7 +92,7 @@
                 Header="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}"
                 Icon="{markup:SymbolIcon Save}"
                 InputGesture="Ctrl+S" />
-            <MenuItem Header="-" IsVisible="{x:Static vm:SingleViewerViewModel.HasTransformerExtensions}" />
+            <Separator IsVisible="{x:Static vm:SingleViewerViewModel.HasTransformerExtensions}" />
             <MenuItem
                 Command="{Binding PrimaryTransformerExtensionItem.Command, FallbackValue={x:Null}}"
                 CommandParameter="{Binding $self}"
@@ -118,7 +118,7 @@
                     </ControlTheme>
                 </MenuItem.ItemContainerTheme>
             </MenuItem>
-            <MenuItem Header="-" />
+            <Separator />
             <!--  旋转/镜像  -->
             <MenuItem
                 Command="{Binding RotateClockwiseCommand}"
@@ -134,8 +134,8 @@
                 Icon="{markup:SymbolIcon FlipHorizontal}"
                 IsChecked="{Binding IsMirrored, Mode=TwoWay}"
                 ToggleType="CheckBox" />
-        </MenuFlyout>
-    </UserControl.ContextFlyout>
+        </ContextMenu>
+    </UserControl.ContextMenu>
     <Panel>
         <ContentPresenter
             x:Name="ImagePresenter"

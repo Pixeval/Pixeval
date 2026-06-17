@@ -79,9 +79,9 @@ public partial class HomePageViewModel : ViewModelBase
         }
     } = Settings.HideHomePageCardTitle;
 
-    public int RowCount => decimal.ToInt32(Math.Clamp(Settings.HomePageRows, HomePage.MinimumGridSize, HomePage.MaximumGridSize));
+    public int RowCount => decimal.ToInt32(decimal.Clamp(Settings.HomePageRows, HomePage.MinimumGridSize, HomePage.MaximumGridSize));
 
-    public int ColumnCount => decimal.ToInt32(Math.Clamp(Settings.HomePageColumns, HomePage.MinimumGridSize, HomePage.MaximumGridSize));
+    public int ColumnCount => decimal.ToInt32(decimal.Clamp(Settings.HomePageColumns, HomePage.MinimumGridSize, HomePage.MaximumGridSize));
 
     [ObservableProperty]
     public partial decimal GridColumnsValue { get; set; }

@@ -11,11 +11,11 @@ namespace Pixeval.Download.MacroParser;
 
 public readonly record struct MacroTextSpan(int Start, int Length)
 {
-    public int End => Start + Math.Max(Length, 0);
+    public int End => Start + int.Max(Length, 0);
 
     public static MacroTextSpan FromBounds(int start, int end)
     {
-        return new(start, Math.Max(0, end - start));
+        return new(start, int.Max(0, end - start));
     }
 }
 

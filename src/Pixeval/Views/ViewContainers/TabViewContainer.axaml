@@ -56,7 +56,7 @@
                             Header="{I18N {x:Static pixeval:MainPageResources.OpenMyPageInBrowserItemText}}"
                             Icon="{markup:SymbolIcon GlobeArrowUp}"
                             Tag="{Binding Url}" />
-                        <MenuItem Header="-" />
+                        <Separator />
                         <!--  该项不显示  -->
                         <MenuItem
                             Command="{Binding ToggleRestrictedModeCommand, Mode=OneTime}"
@@ -76,7 +76,7 @@
                             Header="{I18N {x:Static pixeval:MainPageResources.MoreViewingSettingsItemText}}"
                             Icon="{markup:SymbolIcon MoreHorizontal}"
                             Tag="https://www.pixiv.net/settings/viewing" />
-                        <MenuItem Header="-" />
+                        <Separator />
                         <MenuItem
                             Click="SwitchAccount_OnClicked"
                             Header="{I18N {x:Static pixeval:MainPageResources.SwitchAccountItemText}}"

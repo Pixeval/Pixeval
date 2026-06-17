@@ -65,13 +65,13 @@ public partial class ConstrainedBox : ContentControl
             // However, if we always re-calculate even if we are provided the proper finalSize, this can trigger
             // multiple arrange passes and cause a rounding error in layout. Therefore, we only want to
             // re-calculate if we think we will have a significant impact.
-            if (Math.Abs(finalSize.Width - _lastMeasuredSize.Width) > CalculationTolerance ||
-                Math.Abs(finalSize.Height - _lastMeasuredSize.Height) > CalculationTolerance)
+            if (double.Abs(finalSize.Width - _lastMeasuredSize.Width) > CalculationTolerance ||
+                double.Abs(finalSize.Height - _lastMeasuredSize.Height) > CalculationTolerance)
             {
                 // Check if we can re-use our measure calculation if we're given effectively
                 // the same size as we had in the measure step.
-                if (Math.Abs(finalSize.Width - _originalSize.Width) <= CalculationTolerance &&
-                    Math.Abs(finalSize.Height - _originalSize.Height) <= CalculationTolerance)
+                if (double.Abs(finalSize.Width - _originalSize.Width) <= CalculationTolerance &&
+                    double.Abs(finalSize.Height - _originalSize.Height) <= CalculationTolerance)
                 {
                     finalSize = _lastMeasuredSize;
                 }

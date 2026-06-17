@@ -64,9 +64,9 @@ public sealed class Skeleton : TemplatedControl
             return;
         }
 
-        var shimmerWidth = Math.Max(MinShimmerWidth, Bounds.Width * ShimmerWidthRatio);
+        var shimmerWidth = double.Max(MinShimmerWidth, Bounds.Width * ShimmerWidthRatio);
         _shimmer.Width = shimmerWidth;
-        _shimmer.Height = Math.Max(Bounds.Height, 1);
+        _shimmer.Height = double.Max(Bounds.Height, 1);
 
         if (ElementComposition.GetElementVisual(_shimmer) is not { } visual)
             return;

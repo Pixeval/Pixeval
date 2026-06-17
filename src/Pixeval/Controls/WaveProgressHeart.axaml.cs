@@ -28,7 +28,7 @@ public sealed class WaveProgressHeart : TemplatedControl
     private static readonly TimeSpan _MinTimeSpan = TimeSpan.FromSeconds(0.1);
 
     public static readonly StyledProperty<double> ValueProperty = 
-        AvaloniaProperty.Register<WaveProgressHeart, double>(nameof(Value), coerce: (o, d) => Math.Clamp(d, 0, 1));
+        AvaloniaProperty.Register<WaveProgressHeart, double>(nameof(Value), coerce: (o, d) => double.Clamp(d, 0, 1));
 
     public static readonly StyledProperty<TimeSpan> ValueTransitionDurationProperty = 
         AvaloniaProperty.Register<WaveProgressHeart, TimeSpan>(nameof(ValueTransitionDuration), TimeSpan.FromSeconds(0.5), coerce: (o, d) => d > _MinTimeSpan ? d : _MinTimeSpan);
@@ -40,10 +40,10 @@ public sealed class WaveProgressHeart : TemplatedControl
         AvaloniaProperty.Register<WaveProgressHeart, TimeSpan>(nameof(WavePeriod), TimeSpan.FromSeconds(1), coerce: (o, d) => d > _MinTimeSpan ? d : _MinTimeSpan);
 
     public static readonly StyledProperty<double> WaveStrokeThicknessProperty =
-        AvaloniaProperty.Register<WaveProgressHeart, double>(nameof(WaveStrokeThickness), 2, coerce: (o, d) => Math.Max(d, 0));
+        AvaloniaProperty.Register<WaveProgressHeart, double>(nameof(WaveStrokeThickness), 2, coerce: (o, d) => double.Max(d, 0));
 
     public static readonly StyledProperty<double> StrokeThicknessProperty =
-        AvaloniaProperty.Register<WaveProgressHeart, double>(nameof(StrokeThickness), 1, coerce: (o, d) => Math.Max(d, 0));
+        AvaloniaProperty.Register<WaveProgressHeart, double>(nameof(StrokeThickness), 1, coerce: (o, d) => double.Max(d, 0));
 
     public static readonly StyledProperty<IBrush?> WaveStrokeProperty =
         AvaloniaProperty.Register<WaveProgressHeart, IBrush?>(nameof(WaveStroke));

@@ -70,7 +70,7 @@ public sealed class TopPanel : Panel
         MeasureControl(p.TabsControl);
         MeasureControl(p.MiddleDragWindowThumb);
 
-        width = Math.Max(availableWidth, width);
+        width = double.Max(availableWidth, width);
 
         return new Size(width, height);
 
@@ -79,7 +79,7 @@ public sealed class TopPanel : Panel
             var currentAvailableWidth = availableWidth - width;
             control.Measure(new Size(currentAvailableWidth, availableHeight));
             width += control.DesiredSize.Width;
-            height = Math.Max(height, control.DesiredSize.Height);
+            height = double.Max(height, control.DesiredSize.Height);
         }
     }
 
@@ -105,7 +105,7 @@ public sealed class TopPanel : Panel
             RightDragWindowThumb = p.RightDragWindowThumb.DesiredSize.Width,
         };
 
-        var tabsHeight = Math.Max(p.TabsControl.DesiredSize.Height, finalSize.Height);
+        var tabsHeight = double.Max(p.TabsControl.DesiredSize.Height, finalSize.Height);
 
         var withoutTabsWidth =
             partsWidth.LeftDragWindowThumb

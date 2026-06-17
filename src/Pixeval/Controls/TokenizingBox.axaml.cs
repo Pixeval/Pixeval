@@ -105,7 +105,7 @@ public class TokenizingBoxPanel : Panel
 
     protected override Size MeasureOverride(Size availableSize)
     {
-        var width = double.IsInfinity(availableSize.Width) ? double.PositiveInfinity : Math.Max(0, availableSize.Width);
+        var width = double.IsInfinity(availableSize.Width) ? double.PositiveInfinity : double.Max(0, availableSize.Width);
         var input = FindNamedChild("PART_AutoCompleteBox");
         var count = FindNamedChild("PART_CountTextBlock");
 
@@ -147,7 +147,7 @@ public class TokenizingBoxPanel : Panel
             var prefixSpacing = x > 0 ? ItemSpacing : 0;
             var inputWidth = double.IsInfinity(width)
                 ? MinInputWidth
-                : Math.Max(MinInputWidth, width - x - prefixSpacing - countSpacing - countWidth);
+                : double.Max(MinInputWidth, width - x - prefixSpacing - countSpacing - countWidth);
 
             AddMeasuredChild(inputWidth, input.DesiredSize.Height);
 
@@ -169,7 +169,7 @@ public class TokenizingBoxPanel : Panel
                 CommitLine();
 
             x += x > 0 ? ItemSpacing + childWidth : childWidth;
-            lineHeight = Math.Max(lineHeight, childHeight);
+            lineHeight = double.Max(lineHeight, childHeight);
         }
 
         void CommitLine()
@@ -177,7 +177,7 @@ public class TokenizingBoxPanel : Panel
             if (lineHeight <= 0)
                 return;
 
-            maxLineWidth = Math.Max(maxLineWidth, x);
+            maxLineWidth = double.Max(maxLineWidth, x);
             totalHeight += totalHeight > 0 ? LineSpacing + lineHeight : lineHeight;
             x = 0;
             lineHeight = 0;
@@ -188,7 +188,7 @@ public class TokenizingBoxPanel : Panel
     {
         var input = FindNamedChild("PART_AutoCompleteBox");
         var count = FindNamedChild("PART_CountTextBlock");
-        var width = Math.Max(0, finalSize.Width);
+        var width = double.Max(0, finalSize.Width);
         var x = 0d;
         var y = 0d;
         var lineHeight = 0d;
@@ -211,12 +211,12 @@ public class TokenizingBoxPanel : Panel
                 MoveToNextLine();
 
             var inputX = x > 0 ? x + ItemSpacing : 0;
-            var inputWidth = Math.Max(0, width - inputX - countSpacing - countWidth);
-            var rowHeight = Math.Max(input.DesiredSize.Height, count?.IsVisible == true ? count.DesiredSize.Height : 0);
+            var inputWidth = double.Max(0, width - inputX - countSpacing - countWidth);
+            var rowHeight = double.Max(input.DesiredSize.Height, count?.IsVisible == true ? count.DesiredSize.Height : 0);
 
             input.Arrange(new Rect(inputX, y, inputWidth, rowHeight));
             x = inputX + inputWidth;
-            lineHeight = Math.Max(lineHeight, rowHeight);
+            lineHeight = double.Max(lineHeight, rowHeight);
 
             if (count?.IsVisible == true)
             {
@@ -241,7 +241,7 @@ public class TokenizingBoxPanel : Panel
             var childX = x > 0 ? x + ItemSpacing : 0;
             child.Arrange(new Rect(childX, y, childSize.Width, childSize.Height));
             x = childX + childSize.Width;
-            lineHeight = Math.Max(lineHeight, childSize.Height);
+            lineHeight = double.Max(lineHeight, childSize.Height);
         }
 
         void MoveToNextLine()

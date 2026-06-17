@@ -78,7 +78,7 @@ public sealed class FilterLanguage
         var normalized = text ?? "";
         var parser = new Parser(this, normalized);
         var query = parser.Parse();
-        var caret = Math.Clamp(caretPosition < 0 ? normalized.Length : caretPosition, 0, normalized.Length);
+        var caret = int.Clamp(caretPosition < 0 ? normalized.Length : caretPosition, 0, normalized.Length);
         return new(query, parser.Diagnostics, GetCompletions(normalized, caret, valueCompletionProvider));
     }
 
@@ -94,7 +94,7 @@ public sealed class FilterLanguage
         var tokenStart = FindTokenStart(text, caret);
         var tokenEnd = FindTokenEnd(text, caret);
         var replacementSpan = FilterTextSpan.FromBounds(tokenStart, tokenEnd);
-        var fragment = text.AsSpan(tokenStart, Math.Max(caret - tokenStart, 0));
+        var fragment = text.AsSpan(tokenStart, int.Max(caret - tokenStart, 0));
         var isNegated = fragment.StartsWith("!", StringComparison.Ordinal);
         if (isNegated)
             fragment = fragment[1..];
@@ -509,7 +509,7 @@ public sealed class FilterLanguage
                     if (expectRightParenthesis)
                         AddDiagnostic(
                             FilterDiagnosticKind.MissingRightParenthesis,
-                            FilterTextSpan.FromBounds(groupStart, Math.Min(groupStart + 1, text.Length)),
+                            FilterTextSpan.FromBounds(groupStart, int.Min(groupStart + 1, text.Length)),
                             "(");
                     break;
                 }
@@ -627,8 +627,8 @@ public sealed class FilterLanguage
 
             AddDiagnostic(
                 FilterDiagnosticKind.MissingGroupOperator,
-                FilterTextSpan.FromBounds(operatorStart, Math.Max(operatorStart + Math.Max(_position - operatorStart, 1), operatorStart + 1)),
-                GetDiagnosticArgument(FilterTextSpan.FromBounds(wordStart, Math.Max(_position, wordStart + 1))));
+                FilterTextSpan.FromBounds(operatorStart, int.Max(operatorStart + int.Max(_position - operatorStart, 1), operatorStart + 1)),
+                GetDiagnosticArgument(FilterTextSpan.FromBounds(wordStart, int.Max(_position, wordStart + 1))));
             return null;
         }
 
@@ -1209,7 +1209,7 @@ public sealed class FilterLanguage
                 ++end;
 
             if (end == start)
-                end = Math.Min(start + 1, text.Length);
+                end = int.Min(start + 1, text.Length);
 
             return FilterTextSpan.FromBounds(start, end);
         }
