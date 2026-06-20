@@ -15,6 +15,18 @@
   "UnloadExtensionsButton": {
     "Label": "卸载扩展"
   },
+  "ExtensionsPriorityUpButton": {
+    "Label": "提升优先级"
+  },
+  "ExtensionsPriorityDownButton": {
+    "Label": "降低优先级"
+  },
+  "ExtensionsPriorityTopButton": {
+    "Label": "提升优先级到最高"
+  },
+  "ExtensionsPriorityBottomButton": {
+    "Label": "降低优先级到最低"
+  },
   "ZipContainsNoExtension": "压缩文件不包含可用的扩展库",
   "ExtensionsHelpButton": {
     "Label": "帮助文档"

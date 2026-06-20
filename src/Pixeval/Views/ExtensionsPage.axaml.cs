@@ -172,4 +172,48 @@ public partial class ExtensionsPage : ContentPage
     {
         _ = TopLevel.GetTopLevel(this)?.Launcher.LaunchUriAsync(new Uri("https://github.com/Pixeval/Pixeval/releases"));
     }
+
+    private void ExtensionsPriorityUpOnClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Control { DataContext: ExtensionsHostModel model })
+            return;
+        var oldIndex = Models.IndexOf(model);
+        if (oldIndex < 1)
+            return;
+
+        Models.Move(oldIndex, oldIndex - 1);
+    }
+
+    private void ExtensionsPriorityDownOnClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Control { DataContext: ExtensionsHostModel model })
+            return;
+        var oldIndex = Models.IndexOf(model);
+        if (oldIndex < 0 || oldIndex >= Models.Count - 1)
+            return;
+
+        Models.Move(oldIndex, oldIndex + 1);
+    }
+
+    private void ExtensionsPriorityTopOnClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Control { DataContext: ExtensionsHostModel model })
+            return;
+        var oldIndex = Models.IndexOf(model);
+        if (oldIndex < 1)
+            return;
+
+        Models.Move(oldIndex, 0);
+    }
+
+    private void ExtensionsPriorityBottomOnClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Control { DataContext: ExtensionsHostModel model })
+            return;
+        var oldIndex = Models.IndexOf(model);
+        if (oldIndex < 0 || oldIndex >= Models.Count - 1)
+            return;
+
+        Models.Move(oldIndex, Models.Count - 1);
+    }
 }

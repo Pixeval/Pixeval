@@ -379,6 +379,10 @@ namespace Pixeval
         public const string ExtensionLoadFailed = "ExtensionsPage.ExtensionLoadFailed";
         public const string ExtensionOutdatedFormatted = "ExtensionsPage.ExtensionOutdatedFormatted";
         public const string ExtensionsHelpButtonLabel = "ExtensionsPage.ExtensionsHelpButton.Label";
+        public const string ExtensionsPriorityBottomButtonLabel = "ExtensionsPage.ExtensionsPriorityBottomButton.Label";
+        public const string ExtensionsPriorityDownButtonLabel = "ExtensionsPage.ExtensionsPriorityDownButton.Label";
+        public const string ExtensionsPriorityTopButtonLabel = "ExtensionsPage.ExtensionsPriorityTopButton.Label";
+        public const string ExtensionsPriorityUpButtonLabel = "ExtensionsPage.ExtensionsPriorityUpButton.Label";
         public const string OpenExtensionsButtonLabel = "ExtensionsPage.OpenExtensionsButton.Label";
         public const string PlatformNotSupportExtensions = "ExtensionsPage.PlatformNotSupportExtensions";
         public const string SomeExtensionsOutdatedFormatted = "ExtensionsPage.SomeExtensionsOutdatedFormatted";

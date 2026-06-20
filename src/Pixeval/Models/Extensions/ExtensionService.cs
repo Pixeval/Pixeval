@@ -98,12 +98,19 @@ public class ExtensionService : IDisposable
         if (!loadInstalledHosts)
             return;
 
-        foreach (var library in EnumerateExtensionHostNativeLibraries(AppInfo.ExtensionsFolder))
+        foreach (var library in EnumerateLocalExtensionHosts(AppInfo.ExtensionsFolder))
         {
             _ = TryLoadHost(library, logger, out var outdatedVersion);
             if (outdatedVersion is not null)
                 ++OutDateExtensionHostsCount;
         }
+
+        HostModels.CollectionChanged += (s, _) =>
+        {
+            if (s is ObservableCollection<ExtensionsHostModel> { Count: var c } o)
+                for (var i = 0; i < c; i++)
+                    o[i].Priority = i;
+        };
     }
 
     public bool TryLoadHost(string path, ILogger logger, out string? outdatedVersion)
@@ -112,7 +119,7 @@ public class ExtensionService : IDisposable
         return result is ExtensionHostLoadResult.Loaded;
     }
 
-    public static IReadOnlyList<string> EnumerateExtensionHostNativeLibraries(string directory)
+    public static IEnumerable<string> EnumerateLocalExtensionHosts(string directory)
     {
         if (!Directory.Exists(directory) || NativeLibraryExtension is not { } extension)
             return [];
@@ -123,12 +130,12 @@ public class ExtensionService : IDisposable
         var childLibraries = Directory.GetDirectories(directory)
             .SelectMany(t => Directory.GetFiles(t, pattern, SearchOption.TopDirectoryOnly));
 
-        return [.. rootLibraries.Concat(childLibraries)
+        return rootLibraries.Concat(childLibraries)
             .Where(IsExtensionHostNativeLibrary)
-            .Order(StringComparer.OrdinalIgnoreCase)];
+            .Order(StringComparer.OrdinalIgnoreCase);
     }
 
-    public static IReadOnlyList<string> EnumerateExtensionHostNativeLibraryEntryNames(ZipArchive zipArchive) =>
+    public static IReadOnlyList<string> GetExtensionHostEntryNames(ZipArchive zipArchive) =>
         [.. zipArchive.Entries
             .Where(IsSupportedRelativeNativeLibraryPath)
             .Where(IsExtensionHostNativeLibrary)
@@ -143,7 +150,7 @@ public class ExtensionService : IDisposable
         var destinationDirectory = ContainsSingleTopLevelDirectory(zipArchive)
             ? extensionsFolder
             : Path.Combine(extensionsFolder, GetZipFolderName(zipFilePath));
-        return (destinationDirectory, EnumerateExtensionHostNativeLibraryEntryNames(zipArchive));
+        return (destinationDirectory, GetExtensionHostEntryNames(zipArchive));
 
         static bool ContainsSingleTopLevelDirectory(ZipArchive zipArchive)
         {
@@ -363,8 +370,8 @@ public class ExtensionService : IDisposable
     private void InsertHost(ExtensionsHostModel model)
     {
         var inserted = false;
-        for (var i = HostModels.Count; i > 0; --i)
-            if (HostModels[i - 1].Priority < model.Priority)
+        for (var i = 0; i < HostModels.Count; ++i)
+            if (HostModels[i].Priority >= model.Priority)
             {
                 HostModels.Insert(i, model);
                 inserted = true;
@@ -372,7 +379,7 @@ public class ExtensionService : IDisposable
             }
 
         if (!inserted)
-            HostModels.Insert(0, model);
+            HostModels.Add(model);
     }
 
     private void LoadExtensions(ExtensionsHostModel hostModel)

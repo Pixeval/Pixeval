@@ -102,7 +102,15 @@
                             </controls:SettingsCard.Header>
                             <StackPanel Orientation="Horizontal" Spacing="10">
                                 <ToggleSwitch IsChecked="{Binding IsActive, Mode=TwoWay}" />
-                                <CommandBar IsDynamicOverflowEnabled="True">
+                                <CommandBar DefaultLabelPosition="Collapsed">
+                                    <CommandBarButton
+                                        Click="ExtensionsPriorityUpOnClick"
+                                        Icon="{markup:SymbolIcon ChevronUp}"
+                                        ToolTip.Tip="{I18N {x:Static pixeval:ExtensionsPageResources.ExtensionsPriorityUpButtonLabel}}" />
+                                    <CommandBarButton
+                                        Click="ExtensionsPriorityDownOnClick"
+                                        Icon="{markup:SymbolIcon ChevronDown}"
+                                        ToolTip.Tip="{I18N {x:Static pixeval:ExtensionsPageResources.ExtensionsPriorityDownButtonLabel}}" />
                                     <CommandBar.SecondaryCommands>
                                         <CommandBarButton
                                             Click="ExtensionsHelpOnClick"
@@ -110,6 +118,14 @@
                                             IsVisible="{Binding HelpLink, Converter={x:Static ObjectConverters.IsNotNull}}"
                                             Label="{I18N {x:Static pixeval:ExtensionsPageResources.ExtensionsHelpButtonLabel}}"
                                             Tag="{Binding HelpLink}" />
+                                        <CommandBarButton
+                                            Click="ExtensionsPriorityTopOnClick"
+                                            Icon="{markup:SymbolIcon ChevronDoubleUp}"
+                                            Label="{I18N {x:Static pixeval:ExtensionsPageResources.ExtensionsPriorityTopButtonLabel}}" />
+                                        <CommandBarButton
+                                            Click="ExtensionsPriorityBottomOnClick"
+                                            Icon="{markup:SymbolIcon ChevronDoubleDown}"
+                                            Label="{I18N {x:Static pixeval:ExtensionsPageResources.ExtensionsPriorityBottomButtonLabel}}" />
                                         <CommandBarButton
                                             Click="UnloadHostOnClick"
                                             Icon="{markup:SymbolIcon PlugDisconnected}"

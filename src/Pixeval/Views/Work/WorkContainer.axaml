@@ -19,17 +19,15 @@
     <DockPanel>
         <DockPanel DockPanel.Dock="Top">
             <!--  Non-selection toolbar (right side)  -->
-            <!--  CommandBar BUG: DefaultLabelPosition 会覆盖子元素的 LabelPosition  -->
             <CommandBar
                 x:Name="RightToolBar"
-                DefaultLabelPosition="Right"
+                DefaultLabelPosition="Collapsed"
                 DockPanel.Dock="Right"
                 IsDynamicOverflowEnabled="True">
                 <CommandBarToggleButton
                     x:Name="SelectionToggleButton"
                     Icon="{markup:SymbolIcon Symbol=Multiselect}"
                     IsChecked="{Binding IsSelecting, Mode=OneWayToSource}"
-                    LabelPosition="Collapsed"
                     ToolTip.Tip="{I18N {x:Static local:WorkContainerResources.SelectionButtonLabel}}" />
                 <CommandBar.SecondaryCommands>
                     <CommandBarButton
@@ -38,8 +36,7 @@
                         Icon="{markup:SymbolIcon Symbol=ArrowClockwise}"
                         IsEnabled="{Binding $parent[work:WorkContainer].IsRefreshEnabled}"
                         IsVisible="{Binding $parent[work:WorkContainer].IsRefreshEnabled}"
-                        Label="{I18N {x:Static local:WorkContainerResources.RefreshButtonLabel}}"
-                        LabelPosition="Right" />
+                        Label="{I18N {x:Static local:WorkContainerResources.RefreshButtonLabel}}" />
                 </CommandBar.SecondaryCommands>
             </CommandBar>
 
