@@ -34,7 +34,7 @@ public partial class IllustrationItemViewModel
     protected override async Task SaveAsync(Control? parameter)
     {
         if (TopLevel.GetTopLevel(parameter) is { ViewContainer: { } viewContainer })
-            await SaveInternalAsync(viewContainer, App.AppViewModel.AppSettings.DownloadPathMacro);
+            await SaveInternalAsync(viewContainer, App.AppViewModel.AppSettings.DownloadSettings.DownloadPathMacro);
     }
 
     /// <inheritdoc />
@@ -51,7 +51,7 @@ public partial class IllustrationItemViewModel
             return;
         }
 
-        var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadPathMacro);
+        var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadSettings.DownloadPathMacro);
         var path = Path.Combine(single.Path.OriginalString, name);
         await SaveInternalAsync(viewContainer, path);
     }

@@ -343,14 +343,14 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
 
     public int AutoPlayInterval
     {
-        get => App.AppViewModel.AppSettings.IllustrationViewerAutoPlayInterval;
+        get => App.AppViewModel.AppSettings.BrowsingExperienceSettings.IllustrationViewerAutoPlayInterval;
         set
         {
             value = int.Clamp(value, 1, 60);
-            if (App.AppViewModel.AppSettings.IllustrationViewerAutoPlayInterval == value)
+            if (App.AppViewModel.AppSettings.BrowsingExperienceSettings.IllustrationViewerAutoPlayInterval == value)
                 return;
 
-            App.AppViewModel.AppSettings.IllustrationViewerAutoPlayInterval = value;
+            App.AppViewModel.AppSettings.BrowsingExperienceSettings.IllustrationViewerAutoPlayInterval = value;
             SaveAutoPlaySettings();
             OnPropertyChanged();
             UpdateAutoPlayTimerInterval();
@@ -359,13 +359,13 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
 
     public IllustrationViewerAutoPlayMode AutoPlayMode
     {
-        get => App.AppViewModel.AppSettings.IllustrationViewerAutoPlayMode;
+        get => App.AppViewModel.AppSettings.BrowsingExperienceSettings.IllustrationViewerAutoPlayMode;
         set
         {
-            if (App.AppViewModel.AppSettings.IllustrationViewerAutoPlayMode == value)
+            if (App.AppViewModel.AppSettings.BrowsingExperienceSettings.IllustrationViewerAutoPlayMode == value)
                 return;
 
-            App.AppViewModel.AppSettings.IllustrationViewerAutoPlayMode = value;
+            App.AppViewModel.AppSettings.BrowsingExperienceSettings.IllustrationViewerAutoPlayMode = value;
             SaveAutoPlaySettings();
             OnPropertyChanged();
         }
@@ -373,13 +373,13 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
 
     public IllustrationViewerAutoPlayScope AutoPlayScope
     {
-        get => App.AppViewModel.AppSettings.IllustrationViewerAutoPlayScope;
+        get => App.AppViewModel.AppSettings.BrowsingExperienceSettings.IllustrationViewerAutoPlayScope;
         set
         {
-            if (App.AppViewModel.AppSettings.IllustrationViewerAutoPlayScope == value)
+            if (App.AppViewModel.AppSettings.BrowsingExperienceSettings.IllustrationViewerAutoPlayScope == value)
                 return;
 
-            App.AppViewModel.AppSettings.IllustrationViewerAutoPlayScope = value;
+            App.AppViewModel.AppSettings.BrowsingExperienceSettings.IllustrationViewerAutoPlayScope = value;
             SaveAutoPlaySettings();
             OnPropertyChanged();
         }

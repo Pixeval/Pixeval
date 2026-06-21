@@ -88,7 +88,7 @@ public class WorkInfoPane : TemplatedControl
     {
         if (tag is null) return;
 
-        var blockedTags = App.AppViewModel.AppSettings.BlockedTags;
+        var blockedTags = App.AppViewModel.AppSettings.BrowsingExperienceSettings.BlockedTags;
         if (!blockedTags.Contains(tag.Name))
         {
             blockedTags.Add(tag.Name);

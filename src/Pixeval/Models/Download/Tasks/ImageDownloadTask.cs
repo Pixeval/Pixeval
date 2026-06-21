@@ -91,7 +91,7 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
     private bool ValidateExistence()
     {
         if (File.Exists(Destination))
-            if (App.AppViewModel.AppSettings.OverwriteDownloadedFile)
+            if (App.AppViewModel.AppSettings.DownloadSettings.OverwriteDownloadedFile)
                 File.Delete(Destination);
             else
                 return true;

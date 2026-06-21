@@ -85,7 +85,7 @@ public static class CacheHelper
             var key = frameUri.OriginalString;
             if (TryGetStream(key) is { } stream)
                 return IAnimatedBitmap.Load(stream, true);
-            var useFileCache = App.AppViewModel.AppSettings.UseFileCache;
+            var useFileCache = App.AppViewModel.AppSettings.ApplicationSettings.UseFileCache;
 
             var client = App.AppViewModel.GetRequiredPlatformService<IDownloadHttpClientService>(platform)
                 .GetImageDownloadClient();
@@ -135,7 +135,7 @@ public static class CacheHelper
                     stream = s;
                 else
                 {
-                    var useFileCache = App.AppViewModel.AppSettings.UseFileCache;
+                    var useFileCache = App.AppViewModel.AppSettings.ApplicationSettings.UseFileCache;
                     var sp = startProgress;
                     if (await client.DownloadMemoryStreamAsync(
                             uri,
@@ -236,7 +236,7 @@ public static class CacheHelper
     }
 
     /// <summary>
-    /// 本方法会根据<see cref="AppSettings.UseFileCache"/>判断是否使用文件缓存
+    /// 本方法会根据<see cref="AppSettings.ApplicationSettings.UseFileCache"/>判断是否使用文件缓存
     /// </summary>
     /// <returns><see langword="null"/>表示下载失败</returns>
     private static async ValueTask<Stream?> GetStreamAsync(
@@ -247,7 +247,7 @@ public static class CacheHelper
     {
         if (TryGetStream(key) is { } stream)
             return stream;
-        var useFileCache = App.AppViewModel.AppSettings.UseFileCache;
+        var useFileCache = App.AppViewModel.AppSettings.ApplicationSettings.UseFileCache;
 
         if (await App.AppViewModel.AppServiceProvider.GetRequiredKeyedService<IDownloadHttpClientService>(platform)
                 .GetImageDownloadClient()
@@ -274,7 +274,7 @@ public static class CacheHelper
     {
         try
         {
-            if (App.AppViewModel.AppSettings.UseFileCache && CacheTable.TryReadCache(new PixevalIllustrationCacheKey(key), out Stream stream))
+            if (App.AppViewModel.AppSettings.ApplicationSettings.UseFileCache && CacheTable.TryReadCache(new PixevalIllustrationCacheKey(key), out Stream stream))
                 return stream;
         }
         catch (Exception e)
@@ -288,9 +288,9 @@ public static class CacheHelper
     /// <exception cref="InvalidOperationException"/>
     public static AllocatorState TryCacheStream(string key, Stream stream)
     {
-        if (App.AppViewModel.AppSettings.UseFileCache)
+        if (App.AppViewModel.AppSettings.ApplicationSettings.UseFileCache)
             return CacheTable.TryCache(new(key, (int)stream.Length), stream);
 
-        throw new InvalidOperationException($"check {nameof(App.AppViewModel.AppSettings.UseFileCache)} before {nameof(TryCacheStream)}");
+        throw new InvalidOperationException($"check {nameof(App.AppViewModel.AppSettings.ApplicationSettings.UseFileCache)} before {nameof(TryCacheStream)}");
     }
 }

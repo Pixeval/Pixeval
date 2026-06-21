@@ -97,6 +97,13 @@ namespace Pixeval
         public const string ReverseSearchApiKeyEntryPlaceholder = "AppSettings.ReverseSearchApiKeyEntry.Placeholder";
         public const string ReverseSearchResultSimilarityThresholdEntryDescription = "AppSettings.ReverseSearchResultSimilarityThresholdEntry.Description";
         public const string ReverseSearchResultSimilarityThresholdEntryHeader = "AppSettings.ReverseSearchResultSimilarityThresholdEntry.Header";
+        public const string SettingsGroupApplicationHeader = "AppSettings.SettingsGroup.Application.Header";
+        public const string SettingsGroupBrowsingExperienceHeader = "AppSettings.SettingsGroup.BrowsingExperience.Header";
+        public const string SettingsGroupDownloadHeader = "AppSettings.SettingsGroup.Download.Header";
+        public const string SettingsGroupMiscHeader = "AppSettings.SettingsGroup.Misc.Header";
+        public const string SettingsGroupNetworkHeader = "AppSettings.SettingsGroup.Network.Header";
+        public const string SettingsGroupSearchHeader = "AppSettings.SettingsGroup.Search.Header";
+        public const string SettingsGroupSessionHeader = "AppSettings.SettingsGroup.Session.Header";
         public const string SimpleWorkTypeEntryDescription = "AppSettings.SimpleWorkTypeEntry.Description";
         public const string SimpleWorkTypeEntryHeader = "AppSettings.SimpleWorkTypeEntry.Header";
         public const string TargetAPIPlatformEntryDescription = "AppSettings.TargetAPIPlatformEntry.Description";
@@ -728,10 +735,8 @@ namespace Pixeval
     {
         public const string AnimatedPathBlockText = "SettingsMainView.AnimatedPathBlock.Text";
         public const string AppDescriptionTextBlockText = "SettingsMainView.AppDescriptionTextBlock.Text";
-        public const string ApplicationSettingsGroupText = "SettingsMainView.ApplicationSettingsGroup.Text";
         public const string BackupSettingsEntryDescription = "SettingsMainView.BackupSettingsEntry.Description";
         public const string BackupSettingsEntryHeader = "SettingsMainView.BackupSettingsEntry.Header";
-        public const string BrowsingExperienceSettingsGroupText = "SettingsMainView.BrowsingExperienceSettingsGroup.Text";
         public const string BugReportChannelsEntryDescription = "SettingsMainView.BugReportChannelsEntry.Description";
         public const string BugReportChannelsEntryHeader = "SettingsMainView.BugReportChannelsEntry.Header";
         public const string BugReportEntryDescription = "SettingsMainView.BugReportEntry.Description";
@@ -753,7 +758,6 @@ namespace Pixeval
         public const string DownloadMacroInvalidInfoBarInputCannotBeBlank = "SettingsMainView.DownloadMacroInvalidInfoBarInputCannotBeBlank";
         public const string DownloadMacroInvalidInfoBarMacroInvalidFormatted = "SettingsMainView.DownloadMacroInvalidInfoBarMacroInvalidFormatted";
         public const string DownloadPathMacroTextBoxPlaceholderText = "SettingsMainView.DownloadPathMacroTextBox.PlaceholderText";
-        public const string DownloadSettingsGroupText = "SettingsMainView.DownloadSettingsGroup.Text";
         public const string EMailBugReportEntryToolTip = "SettingsMainView.EMailBugReportEntry.ToolTip";
         public const string ExportSettingsPlaintextEntryDescription = "SettingsMainView.ExportSettingsPlaintextEntry.Description";
         public const string ExportSettingsPlaintextEntryHeader = "SettingsMainView.ExportSettingsPlaintextEntry.Header";
@@ -773,9 +777,7 @@ namespace Pixeval
         public const string LastCheckedPrefix = "SettingsMainView.LastCheckedPrefix";
         public const string MajorUpdateAvailable = "SettingsMainView.MajorUpdateAvailable";
         public const string MinorUpdateAvailable = "SettingsMainView.MinorUpdateAvailable";
-        public const string MiscSettingsGroupText = "SettingsMainView.MiscSettingsGroup.Text";
         public const string MsStoreCheckForUpdatesEntryHeader = "SettingsMainView.MsStoreCheckForUpdatesEntry.Header";
-        public const string NetworkSettingsGroupText = "SettingsMainView.NetworkSettingsGroup.Text";
         public const string NovelPathBlockText = "SettingsMainView.NovelPathBlock.Text";
         public const string OpenExtensionsEntryDescription = "SettingsMainView.OpenExtensionsEntry.Description";
         public const string OpenExtensionsEntryHeader = "SettingsMainView.OpenExtensionsEntry.Header";
@@ -798,8 +800,6 @@ namespace Pixeval
         public const string ResetDefaultSettingsEntryHeader = "SettingsMainView.ResetDefaultSettingsEntry.Header";
         public const string ResetSettingConfirmationDialogContent = "SettingsMainView.ResetSettingConfirmationDialogContent";
         public const string ResetSettingConfirmationDialogTitle = "SettingsMainView.ResetSettingConfirmationDialogTitle";
-        public const string SearchSettingsGroupText = "SettingsMainView.SearchSettingsGroup.Text";
-        public const string SessionSettingsGroupText = "SettingsMainView.SessionSettingsGroup.Text";
         public const string SetPathBlockText = "SettingsMainView.SetPathBlock.Text";
         public const string SinglePathBlockText = "SettingsMainView.SinglePathBlock.Text";
         public const string SwitchAccountEntryDescription = "SettingsMainView.SwitchAccountEntry.Description";

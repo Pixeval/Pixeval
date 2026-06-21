@@ -21,7 +21,7 @@ public class HistoryPersistHelper : IDisposable
         BrowseHistoryPersistentManager browseHistoryPersistentManager,
         WatchLaterPersistentManager watchLaterPersistentManager)
     {
-        DownloadManager = new DownloadManager(service.GetImageDownloadClient(), App.AppViewModel.AppSettings.MaxDownloadTaskConcurrencyLevel);
+        DownloadManager = new DownloadManager(service.GetImageDownloadClient(), App.AppViewModel.AppSettings.DownloadSettings.MaxDownloadTaskConcurrencyLevel);
 
         foreach (var downloadTaskGroup in downloadHistoryPersistentManager)
             DownloadManager.QueueTask(downloadTaskGroup);

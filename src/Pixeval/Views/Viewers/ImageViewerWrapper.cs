@@ -12,7 +12,7 @@ public class ImageViewerWrapper : ContentControl
 {
     public ImageViewerBase ImageViewer => (ImageViewerBase) Content!;
 
-    public bool IsSwipeMode { get; } = App.AppViewModel.AppSettings.BrowseMode is BrowseMode.Swipe;
+    public bool IsSwipeMode { get; } = App.AppViewModel.AppSettings.BrowsingExperienceSettings.BrowseMode is BrowseMode.Swipe;
 
     public SwipeImageViewer? SwipeImageViewer => Content as SwipeImageViewer;
 
@@ -22,7 +22,7 @@ public class ImageViewerWrapper : ContentControl
         ImageViewerBase imageViewer = IsSwipeMode
             ? new SwipeImageViewer()
             : new ContinuousImageViewer();
-        imageViewer.BrowseDirection = App.AppViewModel.AppSettings.BrowseDirection;
+        imageViewer.BrowseDirection = App.AppViewModel.AppSettings.BrowsingExperienceSettings.BrowseDirection;
         Content = imageViewer;
     }
 

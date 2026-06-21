@@ -55,13 +55,13 @@ public partial class HomePageViewModel : ViewModelBase
             if (value && IsEditMode)
                 IsEditMode = false;
 
-            if (Settings.HideHomePageToolbar == value)
+            if (Settings.ApplicationSettings.HideHomePageToolbar == value)
                 return;
 
-            Settings.HideHomePageToolbar = value;
+            Settings.ApplicationSettings.HideHomePageToolbar = value;
             AppInfo.SaveSettings(Settings);
         }
-    } = Settings.HideHomePageToolbar;
+    } = Settings.ApplicationSettings.HideHomePageToolbar;
 
     public bool IsCardTitleHidden
     {
@@ -71,17 +71,17 @@ public partial class HomePageViewModel : ViewModelBase
             if (!SetProperty(ref field, value))
                 return;
 
-            if (Settings.HideHomePageCardTitle == value)
+            if (Settings.ApplicationSettings.HideHomePageCardTitle == value)
                 return;
 
-            Settings.HideHomePageCardTitle = value;
+            Settings.ApplicationSettings.HideHomePageCardTitle = value;
             AppInfo.SaveSettings(Settings);
         }
-    } = Settings.HideHomePageCardTitle;
+    } = Settings.ApplicationSettings.HideHomePageCardTitle;
 
-    public int RowCount => decimal.ToInt32(decimal.Clamp(Settings.HomePageRows, HomePage.MinimumGridSize, HomePage.MaximumGridSize));
+    public int RowCount => decimal.ToInt32(decimal.Clamp(Settings.ApplicationSettings.HomePageRows, HomePage.MinimumGridSize, HomePage.MaximumGridSize));
 
-    public int ColumnCount => decimal.ToInt32(decimal.Clamp(Settings.HomePageColumns, HomePage.MinimumGridSize, HomePage.MaximumGridSize));
+    public int ColumnCount => decimal.ToInt32(decimal.Clamp(Settings.ApplicationSettings.HomePageColumns, HomePage.MinimumGridSize, HomePage.MaximumGridSize));
 
     [ObservableProperty]
     public partial decimal GridColumnsValue { get; set; }
@@ -165,7 +165,7 @@ public partial class HomePageViewModel : ViewModelBase
     public partial PrivacyPolicy SelectedSourcePrivacyPolicy { get; set; } = PrivacyPolicy.Public;
 
     [ObservableProperty]
-    public partial RankOption SelectedSourceRankOption { get; set; } = App.AppViewModel.AppSettings.IllustrationRankOption;
+    public partial RankOption SelectedSourceRankOption { get; set; } = App.AppViewModel.AppSettings.SearchSettings.IllustrationRankOption;
 
     [ObservableProperty]
     public partial IReadOnlyList<SymbolComboBoxItem> SourceRankOptionItems { get; private set; } = SymbolComboBoxItem.GetValues<RankOption>(SimpleWorkType.IllustrationAndManga);
@@ -231,8 +231,8 @@ public partial class HomePageViewModel : ViewModelBase
         SelectedSourceSimpleWorkType = template.SimpleWorkType;
         SelectedSourcePrivacyPolicy = template.PrivacyPolicy;
         SelectedSourceRankOption = SelectedSourceSimpleWorkType is SimpleWorkType.Novel
-            ? Settings.NovelRankOption
-            : Settings.IllustrationRankOption;
+            ? Settings.SearchSettings.NovelRankOption
+            : Settings.SearchSettings.IllustrationRankOption;
         UseSpecifiedRankingDate = false;
         SelectedRankingDate = MakoClient.RankingMaxDateTime.LocalDateTime;
 
@@ -341,8 +341,8 @@ public partial class HomePageViewModel : ViewModelBase
         var selectedSimpleWorkType = SelectedSourceSimpleWorkType;
         SourceRankOptionItems = SymbolComboBoxItem.GetValues<RankOption>(selectedSimpleWorkType);
         SelectedSourceRankOption = selectedSimpleWorkType is SimpleWorkType.IllustrationAndManga
-            ? Settings.IllustrationRankOption
-            : Settings.NovelRankOption;
+            ? Settings.SearchSettings.IllustrationRankOption
+            : Settings.SearchSettings.NovelRankOption;
     }
 
     private static bool NeedsUserId(HomePageCardSourceKind sourceKind) =>

@@ -2,15 +2,14 @@
     x:Class="Pixeval.Views.Settings.DomainFrontingSettingsExpander"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:am="using:Pixeval.AppManagement"
     xmlns:avalonia="using:AutoSettingsPage.Avalonia"
     xmlns:controls="using:CommunityToolkit.Avalonia.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:entries="using:Pixeval.Models.Settings.Entries"
     xmlns:fluent="using:FluentIcons.Avalonia"
+    xmlns:local="using:Pixeval.Views.Settings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    x:DataType="{x:Type entries:DomainFrontingSettingsEntry,
-                        x:TypeArguments=am:AppSettings}"
+    xmlns:models="using:AutoSettingsPage.Models"
+    x:DataType="{x:Type models:IMultiValuesWithSwitchSettingsEntry}"
     Description="{Binding Converter={x:Static avalonia:SettingsEntryHelper.DescriptionConverter}}"
     Header="{Binding Header}"
     mc:Ignorable="d"
@@ -24,10 +23,10 @@
         <controls:SettingsCard
             HorizontalContentAlignment="Left"
             ContentAlignment="Vertical"
-            Description="{Binding IPSetSettingsEntries[0], Converter={x:Static avalonia:SettingsEntryHelper.DescriptionConverter}}"
-            Header="{Binding IPSetSettingsEntries[0].Header}">
+            Description="{Binding $parent[local:DomainFrontingSettingsExpander].FirstIPSetSettingsEntry, Converter={x:Static avalonia:SettingsEntryHelper.DescriptionConverter}}"
+            Header="{Binding $parent[local:DomainFrontingSettingsExpander].FirstIPSetSettingsEntry.Header}">
             <controls:SettingsCard.HeaderIcon>
-                <fluent:SymbolIcon Symbol="{Binding IPSetSettingsEntries[0].Icon}" />
+                <fluent:SymbolIcon Symbol="{Binding $parent[local:DomainFrontingSettingsExpander].FirstIPSetSettingsEntry.Icon}" />
             </controls:SettingsCard.HeaderIcon>
             <WrapPanel
                 x:Name="WrapPanel"

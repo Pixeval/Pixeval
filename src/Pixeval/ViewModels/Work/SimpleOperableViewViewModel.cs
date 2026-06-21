@@ -26,7 +26,7 @@ public class SimpleOperableViewViewModel<TViewModel> : ViewModelBase, IOperableV
 
     public bool NeedRefreshOnOpen { get; }
 
-    public FrozenSet<string> CachedBlockedTags { get; } = [.. App.AppViewModel.AppSettings.BlockedTags];
+    public FrozenSet<string> CachedBlockedTags { get; } = [.. App.AppViewModel.AppSettings.BrowsingExperienceSettings.BlockedTags];
 
     public IFilter<IWorkViewModel> BlockedTagsFilter => IFilter<IWorkViewModel>.Create(
         entry => !entry.Entry.Tags.Any(t => t.Any(tag => CachedBlockedTags.Contains(tag.Name))),

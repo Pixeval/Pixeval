@@ -96,7 +96,7 @@ public class Versioning
                         uri));
                 }
 
-                App.AppViewModel.AppSettings.LastCheckedUpdate = DateTime.UtcNow;
+                App.AppViewModel.AppSettings.ApplicationSettings.LastCheckedUpdate = DateTime.UtcNow;
 
                 appReleaseModels.Sort();
                 appReleaseModels.Reverse();

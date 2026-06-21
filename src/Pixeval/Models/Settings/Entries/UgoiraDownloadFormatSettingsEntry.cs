@@ -18,16 +18,16 @@ using Pixeval.Models.Options;
 
 namespace Pixeval.Models.Settings.Entries;
 
-public class UgoiraDownloadFormatSettingsEntry(AppSettings settings)
-    : SingleValueSettingsEntry<AppSettings, object>(
+public class UgoiraDownloadFormatSettingsEntry(DownloadSettingsGroup settings)
+    : SingleValueSettingsEntry<DownloadSettingsGroup, object>(
         settings,
-        nameof(AppSettings.UgoiraDownloadFormat),
+        nameof(DownloadSettingsGroup.UgoiraDownloadFormat),
         I18NManager.GetResource(EnumResources.WorkTypeEnumUgoira),
         "",
         Symbol.Gif,
         null,
-        static appSettings => new UgoiraDownloadFormatToken(appSettings.UgoiraDownloadFormat),
-        static (appSettings, value) => appSettings.UgoiraDownloadFormat = ((UgoiraDownloadFormatToken) value).Value),
+        static settings => new UgoiraDownloadFormatToken(settings.UgoiraDownloadFormat),
+        static (settings, value) => settings.UgoiraDownloadFormat = ((UgoiraDownloadFormatToken) value).Value),
         IEnumSettingsEntry<object>
 {
     public IReadOnlyList<IReadOnlyStringPair<object>> EnumItems { get; } = CreateEnumItems();

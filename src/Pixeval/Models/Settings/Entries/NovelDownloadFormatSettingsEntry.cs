@@ -18,10 +18,10 @@ using Pixeval.Models.Options;
 
 namespace Pixeval.Models.Settings.Entries;
 
-public class NovelDownloadFormatSettingsEntry(AppSettings settings)
-    : SingleValueSettingsEntry<AppSettings, object>(
+public class NovelDownloadFormatSettingsEntry(DownloadSettingsGroup settings)
+    : SingleValueSettingsEntry<DownloadSettingsGroup, object>(
         settings,
-        nameof(AppSettings.NovelDownloadFormat),
+        nameof(DownloadSettingsGroup.NovelDownloadFormat),
         I18NManager.GetResource(EnumResources.WorkTypeEnumNovel),
         "",
         Symbol.BookOpen,

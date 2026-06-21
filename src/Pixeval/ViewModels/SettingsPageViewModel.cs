@@ -25,17 +25,25 @@ public class SettingsPageViewModel : ViewModelBase
 
     public DateTime LastCheckedUpdate
     {
-        get => AppSettings.LastCheckedUpdate;
-        set => SetProperty(AppSettings.LastCheckedUpdate, value, AppSettings, (setting, v) => setting.LastCheckedUpdate = v);
+        get => AppSettings.ApplicationSettings.LastCheckedUpdate;
+        set => SetProperty(AppSettings.ApplicationSettings.LastCheckedUpdate, value, AppSettings.ApplicationSettings, (setting, v) => setting.LastCheckedUpdate = v);
     }
 
     public AppSettings AppSettings => App.AppViewModel.AppSettings;
 
     public IEnumerable<ISettingsGroup> Groups => LocalGroups.Concat(ExtensionGroups);
 
-    public IReadOnlyList<ISettingsGroup> LocalGroups { get; } = SettingsBuilder.CreateGroupList(App.AppViewModel.AppSettings)
-            .NewGroup(SettingsEntryCategory.Application)
-            .Config(group => group
+    public IReadOnlyList<ISettingsGroup> LocalGroups { get; } = BuildLocalGroups();
+
+    public IReadOnlyList<ExtensionSettingsGroup> ExtensionGroups { get; } =
+        App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>().SettingsGroups;
+
+    private static IReadOnlyList<ISettingsGroup> BuildLocalGroups()
+    {
+        LocalSettingsEntryHelper.Initialize();
+
+        return SettingsBuilder.CreateGroupList(App.AppViewModel.AppSettings)
+            .NewGroup(t => t.ApplicationSettings, group => group
                 .Language(t => t.CultureName)
                 .Enum(t => t.Theme,
                     entry => entry.ValueChanged += t => Application.Current?.RequestedThemeVariant = t switch
@@ -50,8 +58,7 @@ public class SettingsPageViewModel : ViewModelBase
                 .Int(t => t.HomePageColumns, 1, 12, 1)
                 .Bool(t => t.HideHomePageToolbar)
                 .Bool(t => t.HideHomePageCardTitle))
-            .NewGroup(SettingsEntryCategory.Network)
-            .Config(group => group
+            .NewGroup(t => t.NetworkSettings, group => group
                 .DomainFronting(t => t.EnableDomainFronting, entry =>
                         entry.Enum(t => t.DomainFrontingType,
                                 e => e.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.DomainFrontingType = (DomainFrontingType) t)
@@ -67,8 +74,7 @@ public class SettingsPageViewModel : ViewModelBase
                     entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.MirrorHost = t)
                 .String(t => t.WebCookie,
                     entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.Cookie = t))
-            .NewGroup(SettingsEntryCategory.BrowsingExperience)
-            .Config(group => group
+            .NewGroup(t => t.BrowsingExperienceSettings, group => group
                 .Enum(t => t.ThumbnailLayoutType)
                 .Enum(t => t.BrowseMode)
                 .Enum(t => t.BrowseDirection)
@@ -78,10 +84,8 @@ public class SettingsPageViewModel : ViewModelBase
                 .Enum(t => t.TargetFilter)
                 .Collection(t => t.BlockedTags)
                 .Bool(t => t.OpenWorkInfoByDefault))
-            .NewGroup(SettingsEntryCategory.Search)
-            .Config(group => group
-                .String(t => t.ReverseSearchApiKey,
-                    entry => entry.DescriptionUri = new("https://saucenao.com/user.php?page=search-api"))
+            .NewGroup(t => t.SearchSettings, group => group
+                .String(t => t.ReverseSearchApiKey)
                 .Int(t => t.ReverseSearchResultSimilarityThreshold, 1, 100, 1)
                 .Enum(t => t.DefaultSimpleWorkType)
                 .MultiValues(t => t.IllustrationRankOption, entry =>
@@ -93,8 +97,7 @@ public class SettingsPageViewModel : ViewModelBase
                             WorkTypeEnum.Novel,
                             t => t.NovelRankOption,
                             SimpleWorkType.Novel)))
-            .NewGroup(SettingsEntryCategory.Download)
-            .Config(group => group
+            .NewGroup(t => t.DownloadSettings, group => group
                 .Bool(t => t.OverwriteDownloadedFile)
                 .Int(t => t.MaxDownloadTaskConcurrencyLevel, 1, Environment.ProcessorCount, 1,
                     entry => entry.ValueChanged += t => App.AppViewModel.HistoryPersistHelper.DownloadManager.ConcurrencyDegree = t)
@@ -104,10 +107,6 @@ public class SettingsPageViewModel : ViewModelBase
                         .UgoiraDownloadFormat()
                         .NovelDownloadFormat())
                 .WorkSubscriptions())
-            //.NewGroup(SettingsEntryCategory.Misc)
-            //.Config(group => group)
             .Build();
-
-    public IReadOnlyList<ExtensionSettingsGroup> ExtensionGroups { get; } =
-        App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>().SettingsGroups;
+    }
 }

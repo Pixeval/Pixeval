@@ -13,7 +13,7 @@ namespace Pixeval.Views.Capability;
 
 public partial class WorkRankingPage : ContentPage
 {
-    public WorkRankingPage() : this(PixevalSettings.SimpleWorkType, App.AppViewModel.AppSettings.IllustrationRankOption, MaxDate)
+    public WorkRankingPage() : this(PixevalSettings.SimpleWorkType, App.AppViewModel.AppSettings.SearchSettings.IllustrationRankOption, MaxDate)
     {
     }
 
@@ -45,8 +45,8 @@ public partial class WorkRankingPage : ContentPage
         var selectedWorkType = SimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>();
         RankOptionComboBox.ItemsSource = SymbolComboBoxItem.GetValues<RankOption>(selectedWorkType);
         RankOptionComboBox.SelectedValue = selectedWorkType is SimpleWorkType.IllustrationAndManga
-            ? App.AppViewModel.AppSettings.IllustrationRankOption
-            : App.AppViewModel.AppSettings.NovelRankOption;
+            ? App.AppViewModel.AppSettings.SearchSettings.IllustrationRankOption
+            : App.AppViewModel.AppSettings.SearchSettings.NovelRankOption;
     }
 
     private void RankOptionComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e)

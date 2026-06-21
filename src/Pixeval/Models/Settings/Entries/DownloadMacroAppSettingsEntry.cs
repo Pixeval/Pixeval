@@ -12,8 +12,8 @@ using Pixeval.Models.Download;
 namespace Pixeval.Models.Settings.Entries;
 
 public class DownloadMacroAppSettingsEntry(
-    AppSettings settings)
-    : StringSettingsEntry<AppSettings>(settings, t => t.DownloadPathMacro)
+    DownloadSettingsGroup settings)
+    : StringSettingsEntry<DownloadSettingsGroup>(settings, t => t.DownloadPathMacro)
 {
     public static ICollection<SymbolComboBoxItem> AvailableTransducerMacros { get; } =
     [

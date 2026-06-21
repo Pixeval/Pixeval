@@ -116,12 +116,13 @@ public static class AppInfo
 
     public static void SaveWindowContext(Window window)
     {
-        var isMaximized = App.AppViewModel.AppSettings.IsMaximized = window.WindowState is WindowState.Maximized;
+        var applicationSettings = App.AppViewModel.AppSettings.ApplicationSettings;
+        var isMaximized = applicationSettings.IsMaximized = window.WindowState is WindowState.Maximized;
         // 在非最大化状态下保存窗口大小，以便从最大化恢复时使用
         if (!isMaximized)
         {
-            App.AppViewModel.AppSettings.WindowWidth = window.Width;
-            App.AppViewModel.AppSettings.WindowHeight = window.Height;
+            applicationSettings.WindowWidth = window.Width;
+            applicationSettings.WindowHeight = window.Height;
         }
     }
 

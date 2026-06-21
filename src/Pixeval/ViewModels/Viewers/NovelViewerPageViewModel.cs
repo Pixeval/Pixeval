@@ -15,7 +15,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.AppManagement;
-using Pixeval.I18N;
 using Pixeval.Models.Settings;
 using Pixeval.Views.Settings;
 using Pixeval.Views.Viewers;
@@ -151,8 +150,7 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
             LocalSettingsEntryHelper.Initialize();
             return field ??= new SettingsSubView(
                 SettingsBuilder.CreateGroupList(App.AppViewModel.AppSettings)
-                    .NewGroup("")
-                    .Config(group => group
+                    .NewGroup(t => t.NovelSettings, group => group
                         .Color(t => t.NovelBackground, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelBackgroundBrush)))
                         .Color(t => t.NovelFontColor, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelForegroundBrush)))
                         .Font(t => t.NovelFontFamily, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelFontFamilyObject)))
@@ -160,28 +158,25 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
                         .Int(t => t.NovelFontSize, 5, 100, 1, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelFontSize)))
                         .Int(t => t.NovelLineHeight, 0, 150, 1, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelLineHeight)))
                         .Int(t => t.NovelMaxWidth, 50, 10000, 50, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelMaxWidth))))
-                    .Build()[0])
-            {
-                Header = I18NManager.GetResource(EntryViewerPageResources.NovelSettings)
-            };
+                    .Build()[0]);
         }
     }
 
     private static AppSettings Settings => App.AppViewModel.AppSettings;
 
-    public IBrush NovelBackgroundBrush => new SolidColorBrush(Color.FromUInt32(Settings.NovelBackground));
+    public IBrush NovelBackgroundBrush => new SolidColorBrush(Color.FromUInt32(Settings.NovelSettings.NovelBackground));
 
-    public IBrush NovelForegroundBrush => new SolidColorBrush(Color.FromUInt32(Settings.NovelFontColor));
+    public IBrush NovelForegroundBrush => new SolidColorBrush(Color.FromUInt32(Settings.NovelSettings.NovelFontColor));
 
-    public FontFamily NovelFontFamilyObject => new(string.Join(',', Settings.NovelFontFamily));
+    public FontFamily NovelFontFamilyObject => new(string.Join(',', Settings.NovelSettings.NovelFontFamily));
 
-    public FontWeight NovelFontWeight => Settings.NovelFontWeight;
+    public FontWeight NovelFontWeight => Settings.NovelSettings.NovelFontWeight;
 
-    public int NovelFontSize => Settings.NovelFontSize;
+    public int NovelFontSize => Settings.NovelSettings.NovelFontSize;
 
-    public int NovelLineHeight => Settings.NovelLineHeight;
+    public int NovelLineHeight => Settings.NovelSettings.NovelLineHeight;
 
-    public int NovelMaxWidth => Settings.NovelMaxWidth;
+    public int NovelMaxWidth => Settings.NovelSettings.NovelMaxWidth;
 
     #endregion
 

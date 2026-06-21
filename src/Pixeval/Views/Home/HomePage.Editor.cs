@@ -73,7 +73,7 @@ public partial class HomePage
     {
         var rows = DecimalToPositiveInt(decimal.Clamp(ViewModel.GridRowsValue, MinimumGridSize, MaximumGridSize));
         var columns = DecimalToPositiveInt(decimal.Clamp(ViewModel.GridColumnsValue, MinimumGridSize, MaximumGridSize));
-        var settings = App.AppViewModel.AppSettings;
+        var settings = App.AppViewModel.AppSettings.ApplicationSettings;
         if (settings.HomePageRows == rows && settings.HomePageColumns == columns)
             return;
 

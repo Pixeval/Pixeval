@@ -18,16 +18,16 @@ using Pixeval.Models.Options;
 
 namespace Pixeval.Models.Settings.Entries;
 
-public class IllustrationDownloadFormatSettingsEntry(AppSettings settings)
-    : SingleValueSettingsEntry<AppSettings, object>(
+public class IllustrationDownloadFormatSettingsEntry(DownloadSettingsGroup settings)
+    : SingleValueSettingsEntry<DownloadSettingsGroup, object>(
         settings,
-        nameof(AppSettings.IllustrationDownloadFormat),
+        nameof(DownloadSettingsGroup.IllustrationDownloadFormat),
         I18NManager.GetResource(EnumResources.WorkTypeEnumIllustration),
         "",
         Symbol.Image,
         null,
-        static appSettings => new IllustrationDownloadFormatToken(appSettings.IllustrationDownloadFormat),
-        static (appSettings, value) => appSettings.IllustrationDownloadFormat = ((IllustrationDownloadFormatToken) value).Value),
+        static settings => new IllustrationDownloadFormatToken(settings.IllustrationDownloadFormat),
+        static (settings, value) => settings.IllustrationDownloadFormat = ((IllustrationDownloadFormatToken) value).Value),
         IEnumSettingsEntry<object>
 {
     public IReadOnlyList<IReadOnlyStringPair<object>> EnumItems { get; } = CreateEnumItems();

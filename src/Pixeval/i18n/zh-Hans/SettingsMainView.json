@@ -2,15 +2,6 @@
   "AppDescriptionTextBlock": {
     "Text": "Pixeval 是一个基于 Avalonia 开发的第三方 Pixiv 客户端。在保证对 Pixiv 绝大部分功能的支持的同时，提供了大量有助于提高用户体验的额外特性，包括本地收藏夹以及中国大陆地区无需代理的浏览体验等。\n\n你可以在下方链接中找到更多有关 Pixeval 的信息。"
   },
-  "ApplicationSettingsGroup": {
-    "Text": "应用程序相关设置"
-  },
-  "BrowsingExperienceSettingsGroup": {
-    "Text": "浏览体验设置"
-  },
-  "NetworkSettingsGroup": {
-    "Text": "网络设置"
-  },
   "CheckingForUpdate": "正在检查更新",
   "IsUpToDate": "当前已经是最新版本",
   "IsInsider": "正在使用内部版本",
@@ -49,9 +40,6 @@
   },
   "DownloadMacroInvalidInfoBarInputCannotBeBlank": "输入不能为空",
   "DownloadMacroInvalidInfoBarMacroInvalidFormatted": "{0}, 请更正后重新填写",
-  "DownloadSettingsGroup": {
-    "Text": "下载设置"
-  },
   "FeedbackByEmailHyperlinkButton": {
     "Content": "邮件联系作者"
   },
@@ -62,9 +50,6 @@
     "Content": "加入反馈群"
   },
   "LastCheckedPrefix": "上次检查时间：",
-  "MiscSettingsGroup": {
-    "Text": "杂项"
-  },
   "ReleaseNotesHyperlinkButton": {
     "Content": "更新日志"
   },
@@ -119,12 +104,6 @@
   },
   "ResetSettingConfirmationDialogContent": "该操作将会无法撤销",
   "ResetSettingConfirmationDialogTitle": "你确定要重置所有设置项吗？",
-  "SearchSettingsGroup": {
-    "Text": "搜索设置"
-  },
-  "SessionSettingsGroup": {
-    "Text": "会话设置"
-  },
   "SwitchAccountEntry": {
     "Description": "在新的账号登录之后，当前账号将会自动退出登录，但已打开的页面需要手动刷新或重新打开才能正确显示当前账号的内容",
     "Header": "切换账号"

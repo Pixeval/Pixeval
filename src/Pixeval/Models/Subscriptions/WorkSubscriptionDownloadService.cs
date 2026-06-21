@@ -201,7 +201,7 @@ public class WorkSubscriptionDownloadService(
             entry,
             WorkSubscriptionDownloadContext.FromSubscriptionType(subscription.SubscriptionType));
         var task = entry is Novel
-            ? novelDownloadTaskFactory.Create(parserContext, App.AppViewModel.AppSettings.DownloadPathMacro, null)
+            ? novelDownloadTaskFactory.Create(parserContext, App.AppViewModel.AppSettings.DownloadSettings.DownloadPathMacro, null)
             : await CreateIllustrationDownloadTaskAsync(parserContext);
 
         task.DatabaseEntry.WorkSubscriptionId = subscription.HistoryEntryId;
@@ -220,7 +220,7 @@ public class WorkSubscriptionDownloadService(
 
             return illustrationDownloadTaskFactory.Create(
                 context,
-                App.AppViewModel.AppSettings.DownloadPathMacro);
+                App.AppViewModel.AppSettings.DownloadSettings.DownloadPathMacro);
         }
     }
 

@@ -13,12 +13,12 @@ using Pixeval.Models.Options;
 
 namespace Pixeval.Models.Settings.Entries;
 
-public class ProxyAppSettingsEntry : EnumSettingsEntry<AppSettings, object>
+public class ProxyAppSettingsEntry : EnumSettingsEntry<NetworkSettingsGroup, object>
 {
-    public ProxyAppSettingsEntry(AppSettings settings) : base(settings, t => t.ProxyType, SymbolComboBoxItem.GetValues<ProxyType>())
+    public ProxyAppSettingsEntry(NetworkSettingsGroup settings) : base(settings, t => t.ProxyType, SymbolComboBoxItem.GetValues<ProxyType>())
     {
-        Token2 = nameof(AppSettings.Proxy);
-        var member = typeof(AppSettings).GetProperty(Token2);
+        Token2 = nameof(NetworkSettingsGroup.Proxy);
+        var member = typeof(NetworkSettingsGroup).GetProperty(Token2);
 
         if (member?.GetCustomAttribute<SettingsEntryAttribute>() is { } attribute)
         {

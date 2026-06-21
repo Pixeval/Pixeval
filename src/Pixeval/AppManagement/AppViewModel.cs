@@ -113,38 +113,39 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
 
     public void SetNameResolvers()
     {
-        SetNameResolver(MakoHttpOptions.AppApiHost, AppSettings.PixivAppApiNameResolver);
-        AppSettings.PixivAppApiNameResolver.CollectionChanged += (sender, e) =>
+        var networkSettings = AppSettings.NetworkSettings;
+        SetNameResolver(MakoHttpOptions.AppApiHost, networkSettings.PixivAppApiNameResolver);
+        networkSettings.PixivAppApiNameResolver.CollectionChanged += (sender, e) =>
         {
             if (sender is IEnumerable<string> ips)
                 SetNameResolver(MakoHttpOptions.AppApiHost, ips);
         };
-        SetNameResolver(MakoHttpOptions.ImageHost, AppSettings.PixivImageNameResolver);
-        AppSettings.PixivAppApiNameResolver.CollectionChanged += (sender, e) =>
+        SetNameResolver(MakoHttpOptions.ImageHost, networkSettings.PixivImageNameResolver);
+        networkSettings.PixivImageNameResolver.CollectionChanged += (sender, e) =>
         {
             if (sender is IEnumerable<string> ips)
                 SetNameResolver(MakoHttpOptions.ImageHost, ips);
         };
-        SetNameResolver(MakoHttpOptions.ImageHost2, AppSettings.PixivImageNameResolver2);
-        AppSettings.PixivAppApiNameResolver.CollectionChanged += (sender, e) =>
+        SetNameResolver(MakoHttpOptions.ImageHost2, networkSettings.PixivImageNameResolver2);
+        networkSettings.PixivImageNameResolver2.CollectionChanged += (sender, e) =>
         {
             if (sender is IEnumerable<string> ips)
                 SetNameResolver(MakoHttpOptions.ImageHost2, ips);
         };
-        SetNameResolver(MakoHttpOptions.OAuthHost, AppSettings.PixivOAuthNameResolver);
-        AppSettings.PixivAppApiNameResolver.CollectionChanged += (sender, e) =>
+        SetNameResolver(MakoHttpOptions.OAuthHost, networkSettings.PixivOAuthNameResolver);
+        networkSettings.PixivOAuthNameResolver.CollectionChanged += (sender, e) =>
         {
             if (sender is IEnumerable<string> ips)
                 SetNameResolver(MakoHttpOptions.OAuthHost, ips);
         };
-        SetNameResolver(MakoHttpOptions.AccountHost, AppSettings.PixivAccountNameResolver);
-        AppSettings.PixivAppApiNameResolver.CollectionChanged += (sender, e) =>
+        SetNameResolver(MakoHttpOptions.AccountHost, networkSettings.PixivAccountNameResolver);
+        networkSettings.PixivAccountNameResolver.CollectionChanged += (sender, e) =>
         {
             if (sender is IEnumerable<string> ips)
                 SetNameResolver(MakoHttpOptions.AccountHost, ips);
         };
-        SetNameResolver(MakoHttpOptions.WebApiHost, AppSettings.PixivWebApiNameResolver);
-        AppSettings.PixivAppApiNameResolver.CollectionChanged += (sender, e) =>
+        SetNameResolver(MakoHttpOptions.WebApiHost, networkSettings.PixivWebApiNameResolver);
+        networkSettings.PixivWebApiNameResolver.CollectionChanged += (sender, e) =>
         {
             if (sender is IEnumerable<string> ips)
                 SetNameResolver(MakoHttpOptions.WebApiHost, ips);

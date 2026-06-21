@@ -32,13 +32,13 @@ public class App : Application
         RegisterUnhandledExceptionHandler();
         I18NManager.Register(new JsonMarkdownLangPlugin(), LanguageHelper.DefaultLanguage);
         AppViewModel = new AppViewModel(this, Logger);
-        CultureInfo.CurrentUICulture = CultureInfo.CurrentCulture = LanguageHelper.FindClosest(AppViewModel.AppSettings.CultureName);
+        CultureInfo.CurrentUICulture = CultureInfo.CurrentCulture = LanguageHelper.FindClosest(AppViewModel.AppSettings.ApplicationSettings.CultureName);
         I18NManager.Initialize();
         AppViewModel.InitializeProvider();
         
         AvaloniaXamlLoader.Load(this);
-        Resources["ContentControlThemeFontFamily"] = new FontFamily(string.Join(',', AppViewModel.AppSettings.AppFontFamily));
-        RequestedThemeVariant = AppViewModel.AppSettings.Theme switch
+        Resources["ContentControlThemeFontFamily"] = new FontFamily(string.Join(',', AppViewModel.AppSettings.ApplicationSettings.AppFontFamily));
+        RequestedThemeVariant = AppViewModel.AppSettings.ApplicationSettings.Theme switch
         {
             ApplicationTheme.Light => ThemeVariant.Light,
             ApplicationTheme.Dark => ThemeVariant.Dark,
@@ -71,11 +71,11 @@ public class App : Application
                     .Init(
                         AppInfo.AppIdentifier,
                         AppInfo.IconApplicationUri,
-                        AppViewModel.AppSettings.WindowWidth,
-                        AppViewModel.AppSettings.WindowHeight,
+                        AppViewModel.AppSettings.ApplicationSettings.WindowWidth,
+                        AppViewModel.AppSettings.ApplicationSettings.WindowHeight,
                         800,
                         450,
-                        AppViewModel.AppSettings.IsMaximized).Show();
+                        AppViewModel.AppSettings.ApplicationSettings.IsMaximized).Show();
 
                 break;
             case ISingleViewApplicationLifetime singleViewPlatform:

@@ -18,7 +18,7 @@ public abstract partial class WorkViewViewModelBase<T, TViewModel>(FrozenSet<str
     where T : class, IArtworkInfo
     where TViewModel : EntryViewModel<T>, IFactory<T, TViewModel>, IWorkViewModel
 {
-    public FrozenSet<string> CachedBlockedTags { get; private set; } = blockedTags ?? App.AppViewModel.AppSettings.BlockedTags.ToFrozenSet();
+    public FrozenSet<string> CachedBlockedTags { get; private set; } = blockedTags ?? App.AppViewModel.AppSettings.BrowsingExperienceSettings.BlockedTags.ToFrozenSet();
 
     public IFilter<IWorkViewModel> BlockedTagsFilter
     {
@@ -77,7 +77,7 @@ public abstract partial class WorkViewViewModelBase<T, TViewModel>(FrozenSet<str
 
     public void ResetEngine(IFetchEngine<IArtworkInfo>? newEngine, int itemsPerPage = 20, int itemLimit = -1)
     {
-        CachedBlockedTags = [.. App.AppViewModel.AppSettings.BlockedTags.ToFrozenSet()];
+        CachedBlockedTags = [.. App.AppViewModel.AppSettings.BrowsingExperienceSettings.BlockedTags.ToFrozenSet()];
         ResetEngine((IFetchEngine<T>?) newEngine, (info, _) => TViewModel.CreateInstance(info), itemsPerPage, itemLimit);
         SetFilters();
     }

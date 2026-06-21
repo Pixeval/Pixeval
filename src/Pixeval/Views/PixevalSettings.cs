@@ -11,9 +11,9 @@ public static class PixevalSettings
 {
     public static AppSettings Settings => App.AppViewModel.AppSettings;
 
-    public static WorkType WorkType => Settings.WorkType;
+    public static WorkType WorkType => Settings.SearchSettings.WorkType;
 
-    public static SimpleWorkType SimpleWorkType => Settings.DefaultSimpleWorkType;
+    public static SimpleWorkType SimpleWorkType => Settings.SearchSettings.DefaultSimpleWorkType;
 
-    public static ThumbnailLayoutType LayoutType => Settings.ThumbnailLayoutType;
+    public static ThumbnailLayoutType LayoutType => Settings.BrowsingExperienceSettings.ThumbnailLayoutType;
 }

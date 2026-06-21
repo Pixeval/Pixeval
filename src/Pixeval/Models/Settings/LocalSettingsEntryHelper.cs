@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using AutoSettingsPage;
 using AutoSettingsPage.Avalonia;
 using AutoSettingsPage.Models;
@@ -21,7 +20,6 @@ using Pixeval.I18N;
 using Pixeval.Models.Extensions;
 using Pixeval.Models.Options;
 using Pixeval.Models.Settings.Entries;
-using Pixeval.Utilities;
 using Pixeval.Views.Settings;
 
 namespace Pixeval.Models.Settings;
@@ -32,27 +30,22 @@ public static class LocalSettingsEntryHelper
     {
     }
 
-    public static readonly Lazy<IReadOnlyList<SettingsEntryAttribute>> LazyValues = new(() =>
-        [.. typeof(AppSettings).GetProperties(BindingFlags.Instance | BindingFlags.Public).SelectNotNull(f => f.GetCustomAttribute<SettingsEntryAttribute>())]);
-
     static LocalSettingsEntryHelper()
     {
         SettingsEntryAttribute.SettingsResourceKeysProvider = new SettingsResourceKeysProviderImpl();
 
-        _ = SettingsEntryHelper.FactoryDictionary.AddPredefined<AppSettings>()
-            .Add<CollectionSettingsEntry<AppSettings, string>, StringCollectionSettingsExpander>()
-            .Add<DateWithSwitchSettingsEntry<AppSettings>, DateWithSwitchSettingsCard>()
+        _ = SettingsEntryHelper.FactoryDictionary
+            .AddPredefined()
+            .AddOpenGeneric<ISingleValueSettingsEntry<string>, LanguageSettingsCard>(typeof(LanguageSettingsEntry<>))
+            .AddOpenGeneric<ISingleValueSettingsEntry<ObservableCollection<string>>, IPListInput>(typeof(IPSetSettingsEntry<>))
+            .AddOpenGeneric<IMultiValuesWithSwitchSettingsEntry, DomainFrontingSettingsExpander>(typeof(DomainFrontingSettingsEntry<>))
+            .AddOpenGeneric<ISingleValueSettingsEntry<ObservableCollection<string>>, StringCollectionSettingsExpander>(typeof(CollectionSettingsEntry<,>))
             .Add<ProxyAppSettingsEntry, ProxySettingsExpander>()
-            .Add<LanguageSettingsEntry<AppSettings>, LanguageSettingsCard>()
-            .Add<IPSetSettingsEntry<AppSettings>, IPListInput>()
-            .Add<DomainFrontingSettingsEntry<AppSettings>, DomainFrontingSettingsExpander>()
             .Add<DownloadMacroAppSettingsEntry, DownloadMacroSettingsExpander>()
             .Add<IllustrationDownloadFormatSettingsEntry, EnumSettingsCard>()
             .Add<NovelDownloadFormatSettingsEntry, EnumSettingsCard>()
             .Add<UgoiraDownloadFormatSettingsEntry, EnumSettingsCard>()
             .Add<WorkSubscriptionsSettingsEntry, WorkSubscriptionsSettingsExpander>()
-            .Add<MultiValuesEntry<AppSettings>, MultiValuesSettingsExpander>()
-            .Add<FontSettingsEntry<AppSettings>, FontSettingsExpander>()
 
             .Add<ExtensionSettingsEntry<IStringSettingsExtension, string>, StringSettingsCard>()
             .Add<ExtensionDoubleSettingsEntry, DoubleSettingsCard>()
@@ -209,28 +202,24 @@ public static class LocalSettingsEntryHelper
         {
             if (entry is ISettingsValueReset<AppSettings> i)
                 i.ValueReset(resetAppSettings);
+            if (entry is ISettingsValueReset<ApplicationSettingsGroup> application)
+                application.ValueReset(resetAppSettings.ApplicationSettings);
+            if (entry is ISettingsValueReset<NetworkSettingsGroup> network)
+                network.ValueReset(resetAppSettings.NetworkSettings);
+            if (entry is ISettingsValueReset<BrowsingExperienceSettingsGroup> browsingExperience)
+                browsingExperience.ValueReset(resetAppSettings.BrowsingExperienceSettings);
+            if (entry is ISettingsValueReset<SearchSettingsGroup> search)
+                search.ValueReset(resetAppSettings.SearchSettings);
+            if (entry is ISettingsValueReset<DownloadSettingsGroup> download)
+                download.ValueReset(resetAppSettings.DownloadSettings);
+            if (entry is ISettingsValueReset<NovelSettingsGroup> novel)
+                novel.ValueReset(resetAppSettings.NovelSettings);
 
             if (entry is IMultiValuesSettingsEntry m)
             {
-                // 项目暂不会嵌套 IMultiValuesSettingsEntry
                 foreach (var e in m.Entries)
-                    if (e is ISettingsValueReset<AppSettings> s)
-                        s.ValueReset(resetAppSettings);
+                    e.LocalValueReset(resetAppSettings);
             }
-        }
-    }
-
-    extension<TSettings>(ISettingsGroupListBuilder<TSettings> builder)
-    {
-        public ISettingsGroupListBuilder<TSettings> NewGroup(
-            SettingsEntryCategory header,
-            string description = "",
-            Uri? descriptionUri = null,
-            string? token = null,
-            Action<ISettingsGroup>? config = null)
-        {
-            var item = SymbolComboBoxItem.GetValues<SettingsEntryCategory>().First(t => Equals(t.Value, header));
-            return builder.NewGroup(item.Description, description, item.Symbol, descriptionUri, token, config);
         }
     }
 
@@ -328,29 +317,32 @@ public static class LocalSettingsEntryHelper
             builder.Add(new(builder.Settings, property), config);
     }
 
-    extension(ISettingsGroupBuilder<AppSettings> builder)
+    extension(ISettingsGroupBuilder<NetworkSettingsGroup> builder)
     {
-        public ISettingsGroupBuilder<AppSettings> Proxy(
+        public ISettingsGroupBuilder<NetworkSettingsGroup> Proxy(
             Action<ProxyAppSettingsEntry>? config = null) =>
             builder.Add(new(builder.Settings), config);
+    }
 
-        public ISettingsGroupBuilder<AppSettings> DownloadMacro(
+    extension(ISettingsGroupBuilder<DownloadSettingsGroup> builder)
+    {
+        public ISettingsGroupBuilder<DownloadSettingsGroup> DownloadMacro(
             Action<DownloadMacroAppSettingsEntry>? config = null) =>
             builder.Add(new(builder.Settings), config);
 
-        public ISettingsGroupBuilder<AppSettings> IllustrationDownloadFormat(
+        public ISettingsGroupBuilder<DownloadSettingsGroup> IllustrationDownloadFormat(
             Action<IllustrationDownloadFormatSettingsEntry>? config = null) =>
             builder.Add(new IllustrationDownloadFormatSettingsEntry(builder.Settings), config);
 
-        public ISettingsGroupBuilder<AppSettings> NovelDownloadFormat(
+        public ISettingsGroupBuilder<DownloadSettingsGroup> NovelDownloadFormat(
             Action<NovelDownloadFormatSettingsEntry>? config = null) =>
             builder.Add(new NovelDownloadFormatSettingsEntry(builder.Settings), config);
 
-        public ISettingsGroupBuilder<AppSettings> UgoiraDownloadFormat(
+        public ISettingsGroupBuilder<DownloadSettingsGroup> UgoiraDownloadFormat(
             Action<UgoiraDownloadFormatSettingsEntry>? config = null) =>
             builder.Add(new UgoiraDownloadFormatSettingsEntry(builder.Settings), config);
 
-        public ISettingsGroupBuilder<AppSettings> WorkSubscriptions(
+        public ISettingsGroupBuilder<DownloadSettingsGroup> WorkSubscriptions(
             Action<WorkSubscriptionsSettingsEntry>? config = null) =>
             builder.Add(new(), config);
     }
