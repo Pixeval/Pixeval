@@ -272,15 +272,20 @@ public static class IncrementalLoadingBehavior
     {
         if (e.GetNewValue<bool>())
         {
+            itemsControl.Loaded += OnItemsControlLoaded;
             itemsControl.TemplateApplied += OnItemsControlTemplateApplied;
             itemsControl.Unloaded += OnItemsControlUnloaded;
             itemsControl.PropertyChanged += OnItemsControlOnPropertyChanged;
 
             if (itemsControl.IsLoaded)
+            {
                 itemsControl.AttachScrollViewer();
+                itemsControl.RequestLoadCheck();
+            }
         }
         else
         {
+            itemsControl.Loaded -= OnItemsControlLoaded;
             itemsControl.TemplateApplied -= OnItemsControlTemplateApplied;
             itemsControl.Unloaded -= OnItemsControlUnloaded;
             itemsControl.PropertyChanged -= OnItemsControlOnPropertyChanged;
@@ -296,12 +301,22 @@ public static class IncrementalLoadingBehavior
         ic.HasPendingLoadCheck = false;
     }
 
+    private static void OnItemsControlLoaded(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not ItemsControl itemsControl)
+            return;
+
+        itemsControl.AttachScrollViewer();
+        itemsControl.RequestLoadCheck();
+    }
+
     private static void OnItemsControlTemplateApplied(object? sender, TemplateAppliedEventArgs e)
     {
         if (sender is not ItemsControl itemsControl)
             return;
 
         itemsControl.AttachScrollViewer();
+        itemsControl.RequestLoadCheck();
     }
 
     private static void OnItemsControlUnloaded(object? sender, RoutedEventArgs e)
