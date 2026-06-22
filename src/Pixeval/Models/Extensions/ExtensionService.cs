@@ -34,6 +34,8 @@ public enum ExtensionHostLoadResult
 
 public class ExtensionService : IDisposable
 {
+    public static string CurrentVersion { get; } = ExtensionsHostStatics.CurrentSdkVersion.ToString();
+
     public static string? NativeLibraryExtension
     {
         get
@@ -255,7 +257,7 @@ public class ExtensionService : IDisposable
                 var rcw = (IExtensionsHost) wrappers.GetOrCreateObjectForComInstance(ppv, CreateObjectFlags.UniqueInstance);
                 _ = Marshal.Release(ppv);
 
-                if (rcw.SdkVersion != ExtensionsHostStatics.CurrentSdkVersion.ToString())
+                if (rcw.SdkVersion != CurrentVersion)
                 {
                     NativeLibrary.Free(libraryHandle);
                     outdatedVersion = rcw.SdkVersion;

@@ -25,8 +25,7 @@ public partial class FontSettingsExpander : SettingsExpander, IEntryControl<ISin
 
     private void SelectingItemsControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (e.AddedItems is not [FontFamily fontFamily])
-            return;
-        TokenizingBox.AddToken(fontFamily.Name);
+        if (e.AddedItems is [FontFamily fontFamily])
+            TokenizingBox.AddToken(fontFamily.Name);
     }
 }

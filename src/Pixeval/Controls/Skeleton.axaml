@@ -18,12 +18,12 @@
     </ResourceDictionary.ThemeDictionaries>
 
     <Design.PreviewWith>
-        <StackPanel
+        <ContentControl
             Width="320"
             Height="220"
             Background="{DynamicResource SystemRegionBrush}">
-            <controls:Skeleton />
-        </StackPanel>
+            <controls:Skeleton HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        </ContentControl>
     </Design.PreviewWith>
 
     <ControlTheme x:Key="{x:Type controls:Skeleton}" TargetType="{x:Type controls:Skeleton}">

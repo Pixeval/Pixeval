@@ -17,11 +17,17 @@
     d:DesignHeight="800"
     d:DesignWidth="600">
     <DockPanel>
-        <TextBlock
-            Margin="20,40,20,20"
+        <StackPanel
+            Margin="20"
             DockPanel.Dock="Top"
-            Text="{I18N {x:Static pixeval:ExtensionsPageResources.TitleTextBlockText}}"
-            Theme="{StaticResource TitleTextBlockStyle}" />
+            Orientation="Horizontal"
+            Spacing="20">
+            <TextBlock Text="{I18N {x:Static pixeval:ExtensionsPageResources.TitleTextBlockText}}" Theme="{StaticResource TitleTextBlockStyle}" />
+            <TextBlock VerticalAlignment="Bottom" Theme="{StaticResource SubtitleTextBlockStyle}">
+                <Run Text="{I18N {x:Static pixeval:ExtensionsPageResources.SubtitleTextBlockText}}" />
+                <Run Text="{x:Static extensions:ExtensionService.CurrentVersion}" />
+            </TextBlock>
+        </StackPanel>
         <CommandBar
             DefaultLabelPosition="Right"
             DockPanel.Dock="Top"

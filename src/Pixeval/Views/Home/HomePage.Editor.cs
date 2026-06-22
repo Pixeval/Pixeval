@@ -1,7 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
-using System;
 using System.Linq;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.Input;

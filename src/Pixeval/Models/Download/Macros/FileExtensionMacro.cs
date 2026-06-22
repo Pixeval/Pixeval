@@ -1,8 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL v3 License.
 
-using System;
-using Mako.Model;
 using Misaki;
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.Macros;

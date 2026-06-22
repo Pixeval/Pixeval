@@ -12,6 +12,9 @@
   "TitleTextBlock": {
     "Text": "Pixeval 扩展管理器"
   },
+  "SubtitleTextBlock": {
+    "Text": "扩展版本"
+  },
   "UnloadExtensionsButton": {
     "Label": "卸载扩展"
   },

@@ -12,8 +12,8 @@
     xmlns:utilities="using:Pixeval.Utilities"
     Header="{I18N {x:Static pixeval:AboutPageResources.TitleTextBlockText}}"
     mc:Ignorable="d"
-    d:DesignHeight="800"
-    d:DesignWidth="600">
+    d:DesignHeight="600"
+    d:DesignWidth="800">
     <ScrollViewer>
         <StackPanel Margin="20" Spacing="20">
             <StackPanel Spacing="4">

@@ -5,7 +5,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,10 +15,9 @@ using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Layout;
-using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using Avalonia.Metadata;
 using Avalonia.Threading;
@@ -27,239 +25,8 @@ using Avalonia.VisualTree;
 
 namespace Pixeval.Controls;
 
-public class TokenAddingEventArgs(object? item, string? tokenText = null) : CancelEventArgs
-{
-    public string? TokenText { get; } = tokenText;
-
-    public object? Item { get; set; } = item;
-}
-
-public class TokenEventArgs(object? item) : EventArgs
-{
-    public object? Item { get; } = item;
-}
-
-public class TokenRemovingEventArgs(object? item) : CancelEventArgs
-{
-    public object? Item { get; } = item;
-}
-
-public sealed class TokenizingBoxToken(object? item, int index, IDataTemplate? itemTemplate, ICommand removeCommand)
-{
-    public object? Item { get; } = item;
-
-    public int Index { get; } = index;
-
-    public IDataTemplate? ItemTemplate { get; } = itemTemplate;
-
-    public ICommand RemoveCommand { get; } = removeCommand;
-}
-
-file sealed class TokenCommand(Action execute) : ICommand
-{
-    public event EventHandler? CanExecuteChanged
-    {
-        add { }
-        remove { }
-    }
-
-    public bool CanExecute(object? parameter) => true;
-
-    public void Execute(object? parameter) => execute();
-}
-
-public class TokenizingBoxPanel : Panel
-{
-    public static readonly StyledProperty<double> ItemSpacingProperty =
-        AvaloniaProperty.Register<TokenizingBoxPanel, double>(nameof(ItemSpacing), 4);
-
-    public static readonly StyledProperty<double> LineSpacingProperty =
-        AvaloniaProperty.Register<TokenizingBoxPanel, double>(nameof(LineSpacing), 2);
-
-    public static readonly StyledProperty<double> MinInputWidthProperty =
-        AvaloniaProperty.Register<TokenizingBoxPanel, double>(nameof(MinInputWidth), 120);
-
-    static TokenizingBoxPanel()
-    {
-        AffectsMeasure<TokenizingBoxPanel>(ItemSpacingProperty, LineSpacingProperty, MinInputWidthProperty);
-        AffectsArrange<TokenizingBoxPanel>(ItemSpacingProperty, LineSpacingProperty, MinInputWidthProperty);
-    }
-
-    public double ItemSpacing
-    {
-        get => GetValue(ItemSpacingProperty);
-        set => SetValue(ItemSpacingProperty, value);
-    }
-
-    public double LineSpacing
-    {
-        get => GetValue(LineSpacingProperty);
-        set => SetValue(LineSpacingProperty, value);
-    }
-
-    public double MinInputWidth
-    {
-        get => GetValue(MinInputWidthProperty);
-        set => SetValue(MinInputWidthProperty, value);
-    }
-
-    protected override Size MeasureOverride(Size availableSize)
-    {
-        var width = double.IsInfinity(availableSize.Width) ? double.PositiveInfinity : double.Max(0, availableSize.Width);
-        var input = FindNamedChild("PART_AutoCompleteBox");
-        var count = FindNamedChild("PART_CountTextBlock");
-
-        foreach (var child in Children)
-        {
-            if (ReferenceEquals(child, input))
-            {
-                child.Measure(new Size(double.IsInfinity(width) ? MinInputWidth : width, availableSize.Height));
-            }
-            else
-            {
-                child.Measure(new Size(double.PositiveInfinity, availableSize.Height));
-            }
-        }
-
-        var desiredWidth = double.IsInfinity(width) ? 0 : width;
-        var x = 0d;
-        var lineHeight = 0d;
-        var totalHeight = 0d;
-        var maxLineWidth = 0d;
-
-        foreach (var child in Children)
-        {
-            if (!child.IsVisible || ReferenceEquals(child, input) || ReferenceEquals(child, count))
-                continue;
-
-            AddMeasuredChild(child.DesiredSize.Width, child.DesiredSize.Height);
-        }
-
-        if (input?.IsVisible == true)
-        {
-            var countWidth = count?.IsVisible == true ? count.DesiredSize.Width : 0;
-            var countSpacing = countWidth > 0 ? ItemSpacing : 0;
-            var neededWidth = MinInputWidth + countSpacing + countWidth;
-
-            if (!double.IsInfinity(width) && x > 0 && x + ItemSpacing + neededWidth > width)
-                CommitLine();
-
-            var prefixSpacing = x > 0 ? ItemSpacing : 0;
-            var inputWidth = double.IsInfinity(width)
-                ? MinInputWidth
-                : double.Max(MinInputWidth, width - x - prefixSpacing - countSpacing - countWidth);
-
-            AddMeasuredChild(inputWidth, input.DesiredSize.Height);
-
-            if (count?.IsVisible == true)
-                AddMeasuredChild(countWidth, count.DesiredSize.Height);
-        }
-        else if (count?.IsVisible == true)
-        {
-            AddMeasuredChild(count.DesiredSize.Width, count.DesiredSize.Height);
-        }
-
-        CommitLine();
-
-        return new Size(double.IsInfinity(width) ? maxLineWidth : desiredWidth, totalHeight);
-
-        void AddMeasuredChild(double childWidth, double childHeight)
-        {
-            if (!double.IsInfinity(width) && x > 0 && x + ItemSpacing + childWidth > width)
-                CommitLine();
-
-            x += x > 0 ? ItemSpacing + childWidth : childWidth;
-            lineHeight = double.Max(lineHeight, childHeight);
-        }
-
-        void CommitLine()
-        {
-            if (lineHeight <= 0)
-                return;
-
-            maxLineWidth = double.Max(maxLineWidth, x);
-            totalHeight += totalHeight > 0 ? LineSpacing + lineHeight : lineHeight;
-            x = 0;
-            lineHeight = 0;
-        }
-    }
-
-    protected override Size ArrangeOverride(Size finalSize)
-    {
-        var input = FindNamedChild("PART_AutoCompleteBox");
-        var count = FindNamedChild("PART_CountTextBlock");
-        var width = double.Max(0, finalSize.Width);
-        var x = 0d;
-        var y = 0d;
-        var lineHeight = 0d;
-
-        foreach (var child in Children)
-        {
-            if (!child.IsVisible || ReferenceEquals(child, input) || ReferenceEquals(child, count))
-                continue;
-
-            ArrangeFixedChild(child);
-        }
-
-        if (input?.IsVisible == true)
-        {
-            var countWidth = count?.IsVisible == true ? count.DesiredSize.Width : 0;
-            var countSpacing = countWidth > 0 ? ItemSpacing : 0;
-            var neededWidth = MinInputWidth + countSpacing + countWidth;
-
-            if (x > 0 && x + ItemSpacing + neededWidth > width)
-                MoveToNextLine();
-
-            var inputX = x > 0 ? x + ItemSpacing : 0;
-            var inputWidth = double.Max(0, width - inputX - countSpacing - countWidth);
-            var rowHeight = double.Max(input.DesiredSize.Height, count?.IsVisible == true ? count.DesiredSize.Height : 0);
-
-            input.Arrange(new Rect(inputX, y, inputWidth, rowHeight));
-            x = inputX + inputWidth;
-            lineHeight = double.Max(lineHeight, rowHeight);
-
-            if (count?.IsVisible == true)
-            {
-                var countX = x + countSpacing;
-                count.Arrange(new Rect(countX, y, countWidth, rowHeight));
-                x = countX + countWidth;
-            }
-        }
-        else if (count?.IsVisible == true)
-        {
-            ArrangeFixedChild(count);
-        }
-
-        return finalSize;
-
-        void ArrangeFixedChild(Control child)
-        {
-            var childSize = child.DesiredSize;
-            if (x > 0 && x + ItemSpacing + childSize.Width > width)
-                MoveToNextLine();
-
-            var childX = x > 0 ? x + ItemSpacing : 0;
-            child.Arrange(new Rect(childX, y, childSize.Width, childSize.Height));
-            x = childX + childSize.Width;
-            lineHeight = double.Max(lineHeight, childSize.Height);
-        }
-
-        void MoveToNextLine()
-        {
-            y += lineHeight + LineSpacing;
-            x = 0;
-            lineHeight = 0;
-        }
-    }
-
-    private Control? FindNamedChild(string name)
-    {
-        return Children.FirstOrDefault(child => child.Name == name);
-    }
-}
-
 [TemplatePart(PartRoot, typeof(Border))]
-[TemplatePart(PartItemsHost, typeof(Panel))]
+[TemplatePart(PartItemsHost, typeof(TokenizingBoxPanel))]
 [TemplatePart(PartAutoCompleteBox, typeof(AutoCompleteBox))]
 [TemplatePart(PartCountTextBlock, typeof(TextBlock))]
 [PseudoClasses(PseudoClassEmpty, PseudoClassMaxReached)]
@@ -274,7 +41,6 @@ public class TokenizingBox : TemplatedControl
     private const string TokenRemoveClass = "tokenizing-token-remove";
     private const string PseudoClassEmpty = ":empty";
     private const string PseudoClassMaxReached = ":maxreached";
-    public const string TokenTemplateResourceKey = "TokenizingBoxTokenTemplate";
 
     public static readonly StyledProperty<int> MaxCountProperty =
         AvaloniaProperty.Register<TokenizingBox, int>(nameof(MaxCount), -1, validate: value => value >= -1);
@@ -348,12 +114,16 @@ public class TokenizingBox : TemplatedControl
     public static readonly DirectProperty<TokenizingBox, int> TokenCountProperty =
         AvaloniaProperty.RegisterDirect<TokenizingBox, int>(nameof(TokenCount), box => box.TokenCount);
 
+    public static readonly DirectProperty<TokenizingBox, IReadOnlyList<TokenizingBoxToken>> TokenItemsProperty =
+        AvaloniaProperty.RegisterDirect<TokenizingBox, IReadOnlyList<TokenizingBoxToken>>(nameof(TokenItems), box => box.TokenItems);
+
+    public static readonly FuncValueConverter<int, bool> HasMaxCountConverter = new(maxCount => maxCount is >= 0);
+
     private readonly List<object?> _internalItems = [];
     private Border? _root;
-    private Panel? _itemsHost;
+    private TokenizingBoxPanel? _itemsHost;
     private AutoCompleteBox? _autoCompleteBox;
     private TextBox? _textBox;
-    private TextBlock? _countTextBlock;
     private SelectingItemsControl? _suggestionItemsControl;
     private INotifyCollectionChanged? _notifyCollectionChanged;
 
@@ -363,9 +133,6 @@ public class TokenizingBox : TemplatedControl
 
         ItemsSourceProperty.Changed.AddClassHandler<TokenizingBox>((box, _) => box.OnItemsSourceChanged());
         MaxCountProperty.Changed.AddClassHandler<TokenizingBox>((box, _) => box.OnMaxCountChanged());
-        ItemTemplateProperty.Changed.AddClassHandler<TokenizingBox>((box, _) => box.RebuildItemsHost());
-        PlaceholderTextProperty.Changed.AddClassHandler<TokenizingBox>((box, _) => box.UpdateVisualState());
-        IsEnabledProperty.Changed.AddClassHandler<TokenizingBox>((box, _) => box.UpdateVisualState());
     }
 
     public int MaxCount
@@ -516,6 +283,12 @@ public class TokenizingBox : TemplatedControl
         private set => SetAndRaise(TokenCountProperty, ref field, value);
     }
 
+    public IReadOnlyList<TokenizingBoxToken> TokenItems
+    {
+        get;
+        private set => SetAndRaise(TokenItemsProperty, ref field, value);
+    } = [];
+
     public event EventHandler<TokenizingBox, TokenAddingEventArgs>? TokenAdding;
 
     public event EventHandler<TokenizingBox, TokenEventArgs>? TokenAdded;
@@ -549,12 +322,11 @@ public class TokenizingBox : TemplatedControl
         base.OnApplyTemplate(e);
 
         _root = e.NameScope.Find<Border>(PartRoot);
-        _itemsHost = e.NameScope.Find<Panel>(PartItemsHost);
+        _itemsHost = e.NameScope.Find<TokenizingBoxPanel>(PartItemsHost);
         _autoCompleteBox = e.NameScope.Find<AutoCompleteBox>(PartAutoCompleteBox);
-        _countTextBlock = e.NameScope.Find<TextBlock>(PartCountTextBlock);
 
-        if (_root is not null)
-            _root.Tapped += RootOnTapped;
+        _root?.Tapped += RootOnTapped;
+        _itemsHost?.Tapped += ItemsHostOnTapped;
 
         if (_autoCompleteBox is not null)
         {
@@ -576,8 +348,8 @@ public class TokenizingBox : TemplatedControl
 
     private void DetachTemplateParts()
     {
-        if (_root is not null)
-            _root.Tapped -= RootOnTapped;
+        _root?.Tapped -= RootOnTapped;
+        _itemsHost?.Tapped -= ItemsHostOnTapped;
 
         if (_autoCompleteBox is not null)
         {
@@ -592,18 +364,15 @@ public class TokenizingBox : TemplatedControl
         _itemsHost = null;
         _autoCompleteBox = null;
         _textBox = null;
-        _countTextBlock = null;
     }
 
     private void OnItemsSourceChanged()
     {
-        if (_notifyCollectionChanged is not null)
-            _notifyCollectionChanged.CollectionChanged -= ItemsSourceOnCollectionChanged;
+        _notifyCollectionChanged?.CollectionChanged -= ItemsSourceOnCollectionChanged;
 
         _notifyCollectionChanged = ItemsSource as INotifyCollectionChanged;
 
-        if (_notifyCollectionChanged is not null)
-            _notifyCollectionChanged.CollectionChanged += ItemsSourceOnCollectionChanged;
+        _notifyCollectionChanged?.CollectionChanged += ItemsSourceOnCollectionChanged;
 
         TrimToMaxCount();
         RebuildItemsHost();
@@ -623,24 +392,18 @@ public class TokenizingBox : TemplatedControl
 
     private void RebuildItemsHost()
     {
-        if (_itemsHost is null)
-            return;
-
         var snapshot = GetTokenItemsSnapshot();
-        var shouldRestoreFocus = IsKeyboardFocusWithin;
-
-        _itemsHost.Children.Clear();
+        var shouldRestoreFocus = _itemsHost is not null && IsKeyboardFocusWithin;
+        var tokenItems = new TokenizingBoxToken[snapshot.Count];
 
         for (var i = 0; i < snapshot.Count; ++i)
         {
-            _itemsHost.Children.Add(CreateTokenControl(snapshot[i], i));
+            var index = i;
+            var item = snapshot[index];
+            tokenItems[index] = new TokenizingBoxToken(item, new TokenCommand(() => RemoveTokenAt(index, item)));
         }
 
-        if (_autoCompleteBox is not null)
-            _itemsHost.Children.Add(_autoCompleteBox);
-
-        if (_countTextBlock is not null)
-            _itemsHost.Children.Add(_countTextBlock);
+        TokenItems = tokenItems;
 
         UpdateVisualState(snapshot);
 
@@ -648,44 +411,34 @@ public class TokenizingBox : TemplatedControl
             QueueFocusTextBox();
     }
 
-    private Control CreateTokenControl(object? item, int index)
+    private void ItemsHostOnTapped(object? sender, TappedEventArgs e)
     {
-        var token = new TokenizingBoxToken(
-            item,
-            index,
-            ItemTemplate,
-            new TokenCommand(() => RemoveTokenAt(index, item)));
-
-        var control = new ContentControl
-        {
-            Content = token,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!ContentControl.ContentTemplateProperty] = new DynamicResourceExtension(TokenTemplateResourceKey)
-        };
-
-        control.Tapped += (_, e) =>
-        {
-            if (!IsRemoveButtonEvent(e, token))
-                TokenClick?.Invoke(this, new TokenEventArgs(item));
-        };
-
-        return control;
+        if (!IsRemoveButtonEvent(e) && GetEventToken(e) is { } token)
+            TokenClick?.Invoke(this, new TokenEventArgs(token.Item));
     }
 
-    private static bool IsRemoveButtonEvent(RoutedEventArgs e, TokenizingBoxToken? token = null)
+    private static bool IsRemoveButtonEvent(RoutedEventArgs e)
     {
         return e.Source is Visual visual &&
                visual.GetSelfAndVisualAncestors()
                    .OfType<Control>()
-                   .Any(control =>
-                       control.Classes.Contains(TokenRemoveClass)
-                       || (control is Button { Command: { } command }
-                           && ReferenceEquals(command, token?.RemoveCommand)));
+                   .Any(control => control.Classes.Contains(TokenRemoveClass));
+    }
+
+    private static TokenizingBoxToken? GetEventToken(RoutedEventArgs e)
+    {
+        return e.Source is Visual visual
+            ? visual.GetSelfAndVisualAncestors()
+                .OfType<Control>()
+                .Select(control => control.DataContext)
+                .OfType<TokenizingBoxToken>()
+                .FirstOrDefault()
+            : null;
     }
 
     private void RootOnTapped(object? sender, TappedEventArgs e)
     {
-        if (!IsRemoveButtonEvent(e))
+        if (!IsRemoveButtonEvent(e) && GetEventToken(e) is null)
             FocusTextBox();
     }
 
@@ -974,11 +727,6 @@ public class TokenizingBox : TemplatedControl
         return [.. (ItemsSource ?? _internalItems).Cast<object?>()];
     }
 
-    private void UpdateVisualState()
-    {
-        UpdateVisualState(GetTokenItemsSnapshot());
-    }
-
     private void UpdateVisualState(IReadOnlyCollection<object?> snapshot)
     {
         TokenCount = snapshot.Count;
@@ -988,18 +736,18 @@ public class TokenizingBox : TemplatedControl
 
         PseudoClasses.Set(PseudoClassEmpty, isEmpty);
         PseudoClasses.Set(PseudoClassMaxReached, isMaxReached);
-
-        if (_autoCompleteBox is not null)
-        {
-            _autoCompleteBox.IsVisible = !isMaxReached;
-            _autoCompleteBox.IsEnabled = IsEnabled && !isMaxReached;
-            _autoCompleteBox.PlaceholderText = PlaceholderText;
-        }
-
-        if (_countTextBlock is not null)
-        {
-            _countTextBlock.IsVisible = MaxCount >= 0;
-            _countTextBlock.Text = MaxCount >= 0 ? $"{snapshot.Count}/{MaxCount}" : "";
-        }
     }
+}
+
+file sealed class TokenCommand(Action execute) : ICommand
+{
+    public event EventHandler? CanExecuteChanged
+    {
+        add { }
+        remove { }
+    }
+
+    public bool CanExecute(object? parameter) => true;
+
+    public void Execute(object? parameter) => execute();
 }

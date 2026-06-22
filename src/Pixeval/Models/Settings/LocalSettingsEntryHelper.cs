@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Linq.Expressions;
 using AutoSettingsPage;
 using AutoSettingsPage.Avalonia;
@@ -40,6 +39,7 @@ public static class LocalSettingsEntryHelper
             .AddOpenGeneric<ISingleValueSettingsEntry<ObservableCollection<string>>, IPListInput>(typeof(IPSetSettingsEntry<>))
             .AddOpenGeneric<IMultiValuesWithSwitchSettingsEntry, DomainFrontingSettingsExpander>(typeof(DomainFrontingSettingsEntry<>))
             .AddOpenGeneric<ISingleValueSettingsEntry<ObservableCollection<string>>, StringCollectionSettingsExpander>(typeof(CollectionSettingsEntry<,>))
+            .AddOpenGeneric<ISingleValueSettingsEntry<ObservableCollection<string>>, FontSettingsExpander>(typeof(FontSettingsEntry<>))
             .Add<ProxyAppSettingsEntry, ProxySettingsExpander>()
             .Add<DownloadMacroAppSettingsEntry, DownloadMacroSettingsExpander>()
             .Add<IllustrationDownloadFormatSettingsEntry, EnumSettingsCard>()

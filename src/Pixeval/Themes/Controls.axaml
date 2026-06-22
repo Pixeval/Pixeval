@@ -1,8 +1,7 @@
 <ResourceDictionary
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:SmoothScroll.Avalonia.Controls"
-    xmlns:fluent="using:FluentIcons.Avalonia">
+    xmlns:controls="using:SmoothScroll.Avalonia.Controls">
 
     <ResourceDictionary.MergedDictionaries>
         <MergeResourceInclude Source="/Controls/AvatarImage.axaml" />
@@ -17,7 +16,7 @@
         <MergeResourceInclude Source="/Controls/PagePreviewSlider.axaml" />
         <MergeResourceInclude Source="/Controls/FloatingPaneView.axaml" />
         <MergeResourceInclude Source="/Controls/ContentDialog/ContentDialog.axaml" />
-        <MergeResourceInclude Source="/Controls/TokenizingBox.axaml" />
+        <MergeResourceInclude Source="/Controls/TokenizingBox/TokenizingBox.axaml" />
         <MergeResourceInclude Source="/Controls/IPBox.axaml" />
         <MergeResourceInclude Source="/Views/Entry/EntryView.axaml" />
         <MergeResourceInclude Source="/Views/Work/AddNewBookmarkTagItem.axaml" />

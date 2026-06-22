@@ -1,4 +1,6 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="using:System" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=controls_005Ccontentdialog/@EntryIndexedValue" xmlns="clr-namespace:System;assembly=mscorlib">True</Boolean>
+	<Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=controls_005Ctokenizingbox/@EntryIndexedValue" xmlns="clr-namespace:System;assembly=mscorlib">True</Boolean>
 	<Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=viewmodels_005Cillustration/@EntryIndexedValue" xmlns="clr-namespace:System;assembly=mscorlib">True</Boolean>
 	<Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=viewmodels_005Cnovel/@EntryIndexedValue" xmlns="clr-namespace:System;assembly=mscorlib">True</Boolean>
 	<Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=viewmodels_005Cuser/@EntryIndexedValue" xmlns="clr-namespace:System;assembly=mscorlib">True</Boolean>

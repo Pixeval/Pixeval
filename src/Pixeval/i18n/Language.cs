@@ -393,6 +393,7 @@ namespace Pixeval
         public const string OpenExtensionsButtonLabel = "ExtensionsPage.OpenExtensionsButton.Label";
         public const string PlatformNotSupportExtensions = "ExtensionsPage.PlatformNotSupportExtensions";
         public const string SomeExtensionsOutdatedFormatted = "ExtensionsPage.SomeExtensionsOutdatedFormatted";
+        public const string SubtitleTextBlockText = "ExtensionsPage.SubtitleTextBlock.Text";
         public const string TitleTextBlockText = "ExtensionsPage.TitleTextBlock.Text";
         public const string UnloadExtensionsButtonLabel = "ExtensionsPage.UnloadExtensionsButton.Label";
         public const string ZipContainsNoExtension = "ExtensionsPage.ZipContainsNoExtension";

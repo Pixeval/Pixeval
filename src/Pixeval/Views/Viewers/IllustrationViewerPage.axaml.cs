@@ -1,7 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
-using System;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;

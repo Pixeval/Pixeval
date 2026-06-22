@@ -5,6 +5,7 @@
     xmlns:avalonia="using:AutoSettingsPage.Avalonia"
     xmlns:controls="using:CommunityToolkit.Avalonia.Controls"
     xmlns:controls1="using:Pixeval.Controls"
+    xmlns:converters="using:Pixeval.Views.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:local="using:AutoSettingsPage.Avalonia"
@@ -42,7 +43,13 @@
                     AllowDuplicateTokens="False"
                     ItemsSource="{Binding Value}"
                     PlaceholderText="{Binding Placeholder}"
-                    TokenSeparator="," />
+                    TokenSeparator=",">
+                    <controls1:TokenizingBox.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type x:String}">
+                            <TextBlock FontFamily="{Binding Converter={x:Static converters:PixevalConverters.FontFamilyConverter}}" Text="{Binding}" />
+                        </DataTemplate>
+                    </controls1:TokenizingBox.ItemTemplate>
+                </controls1:TokenizingBox>
             </DockPanel>
         </controls:SettingsCard>
     </controls:SettingsExpander.Items>
