@@ -16,20 +16,20 @@ namespace Pixeval.Models.Extensions;
 
 public class ExtensionsHostModel(
     IExtensionsHost host,
-    Dictionary<string, JsonElement> values) : IDisposable
+    Dictionary<string, object?> values) : IDisposable
 {
     public IExtensionsHost Host { get; } = host;
 
     public bool IsActive
     {
         get => Values.TryGetTargetOrAddDefault(nameof(IsActive), true);
-        set => Values.SetTarget(nameof(IsActive), value);
+        set => Values[nameof(IsActive)] = value;
     }
 
     public int Priority
     {
         get => Values.TryGetTargetOrAddDefault(nameof(Priority), 0);
-        set => Values.SetTarget(nameof(Priority), value);
+        set => Values[nameof(Priority)] = value;
     }
 
     internal nint Handle { get; init; }
@@ -67,7 +67,7 @@ public class ExtensionsHostModel(
         }
     }
 
-    public Dictionary<string, JsonElement> Values { get; } = values;
+    public Dictionary<string, object?> Values { get; } = values;
 
     public IReadOnlyList<IExtension> Extensions { get; } = host.Extensions;
 

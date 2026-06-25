@@ -3,7 +3,6 @@
 
 using System;
 using System.IO;
-using System.Text.Json;
 using AutoSettingsPage.Models;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -15,6 +14,7 @@ using Pixeval.Models.Settings;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
 using Pixeval.Views.Login;
+using SharpYaml;
 
 namespace Pixeval.Views.Settings;
 
@@ -77,7 +77,7 @@ public partial class SettingsMainView : ContentPage
                 }) is not { } file)
                 return;
             await using var stream = await file.OpenWriteAsync();
-            await JsonSerializer.SerializeAsync(stream, vm.AppSettings, SettingsSerializerContext.Default.AppSettings);
+            YamlSerializer.Serialize(stream, vm.AppSettings, SettingsSerializerContext.Default.AppSettings);
 
             viewContainer.ShowSuccess(I18NManager.GetResource(SettingsMainViewResources.ExportSettingsSuccess));
         }
@@ -103,7 +103,7 @@ public partial class SettingsMainView : ContentPage
 
             await using var stream = await file.OpenReadAsync();
 
-            if (await JsonSerializer.DeserializeAsync(stream, SettingsSerializerContext.Default.AppSettings) is { } appSettings)
+            if (YamlSerializer.Deserialize(stream, SettingsSerializerContext.Default.AppSettings) is { } appSettings)
             {
                 foreach (var localGroup in vm.LocalGroups)
                     foreach (var settingsEntry in localGroup)

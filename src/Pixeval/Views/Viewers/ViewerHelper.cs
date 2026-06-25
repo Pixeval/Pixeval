@@ -3,7 +3,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Mako.Net.Response;
+using Mako.Net.Responses;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
 using Pixeval.Utilities;

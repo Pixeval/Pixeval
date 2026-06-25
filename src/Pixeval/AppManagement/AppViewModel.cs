@@ -65,7 +65,7 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
             .AddSingleton<WorkSubscriptionDownloadService>()
             .AddSingleton<IllustrationDownloadTaskFactory>()
             .AddSingleton<NovelDownloadTaskFactory>()
-            .AddSingleton(provider => new ExtensionService(provider.GetRequiredService<FileLogger>(), App.AppViewModel.AppSettings.ExtensionSettings))
+            .AddSingleton(provider => new ExtensionService(provider.GetRequiredService<FileLogger>(), AppSettings.ExtensionSettings))
             .AddSingleton(cacheTable)
             .AddSingleton(_ => new SQLiteConnection(AppInfo.DatabaseFilePath,
                 SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex))

@@ -9,7 +9,7 @@ using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mako.Global.Enum;
-using Mako.Net.Response;
+using Mako.Net.Responses;
 using Pixeval.Views.Capability;
 
 namespace Pixeval.ViewModels.Viewers;

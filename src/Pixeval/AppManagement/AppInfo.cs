@@ -3,11 +3,11 @@
 
 using System;
 using System.IO;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform;
 using Pixeval.Utilities;
+using SharpYaml;
 
 namespace Pixeval.AppManagement;
 
@@ -32,9 +32,9 @@ public static class AppInfo
 
     public static string ExtensionsFolder { get; } = Path.Combine(ApplicationFolderPath, "Extensions");
 
-    private static string AppSettingsPath { get; } = Path.Combine(SettingsFolder, "settings.json");
+    private static string AppSettingsPath { get; } = Path.Combine(SettingsFolder, "settings.yaml");
 
-    private static string LoginContextPath { get; } = Path.Combine(SettingsFolder, "login_context.json");
+    private static string LoginContextPath { get; } = Path.Combine(SettingsFolder, "login_context.yaml");
 
     public static string DatabaseFilePath { get; } = Path.Combine(SettingsFolder, "PixevalData4.3.12.sqlite");
 
@@ -136,7 +136,7 @@ public static class AppInfo
     {
         try
         {
-            return JsonSerializer.DeserializeFile(AppSettingsPath, SettingsSerializerContext.Default.AppSettings);
+            return YamlSerializer.DeserializeFile(AppSettingsPath, SettingsSerializerContext.Default.AppSettings);
         }
         catch (Exception e)
         {
@@ -149,7 +149,7 @@ public static class AppInfo
     {
         try
         {
-            return JsonSerializer.DeserializeFile(LoginContextPath, SettingsSerializerContext.Default.LoginContext);
+            return YamlSerializer.DeserializeFile(LoginContextPath, SettingsSerializerContext.Default.LoginContext);
         }
         catch (Exception e)
         {
@@ -163,7 +163,7 @@ public static class AppInfo
         if (configuration is null)
             return;
 
-        JsonSerializer.SerializeToFile(AppSettingsPath, configuration, SettingsSerializerContext.Default.AppSettings);
+        YamlSerializer.SerializeToFile(AppSettingsPath, configuration, SettingsSerializerContext.Default.AppSettings);
     }
 
     public static void SaveLoginContext(LoginContext? configuration)
@@ -171,6 +171,6 @@ public static class AppInfo
         if (configuration is null)
             return;
 
-        JsonSerializer.SerializeToFile(LoginContextPath, configuration, SettingsSerializerContext.Default.LoginContext);
+        YamlSerializer.SerializeToFile(LoginContextPath, configuration, SettingsSerializerContext.Default.LoginContext);
     }
 }

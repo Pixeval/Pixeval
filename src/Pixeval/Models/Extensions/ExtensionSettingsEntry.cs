@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using AutoSettingsPage;
 using AutoSettingsPage.Models;
 using Pixeval.Controls;
@@ -17,7 +16,7 @@ public class ExtensionSettingsEntry<TExtension, TValue>(TExtension extension, TV
     : ObservableSettingsEntry(extension.Token, extension.Label, extension.Description, extension.Icon), ISingleValueSettingsEntry<TValue>, IExtensionSettingEntry
     where TExtension : ISettingsExtension
 {
-    public event Action<TValue>? ValueChanged;
+    public event Action<TValue> ValueChanged = onValueChanged;
 
     public override Uri? DescriptionUri
     {
@@ -34,7 +33,7 @@ public class ExtensionSettingsEntry<TExtension, TValue>(TExtension extension, TV
                 return;
             field = value;
             OnPropertyChanged();
-            ValueChanged?.Invoke(value);
+            ValueChanged(value);
         }
     } = value;
 
@@ -46,10 +45,10 @@ public class ExtensionSettingsEntry<TExtension, TValue>(TExtension extension, TV
         Value = getDefaultValue(extension);
     }
 
-    public void ValueSaving(Dictionary<string, JsonElement> values)
+    public void ValueSaving(Dictionary<string, object?> values)
     {
-        onValueChanged(Value);
-        values.SetTarget(Token, Value);
+        ValueChanged(Value);
+        values[Token] = Value;
     }
 }
 

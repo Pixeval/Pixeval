@@ -86,13 +86,13 @@ public class ExtensionService : IDisposable
 
     private readonly List<ExtensionSettingsGroup> _settingsGroups = [];
 
-    private readonly Dictionary<string, Dictionary<string, JsonElement>> _extensionSettings;
+    private readonly Dictionary<string, Dictionary<string, object?>> _extensionSettings;
 
     public int OutDateExtensionHostsCount { get; }
 
     public ExtensionService(
         FileLogger logger,
-        Dictionary<string, Dictionary<string, JsonElement>> extensionSettings,
+        Dictionary<string, Dictionary<string, object?>> extensionSettings,
         bool loadInstalledHosts = true)
     {
         _extensionSettings = extensionSettings;
@@ -225,7 +225,7 @@ public class ExtensionService : IDisposable
     private static ExtensionHostLoadResult LoadHost(
         string path,
         ILogger logger,
-        Dictionary<string, Dictionary<string, JsonElement>> extensionSettings,
+        Dictionary<string, Dictionary<string, object?>> extensionSettings,
         out ExtensionsHostModel? model,
         out string? outdatedVersion)
     {
@@ -285,7 +285,7 @@ public class ExtensionService : IDisposable
             return ExtensionHostLoadResult.NativeLibraryLoadFailed;
         }
 
-        static Dictionary<string, JsonElement> GetValues(Dictionary<string, Dictionary<string, JsonElement>> extensionSettings, string hostName)
+        static Dictionary<string, object?> GetValues(Dictionary<string, Dictionary<string, object?>> extensionSettings, string hostName)
         {
             ref var value = ref CollectionsMarshal.GetValueRefOrAddDefault(extensionSettings, hostName, out var exists);
             if (!exists)

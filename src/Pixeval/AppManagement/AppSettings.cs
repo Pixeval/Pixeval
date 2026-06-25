@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using AutoSettingsPage;
 using Avalonia;
@@ -12,6 +11,7 @@ using FluentIcons.Common;
 using Mako;
 using Pixeval.I18N;
 using Pixeval.Models.Options;
+using SharpYaml.Serialization;
 using static Pixeval.AppSettingsResources;
 
 namespace Pixeval.AppManagement;
@@ -44,7 +44,10 @@ public record AppSettings
     [SettingsEntry(Symbol.BookOpen, EntryViewerPageResources.NovelSettings, null)]
     public NovelSettingsGroup NovelSettings { get; set; } = new();
 
-    public Dictionary<string, Dictionary<string, JsonElement>> ExtensionSettings { get; set; } = [];
+    /// <summary>
+    /// <see cref="object"/> 只能是基元类型或 <see cref="SettingsSerializerContext"/> 提供过的类型
+    /// </summary>
+    public Dictionary<string, Dictionary<string, object?>> ExtensionSettings { get; set; } = [];
 
     [JsonIgnore]
     public ApplicationTheme ActualTheme => ApplicationSettings.Theme is ApplicationTheme.Default
@@ -65,6 +68,6 @@ public record AppSettings
     }
 }
 
-[JsonSerializable(typeof(AppSettings))]
-[JsonSerializable(typeof(LoginContext))]
-public partial class SettingsSerializerContext : JsonSerializerContext;
+[YamlSerializable(typeof(AppSettings))]
+[YamlSerializable(typeof(LoginContext))]
+public partial class SettingsSerializerContext : YamlSerializerContext;
