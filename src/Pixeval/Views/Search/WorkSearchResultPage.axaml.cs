@@ -13,13 +13,13 @@ using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Search;
 
-public partial class WorkSearchPage : ContentPage
+public partial class WorkSearchResultPage : ContentPage
 {
-    public WorkSearchPage() : this("")
+    public WorkSearchResultPage() : this("")
     {
     }
 
-    public WorkSearchPage(string searchText, SimpleWorkType preferredType) : this(
+    public WorkSearchResultPage(string searchText, SimpleWorkType preferredType) : this(
         searchText,
         new IllustrationSearchArguments(searchText),
         new NovelSearchArguments(searchText),
@@ -27,17 +27,17 @@ public partial class WorkSearchPage : ContentPage
     {
     }
 
-    public WorkSearchPage(IllustrationSearchArguments illustrationSearchArguments)
+    public WorkSearchResultPage(IllustrationSearchArguments illustrationSearchArguments)
         : this(illustrationSearchArguments.SearchText, illustrationSearchArguments)
     {
     }
 
-    public WorkSearchPage(NovelSearchArguments novelSearchArguments)
+    public WorkSearchResultPage(NovelSearchArguments novelSearchArguments)
         : this(novelSearchArguments.SearchText, null, novelSearchArguments, SimpleWorkType.Novel)
     {
     }
 
-    public WorkSearchPage(
+    public WorkSearchResultPage(
         string searchText,
         IllustrationSearchArguments? illustrationSearchArguments = null,
         NovelSearchArguments? novelSearchArguments = null,

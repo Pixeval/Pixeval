@@ -37,6 +37,7 @@ public abstract partial class HistoryPage : ContentPage, IDisposable
         IOperableViewViewModel? viewModel = sender.GetSelectedValue<SimpleWorkType>() is SimpleWorkType.Novel
             ? _novelViewModel
             : _illustrationViewModel;
+        // 保留viewModel到最后关闭时才dispose，避免切换时重新创建
         WorkContainer.SetViewModel(viewModel, ownsViewModel: false);
     }
 

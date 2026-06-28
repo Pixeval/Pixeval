@@ -12,7 +12,6 @@ using Avalonia.Controls;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Mako.Engine;
 using Mako.Global.Enum;
 using Mako.Model;
 using Misaki;
@@ -358,9 +357,9 @@ public partial class WorkContainer : UserControl
 
     private static string GetFilterDiagnosticResourceKey(FilterDiagnosticKind kind) => FilterDiagnosticResourcePrefix + kind;
 
-    public void ResetEngine(IFetchEngine<IArtworkInfo> newEngine, int itemsPerPage = 20, int itemLimit = -1)
+    public void ResetEngine(IAsyncEnumerable<IArtworkInfo> newEngine)
     {
-        WorkView.ResetEngine(newEngine, itemsPerPage, itemLimit);
+        WorkView.ResetEngine(newEngine);
     }
 
     public void SetSource(IReadOnlyCollection<IArtworkInfo> source)

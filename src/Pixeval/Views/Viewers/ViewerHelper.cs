@@ -133,4 +133,4 @@ public static class ViewerHelper
     }
 }
 
-file record SimpleIdentityInfo(string Id, string Platform) : IIdentityInfo;
+internal record SimpleIdentityInfo(string Id, string Platform) : IIdentityInfo;

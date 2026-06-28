@@ -10,6 +10,7 @@ using FluentIcons.Common;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.Models.Options;
+using Pixeval.Utilities;
 
 namespace Pixeval.Models.Settings.Entries;
 
@@ -70,41 +71,9 @@ public class ProxyAppSettingsEntry : EnumSettingsEntry<NetworkSettingsGroup, obj
         {
             if (Settings.Proxy == value)
                 return;
-            Settings.Proxy = value ?? "";
+            Settings.Proxy = value ??= "";
             OnPropertyChanged();
-            ProxyChanged?.Invoke(MakoProxy);
-        }
-    }
-
-    private string? MakoProxy
-    {
-        get
-        {
-            string scheme;
-            switch (Value)
-            {
-                case ProxyType.System:
-                    return "";
-                case ProxyType.Http:
-                    scheme = "http";
-                    break;
-                case ProxyType.Socks4:
-                    scheme = "socks4";
-                    break;
-                case ProxyType.Socks4A:
-                    scheme = "socks4a";
-                    break;
-                case ProxyType.Socks5:
-                    scheme = "socks5";
-                    break;
-                default:
-                    return null;
-            }
-
-            if (!Uri.TryCreate(Proxy, UriKind.Absolute, out var uri))
-                return null;
-            var builder = new UriBuilder(uri) { Scheme = scheme };
-            return builder.ToString();
+            ProxyChanged?.Invoke(MakoHelper.ToMakoProxy((ProxyType) Value, value));
         }
     }
 }

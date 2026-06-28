@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using Imouto.BooruParser;
 using Mako;
 using Mako.Engine;
@@ -168,6 +169,13 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
         return AppServiceProvider.GetKeyedService<T>(platformKey)
                ?? AppServiceProvider.GetKeyedService<T>(IPlatformInfo.All)
                ?? throw new NotSupportedException($"No service found for {platformKey}");
+    }
+
+    public HttpClient GetRequiredHttpClient()
+    {
+        // 在 AddBooruParsers 中注册的
+        return AppServiceProvider.GetRequiredKeyedService<IDownloadHttpClientService>(IPlatformInfo.All)
+            .GetImageDownloadClient();
     }
 
     public void Dispose()

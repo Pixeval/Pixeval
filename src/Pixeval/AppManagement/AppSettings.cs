@@ -11,7 +11,7 @@ using FluentIcons.Common;
 using Mako;
 using Pixeval.I18N;
 using Pixeval.Models.Options;
-using SharpYaml.Serialization;
+using Pixeval.Utilities;
 using static Pixeval.AppSettingsResources;
 
 namespace Pixeval.AppManagement;
@@ -59,7 +59,7 @@ public record AppSettings
         return new MakoConfiguration(
             NetworkSettings.EnableDomainFronting,
             NetworkSettings.DomainFrontingType,
-            NetworkSettings.Proxy,
+            MakoHelper.ToMakoProxy(NetworkSettings.ProxyType, NetworkSettings.Proxy),
             NetworkSettings.WebCookie,
             NetworkSettings.MirrorHost,
             BrowsingExperienceSettings.TargetFilter,
@@ -67,7 +67,3 @@ public record AppSettings
             CultureInfo.CurrentCulture);
     }
 }
-
-[YamlSerializable(typeof(AppSettings))]
-[YamlSerializable(typeof(LoginContext))]
-public partial class SettingsSerializerContext : YamlSerializerContext;

@@ -26,7 +26,8 @@
     "WorkSearch": "作品搜索",
     "SingleImage": "单独图片",
     "SingleNovel": "单独小说",
-    "SingleUser": "单独用户"
+    "SingleUser": "单独用户",
+    "SauceNaoResult": "SauceNAO 搜索结果"
   },
   "SearchResultFormatted": "{0} - 搜索",
   "SearchKeywordCannotBeBlank": {

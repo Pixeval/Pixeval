@@ -319,7 +319,7 @@ public sealed partial class HomePageCardControl : TemplatedControl, IDisposable
                 break;
             case HomePageCardSourceKind.WorkSearch:
                 var searchText = Card.SearchText ?? "";
-                viewContainer.NavigateTo(new WorkSearchPage(
+                viewContainer.NavigateTo(new WorkSearchResultPage(
                     searchText,
                     new IllustrationSearchArguments(searchText),
                     new NovelSearchArguments(searchText),

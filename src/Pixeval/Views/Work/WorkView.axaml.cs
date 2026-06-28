@@ -10,7 +10,6 @@ using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
-using Mako.Engine;
 using Mako.Model;
 using Misaki;
 using Pixeval.Models.Options;
@@ -107,19 +106,19 @@ public partial class WorkView : UserControl, IDisposable
     /// <summary>
     /// 在调用<see cref="ResetEngine"/>前<see cref="StyledElement.DataContext"/>为<see langword="null"/>
     /// </summary>
-    public void ResetEngine(IFetchEngine<IArtworkInfo> newEngine, int itemsPerPage = 20, int itemLimit = -1)
+    public void ResetEngine(IAsyncEnumerable<IArtworkInfo> newEngine)
     {
-        var isNovelEngine = newEngine is IFetchEngine<Novel>;
+        var isNovelEngine = newEngine is IAsyncEnumerable<Novel>;
         var viewModel = DataContext as IWorkViewViewModel;
         switch (viewModel)
         {
             case NovelViewViewModel when isNovelEngine:
             case IllustrationViewViewModel when !isNovelEngine:
-                viewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
+                viewModel.ResetEngine(newEngine);
                 break;
             default:
                 IWorkViewViewModel newViewModel = isNovelEngine ? new NovelViewViewModel() : new IllustrationViewViewModel();
-                newViewModel.ResetEngine(newEngine, itemsPerPage, itemLimit);
+                newViewModel.ResetEngine(newEngine);
                 SetViewModel(newViewModel);
                 break;
         }

@@ -18,9 +18,6 @@ public record SearchSettingsGroup
         DescriptionLink = "https://saucenao.com/user.php?page=search-api")]
     public string ReverseSearchApiKey { get; set; } = "";
 
-    [SettingsEntry(Symbol.TargetArrow, AppSettingsResources.ReverseSearchResultSimilarityThresholdEntryHeader, AppSettingsResources.ReverseSearchResultSimilarityThresholdEntryDescription)]
-    public int ReverseSearchResultSimilarityThreshold { get; set; } = 80;
-
     [SettingsEntry(Symbol.Grid, AppSettingsResources.SimpleWorkTypeEntryHeader, AppSettingsResources.SimpleWorkTypeEntryDescription)]
     public SimpleWorkType DefaultSimpleWorkType { get; set; }
 

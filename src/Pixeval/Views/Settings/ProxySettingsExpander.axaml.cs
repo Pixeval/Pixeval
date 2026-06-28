@@ -20,7 +20,7 @@ public partial class ProxySettingsExpander : SettingsExpander, IEntryControl<Pro
 
     private void TextBox_OnLostFocus(object? sender, RoutedEventArgs e)
     {
-        if (sender is not TextBox{Text: var text} || DataContext is not ProxyAppSettingsEntry entry)
+        if (sender is not TextBox { Text: var text } || DataContext is not ProxyAppSettingsEntry entry)
             return;
 
         if (string.IsNullOrWhiteSpace(text))

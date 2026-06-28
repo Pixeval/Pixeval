@@ -1,5 +1,5 @@
 <ContentPage
-    x:Class="Pixeval.Views.Search.WorkSearchPage"
+    x:Class="Pixeval.Views.Search.WorkSearchResultPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"

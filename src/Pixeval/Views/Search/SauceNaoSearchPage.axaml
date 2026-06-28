@@ -1,0 +1,79 @@
+<ContentPage
+    x:Class="Pixeval.Views.Search.SauceNaoSearchPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Pixeval.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.Avalonia"
+    xmlns:markup="using:Pixeval.Views.Markup"
+    xmlns:markup1="clr-namespace:FluentIcons.Avalonia.Markup;assembly=FluentIcons.Avalonia"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
+    xmlns:viewModels="using:Pixeval.ViewModels.Search"
+    x:DataType="{x:Type viewModels:SauceNaoSearchPageViewModel}"
+    Header="{I18N {x:Static pixeval:SearchResources.AdvancedOptionsSauceNaoTab}}"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
+    <ContentPage.DataContext>
+        <viewModels:SauceNaoSearchPageViewModel />
+    </ContentPage.DataContext>
+    <DockPanel
+        Margin="12"
+        IsEnabled="{Binding IsApiKeyExisted}"
+        VerticalSpacing="5">
+        <Border
+            Padding="10"
+            Background="{DynamicResource SystemFillColorCautionBackgroundBrush}"
+            CornerRadius="{StaticResource ControlCornerRadius}"
+            DockPanel.Dock="Top"
+            IsVisible="{Binding !IsApiKeyExisted}">
+            <DockPanel HorizontalSpacing="10">
+                <fluent:SymbolIcon
+                    DockPanel.Dock="Left"
+                    Foreground="{DynamicResource SystemFillColorCautionBrush}"
+                    IconVariant="Filled"
+                    Symbol="Warning" />
+                <TextBlock Text="{I18N {x:Static pixeval:SearchResources.SauceNAOProvideApiKey}}" />
+            </DockPanel>
+        </Border>
+        <Button
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            Click="SearchButton_OnClick"
+            Content="{I18N {x:Static pixeval:SearchResources.SauceNAOSearch}}"
+            DockPanel.Dock="Top"
+            IsEnabled="{Binding FileSelected}" />
+        <Button
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            Command="{Binding PasteCommand}"
+            CommandParameter="{Binding $self}"
+            DockPanel.Dock="Bottom"
+            HotKey="Ctrl+V">
+            <Button.Content>
+                <controls:IconText Symbol="ClipboardPaste" Text="{I18N {x:Static pixeval:SearchResources.SauceNAOPasteFromClipboard}}" />
+            </Button.Content>
+        </Button>
+        <Button
+            MaxHeight="600"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Click="OpenFileButton_OnClick">
+            <Panel Margin="20">
+                <StackPanel VerticalAlignment="Center" Spacing="20">
+                    <PathIcon
+                        Width="100"
+                        Height="100"
+                        Data="{markup:SvgPath {x:Static pixeval:SvgResources.SauceNAO}}" />
+                    <TextBlock FontSize="20" TextAlignment="Center">
+                        <Run Text="{I18N {x:Static pixeval:SearchResources.SauceNAOProvideImage}}" />
+                        <LineBreak />
+                        <Run Text="{I18N {x:Static pixeval:SearchResources.SauceNAOOr}}" />
+                    </TextBlock>
+                </StackPanel>
+                <Image Source="{Binding Image}" />
+            </Panel>
+        </Button>
+    </DockPanel>
+</ContentPage>

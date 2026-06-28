@@ -72,7 +72,7 @@ public partial class SettingsMainView : ContentPage
         {
             if (await provider.SaveFilePickerAsync(new()
                 {
-                    DefaultExtension = "json",
+                    DefaultExtension = "yaml",
                     SuggestedFileName = "settings"
                 }) is not { } file)
                 return;
@@ -96,7 +96,7 @@ public partial class SettingsMainView : ContentPage
         {
             if (await provider.OpenFilePickerAsync(new()
                 {
-                    FileTypeFilter = [new("JSON") { Patterns = ["*.json"] }],
+                    FileTypeFilter = [new("YAML") { Patterns = ["*.yaml"] }],
                     AllowMultiple = false
                 }) is not [{ } file])
                 return;

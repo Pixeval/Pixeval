@@ -66,26 +66,33 @@
                 <TabbedPage x:Name="AdvancedOptionsTabControl" SelectedIndex="{Binding SelectedAdvancedOptionsType, Mode=TwoWay}">
                     <search:IllustrationSearchOptionsPage DataContext="{Binding IllustrationForm}" />
                     <search:NovelSearchOptionsPage DataContext="{Binding NovelForm}" />
+                    <search:SauceNaoSearchPage />
                 </TabbedPage>
             </Expander>
             <ScrollViewer MaxHeight="200" DockPanel.Dock="Top">
                 <ItemsControl ItemsSource="{Binding SearchHistories}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type database:SearchHistoryEntry}">
-                            <DockPanel HorizontalSpacing="1">
-                                <Button
-                                    Click="DeleteButton_OnClick"
-                                    Content="{markup:SymbolIcon Dismiss}"
-                                    DockPanel.Dock="Right" />
-                                <Button Click="SearchHistoryButton_OnClick">
-                                    <Button.Content>
-                                        <StackPanel Orientation="Horizontal" Spacing="5">
-                                            <TextBlock Text="{Binding Value}" />
-                                            <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{Binding TranslatedName}" />
-                                        </StackPanel>
-                                    </Button.Content>
-                                </Button>
-                            </DockPanel>
+                            <Button Click="SearchHistoryButton_OnClick">
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <TextBlock Text="{Binding Value}" />
+                                        <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{Binding TranslatedName}" />
+                                    </StackPanel>
+                                </Button.Content>
+                                <Button.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem
+                                            Click="CopyButton_OnClick"
+                                            Header="{I18N {x:Static pixeval:SearchResources.SearchHistoryCopy}}"
+                                            Icon="{markup:SymbolIcon Copy}" />
+                                        <MenuItem
+                                            Click="DeleteButton_OnClick"
+                                            Header="{I18N {x:Static pixeval:SearchResources.SearchHistoryDelete}}"
+                                            Icon="{markup:SymbolIcon Delete}" />
+                                    </ContextMenu>
+                                </Button.ContextMenu>
+                            </Button>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                     <ItemsControl.ItemsPanel>

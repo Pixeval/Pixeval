@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Mako.Engine;
 using Misaki;
 using Pixeval.Collections;
 using Pixeval.Controls;
@@ -75,10 +74,10 @@ public abstract partial class WorkViewViewModelBase<T, TViewModel>(FrozenSet<str
 
     public abstract bool RequireAdaptiveGrid { get; }
 
-    public void ResetEngine(IFetchEngine<IArtworkInfo>? newEngine, int itemsPerPage = 20, int itemLimit = -1)
+    public void ResetEngine(IAsyncEnumerable<IArtworkInfo>? newEngine, int itemsPerPage = 20, int itemLimit = -1)
     {
         CachedBlockedTags = [.. App.AppViewModel.AppSettings.BrowsingExperienceSettings.BlockedTags.ToFrozenSet()];
-        ResetEngine((IFetchEngine<T>?) newEngine, (info, _) => TViewModel.CreateInstance(info), itemsPerPage, itemLimit);
+        ResetEngine((IAsyncEnumerable<T>?) newEngine, (info, _) => TViewModel.CreateInstance(info), itemsPerPage, itemLimit);
         SetFilters();
     }
 }

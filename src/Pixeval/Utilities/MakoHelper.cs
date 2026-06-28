@@ -96,6 +96,28 @@ public static class MakoHelper
         return id.IsFavorite;
     }
 
+    public static string? ToMakoProxy(ProxyType type, string proxy)
+    {
+        if (type is ProxyType.System)
+            return null;
+        var scheme = type switch
+        {
+            ProxyType.Http => "http",
+            ProxyType.Socks4 => "socks4",
+            ProxyType.Socks4A => "socks4a",
+            ProxyType.Socks5 => "socks5",
+            _ => null
+        };
+
+        if (scheme is null)
+            return "";
+
+        if (!Uri.TryCreate(proxy, UriKind.Absolute, out var uri))
+            return "";
+        var builder = new UriBuilder(uri) { Scheme = scheme };
+        return builder.ToString();
+    }
+
     extension<T>(IPreloadableList<T> list)
     {
         public async ValueTask TryPreloadListAsync(IPlatformInfo platform)

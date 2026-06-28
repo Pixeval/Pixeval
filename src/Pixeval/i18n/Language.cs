@@ -95,8 +95,6 @@ namespace Pixeval
         public const string ReverseSearchApiKeyEntryDescription = "AppSettings.ReverseSearchApiKeyEntry.Description";
         public const string ReverseSearchApiKeyEntryHeader = "AppSettings.ReverseSearchApiKeyEntry.Header";
         public const string ReverseSearchApiKeyEntryPlaceholder = "AppSettings.ReverseSearchApiKeyEntry.Placeholder";
-        public const string ReverseSearchResultSimilarityThresholdEntryDescription = "AppSettings.ReverseSearchResultSimilarityThresholdEntry.Description";
-        public const string ReverseSearchResultSimilarityThresholdEntryHeader = "AppSettings.ReverseSearchResultSimilarityThresholdEntry.Header";
         public const string SettingsGroupApplicationHeader = "AppSettings.SettingsGroup.Application.Header";
         public const string SettingsGroupBrowsingExperienceHeader = "AppSettings.SettingsGroup.BrowsingExperience.Header";
         public const string SettingsGroupDownloadHeader = "AppSettings.SettingsGroup.Download.Header";
@@ -632,6 +630,7 @@ namespace Pixeval
         public const string TabHome = "MainPage.Tab.Home";
         public const string TabLogin = "MainPage.Tab.Login";
         public const string TabRelatedUser = "MainPage.Tab.RelatedUser";
+        public const string TabSauceNaoResult = "MainPage.Tab.SauceNaoResult";
         public const string TabSearch = "MainPage.Tab.Search";
         public const string TabSettings = "MainPage.Tab.Settings";
         public const string TabSingleImage = "MainPage.Tab.SingleImage";
@@ -691,6 +690,7 @@ namespace Pixeval
     {
         public const string AdvancedOptionsIllustrationTab = "Search.AdvancedOptions.IllustrationTab";
         public const string AdvancedOptionsNovelTab = "Search.AdvancedOptions.NovelTab";
+        public const string AdvancedOptionsSauceNaoTab = "Search.AdvancedOptions.SauceNaoTab";
         public const string CommonEndDate = "Search.Common.EndDate";
         public const string CommonIncludePotentialViolationWorks = "Search.Common.IncludePotentialViolationWorks";
         public const string CommonIncludeTranslatedTagResults = "Search.Common.IncludeTranslatedTagResults";
@@ -718,7 +718,14 @@ namespace Pixeval
         public const string OpenIdIllustration = "Search.OpenId.Illustration";
         public const string OpenIdNovel = "Search.OpenId.Novel";
         public const string OpenIdUser = "Search.OpenId.User";
+        public const string SauceNAOOr = "Search.SauceNAO.Or";
+        public const string SauceNAOPasteFromClipboard = "Search.SauceNAO.PasteFromClipboard";
+        public const string SauceNAOProvideApiKey = "Search.SauceNAO.ProvideApiKey";
+        public const string SauceNAOProvideImage = "Search.SauceNAO.ProvideImage";
+        public const string SauceNAOSearch = "Search.SauceNAO.Search";
         public const string SearchBoxPlaceholderText = "Search.SearchBox.PlaceholderText";
+        public const string SearchHistoryCopy = "Search.SearchHistory.Copy";
+        public const string SearchHistoryDelete = "Search.SearchHistory.Delete";
         public const string SearchUser = "Search.SearchUser";
         public const string SectionsCommon = "Search.Sections.Common";
         public const string SectionsIllustration = "Search.Sections.Illustration";

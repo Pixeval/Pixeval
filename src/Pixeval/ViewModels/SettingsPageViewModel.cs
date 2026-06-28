@@ -86,7 +86,6 @@ public class SettingsPageViewModel : ViewModelBase
                 .Bool(t => t.OpenWorkInfoByDefault))
             .NewGroup(t => t.SearchSettings, group => group
                 .String(t => t.ReverseSearchApiKey)
-                .Int(t => t.ReverseSearchResultSimilarityThreshold, 1, 100, 1)
                 .Enum(t => t.DefaultSimpleWorkType)
                 .MultiValues(t => t.IllustrationRankOption, entry =>
                     entry.Enum(

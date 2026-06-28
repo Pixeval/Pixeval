@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using Mako.Engine;
 using Misaki;
 using Pixeval.Collections;
 
@@ -28,7 +27,7 @@ public abstract class EntryViewViewModel<T, TViewModel>
         DataProvider.Dispose();
     }
 
-    public void ResetEngine(IFetchEngine<T>? newEngine, Func<T, int, TViewModel> factory, int itemsPerPage = 20, int itemLimit = -1) => DataProvider.ResetEngine(newEngine, factory, itemsPerPage, itemLimit);
+    public void ResetEngine(IAsyncEnumerable<T>? newEngine, Func<T, int, TViewModel> factory, int itemsPerPage = 20, int itemLimit = -1) => DataProvider.ResetEngine(newEngine, factory, itemsPerPage, itemLimit);
 
     /// <inheritdoc />
     IReadOnlyCollection<INotifyPropertyChanged> ISimpleViewViewModel.View => View;

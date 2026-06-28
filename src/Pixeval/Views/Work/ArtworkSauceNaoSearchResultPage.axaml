@@ -1,0 +1,20 @@
+<ContentPage
+    x:Class="Pixeval.Views.Work.ArtworkSauceNaoSearchResultPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
+    xmlns:work="using:Pixeval.Views.Work"
+    Header="{I18N {x:Static pixeval:MainPageResources.TabSauceNaoResult}}"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
+    <ContentPage.Icon>
+        <Image
+            Width="16"
+            Height="16"
+            Source="avares://Pixeval/Assets/Platforms/saucenao.png" />
+    </ContentPage.Icon>
+    <work:WorkContainer x:Name="WorkContainer" IsRefreshEnabled="False" />
+</ContentPage>

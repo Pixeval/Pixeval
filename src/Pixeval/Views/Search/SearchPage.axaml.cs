@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
+using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -23,17 +24,6 @@ using Pixeval.Views.Capability;
 using Pixeval.Views.Viewers;
 
 namespace Pixeval.Views.Search;
-
-public enum SearchCompletionKind
-{
-    OpenIllustration,
-    OpenNovel,
-    OpenUser,
-    SearchUser,
-    Tag
-}
-
-public sealed record SearchCompletionItem(SearchCompletionKind Kind, string Text, string? Description = null);
 
 public partial class SearchPage : ContentPage
 {
@@ -51,11 +41,21 @@ public partial class SearchPage : ContentPage
         InitializeComponent();
     }
 
+    private async void CopyButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Control { DataContext: SearchHistoryEntry entry }
+            || TopLevel.GetTopLevel(this) is not { ViewContainer: { } viewContainer, Clipboard: { } clipboard })
+            return;
+
+        await clipboard.SetTextAsync(entry.Value);
+        viewContainer?.ShowSuccess(I18NManager.GetResource(MiscResources.Copied));
+    }
+
     private void DeleteButton_OnClick(object? sender, RoutedEventArgs e)
     {
         if (sender is not Control { DataContext: SearchHistoryEntry entry })
             return;
-        App.AppViewModel.HistoryPersistHelper.SearchHistoryEntries.Remove(entry);
+        _ = App.AppViewModel.HistoryPersistHelper.SearchHistoryEntries.Remove(entry);
     }
 
     private void TrendingTagButton_OnClick(object? sender, RoutedEventArgs e)
@@ -67,7 +67,7 @@ public partial class SearchPage : ContentPage
         if (DataContext is not SearchPageViewModel viewModel)
             return;
 
-        viewContainer.NavigateTo(new WorkSearchPage(tag.Tag, viewModel.SelectedTrendingTagsType));
+        viewContainer.NavigateTo(new WorkSearchResultPage(tag.Tag, viewModel.SelectedTrendingTagsType));
     }
 
     private void SearchButton_OnClick(object? sender, RoutedEventArgs e)
@@ -126,10 +126,7 @@ public partial class SearchPage : ContentPage
             return;
 
         var selectedItem = GetSelectedSearchCompletion();
-        Dispatcher.UIThread.Post(() =>
-        {
-            _ = CommitSearchCompletion(selectedItem ?? GetSelectedSearchCompletion());
-        });
+        Dispatcher.UIThread.Post(() => CommitSearchCompletion(selectedItem ?? GetSelectedSearchCompletion()));
     }
 
     private void SearchAutoCompleteBox_OnTextChanged(object? sender, TextChangedEventArgs e)
@@ -286,7 +283,7 @@ public partial class SearchPage : ContentPage
         {
             if (!advanced)
             {
-                viewContainer.NavigateTo(new WorkSearchPage(searchText, viewModel.SelectedAdvancedOptionsType));
+                viewContainer.NavigateTo(new WorkSearchResultPage(searchText, viewModel.SelectedAdvancedOptionsType));
                 return;
             }
 
@@ -300,7 +297,7 @@ public partial class SearchPage : ContentPage
 
                 var arguments = viewModel.NovelForm.BuildArguments(searchText);
                 App.AppViewModel.HistoryPersistHelper.AddSearchHistory(searchText);
-                viewContainer.NavigateTo(new WorkSearchPage(arguments));
+                viewContainer.NavigateTo(new WorkSearchResultPage(arguments));
             }
             else
             {
@@ -312,7 +309,7 @@ public partial class SearchPage : ContentPage
 
                 var arguments = viewModel.IllustrationForm.BuildArguments(searchText);
                 App.AppViewModel.HistoryPersistHelper.AddSearchHistory(searchText);
-                viewContainer.NavigateTo(new WorkSearchPage(arguments));
+                viewContainer.NavigateTo(new WorkSearchResultPage(arguments));
             }
         }
         catch (Exception ex)

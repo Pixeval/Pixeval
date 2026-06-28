@@ -50,13 +50,13 @@ public static class Source
 
     static Source()
     {
-        CacheProperty.Changed.AddClassHandler<AnimatedImage>(OnAnimatedImageChanged);
-        CacheProperty.Changed.AddClassHandler<AvatarImage>(OnAvatarImageChanged);
-        CacheProperty.Changed.AddClassHandler<Image>(OnImageChanged);
+        _ = CacheProperty.Changed.AddClassHandler<AnimatedImage>(OnAnimatedImageChanged);
+        _ = CacheProperty.Changed.AddClassHandler<AvatarImage>(OnAvatarImageChanged);
+        _ = CacheProperty.Changed.AddClassHandler<Image>(OnImageChanged);
 
-        BackgroundCacheProperty.Changed.AddClassHandler<Border>(OnBorderBackgroundCacheChanged);
-        BackgroundCacheProperty.Changed.AddClassHandler<Panel>(OnPanelBackgroundCacheChanged);
-        BackgroundCacheProperty.Changed.AddClassHandler<TemplatedControl>(OnTemplatedControlBackgroundCacheChanged);
+        _ = BackgroundCacheProperty.Changed.AddClassHandler<Border>(OnBorderBackgroundCacheChanged);
+        _ = BackgroundCacheProperty.Changed.AddClassHandler<Panel>(OnPanelBackgroundCacheChanged);
+        _ = BackgroundCacheProperty.Changed.AddClassHandler<TemplatedControl>(OnTemplatedControlBackgroundCacheChanged);
     }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -205,7 +205,7 @@ public static class Source
                 brush = new ImageBrush(bitmap) { Stretch = Stretch.UniformToFill };
             }
 
-            element.SetValue(backgroundProperty, brush);
+            _ = element.SetValue(backgroundProperty, brush);
 
             SetBackgroundCacheSource(element, bitmap);
             SetLoaded(element, true);

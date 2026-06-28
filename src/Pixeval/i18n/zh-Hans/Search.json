@@ -3,8 +3,9 @@
     "PlaceholderText": "输入关键字后按 Enter 开始搜索"
   },
   "AdvancedOptions": {
-    "IllustrationTab": "插画",
-    "NovelTab": "小说"
+    "IllustrationTab": "Pixiv 插画",
+    "NovelTab": "Pixiv 小说",
+    "SauceNaoTab": "SauceNAO 以图搜图"
   },
   "Sections": {
     "Common": "通用条件",
@@ -66,5 +67,16 @@
     "Illustration": "打开图片页面",
     "Novel": "打开小说页面"
   },
-  "SearchUser": "搜索用户"
+  "SearchUser": "搜索用户",
+  "SearchHistory": {
+    "Copy": "复制",
+    "Delete": "删除"
+  },
+  "SauceNAO": {
+    "Search": "SauceNAO 搜索",
+    "ProvideImage": "点击选择图片",
+    "Or": "或",
+    "PasteFromClipboard": "从剪切板粘贴图片",
+    "ProvideApiKey": "请先在设置页提供 SauceNAO API Key 再使用此功能"
+  }
 }

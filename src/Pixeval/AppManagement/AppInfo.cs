@@ -49,12 +49,12 @@ public static class AppInfo
         if (Directory.Exists(TempFolder))
             Directory.Delete(TempFolder, true);
         // Ensure directories exist
-        Directory.CreateDirectory(ApplicationFolderPath);
-        Directory.CreateDirectory(SettingsFolder);
-        Directory.CreateDirectory(CacheFolder);
-        Directory.CreateDirectory(LogsFolder);
-        Directory.CreateDirectory(TempFolder);
-        Directory.CreateDirectory(ExtensionsFolder);
+        _ = Directory.CreateDirectory(ApplicationFolderPath);
+        _ = Directory.CreateDirectory(SettingsFolder);
+        _ = Directory.CreateDirectory(CacheFolder);
+        _ = Directory.CreateDirectory(LogsFolder);
+        _ = Directory.CreateDirectory(TempFolder);
+        _ = Directory.CreateDirectory(ExtensionsFolder);
     }
 
     public const string ImageNotAvailablePath = $"avares://{AppIdentifier}/Assets/image-not-available.png";

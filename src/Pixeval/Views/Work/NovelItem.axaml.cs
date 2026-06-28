@@ -22,7 +22,7 @@ public partial class NovelItem : WorkItem
         if (TopLevel.GetTopLevel(this)?.ViewContainer is not { } viewContainer)
             return;
         App.AppViewModel.HistoryPersistHelper.AddSearchHistory(tag.Name, tag.TranslatedName);
-        viewContainer.NavigateTo(new WorkSearchPage(tag.Name, SimpleWorkType.Novel));
+        viewContainer.NavigateTo(new WorkSearchResultPage(tag.Name, SimpleWorkType.Novel));
     }
 
     private void InputElement_OnPointerEntered(object? sender, PointerEventArgs e)

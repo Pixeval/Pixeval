@@ -8,6 +8,7 @@
     xmlns:extensions="using:Pixeval.Models.Extensions"
     xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:AutoSettingsPage.Models"
     xmlns:pixeval="using:Pixeval"
@@ -126,7 +127,7 @@
                                 Tag="https://github.com/Pixeval/Pixeval/issues/new/choose"
                                 ToolTip.Tip="{I18N {x:Static pixeval:SettingsMainViewResources.GitHubBugReportEntryToolTip}}">
                                 <CommandBarButton.Icon>
-                                    <Image MaxWidth="20" Source="{SvgImage avares://Pixeval/Assets/GitHub.svg}" />
+                                    <PathIcon MaxWidth="20" Data="{markup1:SvgPath {x:Static pixeval:SvgResources.GitHub}}" />
                                 </CommandBarButton.Icon>
                             </CommandBarButton>
                             <CommandBarButton
@@ -139,7 +140,7 @@
                                 Tag="https://jq.qq.com/?_wv=1027&amp;k=trDeCrog"
                                 ToolTip.Tip="{I18N {x:Static pixeval:SettingsMainViewResources.QQBugReportEntryToolTip}}">
                                 <CommandBarButton.Icon>
-                                    <Image MaxWidth="20" Source="{SvgImage avares://Pixeval/Assets/QQ.svg}" />
+                                    <PathIcon MaxWidth="20" Data="{markup1:SvgPath {x:Static pixeval:SvgResources.QQ}}" />
                                 </CommandBarButton.Icon>
                             </CommandBarButton>
                         </CommandBar>

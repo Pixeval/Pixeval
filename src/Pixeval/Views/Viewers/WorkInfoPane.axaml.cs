@@ -81,7 +81,7 @@ public class WorkInfoPane : TemplatedControl
 
         var type = entry is Illustration ? SimpleWorkType.IllustrationAndManga : SimpleWorkType.Novel;
         App.AppViewModel.HistoryPersistHelper.AddSearchHistory(tag.Name, tag.TranslatedName);
-        viewContainer.NavigateTo(new WorkSearchPage(tag.Name, type));
+        viewContainer.NavigateTo(new WorkSearchResultPage(tag.Name, type));
     }
     
     private void BlockTag(ITag? tag)
