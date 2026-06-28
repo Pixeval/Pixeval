@@ -1,0 +1,267 @@
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Xml.Linq;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Text;
+
+namespace Pixeval.SourceGen;
+
+[Generator]
+public sealed class SvgPathIncrementalGenerator : IIncrementalGenerator
+{
+    private static readonly DiagnosticDescriptor _InvalidSvgDescriptor = new(
+        id: "SVGPATHGEN001",
+        title: "Unable to parse SVG file",
+        messageFormat: "SVG file '{0}' could not be parsed: {1}",
+        category: "SvgPathGenerator",
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
+
+    private static readonly DiagnosticDescriptor _MissingPathDescriptor = new(
+        id: "SVGPATHGEN002",
+        title: "SVG path data not found",
+        messageFormat: "SVG file '{0}' does not contain any <path> elements with a 'd' attribute",
+        category: "SvgPathGenerator",
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
+
+    public void Initialize(IncrementalGeneratorInitializationContext context)
+    {
+        var svgFiles = context.AdditionalTextsProvider
+            .Where(static text => text.Path.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
+            .Select(static (text, cancellationToken) => ExtractPathData(text, cancellationToken))
+            .Collect();
+
+        context.RegisterSourceOutput(svgFiles, static (productionContext, results) =>
+        {
+            if (results.IsDefaultOrEmpty)
+                return;
+
+            foreach (var diagnostic in results.SelectMany(static result => result.Diagnostics))
+                productionContext.ReportDiagnostic(diagnostic);
+
+            var entries = BuildEntries(results);
+            if (entries.Count is 0)
+                return;
+
+            var source = BuildSource(entries);
+            productionContext.AddSource("SvgResources.g.cs", SourceText.From(source, Encoding.UTF8));
+        });
+    }
+
+    private static SvgExtractionResult ExtractPathData(AdditionalText text, CancellationToken cancellationToken)
+    {
+        var sourceText = text.GetText(cancellationToken);
+        if (sourceText == null)
+        {
+            return SvgExtractionResult.WithDiagnostic(
+                Diagnostic.Create(_InvalidSvgDescriptor, Location.None, text.Path, "file could not be read"));
+        }
+
+        try
+        {
+            var document = XDocument.Parse(sourceText.ToString(), LoadOptions.None);
+
+            var pathData = document
+                .Descendants()
+                .Where(static element => string.Equals(element.Name.LocalName, "path", StringComparison.Ordinal))
+                .Select(static element => element.Attribute("d")?.Value.Trim())
+                .Where(static value => !string.IsNullOrWhiteSpace(value))
+                .Cast<string>()
+                .ToArray();
+
+            if (pathData.Length == 0)
+            {
+                return SvgExtractionResult.WithDiagnostic(
+                    Diagnostic.Create(_MissingPathDescriptor, Location.None, text.Path));
+            }
+
+            return SvgExtractionResult.Success(
+                CreateBaseIdentifier(text.Path),
+                string.Join(" ", pathData),
+                text.Path);
+        }
+        catch (Exception exception)
+        {
+            return SvgExtractionResult.WithDiagnostic(
+                Diagnostic.Create(_InvalidSvgDescriptor, Location.None, text.Path, exception.Message));
+        }
+    }
+
+    private static List<SvgEntry> BuildEntries(ImmutableArray<SvgExtractionResult> results)
+    {
+        var duplicateCounts = new Dictionary<string, int>(StringComparer.Ordinal);
+        var entries = new List<SvgEntry>();
+
+        foreach (var result in results)
+        {
+            if (!result.IsSuccess)
+            {
+                continue;
+            }
+
+            var identifier = result.BaseIdentifier;
+            if (duplicateCounts.TryGetValue(identifier, out var count))
+            {
+                count++;
+                duplicateCounts[identifier] = count;
+                identifier = identifier + "_" + count.ToString(CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                duplicateCounts.Add(identifier, 0);
+            }
+
+            entries.Add(new SvgEntry(identifier, result.PathData, result.SourcePath));
+        }
+
+        entries.Sort(static (left, right) => StringComparer.Ordinal.Compare(left.Identifier, right.Identifier));
+        return entries;
+    }
+
+    private static string BuildSource(IReadOnlyList<SvgEntry> entries)
+    {
+        var builder = new StringBuilder();
+        _ = builder.AppendLine(
+            $$"""
+            // <auto-generated />
+            #nullable enable
+            namespace {{nameof(Pixeval)}};
+            
+            public static class SvgResources
+            {
+            """);
+
+        foreach (var entry in entries)
+        {
+            _ = builder.AppendLine(
+                $"""
+                     /// <summary>
+                     /// Source: 
+                     /// {entry.SourcePath}
+                     /// </summary>
+                     public const string {entry.Identifier} = {ToStringLiteral(entry.PathData)};
+                  """);
+        }
+
+        builder.AppendLine("}");
+
+        return builder.ToString();
+    }
+
+    private static string CreateBaseIdentifier(string path)
+    {
+        var fileName = Path.GetFileNameWithoutExtension(path);
+        if (string.IsNullOrWhiteSpace(fileName))
+            return "SvgPath";
+
+        var builder = new StringBuilder(fileName.Length);
+        var capitalizeNext = true;
+
+        foreach (var character in fileName)
+        {
+            if (char.IsLetterOrDigit(character))
+            {
+                builder.Append(capitalizeNext ? char.ToUpperInvariant(character) : character);
+                capitalizeNext = false;
+            }
+            else
+                capitalizeNext = true;
+        }
+
+        if (builder.Length is 0)
+            builder.Append("SvgPath");
+
+        if (!SyntaxFacts.IsIdentifierStartCharacter(builder[0]))
+            builder.Insert(0, '_');
+
+        for (var index = 1; index < builder.Length; index++)
+            if (!SyntaxFacts.IsIdentifierPartCharacter(builder[index]))
+                builder[index] = '_';
+
+        return builder.ToString();
+    }
+
+    private static string ToStringLiteral(string value)
+    {
+        var builder = new StringBuilder(value.Length + 2);
+        builder.Append('"');
+
+        foreach (var character in value)
+        {
+            switch (character)
+            {
+                case '\\':
+                    builder.Append(@"\\");
+                    break;
+                case '"':
+                    builder.Append("\\\"");
+                    break;
+                case '\r':
+                    builder.Append("\\r");
+                    break;
+                case '\n':
+                    builder.Append("\\n");
+                    break;
+                case '\t':
+                    builder.Append("\\t");
+                    break;
+                default:
+                    if (char.IsControl(character))
+                    {
+                        builder.Append("\\u");
+                        builder.Append(((int)character).ToString("x4", CultureInfo.InvariantCulture));
+                    }
+                    else
+                    {
+                        builder.Append(character);
+                    }
+
+                    break;
+            }
+        }
+
+        builder.Append('"');
+        return builder.ToString();
+    }
+
+    private sealed record SvgEntry(string Identifier, string PathData, string SourcePath);
+
+    private sealed class SvgExtractionResult
+    {
+        private SvgExtractionResult(string baseIdentifier, string pathData, string sourcePath, ImmutableArray<Diagnostic> diagnostics)
+        {
+            BaseIdentifier = baseIdentifier;
+            PathData = pathData;
+            SourcePath = sourcePath;
+            Diagnostics = diagnostics;
+        }
+
+        public string BaseIdentifier { get; private set; }
+
+        public string PathData { get; private set; }
+
+        public string SourcePath { get; private set; }
+
+        public ImmutableArray<Diagnostic> Diagnostics { get; private set; }
+
+        public bool IsSuccess => BaseIdentifier != null && PathData != null && SourcePath != null;
+
+        public static SvgExtractionResult Success(string baseIdentifier, string pathData, string sourcePath)
+        {
+            return new SvgExtractionResult(baseIdentifier, pathData, sourcePath, ImmutableArray<Diagnostic>.Empty);
+        }
+
+        public static SvgExtractionResult WithDiagnostic(Diagnostic diagnostic)
+        {
+            return new SvgExtractionResult(null, null, null, [diagnostic]);
+        }
+    }
+}
