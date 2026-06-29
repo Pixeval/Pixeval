@@ -38,6 +38,7 @@
         <AutoCompleteBox
             HorizontalAlignment="Stretch"
             FilterMode="Custom"
+            IsEnabled="{Binding !IsLoginInProgress}"
             IsTextCompletionEnabled="False"
             ItemFilter="{x:Static viewModels:LoginPageViewModel.LoginUserFilter}"
             ItemSelector="{x:Static viewModels:LoginPageViewModel.LoginUserTextSelector}"
@@ -51,10 +52,12 @@
         <Button
             HorizontalAlignment="Stretch"
             Click="LoginButton_OnClick"
-            Content="{I18N {x:Static pixeval:LoginPageResources.RefreshTokenButtonContent}}" />
+            Content="{I18N {x:Static pixeval:LoginPageResources.RefreshTokenButtonContent}}"
+            IsEnabled="{Binding !IsLoginInProgress}" />
         <Button
             HorizontalAlignment="Stretch"
             Click="OpenWebView_OnClick"
-            Content="{I18N {x:Static pixeval:LoginPageResources.WebViewButtonContent}}" />
+            Content="{I18N {x:Static pixeval:LoginPageResources.WebViewButtonContent}}"
+            IsEnabled="{Binding !IsLoginInProgress}" />
     </StackPanel>
 </ContentPage>

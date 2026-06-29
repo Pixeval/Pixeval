@@ -30,6 +30,9 @@ public partial class LoginPageViewModel : ViewModelBase
     [ObservableProperty]
     public partial string RefreshToken { get; set; }
 
+    [ObservableProperty]
+    public partial bool IsLoginInProgress { get; set; }
+
     public bool HasSelectedUser => SelectedUser is not null;
 
     public static AutoCompleteFilterPredicate<object> LoginUserFilter { get; } = static (_, item) => item is LoginUserEntry;

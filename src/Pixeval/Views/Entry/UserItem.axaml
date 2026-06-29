@@ -77,9 +77,7 @@
             Click="AvatarButton_OnClicked"
             CornerRadius="100"
             Tapped="AvatarButton_OnTapped">
-            <Border ClipToBounds="True" CornerRadius="100">
-                <animatedImage:AnimatedImage controls:Source.Cache="{Binding AvatarUrl}" />
-            </Border>
+            <controls:AvatarImage controls:Source.Cache="{Binding AvatarUrl}" />
             <Button.Flyout>
                 <MenuFlyout>
                     <MenuItem

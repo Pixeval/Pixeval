@@ -13,11 +13,14 @@
                     VerticalAlignment="Stretch"
                     AspectRatio="1:1">
                     <Border ClipToBounds="True" CornerRadius="1000">
-                        <animatedImage:AnimatedImage
-                            IsPlaying="{TemplateBinding IsPlaying}"
-                            Source="{TemplateBinding Source}"
-                            Stretch="{TemplateBinding Stretch}"
-                            StretchDirection="{TemplateBinding StretchDirection}" />
+                        <Panel>
+                            <controls:Skeleton IsVisible="{TemplateBinding Source, Converter={x:Static ObjectConverters.IsNull}}" />
+                            <animatedImage:AnimatedImage
+                                IsPlaying="{TemplateBinding IsPlaying}"
+                                Source="{TemplateBinding Source}"
+                                Stretch="{TemplateBinding Stretch}"
+                                StretchDirection="{TemplateBinding StretchDirection}" />
+                        </Panel>
                     </Border>
                 </controls:ConstrainedBox>
             </ControlTemplate>

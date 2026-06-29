@@ -23,25 +23,39 @@ public partial class LoginPage : ContentPage
 
     private async void LoginButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (DataContext is not LoginPageViewModel viewModel)
+        if (!TryBeginLogin())
             return;
 
-        var token = viewModel.RefreshToken;
-        if (string.IsNullOrWhiteSpace(token))
-            return;
+        try
+        {
+            if (DataContext is not LoginPageViewModel viewModel)
+                return;
 
-        App.AppViewModel.MakoClient.SetToken(token);
-        if (await App.AppViewModel.MakoClient.IdentifyTokenAsync())
-            LoginNavigate();
+            var token = viewModel.RefreshToken;
+            if (string.IsNullOrWhiteSpace(token))
+                return;
+
+            App.AppViewModel.MakoClient.SetToken(token);
+            if (await App.AppViewModel.MakoClient.IdentifyTokenAsync())
+                LoginNavigate();
+        }
+        finally
+        {
+            EndLogin();
+        }
     }
 
     private async void OpenWebView_OnClick(object? sender, RoutedEventArgs e)
     {
-        var verifier = PixivAuth.GetCodeVerify();
-        if (TopLevel.GetTopLevel(this) is not { ViewContainer: { } viewContainer } topLevel)
+        if (!TryBeginLogin())
             return;
+
         try
         {
+            var verifier = PixivAuth.GetCodeVerify();
+            if (TopLevel.GetTopLevel(this) is not { ViewContainer: { } viewContainer } topLevel)
+                return;
+
             var result = await WebAuthenticationBroker.AuthenticateAsync(
                 topLevel,
                 new(
@@ -67,10 +81,17 @@ public partial class LoginPage : ContentPage
         }
         catch (Exception exception)
         {
-            viewContainer.ShowError(exception.GetType().ToString(), exception.Message);
-            _ = await viewContainer.CreateAcknowledgementAsync(
-                I18NManager.GetResource(LoginPageResources.FetchingSessionFailedTitle),
-                I18NManager.GetResource(LoginPageResources.FetchingSessionFailedContent));
+            if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer)
+            {
+                viewContainer.ShowError(exception.GetType().ToString(), exception.Message);
+                _ = await viewContainer.CreateAcknowledgementAsync(
+                    I18NManager.GetResource(LoginPageResources.FetchingSessionFailedTitle),
+                    I18NManager.GetResource(LoginPageResources.FetchingSessionFailedContent));
+            }
+        }
+        finally
+        {
+            EndLogin();
         }
     }
 
@@ -85,5 +106,22 @@ public partial class LoginPage : ContentPage
     {
         if (sender is AutoCompleteBox box)
             box.IsDropDownOpen = true;
+    }
+
+    private bool TryBeginLogin()
+    {
+        if (DataContext is not LoginPageViewModel viewModel)
+            return false;
+
+        viewModel.IsLoginInProgress = true;
+        return true;
+    }
+
+    private void EndLogin()
+    {
+        if (DataContext is not LoginPageViewModel viewModel)
+            return;
+
+        viewModel.IsLoginInProgress = false;
     }
 }
