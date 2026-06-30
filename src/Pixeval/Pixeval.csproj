@@ -36,6 +36,7 @@
 		<PackageReference Include="SmoothScroll.Avalonia" Version="12.0.0.12" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.10.196-beta" />
 		<PackageReference Include="Svg.Controls.Skia.Avalonia" Version="12.0.0.13" />
+		<PackageReference Include="TabView.Avalonia" Version="1.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -45,7 +46,6 @@
 	  <ProjectReference Include="..\lib\FluentAvalonia\FluentAvalonia.csproj" />
 	  <ProjectReference Include="..\lib\Imouto\Imouto.BooruParser\Imouto.BooruParser.csproj" />
 	  <ProjectReference Include="..\lib\Mako\Mako\Mako.csproj" />
-	  <ProjectReference Include="..\lib\Tabalonia\Tabalonia\Tabalonia.csproj" />
 	  <ProjectReference Include="..\Pixeval.I18N\Pixeval.I18N.csproj" />
 	  <ProjectReference Include="..\Pixeval.Caching\Pixeval.Caching.csproj" />
 	  <ProjectReference Include="..\Pixeval.Download\Pixeval.Download.csproj" />

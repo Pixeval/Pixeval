@@ -17,7 +17,6 @@ using Pixeval.I18N;
 using Pixeval.Views;
 using Pixeval.Views.Capability;
 using Pixeval.Views.Download;
-using Pixeval.Views.Home;
 using Pixeval.Views.Search;
 using Pixeval.Views.Settings;
 using Pixeval.Views.ViewContainers;
@@ -49,7 +48,7 @@ public static class AvaloniaHelper
 
     public static IReadOnlyList<NavigationInfo> HeaderItems { get; } =
     [
-        new(typeof(HomePage), Symbol.Home, MainPageResources.TabHome),
+        // new(typeof(HomePage), Symbol.Home, MainPageResources.TabHome),
         new(typeof(SearchPage), Symbol.SearchSparkle, MainPageResources.TabSearch),
         new(typeof(WorkRecommendedPage), Symbol.Calendar, MainPageResources.TabWorkRecommended),
         new(typeof(WorkRankingPage), Symbol.ArrowTrendingLines, MainPageResources.TabWorkRanking),

@@ -3,13 +3,13 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:autoSettingsPage="using:AutoSettingsPage.Avalonia"
-    xmlns:custom="using:Tabalonia.Themes.Custom"
     xmlns:smoothScroll="using:SmoothScroll.Avalonia.Controls"
+    xmlns:tabView="using:TabView.Avalonia"
     xmlns:ui="using:FluentAvalonia.UI.Themes">
 
     <Application.Styles>
         <FluentTheme />
-        <custom:CustomTheme />
+        <tabView:TabsViewTheme />
         <ui:FluentAvaloniaTheme />
         <autoSettingsPage:AutoSettingsPageTheme />
         <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />

@@ -32,7 +32,10 @@
         </Style>
     </DrawerPage.Styles>
     <DockPanel x:DataType="{x:Type viewModels:HomePageViewModel}" DataContext="{Binding $parent[home:HomePage].DataContext}">
-        <DockPanel DockPanel.Dock="Top" HorizontalSpacing="10">
+        <DockPanel
+            DockPanel.Dock="Top"
+            HorizontalSpacing="10"
+            IsVisible="{Binding !IsToolbarHidden}">
             <Image
                 Width="30"
                 Height="30"
@@ -47,8 +50,7 @@
             <CommandBar
                 HorizontalAlignment="Right"
                 DefaultLabelPosition="Right"
-                IsDynamicOverflowEnabled="True"
-                IsVisible="{Binding !IsToolbarHidden}">
+                IsDynamicOverflowEnabled="True">
                 <CommandBarToggleButton
                     Icon="{markup:SymbolIcon AppTitle}"
                     IsChecked="{Binding IsCardTitleHidden, Mode=TwoWay}"

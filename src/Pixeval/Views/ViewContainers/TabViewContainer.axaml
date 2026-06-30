@@ -2,14 +2,14 @@
     x:Class="Pixeval.Views.ViewContainers.TabViewContainer"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:Tabalonia.Controls"
-    xmlns:controls1="using:Pixeval.Controls"
+    xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:local="using:Pixeval.Views.ViewContainers"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
+    xmlns:tabView="using:TabView.Avalonia"
     xmlns:utilities="using:Pixeval.Utilities"
     xmlns:viewModels="using:Pixeval.ViewModels"
     x:DataType="{x:Type viewModels:TabViewContainerViewModel}"
@@ -19,11 +19,12 @@
     <local:ViewContainerBase.DataContext>
         <viewModels:TabViewContainerViewModel />
     </local:ViewContainerBase.DataContext>
-    <controls:TabsControl
+    <tabView:TabsView
         x:Name="TabsControl"
+        AddTabButtonClick="TabsView_OnAddTabButtonClick"
         LeftHeaderContentDraggable="True"
-        TabClosing="TabsControl_OnTabClosing">
-        <controls:TabsControl.LeftHeaderContent>
+        TabClosing="TabsView_OnTabClosing">
+        <tabView:TabsView.LeftHeaderContent>
             <Image
                 Width="20"
                 Height="20"
@@ -31,15 +32,15 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
                 Source="{SvgImage avares://Pixeval/Assets/logo.svg}" />
-        </controls:TabsControl.LeftHeaderContent>
-        <controls:TabsControl.RightHeaderContent>
+        </tabView:TabsView.LeftHeaderContent>
+        <tabView:TabsView.RightHeaderContent>
             <Button
                 MaxWidth="32"
                 MaxHeight="32"
                 Padding="1"
                 Background="Transparent"
                 CornerRadius="100">
-                <controls1:AvatarImage Source="{Binding Avatar}" />
+                <controls:AvatarImage Source="{Binding Avatar}" />
                 <Button.Flyout>
                     <MenuFlyout>
                         <MenuItem
@@ -84,8 +85,8 @@
                     </MenuFlyout>
                 </Button.Flyout>
             </Button>
-        </controls:TabsControl.RightHeaderContent>
-        <controls:TabsControl.LeftContent>
+        </tabView:TabsView.RightHeaderContent>
+        <tabView:TabsView.LeftContent>
             <DockPanel
                 Margin="5"
                 HorizontalAlignment="Stretch"
@@ -116,6 +117,6 @@
                     ItemsSource="{x:Static utilities:AvaloniaHelper.FooterItems}" />
                 <ItemsControl HorizontalAlignment="Stretch" ItemsSource="{x:Static utilities:AvaloniaHelper.HeaderItems}" />
             </DockPanel>
-        </controls:TabsControl.LeftContent>
-    </controls:TabsControl>
+        </tabView:TabsView.LeftContent>
+    </tabView:TabsView>
 </local:ViewContainerBase>
