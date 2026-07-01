@@ -189,7 +189,7 @@ public sealed class AdvancedObservableCollectionTest
         var filteredItemInAoc = aoc.FirstOrDefault(Filter);
         Assert.IsNull(filteredItemInAoc, $"Filtered item unexpectedly included in collection view: {filteredItemInAoc?.Val}.");
 
-        col.Remove(itemToFilter);
+        _ = col.Remove(itemToFilter);
 
         // With filter set, create and add an item that isn't filtered
         var itemToNotFilter = new SampleClass(itemToFilter.Val + 1);
@@ -276,7 +276,7 @@ public sealed class AdvancedObservableCollectionTest
         adaptor.Add(sourceItem);
         Assert.HasCount(1, col);
         Assert.AreEqual(1, adaptor.Count);
-        Assert.IsInstanceOfType<SampleViewModel>(adaptor[0]);
+        _ = Assert.IsInstanceOfType<SampleViewModel>(adaptor[0]);
         Assert.AreSame(adaptor[0], ((IList)adaptor)[0]);
         Assert.IsTrue(((IList)adaptor).IsReadOnly);
 
@@ -358,7 +358,7 @@ public sealed class AdvancedObservableCollectionTest
         col.RemoveAt(2);
 
         CollectionAssert.AreEqual((int[]) [1, 30, 3], aoc.Select(item => item.Val).ToArray());
-        Assert.AreEqual(3, changes.Count);
+        Assert.HasCount(3, changes);
         Assert.IsTrue(changes.All(change => change.Action is NotifyCollectionChangedAction.Reset));
     }
 

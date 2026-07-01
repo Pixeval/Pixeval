@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:database="using:Pixeval.Models.Database"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
     xmlns:viewModels="using:Pixeval.ViewModels"
@@ -31,6 +32,18 @@
         VerticalAlignment="Center"
         DockPanel.Dock="Right"
         Spacing="10">
+        <StackPanel Orientation="Horizontal" Spacing="10">
+            <PathIcon
+                Width="82"
+                Height="29"
+                HorizontalAlignment="Left"
+                Data="{markup1:SvgPath {x:Static pixeval:SvgResources.Pixiv}}"
+                Foreground="{DynamicResource PixivLogo}" />
+            <TextBlock
+                VerticalAlignment="Center"
+                Text="{I18N {x:Static pixeval:LoginPageResources.LoginHeader}}"
+                Theme="{StaticResource SubtitleTextBlockStyle}" />
+        </StackPanel>
         <ContentControl
             Content="{Binding SelectedUser}"
             ContentTemplate="{StaticResource LoginUserTemplate}"

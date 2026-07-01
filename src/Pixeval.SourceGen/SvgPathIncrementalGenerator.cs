@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -234,25 +235,14 @@ public sealed class SvgPathIncrementalGenerator : IIncrementalGenerator
 
     private sealed record SvgEntry(string Identifier, string PathData, string SourcePath);
 
-    private sealed class SvgExtractionResult
+    private sealed record SvgExtractionResult(
+        string? BaseIdentifier,
+        string? PathData,
+        string? SourcePath,
+        ImmutableArray<Diagnostic> Diagnostics)
     {
-        private SvgExtractionResult(string baseIdentifier, string pathData, string sourcePath, ImmutableArray<Diagnostic> diagnostics)
-        {
-            BaseIdentifier = baseIdentifier;
-            PathData = pathData;
-            SourcePath = sourcePath;
-            Diagnostics = diagnostics;
-        }
-
-        public string BaseIdentifier { get; private set; }
-
-        public string PathData { get; private set; }
-
-        public string SourcePath { get; private set; }
-
-        public ImmutableArray<Diagnostic> Diagnostics { get; private set; }
-
-        public bool IsSuccess => BaseIdentifier != null && PathData != null && SourcePath != null;
+        [MemberNotNullWhen(true, nameof(BaseIdentifier), nameof(PathData), nameof(SourcePath))]
+        public bool IsSuccess => BaseIdentifier is not null && PathData is not null && SourcePath is not null;
 
         public static SvgExtractionResult Success(string baseIdentifier, string pathData, string sourcePath)
         {

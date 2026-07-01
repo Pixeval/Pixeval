@@ -151,7 +151,7 @@ public sealed class FilterLanguageTest
         var result = _Language.Analyze(string.Empty, 0);
 
         Assert.IsTrue(result.IsSuccess);
-        Assert.ContainsSingle(t => t.DisplayText.Contains("artist", StringComparison.OrdinalIgnoreCase), result.Completions);
+        _ = Assert.ContainsSingle(t => t.DisplayText.Contains("artist", StringComparison.OrdinalIgnoreCase), result.Completions);
     }
 
     [TestMethod]

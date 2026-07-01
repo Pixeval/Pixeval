@@ -21,7 +21,7 @@ namespace Pixeval.ViewModels;
 
 public class SettingsPageViewModel : ViewModelBase
 {
-    public string CurrentVersion => AppInfo.AppVersion.CurrentVersionText;
+    public string CurrentVersion => AppInfo.AppVersion.CurrentVersionShortText;
 
     public DateTime LastCheckedUpdate
     {

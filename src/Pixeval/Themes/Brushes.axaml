@@ -194,6 +194,7 @@
             <SolidColorBrush x:Key="AccentAcrylicInAppFillColorBaseBrush" Color="{DynamicResource SystemAccentColorLight3}" />
 
             <SolidColorBrush x:Key="PixevalTranslucentBackground" Color="#8FFFFFFF" />
+            <SolidColorBrush x:Key="PixivLogo" Color="#0096FA" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
             <!--  Brushes  -->
@@ -386,6 +387,7 @@
             <SolidColorBrush x:Key="AccentAcrylicInAppFillColorBaseBrush" Color="{DynamicResource SystemControlAccentColorDark2}" />
 
             <SolidColorBrush x:Key="PixevalTranslucentBackground" Color="#8F000000" />
+            <SolidColorBrush x:Key="PixivLogo" Color="#FFFFFF" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 

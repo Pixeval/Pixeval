@@ -19,17 +19,20 @@ public class Versioning
     {
         var assembly = typeof(Versioning).Assembly;
         CurrentVersion = assembly.GetName().Version ?? new(0, 0, 0, 0);
-        CurrentVersionText = assembly
+        CurrentVersionShortText = CurrentVersion.ToString();
+        CurrentVersionFullText = assembly
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-            ?.InformationalVersion ?? CurrentVersion.ToString();
+            ?.InformationalVersion ?? CurrentVersionShortText;
     }
 
     public Version CurrentVersion { get; }
 
+    public string CurrentVersionShortText { get; }
+
     /// <remarks>
     /// <see cref="AssemblyInformationalVersionAttribute"/> 包含 GitSha 信息
     /// </remarks>
-    public string CurrentVersionText { get; }
+    public string CurrentVersionFullText { get; }
 
     public Version? NewestVersion => NewestAppReleaseModel?.Version;
 

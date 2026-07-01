@@ -37,12 +37,13 @@
             DockPanel.Dock="Top"
             HorizontalSpacing="10"
             IsVisible="{Binding !#HideHomePageToolbarButton.IsChecked}">
-            <Image
+            <Border
                 Width="30"
                 Height="30"
                 Margin="10,0,0,0"
-                DockPanel.Dock="Left"
-                Source="{SvgImage avares://Pixeval/Assets/logo.svg}" />
+                Background="{SvgResource avares://Pixeval/Assets/logo.svg}"
+                CornerRadius="{StaticResource ControlCornerRadius}"
+                DockPanel.Dock="Left" />
             <TextBlock
                 VerticalAlignment="Center"
                 DockPanel.Dock="Left"

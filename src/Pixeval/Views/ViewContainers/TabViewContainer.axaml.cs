@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Interactivity;
@@ -20,8 +21,6 @@ public partial class TabViewContainer : ViewContainerBase
     {
         InitializeComponent();
 
-        TabsControl.InterTabController = new InterTabController { InterTabClient = new PixevalInterTabClient() };
-
         AddHandler(
             ViewModelDisposal.ViewModelDisposalEvent,
             OnViewModelDisposal,
@@ -33,6 +32,13 @@ public partial class TabViewContainer : ViewContainerBase
             OnRequestDispose,
             RoutingStrategies.Bubble,
             handledEventsToo: true);
+
+        Task.Delay(5000).ContinueWith(t => LoggingInDescriptionTextBlock.IsVisible = true, TaskScheduler.FromCurrentSynchronizationContext());
+    }
+
+    public void SetInterTabController(bool set)
+    {
+        TabsControl.InterTabController = set ? new InterTabController { InterTabClient = new PixevalInterTabClient() } : null;
     }
 
     /// <inheritdoc />
@@ -63,27 +69,6 @@ public partial class TabViewContainer : ViewContainerBase
         if (removeCurrentPage)
             if (selected is not null)
                 _ = pages.Remove(selected);
-    }
-
-    /// <summary>
-    /// Custom <see cref="IInterTabClient"/> that creates new <see cref="Window"/>
-    /// instances with a fresh <see cref="TabViewContainer"/> for tab tear-off.
-    /// </summary>
-    private sealed class PixevalInterTabClient : IInterTabClient
-    {
-        public TabsHost GetNewHost(InterTabController controller, TabsHost host)
-        {
-            var container = new TabViewContainer();
-            var window = new Window { Content = container }.Fork(host.Window);
-            window.Closed += static (sender, args) =>
-            {
-                if (sender is TopLevel { ViewContainer: TabViewContainer container })
-                    foreach (var page in container.TabsControl.Pages ?? [])
-                        DisposeTab(page);
-            };
-
-            return new TabsHost(window, container.TabsControl);
-        }
     }
 
     private void NavigationButton_OnClick(object? sender, RoutedEventArgs e)
@@ -146,6 +131,27 @@ public partial class TabViewContainer : ViewContainerBase
                 if (disposable.TryGetTarget(out var target))
                     target.Dispose();
             set.Clear();
+        }
+    }
+
+    /// <summary>
+    /// Custom <see cref="IInterTabClient"/> that creates new <see cref="Window"/>
+    /// instances with a fresh <see cref="TabViewContainer"/> for tab tear-off.
+    /// </summary>
+    private sealed class PixevalInterTabClient : IInterTabClient
+    {
+        public TabsHost GetNewHost(InterTabController controller, TabsHost host)
+        {
+            var container = new TabViewContainer();
+            var window = new Window { Content = container }.Fork(host.Window);
+            window.Closed += static (sender, args) =>
+            {
+                if (sender is TopLevel { ViewContainer: TabViewContainer container })
+                    foreach (var page in container.TabsControl.Pages ?? [])
+                        DisposeTab(page);
+            };
+
+            return new TabsHost(window, container.TabsControl);
         }
     }
 }

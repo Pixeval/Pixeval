@@ -236,7 +236,7 @@ public static class CacheHelper
     }
 
     /// <summary>
-    /// 本方法会根据<see cref="AppSettings.ApplicationSettings.UseFileCache"/>判断是否使用文件缓存
+    /// 本方法会根据<see cref="ApplicationSettingsGroup.UseFileCache"/>判断是否使用文件缓存
     /// </summary>
     /// <returns><see langword="null"/>表示下载失败</returns>
     private static async ValueTask<Stream?> GetStreamAsync(

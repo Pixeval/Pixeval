@@ -20,7 +20,7 @@ public partial class AboutPage : ContentPage
 
     public IReadOnlyList<Supporter> Supporters => Supporter.Supporters;
 
-    public string CurrentVersionText => AppInfo.AppVersion.CurrentVersionText;
+    public string CurrentVersionText => AppInfo.AppVersion.CurrentVersionFullText;
 
     private async void LoadData()
     {

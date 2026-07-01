@@ -54,7 +54,7 @@ public class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        ViewContainerBase? viewContainer = null;
+        var viewContainer = new TabViewContainer();
 
         switch (ApplicationLifetime)
         {
@@ -65,7 +65,8 @@ public class App : Application
                     AppViewModel.Dispose();
                 };
 
-                viewContainer = new TabViewContainer();
+                viewContainer.SetInterTabController(true);
+
                 // 这个窗口可能会被用户关闭，所以不设为desktop.MainWindow
                 new Window { Content = viewContainer }
                     .Init(
@@ -79,16 +80,12 @@ public class App : Application
 
                 break;
             case ISingleViewApplicationLifetime singleViewPlatform:
-                singleViewPlatform.MainView = viewContainer = new SingleViewContainer
-                {
-                };
+                viewContainer.SetInterTabController(false);
+                singleViewPlatform.MainView = viewContainer;
                 break;
         }
 
-        if (viewContainer is not null)
-        {
-            _ = LoginAsync(viewContainer);
-        }
+        _ = LoginAsync(viewContainer);
 
         base.OnFrameworkInitializationCompleted();
     }
@@ -105,6 +102,8 @@ public class App : Application
                 AppViewModel.QueueWorkSubscriptionSyncAll();
                 return;
             }
+
+            viewContainer.ShowError(I18NManager.GetResource(MainPageResources.LoggingInFailed));
         }
         viewContainer.NavigateTo(new LoginPage());
     }

@@ -20,117 +20,136 @@
     <local:ViewContainerBase.DataContext>
         <viewModels:TabViewContainerViewModel />
     </local:ViewContainerBase.DataContext>
-    <tabView:TabsView
-        x:Name="TabsControl"
-        AddTabButtonClick="TabsView_OnAddTabButtonClick"
-        LeftHeaderContentDraggable="True"
-        ShowDefaultAddButton="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
-        TabClosing="TabsView_OnTabClosing">
-        <tabView:TabsView.LeftHeaderContent>
-            <Image
-                Width="20"
-                Height="20"
-                Margin="16,0"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Center"
-                Source="{SvgImage avares://Pixeval/Assets/logo.svg}" />
-        </tabView:TabsView.LeftHeaderContent>
-        <tabView:TabsView.RightHeaderContent>
-            <Button
-                MaxWidth="32"
-                MaxHeight="32"
-                Padding="1"
-                Background="Transparent"
-                CornerRadius="100">
-                <controls:AvatarImage Source="{Binding Avatar}" />
-                <Button.Flyout>
-                    <MenuFlyout>
-                        <MenuItem
-                            Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
-                            Header="{Binding IdText, StringFormat='ID: {0}'}"
-                            Icon="{markup:SymbolIcon Guest}"
-                            IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
-                            Tag="{Binding IdText}" />
-                        <MenuItem
-                            Click="OpenMyPage_OnClick"
-                            Header="{I18N {x:Static pixeval:MainPageResources.OpenMyPageItemText}}"
-                            Icon="{markup:SymbolIcon Open}"
-                            IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}" />
-                        <MenuItem
-                            Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
-                            Header="{I18N {x:Static pixeval:MainPageResources.OpenMyPageInBrowserItemText}}"
-                            Icon="{markup:SymbolIcon GlobeArrowUp}"
-                            IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
-                            Tag="{Binding Url}" />
-                        <Separator />
-                        <!--  该项不显示  -->
-                        <MenuItem
-                            Command="{Binding ToggleRestrictedModeCommand, Mode=OneTime}"
-                            Header="{I18N {x:Static pixeval:MainPageResources.RestrictedModeItemText}}"
-                            Icon="{markup:SymbolIcon PersonProhibited}"
-                            IsChecked="{Binding RestrictedCache}"
-                            IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
-                            IsVisible="False"
-                            ToggleType="CheckBox" />
-                        <MenuItem
-                            Command="{Binding ToggleAiShowCommand, Mode=OneTime}"
-                            Header="{I18N {x:Static pixeval:MainPageResources.AiShowItemText}}"
-                            Icon="{markup:SymbolIcon Bot}"
-                            IsChecked="{Binding AiShowCache}"
-                            IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
-                            ToggleType="CheckBox" />
-                        <MenuItem
-                            Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
-                            Header="{I18N {x:Static pixeval:MainPageResources.MoreViewingSettingsItemText}}"
-                            Icon="{markup:SymbolIcon MoreHorizontal}"
-                            IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
-                            Tag="https://www.pixiv.net/settings/viewing" />
-                        <Separator />
-                        <MenuItem
-                            Click="SwitchAccount_OnClicked"
-                            Header="{I18N {x:Static pixeval:MainPageResources.SwitchAccountItemText}}"
-                            Icon="{markup:SymbolIcon PersonSwap}" />
-                    </MenuFlyout>
-                </Button.Flyout>
-            </Button>
-        </tabView:TabsView.RightHeaderContent>
-        <tabView:TabsView.LeftContent>
-            <DockPanel
-                Margin="5"
-                HorizontalAlignment="Stretch"
-                VerticalSpacing="5">
-                <DockPanel.DataTemplates>
-                    <DataTemplate x:DataType="{x:Type utilities:NavigationInfo}">
-                        <Button
-                            HorizontalAlignment="Stretch"
-                            Background="Transparent"
-                            Click="NavigationButton_OnClick">
-                            <Button.IsEnabled>
-                                <MultiBinding Converter="{x:Static BoolConverters.Or}">
-                                    <Binding Path="!NeedLogin" />
-                                    <Binding Path="IsLoggedIn" Source="{x:Static views:PixevalSettings.Instance}" />
-                                </MultiBinding>
-                            </Button.IsEnabled>
-                            <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
-                                <fluent:SymbolIcon
-                                    HorizontalAlignment="Center"
-                                    IconVariant="Color"
-                                    Symbol="{Binding Icon}" />
-                                <TextBlock
-                                    Grid.Row="1"
-                                    HorizontalAlignment="Center"
-                                    FontSize="10"
-                                    Text="{Binding Header}" />
-                            </Grid>
-                        </Button>
-                    </DataTemplate>
-                </DockPanel.DataTemplates>
-                <ItemsControl
+    <Panel>
+        <StackPanel
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Spacing="10">
+            <TextBlock
+                HorizontalAlignment="Center"
+                Text="{I18N {x:Static pixeval:MainPageResources.LoggingInHeader}}"
+                Theme="{StaticResource SubtitleTextBlockStyle}" />
+            <TextBlock
+                x:Name="LoggingInDescriptionTextBlock"
+                MaxWidth="400"
+                IsVisible="False"
+                Text="{I18N {x:Static pixeval:MainPageResources.LoggingInDescription}}"
+                TextWrapping="Wrap" />
+        </StackPanel>
+        <tabView:TabsView
+            x:Name="TabsControl"
+            AddTabButtonClick="TabsView_OnAddTabButtonClick"
+            Background="Transparent"
+            LeftHeaderContentDraggable="True"
+            ShowDefaultAddButton="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
+            TabClosing="TabsView_OnTabClosing">
+            <tabView:TabsView.LeftHeaderContent>
+                <Border
+                    Width="25"
+                    Height="25"
+                    Margin="16,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Background="{SvgResource avares://Pixeval/Assets/logo.svg}"
+                    CornerRadius="{StaticResource ControlCornerRadius}" />
+            </tabView:TabsView.LeftHeaderContent>
+            <tabView:TabsView.RightHeaderContent>
+                <Button
+                    MaxWidth="32"
+                    MaxHeight="32"
+                    Padding="1"
+                    Background="Transparent"
+                    CornerRadius="100">
+                    <controls:AvatarImage Source="{Binding Avatar}" />
+                    <Button.Flyout>
+                        <MenuFlyout>
+                            <MenuItem
+                                Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
+                                Header="{Binding IdText, StringFormat='ID: {0}'}"
+                                Icon="{markup:SymbolIcon Guest}"
+                                IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
+                                Tag="{Binding IdText}" />
+                            <MenuItem
+                                Click="OpenMyPage_OnClick"
+                                Header="{I18N {x:Static pixeval:MainPageResources.OpenMyPageItemText}}"
+                                Icon="{markup:SymbolIcon Open}"
+                                IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}" />
+                            <MenuItem
+                                Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
+                                Header="{I18N {x:Static pixeval:MainPageResources.OpenMyPageInBrowserItemText}}"
+                                Icon="{markup:SymbolIcon GlobeArrowUp}"
+                                IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
+                                Tag="{Binding Url}" />
+                            <Separator />
+                            <!--  该项不显示  -->
+                            <MenuItem
+                                Command="{Binding ToggleRestrictedModeCommand, Mode=OneTime}"
+                                Header="{I18N {x:Static pixeval:MainPageResources.RestrictedModeItemText}}"
+                                Icon="{markup:SymbolIcon PersonProhibited}"
+                                IsChecked="{Binding RestrictedCache}"
+                                IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
+                                IsVisible="False"
+                                ToggleType="CheckBox" />
+                            <MenuItem
+                                Command="{Binding ToggleAiShowCommand, Mode=OneTime}"
+                                Header="{I18N {x:Static pixeval:MainPageResources.AiShowItemText}}"
+                                Icon="{markup:SymbolIcon Bot}"
+                                IsChecked="{Binding AiShowCache}"
+                                IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
+                                ToggleType="CheckBox" />
+                            <MenuItem
+                                Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
+                                Header="{I18N {x:Static pixeval:MainPageResources.MoreViewingSettingsItemText}}"
+                                Icon="{markup:SymbolIcon MoreHorizontal}"
+                                IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
+                                Tag="https://www.pixiv.net/settings/viewing" />
+                            <Separator />
+                            <MenuItem
+                                Click="SwitchAccount_OnClicked"
+                                Header="{I18N {x:Static pixeval:MainPageResources.SwitchAccountItemText}}"
+                                Icon="{markup:SymbolIcon PersonSwap}" />
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+            </tabView:TabsView.RightHeaderContent>
+            <tabView:TabsView.LeftContent>
+                <DockPanel
+                    Margin="5"
                     HorizontalAlignment="Stretch"
-                    DockPanel.Dock="Bottom"
-                    ItemsSource="{x:Static utilities:AvaloniaHelper.FooterItems}" />
-                <ItemsControl HorizontalAlignment="Stretch" ItemsSource="{x:Static utilities:AvaloniaHelper.HeaderItems}" />
-            </DockPanel>
-        </tabView:TabsView.LeftContent>
-    </tabView:TabsView>
+                    VerticalSpacing="5">
+                    <DockPanel.DataTemplates>
+                        <DataTemplate x:DataType="{x:Type utilities:NavigationInfo}">
+                            <Button
+                                HorizontalAlignment="Stretch"
+                                Background="Transparent"
+                                Click="NavigationButton_OnClick">
+                                <Button.IsEnabled>
+                                    <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                                        <Binding Path="!NeedLogin" />
+                                        <Binding Path="IsLoggedIn" Source="{x:Static views:PixevalSettings.Instance}" />
+                                    </MultiBinding>
+                                </Button.IsEnabled>
+                                <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
+                                    <fluent:SymbolIcon
+                                        HorizontalAlignment="Center"
+                                        IconVariant="Color"
+                                        Symbol="{Binding Icon}" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        HorizontalAlignment="Center"
+                                        FontSize="10"
+                                        Text="{Binding Header}" />
+                                </Grid>
+                            </Button>
+                        </DataTemplate>
+                    </DockPanel.DataTemplates>
+                    <ItemsControl
+                        HorizontalAlignment="Stretch"
+                        DockPanel.Dock="Bottom"
+                        ItemsSource="{x:Static utilities:AvaloniaHelper.FooterItems}" />
+                    <ItemsControl HorizontalAlignment="Stretch" ItemsSource="{x:Static utilities:AvaloniaHelper.HeaderItems}" />
+                </DockPanel>
+            </tabView:TabsView.LeftContent>
+        </tabView:TabsView>
+    </Panel>
 </local:ViewContainerBase>

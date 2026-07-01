@@ -21,7 +21,7 @@ public record ApplicationSettingsGroup
 
     public bool IsMaximized { get; set; }
 
-    [Obsolete]
+    // TODO: Not Used
     [SettingsEntry(Symbol.Communication, AppSettingsResources.DownloadUpdateAutomaticallyEntryHeader, AppSettingsResources.DownloadUpdateAutomaticallyEntryDescription)]
     public bool DownloadUpdateAutomatically { get; set; }
 

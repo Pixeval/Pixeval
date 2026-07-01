@@ -21,7 +21,7 @@ public sealed class ExtensionServiceTest
         var loadedHosts = 0;
         var outdatedHosts = 0;
 
-        foreach (var library in ExtensionService.EnumerateExtensionHostNativeLibraries(AppInfo.ExtensionsFolder))
+        foreach (var library in ExtensionService.EnumerateLocalExtensionHosts(AppInfo.ExtensionsFolder))
         {
             var result = service.TryLoadHostWithResult(library, logger, out var model, out _);
             if (result is ExtensionHostLoadResult.OutdatedSdk)

@@ -16,18 +16,12 @@
     d:DesignWidth="800">
     <ScrollViewer>
         <StackPanel Margin="20" Spacing="20">
-            <StackPanel Spacing="4">
+            <StackPanel Spacing="10">
                 <TextBlock Text="Pixeval" Theme="{StaticResource TitleTextBlockStyle}" />
                 <TextBlock Text="{Binding $parent[settings:AboutPage].CurrentVersionText}" Theme="{StaticResource CaptionTextBlockStyle}" />
-            </StackPanel>
 
-            <!--  Special Thanks  -->
-            <StackPanel Spacing="10">
+                <!--  Special Thanks  -->
                 <TextBlock Text="{I18N {x:Static pixeval:AboutPageResources.SpecialThanksSubtitleTextBlockText}}" Theme="{StaticResource SubtitleTextBlockStyle}" />
-                <TextBlock
-                    Text="{I18N {x:Static pixeval:AboutPageResources.SpecialThanksContentTextBlockText}}"
-                    TextWrapping="Wrap"
-                    Theme="{StaticResource CaptionTextBlockStyle}" />
                 <ItemsControl ItemsSource="{Binding $parent[settings:AboutPage].Supporters}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -66,16 +60,9 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-            </StackPanel>
 
-            <!--  Dependencies  -->
-            <StackPanel>
+                <!--  Dependencies  -->
                 <TextBlock Text="{I18N {x:Static pixeval:AboutPageResources.DependenciesSubtitleTextBlockText}}" Theme="{StaticResource SubtitleTextBlockStyle}" />
-                <TextBlock
-                    Margin="0,10"
-                    Text="{I18N {x:Static pixeval:AboutPageResources.DependenciesContentTextBlockText}}"
-                    TextWrapping="Wrap"
-                    Theme="{StaticResource CaptionTextBlockStyle}" />
                 <ItemsControl ItemsSource="{x:Static settings:DependencyViewModel.DependencyViewModels}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="{x:Type settings:DependencyViewModel}">
@@ -103,36 +90,9 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-            </StackPanel>
 
-            <!--  Support Me  -->
-            <StackPanel Spacing="10">
-                <TextBlock Text="{I18N {x:Static pixeval:AboutPageResources.SupportMeSubtitleTextBlockText}}" Theme="{StaticResource SubtitleTextBlockStyle}" />
-                <TextBlock TextWrapping="Wrap" Theme="{StaticResource CaptionTextBlockStyle}">
-                    <Run Text="{I18N {x:Static pixeval:AboutPageResources.SupportMeContentPartIText}}" />
-                    <InlineUIContainer>
-                        <HyperlinkButton
-                            Padding="0"
-                            Content="{I18N {x:Static pixeval:AboutPageResources.SupportMeHyperlinkContentText}}"
-                            NavigateUri="https://afdian.net/@dylech30th" />
-                    </InlineUIContainer>
-                    <Run Text="{I18N {x:Static pixeval:AboutPageResources.SupportMeContentPartIIText}}" />
-                </TextBlock>
-            </StackPanel>
-
-            <!--  Open Source License  -->
-            <StackPanel Spacing="10">
+                <!--  Open Source License  -->
                 <TextBlock Text="{I18N {x:Static pixeval:AboutPageResources.OpenSourceLicenseSubtitleTextBlockText}}" Theme="{StaticResource SubtitleTextBlockStyle}" />
-                <TextBlock TextWrapping="Wrap" Theme="{StaticResource CaptionTextBlockStyle}">
-                    <Run Text="{I18N {x:Static pixeval:AboutPageResources.OpenSourceLicenseContentPartIText}}" />
-                    <InlineUIContainer>
-                        <HyperlinkButton
-                            Padding="0"
-                            Content="{I18N {x:Static pixeval:AboutPageResources.OpenSourceLicenseHyperlinkContentText}}"
-                            NavigateUri="https://www.gnu.org/licenses/gpl-3.0.en.html" />
-                    </InlineUIContainer>
-                    <Run Text="{I18N {x:Static pixeval:AboutPageResources.OpenSourceLicenseContentPartIIText}}" />
-                </TextBlock>
                 <local:MarkdownBox x:Name="LicenseTextBlock" />
             </StackPanel>
         </StackPanel>

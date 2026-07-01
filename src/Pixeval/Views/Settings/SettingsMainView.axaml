@@ -40,7 +40,6 @@
                     <HyperlinkButton Content="{I18N {x:Static pixeval:SettingsMainViewResources.GitHubRepositoryHyperlinkButtonContent}}" NavigateUri="https://github.com/Pixeval/Pixeval" />
                     <HyperlinkButton Content="{I18N {x:Static pixeval:SettingsMainViewResources.ReportBugHyperlinkButtonContent}}" NavigateUri="https://github.com/Pixeval/Pixeval/issues/new/choose" />
                     <HyperlinkButton Content="{I18N {x:Static pixeval:SettingsMainViewResources.FeedbackByEmailHyperlinkButtonContent}}" NavigateUri="mailto:decem0730@hotmail.com" />
-                    <HyperlinkButton Content="{I18N {x:Static pixeval:SettingsMainViewResources.DonateDeveloperHyperlinkButtonContent}}" NavigateUri="https://afdian.net/a/dylech30th" />
                     <HyperlinkButton Content="{I18N {x:Static pixeval:SettingsMainViewResources.JoinFeedbackGroupHyperlinkButtonContent}}" NavigateUri="https://jq.qq.com/?_wv=1027&amp;k=trDeCrog" />
                 </WrapPanel>
             </DockPanel>
@@ -103,7 +102,7 @@
                         IsClickEnabled="True"
                         Tag="https://github.com/Pixeval/Pixeval/releases">
                         <controls:SettingsCard.HeaderIcon>
-                            <Image Source="{SvgImage avares://Pixeval/Assets/GitHub.svg}" />
+                            <PathIcon Data="{markup1:SvgPath {x:Static pixeval:SvgResources.GitHub}}" />
                         </controls:SettingsCard.HeaderIcon>
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
@@ -127,7 +126,7 @@
                                 Tag="https://github.com/Pixeval/Pixeval/issues/new/choose"
                                 ToolTip.Tip="{I18N {x:Static pixeval:SettingsMainViewResources.GitHubBugReportEntryToolTip}}">
                                 <CommandBarButton.Icon>
-                                    <PathIcon MaxWidth="20" Data="{markup1:SvgPath {x:Static pixeval:SvgResources.GitHub}}" />
+                                    <PathIcon Data="{markup1:SvgPath {x:Static pixeval:SvgResources.GitHub}}" />
                                 </CommandBarButton.Icon>
                             </CommandBarButton>
                             <CommandBarButton
@@ -140,7 +139,7 @@
                                 Tag="https://jq.qq.com/?_wv=1027&amp;k=trDeCrog"
                                 ToolTip.Tip="{I18N {x:Static pixeval:SettingsMainViewResources.QQBugReportEntryToolTip}}">
                                 <CommandBarButton.Icon>
-                                    <PathIcon MaxWidth="20" Data="{markup1:SvgPath {x:Static pixeval:SvgResources.QQ}}" />
+                                    <PathIcon Data="{markup1:SvgPath {x:Static pixeval:SvgResources.QQ}}" />
                                 </CommandBarButton.Icon>
                             </CommandBarButton>
                         </CommandBar>
