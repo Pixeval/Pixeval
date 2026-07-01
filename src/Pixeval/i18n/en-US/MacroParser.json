@@ -1,0 +1,33 @@
+{
+  "UnexpectedToken": "存在非法符号：{0}",
+  "ExpectedLeftBraceAfterAt": "在 '@' 后应该跟随 '{'",
+  "ExpectedMacroName": "在 '@{' 后应该跟随宏名称",
+  "MissingRightBrace": "括号不匹配",
+  "MissingConditionalSeparator": "条件宏缺少 ':'",
+  "UnknownMacroName": "未知的宏名称：'@{{{0}}}'",
+  "NonParameterizedMacroBearingParameter": "宏 '@{{{0}}}' 不能包含任何参数",
+  "ConditionalBranchesMissing": "条件宏 '@{{{0}?:}}' 必须使用 ? 和 : 同时指定正反分支",
+  "InvalidFormatter": "宏 '@{{{0}}}' 的格式化参数无效：'{1}'",
+  "MacroShouldBeInLastSegment": "宏 '@{{{0}}}' 必须在文件名上",
+  "MacroShouldBeContained": "宏 '@{{{0}}}' 应该被包含在条件宏 '@{{{1}?:}}' 内",
+  "MessageWithPositionFormatted": "{0}（位置 {1}）",
+  "MacroDescription": {
+    "Ext": "文件后缀名，类似 .jpg, .png 等，注意该宏已经包含了后缀名前面的点号\".\"；必须在文件名上使用",
+    "Id": "作品ID（字符串类型）",
+    "Title": "作品标题（字符串类型）",
+    "ArtistId": "作者ID（字符串类型）",
+    "ArtistName": "作者名（字符串类型）",
+    "PublishTime": "作品发布时间（时间类型）",
+    "PicSetIndex": "该宏会被替换为当前图片在多图中的索引（第几张）；必须与 @{is_pic_set?:} 宏配合使用，必须在文件名上使用（数字类型）",
+    "IsPicSet": "作品是否为多图",
+    "IsR18": "作品是否为限制级的（包括R18及R18G）",
+    "IsR18G": "作品是否为R18G的",
+    "IsAi": "作品是否为 AI 生成的",
+    "IsPicOne": "作品是否为静态单图",
+    "IsNovel": "作品是否为小说",
+    "IsPicGif": "作品是否为动图",
+    "IsGroup": "作品是否在订阅下载组中",
+    "IsBookmarkGroup": "作品是否在收藏订阅下载组中",
+    "IsPostGroup": "作品是否在投稿订阅下载组中"
+  }
+}

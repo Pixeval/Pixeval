@@ -1,0 +1,184 @@
+{
+  "ApplicationTheme": {
+    "Default": "默认",
+    "Light": "浅色",
+    "Dark": "深色"
+  },
+  "WorkType": {
+    "Illustration": "插画",
+    "Manga": "漫画",
+    "Novel": "小说"
+  },
+  "SimpleWorkType": {
+    "IllustrationAndManga": "插画和漫画",
+    "Novel": "小说"
+  },
+  "LocalSortOption": {
+    "DoNotSort": "不进行任何排序",
+    "PopularityDescending": "收藏数降序",
+    "PublishDateAscending": "发布日期升序",
+    "PublishDateDescending": "发布日期降序"
+  },
+  "DomainFrontingType": {
+    "Fragmentation": "TLS 分片",
+    "Desync": "去同步"
+  },
+  "PrivacyPolicy": {
+    "Public": "公开",
+    "Private": "私有"
+  },
+  "SearchNovelTagMatchOption": {
+    "PartialMatchForTags": "标签（部分一致）",
+    "ExactMatchForTags": "标签（完全一致）",
+    "Text": "正文",
+    "Keyword": "标签、标题、说明文字"
+  },
+  "SearchNovelContentLengthOption": {
+    "None": "不指定",
+    "TextLength": "字数",
+    "WordCount": "单词数",
+    "ReadingTime": "预计阅读时间"
+  },
+  "SearchIllustrationTagMatchOption": {
+    "PartialMatchForTags": "标签（部分一致）",
+    "ExactMatchForTags": "标签（完全一致）",
+    "TitleAndCaption": "匹配标题与说明文字"
+  },
+  "SearchIllustrationContentType": {
+    "IllustrationAndMangaAndUgoira": "插画、漫画、动图",
+    "IllustrationAndUgoira": "插画、动图",
+    "Illustration": "插画",
+    "Manga": "漫画",
+    "Ugoira": "动图"
+  },
+  "SearchIllustrationRatioPattern": {
+    "All": "全部",
+    "Landscape": "横图",
+    "Portrait": "竖图",
+    "Square": "方图"
+  },
+  "WorkSortOption": {
+    "PublishDateDescending": "发布日期降序",
+    "PublishDateAscending": "发布日期升序",
+    "PopularityDescending": "收藏数降序"
+  },
+  "FontWeight": {
+    "Thin": "极细",
+    "ExtraLight": "特细",
+    "Light": "细",
+    "SemiLight": "半细",
+    "Normal": "常规",
+    "Medium": "中等",
+    "SemiBold": "半粗",
+    "Bold": "粗",
+    "ExtraBold": "特粗",
+    "Black": "黑",
+    "ExtraBlack": "特黑"
+  },
+  "IllustrationDownloadFormat": {
+    "Original": "图片原始格式"
+  },
+  "UgoiraDownloadFormat": {
+    "Original": "动图原始格式"
+  },
+  "NovelDownloadFormat": {
+    "OriginalTxt": "TXT外挂插图（Pixiv小说原生标签）",
+    "Html": "HTML外挂插图",
+    "Md": "MarkDown外挂插图"
+  },
+  "RankOption": {
+    "Day": "每日榜单",
+    "Week": "每周榜单",
+    "Month": "每月榜单",
+    "DayMale": "男性向日榜",
+    "DayFemale": "女性向日榜",
+    "WeekOriginal": "原创周榜",
+    "WeekRookie": "新人周榜",
+    "DayManga": "漫画日榜",
+    "WeekManga": "漫画周榜",
+    "MonthManga": "漫画月榜",
+    "DayR18": "R-18日榜",
+    "DayMaleR18": "男性向R-18日榜",
+    "DayFemaleR18": "女性向R-18日榜",
+    "WeekR18": "R-18周榜",
+    "WeekR18G": "R-18G周榜",
+    "DayAi": "AI日榜",
+    "DayR18Ai": "AI R-18日榜",
+    "WeekAi": "AI周榜",
+    "WeekAiR18": "AI R-18周榜"
+  },
+  "ProxyOption": {
+    "None": "无代理",
+    "System": "系统代理"
+  },
+  "WorkTypeEnum": {
+    "Illustration": "插画",
+    "Manga": "漫画",
+    "Ugoira": "动图",
+    "Novel": "小说"
+  },
+  "ClearDataKind": {
+    "FileCache": "已删除所有的文件缓存",
+    "DownloadHistory": "已删除所有的下载记录",
+    "SearchHistory": "已删除所有的搜索记录",
+    "BrowseHistory": "已删除所有的浏览记录"
+  },
+  "ThumbnailLayoutType": {
+    "LinedFlow": "流式布局",
+    "Grid": "网格布局",
+    "Masonry": "瀑布流布局"
+  },
+  "BrowseMode": {
+    "Swipe": "翻页",
+    "Continuous": "连续"
+  },
+  "BrowseDirection": {
+    "LeftRight": "从左到右",
+    "RightLeft": "从右到左",
+    "TopDown": "从上到下",
+    "BottomUp": "从下到上"
+  },
+  "IllustrationViewerAutoPlayMode": {
+    "Sequential": "顺序播放",
+    "Loop": "循环播放"
+  },
+  "IllustrationViewerAutoPlayScope": {
+    "CurrentWork": "当前画集",
+    "AllWorks": "全部画集"
+  },
+  "WorkSubscriptionType": {
+    "Bookmarks": "收藏",
+    "Posts": "发布作品"
+  },
+  "WorkSubscriptionWorkKind": {
+    "IllustrationAndManga": "插画和漫画",
+    "Illustration": "插画",
+    "Manga": "漫画",
+    "Novel": "小说"
+  },
+  "HomePageCardSourceKindDescription": {
+    "WorkRecommended": "来自 Pixiv 推荐引擎，可选择插画、漫画或小说。",
+    "WorkBookmarks": "指定用户、公开范围和标签的收藏作品列表。",
+    "WorkRanking": "指定作品范围、榜单类型和日期的排行列表。",
+    "WorkNew": "按作品类型展示 Pixiv 最新作品。",
+    "WorkFollowing": "来自已关注用户的新作品列表。",
+    "WorkPosts": "指定用户的插画、漫画或小说投稿。",
+    "WorkSearch": "按关键词搜索插画、漫画或小说。",
+    "UserRecommended": "Pixiv 推荐用户列表。",
+    "UserSearch": "按关键词搜索用户。",
+    "UserFollowing": "指定用户正在关注的用户列表。",
+    "UserMyPixiv": "指定用户的 My pixiv 用户列表。",
+    "Spotlight": "Pixivision 特辑列表。",
+    "SingleImage": "指定插画 ID 展示单个作品。",
+    "SingleNovel": "指定小说 ID 展示单个小说。",
+    "SingleUser": "指定用户 ID 展示单个用户。"
+  },
+  "DownloadListOption": {
+    "AllQueued": "所有下载任务",
+    "Cancelled": "已取消",
+    "Completed": "已下载",
+    "CustomSearch": "自定义搜索",
+    "Error": "下载失败",
+    "Running": "正在下载"
+  }
+}

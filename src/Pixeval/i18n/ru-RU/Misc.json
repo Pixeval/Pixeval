@@ -1,0 +1,18 @@
+{
+  "AddedToWatchLater": "已添加到稍后再看",
+  "RemovedFromWatchLater": "已从稍后再看移除",
+  "Pause": "暂停",
+  "Play": "播放",
+  "OpenBottomList": "打开底部图片列表",
+  "CloseBottomList": "关闭底部图片列表",
+  "ExceptionEncountered": "发生异常",
+  "AllCountedTagName": "所有标签",
+  "DownloadItemOpenFailed": "打开文件（夹）失败",
+  "DownloadItemMaybeDeleted": "可能你已经删除了该作品",
+  "UnexpectedBehavior": "发生了未定义的行为，如果你看到了该信息，请联系开发者寻求帮助",
+  "GoToPageFormatted": "去{0}页",
+  "Copied": "已复制",
+  "PixevalBadge": {
+    "Following": "关注中"
+  }
+}

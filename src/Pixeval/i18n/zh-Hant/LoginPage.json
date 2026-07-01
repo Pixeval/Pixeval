@@ -1,0 +1,16 @@
+{
+  "RefreshTokenBox": {
+    "PlaceholderText": "刷新令牌"
+  },
+  "RefreshTokenButton": {
+    "Content": "使用刷新令牌登录"
+  },
+  "WebViewButton": {
+    "Content": "通过WebView登录"
+  },
+  "FetchingSessionFailed": {
+    "Content": "请重新启动应用程序\n如果该问题反复出现，请联系开发者寻求解决",
+    "Title": "获取对话失败"
+  },
+  "LoginHeader": "登录"
+}

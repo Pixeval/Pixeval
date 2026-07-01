@@ -1,0 +1,98 @@
+{
+  "FilterQueryError": "筛选查询语句错误",
+  "Diagnostics": {
+    "CompletionSuffixFormatted": " 可补全：{0}",
+    "MessageWithPositionFormatted": "{0}（位置 {1}）{2}",
+    "UnexpectedToken": "遇到了无法识别的内容：{0}",
+    "MissingPredicateAfterNegation": "逻辑非 {0} 后缺少筛选条件",
+    "MissingTextValue": "筛选条件 {0} 后缺少值",
+    "MissingLongValue": "筛选条件 {0} 后缺少整数值",
+    "MissingDoubleValue": "筛选条件 {0} 后缺少小数值",
+    "MissingRangeValue": "筛选条件 {0} 后缺少范围值",
+    "MissingDateValue": "筛选条件 {0} 后缺少日期值",
+    "MissingGroupOperator": "在 ( 后需要 and 或 or，实际为 {0}",
+    "MissingRightParenthesis": "缺少与 {0} 匹配的右括号 )",
+    "InvalidValue": "筛选条件 {0} 的值无效",
+    "MissingStringQuote": "字符串 {0} 缺少结束引号",
+    "InvalidLongRangeFormat": "筛选条件 {0} 的整数范围 {1} 无效，应使用 a-b、-b 或 a- 形式",
+    "InvalidDoubleRangeFormat": "筛选条件 {0} 的小数范围 {1} 无效，应使用 a-b、-b 或 a- 形式",
+    "DateRequiresMonthAndDay": "筛选条件 {0} 的日期 {1} 至少需要月和日两部分",
+    "ExpectedInteger": "需要整数，实际为 {0}",
+    "IntegerOutOfRange": "整数值 {0} 超出支持范围",
+    "DenominatorCannotBeZero": "分数 {0} 的分母不能为 0",
+    "MissingFractionalPart": "小数 {0} 缺少小数部分",
+    "InvalidDoubleValue": "无效的小数值：{0}",
+    "DateValueTooLarge": "日期值 {0} 过大",
+    "NegativeRangeUnsupported": "筛选条件 {0} 的范围起点不能小于 0，实际为 {1}",
+    "RangeMinimumGreaterThanMaximum": "筛选条件 {0} 的范围最小值（{1}）必须小于或等于最大值（{2}）",
+    "DoubleRangeOpenIntervalUnsupported": "筛选条件 {0} 的小数范围暂不支持开区间写法",
+    "InvalidDate": "筛选条件 {0} 的日期无效：{1}",
+    "UnsupportedValueKind": "筛选条件 {0} 使用了未支持的筛选值类型：{1}",
+    "InternalExpectedTextValue": "筛选器内部错误：筛选条件 {0} 期望字符串值",
+    "InternalExpectedLongValue": "筛选器内部错误：筛选条件 {0} 期望整数值",
+    "InternalExpectedDoubleValue": "筛选器内部错误：筛选条件 {0} 期望小数值",
+    "InternalExpectedLongRangeValue": "筛选器内部错误：筛选条件 {0} 期望整数范围值",
+    "InternalExpectedDoubleRangeValue": "筛选器内部错误：筛选条件 {0} 期望小数范围值",
+    "InternalExpectedDateValue": "筛选器内部错误：筛选条件 {0} 期望日期值"
+  },
+  "Completions": {
+    "And": "逻辑与分组，写法：(and 条件1 条件2)",
+    "Or": "逻辑或分组，写法：(or 条件1 条件2)",
+    "Not": "逻辑非，作用于下一个条件或整个分组",
+    "Title": "按标题筛选",
+    "Tag": "按标签筛选",
+    "Author": "按作者筛选",
+    "Bookmark": "按收藏数筛选",
+    "Ratio": "按图片比例筛选",
+    "StartDate": "按起始发布日期筛选",
+    "EndDate": "按结束发布日期筛选",
+    "Include": {
+      "Constraint": "正约束",
+      "R18": "仅显示 R18（含R18G）",
+      "R18G": "仅显示 R18G",
+      "Gif": "仅显示动图",
+      "Ai": "仅显示 AI 作品"
+    },
+    "Exclude": {
+      "Constraint": "反约束",
+      "R18": "排除 R18（含R18G）",
+      "R18G": "排除 R18G",
+      "Gif": "排除动图",
+      "Ai": "排除 AI 作品"
+    },
+    "ValueHints": {
+      "Text": {
+        "Plain": "普通的字符串",
+        "Quoted": "带空格或转义字符的字符串",
+        "Exact": "完全匹配的字符串",
+        "QuotedExact": "完全匹配并且带空格或转义字符的字符串"
+      },
+      "Long": {
+        "Plain": "普通的整数"
+      },
+      "Double": {
+        "Integer": "整数形式的小数值",
+        "Decimal": "小数形式的小数值",
+        "Fraction": "分数形式的小数值"
+      },
+      "LongRange": {
+        "Lower": "大于等于 2",
+        "Upper": "小于等于 3",
+        "Closed": "大于等于 2 且小于等于 3"
+      },
+      "DoubleRange": {
+        "Lower": "大于等于 2",
+        "UpperDecimal": "小于等于 1.5",
+        "UpperFraction": "小于等于 1/2",
+        "ClosedFraction": "大于等于 1/2 且小于等于 3",
+        "ClosedDecimalFraction": "大于等于 0.3 且小于等于 1/2"
+      },
+      "Date": {
+        "MonthDayDash": "今年某月某日，- 分隔",
+        "MonthDayDot": "今年某月某日，. 分隔",
+        "FullDash": "某年某月某日，- 分隔",
+        "FullDot": "某年某月某日，. 分隔"
+      }
+    }
+  }
+}

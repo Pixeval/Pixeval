@@ -1,0 +1,14 @@
+{
+  "DependenciesSubtitleTextBlock": {
+    "Text": "依赖项"
+  },
+  "OpenSourceLicenseSubtitleTextBlock": {
+    "Text": "开源许可"
+  },
+  "SpecialThanksSubtitleTextBlock": {
+    "Text": "鸣谢（排名不分先后）"
+  },
+  "TitleTextBlock": {
+    "Text": "关于 Pixeval"
+  }
+}

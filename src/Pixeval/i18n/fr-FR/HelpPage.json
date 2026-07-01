@@ -1,0 +1,26 @@
+{
+  "TitleTextBlock": {
+    "Text": "Pixeval 帮助"
+  },
+  "QueryFilterHelpExpander": {
+    "Header": "筛选查询语句帮助"
+  },
+  "QueryFilterSimpleHelpHeader": {
+    "Text": "简易教程"
+  },
+  "QueryFilterHelpHeader": {
+    "Text": "完整教程"
+  },
+  "DownloadMacroHelpExpander": {
+    "Header": "下载宏帮助"
+  },
+  "AppProtocolLinkHelpExpander": {
+    "Header": "应用协议链接使用帮助"
+  },
+  "AppLinkHelp": {
+    "Text": "分享给你的朋友，或者在浏览器或 Windows 运行中输入该链接，可以直接在 Pixeval 打开当前页面"
+  },
+  "ExtensionsHelpExpander": {
+    "Header": "扩展系统帮助"
+  }
+}
