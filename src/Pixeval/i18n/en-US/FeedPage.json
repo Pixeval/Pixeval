@@ -1,0 +1,11 @@
+{
+  "SparseBookmarkFormatted": "将{0}添加到了收藏夹",
+  "SparseFollowUserFormatted": "关注了{0}",
+  "CondensedBookmarkFormatted": "添加了{0}等共{1}部作品到收藏夹",
+  "CondensedFollowUserFormatted": "关注了{0}等共{1}位用户",
+  "CondensedPostIllustFormatted": "投稿了{0}等共{1}部作品",
+  "FeedListTextBlock": {
+    "Text": "用户动态"
+  },
+  "SparsePostIllustFormatted": "投稿了{0}"
+}
