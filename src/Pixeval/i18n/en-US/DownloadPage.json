@@ -1,0 +1,30 @@
+{
+  "CancelSelectionButtonDefaultLabel": "取消选择",
+  "CancelSelectionButtonFormatted": "取消选择（{0}）",
+  "DeleteDownloadHistoryRecordsFormatted": "删除 {0} 条历史记录",
+  "FolderSubtitleFormatted": "{0} 个下载任务",
+  "FilterAutoSuggestBox": {
+    "PlaceholderText": "作品名/作品ID"
+  },
+  "PauseButton": {
+    "Label": "暂停"
+  },
+  "ResumeButton": {
+    "Label": "恢复"
+  },
+  "SelectAllButton": {
+    "Label": "全选"
+  },
+  "ResetButton": {
+    "Label": "重新下载"
+  },
+  "StopButton": {
+    "Label": "取消"
+  },
+  "DeleteButton": {
+    "Label": "删除"
+  },
+  "DeleteLocalFiles": {
+    "Content": "同时删除本地文件"
+  }
+}
