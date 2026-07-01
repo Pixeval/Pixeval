@@ -66,8 +66,8 @@ public static class AvaloniaHelper
         new(typeof(BrowsingHistoryPage), Symbol.History, MainPageResources.TabBrowsingHistory),
         new(typeof(WatchLaterPage), Symbol.Clock, MainPageResources.TabWatchLater),
         new(typeof(DownloadPage), Symbol.ArrowSquareDown, MainPageResources.TabDownload),
-        new(typeof(ExtensionsPage), Symbol.PuzzlePiece, MainPageResources.TabExtensions),
-        new(typeof(SettingsPage), Symbol.Settings, MainPageResources.TabSettings)
+        new(typeof(ExtensionsPage), Symbol.PuzzlePiece, MainPageResources.TabExtensions, false),
+        new(typeof(SettingsPage), Symbol.Settings, MainPageResources.TabSettings, false)
     ];
 
     public static EventHandler<RoutedEventArgs>? LaunchUriTagInWebBrowser { get; }
@@ -124,7 +124,8 @@ public record NavigationInfo(
     [property: DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
     Type PageType,
     Symbol Icon,
-    string Header)
+    string Header,
+    bool NeedLogin = true)
 {
     public string Header { get; } = I18NManager.GetResource(Header);
 }

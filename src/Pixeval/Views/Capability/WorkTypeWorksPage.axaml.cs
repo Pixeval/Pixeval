@@ -109,7 +109,7 @@ public class WorkPostsPage : WorkTypeWorksPage
 {
     private readonly UserBasicInfo _user;
 
-    public WorkPostsPage() : this(App.AppViewModel.MakoClient.Me!)
+    public WorkPostsPage() : this(PixevalSettings.Me)
     {
     }
 

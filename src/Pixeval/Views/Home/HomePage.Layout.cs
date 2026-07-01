@@ -73,7 +73,6 @@ public partial class HomePage
     {
         var control = new HomePageCardControl(card, ViewModel.GetTemplate(card), RowCount, ColumnCount)
         {
-            IsCardTitleVisible = !ViewModel.IsCardTitleHidden,
             IsEditing = ViewModel.IsEditMode,
             IsSelected = card == _selectedCard
         };
@@ -103,7 +102,6 @@ public partial class HomePage
             {
                 control.UpdateGridSize(RowCount, ColumnCount);
                 control.UpdateBackground();
-                control.IsCardTitleVisible = !ViewModel.IsCardTitleHidden;
                 control.IsEditing = ViewModel.IsEditMode;
                 control.IsSelected = card == _selectedCard;
                 ApplyCardLayout(control);

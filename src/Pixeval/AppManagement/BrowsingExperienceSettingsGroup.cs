@@ -40,4 +40,7 @@ public record BrowsingExperienceSettingsGroup
 
     [SettingsEntry(Symbol.Info, AppSettingsResources.OpenWorkInfoByDefaultEntryHeader, AppSettingsResources.OpenWorkInfoByDefaultEntryDescription)]
     public bool OpenWorkInfoByDefault { get; set; }
+
+    [SettingsEntry(Symbol.PersonInfo, AppSettingsResources.OpenUserInfoByDefaultEntryHeader, AppSettingsResources.OpenUserInfoByDefaultEntryDescription)]
+    public bool OpenUserInfoByDefault { get; set; } = true;
 }

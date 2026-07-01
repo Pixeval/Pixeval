@@ -193,7 +193,7 @@
             <SolidColorBrush x:Key="AccentAcrylicBackgroundFillColorBaseBrush" Color="{DynamicResource SystemAccentColorLight3}" />
             <SolidColorBrush x:Key="AccentAcrylicInAppFillColorBaseBrush" Color="{DynamicResource SystemAccentColorLight3}" />
 
-
+            <SolidColorBrush x:Key="PixevalTranslucentBackground" Color="#8FFFFFFF" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
             <!--  Brushes  -->
@@ -385,6 +385,7 @@
             <SolidColorBrush x:Key="AccentAcrylicBackgroundFillColorBaseBrush" Color="{DynamicResource SystemAccentColorDark2}" />
             <SolidColorBrush x:Key="AccentAcrylicInAppFillColorBaseBrush" Color="{DynamicResource SystemControlAccentColorDark2}" />
 
+            <SolidColorBrush x:Key="PixevalTranslucentBackground" Color="#8F000000" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 

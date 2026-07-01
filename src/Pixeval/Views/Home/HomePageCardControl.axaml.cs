@@ -370,7 +370,7 @@ public sealed partial class HomePageCardControl : TemplatedControl, IDisposable
         PreviewViewModel?.ViewModel is SpotlightViewViewModel viewModel ? new(viewModel) : null;
 
     private static UserBasicInfo CreateUserBasicInfo(HomePageCardLayout card) =>
-        App.AppViewModel.MakoClient.Me is { Id: var meId } me && card.UserId == meId
+        PixevalSettings.Me is { Id: var meId } me && card.UserId == meId
             ? me
             : new HomeCardUserBasicInfo(card.UserId, card.ToString());
 

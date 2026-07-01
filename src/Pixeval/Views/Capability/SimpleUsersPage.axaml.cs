@@ -95,7 +95,7 @@ public class UserMyPixivPage : SimpleUsersPage
 {
     private readonly long _userId;
 
-    public UserMyPixivPage() : this(App.AppViewModel.PixivUid)
+    public UserMyPixivPage() : this(PixevalSettings.MyId)
     {
     }
 
@@ -116,7 +116,7 @@ public class RelatedUsersPage : SimpleUsersPage
 {
     private readonly long _userId;
 
-    public RelatedUsersPage() : this(App.AppViewModel.PixivUid)
+    public RelatedUsersPage() : this(PixevalSettings.MyId)
     {
     }
 

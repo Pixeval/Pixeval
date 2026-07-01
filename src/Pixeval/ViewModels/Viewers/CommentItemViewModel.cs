@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.Utilities;
+using Pixeval.Views;
 
 namespace Pixeval.ViewModels.Viewers;
 
@@ -37,7 +38,7 @@ public sealed class CommentItemViewModel(Comment comment, SimpleWorkType parentT
 
     public string CommentContent => CommentImageHelper.GetContents(Comment.Content);
 
-    public bool IsMe => UserId == App.AppViewModel.PixivUid;
+    public bool IsMe => UserId == PixevalSettings.MyId;
 
     public long Id => Comment.Id;
 

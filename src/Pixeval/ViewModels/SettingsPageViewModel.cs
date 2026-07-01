@@ -83,7 +83,8 @@ public class SettingsPageViewModel : ViewModelBase
                 .Enum(t => t.IllustrationViewerAutoPlayScope)
                 .Enum(t => t.TargetFilter)
                 .Collection(t => t.BlockedTags)
-                .Bool(t => t.OpenWorkInfoByDefault))
+                .Bool(t => t.OpenWorkInfoByDefault)
+                .Bool(t => t.OpenUserInfoByDefault))
             .NewGroup(t => t.SearchSettings, group => group
                 .String(t => t.ReverseSearchApiKey)
                 .Enum(t => t.DefaultSimpleWorkType)

@@ -17,6 +17,7 @@ using Pixeval.Models.Download;
 using Pixeval.Models.Download.Tasks;
 using Pixeval.Models.Options;
 using Pixeval.Utilities;
+using Pixeval.Views;
 
 namespace Pixeval.Models.Subscriptions;
 
@@ -166,7 +167,7 @@ public class WorkSubscriptionDownloadService(
                 yield break;
 
             yield return makoClient.WorkBookmarks(subscription.UserId, type, PrivacyPolicy.Public, null);
-            if (subscription.UserId == App.AppViewModel.PixivUid)
+            if (subscription.UserId == PixevalSettings.MyId)
                 yield return makoClient.WorkBookmarks(subscription.UserId, type, PrivacyPolicy.Private, null);
         }
 

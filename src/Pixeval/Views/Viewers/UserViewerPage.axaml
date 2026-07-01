@@ -9,11 +9,13 @@
     xmlns:pixeval="using:Pixeval"
     xmlns:utilities="using:Pixeval.Utilities"
     xmlns:viewers="using:Pixeval.ViewModels.Viewers"
+    xmlns:views="using:Pixeval.Views"
     x:DataType="{x:Type viewers:UserViewerPageViewModel}"
-    Header="{Binding UserDetail.UserEntity.Name, FallbackValue={x:Null}}"
+    Design.DataContext="{x:Static utilities:DesignHelper.DesignUserViewerPageViewModel}"
+    Header="{Binding Header}"
     mc:Ignorable="d"
     d:DesignHeight="600"
-    d:DesignWidth="800">
+    d:DesignWidth="1200">
     <ContentPage.Icon>
         <Image
             Width="16"
@@ -22,50 +24,17 @@
     </ContentPage.Icon>
     <Grid>
         <DockPanel IsVisible="{Binding UserDetail, Converter={x:Static ObjectConverters.IsNotNull}}">
-            <!--  顶部信息区域  -->
-            <Border controls:Source.BackgroundCache="{Binding BackgroundUrl}" DockPanel.Dock="Top">
-                <Grid RowDefinitions="Auto,Auto">
-
-                    <!--  用户信息  -->
-                    <StackPanel
-                        Grid.Row="0"
-                        Margin="40,20"
-                        Orientation="Horizontal"
-                        Spacing="30">
-                        <!--  头像  -->
-                        <Border
-                            Width="80"
-                            Height="80"
-                            ClipToBounds="True"
-                            CornerRadius="40">
-                            <Image controls:Source.Cache="{Binding AvatarUrl}" Stretch="UniformToFill" />
-                        </Border>
-
-                        <!--  用户名、ID、简介  -->
-                        <StackPanel
-                            MaxWidth="400"
-                            VerticalAlignment="Center"
-                            Spacing="6">
-                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                <TextBlock Text="{Binding UserDetail.UserEntity.Name, FallbackValue={x:Null}}" Theme="{StaticResource TitleTextBlockStyle}" />
-                                <controls:PixevalBadge IsVisible="{Binding UserDetail.UserProfile.IsPremium, FallbackValue={x:Null}}" Mode="Premium" />
-                            </StackPanel>
-                            <TextBlock
-                                FontSize="13"
-                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                Text="{Binding Id}" />
-                            <TextBlock
-                                MaxHeight="60"
-                                controls:TranslatableTextBlockBehavior.IsEnabled="True"
-                                controls:TranslatableTextBlockBehavior.TextType="UserComment"
-                                Text="{Binding UserDetail.UserEntity.Description, FallbackValue={x:Null}}"
-                                TextWrapping="Wrap" />
-                        </StackPanel>
-                    </StackPanel>
-
-                    <!--  指标 + 操作栏  -->
-                    <DockPanel Grid.Row="1" Margin="20,0,20,8">
-                        <!--  操作按钮（右侧）  -->
+            <Expander
+                x:Name="UserInfoExpander"
+                Padding="0"
+                HorizontalAlignment="Stretch"
+                controls:Source.BackgroundCache="{Binding BackgroundUrl}"
+                DockPanel.Dock="Top"
+                ExpandDirection="Up"
+                IsExpanded="{Binding OpenUserInfo, Source={x:Static views:PixevalSettings.Instance}, Mode=TwoWay}"
+                PropertyChanged="UserInfoExpander_OnPropertyChanged">
+                <Expander.Header>
+                    <DockPanel>
                         <CommandBar
                             DefaultLabelPosition="Right"
                             DockPanel.Dock="Right"
@@ -103,11 +72,34 @@
                                 Tag="{Binding UserDetail.UserEntity.WebsiteUri, FallbackValue={x:Null}}" />
                         </CommandBar>
 
-                        <!--  指标数据（左侧）  -->
                         <StackPanel
                             VerticalAlignment="Center"
                             Orientation="Horizontal"
                             Spacing="16">
+                            <!--  头像  -->
+                            <controls:AvatarImage
+                                Width="40"
+                                Height="40"
+                                VerticalAlignment="Center"
+                                controls:Source.Cache="{Binding AvatarUrl}"
+                                IsVisible="{Binding !#UserInfoExpander.IsExpanded}" />
+
+                            <!--  用户名、ID、简介  -->
+                            <StackPanel
+                                MaxWidth="150"
+                                VerticalAlignment="Center"
+                                IsVisible="{Binding !#UserInfoExpander.IsExpanded}"
+                                Spacing="6">
+                                <TextBlock
+                                    MaxLines="1"
+                                    Text="{Binding UserDetail.UserEntity.Name, FallbackValue={x:Null}}"
+                                    TextWrapping="Wrap"
+                                    Theme="{StaticResource CaptionStrongTextBlockStyle}" />
+                                <TextBlock
+                                    FontSize="13"
+                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                    Text="{Binding Id}" />
+                            </StackPanel>
                             <controls:IconText
                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                 Symbol="PersonHeart"
@@ -130,29 +122,62 @@
                                 Text="{Binding UserDetail.UserProfile.TotalNovelSeries, FallbackValue={x:Null}}" />
                         </StackPanel>
                     </DockPanel>
-                </Grid>
-            </Border>
+                </Expander.Header>
+                <Border MinHeight="210" Background="{DynamicResource PixevalTranslucentBackground}">
+                    <!--  用户信息  -->
+                    <StackPanel
+                        Margin="40,20"
+                        VerticalAlignment="Stretch"
+                        Orientation="Horizontal"
+                        Spacing="30">
+                        <!--  头像  -->
+                        <controls:AvatarImage
+                            Width="80"
+                            Height="80"
+                            VerticalAlignment="Center"
+                            controls:Source.Cache="{Binding AvatarUrl}" />
 
-            <!--  标签页内容区域  -->
+                        <!--  用户名、ID、简介  -->
+                        <StackPanel
+                            MaxWidth="400"
+                            VerticalAlignment="Center"
+                            Spacing="6">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBlock Text="{Binding UserDetail.UserEntity.Name, FallbackValue={x:Null}}" Theme="{StaticResource TitleTextBlockStyle}" />
+                                <controls:PixevalBadge IsVisible="{Binding UserDetail.UserProfile.IsPremium, FallbackValue={x:Null}}" Mode="Premium" />
+                            </StackPanel>
+                            <TextBlock
+                                FontSize="13"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Text="{Binding Id}" />
+                            <TextBlock
+                                MaxHeight="60"
+                                controls:TranslatableTextBlockBehavior.IsEnabled="True"
+                                controls:TranslatableTextBlockBehavior.TextType="UserComment"
+                                Text="{Binding UserDetail.UserEntity.Description, FallbackValue={x:Null}}"
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Expander>
             <TabbedPage Pages="{Binding TabPages}" />
         </DockPanel>
-        <Grid Background="#7F000000" IsVisible="{Binding IsLoading}">
+        <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" IsVisible="{Binding IsLoading}">
             <StackPanel
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Spacing="10">
                 <ProgressBar Width="160" IsIndeterminate="True" />
-                <TextBlock Foreground="White" Text="{I18N {x:Static pixeval:HomePageResources.CardPreviewLoadingTextBlockText}}" />
+                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.CardPreviewLoadingTextBlockText}}" />
             </StackPanel>
-        </Grid>
-        <Grid Background="#7F000000" IsVisible="{Binding LoadErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+        </Border>
+        <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" IsVisible="{Binding LoadErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
             <TextBlock
                 MaxWidth="480"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Foreground="White"
                 Text="{Binding LoadErrorMessage}"
                 TextWrapping="Wrap" />
-        </Grid>
+        </Border>
     </Grid>
 </ContentPage>

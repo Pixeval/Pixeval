@@ -14,6 +14,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
     xmlns:viewModels="using:Pixeval.ViewModels.Home"
+    xmlns:views="using:Pixeval.Views"
     x:DataType="{x:Type viewModels:HomePageViewModel}"
     DrawerIcon="{markup:SymbolIcon Edit}"
     DrawerLayoutBehavior="Split"
@@ -35,7 +36,7 @@
         <DockPanel
             DockPanel.Dock="Top"
             HorizontalSpacing="10"
-            IsVisible="{Binding !IsToolbarHidden}">
+            IsVisible="{Binding !#HideHomePageToolbarButton.IsChecked}">
             <Image
                 Width="30"
                 Height="30"
@@ -53,11 +54,12 @@
                 IsDynamicOverflowEnabled="True">
                 <CommandBarToggleButton
                     Icon="{markup:SymbolIcon AppTitle}"
-                    IsChecked="{Binding IsCardTitleHidden, Mode=TwoWay}"
+                    IsChecked="{Binding HideHomePageCardTitle, Source={x:Static views:PixevalSettings.Instance}, Mode=TwoWay}"
                     Label="{I18N {x:Static pixeval:HomePageResources.HideCardTitleButtonLabel}}" />
                 <CommandBarToggleButton
+                    x:Name="HideHomePageToolbarButton"
                     Icon="{markup:SymbolIcon WindowHeaderHorizontal}"
-                    IsChecked="{Binding IsToolbarHidden, Mode=TwoWay}"
+                    IsChecked="{Binding HideHomePageToolbar, Source={x:Static views:PixevalSettings.Instance}, Mode=TwoWay}"
                     Label="{I18N {x:Static pixeval:HomePageResources.HideToolbarButtonLabel}}" />
                 <CommandBarToggleButton
                     Icon="{markup:SymbolIcon Edit}"

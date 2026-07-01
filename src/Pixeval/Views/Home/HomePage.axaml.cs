@@ -34,7 +34,6 @@ public partial class HomePage : DrawerPage
         UpdateGridSizeControls();
 
         RefreshGrid();
-        ApplyDisplaySettings();
     }
 
     private int RowCount => ViewModel.RowCount;
@@ -56,9 +55,6 @@ public partial class HomePage : DrawerPage
                 }
 
                 RefreshEditModeVisuals();
-                break;
-            case nameof(HomePageViewModel.IsCardTitleHidden):
-                ApplyDisplaySettings();
                 break;
             case nameof(HomePageViewModel.GridRowsValue):
             case nameof(HomePageViewModel.GridColumnsValue):

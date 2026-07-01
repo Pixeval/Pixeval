@@ -5,26 +5,77 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Mako.Model;
+using Mako.Net.Responses;
 using Misaki;
 using Pixeval.AppManagement;
 using Pixeval.ViewModels;
+using Pixeval.ViewModels.Viewers;
 
 namespace Pixeval.Utilities;
 
 public static class DesignHelper
 {
-    public static UserItemViewModel DesignUserViewModel
-    {
-        get
-        {
-            field ??= new(DesignUser);
-            return field;
-        }
-    }
+    public static UserViewerPageViewModel DesignUserViewerPageViewModel => field ??= new(DesignSingleUserResponse);
+
+    public static UserItemViewModel DesignUserViewModel => field ??= new(DesignUser);
 
     public static IllustrationItemViewModel DesignIllustrationViewModel => field ??= new(DesignIllustration);
 
     public static NovelItemViewModel DesignNovelViewModel => field ??= new(DesignNovel);
+
+    public static SingleUserResponse DesignSingleUserResponse => field ??= new()
+    {
+        UserEntity = DesignUserInfo,
+        UserProfilePublicity = new ProfilePublicity
+        {
+            Gender = "Gender",
+            Region = "Region",
+            BirthDay = "BirthDay",
+            BirthYear = "BirthYear",
+            Job = "Job",
+            Pawoo = false
+        },
+        UserProfile = new Profile
+        {
+            Webpage = "Webpage",
+            Gender = "Gender",
+            Birth = "Birth",
+            BirthDay = "BirthDay",
+            BirthYear = 0,
+            Region = "Region",
+            AddressId = 0,
+            CountryCode = "CountryCode",
+            Job = "Job",
+            JobId = 0,
+            TotalFollowUsers = 0,
+            TotalMyPixivUsers = 0,
+            TotalIllustrations = 0,
+            TotalManga = 0,
+            TotalNovels = 0,
+            TotalIllustrationBookmarksPublic = 0,
+            TotalIllustrationSeries = 0,
+            TotalNovelSeries = 0,
+            BackgroundImageUrl = AppInfo.ImageNotAvailablePath,
+            TwitterAccount = "TwitterAccount",
+            TwitterUrl = "TwitterUrl",
+            IsPremium = false,
+            IsUsingCustomProfileImage = false
+        }, UserWorkspace = new Workspace
+        {
+            Pc = "Pc",
+            Monitor = "Monitor",
+            Tool = "Tool",
+            Scanner = "Scanner",
+            Tablet = "Tablet",
+            Mouse = "Mouse",
+            Printer = "Printer",
+            Desktop = "Desktop",
+            Music = "Music",
+            Desk = "Desk",
+            Chair = "Chair",
+            Comment = "Comment"
+        }
+    };
 
     public static User DesignUser => field ??= new()
     {

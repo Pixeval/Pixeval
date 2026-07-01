@@ -10,6 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
     xmlns:viewModels="using:Pixeval.ViewModels"
+    xmlns:views="using:Pixeval.Views"
     mc:Ignorable="d"
     d:DesignHeight="240"
     d:DesignWidth="320">
@@ -19,6 +20,7 @@
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="IsCardTitleVisible" Value="{Binding !HideHomePageCardTitle, Source={x:Static views:PixevalSettings.Instance}}" />
         <Setter Property="Template">
             <ControlTemplate TargetType="{x:Type home:HomePageCardControl}">
                 <Panel x:Name="PART_RootPanel" ClipToBounds="False">
@@ -85,7 +87,9 @@
                                                 Command="{Binding $parent[home:HomePageCardControl].OpenPreviewItemCommand}"
                                                 CommandParameter="{Binding}"
                                                 Theme="{StaticResource TransparentButtonStyle}">
-                                                <Image controls:Source.Cache="{Binding ThumbnailUrl}" Stretch="UniformToFill" />
+                                                <Border ClipToBounds="True" CornerRadius="{StaticResource ControlCornerRadius}">
+                                                    <Image controls:Source.Cache="{Binding ThumbnailUrl}" Stretch="UniformToFill" />
+                                                </Border>
                                             </Button>
                                         </DataTemplate>
 
@@ -97,11 +101,13 @@
                                                 CommandParameter="{Binding}"
                                                 Theme="{StaticResource TransparentButtonStyle}">
                                                 <DockPanel VerticalSpacing="6">
-                                                    <Image
+                                                    <Border
                                                         Height="64"
-                                                        controls:Source.Cache="{Binding ThumbnailUrl}"
-                                                        DockPanel.Dock="Top"
-                                                        Stretch="UniformToFill" />
+                                                        ClipToBounds="True"
+                                                        CornerRadius="{StaticResource ControlCornerRadius}"
+                                                        DockPanel.Dock="Top">
+                                                        <Image controls:Source.Cache="{Binding ThumbnailUrl}" Stretch="UniformToFill" />
+                                                    </Border>
                                                     <TextBlock
                                                         FontSize="12"
                                                         MaxLines="2"
@@ -138,7 +144,9 @@
                                                         Text="{Binding Entry.PureTitle}"
                                                         TextTrimming="CharacterEllipsis"
                                                         TextWrapping="Wrap" />
-                                                    <Image controls:Source.Cache="{Binding ThumbnailUrl}" Stretch="UniformToFill" />
+                                                    <Border ClipToBounds="True" CornerRadius="{StaticResource ControlCornerRadius}">
+                                                        <Image controls:Source.Cache="{Binding ThumbnailUrl}" Stretch="UniformToFill" />
+                                                    </Border>
                                                 </DockPanel>
                                             </Button>
                                         </DataTemplate>

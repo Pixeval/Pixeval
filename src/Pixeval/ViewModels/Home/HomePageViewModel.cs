@@ -14,6 +14,7 @@ using Pixeval.Controls;
 using Pixeval.I18N;
 using Pixeval.Models.Home;
 using Pixeval.Models.Options;
+using Pixeval.Views;
 using Pixeval.Views.Home;
 
 namespace Pixeval.ViewModels.Home;
@@ -32,52 +33,8 @@ public partial class HomePageViewModel : ViewModelBase
 
     public IReadOnlyList<HomeCardTemplate> CardTemplates { get; } = CreateCardTemplates();
 
-    public bool IsEditMode
-    {
-        get;
-        set
-        {
-            if (value && IsToolbarHidden)
-                value = false;
-
-            SetProperty(ref field, value);
-        }
-    }
-
-    public bool IsToolbarHidden
-    {
-        get;
-        set
-        {
-            if (!SetProperty(ref field, value))
-                return;
-
-            if (value && IsEditMode)
-                IsEditMode = false;
-
-            if (Settings.ApplicationSettings.HideHomePageToolbar == value)
-                return;
-
-            Settings.ApplicationSettings.HideHomePageToolbar = value;
-            AppInfo.SaveSettings(Settings);
-        }
-    } = Settings.ApplicationSettings.HideHomePageToolbar;
-
-    public bool IsCardTitleHidden
-    {
-        get;
-        set
-        {
-            if (!SetProperty(ref field, value))
-                return;
-
-            if (Settings.ApplicationSettings.HideHomePageCardTitle == value)
-                return;
-
-            Settings.ApplicationSettings.HideHomePageCardTitle = value;
-            AppInfo.SaveSettings(Settings);
-        }
-    } = Settings.ApplicationSettings.HideHomePageCardTitle;
+    [ObservableProperty]
+    public partial bool IsEditMode { get; set; }
 
     public int RowCount => decimal.ToInt32(decimal.Clamp(Settings.ApplicationSettings.HomePageRows, HomePage.MinimumGridSize, HomePage.MaximumGridSize));
 
@@ -241,7 +198,7 @@ public partial class HomePageViewModel : ViewModelBase
             case HomePageCardSourceKind.WorkBookmarks or HomePageCardSourceKind.WorkPosts
                 or HomePageCardSourceKind.UserFollowing or HomePageCardSourceKind.UserMyPixiv:
             {
-                SourceUserIdText = App.AppViewModel.PixivUid.ToString();
+                SourceUserIdText = PixevalSettings.MyId.ToString();
                 SourceEntryIdText = "";
                 SourceSearchText = "";
                 if (template.SourceKind is not HomePageCardSourceKind.WorkBookmarks)

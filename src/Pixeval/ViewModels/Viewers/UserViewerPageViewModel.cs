@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mako.Global.Enum;
 using Mako.Net.Responses;
+using Pixeval.Views;
 using Pixeval.Views.Capability;
 
 namespace Pixeval.ViewModels.Viewers;
@@ -29,10 +30,13 @@ public partial class UserViewerPageViewModel : ViewModelBase, IDisposable
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Id))]
+    [NotifyPropertyChangedFor(nameof(Header))]
     [NotifyPropertyChangedFor(nameof(AvatarUrl))]
     [NotifyPropertyChangedFor(nameof(BackgroundUrl))]
     [NotifyPropertyChangedFor(nameof(TabPages))]
     public partial SingleUserResponse? UserDetail { get; private set; }
+
+    public string Header => UserDetail?.UserEntity.Name ?? Id.ToString();
 
     public long Id => UserDetail?.UserEntity.Id ?? field;
 
@@ -103,7 +107,7 @@ public partial class UserViewerPageViewModel : ViewModelBase, IDisposable
         }
     }
 
-    private bool CanFollow => Id != App.AppViewModel.PixivUid;
+    private bool CanFollow => Id != PixevalSettings.MyId;
 
     [RelayCommand(CanExecute = nameof(CanFollow))]
     private async Task FollowAsync()

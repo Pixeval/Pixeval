@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Mako.Engine.Implements;
 using Mako.Global.Enum;
 using Pixeval.I18N;
+using Pixeval.Views;
 
 namespace Pixeval.ViewModels.Search;
 
@@ -45,7 +46,7 @@ public abstract partial class SearchArgumentsFormViewModelBase : ViewModelBase
             return false;
         }
 
-        if (!(App.AppViewModel.MakoClient.Me?.IsPremium ?? false)
+        if (!(PixevalSettings.Me?.IsPremium ?? false)
             && SortOption is WorkSortOption.PopularityDescending)
         {
             title = I18NManager.GetResource(SearchResources.ValidationPremiumSortTitle);

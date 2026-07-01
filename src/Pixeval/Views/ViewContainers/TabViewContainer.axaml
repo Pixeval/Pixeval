@@ -12,6 +12,7 @@
     xmlns:tabView="using:TabView.Avalonia"
     xmlns:utilities="using:Pixeval.Utilities"
     xmlns:viewModels="using:Pixeval.ViewModels"
+    xmlns:views="using:Pixeval.Views"
     x:DataType="{x:Type viewModels:TabViewContainerViewModel}"
     mc:Ignorable="d"
     d:DesignHeight="450"
@@ -23,6 +24,7 @@
         x:Name="TabsControl"
         AddTabButtonClick="TabsView_OnAddTabButtonClick"
         LeftHeaderContentDraggable="True"
+        ShowDefaultAddButton="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
         TabClosing="TabsView_OnTabClosing">
         <tabView:TabsView.LeftHeaderContent>
             <Image
@@ -47,15 +49,18 @@
                             Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
                             Header="{Binding IdText, StringFormat='ID: {0}'}"
                             Icon="{markup:SymbolIcon Guest}"
+                            IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
                             Tag="{Binding IdText}" />
                         <MenuItem
                             Click="OpenMyPage_OnClick"
                             Header="{I18N {x:Static pixeval:MainPageResources.OpenMyPageItemText}}"
-                            Icon="{markup:SymbolIcon Open}" />
+                            Icon="{markup:SymbolIcon Open}"
+                            IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}" />
                         <MenuItem
                             Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                             Header="{I18N {x:Static pixeval:MainPageResources.OpenMyPageInBrowserItemText}}"
                             Icon="{markup:SymbolIcon GlobeArrowUp}"
+                            IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
                             Tag="{Binding Url}" />
                         <Separator />
                         <!--  该项不显示  -->
@@ -64,6 +69,7 @@
                             Header="{I18N {x:Static pixeval:MainPageResources.RestrictedModeItemText}}"
                             Icon="{markup:SymbolIcon PersonProhibited}"
                             IsChecked="{Binding RestrictedCache}"
+                            IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
                             IsVisible="False"
                             ToggleType="CheckBox" />
                         <MenuItem
@@ -71,11 +77,13 @@
                             Header="{I18N {x:Static pixeval:MainPageResources.AiShowItemText}}"
                             Icon="{markup:SymbolIcon Bot}"
                             IsChecked="{Binding AiShowCache}"
+                            IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
                             ToggleType="CheckBox" />
                         <MenuItem
                             Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                             Header="{I18N {x:Static pixeval:MainPageResources.MoreViewingSettingsItemText}}"
                             Icon="{markup:SymbolIcon MoreHorizontal}"
+                            IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
                             Tag="https://www.pixiv.net/settings/viewing" />
                         <Separator />
                         <MenuItem
@@ -97,6 +105,12 @@
                             HorizontalAlignment="Stretch"
                             Background="Transparent"
                             Click="NavigationButton_OnClick">
+                            <Button.IsEnabled>
+                                <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                                    <Binding Path="!NeedLogin" />
+                                    <Binding Path="IsLoggedIn" Source="{x:Static views:PixevalSettings.Instance}" />
+                                </MultiBinding>
+                            </Button.IsEnabled>
                             <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
                                 <fluent:SymbolIcon
                                     HorizontalAlignment="Center"

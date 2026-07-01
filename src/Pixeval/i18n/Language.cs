@@ -80,6 +80,8 @@ namespace Pixeval
         public const string NovelSettingsLineHeightEntryHeader = "AppSettings.NovelSettingsLineHeightEntry.Header";
         public const string NovelSettingsMaxWidthEntryDescription = "AppSettings.NovelSettingsMaxWidthEntry.Description";
         public const string NovelSettingsMaxWidthEntryHeader = "AppSettings.NovelSettingsMaxWidthEntry.Header";
+        public const string OpenUserInfoByDefaultEntryDescription = "AppSettings.OpenUserInfoByDefaultEntry.Description";
+        public const string OpenUserInfoByDefaultEntryHeader = "AppSettings.OpenUserInfoByDefaultEntry.Header";
         public const string OpenWorkInfoByDefaultEntryDescription = "AppSettings.OpenWorkInfoByDefaultEntry.Description";
         public const string OpenWorkInfoByDefaultEntryHeader = "AppSettings.OpenWorkInfoByDefaultEntry.Header";
         public const string OverwriteDownloadedFileEntryDescription = "AppSettings.OverwriteDownloadedFileEntry.Description";

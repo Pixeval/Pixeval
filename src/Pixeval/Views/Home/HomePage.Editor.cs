@@ -1,7 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
-using System.Linq;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.Input;
 using Pixeval.AppManagement;
@@ -13,12 +12,6 @@ namespace Pixeval.Views.Home;
 
 public partial class HomePage
 {
-    private void ApplyDisplaySettings()
-    {
-        foreach (var child in HomeGrid.Children.OfType<HomePageCardControl>())
-            child.IsCardTitleVisible = !ViewModel.IsCardTitleHidden;
-    }
-
     [RelayCommand]
     private void AddConfiguredCard()
     {

@@ -25,7 +25,7 @@ public partial class WorkBookmarksPage : ContentPage
 
     public static IReadOnlyList<BookmarkTag> DefaultTags { get; } = [AllBookmarkTag.Instance];
 
-    public WorkBookmarksPage() : this(App.AppViewModel.MakoClient.Me!)
+    public WorkBookmarksPage() : this(PixevalSettings.Me)
     {
     }
 
@@ -37,7 +37,7 @@ public partial class WorkBookmarksPage : ContentPage
         _initialTag = tag;
         SimpleWorkTypeComboBox.SelectedValue = simpleWorkType;
         PrivacyPolicyComboBox.SelectedValue = privacyPolicy;
-        if (_user.Id != App.AppViewModel.PixivUid)
+        if (_user.Id != PixevalSettings.MyId)
             PrivacyPolicyComboBox.IsEnabled = PrivacyPolicyComboBox.IsVisible = false;
 
         FetchTags();

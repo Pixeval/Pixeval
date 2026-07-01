@@ -14,7 +14,7 @@ public partial class UserFollowingPage : ContentPage
 {
     private readonly long _userId;
 
-    public UserFollowingPage() : this(App.AppViewModel.PixivUid)
+    public UserFollowingPage() : this(PixevalSettings.MyId)
     {
     }
 
@@ -23,7 +23,7 @@ public partial class UserFollowingPage : ContentPage
         InitializeComponent();
         _userId = id;
         PrivacyPolicyComboBox.SelectedValue = privacyPolicy;
-        if (id != App.AppViewModel.PixivUid)
+        if (id != PixevalSettings.MyId)
             PrivacyPolicyComboBox.IsEnabled = PrivacyPolicyComboBox.IsVisible = false;
         if (viewModel is not null)
         {

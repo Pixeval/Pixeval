@@ -23,6 +23,7 @@ using Pixeval.Utilities;
 using Pixeval.Utilities.IO.Caching;
 using SQLite;
 using Pixeval.Models.Options;
+using Pixeval.Views;
 
 namespace Pixeval.AppManagement;
 
@@ -39,8 +40,6 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
     public AppSettings AppSettings { get; } = AppInfo.LoadConfig(logger) ?? new AppSettings();
 
     public LoginContext LoginContext { get; } = AppInfo.LoadLoginContext(logger) ?? new LoginContext();
-
-    public long PixivUid => MakoClient.Me!.Id;
 
     public void InitializeProvider()
     {
@@ -82,9 +81,7 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
         void MakoClientOnTokenRefreshed(MakoClient sender, TokenResponse? tokenResponse)
         {
             if (tokenResponse is null)
-            {
                 LoginContext.CurrentKey = 0;
-            }
             else
             {
                 var manager = AppServiceProvider.GetRequiredService<LoginUserPersistentManager>();
@@ -92,6 +89,7 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
                 LoginContext.CurrentKey = entry.HistoryEntryId;
             }
 
+            PixevalSettings.Instance.OnIsLoggedInChanged();
             AppInfo.SaveLoginContext(LoginContext);
         }
     }

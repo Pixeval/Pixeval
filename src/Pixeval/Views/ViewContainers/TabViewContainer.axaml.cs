@@ -102,7 +102,7 @@ public partial class TabViewContainer : ViewContainerBase
 
     private void OpenMyPage_OnClick(object? sender, RoutedEventArgs e)
     {
-        this.CreateUserPage(App.AppViewModel.PixivUid);
+        this.CreateUserPage(PixevalSettings.MyId);
     }
 
     private void SwitchAccount_OnClicked(object? sender, RoutedEventArgs e)
