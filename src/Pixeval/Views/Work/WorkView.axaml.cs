@@ -48,6 +48,7 @@ public partial class WorkView : UserControl, IDisposable
         PseudoClasses.Set(":linedFlow", actualLayoutType is ThumbnailLayoutType.LinedFlow);
         PseudoClasses.Set(":verticalStack", actualLayoutType is ThumbnailLayoutType.VerticalStack);
         PseudoClasses.Set(":grid", actualLayoutType is ThumbnailLayoutType.Grid);
+        PseudoClasses.Set(":masonry", actualLayoutType is ThumbnailLayoutType.Masonry);
     }
 
     private async void WorkItem_OnTapped(object? sender, TappedEventArgs tappedEventArgs)

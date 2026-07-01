@@ -14,13 +14,14 @@ public enum ThumbnailLayoutType
     [LocalizedResource(EnumResources.ThumbnailLayoutTypeGrid)]
     Grid,
 
+    [LocalizedResource(EnumResources.ThumbnailLayoutTypeMasonry)]
+    Masonry,
+
     VerticalUniformStack,
 
     HorizontalUniformStack,
 
     VerticalStack,
 
-    HorizontalStack,
-
-    Staggered
+    HorizontalStack
 }

@@ -125,7 +125,8 @@
   },
   "ThumbnailLayoutType": {
     "LinedFlow": "流式布局",
-    "Grid": "网格布局"
+    "Grid": "网格布局",
+    "Masonry": "瀑布流布局"
   },
   "BrowseMode": {
     "Swipe": "翻页",

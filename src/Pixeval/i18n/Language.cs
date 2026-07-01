@@ -336,6 +336,7 @@ namespace Pixeval
         public const string SimpleWorkTypeNovel = "Enum.SimpleWorkType.Novel";
         public const string ThumbnailLayoutTypeGrid = "Enum.ThumbnailLayoutType.Grid";
         public const string ThumbnailLayoutTypeLinedFlow = "Enum.ThumbnailLayoutType.LinedFlow";
+        public const string ThumbnailLayoutTypeMasonry = "Enum.ThumbnailLayoutType.Masonry";
         public const string UgoiraDownloadFormatOriginal = "Enum.UgoiraDownloadFormat.Original";
         public const string WorkSortOptionPopularityDescending = "Enum.WorkSortOption.PopularityDescending";
         public const string WorkSortOptionPublishDateAscending = "Enum.WorkSortOption.PublishDateAscending";
