@@ -30,6 +30,7 @@ public class App : Application
     public override void Initialize()
     {
         RegisterUnhandledExceptionHandler();
+        I18NManager.CandidatePaths.Add(AppInfo.ExtensionsFolder);
         I18NManager.Register(new JsonMarkdownLangPlugin(), LanguageHelper.DefaultLanguage);
         AppViewModel = new AppViewModel(this, Logger);
         CultureInfo.CurrentUICulture = CultureInfo.CurrentCulture = LanguageHelper.FindClosest(AppViewModel.AppSettings.ApplicationSettings.CultureName);

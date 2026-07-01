@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
@@ -10,6 +11,10 @@ public static class I18NManager
 {
     private static ILangPlugin? _LangPlugin;
 
+    public static List<string> CandidatePaths { get; }
+
+    public static IReadOnlyDictionary<CultureInfo, DirectoryInfo> AvailableCultures { get; } = new Dictionary<CultureInfo, DirectoryInfo>();
+
     /// <summary>
     /// 注册插件并初始化默认文化的资源
     /// </summary>
@@ -17,7 +22,7 @@ public static class I18NManager
     {
         ArgumentNullException.ThrowIfNull(plugin);
         ResolveResourceDirectory();
-        plugin.Load(defaultCulture, CheckCultureFolderExists(defaultCulture), true);
+        plugin.Load(defaultCulture, AvailableCultures[defaultCulture], true);
         _LangPlugin = plugin;
     }
 
@@ -29,7 +34,7 @@ public static class I18NManager
         ArgumentNullException.ThrowIfNull(_LangPlugin);
         var currentCulture = CultureInfo.CurrentUICulture;
         if (!Equals(_LangPlugin.DefaultCulture, currentCulture))
-            _LangPlugin.Load(currentCulture, CheckCultureFolderExists(currentCulture), false);
+            _LangPlugin.Load(currentCulture, AvailableCultures[currentCulture], false);
     }
 
     public static string GetResource(string key)
@@ -50,32 +55,47 @@ public static class I18NManager
             throw new InvalidOperationException($"{nameof(I18NManager)} is not registered. Please register a language plugin before using it.");
     }
 
-    public static DirectoryInfo ResourceFolder { get; private set; } = null!;
-
     private static void ResolveResourceDirectory()
     {
-        var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-        var candidatePaths = new[]
-            {
-                Path.Combine(baseDirectory, "i18n"),
-                Path.Combine(AppContext.BaseDirectory, "i18n"),
-                Path.Combine(Environment.CurrentDirectory, "i18n"),
-                Path.GetFullPath(Path.Combine(baseDirectory, "..", "i18n")),
-                Path.GetFullPath(Path.Combine(baseDirectory, "..", "Resources", "i18n"))
-            }
-            .Distinct(StringComparer.OrdinalIgnoreCase);
+        var candidateDirectories = CandidatePaths
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Select(path => new DirectoryInfo(Path.Combine(path, "i18n")))
+            .Where(t => t.Exists);
 
-        var directory = candidatePaths
-            .Where(Directory.Exists)
-            .Select(candidatePath => new DirectoryInfo(candidatePath))
-            .FirstOrDefault();
-        ResourceFolder = directory ?? throw new DirectoryNotFoundException($"Could not find the resource directory under {baseDirectory}.");
+        var dictionary = (Dictionary<CultureInfo, DirectoryInfo>) AvailableCultures;
+
+        foreach (var candidateDirectory in candidateDirectories)
+        {
+            foreach (var languageDirectory in candidateDirectory.EnumerateDirectories())
+            {
+                CultureInfo cultureInfo;
+                try
+                {
+                    cultureInfo = CultureInfo.GetCultureInfo(languageDirectory.Name);
+                }
+                catch
+                {
+                    continue;
+                }
+
+                dictionary[cultureInfo] = languageDirectory;
+            }
+        }
+
+        if (dictionary.Count is 0)
+            throw new DirectoryNotFoundException($"Could not find the resource directory under {nameof(CandidatePaths)}.");
     }
 
-    private static DirectoryInfo CheckCultureFolderExists(CultureInfo culture)
+    static I18NManager()
     {
-        var path = Path.Combine(ResourceFolder.FullName, culture.Name);
-        var directory = new DirectoryInfo(path);
-        return directory.Exists ? directory : throw new DirectoryNotFoundException($"Could not find the resource directory for culture {culture.Name} under {ResourceFolder.FullName}.");
+        var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        CandidatePaths =
+        [
+            baseDirectory,
+            AppContext.BaseDirectory,
+            Environment.CurrentDirectory,
+            Path.GetFullPath(Path.Combine(baseDirectory, "..")),
+            Path.GetFullPath(Path.Combine(baseDirectory, "..", "Resources"))
+        ];
     }
 }

@@ -2,7 +2,6 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -35,30 +34,25 @@ public static class LanguageHelper
         return int.MaxValue / 2;
     }
 
-    public static CultureInfo FindClosest(string? targetCulture)
-    {
-        var target = targetCulture is null ? CultureInfo.CurrentUICulture : new CultureInfo(targetCulture);
-
-        if (Presets.Contains(target))
-            return target;
-
-        return Presets.MinBy(c => Distance(target, c))
-            ?? throw new ArgumentNullException(nameof(Presets));
-    }
-
+    /// <summary>
+    /// 延迟加载，不能先于<see cref="I18NManager.Register"/>
+    /// </summary>
     public static IReadOnlyList<CultureInfo> AvailableLanguages => field ??=
     [
         new DefaultCultureInfo(),
-        ..Presets
+        ..I18NManager.AvailableCultures.Keys
     ];
 
-    private static FrozenSet<CultureInfo> Presets => field ??= new HashSet<CultureInfo>
+    public static CultureInfo FindClosest(string? targetCulture)
     {
-        DefaultLanguage,
-        new CultureInfo("ru-RU"),
-        new CultureInfo("fr-FR"),
-        new CultureInfo("en-US"),
-    }.ToFrozenSet();
+        var target = string.IsNullOrWhiteSpace(targetCulture) ? CultureInfo.CurrentUICulture : new CultureInfo(targetCulture);
+
+        if (I18NManager.AvailableCultures.ContainsKey(target))
+            return target;
+
+        return I18NManager.AvailableCultures.Keys.MinBy(c => Distance(target, c))
+               ?? throw new ArgumentNullException(nameof(I18NManager.AvailableCultures));
+    }
 
     public static readonly CultureInfo DefaultLanguage = new("zh-Hans");
 }
