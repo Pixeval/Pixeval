@@ -1,0 +1,5 @@
+files:
+  - source: /src/Pixeval/i18n/zh-Hans/*
+    translation: /src/Pixeval/i18n/%locale%/%original_file_name%
+  - source: /.github/README.md
+    translation: /.github/README.%two_letters_code%.md
