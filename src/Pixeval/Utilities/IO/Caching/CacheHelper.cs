@@ -21,9 +21,15 @@ namespace Pixeval.Utilities.IO.Caching;
 
 public static class CacheHelper
 {
-    // TODO: 此处可能被dispose，做池化或者每次都新建一个
-    public static readonly Lazy<Task<Bitmap>> ImageNotAvailableTask = new(() => AppInfo.GetImageNotAvailableStream().DecodeBitmapImageAsync(true));
-    public static readonly Lazy<Task<IAnimatedBitmap>> AnimatedImageNotAvailableTask = new(async () => IAnimatedBitmap.Load([await ImageNotAvailableTask.Value], [100]));
+    /// <summary>
+    /// Dispose无效果，可以反复用
+    /// </summary>
+    public static readonly Lazy<Bitmap> WrappedImageNotAvailable = new(() => new UndisposableBitmap(AppInfo.GetImageNotAvailableStream()));
+
+    /// <summary>
+    /// Dispose无效果，可以反复用
+    /// </summary>
+    public static readonly Lazy<IAnimatedBitmap> AnimatedImageNotAvailable = new(() => IAnimatedBitmap.Load([WrappedImageNotAvailable.Value], [100]));
 
     private static IllustrationCacheTable CacheTable =>
         App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>();
@@ -52,7 +58,7 @@ public static class CacheHelper
         if (frame.PreferredAnimatedImageType is SingleAnimatedImageType.SingleZipFile)
         {
             if (await GetStreamAsync(platform, key.OriginalString, progress, token) is not { } stream)
-                return await AnimatedImageNotAvailableTask.Value;
+                return AnimatedImageNotAvailable.Value;
             ArgumentNullException.ThrowIfNull(frame.ZipImageDelays);
             await frame.ZipImageDelays.TryPreloadListAsync(platform);
             var zip = await Streams.ReadZipAsync(stream, true);
@@ -61,7 +67,7 @@ public static class CacheHelper
         // SingleAnimatedImageType.SingleFile
         else if (await GetSingleImageAsync(platform, key, progress, token) is { } bitmap)
             return bitmap;
-        return await AnimatedImageNotAvailableTask.Value;
+        return AnimatedImageNotAvailable.Value;
     }
 
     /// <summary>
@@ -99,14 +105,14 @@ public static class CacheHelper
                 return IAnimatedBitmap.Load(s, true);
             }
 
-            return await AnimatedImageNotAvailableTask.Value;
+            return AnimatedImageNotAvailable.Value;
         }
         catch (Exception e)
         {
             App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
-                .LogError(nameof(GetImageStreamAsync), e);
+                .LogError(nameof(GetSingleImageAsync), e);
         }
-        return await AnimatedImageNotAvailableTask.Value;
+        return AnimatedImageNotAvailable.Value;
     }
 
     public static async Task<IAnimatedBitmap> GetAnimatedImageSeparatedAsync(
@@ -121,13 +127,13 @@ public static class CacheHelper
         var client = App.AppViewModel.AppServiceProvider.GetRequiredKeyedService<IDownloadHttpClientService>(platform)
             .GetImageDownloadClient();
         var count = frame.MultiImageUris!.Count;
-        var imageList = new List<Stream>(count);
+        var imageList = new List<BitmapOrStream>(count);
         var delayList = new List<int>(count);
         var ratio = 1d / count;
         var startProgress = 0d;
         foreach (var (uri, msDelay) in frame.MultiImageUris)
         {
-            Stream stream;
+            BitmapOrStream stream;
             try
             {
                 var key = uri.OriginalString;
@@ -151,14 +157,14 @@ public static class CacheHelper
                         stream = s2;
                     }
                     else
-                        stream = AppInfo.GetImageNotAvailableStream();
+                        stream = WrappedImageNotAvailable.Value;
                 }
             }
             catch (Exception e)
             {
                 App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
-                    .LogError(nameof(GetImageStreamAsync), e);
-                stream = AppInfo.GetImageNotAvailableStream();
+                    .LogError(nameof(GetAnimatedImageSeparatedAsync), e);
+                stream = WrappedImageNotAvailable.Value;
             }
             imageList.Add(stream);
             delayList.Add(msDelay);
@@ -171,7 +177,7 @@ public static class CacheHelper
     /// <summary>
     /// 保证<see cref="Stream.Position"/>为0
     /// </summary>
-    public static async ValueTask<Stream> GetImageStreamAsync(
+    public static async ValueTask<Stream?> GetImageStreamAsync(
         string platform,
         string key,
         IProgress<double>? progress = null,
@@ -179,15 +185,14 @@ public static class CacheHelper
     {
         try
         {
-            return await GetStreamAsync(platform, key, progress, cancellationToken) ??
-                   AppInfo.GetImageNotAvailableStream();
+            return await GetStreamAsync(platform, key, progress, cancellationToken);
         }
         catch (Exception e)
         {
             App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
                 .LogError(nameof(GetImageStreamAsync), e);
         }
-        return AppInfo.GetImageNotAvailableStream();
+        return null;
     }
 
     public static async Task<IAnimatedBitmap> GetAnimatedBitmapAsync(
@@ -198,15 +203,16 @@ public static class CacheHelper
     {
         try
         {
-            var stream = await GetImageStreamAsync(platform, key, progress, token);
-            return IAnimatedBitmap.Load(stream, true);
+            if (await GetImageStreamAsync(platform, key, progress, token) is { } stream)
+                return IAnimatedBitmap.Load(stream, true);
+            return AnimatedImageNotAvailable.Value;
         }
         catch (Exception e)
         {
             App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
-                .LogError(nameof(GetImageStreamAsync), e);
+                .LogError(nameof(GetAnimatedBitmapAsync), e);
         }
-        return await AnimatedImageNotAvailableTask.Value;
+        return AnimatedImageNotAvailable.Value;
     }
 
     public static async ValueTask<Bitmap> GetBitmapAsync(
@@ -220,7 +226,7 @@ public static class CacheHelper
         {
             return await GetStreamAsync(platform, key, progress, token) is { } stream
                 ? await stream.DecodeBitmapImageAsync(true, desiredWidth)
-                : await ImageNotAvailableTask.Value;
+                : WrappedImageNotAvailable.Value;
         }
         catch (TaskCanceledException)
         {
@@ -232,7 +238,7 @@ public static class CacheHelper
                 .LogError(nameof(GetBitmapAsync), e);
         }
 
-        return await ImageNotAvailableTask.Value;
+        return WrappedImageNotAvailable.Value;
     }
 
     /// <summary>
@@ -292,5 +298,22 @@ public static class CacheHelper
             return CacheTable.TryCache(new(key, (int)stream.Length), stream);
 
         throw new InvalidOperationException($"check {nameof(App.AppViewModel.AppSettings.ApplicationSettings.UseFileCache)} before {nameof(TryCacheStream)}");
+    }
+}
+
+file class UndisposableBitmap : Bitmap
+{
+    public UndisposableBitmap(Stream stream) : base(stream)
+    {
+    }
+
+    /// <inheritdoc />
+    public override void Dispose()
+    {
+    }
+
+    public void DisposeForce()
+    {
+        base.Dispose();
     }
 }
