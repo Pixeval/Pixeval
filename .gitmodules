@@ -14,3 +14,6 @@
 	path = src/lib/AnimatedControls.Avalonia
 	url = https://github.com/Pixeval/AnimatedControls.Avalonia.git
 	branch = master
+[submodule "src/lib/SmoothScroll.Avalonia"]
+	path = src/lib/SmoothScroll.Avalonia
+	url = https://github.com/zxbmmmmmmmmm/SmoothScroll.Avalonia.git

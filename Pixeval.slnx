@@ -9,6 +9,8 @@
     <Project Path="src/lib/Mako/Mako.SourceGen/Mako.SourceGen.csproj" />
     <Project Path="src/lib/Mako/Mako/Mako.csproj" />
     <Project Path="src/lib/Mako/Pixeval.Network.Maho/Pixeval.Network.Maho/Pixeval.Network.Maho.csproj" />
+    <Project Path="src/lib/SmoothScroll.Avalonia/src/SmoothScroll.Avalonia.Controls/SmoothScroll.Avalonia.Controls.csproj" />
+    <Project Path="src/lib/SmoothScroll.Avalonia/src/SmoothScroll.Avalonia.Interaction/SmoothScroll.Avalonia.Interaction.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />

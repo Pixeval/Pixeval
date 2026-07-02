@@ -33,26 +33,27 @@
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
 		<PackageReference Include="Markdown.Avalonia" Version="12.0.0-a3" />
 		<PackageReference Include="SharpYaml" Version="3.11.0" />
-		<PackageReference Include="SmoothScroll.Avalonia" Version="12.0.0.12" />
+		<!--<PackageReference Include="SmoothScroll.Avalonia" Version="12.0.0.12" />-->
 		<PackageReference Include="sqlite-net-pcl" Version="1.10.196-beta" />
 		<PackageReference Include="Svg.Controls.Skia.Avalonia" Version="12.0.0.13" />
 		<PackageReference Include="TabView.Avalonia" Version="1.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\lib\AutoSettingsPage\AutoSettingsPage.Avalonia\AutoSettingsPage.Avalonia.csproj" />
-	  <ProjectReference Include="..\lib\AutoSettingsPage\AutoSettingsPage\AutoSettingsPage.csproj" />
-	  <ProjectReference Include="..\lib\AnimatedControls.Avalonia\AnimatedControls.Avalonia\AnimatedControls.Avalonia.csproj" />
-	  <ProjectReference Include="..\lib\FluentAvalonia\FluentAvalonia.csproj" />
-	  <ProjectReference Include="..\lib\Imouto\Imouto.BooruParser\Imouto.BooruParser.csproj" />
-	  <ProjectReference Include="..\lib\Mako\Mako\Mako.csproj" />
-	  <ProjectReference Include="..\Pixeval.I18N\Pixeval.I18N.csproj" />
-	  <ProjectReference Include="..\Pixeval.Caching\Pixeval.Caching.csproj" />
-	  <ProjectReference Include="..\Pixeval.Download\Pixeval.Download.csproj" />
-	  <ProjectReference Include="..\Pixeval.Filters\Pixeval.Filters.csproj" />
-	  <ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
-	</ItemGroup>	
-		
+		<ProjectReference Include="..\lib\AutoSettingsPage\AutoSettingsPage.Avalonia\AutoSettingsPage.Avalonia.csproj" />
+		<ProjectReference Include="..\lib\AutoSettingsPage\AutoSettingsPage\AutoSettingsPage.csproj" />
+		<ProjectReference Include="..\lib\AnimatedControls.Avalonia\AnimatedControls.Avalonia\AnimatedControls.Avalonia.csproj" />
+		<ProjectReference Include="..\lib\FluentAvalonia\FluentAvalonia.csproj" />
+		<ProjectReference Include="..\lib\Imouto\Imouto.BooruParser\Imouto.BooruParser.csproj" />
+		<ProjectReference Include="..\lib\Mako\Mako\Mako.csproj" />
+		<ProjectReference Include="..\lib\SmoothScroll.Avalonia\src\SmoothScroll.Avalonia.Controls\SmoothScroll.Avalonia.Controls.csproj" />
+		<ProjectReference Include="..\Pixeval.I18N\Pixeval.I18N.csproj" />
+		<ProjectReference Include="..\Pixeval.Caching\Pixeval.Caching.csproj" />
+		<ProjectReference Include="..\Pixeval.Download\Pixeval.Download.csproj" />
+		<ProjectReference Include="..\Pixeval.Filters\Pixeval.Filters.csproj" />
+		<ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<!-- 字符串资源相关 -->
 		<AdditionalFiles Include="i18n\**\*.json" />
