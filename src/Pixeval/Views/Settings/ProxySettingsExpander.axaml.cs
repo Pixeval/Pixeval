@@ -1,7 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
-using System;
 using AutoSettingsPage.Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -29,14 +28,9 @@ public partial class ProxySettingsExpander : SettingsExpander, IEntryControl<Pro
             return;
         }
 
-        var proxy = text;
-
-        if (!text.Contains("://"))
-            proxy = "http://" + proxy;
-
-        if (!Uri.IsWellFormedUriString(proxy, UriKind.Absolute))
+        if (MakoHelper.NormalizeProxyUri(text) is not { } proxy)
         {
-            TopLevel.GetTopLevel(this)?.ViewContainer?.ShowError(I18NManager.GetResource(SettingsMainViewResources.ProxyTextBoxErrorUri), proxy);
+            TopLevel.GetTopLevel(this)?.ViewContainer?.ShowError(I18NManager.GetResource(SettingsMainViewResources.ProxyTextBoxErrorUri), text);
             entry.Proxy = null;
             return;
         }

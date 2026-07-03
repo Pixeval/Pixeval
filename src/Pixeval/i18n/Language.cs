@@ -295,6 +295,7 @@ namespace Pixeval
         public const string NovelDownloadFormatOriginalTxt = "Enum.NovelDownloadFormat.OriginalTxt";
         public const string PrivacyPolicyPrivate = "Enum.PrivacyPolicy.Private";
         public const string PrivacyPolicyPublic = "Enum.PrivacyPolicy.Public";
+        public const string ProxyOptionCustom = "Enum.ProxyOption.Custom";
         public const string ProxyOptionNone = "Enum.ProxyOption.None";
         public const string ProxyOptionSystem = "Enum.ProxyOption.System";
         public const string RankOptionDay = "Enum.RankOption.Day";

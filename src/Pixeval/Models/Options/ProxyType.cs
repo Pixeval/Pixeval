@@ -14,15 +14,6 @@ public enum ProxyType
     [LocalizedResource(EnumResources.ProxyOptionNone)]
     None,
 
-    [LocalizedResource(Resource = "http/https")]
-    Http,
-
-    [LocalizedResource(Resource = "socks4")]
-    Socks4,
-
-    [LocalizedResource(Resource = "socks4a")]
-    Socks4A,
-
-    [LocalizedResource(Resource = "socks5")]
-    Socks5
+    [LocalizedResource(EnumResources.ProxyOptionCustom)]
+    Custom
 }

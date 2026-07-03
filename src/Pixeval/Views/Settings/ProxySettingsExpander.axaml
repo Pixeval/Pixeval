@@ -1,4 +1,4 @@
-﻿<controls:SettingsExpander
+<controls:SettingsExpander
     x:Class="Pixeval.Views.Settings.ProxySettingsExpander"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -35,6 +35,7 @@
             </controls:SettingsCard.HeaderIcon>
             <TextBox
                 MinWidth="200"
+                IsEnabled="{Binding IsProxyTextBoxEnabled}"
                 LostFocus="TextBox_OnLostFocus"
                 Text="{Binding Proxy, Mode=TwoWay}" />
         </controls:SettingsCard>

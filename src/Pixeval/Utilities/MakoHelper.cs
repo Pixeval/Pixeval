@@ -96,26 +96,25 @@ public static class MakoHelper
         return id.IsFavorite;
     }
 
-    public static string? ToMakoProxy(ProxyType type, string proxy)
-    {
-        if (type is ProxyType.System)
-            return null;
-        var scheme = type switch
+    public static string? ToMakoProxy(ProxyType type, string? proxy) =>
+        type switch
         {
-            ProxyType.Http => "http",
-            ProxyType.Socks4 => "socks4",
-            ProxyType.Socks4A => "socks4a",
-            ProxyType.Socks5 => "socks5",
-            _ => null
+            ProxyType.System => null,
+            ProxyType.Custom => NormalizeProxyUri(proxy) ?? "",
+            ProxyType.None => "",
+            _ => throw new ArgumentOutOfRangeException(nameof(type))
         };
 
-        if (scheme is null)
-            return "";
+    public static string? NormalizeProxyUri(string? proxy)
+    {
+        if (string.IsNullOrWhiteSpace(proxy))
+            return null;
 
-        if (!Uri.TryCreate(proxy, UriKind.Absolute, out var uri))
-            return "";
-        var builder = new UriBuilder(uri) { Scheme = scheme };
-        return builder.ToString();
+        var uri = proxy.Trim();
+        if (!uri.Contains("://", StringComparison.Ordinal))
+            uri = "http://" + uri;
+
+        return Uri.IsWellFormedUriString(uri, UriKind.Absolute) ? uri : null;
     }
 
     extension<T>(IPreloadableList<T> list)
