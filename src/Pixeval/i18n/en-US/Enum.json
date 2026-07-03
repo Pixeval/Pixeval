@@ -108,6 +108,7 @@
     "WeekAiR18": "AI R-18周榜"
   },
   "ProxyOption": {
+    "Custom": "指定代理",
     "None": "无代理",
     "System": "系统代理"
   },
