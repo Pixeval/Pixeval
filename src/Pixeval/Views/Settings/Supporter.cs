@@ -84,56 +84,66 @@ public partial class Supporter : ViewModelBase
 
     public static async Task GetSupportersAsync()
     {
-        _ = Directory.CreateDirectory(BasePath);
-
-        var httpClient = App.AppViewModel.GetRequiredHttpClient();
-
-        var path = Path.Combine(BasePath, "github-supporters.json");
-        var exists = File.Exists(path);
-        if (exists)
+        try
         {
-            await using var fileStream = File.OpenAsyncRead(path);
 
-            if (await JsonSerializer.DeserializeAsync(fileStream, GitHubUserSerializeContext.Default.SupporterArray) is { } supporters
-                && supporters.Length == Supporters.Length)
+            _ = Directory.CreateDirectory(BasePath);
+
+            var httpClient = App.AppViewModel.GetRequiredGitHubHttpClient();
+
+            var path = Path.Combine(BasePath, "github-supporters.json");
+            var exists = File.Exists(path);
+            if (exists)
             {
-                foreach (var supporter in Supporters)
+                await using var fileStream = File.OpenAsyncRead(path);
+
+                if (await JsonSerializer.DeserializeAsync(fileStream, GitHubUserSerializeContext.Default.SupporterArray) is { } supporters
+                    && supporters.Length == Supporters.Length)
+                {
+                    foreach (var supporter in Supporters)
+                        await LoadAvatarAsync(supporter, BasePath, httpClient);
+
+                    return;
+                }
+            }
+
+            foreach (var supporter in Supporters)
+                if (await httpClient.GetFromJsonAsync("https://api.github.com/users/" + supporter.Name, GitHubUserSerializeContext.Default.GitHubUser) is { } user)
+                {
+                    supporter.ProfilePicture = user.AvatarUrl;
+                    supporter.ProfileUri = user.HtmlUrl;
                     await LoadAvatarAsync(supporter, BasePath, httpClient);
+                }
 
-                return;
-            }
-        }
-
-        foreach (var supporter in Supporters)
-            if (await httpClient.GetFromJsonAsync("https://api.github.com/users/" + supporter.Name, GitHubUserSerializeContext.Default.GitHubUser) is { } user)
+            if (!exists)
             {
-                supporter.ProfilePicture = user.AvatarUrl;
-                supporter.ProfileUri = user.HtmlUrl;
-                await LoadAvatarAsync(supporter, BasePath, httpClient);
+                await using var fs = File.CreateAsyncWrite(path);
+                await JsonSerializer.SerializeAsync(fs, Supporters, GitHubUserSerializeContext.Default.SupporterArray);
             }
-
-        if (!exists)
-        {
-            await using var fs = File.CreateAsyncWrite(path);
-            await JsonSerializer.SerializeAsync(fs, Supporters, GitHubUserSerializeContext.Default.SupporterArray);
         }
-    }
-
-    private static async ValueTask LoadAvatarAsync(Supporter supporter, string basePath, HttpClient client)
-    {
-        var path = Path.Combine(basePath, supporter.Name + ".png");
-        if (File.Exists(path) || supporter.ProfilePicture is null)
-            return;
-        var file = File.CreateAsyncWrite(path);
-        if (await client.DownloadStreamAsync(file, supporter.ProfilePicture) is not null)
+        catch
         {
-            await file.DisposeAsync();
-            File.Delete(path);
+            // ignored
         }
-        else
+
+        return;
+
+        static async ValueTask LoadAvatarAsync(Supporter supporter, string basePath, HttpClient client)
         {
-            await file.DisposeAsync();
-            supporter.OnPropertyChanged(nameof(LocalProfilePicture));
+            var path = Path.Combine(basePath, supporter.Name + ".png");
+            if (File.Exists(path) || supporter.ProfilePicture is null)
+                return;
+            var file = File.CreateAsyncWrite(path);
+            if (await client.DownloadStreamAsync(file, supporter.ProfilePicture) is not null)
+            {
+                await file.DisposeAsync();
+                File.Delete(path);
+            }
+            else
+            {
+                await file.DisposeAsync();
+                supporter.OnPropertyChanged(nameof(LocalProfilePicture));
+            }
         }
     }
 }

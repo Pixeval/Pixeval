@@ -57,8 +57,8 @@ public record AppSettings
     public MakoConfiguration ToMakoConfiguration()
     {
         return new MakoConfiguration(
-            NetworkSettings.EnableDomainFronting,
-            NetworkSettings.DomainFrontingType,
+            NetworkSettings.EnablePixivDomainFronting,
+            NetworkSettings.PixivDomainFrontingType,
             MakoHelper.ToMakoProxy(NetworkSettings.ProxyType, NetworkSettings.Proxy),
             NetworkSettings.WebCookie,
             NetworkSettings.MirrorHost,

@@ -16,6 +16,7 @@ using Pixeval.AppManagement;
 using Pixeval.Models.Extensions;
 using Pixeval.Models.Options;
 using Pixeval.Models.Settings;
+using Pixeval.Utilities.GitHub;
 
 namespace Pixeval.ViewModels;
 
@@ -59,8 +60,8 @@ public class SettingsPageViewModel : ViewModelBase
                 .Bool(t => t.HideHomePageToolbar)
                 .Bool(t => t.HideHomePageCardTitle))
             .NewGroup(t => t.NetworkSettings, group => group
-                .DomainFronting(t => t.EnableDomainFronting, entry =>
-                        entry.Enum(t => t.DomainFrontingType,
+                .DomainFronting(t => t.EnablePixivDomainFronting, entry =>
+                        entry.Enum(t => t.PixivDomainFrontingType,
                                 e => e.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.DomainFrontingType = (DomainFrontingType) t)
                             .IPSet(t => t.PixivAppApiNameResolver)
                             .IPSet(t => t.PixivImageNameResolver)
@@ -68,8 +69,24 @@ public class SettingsPageViewModel : ViewModelBase
                             .IPSet(t => t.PixivOAuthNameResolver)
                             .IPSet(t => t.PixivAccountNameResolver)
                             .IPSet(t => t.PixivWebApiNameResolver),
-                    entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.DomainFronting = t)
-                .Proxy(entry => entry.ProxyChanged += t => App.AppViewModel.MakoClient.Configuration.Proxy = t)
+                    entry => entry.ValueChanged += t =>
+                    {
+                        App.AppViewModel.MakoClient.Configuration.DomainFronting = t;
+                        App.AppViewModel.AppServiceProvider.GetRequiredService<GitHubHttpClientProvider>().Reset();
+                    })
+                .DomainFronting(t => t.EnableGitHubDirectConnection, entry => entry
+                    .IPSet(t => t.GitHubNameResolver)
+                    .IPSet(t => t.GitHubApiNameResolver)
+                    .IPSet(t => t.GitHubAvatarNameResolver)
+                    .IPSet(t => t.GitHubUserContentNameResolver)
+                    .IPSet(t => t.GitHubAssetsNameResolver)
+                    .IPSet(t => t.GitHubCodeloadNameResolver),
+                    entry => entry.ValueChanged += _ => App.AppViewModel.AppServiceProvider.GetRequiredService<GitHubHttpClientProvider>().Reset())
+                .Proxy(entry => entry.ProxyChanged += t =>
+                {
+                    App.AppViewModel.MakoClient.Configuration.Proxy = t;
+                    App.AppViewModel.AppServiceProvider.GetRequiredService<GitHubHttpClientProvider>().Reset();
+                })
                 .String(t => t.MirrorHost,
                     entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.MirrorHost = t)
                 .String(t => t.WebCookie,

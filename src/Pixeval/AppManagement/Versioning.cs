@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Net.Http.Json;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -42,17 +41,19 @@ public class Versioning
 
     public UpdateState CompareUpdateState(Version currentVersion, Version? newVersion)
     {
-        if (newVersion is not { } version)
+        if (newVersion is null)
             return UpdateState.Unknown;
 
-        var currentLong = ((ulong) currentVersion.Major << 0x30) +
-                          ((ulong) currentVersion.Minor << 0x20) +
-                          ((ulong) currentVersion.Build << 0x10) +
-                          (ulong) currentVersion.Revision;
-        var newLong = ((ulong) version.Major << 0x30) +
-                      ((ulong) version.Minor << 0x20) +
-                      ((ulong) version.Build << 0x10) +
-                      (ulong) version.Revision;
+        var currentLong =
+            ((ulong) currentVersion.Major << 0x30) +
+            ((ulong) currentVersion.Minor << 0x20) +
+            ((ulong) currentVersion.Build << 0x10) +
+            (ulong) currentVersion.Revision;
+        var newLong =
+            ((ulong) newVersion.Major << 0x30) +
+            ((ulong) newVersion.Minor << 0x20) +
+            ((ulong) newVersion.Build << 0x10) +
+            (ulong) newVersion.Revision;
 
         if (currentLong > newLong)
             return UpdateState.Insider;
@@ -73,13 +74,13 @@ public class Versioning
 
     public AppReleaseModel[]? AppReleaseModels { get; private set; }
 
-    public async Task GitHubCheckForUpdateAsync(HttpClient client)
+    public async Task GitHubCheckForUpdateAsync()
     {
         try
         {
-            if (client.DefaultRequestHeaders.UserAgent.Count is 0)
-                client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0");
-            if (await client.GetFromJsonAsync("https://api.github.com/repos/Pixeval/Pixeval/releases", typeof(GitHubRelease[]), GitHubReleaseSerializeContext.Default) is GitHubRelease[] { Length: > 0 } gitHubReleases)
+            var client = App.AppViewModel.GetRequiredGitHubHttpClient();
+
+            if (await client.GetFromJsonAsync("https://api.github.com/repos/Pixeval/Pixeval/releases", GitHubReleaseSerializeContext.Default.GitHubReleaseArray) is { Length: > 0 } gitHubReleases)
             {
                 var appReleaseModels = new List<AppReleaseModel>(gitHubReleases.Length);
                 foreach (var release in gitHubReleases)
@@ -126,14 +127,16 @@ public record AppReleaseModel(
             return 0;
         if (other is null)
             return 1;
-        var currentLong = ((ulong) Version.Major << 0x30) +
-                          ((ulong) Version.Minor << 0x20) +
-                          ((ulong) Version.Build << 0x10) +
-                          (ulong) Version.Revision;
-        var newLong = ((ulong) other.Version.Major << 0x30) +
-                      ((ulong) other.Version.Minor << 0x20) +
-                      ((ulong) other.Version.Build << 0x10) +
-                      (ulong) other.Version.Revision;
+        var currentLong =
+            ((ulong) Version.Major << 0x30) +
+            ((ulong) Version.Minor << 0x20) +
+            ((ulong) Version.Build << 0x10) +
+            (ulong) Version.Revision;
+        var newLong =
+            ((ulong) other.Version.Major << 0x30) +
+            ((ulong) other.Version.Minor << 0x20) +
+            ((ulong) other.Version.Build << 0x10) +
+            (ulong) other.Version.Revision;
         if (currentLong > newLong)
             return 1;
         if (currentLong < newLong)
@@ -143,7 +146,6 @@ public record AppReleaseModel(
 }
 
 [JsonSerializable(typeof(GitHubRelease[]))]
-[JsonSerializable(typeof(Assets[]))]
 public partial class GitHubReleaseSerializeContext : JsonSerializerContext;
 public class GitHubRelease
 {

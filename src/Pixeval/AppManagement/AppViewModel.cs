@@ -24,6 +24,7 @@ using Pixeval.Utilities.IO.Caching;
 using SQLite;
 using Pixeval.Models.Options;
 using Pixeval.Views;
+using Pixeval.Utilities.GitHub;
 
 namespace Pixeval.AppManagement;
 
@@ -60,6 +61,7 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
         return new ServiceCollection()
             .AddSingleton(_ => logger)
             .AddBooruParsers()
+            .AddSingleton(_ => new GitHubHttpClientProvider(AppSettings.NetworkSettings))
             .AddKeyedSingleton<IGetArtworkService, MakoClient>(IPlatformInfo.Pixiv, (provider, key) => makoClient)
             .AddKeyedSingleton<IDownloadHttpClientService, MakoClient>(IPlatformInfo.Pixiv, (provider, key) => makoClient)
             .AddSingleton<WorkSubscriptionDownloadService>()
@@ -175,6 +177,9 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
         return AppServiceProvider.GetRequiredKeyedService<IDownloadHttpClientService>(IPlatformInfo.All)
             .GetImageDownloadClient();
     }
+
+    public HttpClient GetRequiredGitHubHttpClient() =>
+        AppServiceProvider.GetRequiredService<GitHubHttpClientProvider>().Client;
 
     public void Dispose()
     {
