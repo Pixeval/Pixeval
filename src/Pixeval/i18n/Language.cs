@@ -89,9 +89,9 @@ namespace Pixeval
         public const string ProxyTypeEntryHeader = "AppSettings.ProxyTypeEntry.Header";
         public const string RankOptionEntryDescription = "AppSettings.RankOptionEntry.Description";
         public const string RankOptionEntryHeader = "AppSettings.RankOptionEntry.Header";
-        public const string ReverseSearchApiKeyEntryDescription = "AppSettings.ReverseSearchApiKeyEntry.Description";
-        public const string ReverseSearchApiKeyEntryHeader = "AppSettings.ReverseSearchApiKeyEntry.Header";
-        public const string ReverseSearchApiKeyEntryPlaceholder = "AppSettings.ReverseSearchApiKeyEntry.Placeholder";
+        public const string SauceNaoApiKeyEntryDescription = "AppSettings.SauceNaoApiKeyEntry.Description";
+        public const string SauceNaoApiKeyEntryHeader = "AppSettings.SauceNaoApiKeyEntry.Header";
+        public const string SauceNaoApiKeyEntryPlaceholder = "AppSettings.SauceNaoApiKeyEntry.Placeholder";
         public const string SettingsGroupApplicationHeader = "AppSettings.SettingsGroup.Application.Header";
         public const string SettingsGroupBrowsingExperienceHeader = "AppSettings.SettingsGroup.BrowsingExperience.Header";
         public const string SettingsGroupDownloadHeader = "AppSettings.SettingsGroup.Download.Header";
@@ -770,6 +770,8 @@ namespace Pixeval
         public const string QQBugReportEntryToolTip = "SettingsMainView.QQBugReportEntry.ToolTip";
         public const string RateEntryDescription = "SettingsMainView.RateEntry.Description";
         public const string RateEntryHeader = "SettingsMainView.RateEntry.Header";
+        public const string ReleaseNoteDialogEmpty = "SettingsMainView.ReleaseNoteDialog.Empty";
+        public const string ReleaseNoteDialogTitleFormatted = "SettingsMainView.ReleaseNoteDialog.TitleFormatted";
         public const string ReleaseNotesHyperlinkButtonContent = "SettingsMainView.ReleaseNotesHyperlinkButton.Content";
         public const string ReportBugHyperlinkButtonContent = "SettingsMainView.ReportBugHyperlinkButton.Content";
         public const string ResetDefaultSettingsEntryDescription = "SettingsMainView.ResetDefaultSettingsEntry.Description";

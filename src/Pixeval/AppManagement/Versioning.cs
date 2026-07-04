@@ -72,12 +72,17 @@ public class Versioning
 
     public bool UpdateAvailable => UpdateState is not UpdateState.UpToDate and not UpdateState.Insider and not UpdateState.Unknown;
 
-    public AppReleaseModel[]? AppReleaseModels { get; private set; }
+    public IReadOnlyList<AppReleaseModel>? AppReleaseModels { get; private set; }
+
+    private bool IsUpdating { get; set; }
 
     public async Task GitHubCheckForUpdateAsync()
     {
+        if (IsUpdating)
+            return;
         try
         {
+            IsUpdating = true;
             var client = App.AppViewModel.GetRequiredGitHubHttpClient();
 
             if (await client.GetFromJsonAsync("https://api.github.com/repos/Pixeval/Pixeval/releases", GitHubReleaseSerializeContext.Default.GitHubReleaseArray) is { Length: > 0 } gitHubReleases)
@@ -105,13 +110,18 @@ public class Versioning
                 appReleaseModels.Sort();
                 appReleaseModels.Reverse();
 
-                AppReleaseModels = [.. appReleaseModels];
+                AppReleaseModels = appReleaseModels;
             }
         }
         catch
         {
             // ignored
         }
+        finally
+        {
+            IsUpdating = false;
+        }
+
         UpdateState = AppReleaseModels is null ? UpdateState.Unknown : CompareUpdateState(CurrentVersion, NewestVersion);
     }
 }

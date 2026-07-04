@@ -24,6 +24,28 @@ public record AppSettings
         ApplicationSettings.AppFontFamily = [defaultFont];
         NovelSettings.NovelFontFamily = [defaultFont];
         NovelSettings.ActualThemeProvider = () => ActualTheme;
+
+        if (LastOpenedVersion != AppInfo.AppVersion.CurrentVersionShortText)
+        {
+            IsNewVersion = true;
+            LastOpenedVersion = AppInfo.AppVersion.CurrentVersionShortText;
+
+            // 更新时若域前置IP改变，则在此手动更新域名
+            //var network = new NetworkSettingsGroup();
+            //NetworkSettings.PixivAppApiNameResolver = network.PixivAppApiNameResolver;
+            //NetworkSettings.PixivWebApiNameResolver = network.PixivWebApiNameResolver;
+            //NetworkSettings.PixivAccountNameResolver = network.PixivAccountNameResolver;
+            //NetworkSettings.PixivOAuthNameResolver = network.PixivOAuthNameResolver;
+            //NetworkSettings.PixivImageNameResolver = network.PixivImageNameResolver;
+            //NetworkSettings.PixivImageNameResolver2 = network.PixivImageNameResolver2;
+
+            //NetworkSettings.GitHubNameResolver = network.GitHubNameResolver;
+            //NetworkSettings.GitHubApiNameResolver = network.GitHubApiNameResolver;
+            //NetworkSettings.GitHubAvatarNameResolver = network.GitHubAvatarNameResolver;
+            //NetworkSettings.GitHubUserContentNameResolver = network.GitHubUserContentNameResolver;
+            //NetworkSettings.GitHubAssetsNameResolver = network.GitHubAssetsNameResolver;
+            //NetworkSettings.GitHubCodeloadNameResolver = network.GitHubCodeloadNameResolver;
+        }
     }
 
     [SettingsEntry(Symbol.Apps, SettingsGroupApplicationHeader, null)]
@@ -48,6 +70,10 @@ public record AppSettings
     /// <see cref="object"/> 只能是基元类型或 <see cref="SettingsSerializerContext"/> 提供过的类型
     /// </summary>
     public Dictionary<string, Dictionary<string, object?>> ExtensionSettings { get; set; } = [];
+
+    public string LastOpenedVersion { get; } = "";
+
+    public bool IsNewVersion { get; }
 
     [JsonIgnore]
     public ApplicationTheme ActualTheme => ApplicationSettings.Theme is ApplicationTheme.Default

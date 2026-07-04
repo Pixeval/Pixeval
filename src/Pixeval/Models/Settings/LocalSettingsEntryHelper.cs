@@ -40,8 +40,8 @@ public static class LocalSettingsEntryHelper
             .AddOpenGeneric<IMultiValuesWithSwitchSettingsEntry, DomainFrontingSettingsExpander>(typeof(DomainFrontingSettingsEntry<>))
             .AddOpenGeneric<ISingleValueSettingsEntry<ObservableCollection<string>>, StringCollectionSettingsExpander>(typeof(CollectionSettingsEntry<,>))
             .AddOpenGeneric<ISingleValueSettingsEntry<ObservableCollection<string>>, FontSettingsExpander>(typeof(FontSettingsEntry<>))
-            .Add<ProxyAppSettingsEntry, ProxySettingsExpander>()
-            .Add<DownloadMacroAppSettingsEntry, DownloadMacroSettingsExpander>()
+            .Add<DownloadMacroSettingsEntry, DownloadMacroSettingsExpander>()
+            .Add<ProxySettingsEntry, ProxySettingsExpander>()
             .Add<IllustrationDownloadFormatSettingsEntry, EnumSettingsCard>()
             .Add<NovelDownloadFormatSettingsEntry, EnumSettingsCard>()
             .Add<UgoiraDownloadFormatSettingsEntry, EnumSettingsCard>()
@@ -320,31 +320,33 @@ public static class LocalSettingsEntryHelper
     extension(ISettingsGroupBuilder<NetworkSettingsGroup> builder)
     {
         public ISettingsGroupBuilder<NetworkSettingsGroup> Proxy(
-            Action<ProxyAppSettingsEntry>? config = null) =>
+            Action<ProxySettingsEntry>? config = null) =>
             builder.Add(new(builder.Settings), config);
     }
 
     extension(ISettingsGroupBuilder<DownloadSettingsGroup> builder)
     {
         public ISettingsGroupBuilder<DownloadSettingsGroup> DownloadMacro(
-            Action<DownloadMacroAppSettingsEntry>? config = null) =>
-            builder.Add(new(builder.Settings), config);
+            Expression<Func<DownloadSettingsGroup, string>> expression,
+            Action<DownloadMacroSettingsEntry>? config = null) =>
+            builder.Add(new(builder.Settings, expression), config);
 
         public ISettingsGroupBuilder<DownloadSettingsGroup> IllustrationDownloadFormat(
             Action<IllustrationDownloadFormatSettingsEntry>? config = null) =>
             builder.Add(new IllustrationDownloadFormatSettingsEntry(builder.Settings), config);
 
-        public ISettingsGroupBuilder<DownloadSettingsGroup> NovelDownloadFormat(
-            Action<NovelDownloadFormatSettingsEntry>? config = null) =>
-            builder.Add(new NovelDownloadFormatSettingsEntry(builder.Settings), config);
-
         public ISettingsGroupBuilder<DownloadSettingsGroup> UgoiraDownloadFormat(
             Action<UgoiraDownloadFormatSettingsEntry>? config = null) =>
             builder.Add(new UgoiraDownloadFormatSettingsEntry(builder.Settings), config);
 
+        public ISettingsGroupBuilder<DownloadSettingsGroup> NovelDownloadFormat(
+            Action<NovelDownloadFormatSettingsEntry>? config = null) =>
+            builder.Add(new NovelDownloadFormatSettingsEntry(builder.Settings), config);
+
         public ISettingsGroupBuilder<DownloadSettingsGroup> WorkSubscriptions(
+            Expression<Func<DownloadSettingsGroup, byte>> expression,
             Action<WorkSubscriptionsSettingsEntry>? config = null) =>
-            builder.Add(new(), config);
+            builder.Add(new(expression), config);
     }
 
     private class SettingsResourceKeysProviderImpl : ISettingsResourceKeysProvider

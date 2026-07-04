@@ -148,5 +148,9 @@
   },
   "NovelPathBlock": {
     "Text": "小说："
+  },
+  "ReleaseNoteDialog": {
+    "TitleFormatted": "更新日志 {0}",
+    "Empty": "暂无更新日志"
   }
 }

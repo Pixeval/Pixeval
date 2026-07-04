@@ -8,6 +8,7 @@ using FluentIcons.Common;
 using Mako.Global.Enum;
 using Pixeval.Models.Home;
 using Pixeval.Models.Options;
+using static Pixeval.AppSettingsResources;
 
 namespace Pixeval.AppManagement;
 
@@ -22,37 +23,37 @@ public record ApplicationSettingsGroup
     public bool IsMaximized { get; set; }
 
     // TODO: Not Used
-    [SettingsEntry(Symbol.Communication, AppSettingsResources.DownloadUpdateAutomaticallyEntryHeader, AppSettingsResources.DownloadUpdateAutomaticallyEntryDescription)]
+    [SettingsEntry(Symbol.Communication, DownloadUpdateAutomaticallyEntryHeader, DownloadUpdateAutomaticallyEntryDescription)]
     public bool DownloadUpdateAutomatically { get; set; }
 
     /// <summary>
     /// "" 表示使用系统默认语言
     /// </summary>
-    [SettingsEntry(Symbol.LocalLanguage, AppSettingsResources.AppLanguageEntryHeader, AppSettingsResources.AppLanguageEntryDescription, AppSettingsResources.AppLanguageEntryPlaceholder, "ms-settings:regionlanguage")]
+    [SettingsEntry(Symbol.LocalLanguage, AppLanguageEntryHeader, AppLanguageEntryDescription, AppLanguageEntryPlaceholder, "ms-settings:regionlanguage")]
     public string CultureName { get; set; } = "";
 
     /// <summary>
     /// The Application Theme
     /// </summary>
-    [SettingsEntry(Symbol.DarkTheme, AppSettingsResources.ThemeEntryHeader, AppSettingsResources.ThemeEntryDescription)]
+    [SettingsEntry(Symbol.DarkTheme, ThemeEntryHeader, ThemeEntryDescription)]
     public ApplicationTheme Theme { get; set; }
 
-    [SettingsEntry(Symbol.Database, AppSettingsResources.UseFileCacheEntryHeader, AppSettingsResources.UseFileCacheEntryDescription)]
+    [SettingsEntry(Symbol.Database, UseFileCacheEntryHeader, UseFileCacheEntryDescription)]
     public bool UseFileCache { get; set; } = true;
 
-    [SettingsEntry(Symbol.TextFont, AppSettingsResources.AppFontFamilyEntryHeader, AppSettingsResources.AppFontFamilyEntryDescription, AppSettingsResources.AppFontFamilyEntryPlaceholder)]
+    [SettingsEntry(Symbol.TextFont, AppFontFamilyEntryHeader, AppFontFamilyEntryDescription, AppFontFamilyEntryPlaceholder)]
     public ObservableCollection<string> AppFontFamily { get; set; } = [];
 
-    [SettingsEntry(Symbol.Table, AppSettingsResources.HomePageRowsEntryHeader, AppSettingsResources.HomePageRowsEntryDescription)]
+    [SettingsEntry(Symbol.Table, HomePageRowsEntryHeader, HomePageRowsEntryDescription)]
     public int HomePageRows { get; set; } = 7;
 
-    [SettingsEntry(Symbol.Table, AppSettingsResources.HomePageColumnsEntryHeader, AppSettingsResources.HomePageColumnsEntryDescription)]
+    [SettingsEntry(Symbol.Table, HomePageColumnsEntryHeader, HomePageColumnsEntryDescription)]
     public int HomePageColumns { get; set; } = 1;
 
-    [SettingsEntry(Symbol.WindowHeaderHorizontal, AppSettingsResources.HideHomePageToolbarEntryHeader, AppSettingsResources.HideHomePageToolbarEntryDescription)]
+    [SettingsEntry(Symbol.WindowHeaderHorizontal, HideHomePageToolbarEntryHeader, HideHomePageToolbarEntryDescription)]
     public bool HideHomePageToolbar { get; set; }
 
-    [SettingsEntry(Symbol.AppTitle, AppSettingsResources.HideHomePageCardTitleEntryHeader, AppSettingsResources.HideHomePageCardTitleEntryDescription)]
+    [SettingsEntry(Symbol.AppTitle, HideHomePageCardTitleEntryHeader, HideHomePageCardTitleEntryDescription)]
     public bool HideHomePageCardTitle { get; set; }
 
     public ObservableCollection<HomePageCardLayout> HomePageCards { get; set; } =

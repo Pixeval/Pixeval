@@ -23,7 +23,7 @@ public sealed partial class SauceNaoSearchPageViewModel : ViewModelBase, IDispos
     [ObservableProperty]
     public partial bool FileSelected { get; private set; }
 
-    public static string ApiKey => App.AppViewModel.AppSettings.SearchSettings.ReverseSearchApiKey;
+    public static string ApiKey => App.AppViewModel.AppSettings.SearchSettings.SauceNaoApiKey;
 
     public static bool IsApiKeyExisted => !string.IsNullOrWhiteSpace(ApiKey);
 

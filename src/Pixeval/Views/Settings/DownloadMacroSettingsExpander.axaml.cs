@@ -15,10 +15,10 @@ using Pixeval.Utilities.IO;
 
 namespace Pixeval.Views.Settings;
 
-public partial class DownloadMacroSettingsExpander : SettingsExpander, IEntryControl<DownloadMacroAppSettingsEntry>
+public partial class DownloadMacroSettingsExpander : SettingsExpander, IEntryControl<DownloadMacroSettingsEntry>
 {
     private readonly MacroEditorColorizer _colorizer = new();
-    private DownloadMacroAppSettingsEntry? _entry;
+    private DownloadMacroSettingsEntry? _entry;
     private bool _isSynchronizingText;
 
     private static readonly ISingleImage _SingleImage = DesignHelper.DownloadParserSampleWork(ImageType.SingleImage);
@@ -29,7 +29,7 @@ public partial class DownloadMacroSettingsExpander : SettingsExpander, IEntryCon
     private static readonly ISingleImage _ImageSet = DesignHelper.DownloadParserSampleWork(ImageType.ImageSet);
     private static readonly ISingleImage _Novel = DesignHelper.DownloadParserSampleWork(ImageType.Other);
 
-    public DownloadMacroAppSettingsEntry Entry
+    public DownloadMacroSettingsEntry Entry
     {
         set
         {

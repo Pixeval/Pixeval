@@ -9,7 +9,7 @@
     xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:local="using:AutoSettingsPage.Avalonia"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    x:DataType="{x:Type entries:ProxyAppSettingsEntry}"
+    x:DataType="{x:Type entries:ProxySettingsEntry}"
     Description="{Binding Converter={x:Static avalonia:SettingsEntryHelper.DescriptionConverter}}"
     Header="{Binding Header}"
     Tag="{Binding Token}"

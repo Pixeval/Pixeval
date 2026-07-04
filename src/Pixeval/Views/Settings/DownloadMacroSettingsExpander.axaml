@@ -12,7 +12,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
     xmlns:utilities="using:Pixeval.Utilities"
-    x:DataType="{x:Type entries:DownloadMacroAppSettingsEntry}"
+    x:DataType="{x:Type entries:DownloadMacroSettingsEntry}"
     Description="{Binding Converter={x:Static avalonia:SettingsEntryHelper.DescriptionConverter}}"
     Header="{Binding Header}"
     mc:Ignorable="d"
@@ -38,9 +38,9 @@
                             ToolTip.Tip="{Binding Description}" />
                     </DataTemplate>
                 </StackPanel.DataTemplates>
-                <ItemsControl ItemsPanel="{StaticResource WrapPanelTemplate}" ItemsSource="{x:Static entries:DownloadMacroAppSettingsEntry.AvailableTransducerMacros}" />
+                <ItemsControl ItemsPanel="{StaticResource WrapPanelTemplate}" ItemsSource="{x:Static entries:DownloadMacroSettingsEntry.AvailableTransducerMacros}" />
                 <TextBlock Text="{I18N {x:Static pixeval:SettingsMainViewResources.PredicateMacroHeader}}" TextWrapping="Wrap" />
-                <ItemsControl ItemsPanel="{StaticResource WrapPanelTemplate}" ItemsSource="{x:Static entries:DownloadMacroAppSettingsEntry.AvailablePredicateMacros}" />
+                <ItemsControl ItemsPanel="{StaticResource WrapPanelTemplate}" ItemsSource="{x:Static entries:DownloadMacroSettingsEntry.AvailablePredicateMacros}" />
             </StackPanel>
         </controls:SettingsCard>
         <controls:SettingsCard ContentAlignment="Left">

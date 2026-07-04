@@ -11,15 +11,15 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Views.Settings;
 
-public partial class ProxySettingsExpander : SettingsExpander, IEntryControl<ProxyAppSettingsEntry>
+public partial class ProxySettingsExpander : SettingsExpander, IEntryControl<ProxySettingsEntry>
 {
-    public ProxyAppSettingsEntry Entry { set => DataContext = value; }
+    public ProxySettingsEntry Entry { set => DataContext = value; }
 
     public ProxySettingsExpander() => InitializeComponent();
 
     private void TextBox_OnLostFocus(object? sender, RoutedEventArgs e)
     {
-        if (sender is not TextBox { Text: var text } || DataContext is not ProxyAppSettingsEntry entry)
+        if (sender is not TextBox { Text: var text } || DataContext is not ProxySettingsEntry entry)
             return;
 
         if (string.IsNullOrWhiteSpace(text))

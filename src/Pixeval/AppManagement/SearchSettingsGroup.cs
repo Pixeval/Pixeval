@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 using AutoSettingsPage;
 using FluentIcons.Common;
 using Mako.Global.Enum;
+using static Pixeval.AppSettingsResources;
 
 namespace Pixeval.AppManagement;
 
@@ -12,16 +13,16 @@ public record SearchSettingsGroup
 {
     [SettingsEntry(
         Symbol.Key,
-        AppSettingsResources.ReverseSearchApiKeyEntryHeader,
-        AppSettingsResources.ReverseSearchApiKeyEntryDescription,
-        AppSettingsResources.ReverseSearchApiKeyEntryPlaceholder,
+        SauceNaoApiKeyEntryHeader,
+        SauceNaoApiKeyEntryDescription,
+        SauceNaoApiKeyEntryPlaceholder,
         DescriptionLink = "https://saucenao.com/user.php?page=search-api")]
-    public string ReverseSearchApiKey { get; set; } = "";
+    public string SauceNaoApiKey { get; set; } = "";
 
-    [SettingsEntry(Symbol.Grid, AppSettingsResources.SimpleWorkTypeEntryHeader, AppSettingsResources.SimpleWorkTypeEntryDescription)]
+    [SettingsEntry(Symbol.Grid, SimpleWorkTypeEntryHeader, SimpleWorkTypeEntryDescription)]
     public SimpleWorkType DefaultSimpleWorkType { get; set; }
 
-    [SettingsEntry(Symbol.ArrowTrending, AppSettingsResources.RankOptionEntryHeader, AppSettingsResources.RankOptionEntryDescription)]
+    [SettingsEntry(Symbol.ArrowTrending, RankOptionEntryHeader, RankOptionEntryDescription)]
     public RankOption IllustrationRankOption { get; set; }
 
     public RankOption NovelRankOption { get; set; }

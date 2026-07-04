@@ -103,7 +103,7 @@ public class SettingsPageViewModel : ViewModelBase
                 .Bool(t => t.OpenWorkInfoByDefault)
                 .Bool(t => t.OpenUserInfoByDefault))
             .NewGroup(t => t.SearchSettings, group => group
-                .String(t => t.ReverseSearchApiKey)
+                .String(t => t.SauceNaoApiKey)
                 .Enum(t => t.DefaultSimpleWorkType)
                 .MultiValues(t => t.IllustrationRankOption, entry =>
                     entry.Enum(
@@ -118,12 +118,12 @@ public class SettingsPageViewModel : ViewModelBase
                 .Bool(t => t.OverwriteDownloadedFile)
                 .Int(t => t.MaxDownloadTaskConcurrencyLevel, 1, Environment.ProcessorCount, 1,
                     entry => entry.ValueChanged += t => App.AppViewModel.HistoryPersistHelper.DownloadManager.ConcurrencyDegree = t)
-                .DownloadMacro()
+                .DownloadMacro(t => t.DownloadPathMacro)
                 .MultiValues(t => t.IllustrationDownloadFormat, entry =>
                     entry.IllustrationDownloadFormat()
                         .UgoiraDownloadFormat()
                         .NovelDownloadFormat())
-                .WorkSubscriptions())
+                .WorkSubscriptions(t => t.WorkSubscriptions))
             .Build();
     }
 }

@@ -14,9 +14,9 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Models.Settings.Entries;
 
-public class ProxyAppSettingsEntry : EnumSettingsEntry<NetworkSettingsGroup, object>
+public class ProxySettingsEntry : EnumSettingsEntry<NetworkSettingsGroup, object>
 {
-    public ProxyAppSettingsEntry(NetworkSettingsGroup settings) : base(settings, t => t.ProxyType, SymbolComboBoxItem.GetValues<ProxyType>())
+    public ProxySettingsEntry(NetworkSettingsGroup settings) : base(settings, t => t.ProxyType, SymbolComboBoxItem.GetValues<ProxyType>())
     {
         ValueChanged += _ =>
         {

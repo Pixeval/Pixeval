@@ -51,15 +51,5 @@ public static class SerializerHelper
             using var stream = File.OpenAsyncRead(filePath);
             return YamlSerializer.Deserialize(stream, info);
         }
-
-        public static void Serialize<TValue>(Stream stream, TValue value, YamlTypeInfo<TValue> context)
-        {
-            YamlSerializer.Serialize(stream, value, context);
-        }
-
-        public static TValue? Deserialize<TValue>(Stream stream, YamlTypeInfo<TValue> info)
-        {
-            return YamlSerializer.Deserialize(stream, info);
-        }
     }
 }

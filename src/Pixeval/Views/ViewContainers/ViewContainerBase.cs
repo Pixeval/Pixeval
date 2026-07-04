@@ -4,6 +4,7 @@
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
+using Avalonia.Threading;
 using Pixeval.Controls;
 using Pixeval.I18N;
 
@@ -25,7 +26,7 @@ public abstract class ViewContainerBase : ContentControl
     public Task<ContentDialogResult> ShowContentDialogAsync(ContentDialog dialog) =>
         DialogHost.ShowAsync(dialog);
 
-    public Task<ContentDialogResult> CreateOkCancelAsync(string title, string content) =>
+    public Task<ContentDialogResult> CreateOkCancelAsync(string title, object? content) =>
         ShowContentDialogAsync(new()
         {
             Title = title,
@@ -35,7 +36,7 @@ public abstract class ViewContainerBase : ContentControl
             DefaultButton = ContentDialogButton.Primary
         });
 
-    public Task<ContentDialogResult> CreateAcknowledgementAsync(string title, string? content) =>
+    public Task<ContentDialogResult> CreateAcknowledgementAsync(string title, object? content) =>
         ShowContentDialogAsync(new()
         {
             Title = title,
@@ -43,6 +44,25 @@ public abstract class ViewContainerBase : ContentControl
             PrimaryButtonText = I18NManager.GetResource(ContentDialogResources.OkButtonContent),
             DefaultButton = ContentDialogButton.Primary
         });
+
+    public Task<ContentDialogResult> CreateAcknowledgementTaskAsync(string title, Task<object?> content)
+    {
+        if (content.IsCompleted)
+            return CreateAcknowledgementAsync(title, content.Result);
+
+        var contentDialog = new ContentDialog
+        {
+            Title = title,
+            Content = new ProgressBar
+            {
+                IsIndeterminate = true
+            },
+            PrimaryButtonText = I18NManager.GetResource(ContentDialogResources.OkButtonContent),
+            DefaultButton = ContentDialogButton.Primary
+        };
+        _ = content.ContinueWith(t => Dispatcher.UIThread.Post(() => contentDialog.Content = t.Result));
+        return ShowContentDialogAsync(contentDialog);
+    }
 
     public void ShowNotification(INotification notification)
     {

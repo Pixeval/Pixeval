@@ -3,6 +3,7 @@
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using AutoSettingsPage.Models;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -59,8 +60,24 @@ public partial class SettingsMainView : ContentPage
                 settingsEntry.ValueReset();
     }
 
-    private void ReleaseNotesHyperlink_OnClicked(object? sender, RoutedEventArgs e)
+    private async void ReleaseNotesHyperlink_OnClicked(object? sender, RoutedEventArgs e)
     {
+        if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer)
+            await viewContainer.CreateAcknowledgementTaskAsync(
+                I18NManager.GetResource(SettingsMainViewResources.ReleaseNoteDialogTitleFormatted, AppInfo.AppVersion.CurrentVersionShortText),
+                GetReleaseNotesAsync());
+        return;
+
+        static async Task<object?> GetReleaseNotesAsync()
+        {
+            await AppInfo.AppVersion.GitHubCheckForUpdateAsync();
+            return new MarkdownBox
+            {
+                Markdown =
+                    AppInfo.AppVersion.NewestAppReleaseModel?.ReleaseNote ??
+                    I18NManager.GetResource(SettingsMainViewResources.ReleaseNoteDialogEmpty)
+            };
+        }
     }
 
     private async void ExportSettingsPlainText_OnClicked(object sender, RoutedEventArgs e)
@@ -72,6 +89,11 @@ public partial class SettingsMainView : ContentPage
         {
             if (await provider.SaveFilePickerAsync(new()
                 {
+                    FileTypeChoices = [new("YAML")
+                    {
+                        Patterns = ["*.yaml"],
+                        MimeTypes = ["text/yaml", "application/x-yaml"]
+                    }],
                     DefaultExtension = "yaml",
                     SuggestedFileName = "settings"
                 }) is not { } file)
