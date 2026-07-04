@@ -6,7 +6,6 @@ using System.IO;
 using System.Text;
 using Avalonia.Media.Imaging;
 using Pixeval.I18N;
-using Pixeval.Utilities;
 
 namespace Pixeval.ViewModels;
 
@@ -57,12 +56,11 @@ public class PixivNovelMdParser<TImage>(StringBuilder sb, int pageIndex) : Pixiv
     protected override void AddPixivImage(StringBuilder currentText, INovelContext<TImage> viewModel, long imageId, int page)
     {
         var key = (imageId, page);
-        var url = viewModel.IllustrationLookup[key].ThumbnailUrl;
+        var info = viewModel.IllustrationLookup[key];
         _ = currentText
             .AppendLine()
-            .Append($"[![{imageId}-{page}]({imageId}-{page}{Path.GetExtension(url)})]({MakoHelper.GenerateIllustrationWebUri(imageId).OriginalString})")
+            .Append($"[![{imageId}-{page}]({imageId}-{page}{Path.GetExtension(info.ThumbnailUrl)})]({info.WebsiteUri.OriginalString})")
             .AppendLine();
-        // var info = viewModel.IllustrationLookup[key];
     }
 
     protected override void NewPage(StringBuilder currentText)
@@ -95,12 +93,11 @@ public class PixivNovelMdDisplayParser(StringBuilder sb, int pageIndex) : PixivN
     protected override void AddPixivImage(StringBuilder currentText, INovelContext<Bitmap> viewModel, long imageId, int page)
     {
         var key = (imageId, page);
-        var url = viewModel.IllustrationLookup[key].ThumbnailUrl;
+        var info = viewModel.IllustrationLookup[key];
         _ = currentText
             .AppendLine()
             .Append(
-                $"[![{imageId}-{page}]({url})]({MakoHelper.GenerateIllustrationWebUri(imageId).OriginalString})")
+                $"[![{imageId}-{page}]({info.ThumbnailUrl})]({info.AppUri.OriginalString})")
             .AppendLine();
-        // var info = viewModel.IllustrationLookup[key];
     }
 }

@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Mako.Global.Enum;
 using Mako.Model;
 using Misaki;
-using Pixeval.AppManagement;
 using Pixeval.Collections;
 using Pixeval.I18N;
 using Pixeval.Models.Options;
@@ -35,14 +34,6 @@ public static class MakoHelper
             _ => throw new ArgumentOutOfRangeException(nameof(option))
         };
     }
-
-    public static Uri GenerateIllustrationWebUri(long id) => new($"https://www.pixiv.net/artworks/{id}");
-
-    public static Uri GenerateUserWebUri(long id) => new($"https://www.pixiv.net/users/{id}");
-
-    public static Uri GenerateSpotlightWebUri(long id) => new($"https://www.pixivision.net/a/{id}");
-
-    public static Uri GenerateSpotlightAppUri(long id) => new($"{AppInfo.AppProtocol}://spotlight/{id}");
 
     public static IEnumerable<ISortDescription<IWorkViewModel>> GetSortDescription(LocalSortOption sortOption)
     {

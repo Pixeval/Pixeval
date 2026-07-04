@@ -36,18 +36,46 @@ public static class GitHubHttpOptions
     public static bool HasConfiguredResolver(NetworkSettingsGroup settings, string host) =>
         GetResolver(settings, host) is { Count: > 0 };
 
+    public static bool IsGitHubHost(string host) =>
+        GetResolver(host) is not null;
+
     private static ObservableCollection<string>? GetResolver(NetworkSettingsGroup settings, string host)
+    {
+        var resolver = GetResolver(host);
+        return resolver switch
+        {
+            GitHubResolver.Host => settings.GitHubNameResolver,
+            GitHubResolver.Api => settings.GitHubApiNameResolver,
+            GitHubResolver.Avatar => settings.GitHubAvatarNameResolver,
+            GitHubResolver.UserContent => settings.GitHubUserContentNameResolver,
+            GitHubResolver.Assets => settings.GitHubAssetsNameResolver,
+            GitHubResolver.Codeload => settings.GitHubCodeloadNameResolver,
+            _ => null
+        };
+    }
+
+    private static GitHubResolver? GetResolver(string host)
     {
         return host.ToLowerInvariant() switch
         {
-            Host or "gist.github.com" => settings.GitHubNameResolver,
-            ApiHost => settings.GitHubApiNameResolver,
-            AvatarHost => settings.GitHubAvatarNameResolver,
-            AssetsHost => settings.GitHubAssetsNameResolver,
-            CodeloadHost => settings.GitHubCodeloadNameResolver,
+            Host or "gist.github.com" => GitHubResolver.Host,
+            ApiHost => GitHubResolver.Api,
+            AvatarHost => GitHubResolver.Avatar,
+            AssetsHost => GitHubResolver.Assets,
+            CodeloadHost => GitHubResolver.Codeload,
             var h when h.EndsWith(".githubusercontent.com", StringComparison.OrdinalIgnoreCase)
-                => settings.GitHubUserContentNameResolver,
+                => GitHubResolver.UserContent,
             _ => null
         };
+    }
+
+    private enum GitHubResolver
+    {
+        Host,
+        Api,
+        Avatar,
+        UserContent,
+        Assets,
+        Codeload
     }
 }

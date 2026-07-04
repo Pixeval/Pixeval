@@ -9,7 +9,6 @@ using CommunityToolkit.Mvvm.Input;
 using Mako;
 using Mako.Model;
 using Misaki;
-using Pixeval.Utilities;
 using Pixeval.Utilities.IO.Caching;
 
 namespace Pixeval.ViewModels;
@@ -39,7 +38,7 @@ public partial class TabViewContainerViewModel : ViewModelBase
 
     public string? IdText => User?.Id.ToString();
 
-    public Uri? Url => User?.Id is { } id ? MakoHelper.GenerateUserWebUri(id) : null;
+    public Uri? Url => User?.WebsiteUri;
 
     [ObservableProperty]
     public partial bool RestrictedModeIdle { get; private set; } = true;

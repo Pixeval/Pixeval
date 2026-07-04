@@ -4,7 +4,6 @@
 using System;
 using Mako.Model;
 using Pixeval.Controls;
-using Pixeval.Utilities;
 
 namespace Pixeval.ViewModels;
 
@@ -15,7 +14,7 @@ public class SpotlightItemViewModel(Spotlight spotlight) : ThumbnailEntryViewMod
 
     public override string ThumbnailUrl => Entry.Thumbnail;
 
-    public override Uri AppUri => MakoHelper.GenerateSpotlightAppUri(Entry.Id);
+    public override Uri AppUri => Entry.AppUri;
 
-    public override Uri WebsiteUri => MakoHelper.GenerateSpotlightWebUri(Entry.Id);
+    public override Uri WebsiteUri => Entry.WebsiteUri;
 }

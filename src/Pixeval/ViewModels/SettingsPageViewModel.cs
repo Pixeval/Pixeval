@@ -16,7 +16,6 @@ using Pixeval.AppManagement;
 using Pixeval.Models.Extensions;
 using Pixeval.Models.Options;
 using Pixeval.Models.Settings;
-using Pixeval.Utilities.GitHub;
 
 namespace Pixeval.ViewModels;
 
@@ -69,24 +68,15 @@ public class SettingsPageViewModel : ViewModelBase
                             .IPSet(t => t.PixivOAuthNameResolver)
                             .IPSet(t => t.PixivAccountNameResolver)
                             .IPSet(t => t.PixivWebApiNameResolver),
-                    entry => entry.ValueChanged += t =>
-                    {
-                        App.AppViewModel.MakoClient.Configuration.DomainFronting = t;
-                        App.AppViewModel.AppServiceProvider.GetRequiredService<GitHubHttpClientProvider>().Reset();
-                    })
-                .DomainFronting(t => t.EnableGitHubDirectConnection, entry => entry
+                    entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.DomainFronting = t)
+                .DomainFronting(t => t.EnableGitHubDomainFronting, entry => entry
                     .IPSet(t => t.GitHubNameResolver)
                     .IPSet(t => t.GitHubApiNameResolver)
                     .IPSet(t => t.GitHubAvatarNameResolver)
                     .IPSet(t => t.GitHubUserContentNameResolver)
                     .IPSet(t => t.GitHubAssetsNameResolver)
-                    .IPSet(t => t.GitHubCodeloadNameResolver),
-                    entry => entry.ValueChanged += _ => App.AppViewModel.AppServiceProvider.GetRequiredService<GitHubHttpClientProvider>().Reset())
-                .Proxy(entry => entry.ProxyChanged += t =>
-                {
-                    App.AppViewModel.MakoClient.Configuration.Proxy = t;
-                    App.AppViewModel.AppServiceProvider.GetRequiredService<GitHubHttpClientProvider>().Reset();
-                })
+                    .IPSet(t => t.GitHubCodeloadNameResolver))
+                .Proxy(entry => entry.ProxyChanged += t => App.AppViewModel.MakoClient.Configuration.Proxy = t)
                 .String(t => t.MirrorHost,
                     entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.MirrorHost = t)
                 .String(t => t.WebCookie,

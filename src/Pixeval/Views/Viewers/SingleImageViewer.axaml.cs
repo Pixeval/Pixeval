@@ -178,7 +178,7 @@ public partial class SingleImageViewer : UserControl
             || scrollView.ZoomFactor == viewModel.ZoomFactor)
             return;
 
-        scrollView.ZoomTo(viewModel.ZoomFactor);
+       // scrollView.ZoomTo(viewModel.ZoomFactor);
     }
 
     private async void SaveButton_OnRightClick(object? sender, ContextRequestedEventArgs e)

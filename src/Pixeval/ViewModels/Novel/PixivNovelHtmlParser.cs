@@ -5,7 +5,6 @@ using System;
 using System.IO;
 using System.Text;
 using Pixeval.I18N;
-using Pixeval.Utilities;
 
 namespace Pixeval.ViewModels;
 
@@ -56,12 +55,11 @@ public class PixivNovelHtmlParser<TImage>(StringBuilder sb, int pageIndex) : Pix
     protected override void AddPixivImage(StringBuilder currentText, INovelContext<TImage> viewModel, long imageId, int page)
     {
         var key = (imageId, page);
-        var url = viewModel.IllustrationLookup[key].ThumbnailUrl;
+        var info = viewModel.IllustrationLookup[key];
         _ = currentText
             .AppendLine("<br/><br/>")
-            .AppendLine($"<a href=\"{MakoHelper.GenerateIllustrationWebUri(imageId).OriginalString}\"><img src=\"{imageId}-{page}{Path.GetExtension(url)}\" alt=\"{imageId}-{page}\" /></a>")
+            .AppendLine($"<a href=\"{info.WebsiteUri.OriginalString}\"><img src=\"{imageId}-{page}{Path.GetExtension(info.ThumbnailUrl)}\" alt=\"{imageId}-{page}\" /></a>")
             .AppendLine("<br/><br/>");
-        // var info = viewModel.IllustrationLookup[key];
     }
 
     protected override void NewPage(StringBuilder currentText)

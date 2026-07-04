@@ -30,7 +30,7 @@ internal sealed class GitHubDirectProxy(NetworkSettingsGroup settings) : IWebPro
 
     public bool IsBypassed(Uri host)
     {
-        if (settings.EnableGitHubDirectConnection &&
+        if (settings.EnableGitHubDomainFronting &&
             GitHubHttpOptions.HasConfiguredResolver(settings, host.Host))
         {
             return true;

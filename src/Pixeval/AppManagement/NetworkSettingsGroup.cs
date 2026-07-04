@@ -27,7 +27,7 @@ public record NetworkSettingsGroup
     public string Proxy { get; set; } = "";
 
     [SettingsEntry(Symbol.ShieldTask, EnableGitHubDomainFrontingEntryHeader, EnableGitHubDomainFrontingEntryDescription)]
-    public bool EnableGitHubDirectConnection { get; set; } = true;
+    public bool EnableGitHubDomainFronting { get; set; } = true;
 
     /// <summary>
     /// The mirror host for image server, Pixeval will do a simple substitution that

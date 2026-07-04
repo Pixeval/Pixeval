@@ -48,7 +48,7 @@ public static class GitHubDirectHttpClientFactory
         CancellationToken token)
     {
         var endpoint = context.DnsEndPoint;
-        if (networkSettings.EnableGitHubDirectConnection &&
+        if (networkSettings.EnableGitHubDomainFronting &&
             GitHubHttpOptions.TryGetConfiguredAddresses(networkSettings, endpoint.Host, out var addresses))
         {
             return await ConnectToAddressesAsync(endpoint.Host, endpoint.Port, addresses, token).ConfigureAwait(false);

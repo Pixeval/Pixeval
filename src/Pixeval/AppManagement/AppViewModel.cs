@@ -61,9 +61,11 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
         return new ServiceCollection()
             .AddSingleton(_ => logger)
             .AddBooruParsers()
-            .AddSingleton(_ => new GitHubHttpClientProvider(AppSettings.NetworkSettings))
             .AddKeyedSingleton<IGetArtworkService, MakoClient>(IPlatformInfo.Pixiv, (provider, key) => makoClient)
             .AddKeyedSingleton<IDownloadHttpClientService, MakoClient>(IPlatformInfo.Pixiv, (provider, key) => makoClient)
+            .AddKeyedSingleton<IDownloadHttpClientService>(
+                GitHubHttpClientProvider.PlatformKey,
+                (_, _) => new GitHubHttpClientProvider(AppSettings.NetworkSettings))
             .AddSingleton<WorkSubscriptionDownloadService>()
             .AddSingleton<IllustrationDownloadTaskFactory>()
             .AddSingleton<NovelDownloadTaskFactory>()
@@ -179,7 +181,8 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
     }
 
     public HttpClient GetRequiredGitHubHttpClient() =>
-        AppServiceProvider.GetRequiredService<GitHubHttpClientProvider>().Client;
+        AppServiceProvider.GetRequiredKeyedService<IDownloadHttpClientService>(GitHubHttpClientProvider.PlatformKey)
+            .GetApiClient();
 
     public void Dispose()
     {
