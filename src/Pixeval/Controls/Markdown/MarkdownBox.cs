@@ -1,0 +1,370 @@
+// Copyright (c) Pixeval.
+// Licensed under the GPL-3.0 License.
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Media;
+using Avalonia.Threading;
+using Avalonia.VisualTree;
+using ColorTextBlock.Avalonia;
+using CommunityToolkit.Mvvm.Input;
+using Markdown.Avalonia;
+using Markdown.Avalonia.StyleCollections;
+using Markdown.Avalonia.Svg;
+using Markdown.Avalonia.Utils;
+using Misaki;
+using Pixeval.AppManagement;
+using Pixeval.Utilities;
+using Pixeval.Utilities.GitHub;
+using Pixeval.Utilities.IO.Caching;
+using Pixeval.Views.Viewers;
+
+namespace Pixeval.Controls;
+
+public sealed class MarkdownHyperlinkClickedEventArgs(string url) : EventArgs
+{
+    public string Url { get; } = url;
+
+    public bool Handled { get; set; }
+}
+
+public class MarkdownBox : MarkdownScrollViewer
+{
+    private const double AnchorScrollOffset = 12;
+    private static readonly Cursor TextCursor = new(StandardCursorType.Ibeam);
+
+    public static readonly StyledProperty<IBrush?> MarkdownForegroundProperty =
+        AvaloniaProperty.Register<MarkdownBox, IBrush?>(nameof(MarkdownForeground));
+
+    public static readonly StyledProperty<FontFamily?> MarkdownFontFamilyProperty =
+        AvaloniaProperty.Register<MarkdownBox, FontFamily?>(nameof(MarkdownFontFamily));
+
+    public static readonly StyledProperty<FontWeight?> MarkdownFontWeightProperty =
+        AvaloniaProperty.Register<MarkdownBox, FontWeight?>(nameof(MarkdownFontWeight));
+
+    public static readonly StyledProperty<double> MarkdownFontSizeProperty =
+        AvaloniaProperty.Register<MarkdownBox, double>(nameof(MarkdownFontSize), double.NaN);
+
+    public static readonly StyledProperty<double> MarkdownLineHeightProperty =
+        AvaloniaProperty.Register<MarkdownBox, double>(nameof(MarkdownLineHeight), double.NaN);
+
+    public static readonly StyledProperty<double> MarkdownLineSpacingProperty =
+        AvaloniaProperty.Register<MarkdownBox, double>(nameof(MarkdownLineSpacing), double.NaN);
+
+    private bool _presentationApplyQueued;
+
+    public event EventHandler<MarkdownHyperlinkClickedEventArgs>? HyperlinkClicked;
+
+    public IBrush? MarkdownForeground
+    {
+        get => GetValue(MarkdownForegroundProperty);
+        set => SetValue(MarkdownForegroundProperty, value);
+    }
+
+    public FontFamily? MarkdownFontFamily
+    {
+        get => GetValue(MarkdownFontFamilyProperty);
+        set => SetValue(MarkdownFontFamilyProperty, value);
+    }
+
+    public FontWeight? MarkdownFontWeight
+    {
+        get => GetValue(MarkdownFontWeightProperty);
+        set => SetValue(MarkdownFontWeightProperty, value);
+    }
+
+    public double MarkdownFontSize
+    {
+        get => GetValue(MarkdownFontSizeProperty);
+        set => SetValue(MarkdownFontSizeProperty, value);
+    }
+
+    public double MarkdownLineHeight
+    {
+        get => GetValue(MarkdownLineHeightProperty);
+        set => SetValue(MarkdownLineHeightProperty, value);
+    }
+
+    public double MarkdownLineSpacing
+    {
+        get => GetValue(MarkdownLineSpacingProperty);
+        set => SetValue(MarkdownLineSpacingProperty, value);
+    }
+
+    public MarkdownBox()
+    {
+        SelectionEnabled = true;
+        Cursor = TextCursor;
+        Classes.Add("PixevalMarkdownBox");
+        MarkdownStyle = new MarkdownStyleFluentTheme();
+        Styles.Add(new MarkdownBoxStyles());
+        Plugins.Plugins.Add(new PixevalMarkdownPlugin());
+        Plugins.Plugins.Add(new PixevalHtmlPlugin());
+        Plugins.Plugins.Add(new SvgFormat());
+        Plugins.PathResolver = new PixevalPathResolver();
+        Plugins.HyperlinkCommand = new RelayCommand<string>(OnHyperlinkClicked);
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        QueueApplyMarkdownPresentation();
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+
+        if (change.Property == MarkdownProperty
+            || change.Property == MarkdownForegroundProperty
+            || change.Property == MarkdownFontFamilyProperty
+            || change.Property == MarkdownFontWeightProperty
+            || change.Property == MarkdownFontSizeProperty
+            || change.Property == MarkdownLineHeightProperty
+            || change.Property == MarkdownLineSpacingProperty)
+        {
+            QueueApplyMarkdownPresentation();
+        }
+    }
+
+    private async void OnHyperlinkClicked(string? url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+            return;
+
+        var args = new MarkdownHyperlinkClickedEventArgs(url);
+        HyperlinkClicked?.Invoke(this, args);
+        if (args.Handled)
+            return;
+
+        if (TryScrollToAnchor(url))
+            return;
+
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
+            return;
+
+        if (TopLevel.GetTopLevel(this) is not
+            {
+                ViewContainer: { } viewContainer,
+                Launcher: { } launcher
+            })
+            return;
+
+        if (uri.Scheme is not AppInfo.AppProtocol)
+            await launcher.LaunchUriAsync(uri);
+        else if (uri.Host is "illust" && uri.AbsolutePath.Trim('/') is { } id)
+            viewContainer.CreateIllustrationPage(id, IPlatformInfo.Pixiv);
+    }
+
+    private bool TryScrollToAnchor(string url)
+    {
+        if (!url.StartsWith('#'))
+            return false;
+
+        var anchor = Uri.UnescapeDataString(url[1..]);
+        if (string.IsNullOrWhiteSpace(anchor))
+            return false;
+
+        var target = this
+            .GetVisualDescendants()
+            .OfType<Control>()
+            .FirstOrDefault(control =>
+                control.Classes.Contains(MarkdownAnchor.ClassName)
+                && string.Equals(control.Tag as string, anchor, StringComparison.Ordinal));
+
+        if (target?.TranslatePoint(default, this) is not { } point)
+            return false;
+
+        ScrollValue = new Vector(
+            ScrollValue.X,
+            Math.Max(0, ScrollValue.Y + point.Y - AnchorScrollOffset));
+
+        return true;
+    }
+
+    private void QueueApplyMarkdownPresentation()
+    {
+        if (_presentationApplyQueued)
+            return;
+
+        _presentationApplyQueued = true;
+        Dispatcher.UIThread.Post(() =>
+        {
+            _presentationApplyQueued = false;
+            ApplyMarkdownPresentation();
+        }, DispatcherPriority.Loaded);
+    }
+
+    private void ApplyMarkdownPresentation()
+    {
+        var fontFamily = MarkdownFontFamily;
+        var fontWeight = MarkdownFontWeight;
+        var hasFontSize = IsPositive(MarkdownFontSize);
+        var hasLineHeight = IsPositive(MarkdownLineHeight);
+        var hasLineSpacing = IsNonNegative(MarkdownLineSpacing);
+
+        foreach (var text in this.GetVisualDescendants().OfType<CTextBlock>())
+        {
+            var isHeading = IsHeading(text);
+            var hasNaturalLineHeightInline = ContainsNaturalLineHeightInline(text);
+
+            NormalizeInlineDecorations(text);
+
+            text.Cursor = TextCursor;
+
+            if (MarkdownForeground is { } foreground)
+                text.Foreground = foreground;
+            else
+                text.ClearValue(CTextBlock.ForegroundProperty);
+
+            if (fontFamily is not null)
+                text.FontFamily = fontFamily;
+            else
+                text.ClearValue(CTextBlock.FontFamilyProperty);
+
+            if (fontWeight is { } weight && !isHeading)
+                text.FontWeight = weight;
+            else
+                text.ClearValue(CTextBlock.FontWeightProperty);
+
+            if (hasFontSize && !isHeading)
+                text.FontSize = MarkdownFontSize;
+            else
+                text.ClearValue(CTextBlock.FontSizeProperty);
+
+            if (hasLineHeight && !isHeading && !hasNaturalLineHeightInline)
+                text.LineHeight = MarkdownLineHeight;
+            else
+                text.ClearValue(CTextBlock.LineHeightProperty);
+
+            if (hasLineSpacing && !isHeading)
+                text.LineSpacing = MarkdownLineSpacing;
+            else
+                text.ClearValue(CTextBlock.LineSpacingProperty);
+        }
+
+        foreach (var text in this.GetVisualDescendants().OfType<TextBlock>())
+        {
+            text.Cursor = TextCursor;
+
+            if (MarkdownForeground is { } foreground)
+                text.Foreground = foreground;
+            else
+                text.ClearValue(TextBlock.ForegroundProperty);
+
+            if (fontFamily is not null)
+                text.FontFamily = fontFamily;
+            else
+                text.ClearValue(TextBlock.FontFamilyProperty);
+
+            if (fontWeight is { } weight)
+                text.FontWeight = weight;
+            else
+                text.ClearValue(TextBlock.FontWeightProperty);
+
+            if (hasFontSize)
+                text.FontSize = MarkdownFontSize;
+            else
+                text.ClearValue(TextBlock.FontSizeProperty);
+
+            if (hasLineHeight)
+                text.LineHeight = MarkdownLineHeight;
+            else
+                text.ClearValue(TextBlock.LineHeightProperty);
+        }
+    }
+
+    private static bool IsHeading(CTextBlock text) =>
+        text.Classes.Any(@class =>
+            @class is "Heading1" or "Heading2" or "Heading3" or "Heading4" or "Heading5" or "Heading6");
+
+    private static bool ContainsNaturalLineHeightInline(CTextBlock text) =>
+        text.Content.Any(ContainsNaturalLineHeightInline);
+
+    private static bool ContainsNaturalLineHeightInline(CInline inline) =>
+        inline is RubyInline
+        || inline is CImage
+        || inline is CInlineUIContainer
+        || (inline is CSpan { Content: { } content } && content.Any(ContainsNaturalLineHeightInline));
+
+    private static void NormalizeInlineDecorations(CTextBlock text)
+    {
+        foreach (var inline in text.Content)
+            NormalizeInlineDecorations(inline, false);
+    }
+
+    private static void NormalizeInlineDecorations(CInline inline, bool isInsideCode)
+    {
+        if (isInsideCode)
+            inline.Background = null;
+
+        if (inline is CSpan { Content: { } content })
+        {
+            var childIsInsideCode = isInsideCode || inline is CCode;
+            foreach (var child in content)
+                NormalizeInlineDecorations(child, childIsInsideCode);
+        }
+    }
+
+    private static bool IsPositive(double value) => !double.IsNaN(value) && value > 0;
+
+    private static bool IsNonNegative(double value) => !double.IsNaN(value) && value >= 0;
+
+    private sealed class PixevalPathResolver : IPathResolver
+    {
+        private readonly DefaultPathResolver _defaultPathResolver = new();
+
+        public string? AssetPathRoot
+        {
+            get;
+            set
+            {
+                field = value;
+                _defaultPathResolver.AssetPathRoot = value;
+            }
+        }
+
+        public IEnumerable<string>? CallerAssemblyNames
+        {
+            get;
+            set
+            {
+                field = value;
+                _defaultPathResolver.CallerAssemblyNames = value;
+            }
+        }
+
+        public async Task<Stream?> ResolveImageResource(string relativeOrAbsolutePath)
+        {
+            if (Uri.TryCreate(relativeOrAbsolutePath, UriKind.Absolute, out var uri)
+                && uri.Scheme is "http" or "https")
+            {
+                return await CacheHelper.GetImageStreamAsync(ResolvePlatform(uri), uri.OriginalString).ConfigureAwait(false);
+            }
+
+            return await (_defaultPathResolver.ResolveImageResource(relativeOrAbsolutePath) ?? Task.FromResult<Stream?>(null)).ConfigureAwait(false);
+        }
+
+        private static string ResolvePlatform(Uri uri)
+        {
+            var host = uri.Host;
+            if (GitHubHttpOptions.IsGitHubHost(host))
+                return GitHubHttpClientProvider.PlatformKey;
+            if (IsHostOrSubdomain(host, "pixiv.net") || IsHostOrSubdomain(host, "pximg.net"))
+                return IPlatformInfo.Pixiv;
+            if (IsHostOrSubdomain(host, "donmai.us"))
+                return IPlatformInfo.Danbooru;
+            return IPlatformInfo.All;
+        }
+
+        private static bool IsHostOrSubdomain(string host, string domain) =>
+            host.Equals(domain, StringComparison.OrdinalIgnoreCase)
+            || host.EndsWith("." + domain, StringComparison.OrdinalIgnoreCase);
+    }
+}

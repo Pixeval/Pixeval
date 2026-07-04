@@ -3,6 +3,7 @@
 
 using System;
 using System.IO;
+using System.Net;
 using System.Text;
 using Pixeval.I18N;
 
@@ -19,7 +20,7 @@ public class PixivNovelHtmlParser<TImage>(StringBuilder sb, int pageIndex) : Pix
 
     protected override void AddRuby(StringBuilder currentText, string kanji, string ruby)
     {
-        _ = currentText.Append($"<ruby>{kanji}<rp>（<rp><rt>{ruby}</rt><rp>）<rp></ruby>");
+        _ = currentText.Append($"<ruby>{WebUtility.HtmlEncode(kanji)}<rp>（</rp><rt>{WebUtility.HtmlEncode(ruby)}</rt><rp>）</rp></ruby>");
     }
 
     protected override void AddHyperlink(StringBuilder currentText, string content, Uri uri)

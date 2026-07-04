@@ -1,0 +1,235 @@
+<Styles
+    x:Class="Pixeval.Controls.MarkdownBoxStyles"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ctxt="clr-namespace:ColorTextBlock.Avalonia;assembly=ColorTextBlock.Avalonia"
+    xmlns:mdc="clr-namespace:Markdown.Avalonia.Controls;assembly=Markdown.Avalonia">
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CTextBlock">
+        <Setter Property="LineSpacing" Value="3" />
+        <Setter Property="Margin" Value="0,5" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CTextBlock.Paragraph">
+        <Setter Property="Margin" Value="0,6" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CTextBlock.Heading1">
+        <Setter Property="Margin" Value="0,18,0,10" />
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="LineSpacing" Value="0" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CTextBlock.Heading2">
+        <Setter Property="Margin" Value="0,18,0,8" />
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="LineSpacing" Value="0" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CTextBlock.Heading3">
+        <Setter Property="Margin" Value="0,16,0,6" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="LineSpacing" Value="0" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CTextBlock.Heading4">
+        <Setter Property="Margin" Value="0,12,0,4" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CTextBlock.Heading5">
+        <Setter Property="Margin" Value="0,10,0,4" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CTextBlock.Heading6">
+        <Setter Property="Margin" Value="0,10,0,4" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CHyperlink">
+        <Setter Property="Foreground" Value="{DynamicResource AccentTextFillColorSecondaryBrush}" />
+        <Setter Property="IsUnderline" Value="False" />
+        <Setter Property="HoverForeground" Value="{x:Null}" />
+        <Setter Property="HoverBackground" Value="{x:Null}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CHyperlink:pointerover">
+        <Setter Property="Foreground" Value="{DynamicResource AccentTextFillColorPrimaryBrush}" />
+        <Setter Property="IsUnderline" Value="True" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CHyperlink:pressed">
+        <Setter Property="Foreground" Value="{DynamicResource AccentTextFillColorTertiaryBrush}" />
+        <Setter Property="IsUnderline" Value="True" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CCode">
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        <Setter Property="Background" Value="#1AF6F8FA" />
+        <Setter Property="Padding" Value="3,1" />
+        <Setter Property="CornerRadius" Value="4" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Border.CodeBlock">
+        <Setter Property="Margin" Value="0,10" />
+        <Setter Property="Padding" Value="12,10" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+        <Setter Property="Background" Value="{DynamicResource LayerOnMicaBaseAltFillColorSecondaryBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer TextBlock.CodeBlock">
+        <Setter Property="FontFamily" Value="Cascadia Mono,Consolas,Menlo,Monaco,monospace" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="LineHeight" Value="20" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Border.Blockquote">
+        <Setter Property="Margin" Value="0,8" />
+        <Setter Property="Padding" Value="12,2,0,2" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrongStrokeColorDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="4,0,0,0" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Border.Blockquote ctxt|CTextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer StackPanel.Blockquote">
+        <Setter Property="Margin" Value="0" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Grid.List">
+        <Setter Property="Margin" Value="20,2,0,2" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CTextBlock.ListMarker">
+        <Setter Property="Margin" Value="0,5,6,5" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Border.Table">
+        <Setter Property="Margin" Value="0,10" />
+        <Setter Property="BorderThickness" Value="0,0,1,1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="ClipToBounds" Value="True" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Border.TightTable">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Grid.Table">
+        <Setter Property="mdc:AutoScaleColumnDefinitions.IsEnabled" Value="True" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Grid.Table > Border">
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Padding" Value="10,6" />
+        <Setter Property="BorderThickness" Value="1,1,0,0" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Border.TableHeader">
+        <Setter Property="Background" Value="{DynamicResource LayerOnMicaBaseAltFillColorSecondaryBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Border.TableHeader ctxt|CTextBlock">
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Border.EvenTableRow">
+        <Setter Property="Background" Value="{DynamicResource LayerFillColorAltBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Border.MarkdownAlert">
+        <Setter Property="Margin" Value="0,10" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="BorderThickness" Value="4,1,1,1" />
+        <Setter Property="CornerRadius" Value="6" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Border.MarkdownAlertNote">
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemFillColorAttentionBrush}" />
+        <Setter Property="Background" Value="{DynamicResource SystemFillColorAttentionBackgroundBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Border.MarkdownAlertInfo">
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemFillColorAttentionBrush}" />
+        <Setter Property="Background" Value="{DynamicResource SystemFillColorAttentionBackgroundBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Border.MarkdownAlertTip">
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemFillColorSuccessBrush}" />
+        <Setter Property="Background" Value="{DynamicResource SystemFillColorSuccessBackgroundBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Border.MarkdownAlertImportant">
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+        <Setter Property="Background" Value="{DynamicResource SystemFillColorAttentionBackgroundBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Border.MarkdownAlertWarning">
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemFillColorCautionBrush}" />
+        <Setter Property="Background" Value="{DynamicResource SystemFillColorCautionBackgroundBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Border.MarkdownAlertCaution">
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemFillColorCriticalBrush}" />
+        <Setter Property="Background" Value="{DynamicResource SystemFillColorCriticalBackgroundBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CTextBlock.MarkdownAlertTitle">
+        <Setter Property="Margin" Value="0,0,0,4" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CTextBlock.MarkdownAlertTitleNote">
+        <Setter Property="Foreground" Value="{DynamicResource SystemFillColorAttentionBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CTextBlock.MarkdownAlertTitleInfo">
+        <Setter Property="Foreground" Value="{DynamicResource SystemFillColorAttentionBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CTextBlock.MarkdownAlertTitleTip">
+        <Setter Property="Foreground" Value="{DynamicResource SystemFillColorSuccessBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CTextBlock.MarkdownAlertTitleImportant">
+        <Setter Property="Foreground" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CTextBlock.MarkdownAlertTitleWarning">
+        <Setter Property="Foreground" Value="{DynamicResource SystemFillColorCautionBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CTextBlock.MarkdownAlertTitleCaution">
+        <Setter Property="Foreground" Value="{DynamicResource SystemFillColorCriticalBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Border.MarkdownAnchor">
+        <Setter Property="Height" Value="0" />
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+    </Style>
+</Styles>

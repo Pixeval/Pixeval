@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -153,7 +154,11 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
                     .NewGroup(t => t.NovelSettings, group => group
                         .Color(t => t.NovelBackground, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelBackgroundBrush)))
                         .Color(t => t.NovelFontColor, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelForegroundBrush)))
-                        .Font(t => t.NovelFontFamily, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelFontFamilyObject)))
+                        .Font(t => t.NovelFontFamily, t =>
+                        {
+                            t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelFontFamilyObject));
+                            t.Value.CollectionChanged += (_, _) => OnPropertyChanged(nameof(NovelFontFamilyObject));
+                        })
                         .Enum(t => t.NovelFontWeight, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelFontWeight)))
                         .Int(t => t.NovelFontSize, 5, 100, 1, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelFontSize)))
                         .Int(t => t.NovelLineHeight, 0, 150, 1, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelLineHeight)))

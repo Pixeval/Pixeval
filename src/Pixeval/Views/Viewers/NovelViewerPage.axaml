@@ -92,7 +92,13 @@
                         <controls:MarkdownBox
                             MaxWidth="{Binding NovelMaxWidth}"
                             Margin="30,20"
-                            Markdown="{Binding CurrentMarkdown}" />
+                            HyperlinkClicked="MarkdownBox_OnHyperlinkClicked"
+                            Markdown="{Binding CurrentMarkdown}"
+                            MarkdownFontFamily="{Binding NovelFontFamilyObject}"
+                            MarkdownFontSize="{Binding NovelFontSize}"
+                            MarkdownFontWeight="{Binding NovelFontWeight}"
+                            MarkdownForeground="{Binding NovelForegroundBrush}"
+                            MarkdownLineHeight="{Binding NovelLineHeight}" />
 
                         <Grid Background="#7F000000" IsVisible="{Binding IsLoading}">
                             <StackPanel

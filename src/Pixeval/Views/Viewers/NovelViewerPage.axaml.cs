@@ -1,12 +1,14 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Mako.Global.Enum;
+using Pixeval.Controls;
 using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.ViewModels.Viewers;
@@ -32,6 +34,17 @@ public partial class NovelViewerPage : ContentPage
 
     private void NextButton_OnRightClick(object? sender, ContextRequestedEventArgs e) => ViewModel.NextWorkCommand.Execute(null);
 
+    private void MarkdownBox_OnHyperlinkClicked(object? sender, MarkdownHyperlinkClickedEventArgs e)
+    {
+        if (!TryParsePageLink(e.Url, out var pageIndex))
+            return;
+
+        e.Handled = true;
+
+        if (pageIndex >= 0 && pageIndex < ViewModel.PageCount)
+            ViewModel.CurrentPageIndex = pageIndex;
+    }
+
     private async void SaveButton_OnRightClick(object? sender, ContextRequestedEventArgs e)
     {
         if (ViewModel.CurrentNovel is { } current)
@@ -56,6 +69,17 @@ public partial class NovelViewerPage : ContentPage
             TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(
                 I18NManager.GetResource(EntryViewerPageResources.AddedToBookmark));
         }
+    }
+
+    private static bool TryParsePageLink(string url, out int pageIndex)
+    {
+        pageIndex = 0;
+        var link = url.StartsWith('#') ? url[1..] : url;
+
+        if (!link.StartsWith("page", StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        return int.TryParse(link[4..], out pageIndex);
     }
 
     #region Disposal
