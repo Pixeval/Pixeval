@@ -41,6 +41,13 @@ public record ApplicationSettingsGroup
     [SettingsEntry(Symbol.Database, UseFileCacheEntryHeader, UseFileCacheEntryDescription)]
     public bool UseFileCache { get; set; } = true;
 
+    [SettingsEntry(Symbol.DatabaseLightning, LimitFileCacheSizeEntryHeader, LimitFileCacheSizeEntryDescription)]
+    public bool LimitFileCacheSize { get; set; }
+
+    [SettingsEntry(Symbol.HardDrive, FileCacheSizeLimitInMegabytesEntryHeader,
+        FileCacheSizeLimitInMegabytesEntryDescription)]
+    public int FileCacheSizeLimitInMegabytes { get; set; } = 2048;
+
     [SettingsEntry(Symbol.TextFont, AppFontFamilyEntryHeader, AppFontFamilyEntryDescription, AppFontFamilyEntryPlaceholder)]
     public ObservableCollection<string> AppFontFamily { get; set; } = [];
 

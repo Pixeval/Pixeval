@@ -2,7 +2,6 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using AutoSettingsPage.Models;
 using Avalonia.Controls;
@@ -13,6 +12,7 @@ using Pixeval.I18N;
 using Pixeval.Models.Options;
 using Pixeval.Models.Settings;
 using Pixeval.Utilities;
+using Pixeval.Utilities.IO.Caching;
 using Pixeval.ViewModels;
 using Pixeval.Views.Login;
 using SharpYaml;
@@ -63,7 +63,7 @@ public partial class SettingsMainView : ContentPage
     private async void ReleaseNotesHyperlink_OnClicked(object? sender, RoutedEventArgs e)
     {
         if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer)
-            await viewContainer.CreateAcknowledgementTaskAsync(
+            _ = await viewContainer.CreateAcknowledgementTaskAsync(
                 I18NManager.GetResource(SettingsMainViewResources.ReleaseNoteDialogTitleFormatted, AppInfo.AppVersion.CurrentVersionShortText),
                 GetReleaseNotesAsync());
         return;
@@ -141,8 +141,7 @@ public partial class SettingsMainView : ContentPage
 
     private void DeleteFileCacheEntryButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        Directory.Delete(AppInfo.CacheFolder, true);
-        _ = Directory.CreateDirectory(AppInfo.CacheFolder);
+        CacheHelper.PurgeCache();
         ShowClearData(ClearDataKind.FileCache);
     }
 

@@ -21,9 +21,14 @@ public sealed class ExtensionServiceTest
         var loadedHosts = 0;
         var outdatedHosts = 0;
 
-        foreach (var library in ExtensionService.EnumerateLocalExtensionHosts(AppInfo.ExtensionsFolder))
+        foreach (var host in ExtensionService.EnumerateLocalExtensionHosts(AppInfo.ExtensionsFolder))
         {
-            var result = service.TryLoadHostWithResult(library, logger, out var model, out _);
+            var result = service.TryLoadHostWithResult(
+                host.LibraryPath,
+                logger,
+                out var model,
+                out _,
+                host.UninstallTargetRelativePath);
             if (result is ExtensionHostLoadResult.OutdatedSdk)
             {
                 ++outdatedHosts;
@@ -32,18 +37,19 @@ public sealed class ExtensionServiceTest
 
             if (result is not ExtensionHostLoadResult.Loaded || model is null)
             {
-                failures.Add($"{Path.GetFileName(library)}: {result}");
+                failures.Add($"{Path.GetFileName(host.LibraryPath)}: {result}");
                 continue;
             }
 
             ++loadedHosts;
-            AssertHostMetadata(model, library);
+            AssertHostMetadata(model, host.LibraryPath);
             foreach (var extension in model.Extensions)
-                AssertExtensionMetadata(extension, library);
+                AssertExtensionMetadata(extension, host.LibraryPath);
         }
 
         if (failures.Count > 0)
-            Assert.Fail("Some extension hosts failed to load:" + Environment.NewLine + string.Join(Environment.NewLine, failures));
+            Assert.Fail("Some extension hosts failed to load:" + Environment.NewLine +
+                        string.Join(Environment.NewLine, failures));
 
         if (loadedHosts is 0)
             Assert.Inconclusive(outdatedHosts is 0
@@ -59,7 +65,8 @@ public sealed class ExtensionServiceTest
         Assert.IsNotNull(model.Description, $"{model.Name} description is null.");
         Assert.IsNotNull(model.Extensions, $"{model.Name} extensions collection is null.");
         var icon = model.Host.GetIcon(out var iconCount);
-        Assert.AreEqual(icon?.Length ?? 0, iconCount, $"{model.Name} icon count does not match the returned buffer length.");
+        Assert.AreEqual(icon?.Length ?? 0, iconCount,
+            $"{model.Name} icon count does not match the returned buffer length.");
         Assert.IsNotNull(model.Icon, $"{model.Name} icon control is null.");
         _ = model.Link?.ToString();
         _ = model.HelpLink?.ToString();

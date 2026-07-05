@@ -3,6 +3,7 @@
 
 using System;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -17,6 +18,8 @@ using Pixeval.Utilities;
 using Pixeval.Views.Home;
 using Pixeval.Views.Login;
 using Pixeval.Views.ViewContainers;
+
+[assembly: InternalsVisibleTo("Pixeval.Tests")]
 
 namespace Pixeval;
 

@@ -11,34 +11,43 @@ using Avalonia.Media.Imaging;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
 using Pixeval.AppManagement;
-using Pixeval.Caching;
-using IllustrationCacheTable = Pixeval.Caching.CacheTable<
-    Pixeval.Utilities.IO.Caching.PixevalIllustrationCacheKey,
-    Pixeval.Utilities.IO.Caching.PixevalIllustrationCacheHeader,
-    Pixeval.Utilities.IO.Caching.PixevalIllustrationCacheProtocol>;
 
 namespace Pixeval.Utilities.IO.Caching;
 
 public static class CacheHelper
 {
-    /// <summary>
-    /// Dispose无效果，可以反复用
-    /// </summary>
-    public static readonly Lazy<Bitmap> WrappedImageNotAvailable = new(() => new UndisposableBitmap(AppInfo.GetImageNotAvailableStream()));
-
-    /// <summary>
-    /// Dispose无效果，可以反复用
-    /// </summary>
-    public static readonly Lazy<IAnimatedBitmap> AnimatedImageNotAvailable = new(() => IAnimatedBitmap.Load([WrappedImageNotAvailable.Value], [100]));
-
-    private static IllustrationCacheTable CacheTable =>
-        App.AppViewModel.AppServiceProvider.GetRequiredService<IllustrationCacheTable>();
-
     public static string CachePath { get; } = Path.Combine(AppInfo.CacheFolder, "FileCache");
 
-    public static void PurgeCache()
+    private static readonly FileCache _FileCache = new(CachePath);
+
+    /// <summary>
+    /// Dispose无效果，可以反复用
+    /// </summary>
+    public static readonly Lazy<Bitmap> WrappedImageNotAvailable =
+        new(() => new UndisposableBitmap(AppInfo.GetImageNotAvailableStream()));
+
+    /// <summary>
+    /// Dispose无效果，可以反复用
+    /// </summary>
+    public static readonly Lazy<IAnimatedBitmap> AnimatedImageNotAvailable =
+        new(() => IAnimatedBitmap.Load([WrappedImageNotAvailable.Value], [100]));
+
+    public static void PurgeCache() => _FileCache.Purge();
+
+    public static void EnforceCacheSizeLimit()
     {
-        Directory.Delete(CachePath, true);
+        var settings = App.AppViewModel.AppSettings.ApplicationSettings;
+        if (!settings.LimitFileCacheSize)
+            return;
+
+        _FileCache.EnforceSizeLimit(GetCacheSizeLimitInBytes());
+    }
+
+    private static long GetCacheSizeLimitInBytes()
+    {
+        var sizeInMegabytes =
+            Math.Max(1, App.AppViewModel.AppSettings.ApplicationSettings.FileCacheSizeLimitInMegabytes);
+        return sizeInMegabytes * 1024L * 1024L;
     }
 
     /// <summary>
@@ -52,8 +61,10 @@ public static class CacheHelper
     {
         var key = frame.SingleImageUri;
         ArgumentNullException.ThrowIfNull(key);
-        if (frame.PreferredAnimatedImageType is not SingleAnimatedImageType.SingleZipFile and not SingleAnimatedImageType.SingleFile)
-            throw new InvalidOperationException($"{nameof(IAnimatedImageFrame.PreferredAnimatedImageType)} should be {nameof(SingleAnimatedImageType.SingleZipFile)} or {nameof(SingleAnimatedImageType.SingleFile)}");
+        if (frame.PreferredAnimatedImageType is not SingleAnimatedImageType.SingleZipFile
+            and not SingleAnimatedImageType.SingleFile)
+            throw new InvalidOperationException(
+                $"{nameof(IAnimatedImageFrame.PreferredAnimatedImageType)} should be {nameof(SingleAnimatedImageType.SingleZipFile)} or {nameof(SingleAnimatedImageType.SingleFile)}");
 
         if (frame.PreferredAnimatedImageType is SingleAnimatedImageType.SingleZipFile)
         {
@@ -64,9 +75,11 @@ public static class CacheHelper
             var zip = await Streams.ReadZipAsync(stream, true);
             return IAnimatedBitmap.Load(zip, frame.ZipImageDelays, true);
         }
+
         // SingleAnimatedImageType.SingleFile
-        else if (await GetSingleImageAsync(platform, key, progress, token) is { } bitmap)
+        if (await GetSingleImageAsync(platform, key, progress, token) is { } bitmap)
             return bitmap;
+
         return AnimatedImageNotAvailable.Value;
     }
 
@@ -95,13 +108,15 @@ public static class CacheHelper
 
             var client = App.AppViewModel.GetRequiredPlatformService<IDownloadHttpClientService>(platform)
                 .GetImageDownloadClient();
-            if (await client.DownloadMemoryStreamAsync(frameUri, progress, token: token) is Result<Stream>.Success(var s))
+            if (await client.DownloadMemoryStreamAsync(frameUri, progress, token: token) is
+                Result<Stream>.Success(var s))
             {
                 if (useFileCache)
                 {
                     _ = TryCacheStream(key, s);
                     s.Position = 0;
                 }
+
                 return IAnimatedBitmap.Load(s, true);
             }
 
@@ -112,6 +127,7 @@ public static class CacheHelper
             App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
                 .LogError(nameof(GetSingleImageAsync), e);
         }
+
         return AnimatedImageNotAvailable.Value;
     }
 
@@ -122,7 +138,8 @@ public static class CacheHelper
         CancellationToken token = default)
     {
         if (frame.PreferredAnimatedImageType is not SingleAnimatedImageType.MultiFiles)
-            throw new InvalidOperationException($"{nameof(IAnimatedImageFrame.PreferredAnimatedImageType)} should be {nameof(SingleAnimatedImageType.MultiFiles)}");
+            throw new InvalidOperationException(
+                $"{nameof(IAnimatedImageFrame.PreferredAnimatedImageType)} should be {nameof(SingleAnimatedImageType.MultiFiles)}");
         await frame.MultiImageUris!.TryPreloadListAsync(platform);
         var client = App.AppViewModel.AppServiceProvider.GetRequiredKeyedService<IDownloadHttpClientService>(platform)
             .GetImageDownloadClient();
@@ -166,6 +183,7 @@ public static class CacheHelper
                     .LogError(nameof(GetAnimatedImageSeparatedAsync), e);
                 stream = WrappedImageNotAvailable.Value;
             }
+
             imageList.Add(stream);
             delayList.Add(msDelay);
             startProgress += 100 * ratio;
@@ -192,6 +210,7 @@ public static class CacheHelper
             App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
                 .LogError(nameof(GetImageStreamAsync), e);
         }
+
         return null;
     }
 
@@ -212,6 +231,7 @@ public static class CacheHelper
             App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
                 .LogError(nameof(GetAnimatedBitmapAsync), e);
         }
+
         return AnimatedImageNotAvailable.Value;
     }
 
@@ -280,32 +300,36 @@ public static class CacheHelper
     {
         try
         {
-            if (App.AppViewModel.AppSettings.ApplicationSettings.UseFileCache && CacheTable.TryReadCache(new PixevalIllustrationCacheKey(key), out Stream stream))
-                return stream;
+            return App.AppViewModel.AppSettings.ApplicationSettings.UseFileCache
+                ? _FileCache.TryOpen(key)
+                : null;
         }
         catch (Exception e)
         {
             App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
-                .LogError(nameof(IllustrationCacheTable.TryReadCache), e);
+                .LogError(nameof(TryGetStream), e);
         }
+
         return null;
     }
 
     /// <exception cref="InvalidOperationException"/>
-    public static AllocatorState TryCacheStream(string key, Stream stream)
+    internal static FileCacheWriteResult TryCacheStream(string key, Stream stream)
     {
-        if (App.AppViewModel.AppSettings.ApplicationSettings.UseFileCache)
-            return CacheTable.TryCache(new(key, (int)stream.Length), stream);
+        if (!App.AppViewModel.AppSettings.ApplicationSettings.UseFileCache)
+            throw new InvalidOperationException(
+                $"Check {nameof(App.AppViewModel.AppSettings.ApplicationSettings.UseFileCache)} before {nameof(TryCacheStream)}");
 
-        throw new InvalidOperationException($"check {nameof(App.AppViewModel.AppSettings.ApplicationSettings.UseFileCache)} before {nameof(TryCacheStream)}");
+        var sizeLimitBytes = App.AppViewModel.AppSettings.ApplicationSettings.LimitFileCacheSize
+            ? GetCacheSizeLimitInBytes()
+            : (long?) null;
+
+        return _FileCache.TryCache(key, stream, sizeLimitBytes);
     }
 }
 
-file class UndisposableBitmap : Bitmap
+file class UndisposableBitmap(Stream stream) : Bitmap(stream)
 {
-    public UndisposableBitmap(Stream stream) : base(stream)
-    {
-    }
 
     /// <inheritdoc />
     public override void Dispose()

@@ -74,7 +74,8 @@ public partial class ExtensionsPage : ContentPage
                     var newLibraryPath = Path.Combine(AppInfo.ExtensionsFolder, fileName);
                     if (File.Exists(newLibraryPath))
                     {
-                        viewContainer.ShowError(I18NManager.GetResource(ExtensionsPageResources.ExtensionFileExistedError), fileName);
+                        viewContainer.ShowError(
+                            I18NManager.GetResource(ExtensionsPageResources.ExtensionFileExistedError), fileName);
                         continue;
                     }
 
@@ -84,7 +85,8 @@ public partial class ExtensionsPage : ContentPage
                     }
                     catch (Exception ex)
                     {
-                        viewContainer.ShowError(I18NManager.GetResource(ExtensionsPageResources.ExtensionLoadFailed), $"{fileName}: {ex.Message}");
+                        viewContainer.ShowError(I18NManager.GetResource(ExtensionsPageResources.ExtensionLoadFailed),
+                            $"{fileName}: {ex.Message}");
                     }
 
                     LoadExtension(newLibraryPath, fileName);
@@ -94,7 +96,7 @@ public partial class ExtensionsPage : ContentPage
                 case ".zip":
                     try
                     {
-                        var plan = await Task.Run(() =>
+                        var (destinationDirectory, hostLibraryEntryNames) = await Task.Run(() =>
                         {
                             using var zipArchive = ZipFile.OpenRead(fileInfo.FullName);
                             return ExtensionService.CreateExtensionZipExtractionPlan(
@@ -103,23 +105,25 @@ public partial class ExtensionsPage : ContentPage
                                 AppInfo.ExtensionsFolder);
                         });
 
-                        if (plan.HostLibraryEntryNames.Count is not 0)
+                        if (hostLibraryEntryNames.Count is not 0)
                         {
                             await Task.Run(() =>
-                                ZipFile.ExtractToDirectory(fileInfo.FullName, plan.DestinationDirectory));
+                                ZipFile.ExtractToDirectory(fileInfo.FullName, destinationDirectory));
 
-                            foreach (var libraryName in plan.HostLibraryEntryNames)
+                            foreach (var libraryName in hostLibraryEntryNames)
                             {
-                                var newLibraryPath = Path.Combine(plan.DestinationDirectory, libraryName);
+                                var newLibraryPath = Path.Combine(destinationDirectory, libraryName);
                                 LoadExtension(newLibraryPath, fileName);
                             }
                         }
                         else
-                            viewContainer.ShowWarning(I18NManager.GetResource(ExtensionsPageResources.ZipContainsNoExtension), fileName);
+                            viewContainer.ShowWarning(
+                                I18NManager.GetResource(ExtensionsPageResources.ZipContainsNoExtension), fileName);
                     }
                     catch (Exception ex)
                     {
-                        viewContainer.ShowError(I18NManager.GetResource(ExtensionsPageResources.ExtensionLoadFailed), $"{fileName}: {ex.Message}");
+                        viewContainer.ShowError(I18NManager.GetResource(ExtensionsPageResources.ExtensionLoadFailed),
+                            $"{fileName}: {ex.Message}");
                     }
 
                     break;
@@ -132,9 +136,12 @@ public partial class ExtensionsPage : ContentPage
         {
             try
             {
-                if (ExtensionService.TryLoadHost(libraryPath, logger, out var outdatedVersion))
+                var result =
+                    ExtensionService.TryLoadHostWithResult(libraryPath, logger, out _, out var outdatedVersion);
+                if (result is ExtensionHostLoadResult.Loaded)
                 {
-                    viewContainer.ShowSuccess(I18NManager.GetResource(ExtensionsPageResources.ExtensionLoadedSuccessfully), fileName);
+                    viewContainer.ShowSuccess(
+                        I18NManager.GetResource(ExtensionsPageResources.ExtensionLoadedSuccessfully), fileName);
                     return;
                 }
 
@@ -146,7 +153,8 @@ public partial class ExtensionsPage : ContentPage
             }
             catch (Exception ex)
             {
-                viewContainer.ShowError(I18NManager.GetResource(ExtensionsPageResources.ExtensionLoadFailed), $"{fileName}: {ex.Message}");
+                viewContainer.ShowError(I18NManager.GetResource(ExtensionsPageResources.ExtensionLoadFailed),
+                    $"{fileName}: {ex.Message}");
             }
         }
     }
@@ -185,7 +193,8 @@ public partial class ExtensionsPage : ContentPage
         var count = ExtensionService.ScheduleOutdatedHostUninstalls();
         TopLevel.GetTopLevel(this)?.ViewContainer?.ShowInformation(count is 0
             ? I18NManager.GetResource(ExtensionsPageResources.NoOutdatedExtensionsToUninstall)
-            : I18NManager.GetResource(ExtensionsPageResources.MarkedOutdatedExtensionsPendingUninstallFormatted, count));
+            : I18NManager.GetResource(ExtensionsPageResources.MarkedOutdatedExtensionsPendingUninstallFormatted,
+                count));
     }
 
     private void OpenExtensionsOnClick(object? sender, RoutedEventArgs e)

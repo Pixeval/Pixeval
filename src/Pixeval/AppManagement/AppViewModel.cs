@@ -13,7 +13,6 @@ using Mako.Model;
 using Mako.Net;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
-using Pixeval.Caching;
 using Pixeval.Models.Database;
 using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Download;
@@ -48,12 +47,11 @@ public sealed class AppViewModel(App app, FileLogger logger) : IDisposable
         SetNameResolvers();
         // 触发卸载插件
         _ = AppServiceProvider.GetRequiredService<ExtensionService>();
+        CacheHelper.EnforceCacheSizeLimit();
     }
 
     private ServiceProvider CreateServiceProvider()
     {
-        const int defaultCacheSizeInByte = 200 * 1024 * 1024;
-
         var makoClient = new MakoClient(App.AppViewModel.AppSettings.ToMakoConfiguration(), logger);
         makoClient.TokenRefreshed += MakoClientOnTokenRefreshed;
 
@@ -68,10 +66,7 @@ public sealed class AppViewModel(App app, FileLogger logger) : IDisposable
             .AddSingleton<WorkSubscriptionDownloadService>()
             .AddSingleton<IllustrationDownloadTaskFactory>()
             .AddSingleton<NovelDownloadTaskFactory>()
-            .AddSingleton(provider => new ExtensionService(provider.GetRequiredService<FileLogger>(), AppSettings.ExtensionSettings))
-            .AddSingleton(_ => new CacheTable<PixevalIllustrationCacheKey, PixevalIllustrationCacheHeader, PixevalIllustrationCacheProtocol>(
-                new PixevalIllustrationCacheProtocol(),
-                new CacheToken(1, defaultCacheSizeInByte, CacheHelper.CachePath, 8)))
+            .AddSingleton(provider => new ExtensionService(provider.GetRequiredService<FileLogger>(), AppSettings))
             .AddSingleton(_ => new SQLiteConnection(AppInfo.DatabaseFilePath,
                 SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex))
             .AddSingleton<DownloadHistoryPersistentManager>()
@@ -193,7 +188,6 @@ public sealed class AppViewModel(App app, FileLogger logger) : IDisposable
         try
         {
             AppServiceProvider?.Dispose();
-            CacheHelper.PurgeCache();
         }
         catch
         {

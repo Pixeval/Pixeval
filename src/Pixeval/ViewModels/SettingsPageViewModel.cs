@@ -16,6 +16,7 @@ using Pixeval.AppManagement;
 using Pixeval.Models.Extensions;
 using Pixeval.Models.Options;
 using Pixeval.Models.Settings;
+using Pixeval.Utilities.IO.Caching;
 
 namespace Pixeval.ViewModels;
 
@@ -54,6 +55,14 @@ public class SettingsPageViewModel : ViewModelBase
                     })
                 .Font(t => t.AppFontFamily, entry => entry.ValueChanged += t => Application.Current?.Resources["ContentControlThemeFontFamily"] = new FontFamily(string.Join(',', t)))
                 .Bool(t => t.UseFileCache)
+                .MultiValuesWithSwitch(t => t.LimitFileCacheSize,
+                    entry => entry.Int(t => t.FileCacheSizeLimitInMegabytes, 1, 0x100000, 0x80,
+                        t => t.ValueChanged += _ => CacheHelper.EnforceCacheSizeLimit()),
+                    t => t.ValueChanged += enabled =>
+                    {
+                        if (enabled)
+                            CacheHelper.EnforceCacheSizeLimit();
+                    })
                 .Int(t => t.HomePageRows, 1, 12, 1)
                 .Int(t => t.HomePageColumns, 1, 12, 1)
                 .Bool(t => t.HideHomePageToolbar)

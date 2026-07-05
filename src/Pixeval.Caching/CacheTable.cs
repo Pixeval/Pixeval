@@ -35,7 +35,7 @@ public sealed class CacheTable<TKey, THeader, TProtocol>(
     // ReSharper disable once InconsistentNaming
     public int CacheLRUFactor { get; set; } = 2;
 
-    private TProtocol _protocol = protocol;
+    private readonly TProtocol _protocol = protocol;
 
     /// <summary>
     /// While calling this method, all cache operations should be halted.
@@ -200,7 +200,7 @@ public sealed class CacheTable<TKey, THeader, TProtocol>(
             return true;
         }
 
-        span = Span<byte>.Empty;
+        span = [];
         return false;
     }
 

@@ -48,7 +48,7 @@
 		<ProjectReference Include="..\lib\Mako\Mako\Mako.csproj" />
 		<ProjectReference Include="..\lib\SmoothScroll.Avalonia\src\SmoothScroll.Avalonia.Controls\SmoothScroll.Avalonia.Controls.csproj" />
 		<ProjectReference Include="..\Pixeval.I18N\Pixeval.I18N.csproj" />
-		<ProjectReference Include="..\Pixeval.Caching\Pixeval.Caching.csproj" />
+		<!--<ProjectReference Include="..\Pixeval.Caching\Pixeval.Caching.csproj" />-->
 		<ProjectReference Include="..\Pixeval.Download\Pixeval.Download.csproj" />
 		<ProjectReference Include="..\Pixeval.Filters\Pixeval.Filters.csproj" />
 		<ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
