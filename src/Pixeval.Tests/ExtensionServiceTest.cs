@@ -16,7 +16,7 @@ public sealed class ExtensionServiceTest
     public void InstalledExtensionHostsShouldLoadAndExposeMetadata()
     {
         var logger = new FileLogger(Path.Combine(Path.GetTempPath(), nameof(Pixeval), nameof(ExtensionServiceTest)));
-        using var service = new ExtensionService(logger, [], loadInstalledHosts: false);
+        using var service = new ExtensionService(logger, [], [], loadInstalledHosts: false);
         var failures = new List<string>();
         var loadedHosts = 0;
         var outdatedHosts = 0;

@@ -151,10 +151,41 @@ public partial class ExtensionsPage : ContentPage
         }
     }
 
-    private void UnloadHostOnClick(object? sender, RoutedEventArgs e)
+    private void UninstallHostOnClick(object? sender, RoutedEventArgs e)
     {
-        if (sender is Control { DataContext: ExtensionsHostModel model })
-            ExtensionService.UnloadHost(model);
+        if (sender is not Control { DataContext: ExtensionsHostModel model })
+            return;
+
+        var viewContainer = TopLevel.GetTopLevel(this)?.ViewContainer;
+        if (model.IsPendingUninstall)
+        {
+            if (ExtensionService.CancelHostUninstall(model))
+                viewContainer?.ShowInformation(
+                    I18NManager.GetResource(ExtensionsPageResources.ExtensionPendingUninstallCancelled),
+                    model.Name);
+            return;
+        }
+
+        if (ExtensionService.ScheduleHostUninstall(model))
+            viewContainer?.ShowInformation(
+                I18NManager.GetResource(ExtensionsPageResources.ExtensionWillUninstallOnNextStartup),
+                model.Name);
+    }
+
+    private void UninstallAllExtensionsOnClick(object? sender, RoutedEventArgs e)
+    {
+        var count = ExtensionService.ScheduleAllHostUninstalls();
+        TopLevel.GetTopLevel(this)?.ViewContainer?.ShowInformation(count is 0
+            ? I18NManager.GetResource(ExtensionsPageResources.NoExtensionsToUninstall)
+            : I18NManager.GetResource(ExtensionsPageResources.MarkedExtensionsPendingUninstallFormatted, count));
+    }
+
+    private void UninstallOutdatedExtensionsOnClick(object? sender, RoutedEventArgs e)
+    {
+        var count = ExtensionService.ScheduleOutdatedHostUninstalls();
+        TopLevel.GetTopLevel(this)?.ViewContainer?.ShowInformation(count is 0
+            ? I18NManager.GetResource(ExtensionsPageResources.NoOutdatedExtensionsToUninstall)
+            : I18NManager.GetResource(ExtensionsPageResources.MarkedOutdatedExtensionsPendingUninstallFormatted, count));
     }
 
     private void OpenExtensionsOnClick(object? sender, RoutedEventArgs e)

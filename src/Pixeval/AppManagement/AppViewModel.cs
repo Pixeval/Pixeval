@@ -46,6 +46,8 @@ public sealed class AppViewModel(App app, FileLogger logger) : IDisposable
     {
         AppServiceProvider = CreateServiceProvider();
         SetNameResolvers();
+        // 触发卸载插件
+        _ = AppServiceProvider.GetRequiredService<ExtensionService>();
     }
 
     private ServiceProvider CreateServiceProvider()

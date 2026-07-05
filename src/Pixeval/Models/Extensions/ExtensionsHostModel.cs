@@ -6,17 +6,19 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Avalonia.Controls;
 using Avalonia.Media.Imaging;
+using CommunityToolkit.Mvvm.ComponentModel;
 using FluentIcons.Avalonia;
 using FluentIcons.Common;
 using Microsoft.Win32.SafeHandles;
 using Pixeval.Extensions.Common;
+using Pixeval.I18N;
 using Pixeval.Utilities;
 
 namespace Pixeval.Models.Extensions;
 
-public sealed class ExtensionsHostModel(
+public sealed partial class ExtensionsHostModel(
     IExtensionsHost host,
-    Dictionary<string, object?> values) : IDisposable
+    Dictionary<string, object?> values) : ObservableObject, IDisposable
 {
     public IExtensionsHost Host { get; } = host;
 
@@ -43,6 +45,21 @@ public sealed class ExtensionsHostModel(
     public Uri? Link { get; } = Uri.TryCreate(host.ExtensionLink, UriKind.RelativeOrAbsolute, out var uri) ? uri : null;
 
     public Uri? HelpLink { get; } = Uri.TryCreate(host.HelpLink, UriKind.RelativeOrAbsolute, out var uri) ? uri : null;
+
+    public string HostLibraryPath { get; init; } = "";
+
+    public string UninstallTargetRelativePath { get; init; } = "";
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(UninstallCommandLabel))]
+    [NotifyPropertyChangedFor(nameof(UninstallCommandIcon))]
+    public partial bool IsPendingUninstall { get; set; }
+
+    public string UninstallCommandLabel => I18NManager.GetResource(IsPendingUninstall
+        ? ExtensionsPageResources.CancelPendingUninstallExtensionsButtonLabel
+        : ExtensionsPageResources.UninstallExtensionsButtonLabel);
+
+    public Symbol UninstallCommandIcon => IsPendingUninstall ? Symbol.Dismiss : Symbol.Delete;
 
     internal NativeLibrarySafeHandle Handle { get; init; } = null!;
 

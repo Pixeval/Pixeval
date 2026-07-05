@@ -3,6 +3,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.Avalonia.Controls"
+    xmlns:converters="using:Pixeval.Views.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Pixeval.Models.Extensions"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
@@ -40,6 +41,14 @@
                 Click="OpenExtensionsOnClick"
                 Icon="{markup:SymbolIcon FolderAdd}"
                 Label="{I18N {x:Static pixeval:ExtensionsPageResources.OpenExtensionsButtonLabel}}" />
+            <CommandBarButton
+                Click="UninstallAllExtensionsOnClick"
+                Icon="{markup:SymbolIcon Delete}"
+                Label="{I18N {x:Static pixeval:ExtensionsPageResources.UninstallAllExtensionsButtonLabel}}" />
+            <CommandBarButton
+                Click="UninstallOutdatedExtensionsOnClick"
+                Icon="{markup:SymbolIcon Alert}"
+                Label="{I18N {x:Static pixeval:ExtensionsPageResources.UninstallOutdatedExtensionsButtonLabel}}" />
         </CommandBar>
         <!--  TODO 通过网络获取或删除  -->
         <controls:SettingsExpander
@@ -133,9 +142,9 @@
                                             Icon="{markup:SymbolIcon ChevronDoubleDown}"
                                             Label="{I18N {x:Static pixeval:ExtensionsPageResources.ExtensionsPriorityBottomButtonLabel}}" />
                                         <CommandBarButton
-                                            Click="UnloadHostOnClick"
-                                            Icon="{markup:SymbolIcon PlugDisconnected}"
-                                            Label="{I18N {x:Static pixeval:ExtensionsPageResources.UnloadExtensionsButtonLabel}}" />
+                                            Click="UninstallHostOnClick"
+                                            Icon="{Binding UninstallCommandIcon, Converter={x:Static converters:PixevalConverters.SymbolIconConverter}}"
+                                            Label="{Binding UninstallCommandLabel}" />
                                     </CommandBar.SecondaryCommands>
                                 </CommandBar>
                             </StackPanel>

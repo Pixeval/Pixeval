@@ -363,21 +363,30 @@ namespace Pixeval
     public static class ExtensionsPageResources
     {
         public const string AddExtensionsButtonLabel = "ExtensionsPage.AddExtensionsButton.Label";
+        public const string CancelPendingUninstallExtensionsButtonLabel = "ExtensionsPage.CancelPendingUninstallExtensionsButton.Label";
         public const string ExtensionFileExistedError = "ExtensionsPage.ExtensionFileExistedError";
         public const string ExtensionLoadedSuccessfully = "ExtensionsPage.ExtensionLoadedSuccessfully";
         public const string ExtensionLoadFailed = "ExtensionsPage.ExtensionLoadFailed";
         public const string ExtensionOutdatedFormatted = "ExtensionsPage.ExtensionOutdatedFormatted";
+        public const string ExtensionPendingUninstallCancelled = "ExtensionsPage.ExtensionPendingUninstallCancelled";
         public const string ExtensionsHelpButtonLabel = "ExtensionsPage.ExtensionsHelpButton.Label";
         public const string ExtensionsPriorityBottomButtonLabel = "ExtensionsPage.ExtensionsPriorityBottomButton.Label";
         public const string ExtensionsPriorityDownButtonLabel = "ExtensionsPage.ExtensionsPriorityDownButton.Label";
         public const string ExtensionsPriorityTopButtonLabel = "ExtensionsPage.ExtensionsPriorityTopButton.Label";
         public const string ExtensionsPriorityUpButtonLabel = "ExtensionsPage.ExtensionsPriorityUpButton.Label";
+        public const string ExtensionWillUninstallOnNextStartup = "ExtensionsPage.ExtensionWillUninstallOnNextStartup";
+        public const string MarkedExtensionsPendingUninstallFormatted = "ExtensionsPage.MarkedExtensionsPendingUninstallFormatted";
+        public const string MarkedOutdatedExtensionsPendingUninstallFormatted = "ExtensionsPage.MarkedOutdatedExtensionsPendingUninstallFormatted";
+        public const string NoExtensionsToUninstall = "ExtensionsPage.NoExtensionsToUninstall";
+        public const string NoOutdatedExtensionsToUninstall = "ExtensionsPage.NoOutdatedExtensionsToUninstall";
         public const string OpenExtensionsButtonLabel = "ExtensionsPage.OpenExtensionsButton.Label";
         public const string PlatformNotSupportExtensions = "ExtensionsPage.PlatformNotSupportExtensions";
         public const string SomeExtensionsOutdatedFormatted = "ExtensionsPage.SomeExtensionsOutdatedFormatted";
         public const string SubtitleTextBlockText = "ExtensionsPage.SubtitleTextBlock.Text";
         public const string TitleTextBlockText = "ExtensionsPage.TitleTextBlock.Text";
-        public const string UnloadExtensionsButtonLabel = "ExtensionsPage.UnloadExtensionsButton.Label";
+        public const string UninstallAllExtensionsButtonLabel = "ExtensionsPage.UninstallAllExtensionsButton.Label";
+        public const string UninstallExtensionsButtonLabel = "ExtensionsPage.UninstallExtensionsButton.Label";
+        public const string UninstallOutdatedExtensionsButtonLabel = "ExtensionsPage.UninstallOutdatedExtensionsButton.Label";
         public const string ZipContainsNoExtension = "ExtensionsPage.ZipContainsNoExtension";
     }
     public static class FeedPageResources

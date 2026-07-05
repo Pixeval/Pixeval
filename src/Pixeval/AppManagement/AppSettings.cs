@@ -71,6 +71,11 @@ public record AppSettings
     /// </summary>
     public Dictionary<string, Dictionary<string, object?>> ExtensionSettings { get; set; } = [];
 
+    /// <summary>
+    /// 相对于 <see cref="AppInfo.ExtensionsFolder"/> 的待卸载扩展文件或目录路径。
+    /// </summary>
+    public HashSet<string> PendingExtensionUninstallTargets { get; set; } = [];
+
     public string LastOpenedVersion { get; } = "";
 
     public bool IsNewVersion { get; }
