@@ -15,9 +15,24 @@
   "SubtitleTextBlock": {
     "Text": "扩展版本"
   },
-  "UnloadExtensionsButton": {
+  "UninstallExtensionsButton": {
     "Label": "卸载扩展"
   },
+  "CancelPendingUninstallExtensionsButton": {
+    "Label": "取消卸载"
+  },
+  "UninstallAllExtensionsButton": {
+    "Label": "卸载全部插件"
+  },
+  "UninstallOutdatedExtensionsButton": {
+    "Label": "卸载过时插件"
+  },
+  "ExtensionWillUninstallOnNextStartup": "将在下次启动时卸载扩展",
+  "ExtensionPendingUninstallCancelled": "已取消下次启动时卸载扩展",
+  "MarkedExtensionsPendingUninstallFormatted": "已将 {0} 个扩展标记为下次启动时卸载",
+  "MarkedOutdatedExtensionsPendingUninstallFormatted": "已将 {0} 个过时扩展标记为下次启动时卸载",
+  "NoExtensionsToUninstall": "没有可卸载的扩展",
+  "NoOutdatedExtensionsToUninstall": "没有过时扩展需要卸载",
   "ExtensionsPriorityUpButton": {
     "Label": "提升优先级"
   },
