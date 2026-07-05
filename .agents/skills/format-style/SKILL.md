@@ -53,7 +53,10 @@ description: 工程代码格式化风格指引
   - 对于成员引用或泛型参数引用，`<paramref name="..." />`、`<typeparamref name="..." />` 来提供链接。
   - 对于其中的关键字，使用 `<see langword="..." />` 来增强高亮。
 - 接口中的泛型若可以用协变/逆变，则使用。
-- 对于返回值，若无必要（如迭代器方法则除外），则优先使用 `IReadOnlyCollection<T>` 或更严格的 `IReadOnlyList<T>` 而不是 `IEnumerable<T>`，以表达集合内元素有限。
+- 对于返回值，优先使用 `IReadOnlyCollection<T>` 或更严格的 `IReadOnlyList<T>` 而不是 `IEnumerable<T>`，以表达集合内元素有限。除非这些情况：
+  - 迭代代价昂贵，需要使用迭代器方法（`yield return`）延迟加载。
+  - 包装一个已有的 `IEnumerable<T>` 的方法。
+  - 其他使用 `IEnumerable<T>` 更合理的情况。
 - 优先使用 `IReadOnlyList<T>`或`ReadOnlySpan<T>` 而不是 `T[]` 来表示数组，以避免潜在的数组协变。
 - 若一个类内容太多，可以拆成形如 `.Commands.cs` 的 partial 文件。
 - 对于每个类都较长的多个类，或者关系不大的多个类（例如某个类不是只在另一个类中使用），则拆分成每个类一个文件而不是放在同一个文件里。
