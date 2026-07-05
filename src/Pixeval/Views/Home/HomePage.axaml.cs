@@ -9,7 +9,7 @@ using Pixeval.ViewModels.Home;
 
 namespace Pixeval.Views.Home;
 
-public partial class HomePage : DrawerPage
+public sealed partial class HomePage : DrawerPage
 {
     public const decimal MinimumGridSize = 1;
     public const decimal MaximumGridSize = 12;

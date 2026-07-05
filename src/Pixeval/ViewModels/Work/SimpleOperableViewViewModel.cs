@@ -12,9 +12,11 @@ using Pixeval.Utilities;
 
 namespace Pixeval.ViewModels;
 
-public class SimpleOperableViewViewModel<TViewModel> : ViewModelBase, IOperableViewViewModel, IDisposable
+public sealed class SimpleOperableViewViewModel<TViewModel> : ViewModelBase, IOperableViewViewModel, IDisposable
     where TViewModel : class, IWorkViewModel
 {
+    private bool _isDisposed;
+
     public SimpleOperableViewViewModel(IReadOnlyCollection<IArtworkInfo> source, bool needRefreshOnOpen = false)
     {
         NeedRefreshOnOpen = needRefreshOnOpen;
@@ -85,7 +87,10 @@ public class SimpleOperableViewViewModel<TViewModel> : ViewModelBase, IOperableV
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
         SourceView.Dispose();
     }
 }

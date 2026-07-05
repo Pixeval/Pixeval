@@ -9,8 +9,10 @@ using Misaki;
 
 namespace Pixeval.ViewModels.Viewers;
 
-public partial class ImageViewerViewModel : ViewModelBase, IDisposable
+public sealed partial class ImageViewerViewModel : ViewModelBase, IDisposable
 {
+    private bool _isDisposed;
+
     public ImageViewerViewModel(IllustrationItemViewModel thumbnailViewModel)
     {
         ThumbnailViewModel = thumbnailViewModel;
@@ -43,7 +45,10 @@ public partial class ImageViewerViewModel : ViewModelBase, IDisposable
     /// <inheritdoc />
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
         foreach (var loadableBitmap in Images)
             loadableBitmap.Dispose();
     }

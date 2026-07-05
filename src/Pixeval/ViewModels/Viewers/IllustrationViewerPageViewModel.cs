@@ -455,7 +455,6 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
         if (_disposed)
             return;
 
@@ -466,8 +465,6 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
         CurrentImage = null!;
         _sourceView?.Dispose();
     }
-
-    ~IllustrationViewerPageViewModel() => Dispose();
 
     #endregion
 }

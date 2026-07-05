@@ -42,7 +42,7 @@ public interface IDebouncedTask<T, TResult> where T : struct, IEquatable<T>
 /// </summary>
 /// <typeparam name="T"></typeparam>
 /// <typeparam name="TResult"></typeparam>
-public class Debounce<T, TResult> : IDisposable where T : struct, IEquatable<T>
+public sealed class Debounce<T, TResult> : IDisposable where T : struct, IEquatable<T>
 {
     private record DebounceTaskWrapper(bool Disregarded, IDebouncedTask<T, TResult> Task, TaskCompletionSource<TResult> Completion)
     {
@@ -53,10 +53,11 @@ public class Debounce<T, TResult> : IDisposable where T : struct, IEquatable<T>
     private readonly LinkedList<DebounceTaskWrapper> _executedTasks = [];
     private readonly Channel<DebounceTaskWrapper> _taskQueue = Channel.CreateUnbounded<DebounceTaskWrapper>();
     private readonly List<DebounceTaskWrapper> _auxQueue = [];
+    private bool _disposed;
 
     public async Task<TResult> ExecuteAsync(IDebouncedTask<T, TResult> task)
     {
-        if (_taskQueue.Reader.Completion.IsCompleted)
+        if (_disposed || _taskQueue.Reader.Completion.IsCompleted)
             throw new InvalidOperationException("The debounce queue has been disposed");
 
         if (!_started)
@@ -176,7 +177,10 @@ public class Debounce<T, TResult> : IDisposable where T : struct, IEquatable<T>
 
     public void Dispose()
     {
-        _taskQueue.Writer.Complete();
-        GC.SuppressFinalize(this);
+        if (_disposed)
+            return;
+
+        _disposed = true;
+        _ = _taskQueue.Writer.TryComplete();
     }
 }

@@ -15,6 +15,8 @@ public sealed class SimpleOperableSourceView<TViewModel>(IReadOnlyCollection<IAr
     : ViewModelBase, ISourceView<IWorkViewModel>
     where TViewModel : class, IWorkViewModel
 {
+    private bool _isDisposed;
+
     public AdvancedObservableAdaptor<IArtworkInfo, IWorkViewModel> View { get; } = new(source as ObservableCollection<IArtworkInfo> ?? [.. source], CreateWorkViewModel);
 
     IAdvancedObservableView<IWorkViewModel> ISourceView<IWorkViewModel>.View => View;
@@ -26,7 +28,10 @@ public sealed class SimpleOperableSourceView<TViewModel>(IReadOnlyCollection<IAr
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
         View.Dispose();
     }
 
@@ -43,6 +48,8 @@ public sealed class SimpleOperableSourceView<TViewModel>(IReadOnlyCollection<IAr
     private sealed class SnapshotSourceView<TSnapshotViewModel>(IEnumerable<TSnapshotViewModel> source) : ViewModelBase, ISourceView<TSnapshotViewModel>
         where TSnapshotViewModel : class
     {
+        private bool _isDisposed;
+
         public AdvancedObservableCollection<TSnapshotViewModel> View { get; } = new([.. source]);
 
         IAdvancedObservableView<TSnapshotViewModel> ISourceView<TSnapshotViewModel>.View => View;
@@ -51,7 +58,10 @@ public sealed class SimpleOperableSourceView<TViewModel>(IReadOnlyCollection<IAr
 
         public void Dispose()
         {
-            GC.SuppressFinalize(this);
+            if (_isDisposed)
+                return;
+
+            _isDisposed = true;
             View.Dispose();
         }
     }

@@ -8,12 +8,13 @@ using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using FluentIcons.Avalonia;
 using FluentIcons.Common;
+using Microsoft.Win32.SafeHandles;
 using Pixeval.Extensions.Common;
 using Pixeval.Utilities;
 
 namespace Pixeval.Models.Extensions;
 
-public class ExtensionsHostModel(
+public sealed class ExtensionsHostModel(
     IExtensionsHost host,
     Dictionary<string, object?> values) : IDisposable
 {
@@ -31,8 +32,6 @@ public class ExtensionsHostModel(
         set => Values[nameof(Priority)] = value;
     }
 
-    internal nint Handle { get; init; }
-
     public string Name { get; } = host.ExtensionName;
 
     public string Description { get; } = host.Description;
@@ -44,6 +43,10 @@ public class ExtensionsHostModel(
     public Uri? Link { get; } = Uri.TryCreate(host.ExtensionLink, UriKind.RelativeOrAbsolute, out var uri) ? uri : null;
 
     public Uri? HelpLink { get; } = Uri.TryCreate(host.HelpLink, UriKind.RelativeOrAbsolute, out var uri) ? uri : null;
+
+    internal NativeLibrarySafeHandle Handle { get; init; } = null!;
+
+    private bool _isDisposed;
 
     /// <summary>
     /// 不能缓存<see cref="ExtensionsHostModel.Icon"/>
@@ -74,7 +77,24 @@ public class ExtensionsHostModel(
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
-        NativeLibrary.Free(Handle);
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
+        Handle.Dispose();
+    }
+}
+
+internal sealed class NativeLibrarySafeHandle : SafeHandleZeroOrMinusOneIsInvalid
+{
+    public NativeLibrarySafeHandle(nint handle) : base(true)
+    {
+        SetHandle(handle);
+    }
+
+    protected override bool ReleaseHandle()
+    {
+        NativeLibrary.Free(handle);
+        return true;
     }
 }

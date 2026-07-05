@@ -27,6 +27,8 @@ public class AdvancedObservableAdaptor<TIn, TOut>
 
     private ObservableCollection<TIn>? _source;
 
+    private bool _isDisposed;
+
     public AdvancedObservableAdaptor(Func<TIn, TOut> factory) : this([], factory)
     {
     }
@@ -254,10 +256,17 @@ public class AdvancedObservableAdaptor<TIn, TOut>
     public void Dispose()
     {
         GC.SuppressFinalize(this);
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
         _inner.FilterChanged -= InnerOnFilterChanged;
         _inner.PropertyChanged -= InnerOnPropertyChanged;
         _inner.CollectionChanged -= InnerOnCollectionChanged;
         DetachSourceHandler(_source);
+        PropertyChanged = null;
+        CollectionChanged = null;
+        FilterChanged = null;
         _inner.Dispose();
     }
 }

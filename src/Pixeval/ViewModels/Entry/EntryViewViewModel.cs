@@ -15,6 +15,8 @@ public abstract class EntryViewViewModel<T, TViewModel>
     where T : class, IIdentityInfo
     where TViewModel : ViewModelBase
 {
+    private bool _isDisposed;
+
     public abstract IDataProvider<T, TViewModel> DataProvider { get; }
 
     public AdvancedObservableCollection<TViewModel> View => DataProvider.View;
@@ -24,6 +26,10 @@ public abstract class EntryViewViewModel<T, TViewModel>
     public void Dispose()
     {
         GC.SuppressFinalize(this);
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
         DataProvider.Dispose();
     }
 

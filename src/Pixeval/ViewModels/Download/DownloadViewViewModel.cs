@@ -16,7 +16,7 @@ using Pixeval.Models.Options;
 
 namespace Pixeval.ViewModels;
 
-public partial class DownloadViewViewModel : ViewModelBase, IDisposable
+public sealed partial class DownloadViewViewModel : ViewModelBase, IDisposable
 {
     private readonly ObservableCollection<IDownloadTaskGroupBase> _source;
 
@@ -27,6 +27,8 @@ public partial class DownloadViewViewModel : ViewModelBase, IDisposable
     private readonly List<IDownloadListEntryViewModel> _filteredTasks = [];
 
     private readonly Dictionary<int, DownloadFolderViewModel> _subscriptionFolders = [];
+
+    private bool _isDisposed;
 
     [ObservableProperty]
     public partial DownloadListOption CurrentOption { get; set; } = DownloadListOption.AllQueued;
@@ -69,7 +71,10 @@ public partial class DownloadViewViewModel : ViewModelBase, IDisposable
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
         _source.CollectionChanged -= SourceOnCollectionChanged;
         View.Dispose();
     }

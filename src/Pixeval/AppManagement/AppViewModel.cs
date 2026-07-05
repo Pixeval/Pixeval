@@ -28,7 +28,7 @@ using Pixeval.Utilities.GitHub;
 
 namespace Pixeval.AppManagement;
 
-public class AppViewModel(App app, FileLogger logger) : IDisposable
+public sealed class AppViewModel(App app, FileLogger logger) : IDisposable
 {
     public ServiceProvider AppServiceProvider { get; private set; } = null!;
 
@@ -52,9 +52,6 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
     {
         const int defaultCacheSizeInByte = 200 * 1024 * 1024;
 
-        var cacheTable = new CacheTable<PixevalIllustrationCacheKey, PixevalIllustrationCacheHeader, PixevalIllustrationCacheProtocol>(
-            new PixevalIllustrationCacheProtocol(),
-            new CacheToken(1, defaultCacheSizeInByte, CacheHelper.CachePath, 8));
         var makoClient = new MakoClient(App.AppViewModel.AppSettings.ToMakoConfiguration(), logger);
         makoClient.TokenRefreshed += MakoClientOnTokenRefreshed;
 
@@ -70,7 +67,9 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
             .AddSingleton<IllustrationDownloadTaskFactory>()
             .AddSingleton<NovelDownloadTaskFactory>()
             .AddSingleton(provider => new ExtensionService(provider.GetRequiredService<FileLogger>(), AppSettings.ExtensionSettings))
-            .AddSingleton(cacheTable)
+            .AddSingleton(_ => new CacheTable<PixevalIllustrationCacheKey, PixevalIllustrationCacheHeader, PixevalIllustrationCacheProtocol>(
+                new PixevalIllustrationCacheProtocol(),
+                new CacheToken(1, defaultCacheSizeInByte, CacheHelper.CachePath, 8)))
             .AddSingleton(_ => new SQLiteConnection(AppInfo.DatabaseFilePath,
                 SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex))
             .AddSingleton<DownloadHistoryPersistentManager>()
@@ -199,7 +198,6 @@ public class AppViewModel(App app, FileLogger logger) : IDisposable
             // ignored
             // 保证退出时不出幺蛾子
         }
-        GC.SuppressFinalize(this);
     }
 
     private bool _disposed;

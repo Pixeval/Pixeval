@@ -73,6 +73,8 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
 
     private bool _isRunning;
 
+    private bool _isDisposed;
+
     private async Task SetRunningAsync(bool value, bool suppressDownloadStartedAsync = false)
     {
         if (value == _isRunning)
@@ -285,6 +287,11 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
     public void Dispose()
     {
         GC.SuppressFinalize(this);
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
+        CancellationTokenSource.Cancel();
         CancellationTokenSource.Dispose();
     }
 

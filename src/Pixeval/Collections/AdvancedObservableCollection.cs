@@ -23,6 +23,8 @@ public class AdvancedObservableCollection<T>
 
     private readonly List<T> _view = [];
 
+    private bool _isDisposed;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="AdvancedObservableCollection{T}"/> class.
     /// </summary>
@@ -662,7 +664,14 @@ public class AdvancedObservableCollection<T>
     public void Dispose()
     {
         GC.SuppressFinalize(this);
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
         DetachSourceHandler(Source);
+        PropertyChanged = null;
+        CollectionChanged = null;
+        FilterChanged = null;
     }
 }
 

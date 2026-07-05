@@ -45,7 +45,7 @@ public unsafe record HeapBlock(Memory<byte> Memory, nint UnallocatedStart)
     public nint UnallocatedStart { get; set; } = UnallocatedStart;
 }
 
-public class HeapAllocator : IDisposable
+public sealed class HeapAllocator : IDisposable
 {
     // 1mb, this will be doubled the first time the allocator allocates.
     private nint _lastGrowthSize = 1 * 1024 * 1024;
@@ -183,6 +183,7 @@ public class HeapAllocator : IDisposable
 
     public void Dispose()
     {
-        _available = true;
+        _available = false;
+        _commitedRegions.Clear();
     }
 }

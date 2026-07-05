@@ -10,7 +10,7 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Views.Home;
 
-public partial class HomePage
+public sealed partial class HomePage
 {
     [RelayCommand]
     private void AddConfiguredCard()

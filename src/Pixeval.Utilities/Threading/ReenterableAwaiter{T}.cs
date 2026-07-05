@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 
 namespace Pixeval.Utilities.Threading;
 
-public class ReenterableAwaiter<TResult>(bool initialSignal, TResult resultInitialSignalIsTrue) : INotifyCompletion, IDisposable
+public sealed class ReenterableAwaiter<TResult>(bool initialSignal, TResult resultInitialSignalIsTrue) : INotifyCompletion, IDisposable
 {
     private Action? _continuation;
     private bool _continueOnCapturedContext = true; // whether the continuation should be posted to the captured SynchronizationContext
     private Exception? _exception;
     private TResult? _result = resultInitialSignalIsTrue;
     private readonly SemaphoreSlim _semaphoreSlim = new(1, 1);
+    private bool _disposed;
 
     public bool IsCompleted { get; set; } = initialSignal;
 
@@ -119,7 +120,10 @@ public class ReenterableAwaiter<TResult>(bool initialSignal, TResult resultIniti
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
+        if (_disposed)
+            return;
+
+        _disposed = true;
         _semaphoreSlim.Dispose();
     }
 }

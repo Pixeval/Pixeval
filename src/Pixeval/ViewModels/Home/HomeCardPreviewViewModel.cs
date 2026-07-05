@@ -130,7 +130,6 @@ public sealed partial class HomeCardPreviewViewModel(HomePageCardLayout card) : 
             return;
 
         _isDisposed = true;
-        GC.SuppressFinalize(this);
         _loadingCts.Cancel();
         _loadingCts.Dispose();
         DetachItems();

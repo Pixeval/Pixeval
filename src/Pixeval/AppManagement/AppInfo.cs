@@ -3,6 +3,7 @@
 
 using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform;
@@ -65,14 +66,12 @@ public static class AppInfo
 
     public static Stream GetPixivNoProfileStream() => AssetLoader.Open(new Uri(PixivNoProfilePath));
 
-    /// <summary>
-    /// Get the byte array of a file in the Assets folder
-    /// </summary>
-    /// <param name="relativeToAssetsFolder">A path with leading slash(or backslash) removed</param>
-    /// <returns></returns>
-    public static Task<byte[]> GetAssetBytesAsync(string relativeToAssetsFolder)
+    public static async Task<byte[]> GetAssetBytesAsync(string relativeToAssetsFolder)
     {
-        return GetResourceBytesAsync(relativeToAssetsFolder);
+        await using var stream = GetAssetStream(relativeToAssetsFolder);
+        await using var ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+        return ms.ToArray();
     }
 
     public static Stream GetAssetStream(string relativeToAssetsFolder)
@@ -81,13 +80,10 @@ public static class AppInfo
         return AssetLoader.Open(uri);
     }
 
-    public static async Task<byte[]> GetResourceBytesAsync(string relativeToAssetsFolder)
+    public static async Task<string> GetAssetStringAsync(string relativeToAssetsFolder, Encoding? encoding = null)
     {
-        var uri = new Uri($"avares://{AppIdentifier}/Assets/{relativeToAssetsFolder}");
-        await using var stream = AssetLoader.Open(uri);
-        await using var ms = new MemoryStream();
-        await stream.CopyToAsync(ms);
-        return ms.ToArray();
+        var reader = new StreamReader(GetAssetStream(relativeToAssetsFolder), encoding);
+        return await reader.ReadToEndAsync();
     }
 
     public static void ClearConfig()

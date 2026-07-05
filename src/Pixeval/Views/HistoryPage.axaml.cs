@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using System;
 using Avalonia.Interactivity;
 using Avalonia.Controls;
-using Avalonia.Threading;
 using FluentIcons.Avalonia;
 using FluentIcons.Common;
 using Mako.Global.Enum;
@@ -21,6 +20,7 @@ public abstract partial class HistoryPage : ContentPage, IDisposable
 {
     private SimpleOperableViewViewModel<IllustrationItemViewModel>? _illustrationViewModel;
     private SimpleOperableViewViewModel<NovelItemViewModel>? _novelViewModel;
+    private bool _isDisposed;
 
     protected HistoryPage(string header, Symbol symbol)
     {
@@ -63,13 +63,15 @@ public abstract partial class HistoryPage : ContentPage, IDisposable
     public void Dispose()
     {
         GC.SuppressFinalize(this);
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
         _illustrationViewModel?.Dispose();
         _illustrationViewModel = null;
         _novelViewModel?.Dispose();
         _novelViewModel = null;
     }
-
-    ~HistoryPage() => Dispatcher.UIThread.InvokeAsync(Dispose);
 
     #endregion
 }

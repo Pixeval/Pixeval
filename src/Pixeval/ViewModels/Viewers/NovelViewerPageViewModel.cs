@@ -359,7 +359,6 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
         if (_disposed)
             return;
 
@@ -368,8 +367,6 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
         _loadingCts.Dispose();
         _sourceView?.Dispose();
     }
-
-    ~NovelViewerPageViewModel() => Dispose();
 
     #endregion
 }

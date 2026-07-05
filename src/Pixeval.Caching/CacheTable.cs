@@ -13,14 +13,16 @@ using Pixeval.Utilities.Memory;
 
 namespace Pixeval.Caching;
 
-public class CacheTable<TKey, THeader, TProtocol>(
+public sealed class CacheTable<TKey, THeader, TProtocol>(
     TProtocol protocol,
-    CacheToken token)
+    CacheToken token) : IDisposable
     where THeader : unmanaged
     where TKey : IEquatable<TKey>
     where TProtocol : ICacheProtocol<TKey, THeader>
 {
     public MemoryMappedFileMemoryManager MemoryManager { get; } = new(token);
+
+    private bool _disposed;
 
     private readonly ConcurrentDictionary<TKey, Lock> _locks = new();
 
@@ -88,6 +90,9 @@ public class CacheTable<TKey, THeader, TProtocol>(
 
     public AllocatorState TryCache(TKey key, Span<byte> span)
     {
+        if (_disposed)
+            return AllocatorState.AllocatorClosed;
+
         lock (_purgeLock)
         {
             if (_locks.TryGetValue(key, out var lk))
@@ -133,6 +138,12 @@ public class CacheTable<TKey, THeader, TProtocol>(
 
     public bool TryReadCache(TKey key, out Stream readonlyStream)
     {
+        if (_disposed)
+        {
+            readonlyStream = null!;
+            return false;
+        }
+
         if (TryReadCache(key, out Span<byte> span))
         {
             unsafe
@@ -151,6 +162,12 @@ public class CacheTable<TKey, THeader, TProtocol>(
 
     public bool TryReadCache(TKey key, out Span<byte> span)
     {
+        if (_disposed)
+        {
+            span = [];
+            return false;
+        }
+
         lock (_purgeLock)
         {
             if (_locks.TryGetValue(key, out var lk))
@@ -185,5 +202,14 @@ public class CacheTable<TKey, THeader, TProtocol>(
 
         span = Span<byte>.Empty;
         return false;
+    }
+
+    public void Dispose()
+    {
+        if (_disposed)
+            return;
+
+        _disposed = true;
+        MemoryManager.Dispose();
     }
 }

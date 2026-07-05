@@ -12,8 +12,10 @@ using Pixeval.AppManagement;
 
 namespace Pixeval.ViewModels;
 
-public class NovelContext(NovelContent novelContent) : INovelContext<Stream>, IDisposable
+public sealed class NovelContext(NovelContent novelContent) : INovelContext<Stream>, IDisposable
 {
+    private bool _isDisposed;
+
     public int TotalImagesCount { get; } = novelContent.Images.Count + novelContent.Illustrations.Count;
 
     /// <summary>
@@ -81,8 +83,12 @@ public class NovelContext(NovelContent novelContent) : INovelContext<Stream>, ID
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
         LoadingCts.Cancel();
+        LoadingCts.Dispose();
         foreach (var (_, value) in IllustrationImages)
             value.Dispose();
         IllustrationImages.Clear();

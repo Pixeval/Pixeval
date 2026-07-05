@@ -15,7 +15,7 @@ using Pixeval.Views.Capability;
 
 namespace Pixeval.ViewModels.Viewers;
 
-public partial class UserViewerPageViewModel : ViewModelBase, IDisposable
+public sealed partial class UserViewerPageViewModel : ViewModelBase, IDisposable
 {
     private readonly CancellationTokenSource _loadingCts = new();
 
@@ -148,7 +148,6 @@ public partial class UserViewerPageViewModel : ViewModelBase, IDisposable
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
         if (_disposed)
             return;
 
@@ -156,8 +155,6 @@ public partial class UserViewerPageViewModel : ViewModelBase, IDisposable
         _loadingCts.Cancel();
         _loadingCts.Dispose();
     }
-
-    ~UserViewerPageViewModel() => Dispose();
 
     #endregion
 }

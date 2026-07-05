@@ -10,7 +10,7 @@ using Pixeval.Collections;
 
 namespace Pixeval.ViewModels;
 
-public class SimpleViewDataProvider<T, TViewModel> : ViewModelBase, IDataProvider<T, TViewModel>
+public sealed class SimpleViewDataProvider<T, TViewModel> : ViewModelBase, IDataProvider<T, TViewModel>
     where T : class, IIdEntry
     where TViewModel : ViewModelBase
 {
@@ -21,12 +21,11 @@ public class SimpleViewDataProvider<T, TViewModel> : ViewModelBase, IDataProvide
     public ObservableCollection<TViewModel> Source
     {
         get => View.Source;
-        protected set => View.Source = value;
+        private set => View.Source = value;
     }
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
         if (_isDisposed)
             return;
 

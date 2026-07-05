@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Pixeval.AppManagement;
@@ -24,7 +23,7 @@ public partial class AboutPage : ContentPage
 
     private async void LoadData()
     {
-        LicenseTextBlock.Markdown = Encoding.UTF8.GetString(await AppInfo.GetAssetBytesAsync("GPLv3.md"));
+        LicenseTextBlock.Markdown = await AppInfo.GetAssetStringAsync("GPLv3.md");
         await Supporter.GetSupportersAsync();
     }
 

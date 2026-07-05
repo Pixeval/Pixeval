@@ -4,12 +4,11 @@
 using System;
 using System.Linq;
 using Avalonia.Interactivity;
-using Avalonia.Threading;
 using Pixeval.Utilities;
 
 namespace Pixeval.Views.Home;
 
-public partial class HomePage : IDisposable
+public sealed partial class HomePage : IDisposable
 {
     protected override void OnLoaded(RoutedEventArgs e)
     {
@@ -23,7 +22,6 @@ public partial class HomePage : IDisposable
             return;
 
         _isDisposed = true;
-        GC.SuppressFinalize(this);
         ViewModel.PropertyChanged -= ViewModel_OnPropertyChanged;
         _activeCardControl?.CancelEdit();
         _activeCardControl = null;
@@ -36,6 +34,4 @@ public partial class HomePage : IDisposable
         GuideGrid.Children.Clear();
         DataContext = null;
     }
-
-    ~HomePage() => Dispatcher.UIThread.InvokeAsync(Dispose);
 }

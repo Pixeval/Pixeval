@@ -15,6 +15,8 @@ namespace Pixeval.ViewModels.Search;
 
 public sealed partial class SauceNaoSearchPageViewModel : ViewModelBase, IDisposable
 {
+    private bool _isDisposed;
+
     public ReadOnlyMemory<byte> File { get; private set; } = ReadOnlyMemory<byte>.Empty;
 
     [ObservableProperty]
@@ -29,6 +31,8 @@ public sealed partial class SauceNaoSearchPageViewModel : ViewModelBase, IDispos
 
     public async Task LoadAsync(Stream stream)
     {
+        ObjectDisposedException.ThrowIf(_isDisposed, this);
+
         try
         {
             using var memoryStream = Streams.RentStream();
@@ -48,6 +52,8 @@ public sealed partial class SauceNaoSearchPageViewModel : ViewModelBase, IDispos
     [RelayCommand]
     public async Task PasteAsync(Control control)
     {
+        ObjectDisposedException.ThrowIf(_isDisposed, this);
+
         if (TopLevel.GetTopLevel(control) is not { Clipboard: { } clipboard })
             return;
         if (await clipboard.TryGetBitmapAsync() is { } bitmap)
@@ -69,8 +75,13 @@ public sealed partial class SauceNaoSearchPageViewModel : ViewModelBase, IDispos
     /// <inheritdoc />
     public void Dispose()
     {
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
         FileSelected = false;
         File = ReadOnlyMemory<byte>.Empty;
         Image?.Dispose();
+        Image = null;
     }
 }

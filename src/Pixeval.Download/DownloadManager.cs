@@ -12,7 +12,7 @@ using Pixeval.Utilities.Threading;
 
 namespace Pixeval.Download;
 
-public class DownloadManager : IDisposable
+public sealed class DownloadManager : IDisposable
 {
     /// <summary>
     /// 正在排队的任务队列
@@ -42,6 +42,8 @@ public class DownloadManager : IDisposable
     /// </summary>
     private readonly Dictionary<string, IDownloadTaskGroupBase> _taskQuerySet = [];
 
+    private bool _disposed;
+
     /// <summary>
     /// 所有的下载任务
     /// </summary>
@@ -62,9 +64,14 @@ public class DownloadManager : IDisposable
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
-        _downloadTaskChannel.Writer.Complete();
+        if (_disposed)
+            return;
+
+        _disposed = true;
+        _ = _downloadTaskChannel.Writer.TryComplete();
         _throttle.Dispose();
+        foreach (var task in QueuedTasks)
+            task.Dispose();
     }
 
     /// <summary>
@@ -92,21 +99,27 @@ public class DownloadManager : IDisposable
     /// </summary>
     private async void PollTask()
     {
-        while (await _downloadTaskChannel.Reader.WaitToReadAsync())
-            while (await _throttle && _downloadTaskChannel.Reader.TryRead(out var taskToken) && taskToken is { Token.IsCancellationRequested: false, Task: var taskGroup })
-            {
-                await taskGroup.InitializeTaskGroupAsync();
-
-                foreach (var subTask in taskGroup)
+        try
+        {
+            while (await _downloadTaskChannel.Reader.WaitToReadAsync())
+                while (await _throttle && _downloadTaskChannel.Reader.TryRead(out var taskToken) && taskToken is { Token.IsCancellationRequested: false, Task: var taskGroup })
                 {
-                    // 需要判断是否处于Queued状态才能运行
-                    if (subTask.CurrentState is DownloadState.Queued)
+                    await taskGroup.InitializeTaskGroupAsync();
+
+                    foreach (var subTask in taskGroup)
                     {
-                        await DownloadAsync(subTask);
-                        _ = await _throttle;
+                        // 需要判断是否处于Queued状态才能运行
+                        if (subTask.CurrentState is DownloadState.Queued)
+                        {
+                            await DownloadAsync(subTask);
+                            _ = await _throttle;
+                        }
                     }
                 }
-            }
+        }
+        catch (ObjectDisposedException) when (_disposed)
+        {
+        }
     }
 
     /// <summary>

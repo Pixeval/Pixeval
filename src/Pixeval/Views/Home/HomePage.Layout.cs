@@ -8,7 +8,7 @@ using Pixeval.Models.Home;
 
 namespace Pixeval.Views.Home;
 
-public partial class HomePage
+public sealed partial class HomePage
 {
     private void RefreshGrid()
     {

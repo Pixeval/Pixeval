@@ -9,7 +9,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using FluentIcons.Common;
 using Mako.Engine.Implements;
@@ -408,7 +407,6 @@ public sealed partial class HomePageCardControl : TemplatedControl, IDisposable
             return;
 
         _isDisposed = true;
-        GC.SuppressFinalize(this);
         Loaded -= HomePageCardControl_OnLoaded;
         CompleteEdit(false);
         DetachTemplateHandlers();
@@ -418,6 +416,4 @@ public sealed partial class HomePageCardControl : TemplatedControl, IDisposable
         DeleteRequested = null;
         PreviewViewModel = null;
     }
-
-    ~HomePageCardControl() => Dispatcher.UIThread.InvokeAsync(Dispose);
 }

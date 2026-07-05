@@ -2,13 +2,16 @@
 // Licensed under the GPL v3 License.
 
 using System;
-using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace Pixeval.Utilities;
 
 public class SharedRef<T>
 {
-    private readonly HashSet<int> _keys = [];
+    private readonly Lock _gate = new();
+    private readonly object _ownerMarker = new();
+    private readonly ConditionalWeakTable<object, object> _keys = new();
 
     public T Value { get; init; }
 
@@ -16,7 +19,7 @@ public class SharedRef<T>
     {
         IdentifyKey(key);
         Value = value;
-        _ = _keys.Add(key.GetHashCode());
+        _keys.Add(key, _ownerMarker);
     }
 
     public bool IsDisposed { get; private set; }
@@ -24,37 +27,70 @@ public class SharedRef<T>
     public bool TryDispose<TKey>(TKey key) where TKey : class
     {
         IdentifyKey(key);
-        _ = _keys.Remove(key.GetHashCode());
-        if (_keys.Count > 0)
+        if (IsDisposed)
             return false;
-        if (Value is IDisposable disposable)
-            disposable.Dispose();
-        return IsDisposed = true;
+
+        lock (_gate)
+        {
+            if (IsDisposed)
+                return false;
+
+            if (!_keys.Remove(key) || HasOwners())
+                return false;
+
+            if (Value is IDisposable disposable)
+                disposable.Dispose();
+            return IsDisposed = true;
+        }
     }
 
     public void DisposeForce()
     {
-        _keys.Clear();
-        if (Value is IDisposable disposable)
-            disposable.Dispose();
-        IsDisposed = true;
+        if (IsDisposed)
+            return;
+
+        lock (_gate)
+        {
+            if (IsDisposed)
+                return;
+
+            _keys.Clear();
+            if (Value is IDisposable disposable)
+                disposable.Dispose();
+            IsDisposed = true;
+        }
     }
 
     public void IdentifyKey(object key)
     {
-#if DEBUG
+        ArgumentNullException.ThrowIfNull(key);
         // 判断key是不是引用类型
         var type = key.GetType();
         if (type.IsValueType || type == typeof(string))
             throw new ArgumentException("Key must be a reference type and not a string.");
-#endif
     }
 
     public SharedRef<T> MakeShared<TKey>(TKey key) where TKey : class
     {
         IdentifyKey(key);
         ObjectDisposedException.ThrowIf(IsDisposed, typeof(SharedRef<T>));
-        _ = _keys.Add(key.GetHashCode());
-        return this;
+
+        lock (_gate)
+        {
+            ObjectDisposedException.ThrowIf(IsDisposed, typeof(SharedRef<T>));
+            if (!_keys.TryGetValue(key, out _))
+                _keys.Add(key, _ownerMarker);
+            return this;
+        }
+    }
+
+    private bool HasOwners()
+    {
+        foreach (var _ in _keys)
+        {
+            return true;
+        }
+
+        return false;
     }
 }

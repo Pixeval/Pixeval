@@ -16,6 +16,12 @@ public unsafe class MemoryMappedFileAllocator(MemoryMappedFileMemoryManager mana
 {
     public AllocatorState TryAllocate(nint size, out Span<byte> span)
     {
+        if (manager.IsDisposed)
+        {
+            span = [];
+            return AllocatorState.AllocatorClosed;
+        }
+
         if (manager.DelegatedCombinedBumpPointerAllocator.TryAllocate(size, out var s) is AllocatorState.AllocationSuccess)
         {
             span = s;
@@ -31,19 +37,37 @@ public unsafe class MemoryMappedFileAllocator(MemoryMappedFileMemoryManager mana
         }
 
         var fileName = Guid.NewGuid();
-        var mmf = MemoryMappedFile.CreateFromFile(Path.Combine(manager.Token.CacheDirectory, fileName.ToString()), FileMode.OpenOrCreate, null, manager.Token.MemoryMappedFileInitialSize, MemoryMappedFileAccess.ReadWrite);
-
-        var handle = mmf.CreateViewAccessor().SafeMemoryMappedViewHandle;
+        var path = manager.GetCacheFilePath(fileName);
+        MemoryMappedFile? mmf = null;
+        MemoryMappedViewAccessor? accessor = null;
         byte* ptr = null;
-        handle.AcquirePointer(ref ptr);
+
+        try
+        {
+            mmf = MemoryMappedFile.CreateFromFile(path, FileMode.OpenOrCreate, null, manager.Token.MemoryMappedFileInitialSize, MemoryMappedFileAccess.ReadWrite);
+            accessor = mmf.CreateViewAccessor();
+            accessor.SafeMemoryMappedViewHandle.AcquirePointer(ref ptr);
+        }
+        catch
+        {
+            accessor?.Dispose();
+            mmf?.Dispose();
+            File.Delete(path);
+            span = [];
+            return AllocatorState.FailedToAllocateNewRegion;
+        }
 
         if (ptr == null)
         {
+            accessor.SafeMemoryMappedViewHandle.ReleasePointer();
+            accessor.Dispose();
+            mmf.Dispose();
+            File.Delete(path);
             span = [];
             return AllocatorState.MMapFailedWithNullPointer;
         }
 
-        manager.Handles.Add(new MemoryMappedFileCacheHandle(fileName, (nint) ptr, handle));
+        manager.Handles.Add(new MemoryMappedFileCacheHandle(fileName, (nint) ptr, mmf, accessor));
         manager.BumpPointerAllocators[fileName] = HeapAllocator.Create(new BumpPointerNativeAllocator(ref Unsafe.AsRef<byte>(ptr), manager.Token.MemoryMappedFileInitialSize));
 
         var result = manager.DelegatedCombinedBumpPointerAllocator.TryAllocate(size, out var s2);
@@ -73,17 +97,12 @@ public unsafe class MemoryMappedFileAllocator(MemoryMappedFileMemoryManager mana
     {
         var memoryMappedFileCacheHandle = manager.Handles.FirstOrDefault(cacheHandle => cacheHandle.Pointer == ptr);
 
-        if (memoryMappedFileCacheHandle?.ViewHandle == null)
+        if (memoryMappedFileCacheHandle is null)
         {
             return Result<Void>.AsFailure(new AllocatorException(AllocatorState.ReadFailed));
         }
 
-        memoryMappedFileCacheHandle.ViewHandle.ReleasePointer();
-        memoryMappedFileCacheHandle.ViewHandle.Dispose();
-        File.Delete(memoryMappedFileCacheHandle.Filename.ToString());
-
-        _ = manager.Handles.Remove(memoryMappedFileCacheHandle);
-        _ = manager.BumpPointerAllocators.Remove(memoryMappedFileCacheHandle.Filename);
+        manager.Free(memoryMappedFileCacheHandle);
 
         return Result<Void>.AsSuccess(Void.Value);
     }

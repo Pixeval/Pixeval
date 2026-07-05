@@ -31,7 +31,7 @@ public enum ExtensionHostLoadResult
     ExtensionLoadFailed
 }
 
-public class ExtensionService : IDisposable
+public sealed class ExtensionService : IDisposable
 {
     public static string CurrentVersion { get; } = ExtensionsHostStatics.CurrentSdkVersion.ToString();
 
@@ -263,7 +263,7 @@ public class ExtensionService : IDisposable
                     return ExtensionHostLoadResult.OutdatedSdk;
                 }
                 rcw.Initialize(CultureInfo.CurrentCulture.Name, AppInfo.TempFolder, Path.GetDirectoryName(path) ?? AppInfo.ExtensionsFolder, logger);
-                model = new(rcw, GetValues(extensionSettings, rcw.ExtensionName)) { Handle = libraryHandle };
+                model = new(rcw, GetValues(extensionSettings, rcw.ExtensionName)) { Handle = new NativeLibrarySafeHandle(libraryHandle) };
                 return ExtensionHostLoadResult.Loaded;
             }
             catch
@@ -475,7 +475,6 @@ public class ExtensionService : IDisposable
         if (Disposed)
             return;
         Disposed = true;
-        GC.SuppressFinalize(this);
         while (HostModels is [var model, ..])
             UnloadHost(model);
     }

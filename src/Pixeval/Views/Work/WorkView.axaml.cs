@@ -9,7 +9,6 @@ using Avalonia.Controls;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Threading;
 using Mako.Model;
 using Misaki;
 using Pixeval.Models.Options;
@@ -19,9 +18,10 @@ using Pixeval.Views.Viewers;
 
 namespace Pixeval.Views.Work;
 
-public partial class WorkView : UserControl, IDisposable
+public sealed partial class WorkView : UserControl, IDisposable
 {
     private bool _ownsDataContext = true;
+    private bool _isDisposed;
 
     public event EventHandler<Control, IWorkViewModel>? RequestAddToBookmark;
 
@@ -171,15 +171,16 @@ public partial class WorkView : UserControl, IDisposable
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
         var d = DataContext;
         DataContext = null!;
         if (_ownsDataContext && d is IDisposable viewModel)
             viewModel.Dispose();
         _ownsDataContext = true;
     }
-
-    ~WorkView() => Dispatcher.UIThread.InvokeAsync(Dispose);
 
     #endregion
 }

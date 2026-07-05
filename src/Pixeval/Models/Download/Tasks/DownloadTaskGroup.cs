@@ -113,6 +113,8 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
 
     private readonly List<ImageDownloadTask> _tasksSet = [];
 
+    private bool _isDisposed;
+
     string IDownloadTaskBase.Destination => DatabaseEntry.Destination;
 
     public abstract string OpenLocalDestination { get; }
@@ -357,6 +359,12 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
     public void Dispose()
     {
         GC.SuppressFinalize(this);
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
+        CancellationTokenSource.Cancel();
+        CancellationTokenSource.Dispose();
         foreach (var task in TasksSet)
             task.Dispose();
     }

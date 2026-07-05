@@ -12,8 +12,10 @@ using Pixeval.Models.Download.Tasks;
 
 namespace Pixeval.Models.Database.Managers;
 
-public class HistoryPersistHelper : IDisposable
+public sealed class HistoryPersistHelper : IDisposable
 {
+    private bool _isDisposed;
+
     public HistoryPersistHelper(
         [FromKeyedServices(IPlatformInfo.Pixiv)] IDownloadHttpClientService service,
         DownloadHistoryPersistentManager downloadHistoryPersistentManager,
@@ -172,7 +174,10 @@ public class HistoryPersistHelper : IDisposable
     /// <inheritdoc />
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
         DownloadManager.Dispose();
     }
 }

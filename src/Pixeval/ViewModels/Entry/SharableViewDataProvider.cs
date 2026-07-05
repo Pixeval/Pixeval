@@ -15,14 +15,14 @@ namespace Pixeval.ViewModels;
 /// 复用时调用<see cref="CloneRef"/>，<see cref="EntrySourceRef"/>会在所有复用对象都Dispose时Dispose<br/>
 /// 初始化时调用<see cref="ResetEngine"/>
 /// </summary>
-public class SharableViewDataProvider<T, TViewModel>
+public sealed class SharableViewDataProvider<T, TViewModel>
     : ViewModelBase, IDataProvider<T, TViewModel>
     where T : class, IIdentityInfo
     where TViewModel : EntryViewModel<T>
 {
     private bool _isDisposed;
 
-    protected SharedRef<IncrementalLoadingCollection<TViewModel>> EntrySourceRef
+    private SharedRef<IncrementalLoadingCollection<TViewModel>> EntrySourceRef
     {
         get;
         set
@@ -46,7 +46,6 @@ public class SharableViewDataProvider<T, TViewModel>
     /// </summary>
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
         if (_isDisposed)
             return;
 
