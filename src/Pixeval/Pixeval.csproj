@@ -47,6 +47,7 @@
 		<ProjectReference Include="..\lib\Imouto\Imouto.BooruParser\Imouto.BooruParser.csproj" />
 		<ProjectReference Include="..\lib\Mako\Mako\Mako.csproj" />
 		<ProjectReference Include="..\lib\SmoothScroll.Avalonia\src\SmoothScroll.Avalonia.Controls\SmoothScroll.Avalonia.Controls.csproj" />
+		<ProjectReference Include="..\Pixeval.Mcp\Pixeval.Mcp.csproj" />
 		<ProjectReference Include="..\Pixeval.I18N\Pixeval.I18N.csproj" />
 		<!--<ProjectReference Include="..\Pixeval.Caching\Pixeval.Caching.csproj" />-->
 		<ProjectReference Include="..\Pixeval.Download\Pixeval.Download.csproj" />

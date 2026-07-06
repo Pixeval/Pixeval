@@ -93,6 +93,8 @@
                             <Button
                                 x:Name="PART_SecondaryButton"
                                 MinWidth="84"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
                                 Content="{TemplateBinding SecondaryButtonText}"
                                 IsEnabled="{TemplateBinding IsSecondaryButtonEnabled}"
                                 IsVisible="{TemplateBinding SecondaryButtonText,
@@ -100,6 +102,8 @@
                             <Button
                                 x:Name="PART_CloseButton"
                                 MinWidth="84"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
                                 Content="{TemplateBinding CloseButtonText}"
                                 IsEnabled="{TemplateBinding IsCloseButtonEnabled}"
                                 IsVisible="{TemplateBinding CloseButtonText,
@@ -107,6 +111,8 @@
                             <Button
                                 x:Name="PART_PrimaryButton"
                                 MinWidth="84"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
                                 Content="{TemplateBinding PrimaryButtonText}"
                                 IsEnabled="{TemplateBinding IsPrimaryButtonEnabled}"
                                 IsVisible="{TemplateBinding PrimaryButtonText,

@@ -1,8 +1,12 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Pixeval.AppManagement;
+using Pixeval.I18N;
+using Pixeval.Utilities;
 using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Settings;
@@ -27,10 +31,16 @@ public partial class SettingsPage : NavigationPage
     /// </summary>
     private void ValueSaving()
     {
-        if (DataContext is not SettingsPageViewModel vm)
+        if (DataContext is not SettingsPageViewModel vm
+            // Parent is TabsView
+            || TopLevel.GetTopLevel(Parent as Control) is not { ViewContainer: { } viewContainer })
             return;
+
         foreach (var extensionGroup in vm.ExtensionGroups)
             foreach (var settingsEntry in extensionGroup)
                 settingsEntry.ValueSaving(extensionGroup.Model.Values);
+        
+        AppInfo.SaveSettings(vm.AppSettings);
+        viewContainer.ShowSuccess(I18NManager.GetResource(SettingsMainViewResources.SettingsSaved));
     }
 }
