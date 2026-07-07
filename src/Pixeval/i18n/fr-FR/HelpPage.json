@@ -14,6 +14,9 @@
   "DownloadMacroHelpExpander": {
     "Header": "下载宏帮助"
   },
+  "McpHelpExpander": {
+    "Header": "MCP 使用帮助"
+  },
   "AppProtocolLinkHelpExpander": {
     "Header": "应用协议链接使用帮助"
   },
