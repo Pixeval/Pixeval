@@ -22,17 +22,15 @@ public partial class SettingsPage : NavigationPage
     protected override void OnUnloaded(RoutedEventArgs e)
     {
         base.OnUnloaded(e);
-        ValueSaving();
+        ValueSaving(Parent);
     }
 
     /// <summary>
     /// 保存设置
     /// </summary>
-    private void ValueSaving()
+    private void ValueSaving(object? parent)
     {
-        if (DataContext is not SettingsPageViewModel vm
-            // Parent is TabsView
-            || TopLevel.GetTopLevel(Parent as Control) is not { ViewContainer: { } viewContainer })
+        if (DataContext is not SettingsPageViewModel vm)
             return;
 
         foreach (var extensionGroup in vm.ExtensionGroups)
@@ -40,6 +38,7 @@ public partial class SettingsPage : NavigationPage
                 settingsEntry.ValueSaving(extensionGroup.Model.Values);
         
         AppInfo.SaveSettings(vm.AppSettings);
-        viewContainer.ShowSuccess(I18NManager.GetResource(SettingsMainViewResources.SettingsSaved));
+        // Parent is TabsView
+        TopLevel.GetTopLevel(parent as Control)?.ViewContainer?.ShowSuccess(I18NManager.GetResource(SettingsMainViewResources.SettingsSaved));
     }
 }

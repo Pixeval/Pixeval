@@ -9,11 +9,15 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using AvaloniaEdit;
 using ColorTextBlock.Avalonia;
 using CommunityToolkit.Mvvm.Input;
+using FluentIcons.Avalonia;
+using FluentIcons.Common;
 using Markdown.Avalonia;
 using Markdown.Avalonia.StyleCollections;
 using Markdown.Avalonia.Svg;
@@ -37,6 +41,12 @@ public sealed class MarkdownHyperlinkClickedEventArgs(string url) : EventArgs
 public class MarkdownBox : MarkdownScrollViewer
 {
     private const double AnchorScrollOffset = 12;
+    private const string CodePadTypeName = "Markdown.Avalonia.SyntaxHigh.CodePad";
+    private const string CodeBlockClass = "CodeBlock";
+    private const string CodeBlockRootClass = "PixevalCodeBlockRoot";
+    private const string CodeBlockToolbarClass = "PixevalCodeBlockToolbar";
+    private const string InlineCodeNormalizedClass = "PixevalInlineCodeNormalized";
+    private const string InlineCodeSentinelClass = "PixevalInlineCodeSentinel";
     private static readonly Cursor TextCursor = new(StandardCursorType.Ibeam);
 
     public static readonly StyledProperty<IBrush?> MarkdownForegroundProperty =
@@ -133,6 +143,26 @@ public class MarkdownBox : MarkdownScrollViewer
         }
     }
 
+    protected override async void OnKeyDown(KeyEventArgs e)
+    {
+        if (e.Key is Key.C
+            && (e.KeyModifiers & KeyModifiers.Control) != 0
+            && TryGetVisualSelectedText() is { Length: > 0 } selectedText
+            && TopLevel.GetTopLevel(this)?.Clipboard is { } clipboard)
+        {
+            var item = new DataTransferItem();
+            item.Set(DataFormat.Text, selectedText);
+            var data = new DataTransfer();
+            data.Add(item);
+
+            await clipboard.SetDataAsync(data);
+            e.Handled = true;
+            return;
+        }
+
+        base.OnKeyDown(e);
+    }
+
     private async void OnHyperlinkClicked(string? url)
     {
         if (string.IsNullOrWhiteSpace(url))
@@ -201,6 +231,31 @@ public class MarkdownBox : MarkdownScrollViewer
         }, DispatcherPriority.Loaded);
     }
 
+    private string? TryGetVisualSelectedText()
+    {
+        var parts = new List<string>();
+        foreach (var textBlock in this.GetVisualDescendants().OfType<CTextBlock>())
+        {
+            if (textBlock.Selection is not { } selection)
+                continue;
+
+            var text = textBlock.Text;
+            var start = Math.Clamp(Math.Min(selection.From, selection.To), 0, text.Length);
+            var end = Math.Clamp(Math.Max(selection.From, selection.To), 0, text.Length);
+            if (end <= start)
+                continue;
+
+            parts.Add(text[start..end]);
+        }
+
+        return parts.Count switch
+        {
+            0 => null,
+            1 => parts[0],
+            _ => string.Join('\n', parts)
+        };
+    }
+
     private void ApplyMarkdownPresentation()
     {
         var fontFamily = MarkdownFontFamily;
@@ -212,11 +267,15 @@ public class MarkdownBox : MarkdownScrollViewer
         foreach (var text in this.GetVisualDescendants().OfType<CTextBlock>())
         {
             var isHeading = IsHeading(text);
+            var isCodeBlock = IsCodeBlock(text);
             var hasNaturalLineHeightInline = ContainsNaturalLineHeightInline(text);
 
             NormalizeInlineDecorations(text);
 
             text.Cursor = TextCursor;
+
+            if (isCodeBlock)
+                continue;
 
             if (MarkdownForeground is { } foreground)
                 text.Foreground = foreground;
@@ -253,6 +312,9 @@ public class MarkdownBox : MarkdownScrollViewer
         {
             text.Cursor = TextCursor;
 
+            if (IsCodeBlock(text))
+                continue;
+
             if (MarkdownForeground is { } foreground)
                 text.Foreground = foreground;
             else
@@ -278,11 +340,16 @@ public class MarkdownBox : MarkdownScrollViewer
             else
                 text.ClearValue(TextBlock.LineHeightProperty);
         }
+
+        NormalizeCodeBlockToolbars();
     }
 
     private static bool IsHeading(CTextBlock text) =>
         text.Classes.Any(@class =>
             @class is "Heading1" or "Heading2" or "Heading3" or "Heading4" or "Heading5" or "Heading6");
+
+    private static bool IsCodeBlock(StyledElement element) =>
+        element.Classes.Contains(CodeBlockClass);
 
     private static bool ContainsNaturalLineHeightInline(CTextBlock text) =>
         text.Content.Any(ContainsNaturalLineHeightInline);
@@ -290,26 +357,144 @@ public class MarkdownBox : MarkdownScrollViewer
     private static bool ContainsNaturalLineHeightInline(CInline inline) =>
         inline is RubyInline
         || inline is CImage
-        || inline is CInlineUIContainer
+        || (inline is CInlineUIContainer container && !container.Classes.Contains(InlineCodeSentinelClass))
         || (inline is CSpan { Content: { } content } && content.Any(ContainsNaturalLineHeightInline));
 
     private static void NormalizeInlineDecorations(CTextBlock text)
     {
-        foreach (var inline in text.Content)
-            NormalizeInlineDecorations(inline, false);
+        for (var i = 0; i < text.Content.Count; i++)
+        {
+            if (NormalizeInlineDecorations(text.Content[i], false))
+            {
+                var inline = text.Content[i];
+                text.Content.RemoveAt(i);
+                text.Content.Insert(i, inline);
+            }
+        }
     }
 
-    private static void NormalizeInlineDecorations(CInline inline, bool isInsideCode)
+    private static bool NormalizeInlineDecorations(CInline inline, bool isInsideCode)
     {
-        if (isInsideCode)
-            inline.Background = null;
+        var changed = false;
+
+        if (inline is CCode code)
+        {
+            changed |= EnsureInlineCodeSentinel(code);
+        }
+        else if (isInsideCode)
+        {
+            inline.Background = Brushes.Transparent;
+        }
 
         if (inline is CSpan { Content: { } content })
         {
             var childIsInsideCode = isInsideCode || inline is CCode;
             foreach (var child in content)
-                NormalizeInlineDecorations(child, childIsInsideCode);
+                changed |= NormalizeInlineDecorations(child, childIsInsideCode);
         }
+
+        return changed;
+    }
+
+    private static bool EnsureInlineCodeSentinel(CCode code)
+    {
+        if (code.Classes.Contains(InlineCodeNormalizedClass))
+            return false;
+
+        var content = code.Content.ToList();
+        if (content.Count == 0)
+            return false;
+
+        content.Add(CreateInlineCodeSentinel());
+        code.Content = content;
+        code.Classes.Add(InlineCodeNormalizedClass);
+
+        return true;
+    }
+
+    private static CInlineUIContainer CreateInlineCodeSentinel()
+    {
+        var sentinel = new CInlineUIContainer(new Border
+        {
+            Width = 0,
+            Height = 1,
+            IsHitTestVisible = false
+        })
+        {
+            TextVerticalAlignment = TextVerticalAlignment.Center
+        };
+        sentinel.Classes.Add(InlineCodeSentinelClass);
+
+        return sentinel;
+    }
+
+    private void NormalizeCodeBlockToolbars()
+    {
+        foreach (var border in this.GetVisualDescendants().OfType<Border>().Where(static border => border.Classes.Contains(CodeBlockClass)))
+            NormalizeCodeBlockToolbar(border);
+    }
+
+    private static void NormalizeCodeBlockToolbar(Border codeBlock)
+    {
+        if (codeBlock.Child is Grid root && root.Classes.Contains(CodeBlockRootClass))
+            return;
+
+        if (codeBlock.Child is not Panel codePad
+            || codePad.GetType().FullName is not CodePadTypeName
+            || codePad.Children.OfType<TextEditor>().FirstOrDefault() is not { } textEditor
+            || codePad.Children.OfType<Label>().FirstOrDefault(static label => label.Classes.Contains("LangInfo")) is not { } langLabel)
+        {
+            return;
+        }
+
+        _ = codePad.Children.Remove(textEditor);
+        _ = codePad.Children.Remove(langLabel);
+
+        langLabel.VerticalAlignment = VerticalAlignment.Center;
+
+        var copyButton = new Button
+        {
+            Content = new SymbolIcon
+            {
+                Symbol = Symbol.Clipboard,
+                FontSize = 14
+            },
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        copyButton.Classes.Add("CopyButton");
+        ToolTip.SetTip(copyButton, "复制代码");
+        copyButton.Click += async (_, _) =>
+        {
+            if (TopLevel.GetTopLevel(textEditor)?.Clipboard is { } clipboard)
+            {
+                var item = new DataTransferItem();
+                item.Set(DataFormat.Text, textEditor.Text ?? "");
+                var data = new DataTransfer();
+                data.Add(item);
+
+                await clipboard.SetDataAsync(data);
+            }
+        };
+
+        var toolbar = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 6,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Top
+        };
+        toolbar.SetValue(Panel.ZIndexProperty, 1);
+        toolbar.Classes.Add(CodeBlockToolbarClass);
+        toolbar.Children.Add(langLabel);
+        toolbar.Children.Add(copyButton);
+
+        root = new Grid();
+        root.Classes.Add(CodeBlockRootClass);
+
+        root.Children.Add(textEditor);
+        root.Children.Add(toolbar);
+
+        codeBlock.Child = root;
     }
 
     private static bool IsPositive(double value) => !double.IsNaN(value) && value > 0;

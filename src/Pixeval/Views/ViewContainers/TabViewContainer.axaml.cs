@@ -97,13 +97,20 @@ public partial class TabViewContainer : ViewContainerBase
 
     private void TabsView_OnTabClosing(TabsView sender, TabClosingEventArgs e)
     {
-        if (e.Item is Control control)
-        {
-            var args = new RoutedEventArgs(ViewModelDisposal.RequestDisposeEvent, control);
-            control.RaiseEvent(args);
-            if (!args.Handled)
-                DisposeTab(control);
-        }
+        if (e.Item is not Control control
+            || sender.Pages is not IReadOnlyCollection<Page> pages)
+            return;
+        // 关闭前手动切换标签页，以便触发标签页的 OnUnloaded 事件并保证其 Parent(TabsView) 存在，以便找 TopLevel(Window) 显示 InfoBar 之类的
+        if (sender.SelectedIndex < pages.Count - 1)
+            sender.SelectedIndex++;
+        else if (sender.SelectedIndex > 0)
+            sender.SelectedIndex--;
+        // 否则关闭最后一个标签页，相当于关闭当前窗口，找到 TopLevel(Window) 也没意义
+
+        var args = new RoutedEventArgs(ViewModelDisposal.RequestDisposeEvent, control);
+        control.RaiseEvent(args);
+        if (!args.Handled)
+            DisposeTab(control);
     }
 
     private void OnViewModelDisposal(object? sender, ViewModelDisposalEventArgs e)
@@ -125,13 +132,12 @@ public partial class TabViewContainer : ViewContainerBase
 
     private static void DisposeTab(Control tabItem)
     {
-        if (ViewModelDisposal.DisposableMap.Remove(tabItem, out var set))
-        {
-            foreach (var disposable in set)
-                if (disposable.TryGetTarget(out var target))
-                    target.Dispose();
-            set.Clear();
-        }
+        if (!ViewModelDisposal.DisposableMap.Remove(tabItem, out var set))
+            return;
+        foreach (var disposable in set)
+            if (disposable.TryGetTarget(out var target))
+                target.Dispose();
+        set.Clear();
     }
 
     /// <summary>
@@ -144,6 +150,7 @@ public partial class TabViewContainer : ViewContainerBase
         {
             var container = new TabViewContainer();
             var window = new Window { Content = container }.Fork(host.Window);
+            container.SetInterTabController(true);
             window.Closed += static (sender, args) =>
             {
                 if (sender is TopLevel { ViewContainer: TabViewContainer container })

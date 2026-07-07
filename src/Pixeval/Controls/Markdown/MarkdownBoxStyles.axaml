@@ -3,6 +3,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ctxt="clr-namespace:ColorTextBlock.Avalonia;assembly=ColorTextBlock.Avalonia"
+    xmlns:icons="using:FluentIcons.Avalonia"
     xmlns:mdc="clr-namespace:Markdown.Avalonia.Controls;assembly=Markdown.Avalonia">
 
     <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CTextBlock">
@@ -93,10 +94,64 @@
         <Setter Property="Background" Value="{DynamicResource LayerOnMicaBaseAltFillColorSecondaryBrush}" />
     </Style>
 
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer StackPanel.PixevalCodeBlockToolbar">
+        <Setter Property="Margin" Value="0,0,8,0" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Label.LangInfo">
+        <Setter Property="MinHeight" Value="26" />
+        <Setter Property="Padding" Value="8,3" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+        <Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Button.CopyButton">
+        <Setter Property="Width" Value="28" />
+        <Setter Property="Height" Value="26" />
+        <Setter Property="MinWidth" Value="28" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorTransparentBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlFillColorTransparentBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Button.CopyButton:pointerover">
+        <Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Button.CopyButton:pressed">
+        <Setter Property="Background" Value="{DynamicResource SubtleFillColorTertiaryBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Button.CopyButton icons|SymbolIcon">
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer Button.CopyButton:pointerover icons|SymbolIcon">
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+    </Style>
+
     <Style Selector=".Markdown_Avalonia_MarkdownViewer TextBlock.CodeBlock">
         <Setter Property="FontFamily" Value="Cascadia Mono,Consolas,Menlo,Monaco,monospace" />
         <Setter Property="FontSize" Value="13" />
         <Setter Property="LineHeight" Value="20" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+    </Style>
+
+    <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CTextBlock.CodeBlock">
+        <Setter Property="FontFamily" Value="Cascadia Mono,Consolas,Menlo,Monaco,monospace" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="LineHeight" Value="20" />
+        <Setter Property="LineSpacing" Value="0" />
+        <Setter Property="Margin" Value="0" />
         <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
     </Style>
 

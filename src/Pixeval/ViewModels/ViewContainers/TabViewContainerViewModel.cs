@@ -17,13 +17,19 @@ public partial class TabViewContainerViewModel : ViewModelBase
 {
     public TabViewContainerViewModel()
     {
+        OnUserRefreshed(App.AppViewModel.MakoClient.Me);
         App.AppViewModel.MakoClient.TokenRefreshed += OnTokenRefreshed;
     }
 
-    private async void OnTokenRefreshed(MakoClient sender, TokenResponse? e)
+    private void OnTokenRefreshed(MakoClient sender, TokenResponse? e)
     {
-        User = e?.User;
-        Avatar = e is null ? null : await CacheHelper.GetAnimatedBitmapAsync(IPlatformInfo.Pixiv, e.User.ProfileImageUrls.Px50X50);
+        OnUserRefreshed(e?.User);
+    }
+
+    private async void OnUserRefreshed(TokenUser? user)
+    {
+        User = user;
+        Avatar = user is null ? null : await CacheHelper.GetAnimatedBitmapAsync(IPlatformInfo.Pixiv, user.ProfileImageUrls.Px50X50);
         // await ToggleRestrictedModeAsync(true);
         await ToggleAiShowAsync(true);
     }

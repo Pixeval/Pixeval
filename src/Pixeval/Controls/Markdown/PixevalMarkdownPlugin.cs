@@ -9,6 +9,8 @@ internal sealed class PixevalMarkdownPlugin : IMdAvPlugin
 {
     public void Setup(SetupInfo info)
     {
+        info.Register(new PixevalFencedCodeBlockOverride());
+        info.Register(new PixevalIndentedCodeBlockOverride());
         info.Register(new GitHubAlertBlockOverride());
         info.Register(new ExtraEscapedCharacterInlineParser());
     }
