@@ -1,7 +1,4 @@
 {
-  "AppDescriptionTextBlock": {
-    "Text": "Pixeval 是一个基于 Avalonia 开发的第三方 Pixiv 客户端。在保证对 Pixiv 绝大部分功能的支持的同时，提供了大量有助于提高用户体验的额外特性，包括本地收藏夹以及中国大陆地区无需代理的浏览体验等。\n\n你可以在下方链接中找到更多有关 Pixeval 的信息。"
-  },
   "CheckingForUpdate": "正在检查更新",
   "IsUpToDate": "当前已经是最新版本",
   "IsInsider": "正在使用内部版本",
@@ -39,22 +36,7 @@
   },
   "DownloadMacroInvalidInfoBarInputCannotBeBlank": "输入不能为空",
   "DownloadMacroInvalidInfoBarMacroInvalidFormatted": "{0}, 请更正后重新填写",
-  "FeedbackByEmailHyperlinkButton": {
-    "Content": "邮件联系作者"
-  },
-  "GitHubRepositoryHyperlinkButton": {
-    "Content": "GitHub 仓库"
-  },
-  "JoinFeedbackGroupHyperlinkButton": {
-    "Content": "加入反馈群"
-  },
   "LastCheckedPrefix": "上次检查时间：",
-  "ReleaseNotesHyperlinkButton": {
-    "Content": "更新日志"
-  },
-  "ReportBugHyperlinkButton": {
-    "Content": "在 GitHub 上汇报问题"
-  },
   "CheckForUpdatesButton": {
     "Content": "检查更新"
   },
@@ -111,9 +93,6 @@
   "TitleTextBlock": {
     "Text": "Pixeval 设置"
   },
-  "ViewPixevalWebsiteHyperlinkButton": {
-    "Content": "介绍网页"
-  },
   "PredicateMacroHeader": "以下条件宏，格式为 @{is_xxx?<正分支>:<反分支>}，如果条件成立则替换为<正分支>，否则替换为<反分支>",
   "OpenExtensionsEntry": {
     "Header": "打开扩展文件夹",
@@ -152,5 +131,6 @@
   "ReleaseNoteDialog": {
     "TitleFormatted": "更新日志 {0}",
     "Empty": "暂无更新日志"
-  }
+  },
+  "SettingsSaved": "设置已保存"
 }
