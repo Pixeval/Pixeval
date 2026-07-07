@@ -645,7 +645,7 @@ public sealed class FilterLanguage
             var candidates = language._matchesByFirstChar.TryGetValue(char.ToUpperInvariant(Current), out var matches)
                 ? matches
                 : [];
-            var match = candidates.FirstOrDefault(currentMatch => text.AsSpan(_position).StartsWith(currentMatch.HeaderText, StringComparison.OrdinalIgnoreCase));
+            var match = GetBestSyntaxMatch(candidates, text.AsSpan(_position));
             if (match is null)
             {
                 if (language._specialStarters.Contains(Current) || Current is ']' or ')')
@@ -667,6 +667,23 @@ public sealed class FilterLanguage
 
             node = new FilterPredicateNode(match.Syntax, boundValue, termSpan, isNegated);
             return true;
+        }
+
+        private static FilterSyntaxMatch? GetBestSyntaxMatch(
+            IReadOnlyCollection<FilterSyntaxMatch> candidates,
+            ReadOnlySpan<char> text)
+        {
+            FilterSyntaxMatch? bestMatch = null;
+            foreach (var candidate in candidates)
+            {
+                if (!text.StartsWith(candidate.HeaderText, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                if (bestMatch is null || candidate.HeaderText.Length > bestMatch.HeaderText.Length)
+                    bestMatch = candidate;
+            }
+
+            return bestMatch;
         }
 
         /// <summary>
@@ -1106,7 +1123,7 @@ public sealed class FilterLanguage
                 }
 
                 span = FilterTextSpan.FromBounds(literalStart, _position);
-                value = (double)integral / denominator;
+                value = (double) integral / denominator;
                 return true;
             }
 
@@ -1184,7 +1201,7 @@ public sealed class FilterLanguage
                 return false;
             }
 
-            narrowed = (int)value;
+            narrowed = (int) value;
             return true;
         }
 

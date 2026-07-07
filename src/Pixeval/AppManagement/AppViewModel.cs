@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Imouto.BooruParser;
 using Mako;
 using Mako.Engine;
@@ -16,19 +17,24 @@ using Misaki;
 using Pixeval.Models.Database;
 using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Download;
-using Pixeval.Models.Subscriptions;
 using Pixeval.Models.Extensions;
+using Pixeval.Models.Subscriptions;
 using Pixeval.Utilities;
-using Pixeval.Utilities.IO.Caching;
-using SQLite;
-using Pixeval.Models.Options;
-using Pixeval.Views;
 using Pixeval.Utilities.GitHub;
+using Pixeval.Utilities.IO.Caching;
+using Pixeval.Models.Options;
+using Pixeval.Utilities.McpServer;
+using Pixeval.Views;
+using SQLite;
 
 namespace Pixeval.AppManagement;
 
-public sealed class AppViewModel(App app, FileLogger logger) : IDisposable
+public sealed class AppViewModel(App app, FileLogger logger) : IAsyncDisposable
 {
+    private bool _disposed;
+
+    public static bool UseMcpService { get; set; }
+
     public ServiceProvider AppServiceProvider { get; private set; } = null!;
 
     public App App { get; } = app;
@@ -55,11 +61,12 @@ public sealed class AppViewModel(App app, FileLogger logger) : IDisposable
         var makoClient = new MakoClient(App.AppViewModel.AppSettings.ToMakoConfiguration(), logger);
         makoClient.TokenRefreshed += MakoClientOnTokenRefreshed;
 
-        return new ServiceCollection()
+        var services = new ServiceCollection()
             .AddSingleton(_ => logger)
             .AddBooruParsers()
             .AddKeyedSingleton<IGetArtworkService, MakoClient>(IPlatformInfo.Pixiv, (provider, key) => makoClient)
-            .AddKeyedSingleton<IDownloadHttpClientService, MakoClient>(IPlatformInfo.Pixiv, (provider, key) => makoClient)
+            .AddKeyedSingleton<IDownloadHttpClientService, MakoClient>(IPlatformInfo.Pixiv,
+                (provider, key) => makoClient)
             .AddKeyedSingleton<IDownloadHttpClientService>(
                 GitHubHttpClientProvider.PlatformKey,
                 (_, _) => new GitHubHttpClientProvider(AppSettings.NetworkSettings))
@@ -75,8 +82,11 @@ public sealed class AppViewModel(App app, FileLogger logger) : IDisposable
             .AddSingleton<BrowseHistoryPersistentManager>()
             .AddSingleton<WatchLaterPersistentManager>()
             .AddSingleton<LoginUserPersistentManager>()
-            .AddSingleton<HistoryPersistHelper>()
-            .BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
+            .AddSingleton<HistoryPersistHelper>();
+        if (UseMcpService)
+            services.AddSingleton<IPixevalMcpService>(t =>
+                new PixevalMcpService(this, t.GetRequiredService<FileLogger>()));
+        return services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
 
         void MakoClientOnTokenRefreshed(MakoClient sender, TokenResponse? tokenResponse)
         {
@@ -85,7 +95,8 @@ public sealed class AppViewModel(App app, FileLogger logger) : IDisposable
             else
             {
                 var manager = AppServiceProvider.GetRequiredService<LoginUserPersistentManager>();
-                var entry = manager.Upsert(LoginUserEntry.FromTokenUser(tokenResponse.RefreshToken, tokenResponse.User));
+                var entry = manager.Upsert(LoginUserEntry.FromTokenUser(tokenResponse.RefreshToken,
+                    tokenResponse.User));
                 LoginContext.CurrentKey = entry.HistoryEntryId;
             }
 
@@ -105,9 +116,11 @@ public sealed class AppViewModel(App app, FileLogger logger) : IDisposable
         AppServiceProvider.GetRequiredService<WorkSubscriptionDownloadService>().QueueSyncAll();
     }
 
-    public void QueueWorkSubscriptionSyncCurrentSource(long uid, WorkSubscriptionType subscriptionType, WorkSubscriptionWorkKind workKind, IFetchEngine<IWorkEntry> engine)
+    public void QueueWorkSubscriptionSyncCurrentSource(long uid, WorkSubscriptionType subscriptionType,
+        WorkSubscriptionWorkKind workKind, IFetchEngine<IWorkEntry> engine)
     {
-        AppServiceProvider.GetRequiredService<WorkSubscriptionDownloadService>().QueueSyncCurrentSource(uid, subscriptionType, workKind, engine);
+        AppServiceProvider.GetRequiredService<WorkSubscriptionDownloadService>()
+            .QueueSyncCurrentSource(uid, subscriptionType, workKind, engine);
     }
 
     public void SetNameResolvers()
@@ -180,14 +193,15 @@ public sealed class AppViewModel(App app, FileLogger logger) : IDisposable
         AppServiceProvider.GetRequiredKeyedService<IDownloadHttpClientService>(GitHubHttpClientProvider.PlatformKey)
             .GetApiClient();
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
         if (_disposed)
             return;
         _disposed = true;
         try
         {
-            AppServiceProvider?.Dispose();
+            // 有些服务只能 DisposeAsync
+            await AppServiceProvider.DisposeAsync();
         }
         catch
         {
@@ -195,6 +209,4 @@ public sealed class AppViewModel(App app, FileLogger logger) : IDisposable
             // 保证退出时不出幺蛾子
         }
     }
-
-    private bool _disposed;
 }

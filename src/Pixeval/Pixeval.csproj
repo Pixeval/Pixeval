@@ -59,7 +59,6 @@
 		<!-- 字符串资源相关 -->
 		<AdditionalFiles Include="i18n\**\*.json" />
 		<AdditionalFiles Include="Views\**\*.axaml" />
-		<AdditionalFiles Include="Assets\*.svg" />
 
 		<None Update="i18n\**">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

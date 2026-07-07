@@ -1,5 +1,6 @@
 using System;
 using Avalonia;
+using Pixeval.AppManagement;
 
 namespace Pixeval.Desktop;
 
@@ -13,15 +14,19 @@ sealed class Program
         .StartWithClassicDesktopLifetime(args);
 
     // Avalonia configuration, don't remove; also used by visual designer.
-    public static AppBuilder BuildAvaloniaApp() =>
-        AppBuilder.Configure<App>()
+    public static AppBuilder BuildAvaloniaApp()
+    {
+        AppViewModel.UseMcpService = true;
+
+        return AppBuilder.Configure<App>()
             .UsePlatformDetect()
-            .With(new SkiaOptions 
-            { 
+            .With(new SkiaOptions
+            {
                 // 提高到128M对于2K分辨率基本够用了，在瀑布流这种有巨量图片同时渲染的场景，应该能大幅提升性能
                 // 再往上拉还能有提升，不过必要性不高（？）
-                MaxGpuResourceSizeBytes = 128 * 1024 * 1024 
+                MaxGpuResourceSizeBytes = 128 * 1024 * 1024
             })
             .WithInterFont()
             .LogToTrace();
+    }
 }

@@ -21,30 +21,6 @@
     d:DesignWidth="800">
     <ScrollViewer>
         <StackPanel Margin="20">
-            <!--  region Header  -->
-            <DockPanel
-                Margin="0,0,0,20"
-                HorizontalSpacing="20"
-                LastChildFill="False"
-                VerticalSpacing="10">
-                <TextBlock
-                    DockPanel.Dock="Top"
-                    Text="{I18N {x:Static pixeval:SettingsMainViewResources.AppDescriptionTextBlockText}}"
-                    TextWrapping="Wrap" />
-                <WrapPanel
-                    DockPanel.Dock="Bottom"
-                    IsTabStop="False"
-                    ItemSpacing="24"
-                    Orientation="Horizontal">
-                    <HyperlinkButton Content="{I18N {x:Static pixeval:SettingsMainViewResources.ViewPixevalWebsiteHyperlinkButtonContent}}" NavigateUri="https://pixeval.github.io/" />
-                    <HyperlinkButton Content="{I18N {x:Static pixeval:SettingsMainViewResources.GitHubRepositoryHyperlinkButtonContent}}" NavigateUri="https://github.com/Pixeval/Pixeval" />
-                    <HyperlinkButton Content="{I18N {x:Static pixeval:SettingsMainViewResources.ReportBugHyperlinkButtonContent}}" NavigateUri="https://github.com/Pixeval/Pixeval/issues/new/choose" />
-                    <HyperlinkButton Content="{I18N {x:Static pixeval:SettingsMainViewResources.FeedbackByEmailHyperlinkButtonContent}}" NavigateUri="mailto:decem0730@hotmail.com" />
-                    <HyperlinkButton Content="{I18N {x:Static pixeval:SettingsMainViewResources.JoinFeedbackGroupHyperlinkButtonContent}}" NavigateUri="https://jq.qq.com/?_wv=1027&amp;k=trDeCrog" />
-                </WrapPanel>
-            </DockPanel>
-            <!--  endregion  -->
-
             <controls:SettingsExpander HeaderIcon="{markup:SymbolIcon ArrowSync}">
                 <controls:SettingsExpander.Header>
                     <HyperlinkButton
@@ -132,7 +108,7 @@
                             <CommandBarButton
                                 Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                                 Icon="{markup:SymbolIcon Mail}"
-                                Tag="mailto:decem0730@hotmail.com"
+                                Tag="mailto:poker_sang@outlook.com"
                                 ToolTip.Tip="{I18N {x:Static pixeval:SettingsMainViewResources.EMailBugReportEntryToolTip}}" />
                             <CommandBarButton
                                 Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"

@@ -37,6 +37,7 @@
   <Project Path="src/Pixeval.Filters/Pixeval.Filters.csproj" />
   <Project Path="src/Pixeval.I18N/Pixeval.I18N.csproj" />
   <Project Path="src/Pixeval.iOS/Pixeval.iOS.csproj" />
+  <Project Path="src/Pixeval.Mcp/Pixeval.Mcp.csproj" />
   <Project Path="src/Pixeval.SourceGen/Pixeval.SourceGen.csproj" />
   <Project Path="src/Pixeval.Utilities/Pixeval.Utilities.csproj" />
   <Project Path="src/Pixeval/Pixeval.csproj" />

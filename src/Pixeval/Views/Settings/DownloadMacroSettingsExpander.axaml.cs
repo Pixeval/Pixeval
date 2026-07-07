@@ -142,4 +142,4 @@ public partial class DownloadMacroSettingsExpander : SettingsExpander, IEntryCon
     private static string GetFilterDiagnosticResourceKey(MacroDiagnosticKind kind) => FilterDiagnosticResourcePrefix + kind;
 
     private const string FilterDiagnosticResourcePrefix = "MacroParser.";
-}    
+}

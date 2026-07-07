@@ -18,7 +18,15 @@
         <StackPanel Margin="20" Spacing="20">
             <StackPanel Spacing="10">
                 <TextBlock Text="Pixeval" Theme="{StaticResource TitleTextBlockStyle}" />
-                <TextBlock Text="{Binding $parent[settings:AboutPage].CurrentVersionText}" Theme="{StaticResource CaptionTextBlockStyle}" />
+                <SelectableTextBlock
+                    VerticalAlignment="Bottom"
+                    Text="{Binding $parent[settings:AboutPage].CurrentVersionText}"
+                    Theme="{StaticResource CaptionTextBlockStyle}" />
+
+                <TextBlock
+                    DockPanel.Dock="Top"
+                    Text="{I18N {x:Static pixeval:AboutPageResources.AppDescriptionTextBlockText}}"
+                    TextWrapping="Wrap" />
 
                 <!--  Special Thanks  -->
                 <TextBlock Text="{I18N {x:Static pixeval:AboutPageResources.SpecialThanksSubtitleTextBlockText}}" Theme="{StaticResource SubtitleTextBlockStyle}" />

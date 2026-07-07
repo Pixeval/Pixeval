@@ -212,6 +212,8 @@ public static class LocalSettingsEntryHelper
                 search.ValueReset(resetAppSettings.SearchSettings);
             if (entry is ISettingsValueReset<DownloadSettingsGroup> download)
                 download.ValueReset(resetAppSettings.DownloadSettings);
+            if (entry is ISettingsValueReset<McpSettingsGroup> mcp)
+                mcp.ValueReset(resetAppSettings.McpSettings);
             if (entry is ISettingsValueReset<NovelSettingsGroup> novel)
                 novel.ValueReset(resetAppSettings.NovelSettings);
 

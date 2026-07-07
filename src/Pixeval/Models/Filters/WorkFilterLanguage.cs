@@ -12,7 +12,7 @@ namespace Pixeval.Models.Filters;
 /// <summary>
 /// 提供作品列表使用的筛选语言单例。
 /// </summary>
-internal static class WorkFilterLanguage
+public static class WorkFilterLanguage
 {
     private static readonly IReadOnlyList<FilterCompletionDefinition> _IntrinsicCompletions =
     [

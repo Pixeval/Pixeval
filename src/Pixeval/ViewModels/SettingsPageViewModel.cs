@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoSettingsPage;
 using AutoSettingsPage.Models;
 using Avalonia;
@@ -16,6 +17,7 @@ using Pixeval.AppManagement;
 using Pixeval.Models.Extensions;
 using Pixeval.Models.Options;
 using Pixeval.Models.Settings;
+using Pixeval.Utilities;
 using Pixeval.Utilities.IO.Caching;
 
 namespace Pixeval.ViewModels;
@@ -123,6 +125,31 @@ public class SettingsPageViewModel : ViewModelBase
                         .UgoiraDownloadFormat()
                         .NovelDownloadFormat())
                 .WorkSubscriptions(t => t.WorkSubscriptions))
+            .NewGroup(t => t.McpSettings, group => group
+                .Bool(t => t.EnableServer, entry => entry.ValueChanged += value =>
+                {
+                    _ = ApplyMcpSettingsAsync();
+                })
+                .Int(t => t.Port, 1, 65535, 1, entry => entry.ValueChanged += value =>
+                {
+                    _ = ApplyMcpSettingsAsync();
+                })
+                .Bool(t => t.EnableWriteTools)
+                .Int(t => t.MaxBinaryResourceMegabytes, 1, McpSettingsGroup.MaxBinaryResourceMegabytesLimit, 1))
             .Build();
+    }
+
+    private static async Task ApplyMcpSettingsAsync()
+    {
+        try
+        {
+            if (App.AppViewModel.AppServiceProvider.GetService<IPixevalMcpService>() is { } service)
+                await service.ApplySettingsAsync();
+        }
+        catch (Exception e)
+        {
+            App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
+                .LogError("Failed to apply Pixeval MCP settings", e);
+        }
     }
 }

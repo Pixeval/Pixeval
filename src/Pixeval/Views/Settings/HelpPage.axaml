@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Controls"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:markup1="clr-namespace:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
     Header="{I18N {x:Static pixeval:HelpPageResources.TitleTextBlockText}}"
@@ -56,9 +57,20 @@
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
             <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.ExtensionsHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Symbol=PuzzlePiece}">
+
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
                         <local:MarkdownBox Markdown="{I18N {x:Static pixeval:MarkdownResources.ExtensionsHelp}}" />
+                    </controls:SettingsCard>
+                </controls:SettingsExpander.Items>
+            </controls:SettingsExpander>
+            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.McpHelpExpanderHeader}}">
+                <controls:SettingsExpander.HeaderIcon>
+                    <PathIcon Data="{markup1:SvgPath {x:Static pixeval:SvgResources.MCP}}" /> 
+                </controls:SettingsExpander.HeaderIcon>
+                <controls:SettingsExpander.Items>
+                    <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
+                        <local:MarkdownBox Markdown="{I18N {x:Static pixeval:MarkdownResources.McpHelp}}" />
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>

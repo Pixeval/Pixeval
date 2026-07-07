@@ -10,6 +10,7 @@ namespace Pixeval
 {
     public static class AboutPageResources
     {
+        public const string AppDescriptionTextBlockText = "AboutPage.AppDescriptionTextBlock.Text";
         public const string DependenciesSubtitleTextBlockText = "AboutPage.DependenciesSubtitleTextBlock.Text";
         public const string OpenSourceLicenseSubtitleTextBlockText = "AboutPage.OpenSourceLicenseSubtitleTextBlock.Text";
         public const string SpecialThanksSubtitleTextBlockText = "AboutPage.SpecialThanksSubtitleTextBlock.Text";
@@ -36,6 +37,10 @@ namespace Pixeval
         public const string DownloadUpdateAutomaticallyEntryHeader = "AppSettings.DownloadUpdateAutomaticallyEntry.Header";
         public const string EnableGitHubDomainFrontingEntryDescription = "AppSettings.EnableGitHubDomainFrontingEntry.Description";
         public const string EnableGitHubDomainFrontingEntryHeader = "AppSettings.EnableGitHubDomainFrontingEntry.Header";
+        public const string EnableMcpServerEntryDescription = "AppSettings.EnableMcpServerEntry.Description";
+        public const string EnableMcpServerEntryHeader = "AppSettings.EnableMcpServerEntry.Header";
+        public const string EnableMcpWriteToolsEntryDescription = "AppSettings.EnableMcpWriteToolsEntry.Description";
+        public const string EnableMcpWriteToolsEntryHeader = "AppSettings.EnableMcpWriteToolsEntry.Header";
         public const string EnablePixivDomainFrontingEntryDescription = "AppSettings.EnablePixivDomainFrontingEntry.Description";
         public const string EnablePixivDomainFrontingEntryHeader = "AppSettings.EnablePixivDomainFrontingEntry.Header";
         public const string FileCacheSizeLimitInMegabytesEntryDescription = "AppSettings.FileCacheSizeLimitInMegabytesEntry.Description";
@@ -63,6 +68,10 @@ namespace Pixeval
         public const string LimitFileCacheSizeEntryHeader = "AppSettings.LimitFileCacheSizeEntry.Header";
         public const string MaxDownloadConcurrencyLevelEntryDescription = "AppSettings.MaxDownloadConcurrencyLevelEntry.Description";
         public const string MaxDownloadConcurrencyLevelEntryHeader = "AppSettings.MaxDownloadConcurrencyLevelEntry.Header";
+        public const string McpMaxBinaryResourceMegabytesEntryDescription = "AppSettings.McpMaxBinaryResourceMegabytesEntry.Description";
+        public const string McpMaxBinaryResourceMegabytesEntryHeader = "AppSettings.McpMaxBinaryResourceMegabytesEntry.Header";
+        public const string McpPortEntryDescription = "AppSettings.McpPortEntry.Description";
+        public const string McpPortEntryHeader = "AppSettings.McpPortEntry.Header";
         public const string NovelSettingsBackgroundEntryDescription = "AppSettings.NovelSettingsBackgroundEntry.Description";
         public const string NovelSettingsBackgroundEntryHeader = "AppSettings.NovelSettingsBackgroundEntry.Header";
         public const string NovelSettingsFontColorEntryDescription = "AppSettings.NovelSettingsFontColorEntry.Description";
@@ -99,6 +108,7 @@ namespace Pixeval
         public const string SettingsGroupApplicationHeader = "AppSettings.SettingsGroup.Application.Header";
         public const string SettingsGroupBrowsingExperienceHeader = "AppSettings.SettingsGroup.BrowsingExperience.Header";
         public const string SettingsGroupDownloadHeader = "AppSettings.SettingsGroup.Download.Header";
+        public const string SettingsGroupMcpHeader = "AppSettings.SettingsGroup.Mcp.Header";
         public const string SettingsGroupNetworkHeader = "AppSettings.SettingsGroup.Network.Header";
         public const string SettingsGroupSearchHeader = "AppSettings.SettingsGroup.Search.Header";
         public const string SimpleWorkTypeEntryDescription = "AppSettings.SimpleWorkTypeEntry.Description";
@@ -486,6 +496,7 @@ namespace Pixeval
         public const string AppProtocolLinkHelpExpanderHeader = "HelpPage.AppProtocolLinkHelpExpander.Header";
         public const string DownloadMacroHelpExpanderHeader = "HelpPage.DownloadMacroHelpExpander.Header";
         public const string ExtensionsHelpExpanderHeader = "HelpPage.ExtensionsHelpExpander.Header";
+        public const string McpHelpExpanderHeader = "HelpPage.McpHelpExpander.Header";
         public const string QueryFilterHelpExpanderHeader = "HelpPage.QueryFilterHelpExpander.Header";
         public const string QueryFilterHelpHeaderText = "HelpPage.QueryFilterHelpHeader.Text";
         public const string QueryFilterSimpleHelpHeaderText = "HelpPage.QueryFilterSimpleHelpHeader.Text";
@@ -728,7 +739,6 @@ namespace Pixeval
     public static class SettingsMainViewResources
     {
         public const string AnimatedPathBlockText = "SettingsMainView.AnimatedPathBlock.Text";
-        public const string AppDescriptionTextBlockText = "SettingsMainView.AppDescriptionTextBlock.Text";
         public const string BackupSettingsEntryDescription = "SettingsMainView.BackupSettingsEntry.Description";
         public const string BackupSettingsEntryHeader = "SettingsMainView.BackupSettingsEntry.Header";
         public const string BugReportChannelsEntryDescription = "SettingsMainView.BugReportChannelsEntry.Description";
@@ -754,16 +764,13 @@ namespace Pixeval
         public const string ExportSettingsPlaintextEntryDescription = "SettingsMainView.ExportSettingsPlaintextEntry.Description";
         public const string ExportSettingsPlaintextEntryHeader = "SettingsMainView.ExportSettingsPlaintextEntry.Header";
         public const string ExportSettingsSuccess = "SettingsMainView.ExportSettingsSuccess";
-        public const string FeedbackByEmailHyperlinkButtonContent = "SettingsMainView.FeedbackByEmailHyperlinkButton.Content";
         public const string GitHubBugReportEntryToolTip = "SettingsMainView.GitHubBugReportEntry.ToolTip";
         public const string GitHubCheckForUpdatesEntryHeader = "SettingsMainView.GitHubCheckForUpdatesEntry.Header";
-        public const string GitHubRepositoryHyperlinkButtonContent = "SettingsMainView.GitHubRepositoryHyperlinkButton.Content";
         public const string ImportSettingsPlaintextEntryDescription = "SettingsMainView.ImportSettingsPlaintextEntry.Description";
         public const string ImportSettingsPlaintextEntryHeader = "SettingsMainView.ImportSettingsPlaintextEntry.Header";
         public const string ImportSettingsSuccess = "SettingsMainView.ImportSettingsSuccess";
         public const string IsInsider = "SettingsMainView.IsInsider";
         public const string IsUpToDate = "SettingsMainView.IsUpToDate";
-        public const string JoinFeedbackGroupHyperlinkButtonContent = "SettingsMainView.JoinFeedbackGroupHyperlinkButton.Content";
         public const string LanguageSystemDefault = "SettingsMainView.LanguageSystemDefault";
         public const string LastCheckedPrefix = "SettingsMainView.LastCheckedPrefix";
         public const string MsStoreCheckForUpdatesEntryHeader = "SettingsMainView.MsStoreCheckForUpdatesEntry.Header";
@@ -785,8 +792,6 @@ namespace Pixeval
         public const string RateEntryHeader = "SettingsMainView.RateEntry.Header";
         public const string ReleaseNoteDialogEmpty = "SettingsMainView.ReleaseNoteDialog.Empty";
         public const string ReleaseNoteDialogTitleFormatted = "SettingsMainView.ReleaseNoteDialog.TitleFormatted";
-        public const string ReleaseNotesHyperlinkButtonContent = "SettingsMainView.ReleaseNotesHyperlinkButton.Content";
-        public const string ReportBugHyperlinkButtonContent = "SettingsMainView.ReportBugHyperlinkButton.Content";
         public const string ResetDefaultSettingsEntryDescription = "SettingsMainView.ResetDefaultSettingsEntry.Description";
         public const string ResetDefaultSettingsEntryHeader = "SettingsMainView.ResetDefaultSettingsEntry.Header";
         public const string ResetSettingConfirmationDialogContent = "SettingsMainView.ResetSettingConfirmationDialogContent";
@@ -801,7 +806,6 @@ namespace Pixeval
         public const string UpdateAvailableMajor = "SettingsMainView.UpdateAvailable.Major";
         public const string UpdateAvailableMinor = "SettingsMainView.UpdateAvailable.Minor";
         public const string UpdateAvailableUnknown = "SettingsMainView.UpdateAvailable.Unknown";
-        public const string ViewPixevalWebsiteHyperlinkButtonContent = "SettingsMainView.ViewPixevalWebsiteHyperlinkButton.Content";
     }
     public static class UserViewerPageResources
     {
@@ -842,6 +846,7 @@ namespace Pixeval
     {
         public const string DownloadMacroHelp = "Markdown.DownloadMacroHelp";
         public const string ExtensionsHelp = "Markdown.ExtensionsHelp";
+        public const string McpHelp = "Markdown.McpHelp";
         public const string QueryFilterHelp = "Markdown.QueryFilterHelp";
         public const string QueryFilterSimpleHelp = "Markdown.QueryFilterSimpleHelp";
     }

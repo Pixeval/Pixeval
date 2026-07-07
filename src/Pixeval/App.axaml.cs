@@ -11,6 +11,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Styling;
+using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
 using Pixeval.I18N;
 using Pixeval.Models.Options;
@@ -39,7 +40,7 @@ public class App : Application
         CultureInfo.CurrentUICulture = CultureInfo.CurrentCulture = LanguageHelper.FindClosest(AppViewModel.AppSettings.ApplicationSettings.CultureName);
         I18NManager.Initialize();
         AppViewModel.InitializeProvider();
-        
+
         AvaloniaXamlLoader.Load(this);
         Resources["ContentControlThemeFontFamily"] = new FontFamily(string.Join(',', AppViewModel.AppSettings.ApplicationSettings.AppFontFamily));
         RequestedThemeVariant = AppViewModel.AppSettings.ApplicationSettings.Theme switch
@@ -63,13 +64,15 @@ public class App : Application
         switch (ApplicationLifetime)
         {
             case IClassicDesktopStyleApplicationLifetime desktop:
-                desktop.Exit += (o, e) =>
+                desktop.ShutdownMode = ShutdownMode.OnLastWindowClose;
+                desktop.Exit += async static (o, e) =>
                 {
                     AppInfo.SaveContext();
-                    AppViewModel.Dispose();
+                    await AppViewModel.DisposeAsync();
                 };
 
                 viewContainer.SetInterTabController(true);
+                _ = AppViewModel.AppServiceProvider.GetService<IPixevalMcpService>()?.StartAsync();
 
                 // 这个窗口可能会被用户关闭，所以不设为desktop.MainWindow
                 new Window { Content = viewContainer }
@@ -109,6 +112,7 @@ public class App : Application
 
             viewContainer.ShowError(I18NManager.GetResource(MainPageResources.LoggingInFailed));
         }
+
         viewContainer.NavigateTo(new LoginPage());
     }
 
