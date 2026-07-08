@@ -100,7 +100,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
                         IsHitTestVisible = false
                     }
                 },
-                new CommentsPage(new CommentsViewViewModel(SimpleWorkType.IllustrationAndManga, id)),
+                new CommentsPage(new CommentsViewViewModel(SimpleWorkType.Illustration, id)),
                 new RelatedWorksPage { IllustrationId = id }
             ]
             : [];

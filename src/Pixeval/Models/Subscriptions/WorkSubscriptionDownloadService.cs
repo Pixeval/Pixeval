@@ -159,7 +159,7 @@ public class WorkSubscriptionDownloadService(
         {
             var workType = subscription.WorkKind switch
             {
-                WorkSubscriptionWorkKind.IllustrationAndManga => SimpleWorkType.IllustrationAndManga,
+                WorkSubscriptionWorkKind.Illustration => SimpleWorkType.Illustration,
                 WorkSubscriptionWorkKind.Novel => SimpleWorkType.Novel,
                 _ => (SimpleWorkType?) null
             };

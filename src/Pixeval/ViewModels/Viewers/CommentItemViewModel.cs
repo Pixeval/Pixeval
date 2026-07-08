@@ -46,36 +46,26 @@ public sealed class CommentItemViewModel(Comment comment, SimpleWorkType parentT
     {
         if (!IsTopComment)
             return Comment.CreateDefault();
-        return await (ParentType is SimpleWorkType.Novel
-            ? App.AppViewModel.MakoClient.AddNovelCommentAsync(ParentId, Id, content)
-            : App.AppViewModel.MakoClient.AddIllustrationCommentAsync(ParentId, Id, content));
+        return await App.AppViewModel.MakoClient.AddWorkCommentAsync(ParentType, ParentId, Id, content);
     }
 
     public override async Task<Comment> AddStickerAsync(int stampId)
     {
         if (!IsTopComment)
             return Comment.CreateDefault();
-        return await (ParentType is SimpleWorkType.Novel
-            ? App.AppViewModel.MakoClient.AddNovelCommentAsync(ParentId, Id, stampId)
-            : App.AppViewModel.MakoClient.AddIllustrationCommentAsync(ParentId, Id, stampId));
+        return await App.AppViewModel.MakoClient.AddWorkCommentAsync(ParentType, ParentId, Id, stampId);
     }
 
     public Task<bool> DeleteAsync()
     {
-        if (!IsMe)
-            return Task.FromResult(false);
-        return ParentType is SimpleWorkType.Novel
-            ? App.AppViewModel.MakoClient.DeleteNovelCommentAsync(Id)
-            : App.AppViewModel.MakoClient.DeleteIllustrationCommentAsync(Id);
+        return IsMe ? App.AppViewModel.MakoClient.DeleteWorkCommentAsync(ParentType, Id) : Task.FromResult(false);
     }
 
     public override void AddComment(Comment comment) => Source.Insert(0, new CommentItemViewModel(comment, ParentType, ParentId, false));
 
     public override void RefreshEngine()
     {
-        ResetEngine(ParentType is SimpleWorkType.Novel
-            ? App.AppViewModel.MakoClient.NovelCommentReplies(Id)
-            : App.AppViewModel.MakoClient.IllustrationCommentReplies(Id),
+        ResetEngine(App.AppViewModel.MakoClient.WorkCommentReplies(ParentType, Id),
             (comment, _) => new(comment, ParentType, ParentId, false));
     }
 }

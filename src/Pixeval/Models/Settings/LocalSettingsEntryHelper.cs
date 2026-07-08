@@ -135,11 +135,11 @@ public static class LocalSettingsEntryHelper
         });
         RegisterAttach<SimpleWorkType>(t =>
         {
-            t.Register(SimpleWorkType.IllustrationAndManga, Symbol.Image, EnumResources.SimpleWorkTypeIllustrationAndManga);
-            t.Register(SimpleWorkType.Novel, Symbol.Book, EnumResources.SimpleWorkTypeNovel);
+            t.Register(SimpleWorkType.Illustration, Symbol.Image, EnumResources.WorkTypeIllustration);
+            t.Register(SimpleWorkType.Novel, Symbol.Book, EnumResources.WorkTypeNovel);
         });
 
-        RegisterAttach<RankOption>(SimpleWorkType.IllustrationAndManga, t =>
+        RegisterAttach<RankOption>(SimpleWorkType.Illustration, t =>
         {
             t.Register(RankOption.Day, EnumResources.RankOptionDay);
             t.Register(RankOption.Week, EnumResources.RankOptionWeek);

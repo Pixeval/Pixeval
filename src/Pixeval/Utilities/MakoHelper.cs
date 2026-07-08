@@ -59,32 +59,20 @@ public static class MakoHelper
         return id.UserInfo.IsFollowed;
     }
 
-    public static async Task<bool> SetIllustrationBookmarkAsync(Illustration id, bool favorite, bool privately = false, IReadOnlyCollection<string>? tags = null)
+    public static async Task<bool> SetWorkBookmarkAsync(WorkBase entry, bool favorite, bool privately = false, IReadOnlyCollection<string>? tags = null)
     {
-        try
+        var simpleWorkType = entry switch
         {
-            var result = await (favorite
-                ? App.AppViewModel.MakoClient.PostIllustrationBookmarkAsync(id.Id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public, tags)
-                : App.AppViewModel.MakoClient.RemoveIllustrationBookmarkAsync(id.Id));
-            if (result)
-                id.IsFavorite = favorite;
-            return id.IsFavorite;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-    }
-
-    public static async Task<bool> SetNovelBookmarkAsync(Novel id, bool favorite, bool privately = false, IReadOnlyCollection<string>? tags = null)
-    {
+            Illustration => SimpleWorkType.Illustration,
+            Novel => SimpleWorkType.Novel,
+            _ => throw new ArgumentOutOfRangeException(nameof(entry))
+        };
         var result = await (favorite
-            ? App.AppViewModel.MakoClient.PostNovelBookmarkAsync(id.Id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public, tags)
-            : App.AppViewModel.MakoClient.RemoveNovelBookmarkAsync(id.Id));
+            ? App.AppViewModel.MakoClient.PostWorkBookmarkAsync(simpleWorkType, entry.Id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public, tags)
+            : App.AppViewModel.MakoClient.RemoveWorkBookmarkAsync(simpleWorkType, entry.Id));
         if (result)
-            id.IsFavorite = favorite;
-        return id.IsFavorite;
+            entry.IsFavorite = favorite;
+        return entry.IsFavorite;
     }
 
     public static string? ToMakoProxy(ProxyType type, string? proxy) =>

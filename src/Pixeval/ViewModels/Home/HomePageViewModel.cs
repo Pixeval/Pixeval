@@ -116,7 +116,7 @@ public partial class HomePageViewModel : ViewModelBase
 
             UpdateRankOptionItems();
         }
-    } = SimpleWorkType.IllustrationAndManga;
+    } = SimpleWorkType.Illustration;
 
     [ObservableProperty]
     public partial PrivacyPolicy SelectedSourcePrivacyPolicy { get; set; } = PrivacyPolicy.Public;
@@ -125,7 +125,7 @@ public partial class HomePageViewModel : ViewModelBase
     public partial RankOption SelectedSourceRankOption { get; set; } = App.AppViewModel.AppSettings.SearchSettings.IllustrationRankOption;
 
     [ObservableProperty]
-    public partial IReadOnlyList<SymbolComboBoxItem> SourceRankOptionItems { get; private set; } = SymbolComboBoxItem.GetValues<RankOption>(SimpleWorkType.IllustrationAndManga);
+    public partial IReadOnlyList<SymbolComboBoxItem> SourceRankOptionItems { get; private set; } = SymbolComboBoxItem.GetValues<RankOption>(SimpleWorkType.Illustration);
 
     [ObservableProperty]
     public partial bool UseSpecifiedRankingDate { get; set; }
@@ -297,7 +297,7 @@ public partial class HomePageViewModel : ViewModelBase
     {
         var selectedSimpleWorkType = SelectedSourceSimpleWorkType;
         SourceRankOptionItems = SymbolComboBoxItem.GetValues<RankOption>(selectedSimpleWorkType);
-        SelectedSourceRankOption = selectedSimpleWorkType is SimpleWorkType.IllustrationAndManga
+        SelectedSourceRankOption = selectedSimpleWorkType is SimpleWorkType.Illustration
             ? Settings.SearchSettings.IllustrationRankOption
             : Settings.SearchSettings.NovelRankOption;
     }

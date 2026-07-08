@@ -69,7 +69,7 @@ public record ApplicationSettingsGroup
         new(new(HomePageCardSourceKind.UserRecommended), 0, 2, 1, 2),
         new(new(HomePageCardSourceKind.WorkRecommended), 0, 4, 1, 3)
         {
-            SimpleWorkType = SimpleWorkType.IllustrationAndManga
+            SimpleWorkType = SimpleWorkType.Illustration
         }
     ];
 }

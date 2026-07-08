@@ -59,7 +59,6 @@ public class WorkInfoPane : TemplatedControl
         BlockTagCommand = new RelayCommand<ITag?>(BlockTag);
     }
 
-
     private async Task OpenAuthorAsync(IUser? user)
     {
         if (TopLevel.GetTopLevel(this) is not { Launcher: { } launcher, ViewContainer: { } viewContainer }
@@ -79,14 +78,15 @@ public class WorkInfoPane : TemplatedControl
         if (ArtworkInfo is not IWorkEntry entry || tag is null)
             return;
 
-        var type = entry is Illustration ? SimpleWorkType.IllustrationAndManga : SimpleWorkType.Novel;
+        var type = entry is Illustration ? SimpleWorkType.Illustration : SimpleWorkType.Novel;
         App.AppViewModel.HistoryPersistHelper.AddSearchHistory(tag.Name, tag.TranslatedName);
         viewContainer.NavigateTo(new WorkSearchResultPage(tag.Name, type));
     }
     
     private void BlockTag(ITag? tag)
     {
-        if (tag is null) return;
+        if (tag is null)
+            return;
 
         var blockedTags = App.AppViewModel.AppSettings.BrowsingExperienceSettings.BlockedTags;
         if (!blockedTags.Contains(tag.Name))

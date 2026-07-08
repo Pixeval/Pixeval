@@ -44,7 +44,7 @@ public partial class WorkRankingPage : ContentPage
     {
         var selectedWorkType = SimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>();
         RankOptionComboBox.ItemsSource = SymbolComboBoxItem.GetValues<RankOption>(selectedWorkType);
-        RankOptionComboBox.SelectedValue = selectedWorkType is SimpleWorkType.IllustrationAndManga
+        RankOptionComboBox.SelectedValue = selectedWorkType is SimpleWorkType.Illustration
             ? App.AppViewModel.AppSettings.SearchSettings.IllustrationRankOption
             : App.AppViewModel.AppSettings.SearchSettings.NovelRankOption;
     }

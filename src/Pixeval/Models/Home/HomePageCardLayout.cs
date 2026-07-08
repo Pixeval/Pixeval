@@ -37,7 +37,7 @@ public record HomePageCardLayout
 
     public WorkType WorkType { get; set; } = WorkType.Illustration;
 
-    public SimpleWorkType SimpleWorkType { get; set; } = SimpleWorkType.IllustrationAndManga;
+    public SimpleWorkType SimpleWorkType { get; set; } = SimpleWorkType.Illustration;
 
     public PrivacyPolicy PrivacyPolicy { get; set; } = PrivacyPolicy.Public;
 

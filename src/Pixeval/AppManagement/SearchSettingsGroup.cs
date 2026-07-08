@@ -28,7 +28,7 @@ public record SearchSettingsGroup
     public RankOption NovelRankOption { get; set; }
 
     [JsonIgnore]
-    public WorkType WorkType => DefaultSimpleWorkType is SimpleWorkType.IllustrationAndManga
+    public WorkType WorkType => DefaultSimpleWorkType is SimpleWorkType.Illustration
         ? WorkType.Illustration
         : WorkType.Novel;
 }

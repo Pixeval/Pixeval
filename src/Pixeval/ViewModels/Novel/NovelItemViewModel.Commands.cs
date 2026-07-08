@@ -18,7 +18,7 @@ namespace Pixeval.ViewModels;
 public partial class NovelItemViewModel
 {
     protected override Task<bool> SetBookmarkAsync(bool favorite, bool privately = false, IReadOnlyCollection<string>? tags = null)
-        => MakoHelper.SetNovelBookmarkAsync(Entry, favorite, privately, tags);
+        => MakoHelper.SetWorkBookmarkAsync(Entry, favorite, privately, tags);
 
     /// <inheritdoc />
     protected override async Task SaveAsync(Control? parameter)

@@ -67,5 +67,5 @@ public partial class IllustrationItemViewModel(IArtworkInfo entry)
     public static IllustrationItemViewModel CreateInstance(IArtworkInfo entry) => new(entry);
 
     protected override Task<bool> SetBookmarkAsync(bool favorite, bool privately = false, IReadOnlyCollection<string>? tags = null)
-        => MakoHelper.SetIllustrationBookmarkAsync((Illustration) Entry, favorite, privately, tags);
+        => MakoHelper.SetWorkBookmarkAsync((Illustration) Entry, favorite, privately, tags);
 }

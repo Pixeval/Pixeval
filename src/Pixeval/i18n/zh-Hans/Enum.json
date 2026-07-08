@@ -9,10 +9,6 @@
     "Manga": "漫画",
     "Novel": "小说"
   },
-  "SimpleWorkType": {
-    "IllustrationAndManga": "插画和漫画",
-    "Novel": "小说"
-  },
   "LocalSortOption": {
     "DoNotSort": "不进行任何排序",
     "PopularityDescending": "收藏数降序",
@@ -152,7 +148,6 @@
     "Posts": "发布作品"
   },
   "WorkSubscriptionWorkKind": {
-    "IllustrationAndManga": "插画和漫画",
     "Illustration": "插画",
     "Manga": "漫画",
     "Novel": "小说"

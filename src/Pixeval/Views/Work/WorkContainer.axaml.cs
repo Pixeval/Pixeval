@@ -187,7 +187,7 @@ public partial class WorkContainer : UserControl
     private SimpleWorkType GetTagSelectorWorkType(IWorkViewModel? target)
         => target is NovelItemViewModel || DataContext is NovelViewViewModel or SimpleOperableViewViewModel<NovelItemViewModel>
             ? SimpleWorkType.Novel
-            : SimpleWorkType.IllustrationAndManga;
+            : SimpleWorkType.Illustration;
 
     private async void SaveAllButton_OnClicked(object? sender, RoutedEventArgs e)
     {

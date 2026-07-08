@@ -351,8 +351,6 @@ namespace Pixeval
         public const string SearchNovelTagMatchOptionKeyword = "Enum.SearchNovelTagMatchOption.Keyword";
         public const string SearchNovelTagMatchOptionPartialMatchForTags = "Enum.SearchNovelTagMatchOption.PartialMatchForTags";
         public const string SearchNovelTagMatchOptionText = "Enum.SearchNovelTagMatchOption.Text";
-        public const string SimpleWorkTypeIllustrationAndManga = "Enum.SimpleWorkType.IllustrationAndManga";
-        public const string SimpleWorkTypeNovel = "Enum.SimpleWorkType.Novel";
         public const string ThumbnailLayoutTypeGrid = "Enum.ThumbnailLayoutType.Grid";
         public const string ThumbnailLayoutTypeLinedFlow = "Enum.ThumbnailLayoutType.LinedFlow";
         public const string ThumbnailLayoutTypeMasonry = "Enum.ThumbnailLayoutType.Masonry";
@@ -363,7 +361,6 @@ namespace Pixeval
         public const string WorkSubscriptionTypeBookmarks = "Enum.WorkSubscriptionType.Bookmarks";
         public const string WorkSubscriptionTypePosts = "Enum.WorkSubscriptionType.Posts";
         public const string WorkSubscriptionWorkKindIllustration = "Enum.WorkSubscriptionWorkKind.Illustration";
-        public const string WorkSubscriptionWorkKindIllustrationAndManga = "Enum.WorkSubscriptionWorkKind.IllustrationAndManga";
         public const string WorkSubscriptionWorkKindManga = "Enum.WorkSubscriptionWorkKind.Manga";
         public const string WorkSubscriptionWorkKindNovel = "Enum.WorkSubscriptionWorkKind.Novel";
         public const string WorkTypeIllustration = "Enum.WorkType.Illustration";

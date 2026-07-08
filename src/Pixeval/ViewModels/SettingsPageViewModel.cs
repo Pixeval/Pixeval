@@ -110,7 +110,7 @@ public class SettingsPageViewModel : ViewModelBase
                     entry.Enum(
                             WorkTypeEnum.Illustration,
                             t => t.IllustrationRankOption,
-                            SimpleWorkType.IllustrationAndManga)
+                            SimpleWorkType.Illustration)
                         .Enum(
                             WorkTypeEnum.Novel,
                             t => t.NovelRankOption,

@@ -33,12 +33,12 @@ public partial class SearchPageViewModel : ViewModelBase
 
     private async Task RefreshIllustrationTagsAsync()
     {
-        IllustrationTrendingTags = await MakoClient.GetIllustrationTrendingTagsAsync();
+        IllustrationTrendingTags = await MakoClient.GetWorkTrendingTagsAsync(SimpleWorkType.Illustration);
     }
 
     private async Task RefreshNovelTagsAsync()
     {
-        NovelTrendingTags = await MakoClient.GetNovelTrendingTagsAsync();
+        NovelTrendingTags = await MakoClient.GetWorkTrendingTagsAsync(SimpleWorkType.Novel);
     }
 
     [ObservableProperty]

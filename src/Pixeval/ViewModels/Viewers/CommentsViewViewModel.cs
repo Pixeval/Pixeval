@@ -17,16 +17,12 @@ public class CommentsViewViewModel(SimpleWorkType parentType, long parentId) : E
 
     public virtual async Task<Comment> AddCommentAsync(string content)
     {
-        return await (ParentType is SimpleWorkType.Novel
-            ? App.AppViewModel.MakoClient.AddNovelCommentAsync(ParentId, content)
-            : App.AppViewModel.MakoClient.AddIllustrationCommentAsync(ParentId, content));
+        return await App.AppViewModel.MakoClient.AddWorkCommentAsync(ParentType, ParentId, content);
     }
 
     public virtual async Task<Comment> AddStickerAsync(int stampId)
     {
-        return await (ParentType is SimpleWorkType.Novel
-            ? App.AppViewModel.MakoClient.AddNovelCommentAsync(ParentId, stampId)
-            : App.AppViewModel.MakoClient.AddIllustrationCommentAsync(ParentId, stampId));
+        return await App.AppViewModel.MakoClient.AddWorkCommentAsync(ParentType, ParentId, stampId);
     }
 
     public virtual void AddComment(Comment comment) => Source.Insert(0, new CommentItemViewModel(comment, ParentType, ParentId, true));

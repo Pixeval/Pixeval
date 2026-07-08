@@ -12,7 +12,7 @@ namespace Pixeval.Views.Home;
 public sealed record HomeCardTemplate(
     HomePageCardSourceKind SourceKind,
     WorkType WorkType = WorkType.Illustration,
-    SimpleWorkType SimpleWorkType = SimpleWorkType.IllustrationAndManga,
+    SimpleWorkType SimpleWorkType = SimpleWorkType.Illustration,
     PrivacyPolicy PrivacyPolicy = PrivacyPolicy.Public,
     RankOption RankOption = RankOption.Day)
 {

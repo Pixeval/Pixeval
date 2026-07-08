@@ -43,7 +43,7 @@ public partial class WorkSubscriptionsSettingsExpander : SettingsExpander, IEntr
         App.AppViewModel.AppServiceProvider.GetRequiredService<WorkSubscriptionPersistentManager>();
 
     private static IReadOnlyList<SymbolComboBoxItem> BookmarkWorkKinds { get; } =
-        [.. SymbolComboBoxItem.GetValues<WorkSubscriptionWorkKind>().Where(t => t.Value is WorkSubscriptionWorkKind.IllustrationAndManga or WorkSubscriptionWorkKind.Novel)];
+        [.. SymbolComboBoxItem.GetValues<WorkSubscriptionWorkKind>().Where(t => t.Value is WorkSubscriptionWorkKind.Illustration or WorkSubscriptionWorkKind.Novel)];
 
     private static IReadOnlyList<SymbolComboBoxItem> PostWorkKinds { get; } =
         [.. SymbolComboBoxItem.GetValues<WorkSubscriptionWorkKind>().Where(t => t.Value is WorkSubscriptionWorkKind.Illustration or WorkSubscriptionWorkKind.Manga or WorkSubscriptionWorkKind.Novel)];

@@ -59,7 +59,7 @@ public partial class IllustrationViewerInfoPane : UserControl
         if (sender is Control c)
             await BookmarkTagSelectorFlyoutHelper.ShowAsync(
                 c,
-                SimpleWorkType.IllustrationAndManga,
+                SimpleWorkType.Illustration,
                 AddToBookmarkAsync,
                 PlacementMode.TopEdgeAlignedRight);
     }

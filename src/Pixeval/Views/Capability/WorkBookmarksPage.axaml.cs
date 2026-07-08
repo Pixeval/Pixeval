@@ -29,7 +29,7 @@ public partial class WorkBookmarksPage : ContentPage
     {
     }
 
-    public WorkBookmarksPage(UserBasicInfo user, SimpleWorkType simpleWorkType = SimpleWorkType.IllustrationAndManga, PrivacyPolicy privacyPolicy = PrivacyPolicy.Public, string? tag = null, IWorkViewViewModel? viewModel = null)
+    public WorkBookmarksPage(UserBasicInfo user, SimpleWorkType simpleWorkType = SimpleWorkType.Illustration, PrivacyPolicy privacyPolicy = PrivacyPolicy.Public, string? tag = null, IWorkViewViewModel? viewModel = null)
     {
         InitializeComponent();
 
@@ -94,7 +94,7 @@ public partial class WorkBookmarksPage : ContentPage
             WorkSubscriptionType.Bookmarks,
             workType is SimpleWorkType.Novel
                 ? WorkSubscriptionWorkKind.Novel
-                : WorkSubscriptionWorkKind.IllustrationAndManga,
+                : WorkSubscriptionWorkKind.Illustration,
             engine);
     }
 
@@ -102,7 +102,7 @@ public partial class WorkBookmarksPage : ContentPage
     {
         var workKind = SimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>() is SimpleWorkType.Novel
             ? WorkSubscriptionWorkKind.Novel
-            : WorkSubscriptionWorkKind.IllustrationAndManga;
+            : WorkSubscriptionWorkKind.Illustration;
 
         if (WorkSubscriptionHelper.TryAddOrUpdate(_user, WorkSubscriptionType.Bookmarks, workKind))
             TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(
