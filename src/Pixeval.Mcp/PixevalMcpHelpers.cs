@@ -1,6 +1,7 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
+using System.Globalization;
 using Mako.Engine.Implements;
 using Mako.Global.Enum;
 using Mako.Model;
@@ -10,43 +11,10 @@ namespace Pixeval.Mcp;
 
 internal static class PixevalMcpHelpers
 {
-    public const int DefaultLimit = 20;
-    public const int MaxLimit = 100;
+    public const int DefaultCount = 20;
+    public const int MaxCount = 100;
 
-    public static int ClampLimit(int limit) => int.Clamp(limit, 1, MaxLimit);
-
-    public static SimpleWorkType ToSimpleWorkType(WorkType workType) =>
-        workType is WorkType.Novel ? SimpleWorkType.Novel : SimpleWorkType.IllustrationAndManga;
-
-    public static async Task<IReadOnlyList<PixevalWorkDto>> TakeWorksAsync<T>(
-        IAsyncEnumerable<T> works,
-        int limit,
-        CancellationToken cancellationToken)
-        where T : IWorkEntry
-    {
-        var models = await TakeWorkModelsAsync(works, limit, cancellationToken).ConfigureAwait(false);
-        return [.. models.Select(PixevalWorkDto.FromWork)];
-    }
-
-    public static async Task<IReadOnlyList<WorkBase>> TakeWorkModelsAsync<T>(
-        IAsyncEnumerable<T> works,
-        int limit,
-        CancellationToken cancellationToken)
-        where T : IWorkEntry
-    {
-        var result = new List<WorkBase>(ClampLimit(limit));
-        await foreach (var work in works.WithCancellation(cancellationToken).ConfigureAwait(false))
-        {
-            if (work is not WorkBase workBase)
-                throw new PixevalMcpException("Pixiv returned a work shape that Pixeval MCP cannot serialize yet.");
-
-            result.Add(workBase);
-            if (result.Count >= ClampLimit(limit))
-                break;
-        }
-
-        return result;
-    }
+    public static int ClampCount(int count) => int.Clamp(count, 1, MaxCount);
 
     public static PixevalWorkListDto CreateWorkListDto(
         IPixevalMcpRuntime runtime,
@@ -65,39 +33,6 @@ internal static class PixevalMcpHelpers
 
         var filtered = runtime.FilterWorks(works, workFilter).Select(PixevalWorkDto.FromWork).ToArray();
         return new(filtered.Length, filtered, analysis);
-    }
-
-    public static async Task<IReadOnlyList<PixevalUserDto>> TakeUsersAsync(
-        IAsyncEnumerable<User> users,
-        int limit,
-        CancellationToken cancellationToken)
-    {
-        var result = new List<PixevalUserDto>(ClampLimit(limit));
-        await foreach (var user in users.WithCancellation(cancellationToken).ConfigureAwait(false))
-        {
-            result.Add(PixevalUserDto.FromUser(user));
-            if (result.Count >= ClampLimit(limit))
-                break;
-        }
-
-        return result;
-    }
-
-    public static async Task<IReadOnlyList<PixevalCommentDto>> TakeCommentsAsync(
-        IAsyncEnumerable<Comment> comments,
-        int limit,
-        long? currentUserId,
-        CancellationToken cancellationToken)
-    {
-        var result = new List<PixevalCommentDto>(ClampLimit(limit));
-        await foreach (var comment in comments.WithCancellation(cancellationToken).ConfigureAwait(false))
-        {
-            result.Add(PixevalCommentDto.FromComment(comment, currentUserId));
-            if (result.Count >= ClampLimit(limit))
-                break;
-        }
-
-        return result;
     }
 
     public static string GetImageMimeType(string url)
@@ -123,23 +58,106 @@ internal static class PixevalMcpHelpers
         string query,
         SearchIllustrationTagMatchOption match,
         WorkSortOption sort,
-        bool includeAi) =>
-        new(query)
+        bool includeAi,
+        SearchIllustrationContentType contentType,
+        SearchIllustrationRatioPattern ratioPattern,
+        string? startDate,
+        string? endDate,
+        bool mergePlainKeywordResults,
+        bool includeTranslatedTagResults,
+        bool includePotentialViolationWorks,
+        int? widthMin,
+        int? widthMax,
+        int? heightMin,
+        int? heightMax,
+        string? tool)
+    {
+        ValidateRange(widthMin, widthMax, nameof(widthMin), nameof(widthMax));
+        ValidateRange(heightMin, heightMax, nameof(heightMin), nameof(heightMax));
+
+        return new(query)
         {
             MatchOption = match,
             SortOption = sort,
-            AiType = includeAi
+            AiType = includeAi,
+            ContentType = contentType,
+            RatioPattern = ratioPattern,
+            StartDate = ParseDate(startDate, nameof(startDate)),
+            EndDate = ParseDate(endDate, nameof(endDate)),
+            MergePlainKeywordResults = mergePlainKeywordResults,
+            IncludeTranslatedTagResults = includeTranslatedTagResults,
+            IncludePotentialViolationWorks = includePotentialViolationWorks,
+            WidthMin = widthMin,
+            WidthMax = widthMax,
+            HeightMin = heightMin,
+            HeightMax = heightMax,
+            Tool = string.IsNullOrWhiteSpace(tool) ? null : tool
         };
+    }
 
     public static NovelSearchArguments CreateNovelSearchArguments(
         string query,
         SearchNovelTagMatchOption match,
         WorkSortOption sort,
-        bool includeAi) =>
-        new(query)
+        bool includeAi,
+        string? language,
+        SearchNovelContentLengthOption contentLengthOption,
+        int? contentLengthMin,
+        int? contentLengthMax,
+        bool originalOnly,
+        int? genreId,
+        bool replaceableOnly,
+        string? startDate,
+        string? endDate,
+        bool mergePlainKeywordResults,
+        bool includeTranslatedTagResults,
+        bool includePotentialViolationWorks)
+    {
+        ValidateRange(contentLengthMin, contentLengthMax, nameof(contentLengthMin), nameof(contentLengthMax));
+
+        return new(query)
         {
             MatchOption = match,
             SortOption = sort,
-            AiType = includeAi
+            AiType = includeAi,
+            LangCode = string.IsNullOrWhiteSpace(language) ? null : language,
+            Option = contentLengthOption,
+            ContentLengthMin = contentLengthMin,
+            ContentLengthMax = contentLengthMax,
+            IsOriginalOnly = originalOnly,
+            GenreId = genreId,
+            IsReplaceableOnly = replaceableOnly,
+            StartDate = ParseDate(startDate, nameof(startDate)),
+            EndDate = ParseDate(endDate, nameof(endDate)),
+            MergePlainKeywordResults = mergePlainKeywordResults,
+            IncludeTranslatedTagResults = includeTranslatedTagResults,
+            IncludePotentialViolationWorks = includePotentialViolationWorks
         };
+    }
+
+    private static DateTimeOffset? ParseDate(string? value, string parameterName)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return null;
+
+        if (DateOnly.TryParseExact(
+                value,
+                "yyyy-MM-dd",
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out var date))
+            return new(date.ToDateTime(TimeOnly.MinValue), TimeSpan.Zero);
+
+        throw new PixevalMcpException($"{parameterName} must be a date in yyyy-MM-dd form.");
+    }
+
+    private static void ValidateRange(int? min, int? max, string minName, string maxName)
+    {
+        if (min is < 0)
+            throw new PixevalMcpException($"{minName} must be greater than or equal to 0.");
+        if (max is < 0)
+            throw new PixevalMcpException($"{maxName} must be greater than or equal to 0.");
+        if (min > max)
+            throw new PixevalMcpException($"{minName} must be less than or equal to {maxName}.");
+    }
 }

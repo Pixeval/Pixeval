@@ -9,6 +9,8 @@ namespace Pixeval.AppManagement;
 
 public interface IPixevalMcpService : IAsyncDisposable
 {
+    Uri? Endpoint { get; }
+
     Task StartAsync(CancellationToken cancellationToken = default);
 
     Task ApplySettingsAsync(CancellationToken cancellationToken = default);

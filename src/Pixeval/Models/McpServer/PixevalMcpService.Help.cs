@@ -7,7 +7,7 @@ using Pixeval.I18N;
 using Pixeval.Mcp;
 using Pixeval.Mcp.Dtos;
 
-namespace Pixeval.Utilities.McpServer;
+namespace Pixeval.Models.McpServer;
 
 public sealed partial class PixevalMcpService
 {
@@ -20,9 +20,10 @@ public sealed partial class PixevalMcpService
         "extensions"
     ];
 
-    public PixevalHelpDto Help(string? topic)
+    public PixevalHelpDto Help(PixevalHelpTopic? topic)
     {
-        var normalized = NormalizeHelpTopic(topic);
+        topic ??= PixevalHelpTopic.All;
+        var normalized = ToHelpTopicName(topic.Value);
         return new(normalized, _HelpTopics, normalized switch
         {
             "all" =>
@@ -36,8 +37,7 @@ public sealed partial class PixevalMcpService
             "download_macro" => [CreateDownloadMacroHelp()],
             "work_filter" => CreateWorkFilterHelp(),
             "extensions" => [CreateExtensionsHelp()],
-            _ => throw new PixevalMcpException(
-                $"Unknown help topic '{topic}'. Available topics: {string.Join(", ", _HelpTopics)}.")
+            _ => throw new ArgumentOutOfRangeException(nameof(topic))
         });
     }
 
@@ -55,7 +55,7 @@ public sealed partial class PixevalMcpService
             I18NManager.GetResource(HelpPageResources.DownloadMacroHelpExpanderHeader),
             MarkdownResources.DownloadMacroHelp,
             I18NManager.GetResource(MarkdownResources.DownloadMacroHelp),
-            ["download_macro", "analyze_download_macro", "preview_download_macro", "set_download_macro"]);
+            ["download_macro", "analyze_download_macro", "set_download_macro"]);
 
     private static IReadOnlyList<PixevalHelpDocumentDto> CreateWorkFilterHelp() =>
     [
@@ -65,7 +65,7 @@ public sealed partial class PixevalMcpService
             MarkdownResources.QueryFilterSimpleHelp,
             I18NManager.GetResource(MarkdownResources.QueryFilterSimpleHelp),
             [
-                "analyze_work_filter", "filter_works", "search_illustrations", "search_novels", "works", "ranking",
+                "analyze_work_filter", "search_illustrations", "search_novels", "works", "ranking",
                 "bookmarks", "history"
             ]),
         new(
@@ -74,7 +74,7 @@ public sealed partial class PixevalMcpService
             MarkdownResources.QueryFilterHelp,
             I18NManager.GetResource(MarkdownResources.QueryFilterHelp),
             [
-                "analyze_work_filter", "filter_works", "search_illustrations", "search_novels", "works", "ranking",
+                "analyze_work_filter", "search_illustrations", "search_novels", "works", "ranking",
                 "bookmarks", "history"
             ])
     ];
@@ -87,16 +87,14 @@ public sealed partial class PixevalMcpService
             I18NManager.GetResource(MarkdownResources.ExtensionsHelp),
             ["extensions"]);
 
-    private static string NormalizeHelpTopic(string? topic) =>
-        string.IsNullOrWhiteSpace(topic)
-            ? "all"
-            : topic.Trim().Replace("-", "_", StringComparison.Ordinal).ToLowerInvariant() switch
-            {
-                "all" => "all",
-                "mcp" or "server" or "mcp_server" => "mcp",
-                "download" or "download_macro" or "macro" => "download_macro",
-                "filter" or "query_filter" or "work_filter" => "work_filter",
-                "extension" or "extensions" => "extensions",
-                var value => value
-            };
+    private static string ToHelpTopicName(PixevalHelpTopic topic) =>
+        topic switch
+        {
+            PixevalHelpTopic.All => "all",
+            PixevalHelpTopic.Mcp => "mcp",
+            PixevalHelpTopic.DownloadMacro => "download_macro",
+            PixevalHelpTopic.WorkFilter => "work_filter",
+            PixevalHelpTopic.Extensions => "extensions",
+            _ => throw new ArgumentOutOfRangeException(nameof(topic))
+        };
 }

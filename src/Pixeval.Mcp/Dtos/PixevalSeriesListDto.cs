@@ -3,11 +3,8 @@
 
 namespace Pixeval.Mcp.Dtos;
 
-public sealed record PixevalBookmarkTagListDto(
-    long UserId,
-    string WorkType,
-    string Privacy,
+public sealed record PixevalSeriesListDto(
     int Count,
-    IReadOnlyList<PixevalBookmarkTagDto> Tags,
+    IReadOnlyList<PixevalSeriesDto> Series,
     bool HasMore = false,
     string? NextCursor = null);

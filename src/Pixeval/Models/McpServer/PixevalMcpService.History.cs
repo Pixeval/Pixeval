@@ -2,6 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
@@ -15,7 +16,7 @@ using Pixeval.Models.Database;
 using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Filters;
 
-namespace Pixeval.Utilities.McpServer;
+namespace Pixeval.Models.McpServer;
 
 public sealed partial class PixevalMcpService
 {
@@ -24,7 +25,7 @@ public sealed partial class PixevalMcpService
     public Task<PixevalHistoryListDto> HistoryAsync(
         PixevalHistoryType type,
         int skip,
-        int limit,
+        int count,
         string? keyword,
         string? workFilter,
         CancellationToken cancellationToken)
@@ -32,35 +33,35 @@ public sealed partial class PixevalMcpService
         cancellationToken.ThrowIfCancellationRequested();
         var typeName = JsonNamingPolicy.SnakeCaseLower.ConvertName(type.ToString());
         var normalizedSkip = int.Max(0, skip);
-        var normalizedLimit = int.Clamp(limit, 1, MaxHistoryLimit);
+        var normalizedCount = int.Clamp(count, 1, MaxHistoryLimit);
         return Task.FromResult(type switch
         {
-            PixevalHistoryType.Search => GetSearchHistory(typeName, normalizedSkip, normalizedLimit, keyword),
+            PixevalHistoryType.Search => GetSearchHistory(typeName, normalizedSkip, normalizedCount, keyword),
             PixevalHistoryType.Browse => GetArtworkHistory<BrowseHistoryPersistentManager, BrowseHistoryEntry>(
                 typeName,
                 normalizedSkip,
-                normalizedLimit,
+                normalizedCount,
                 keyword,
                 workFilter,
                 cancellationToken),
             PixevalHistoryType.WatchLater => GetArtworkHistory<WatchLaterPersistentManager, WatchLaterEntry>(
                 typeName,
                 normalizedSkip,
-                normalizedLimit,
+                normalizedCount,
                 keyword,
                 workFilter,
                 cancellationToken),
             PixevalHistoryType.Download => GetDownloadHistory(
                 typeName,
                 normalizedSkip,
-                normalizedLimit,
+                normalizedCount,
                 keyword,
                 workFilter,
                 cancellationToken),
             PixevalHistoryType.WorkSubscription => GetWorkSubscriptionHistory(
                 typeName,
                 normalizedSkip,
-                normalizedLimit,
+                normalizedCount,
                 keyword),
             _ => throw new ArgumentOutOfRangeException(nameof(type))
         });
@@ -69,7 +70,7 @@ public sealed partial class PixevalMcpService
     private PixevalHistoryListDto GetSearchHistory(
         string type,
         int skip,
-        int limit,
+        int count,
         string? keyword)
     {
         var entries = ViewModel.AppServiceProvider.GetRequiredService<SearchHistoryPersistentManager>()
@@ -77,7 +78,7 @@ public sealed partial class PixevalMcpService
             .Where(entry => ContainsKeyword(entry.Value, keyword)
                             || ContainsKeyword(entry.TranslatedName, keyword))
             .ToArray();
-        var items = entries.Skip(skip).Take(limit)
+        var items = entries.Skip(skip).Take(count)
             .Select(entry => new PixevalHistoryItemDto(
                 entry.HistoryEntryId,
                 type,
@@ -87,13 +88,13 @@ public sealed partial class PixevalMcpService
                 null,
                 null))
             .ToArray();
-        return new(type, skip, limit, entries.Length, items.Length, items);
+        return new(type, skip, count, entries.Length, items.Length, items);
     }
 
     private PixevalHistoryListDto GetArtworkHistory<TManager, TEntry>(
         string type,
         int skip,
-        int limit,
+        int count,
         string? keyword,
         string? workFilter,
         CancellationToken cancellationToken)
@@ -102,34 +103,35 @@ public sealed partial class PixevalMcpService
     {
         var filter = CreateHistoryWorkFilter(workFilter, out var filterDto);
         if (filterDto is { IsSuccess: false })
-            return new(type, skip, limit, 0, 0, [], filterDto);
+            return new(type, skip, count, 0, 0, [], filterDto);
 
         var entries = ViewModel.AppServiceProvider.GetRequiredService<TManager>()
             .Reverse()
-            .Where(entry => TryGetArtwork(entry, out var artwork)
-                            && MatchesArtworkKeyword(artwork, keyword)
-                            && filter(artwork))
+            .Where(entry =>
+                TryGetArtwork(entry, out var artwork)
+                && MatchesArtworkKeyword(artwork, keyword)
+                && filter(artwork))
             .ToArray();
-        var items = entries.Skip(skip)
-            .Take(limit)
-            .Select(entry => CreateArtworkHistoryItem(type, entry, null))
-            .OfType<PixevalHistoryItemDto>()
-            .ToArray();
+        var (items, works) = CreateArtworkHistoryItems(
+            entries.Skip(skip).Take(count),
+            type,
+            static _ => null);
+        CacheWorks(works);
         cancellationToken.ThrowIfCancellationRequested();
-        return new(type, skip, limit, entries.Length, items.Length, items, filterDto);
+        return new(type, skip, count, entries.Length, items.Count, items, filterDto);
     }
 
     private PixevalHistoryListDto GetDownloadHistory(
         string type,
         int skip,
-        int limit,
+        int count,
         string? keyword,
         string? workFilter,
         CancellationToken cancellationToken)
     {
         var filter = CreateHistoryWorkFilter(workFilter, out var filterDto);
         if (filterDto is { IsSuccess: false })
-            return new(type, skip, limit, 0, 0, [], filterDto);
+            return new(type, skip, count, 0, 0, [], filterDto);
 
         var entries = ViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>()
             .Reverse()
@@ -142,27 +144,24 @@ public sealed partial class PixevalMcpService
                 && filter(artwork))
             .Select(task => task.DatabaseEntry)
             .ToArray();
-        var items = entries.Skip(skip)
-            .Take(limit)
-            .Select(entry => CreateArtworkHistoryItem(
-                type,
-                entry,
-                new PixevalDownloadHistoryDto(
-                    entry.Destination,
-                    entry.State.ToString(),
-                    entry.FormatToken,
-                    entry.ErrorMessage,
-                    entry.WorkSubscriptionId)))
-            .OfType<PixevalHistoryItemDto>()
-            .ToArray();
+        var (items, works) = CreateArtworkHistoryItems(
+            entries.Skip(skip).Take(count),
+            type,
+            static entry => new PixevalDownloadHistoryDto(
+                entry.Destination,
+                entry.State.ToString(),
+                entry.FormatToken,
+                entry.ErrorMessage,
+                entry.WorkSubscriptionId));
+        CacheWorks(works);
         cancellationToken.ThrowIfCancellationRequested();
-        return new(type, skip, limit, entries.Length, items.Length, items, filterDto);
+        return new(type, skip, count, entries.Length, items.Count, items, filterDto);
     }
 
     private PixevalHistoryListDto GetWorkSubscriptionHistory(
         string type,
         int skip,
-        int limit,
+        int count,
         string? keyword)
     {
         var entries = ViewModel.AppServiceProvider.GetRequiredService<WorkSubscriptionPersistentManager>()
@@ -173,7 +172,7 @@ public sealed partial class PixevalMcpService
                 || ContainsKeyword(entry.UserId.ToString(), keyword))
             .ToArray();
         var items = entries.Skip(skip)
-            .Take(limit)
+            .Take(count)
             .Select(entry => new PixevalHistoryItemDto(
                 entry.HistoryEntryId,
                 type,
@@ -190,7 +189,7 @@ public sealed partial class PixevalMcpService
                     entry.SubscriptionType.ToString(),
                     entry.WorkKind.ToString())))
             .ToArray();
-        return new(type, skip, limit, entries.Length, items.Length, items);
+        return new(type, skip, count, entries.Length, items.Length, items);
     }
 
     private Func<IArtworkInfo, bool> CreateHistoryWorkFilter(
@@ -209,23 +208,48 @@ public sealed partial class PixevalMcpService
         return artwork => WorkFilterEvaluator.Filter(artwork, query.Root);
     }
 
+    private (IReadOnlyList<PixevalHistoryItemDto> Items, IReadOnlyList<WorkBase> Works) CreateArtworkHistoryItems<TEntry>(
+        IEnumerable<TEntry> entries,
+        string type,
+        Func<TEntry, PixevalDownloadHistoryDto?> createDownload)
+        where TEntry : ArtworkHistoryEntry
+    {
+        var items = new List<PixevalHistoryItemDto>();
+        var works = new List<WorkBase>();
+        foreach (var entry in entries)
+        {
+            if (CreateArtworkHistoryItem(type, entry, createDownload(entry), out var work) is not { } item)
+                continue;
+
+            items.Add(item);
+            if (work is not null)
+                works.Add(work);
+        }
+
+        return (items, works);
+    }
+
     private PixevalHistoryItemDto? CreateArtworkHistoryItem(
         string type,
         ArtworkHistoryEntry entry,
-        PixevalDownloadHistoryDto? download)
+        PixevalDownloadHistoryDto? download,
+        out WorkBase? work)
     {
+        work = null;
         try
         {
-            return TryGetArtwork(entry, out var artwork)
-                ? new PixevalHistoryItemDto(
-                    entry.HistoryEntryId,
-                    type,
-                    null,
-                    null,
-                    CreateArtworkDto(entry, artwork),
-                    download,
-                    null)
-                : null;
+            if (!TryGetArtwork(entry, out var artwork))
+                return null;
+
+            work = artwork as WorkBase;
+            return new PixevalHistoryItemDto(
+                entry.HistoryEntryId,
+                type,
+                null,
+                null,
+                CreateArtworkDto(entry, artwork),
+                download,
+                null);
         }
         catch (Exception e)
         {

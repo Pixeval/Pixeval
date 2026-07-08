@@ -19,27 +19,10 @@ using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Options;
 using Pixeval.Models.Subscriptions;
 
-namespace Pixeval.Utilities.McpServer;
+namespace Pixeval.Models.McpServer;
 
 public sealed partial class PixevalMcpService
 {
-    public async Task<PixevalBookmarkTagListDto> BookmarkTagsAsync(
-        long? userId,
-        SimpleWorkType workType,
-        PrivacyPolicy privacy,
-        CancellationToken cancellationToken)
-    {
-        var uid = userId ?? CurrentUser?.Id ??
-            throw new PixevalMcpException("Current Pixiv user is not available.");
-        var tags = await MakoHelper.GetBookmarkTagsAsync(uid, workType, privacy)
-            .WaitAsync(cancellationToken)
-            .ConfigureAwait(false);
-        var result = tags
-            .Select(tag => PixevalBookmarkTagDto.FromBookmarkTag(tag, tag is AllBookmarkTag))
-            .ToArray();
-        return new(uid, workType.ToString(), privacy.ToString(), result.Length, result);
-    }
-
     public async Task<PixevalBookmarkResultDto> SetBookmarkAsync(
         SimpleWorkType workType,
         long id,
@@ -53,35 +36,20 @@ public sealed partial class PixevalMcpService
             .Select(static tag => tag.Trim())
             .Distinct(StringComparer.Ordinal)
             .ToArray();
-        var privately = privacy is PrivacyPolicy.Private;
 
-        if (workType is SimpleWorkType.Novel)
-        {
-            var novel = await MakoClient.GetNovelFromIdAsync(id).WaitAsync(cancellationToken).ConfigureAwait(false);
-            var actual = await MakoHelper.SetNovelBookmarkAsync(novel, bookmarked, privately, normalizedTags)
-                .WaitAsync(cancellationToken)
-                .ConfigureAwait(false);
-            return new(
-                actual == bookmarked,
-                GetBookmarkMessage(actual, bookmarked),
-                actual,
-                PixevalWorkDto.FromNovel(novel));
-        }
-
-        var illustration = await MakoClient.GetIllustrationFromIdAsync(id).WaitAsync(cancellationToken)
-            .ConfigureAwait(false);
-        var isBookmarked = await MakoHelper.SetIllustrationBookmarkAsync(
-                illustration,
-                bookmarked,
-                privately,
-                normalizedTags)
+        var success = await (bookmarked
+                ? MakoClient.PostWorkBookmarkAsync(workType, id, privacy, normalizedTags)
+                : MakoClient.RemoveWorkBookmarkAsync(workType, id))
             .WaitAsync(cancellationToken)
             .ConfigureAwait(false);
+        if (success)
+            UpdateCachedWork(workType, id, work => work.IsFavorite = bookmarked);
+
         return new(
-            isBookmarked == bookmarked,
-            GetBookmarkMessage(isBookmarked, bookmarked),
-            isBookmarked,
-            PixevalWorkDto.FromIllustration(illustration));
+            success,
+            GetBookmarkMessage(success, bookmarked),
+            success ? bookmarked : null,
+            GetCachedWorkDto(workType, id));
     }
 
     public async Task<PixevalWatchLaterResultDto> SetWatchLaterAsync(
@@ -90,7 +58,7 @@ public sealed partial class PixevalMcpService
         bool watchLater,
         CancellationToken cancellationToken)
     {
-        var work = await LoadWorkAsync(workType, id, cancellationToken).ConfigureAwait(false);
+        var work = await GetWorkAsync(workType, id, cancellationToken).ConfigureAwait(false);
         if (work is not IArtworkInfo artwork)
             throw new PixevalMcpException("Pixiv returned a work shape that Pixeval cannot add to watch later.");
 
@@ -115,22 +83,22 @@ public sealed partial class PixevalMcpService
         PrivacyPolicy privacy,
         CancellationToken cancellationToken)
     {
-        var user = await MakoClient.GetUserFromIdAsync(userId).WaitAsync(cancellationToken).ConfigureAwait(false);
+        var user = await GetUserBasicInfoAsync(userId, cancellationToken).ConfigureAwait(false);
         var success = await (followed
                 ? MakoClient.PostFollowUserAsync(userId, privacy)
                 : MakoClient.RemoveFollowUserAsync(userId))
             .WaitAsync(cancellationToken)
             .ConfigureAwait(false);
-        if (success)
-            user.UserEntity.IsFollowed = followed;
-        var actual = user.UserEntity.IsFollowed;
+        if (success && user is UserInfo userInfo)
+            userInfo.IsFollowed = followed;
+        var actual = user is UserInfo { IsFollowed: var current } ? current : followed;
         return new(
             actual == followed,
             actual == followed
                 ? followed ? "User followed." : "User unfollowed."
                 : "Pixiv did not apply the requested follow state.",
             actual,
-            PixevalUserDto.FromSingleUserResponse(user));
+            PixevalUserDto.FromUserInfo(user));
     }
 
     public PixevalDownloadTaskControlResultDto ControlDownload(
@@ -187,8 +155,7 @@ public sealed partial class PixevalMcpService
         var kind = ToWorkSubscriptionWorkKind(workKind);
         ValidateWorkSubscriptionKind(type, kind);
 
-        var user = (await MakoClient.GetUserFromIdAsync(userId).WaitAsync(cancellationToken).ConfigureAwait(false))
-            .UserEntity;
+        var user = await GetUserBasicInfoAsync(userId, cancellationToken).ConfigureAwait(false);
         if (!WorkSubscriptionHelper.TryAddOrUpdate(user, type, kind))
             return new(false, "Work subscription was not added.", null);
 
@@ -237,14 +204,6 @@ public sealed partial class PixevalMcpService
         return new(true, "Pixeval work subscription sync was queued.");
     }
 
-    private async Task<WorkBase> LoadWorkAsync(
-        SimpleWorkType workType,
-        long id,
-        CancellationToken cancellationToken) =>
-        workType is SimpleWorkType.Novel
-            ? await MakoClient.GetNovelFromIdAsync(id).WaitAsync(cancellationToken).ConfigureAwait(false)
-            : await MakoClient.GetIllustrationFromIdAsync(id).WaitAsync(cancellationToken).ConfigureAwait(false);
-
     private (IDownloadTaskGroupBase? Task, int Index) FindDownloadTask(
         DownloadManager manager,
         int? queueIndex,
@@ -268,8 +227,8 @@ public sealed partial class PixevalMcpService
         return (null, -1);
     }
 
-    private static string GetBookmarkMessage(bool actual, bool requested) =>
-        actual == requested
+    private static string GetBookmarkMessage(bool success, bool requested) =>
+        success
             ? requested ? "Work bookmarked." : "Work bookmark removed."
             : "Pixiv did not apply the requested bookmark state.";
 
@@ -283,9 +242,6 @@ public sealed partial class PixevalMcpService
             entry.SubscriptionType.ToString(),
             entry.WorkKind.ToString());
 
-    private static SimpleWorkType ToSimpleWorkType(WorkType workType) =>
-        workType is WorkType.Novel ? SimpleWorkType.Novel : SimpleWorkType.IllustrationAndManga;
-
     private static WorkSubscriptionType ToWorkSubscriptionType(PixevalWorkSubscriptionType subscriptionType) =>
         subscriptionType switch
         {
@@ -297,7 +253,6 @@ public sealed partial class PixevalMcpService
     private static WorkSubscriptionWorkKind ToWorkSubscriptionWorkKind(PixevalWorkSubscriptionWorkKind workKind) =>
         workKind switch
         {
-            PixevalWorkSubscriptionWorkKind.IllustrationAndManga => WorkSubscriptionWorkKind.IllustrationAndManga,
             PixevalWorkSubscriptionWorkKind.Illustration => WorkSubscriptionWorkKind.Illustration,
             PixevalWorkSubscriptionWorkKind.Manga => WorkSubscriptionWorkKind.Manga,
             PixevalWorkSubscriptionWorkKind.Novel => WorkSubscriptionWorkKind.Novel,
@@ -310,7 +265,7 @@ public sealed partial class PixevalMcpService
     {
         var isValid = subscriptionType switch
         {
-            WorkSubscriptionType.Bookmarks => workKind is WorkSubscriptionWorkKind.IllustrationAndManga
+            WorkSubscriptionType.Bookmarks => workKind is WorkSubscriptionWorkKind.Illustration
                 or WorkSubscriptionWorkKind.Novel,
             WorkSubscriptionType.Posts => workKind is WorkSubscriptionWorkKind.Illustration
                 or WorkSubscriptionWorkKind.Manga
@@ -319,7 +274,7 @@ public sealed partial class PixevalMcpService
         };
         if (!isValid)
             throw new PixevalMcpException(
-                "For bookmarks, workKind must be illustration_and_manga or novel. For posts, workKind must be illustration, manga, or novel.");
+                "For bookmarks, workKind must be illustration or novel. For posts, workKind must be illustration, manga, or novel.");
     }
 
     private static void RunOnUiThread(Action action)

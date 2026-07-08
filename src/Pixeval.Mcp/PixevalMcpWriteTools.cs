@@ -17,7 +17,7 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
     [McpServerTool(Name = "set_download_macro", Title = "Set Pixeval download macro",
         UseStructuredContent = true, OutputSchemaType = typeof(PixevalSetDownloadMacroResultDto))]
     [Description(
-        "Sets Pixeval's current download path macro after validation. Use help(topic: \"download_macro\") for syntax. Requires Pixeval MCP write tools to be enabled.")]
+        "Sets Pixeval's current download path macro after validation. Use help for syntax. Requires Pixeval MCP write tools to be enabled.")]
     public CallToolResult SetDownloadMacro(
         [Description("New Pixeval download path macro text.")]
         string text) =>
@@ -32,8 +32,7 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
     [Description(
         "Adds a text comment or stamp comment to an illustration/manga or novel. Requires Pixeval MCP write tools to be enabled.")]
     public Task<CallToolResult> AddCommentAsync(
-        [Description("Work type. Use illustration, manga, or novel.")]
-        WorkType workType,
+        [Description("Work type.")] SimpleWorkType workType,
         [Description("Pixiv work id.")] long workId,
         [Description("Text content. Use either content or stampId, not both. Text comments must be 1..140 characters.")]
         string? content = null,
@@ -54,28 +53,24 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
             if (content is { Length: > 140 })
                 throw new PixevalMcpException("Pixiv comments must be 140 characters or less.");
 
-            var comment = workType is WorkType.Novel
-                ? await AddNovelCommentAsync().WaitAsync(cancellationToken).ConfigureAwait(false)
-                : await AddIllustrationCommentAsync().WaitAsync(cancellationToken).ConfigureAwait(false);
+            var comment = await AddCommentCoreAsync().WaitAsync(cancellationToken).ConfigureAwait(false);
             return PixevalMcpResult.Success(PixevalCommentDto.FromComment(comment, runtime.CurrentUser?.Id));
 
-            Task<Comment> AddNovelCommentAsync() =>
+            Task<Comment> AddCommentCoreAsync() =>
                 parentCommentId switch
                 {
-                    { } parent when hasContent => runtime.MakoClient.AddNovelCommentAsync(workId, parent, content!),
-                    { } parent => runtime.MakoClient.AddNovelCommentAsync(workId, parent, stampId!.Value),
-                    _ when hasContent => runtime.MakoClient.AddNovelCommentAsync(workId, content!),
-                    _ => runtime.MakoClient.AddNovelCommentAsync(workId, stampId!.Value)
-                };
-
-            Task<Comment> AddIllustrationCommentAsync() =>
-                parentCommentId switch
-                {
-                    { } parent when hasContent => runtime.MakoClient.AddIllustrationCommentAsync(workId, parent,
+                    { } parent when hasContent => runtime.MakoClient.AddWorkCommentAsync(
+                        workType,
+                        workId,
+                        parent,
                         content!),
-                    { } parent => runtime.MakoClient.AddIllustrationCommentAsync(workId, parent, stampId!.Value),
-                    _ when hasContent => runtime.MakoClient.AddIllustrationCommentAsync(workId, content!),
-                    _ => runtime.MakoClient.AddIllustrationCommentAsync(workId, stampId!.Value)
+                    { } parent => runtime.MakoClient.AddWorkCommentAsync(
+                        workType,
+                        workId,
+                        parent,
+                        stampId!.Value),
+                    _ when hasContent => runtime.MakoClient.AddWorkCommentAsync(workType, workId, content!),
+                    _ => runtime.MakoClient.AddWorkCommentAsync(workType, workId, stampId!.Value)
                 };
         });
 
@@ -84,8 +79,7 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
     [Description(
         "Deletes a Pixiv illustration/manga or novel comment. Pixiv decides whether the current account has permission.")]
     public Task<CallToolResult> DeleteCommentAsync(
-        [Description("Work type. Use illustration, manga, or novel.")]
-        WorkType workType,
+        [Description("Work type.")] SimpleWorkType workType,
         [Description("Pixiv comment id.")] long commentId,
         CancellationToken cancellationToken = default) =>
         ExecuteAsync(nameof(DeleteCommentAsync), async () =>
@@ -93,11 +87,9 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
             runtime.EnsureLoggedIn();
             runtime.EnsureWriteToolsEnabled();
 
-            var success = workType is WorkType.Novel
-                ? await runtime.MakoClient.DeleteNovelCommentAsync(commentId).WaitAsync(cancellationToken)
-                    .ConfigureAwait(false)
-                : await runtime.MakoClient.DeleteIllustrationCommentAsync(commentId).WaitAsync(cancellationToken)
-                    .ConfigureAwait(false);
+            var success = await runtime.MakoClient.DeleteWorkCommentAsync(workType, commentId)
+                .WaitAsync(cancellationToken)
+                .ConfigureAwait(false);
             return PixevalMcpResult.Success(new PixevalOperationResultDto(
                 success,
                 success ? "Comment deleted." : "Pixiv did not delete the comment."));
@@ -108,12 +100,11 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
     [Description(
         "Adds or removes a Pixiv illustration/manga or novel bookmark. Requires Pixeval MCP write tools to be enabled.")]
     public Task<CallToolResult> SetBookmarkAsync(
-        [Description("Work type. Use illustration, manga, or novel.")]
-        WorkType workType,
+        [Description("Work type.")] SimpleWorkType workType,
         [Description("Pixiv work id.")] long id,
         [Description("True to add/update the bookmark, false to remove it.")]
         bool bookmarked,
-        [Description("Bookmark privacy when adding. Use public or private.")]
+        [Description("Bookmark privacy when adding.")]
         PrivacyPolicy privacy = PrivacyPolicy.Public,
         [Description("Optional bookmark tags when adding.")]
         IReadOnlyList<string>? tags = null,
@@ -123,7 +114,7 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
             runtime.EnsureLoggedIn();
             runtime.EnsureWriteToolsEnabled();
             return PixevalMcpResult.Success(await runtime.SetBookmarkAsync(
-                    ToSimpleWorkType(workType),
+                    workType,
                     id,
                     bookmarked,
                     privacy,
@@ -137,8 +128,7 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
     [Description(
         "Adds or removes a work from Pixeval's local watch-later history. Requires Pixeval MCP write tools to be enabled.")]
     public Task<CallToolResult> SetWatchLaterAsync(
-        [Description("Work type. Use illustration, manga, or novel.")]
-        WorkType workType,
+        [Description("Work type.")] SimpleWorkType workType,
         [Description("Pixiv work id.")] long id,
         [Description("True to add to watch later, false to remove.")]
         bool watchLater,
@@ -148,7 +138,7 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
             runtime.EnsureLoggedIn();
             runtime.EnsureWriteToolsEnabled();
             return PixevalMcpResult.Success(await runtime.SetWatchLaterAsync(
-                    ToSimpleWorkType(workType),
+                    workType,
                     id,
                     watchLater,
                     cancellationToken)
@@ -162,7 +152,7 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
         [Description("Pixiv user id.")] long userId,
         [Description("True to follow, false to unfollow.")]
         bool followed,
-        [Description("Follow privacy when following. Use public or private.")]
+        [Description("Follow privacy when following.")]
         PrivacyPolicy privacy = PrivacyPolicy.Public,
         CancellationToken cancellationToken = default) =>
         ExecuteAsync(nameof(FollowUserAsync), async () =>
@@ -180,10 +170,9 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
     [McpServerTool(Name = "queue_download", Title = "Queue Pixeval download", OpenWorld = true,
         UseStructuredContent = true, OutputSchemaType = typeof(PixevalMcpDownloadTaskDto))]
     [Description(
-        "Queues a work download in Pixeval's existing download manager using Pixeval's configured download path macro. Use help(topic: \"download_macro\") for macro syntax. Requires write tools.")]
+        "Queues a work download in Pixeval's existing download manager using Pixeval's configured download path macro. Use help for macro syntax. Requires write tools.")]
     public Task<CallToolResult> QueueDownloadAsync(
-        [Description("Work type. Use illustration, manga, or novel.")]
-        WorkType workType,
+        [Description("Work type.")] SimpleWorkType workType,
         [Description("Pixiv work id.")] long id,
         CancellationToken cancellationToken = default) =>
         ExecuteAsync(nameof(QueueDownloadAsync), async () =>
@@ -191,7 +180,7 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
             runtime.EnsureLoggedIn();
             runtime.EnsureWriteToolsEnabled();
             var task = await runtime.QueueDownloadAsync(
-                    ToSimpleWorkType(workType),
+                    workType,
                     id,
                     cancellationToken)
                 .ConfigureAwait(false);
@@ -200,15 +189,13 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
 
     [McpServerTool(Name = "control_download", Title = "Control Pixeval download task",
         UseStructuredContent = true, OutputSchemaType = typeof(PixevalDownloadTaskControlResultDto))]
-    [Description(
-        "Controls an existing Pixeval download task by queue index or destination. Supported actions: pause, resume, reset, cancel, remove.")]
+    [Description("Controls an existing Pixeval download task by queue index or destination.")]
     public CallToolResult ControlDownload(
         [Description("Zero-based queue index from download_tasks.")]
         int? queueIndex = null,
         [Description("Exact destination from download_tasks. Used when queueIndex is empty.")]
         string? destination = null,
-        [Description("Action. Use pause, resume, reset, cancel, or remove.")]
-        PixevalDownloadAction action = PixevalDownloadAction.Pause,
+        [Description("Download task action.")] PixevalDownloadAction action = PixevalDownloadAction.Pause,
         [Description("When action is remove, also delete local downloaded files.")]
         bool deleteLocalFiles = false) =>
         Execute(nameof(ControlDownload), () =>
@@ -228,10 +215,9 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
         "Adds or updates a Pixeval work subscription and queues a subscription sync. Requires Pixeval MCP write tools to be enabled.")]
     public Task<CallToolResult> AddSubscriptionAsync(
         [Description("Pixiv user id.")] long userId,
-        [Description("Subscription type. Use bookmarks or posts.")]
-        PixevalWorkSubscriptionType subscriptionType,
+        [Description("Subscription type.")] PixevalWorkSubscriptionType subscriptionType,
         [Description(
-            "Work kind. For bookmarks: illustration_and_manga or novel. For posts: illustration, manga, or novel.")]
+            "Work kind for the subscription type.")]
         PixevalWorkSubscriptionWorkKind workKind,
         CancellationToken cancellationToken = default) =>
         ExecuteAsync(nameof(AddSubscriptionAsync), async () =>
@@ -251,11 +237,11 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
     [Description(
         "Removes a Pixeval work subscription by historyEntryId, or by userId + subscriptionType + workKind. Requires write tools.")]
     public CallToolResult RemoveSubscription(
-        [Description("History entry id from history(type: work_subscription).")]
+        [Description("History entry id from work subscription history.")]
         int? historyEntryId = null,
         [Description("Pixiv user id. Required when historyEntryId is empty.")]
         long? userId = null,
-        [Description("Subscription type. Use bookmarks or posts. Required when historyEntryId is empty.")]
+        [Description("Subscription type. Required when historyEntryId is empty.")]
         PixevalWorkSubscriptionType? subscriptionType = null,
         [Description("Work kind. Required when historyEntryId is empty.")]
         PixevalWorkSubscriptionWorkKind? workKind = null) =>

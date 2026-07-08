@@ -9,7 +9,7 @@ namespace Pixeval.AppManagement;
 
 public record McpSettingsGroup
 {
-    public const int DefaultPort = 52163;
+    public const ushort DefaultPort = 52163;
 
     // BlobResourceContents is backed by a byte[], so keep the UI limit inside that boundary.
     public const int MaxBinaryResourceMegabytesLimit = 2047;
@@ -18,7 +18,7 @@ public record McpSettingsGroup
     public bool EnableServer { get; set; }
 
     [SettingsEntry(Symbol.SerialPort, McpPortEntryHeader, McpPortEntryDescription)]
-    public int Port { get; set; } = DefaultPort;
+    public ushort Port { get; set; } = DefaultPort;
 
     [SettingsEntry(Symbol.CalligraphyPenCheckmark, EnableMcpWriteToolsEntryHeader, EnableMcpWriteToolsEntryDescription)]
     public bool EnableWriteTools { get; set; }

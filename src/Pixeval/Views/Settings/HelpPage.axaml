@@ -6,9 +6,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Controls"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
-    xmlns:markup1="clr-namespace:Pixeval.Views.Markup"
+    xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mcpServer="using:Pixeval.Models.McpServer"
     xmlns:pixeval="using:Pixeval"
+    xmlns:settings="using:Pixeval.Views.Settings"
     Header="{I18N {x:Static pixeval:HelpPageResources.TitleTextBlockText}}"
     mc:Ignorable="d"
     d:DesignHeight="800"
@@ -20,21 +22,21 @@
                 Text="{I18N {x:Static pixeval:HelpPageResources.TitleTextBlockText}}"
                 Theme="{StaticResource TitleTextBlockStyle}" />
             <!--  TODO 支持app protocol或删除该帮助  -->
-            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.AppProtocolLinkHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Symbol=Link}">
+            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.AppProtocolLinkHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Link}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
                         <TextBlock Text="{I18N {x:Static pixeval:HelpPageResources.AppLinkHelpText}}" TextWrapping="Wrap" />
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
-            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.DownloadMacroHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Symbol=Rename}">
+            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.DownloadMacroHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Rename}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
                         <local:MarkdownBox Markdown="{I18N {x:Static pixeval:MarkdownResources.DownloadMacroHelp}}" />
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
-            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.QueryFilterHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Symbol=Filter}">
+            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.QueryFilterHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Filter}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Vertical">
                         <controls:SettingsCard.Header>
@@ -56,7 +58,7 @@
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
-            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.ExtensionsHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Symbol=PuzzlePiece}">
+            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.ExtensionsHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon PuzzlePiece}">
 
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
@@ -64,13 +66,102 @@
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
-            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.McpHelpExpanderHeader}}">
-                <controls:SettingsExpander.HeaderIcon>
-                    <PathIcon Data="{markup1:SvgPath {x:Static pixeval:SvgResources.MCP}}" /> 
-                </controls:SettingsExpander.HeaderIcon>
+            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.McpHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Bot}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
                         <local:MarkdownBox Markdown="{I18N {x:Static pixeval:MarkdownResources.McpHelp}}" />
+                    </controls:SettingsCard>
+                </controls:SettingsExpander.Items>
+            </controls:SettingsExpander>
+            <controls:SettingsExpander Description="{I18N {x:Static pixeval:HelpPageResources.McpToolsExpanderDescription}}" Header="{I18N {x:Static pixeval:HelpPageResources.McpToolsExpanderHeader}}">
+                <controls:SettingsExpander.HeaderIcon>
+                    <PathIcon Data="{markup1:SvgPath {x:Static pixeval:SvgResources.MCP}}" />
+                </controls:SettingsExpander.HeaderIcon>
+                <Button
+                    x:Name="RefreshMcpToolsButton"
+                    Width="40"
+                    Height="35"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Click="RefreshMcpToolsButton_OnClicked"
+                    Content="{markup:SymbolIcon ArrowSync,
+                                                FontSize=14}"
+                    ToolTip.Tip="{I18N {x:Static pixeval:HelpPageResources.McpToolsRefreshButtonToolTip}}" />
+                <controls:SettingsExpander.Items>
+                    <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Vertical">
+                        <StackPanel Spacing="10">
+                            <TextBlock
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Text="{Binding $parent[settings:HelpPage].McpToolsStatus}"
+                                TextWrapping="Wrap" />
+                            <ItemsControl ItemsSource="{Binding $parent[settings:HelpPage].McpTools}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Spacing="8" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="{x:Type mcpServer:McpToolItemViewModel}">
+                                        <Border
+                                            Padding="10"
+                                            Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}"
+                                            CornerRadius="{DynamicResource ControlCornerRadius}">
+                                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="3">
+                                                <TextBlock
+                                                    FontFamily="Cascadia Code,Consolas,Monospace"
+                                                    FontWeight="SemiBold"
+                                                    Text="{Binding Name}"
+                                                    TextWrapping="Wrap" />
+                                                <TextBlock
+                                                    Grid.Row="1"
+                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                    IsVisible="{Binding HasTitle}"
+                                                    Text="{Binding TitleText}"
+                                                    TextWrapping="Wrap" />
+                                                <TextBlock
+                                                    Grid.Row="2"
+                                                    Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                                    IsVisible="{Binding HasDescription}"
+                                                    Text="{Binding DescriptionText}"
+                                                    TextWrapping="Wrap" />
+                                                <StackPanel
+                                                    Grid.Row="3"
+                                                    Margin="0,6,0,0"
+                                                    Spacing="6">
+                                                    <ItemsControl IsVisible="{Binding HasParameters}" ItemsSource="{Binding Parameters}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate x:DataType="{x:Type mcpServer:McpToolParameterItemViewModel}">
+                                                                <Grid Margin="0,0,0,4" RowDefinitions="Auto,Auto">
+                                                                    <TextBlock
+                                                                        FontFamily="Cascadia Code,Consolas,Monospace"
+                                                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                        Text="{Binding Signature}"
+                                                                        TextWrapping="Wrap" />
+                                                                    <TextBlock
+                                                                        Grid.Row="1"
+                                                                        Margin="12,1,0,0"
+                                                                        Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                                                        IsVisible="{Binding HasDescription}"
+                                                                        Text="{Binding DescriptionText}"
+                                                                        TextWrapping="Wrap" />
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                    <TextBlock
+                                                        Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                                        IsVisible="{Binding HasNoParameters}"
+                                                        Text="{I18N {x:Static pixeval:HelpPageResources.McpToolsParametersEmpty}}"
+                                                        TextWrapping="Wrap" />
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>

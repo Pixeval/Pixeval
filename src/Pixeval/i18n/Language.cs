@@ -494,6 +494,17 @@ namespace Pixeval
         public const string DownloadMacroHelpExpanderHeader = "HelpPage.DownloadMacroHelpExpander.Header";
         public const string ExtensionsHelpExpanderHeader = "HelpPage.ExtensionsHelpExpander.Header";
         public const string McpHelpExpanderHeader = "HelpPage.McpHelpExpander.Header";
+        public const string McpToolsExpanderDescription = "HelpPage.McpToolsExpander.Description";
+        public const string McpToolsExpanderHeader = "HelpPage.McpToolsExpander.Header";
+        public const string McpToolsParametersEmpty = "HelpPage.McpToolsParameters.Empty";
+        public const string McpToolsRefreshButtonToolTip = "HelpPage.McpToolsRefreshButton.ToolTip";
+        public const string McpToolsStatusDisabled = "HelpPage.McpToolsStatus.Disabled";
+        public const string McpToolsStatusEmpty = "HelpPage.McpToolsStatus.Empty";
+        public const string McpToolsStatusFailed = "HelpPage.McpToolsStatus.Failed";
+        public const string McpToolsStatusLoaded = "HelpPage.McpToolsStatus.Loaded";
+        public const string McpToolsStatusLoading = "HelpPage.McpToolsStatus.Loading";
+        public const string McpToolsStatusNotRunning = "HelpPage.McpToolsStatus.NotRunning";
+        public const string McpToolsStatusUnavailable = "HelpPage.McpToolsStatus.Unavailable";
         public const string QueryFilterHelpExpanderHeader = "HelpPage.QueryFilterHelpExpander.Header";
         public const string QueryFilterHelpHeaderText = "HelpPage.QueryFilterHelpHeader.Text";
         public const string QueryFilterSimpleHelpHeaderText = "HelpPage.QueryFilterSimpleHelpHeader.Text";

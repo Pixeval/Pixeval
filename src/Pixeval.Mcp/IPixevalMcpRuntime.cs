@@ -4,6 +4,7 @@
 using Mako;
 using Mako.Global.Enum;
 using Mako.Model;
+using Mako.Net.Responses;
 using Pixeval.Mcp.Dtos;
 
 namespace Pixeval.Mcp;
@@ -20,7 +21,7 @@ public interface IPixevalMcpRuntime
 
     HttpClient ImageHttpClient { get; }
 
-    int Port { get; }
+    ushort Port { get; }
 
     bool EnableWriteTools { get; }
 
@@ -30,17 +31,11 @@ public interface IPixevalMcpRuntime
 
     void EnsureWriteToolsEnabled();
 
-    PixevalHelpDto Help(string? topic);
+    PixevalHelpDto Help(PixevalHelpTopic? topic);
 
     PixevalDownloadMacroSettingsDto DownloadMacro();
 
-    PixevalDownloadMacroAnalysisDto AnalyzeDownloadMacro(string? text);
-
-    Task<PixevalDownloadMacroPreviewDto> PreviewDownloadMacroAsync(
-        string? text,
-        WorkType? workType,
-        long? id,
-        CancellationToken cancellationToken);
+    PixevalDownloadMacroAnalysisDto AnalyzeDownloadMacro(string text);
 
     PixevalSetDownloadMacroResultDto SetDownloadMacro(string text);
 
@@ -51,7 +46,7 @@ public interface IPixevalMcpRuntime
     Task<PixevalHistoryListDto> HistoryAsync(
         PixevalHistoryType type,
         int skip,
-        int limit,
+        int count,
         string? keyword,
         string? workFilter,
         CancellationToken cancellationToken);
@@ -59,6 +54,33 @@ public interface IPixevalMcpRuntime
     PixevalExtensionListDto Extensions();
 
     PixevalSettingsSummaryDto SettingsSummary();
+
+    void CacheWorks(IEnumerable<WorkBase> works);
+
+    void CacheUsers(IEnumerable<User> users);
+
+    void CacheUserInfos(IEnumerable<UserBasicInfo> users);
+
+    Task<WorkBase> GetWorkAsync(
+        SimpleWorkType workType,
+        long id,
+        CancellationToken cancellationToken);
+
+    Task<Illustration> GetIllustrationAsync(
+        long id,
+        CancellationToken cancellationToken);
+
+    Task<Novel> GetNovelAsync(
+        long id,
+        CancellationToken cancellationToken);
+
+    Task<SingleUserResponse> GetUserAsync(
+        long id,
+        CancellationToken cancellationToken);
+
+    Task<UserBasicInfo> GetUserBasicInfoAsync(
+        long id,
+        CancellationToken cancellationToken);
 
     Task<PixevalNovelContentDto> NovelContentAsync(
         long id,
@@ -70,16 +92,10 @@ public interface IPixevalMcpRuntime
         string? imageUrl,
         long? illustrationId,
         int page,
-        int limit,
+        int count,
         string? index,
         double minSimilarity,
         bool loadPixivWorks,
-        CancellationToken cancellationToken);
-
-    Task<PixevalBookmarkTagListDto> BookmarkTagsAsync(
-        long? userId,
-        SimpleWorkType workType,
-        PrivacyPolicy privacy,
         CancellationToken cancellationToken);
 
     Task<PixevalMcpDownloadTaskDto> QueueDownloadAsync(

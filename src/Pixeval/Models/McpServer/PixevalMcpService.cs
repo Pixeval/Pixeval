@@ -18,8 +18,9 @@ using Pixeval.Mcp;
 using Pixeval.Mcp.Dtos;
 using Pixeval.Models.Download;
 using Pixeval.Models.Download.Tasks;
+using Pixeval.Utilities;
 
-namespace Pixeval.Utilities.McpServer;
+namespace Pixeval.Models.McpServer;
 
 public sealed partial class PixevalMcpService(AppViewModel appViewModel, FileLogger logger)
     : IPixevalMcpService, IPixevalMcpRuntime
@@ -28,7 +29,7 @@ public sealed partial class PixevalMcpService(AppViewModel appViewModel, FileLog
 
     private readonly SemaphoreSlim _lifetimeLock = new(1, 1);
     private PixevalMcpHttpServer? _server;
-    private int? _serverPort;
+    private ushort? _serverPort;
     private bool _disposed;
 
     private AppViewModel ViewModel => appViewModel;
@@ -47,12 +48,14 @@ public sealed partial class PixevalMcpService(AppViewModel appViewModel, FileLog
 
     public HttpClient ImageHttpClient => MakoClient.GetImageDownloadClient();
 
-    public int Port => int.Clamp(Settings.Port, 1, 65535);
+    public ushort Port => Settings.Port;
 
     public bool EnableWriteTools => Settings.EnableWriteTools;
 
     public int MaxBinaryResourceMegabytes =>
         int.Clamp(Settings.MaxBinaryResourceMegabytes, 1, McpSettingsGroup.MaxBinaryResourceMegabytesLimit);
+
+    public Uri? Endpoint => _server?.Endpoint;
 
     public Task StartAsync(CancellationToken cancellationToken = default) =>
         ApplySettingsAsync(cancellationToken);
@@ -91,7 +94,7 @@ public sealed partial class PixevalMcpService(AppViewModel appViewModel, FileLog
         await StartCoreAsync(port, cancellationToken).ConfigureAwait(false);
     }
 
-    private async Task StartCoreAsync(int port, CancellationToken cancellationToken)
+    private async Task StartCoreAsync(ushort port, CancellationToken cancellationToken)
     {
         var server = new PixevalMcpHttpServer(this, port);
         try
@@ -218,8 +221,7 @@ public sealed partial class PixevalMcpService(AppViewModel appViewModel, FileLog
         string destination,
         CancellationToken cancellationToken)
     {
-        var illustration = await MakoClient.GetIllustrationFromIdAsync(id).WaitAsync(cancellationToken)
-            .ConfigureAwait(false);
+        var illustration = await GetIllustrationAsync(id, cancellationToken).ConfigureAwait(false);
         if (illustration.IsPicGif && illustration is ISingleAnimatedImage { MultiImageUris: not null } animatedImage)
             await animatedImage.MultiImageUris.TryPreloadListAsync(animatedImage).ConfigureAwait(false);
 
@@ -232,7 +234,7 @@ public sealed partial class PixevalMcpService(AppViewModel appViewModel, FileLog
         string destination,
         CancellationToken cancellationToken)
     {
-        var novel = await MakoClient.GetNovelFromIdAsync(id).WaitAsync(cancellationToken).ConfigureAwait(false);
+        var novel = await GetNovelAsync(id, cancellationToken).ConfigureAwait(false);
         var content = await MakoClient.GetNovelContentAsync(id).WaitAsync(cancellationToken).ConfigureAwait(false);
         var factory = appViewModel.AppServiceProvider.GetRequiredService<NovelDownloadTaskFactory>();
         return factory.Create(novel, destination, content);

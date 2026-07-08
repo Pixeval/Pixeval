@@ -15,7 +15,7 @@ using Pixeval.Extensions.Common.Settings;
 using Pixeval.Mcp.Dtos;
 using Pixeval.Models.Extensions;
 
-namespace Pixeval.Utilities.McpServer;
+namespace Pixeval.Models.McpServer;
 
 public sealed partial class PixevalMcpService
 {

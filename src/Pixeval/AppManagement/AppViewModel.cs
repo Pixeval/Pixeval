@@ -18,12 +18,12 @@ using Pixeval.Models.Database;
 using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Download;
 using Pixeval.Models.Extensions;
+using Pixeval.Models.McpServer;
 using Pixeval.Models.Subscriptions;
 using Pixeval.Utilities;
 using Pixeval.Utilities.GitHub;
 using Pixeval.Utilities.IO.Caching;
 using Pixeval.Models.Options;
-using Pixeval.Utilities.McpServer;
 using Pixeval.Views;
 using SQLite;
 

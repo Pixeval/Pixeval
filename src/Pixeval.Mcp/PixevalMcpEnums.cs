@@ -3,6 +3,19 @@
 
 namespace Pixeval.Mcp;
 
+public enum PixevalHelpTopic
+{
+    All,
+
+    Mcp,
+
+    DownloadMacro,
+
+    WorkFilter,
+
+    Extensions
+}
+
 public enum PixevalHistoryType
 {
     Search,
@@ -38,8 +51,6 @@ public enum PixevalWorkSubscriptionType
 
 public enum PixevalWorkSubscriptionWorkKind
 {
-    IllustrationAndManga,
-
     Illustration,
 
     Manga,

@@ -22,8 +22,7 @@ internal sealed class PixevalMcpResources(IPixevalMcpRuntime runtime)
     public async Task<string> IllustrationAsync(long id, CancellationToken cancellationToken = default)
     {
         runtime.EnsureLoggedIn();
-        var illustration = await runtime.MakoClient.GetIllustrationFromIdAsync(id).WaitAsync(cancellationToken)
-            .ConfigureAwait(false);
+        var illustration = await runtime.GetIllustrationAsync(id, cancellationToken).ConfigureAwait(false);
         return PixevalMcpResult.Json(PixevalWorkDto.FromIllustration(illustration));
     }
 
@@ -38,8 +37,7 @@ internal sealed class PixevalMcpResources(IPixevalMcpRuntime runtime)
         try
         {
             runtime.EnsureLoggedIn();
-            var illustration = await runtime.MakoClient.GetIllustrationFromIdAsync(id).WaitAsync(cancellationToken)
-                .ConfigureAwait(false);
+            var illustration = await runtime.GetIllustrationAsync(id, cancellationToken).ConfigureAwait(false);
             return await ImageResourceAsync(
                     PixevalThumbnailInfoDto.GetThumbnailUrl(illustration, size),
                     PixevalThumbnailInfoDto.GetThumbnailResourceUri("illust", id, size),
@@ -63,8 +61,7 @@ internal sealed class PixevalMcpResources(IPixevalMcpRuntime runtime)
         try
         {
             runtime.EnsureLoggedIn();
-            var novel = await runtime.MakoClient.GetNovelFromIdAsync(id).WaitAsync(cancellationToken)
-                .ConfigureAwait(false);
+            var novel = await runtime.GetNovelAsync(id, cancellationToken).ConfigureAwait(false);
             return await ImageResourceAsync(
                     PixevalThumbnailInfoDto.GetThumbnailUrl(novel, size),
                     PixevalThumbnailInfoDto.GetThumbnailResourceUri("novel", id, size),
@@ -115,7 +112,7 @@ internal sealed class PixevalMcpResources(IPixevalMcpRuntime runtime)
     public async Task<string> NovelAsync(long id, CancellationToken cancellationToken = default)
     {
         runtime.EnsureLoggedIn();
-        var novel = await runtime.MakoClient.GetNovelFromIdAsync(id).WaitAsync(cancellationToken).ConfigureAwait(false);
+        var novel = await runtime.GetNovelAsync(id, cancellationToken).ConfigureAwait(false);
         return PixevalMcpResult.Json(PixevalWorkDto.FromNovel(novel));
     }
 
@@ -124,7 +121,7 @@ internal sealed class PixevalMcpResources(IPixevalMcpRuntime runtime)
     public async Task<string> UserAsync(long id, CancellationToken cancellationToken = default)
     {
         runtime.EnsureLoggedIn();
-        var user = await runtime.MakoClient.GetUserFromIdAsync(id).WaitAsync(cancellationToken).ConfigureAwait(false);
+        var user = await runtime.GetUserAsync(id, cancellationToken).ConfigureAwait(false);
         return PixevalMcpResult.Json(PixevalUserDto.FromSingleUserResponse(user));
     }
 }

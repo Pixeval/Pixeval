@@ -5,7 +5,6 @@ namespace Pixeval.Mcp.Dtos;
 
 public sealed record PixevalMcpSettingsSummaryDto(
     bool EnableServer,
-    int Port,
+    ushort Port,
     bool EnableWriteTools,
-    bool ThumbnailResourcesEnabled,
     int MaxBinaryResourceMegabytes);

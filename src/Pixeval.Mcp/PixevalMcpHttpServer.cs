@@ -29,16 +29,14 @@ public sealed class PixevalMcpHttpServer(IPixevalMcpRuntime runtime, int port) :
         if (_application is not null)
             return;
 
-        var builder = WebApplication.CreateSlimBuilder(new WebApplicationOptions
-        {
-            ApplicationName = typeof(PixevalMcpHttpServer).Assembly.GetName().Name
-        });
+        var builder = WebApplication.CreateSlimBuilder(new WebApplicationOptions { ApplicationName = typeof(PixevalMcpHttpServer).Assembly.GetName().Name });
 
         builder.Logging.ClearProviders();
         builder.WebHost.UseKestrel(options => options.Listen(IPAddress.Loopback, Port));
 
         builder.Services
             .AddSingleton(runtime)
+            .AddSingleton<PixevalMcpCursorStore>()
             .AddSingleton<PixevalMcpReadTools>()
             .AddSingleton<PixevalMcpWriteTools>()
             .AddSingleton<PixevalMcpResources>();

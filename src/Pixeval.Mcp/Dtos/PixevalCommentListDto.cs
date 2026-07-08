@@ -5,4 +5,6 @@ namespace Pixeval.Mcp.Dtos;
 
 public sealed record PixevalCommentListDto(
     int Count,
-    IReadOnlyList<PixevalCommentDto> Comments);
+    IReadOnlyList<PixevalCommentDto> Comments,
+    bool HasMore = false,
+    string? NextCursor = null);

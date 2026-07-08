@@ -14,7 +14,7 @@ using Pixeval.Mcp;
 using Pixeval.Mcp.Dtos;
 using Pixeval.Models.SauceNao;
 
-namespace Pixeval.Utilities.McpServer;
+namespace Pixeval.Models.McpServer;
 
 public sealed partial class PixevalMcpService
 {
@@ -23,7 +23,7 @@ public sealed partial class PixevalMcpService
         string? imageUrl,
         long? illustrationId,
         int page,
-        int limit,
+        int count,
         string? index,
         double minSimilarity,
         bool loadPixivWorks,
@@ -49,7 +49,7 @@ public sealed partial class PixevalMcpService
         var request = new SauceNaoRequest(apiKey)
         {
             Index = ParseSauceNaoIndex(index),
-            NumberResult = int.Clamp(limit, 1, 100)
+            NumberResult = int.Clamp(count, 1, 100)
         };
         var response = await ViewModel.GetRequiredHttpClient()
             .PostAsync(request.ToQueryString(), form, cancellationToken)
@@ -64,7 +64,7 @@ public sealed partial class PixevalMcpService
 
         var filtered = result.Results
             .Where(item => item.Header.Similarity >= minSimilarity)
-            .Take(int.Clamp(limit, 1, 100))
+            .Take(int.Clamp(count, 1, 100))
             .Select(item => ToSauceNaoResultDtoAsync(item, loadPixivWorks, cancellationToken))
             .ToArray();
         var results = await Task.WhenAll(filtered).ConfigureAwait(false);
@@ -107,9 +107,7 @@ public sealed partial class PixevalMcpService
         }
 
         EnsureLoggedIn();
-        var illustration = await MakoClient.GetIllustrationFromIdAsync(illustrationId!.Value)
-            .WaitAsync(cancellationToken)
-            .ConfigureAwait(false);
+        var illustration = await GetIllustrationAsync(illustrationId!.Value, cancellationToken).ConfigureAwait(false);
         var pages = GetOriginalImagePages(illustration);
         if (page < 0 || page >= pages.Count)
             throw new PixevalMcpException($"page must be between 0 and {pages.Count - 1}.");
@@ -135,9 +133,7 @@ public sealed partial class PixevalMcpService
             EnsureLoggedIn();
             try
             {
-                var illustration = await MakoClient.GetIllustrationFromIdAsync(pixivId)
-                    .WaitAsync(cancellationToken)
-                    .ConfigureAwait(false);
+                var illustration = await GetIllustrationAsync(pixivId, cancellationToken).ConfigureAwait(false);
                 work = PixevalWorkDto.FromIllustration(illustration);
             }
             catch (Exception e)

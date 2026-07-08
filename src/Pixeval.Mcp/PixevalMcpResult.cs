@@ -53,13 +53,17 @@ internal static class PixevalMcpResult
 
     private static void AddEnumConverters(JsonSerializerOptions options)
     {
+        AddEnumConverter<PixevalHelpTopic>(options);
         AddEnumConverter<WorkType>(options);
         AddEnumConverter<SimpleWorkType>(options);
         AddEnumConverter<PrivacyPolicy>(options);
         AddEnumConverter<RankOption>(options);
         AddEnumConverter<WorkSortOption>(options);
         AddEnumConverter<SearchIllustrationTagMatchOption>(options);
+        AddEnumConverter<SearchIllustrationContentType>(options);
+        AddEnumConverter<SearchIllustrationRatioPattern>(options);
         AddEnumConverter<SearchNovelTagMatchOption>(options);
+        AddEnumConverter<SearchNovelContentLengthOption>(options);
         AddEnumConverter<PixevalHistoryType>(options);
         AddEnumConverter<PixevalDownloadAction>(options);
         AddEnumConverter<PixevalWorkSubscriptionType>(options);

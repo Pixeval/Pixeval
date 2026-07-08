@@ -7,7 +7,7 @@ public sealed record PixevalCapabilitiesDto(
     bool LoggedIn,
     bool WriteToolsEnabled,
     bool ThumbnailResourcesEnabled,
-    int Port,
+    ushort Port,
     string Endpoint,
     int MaxBinaryResourceMegabytes)
 {

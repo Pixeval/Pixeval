@@ -6,7 +6,7 @@ namespace Pixeval.Mcp.Dtos;
 public sealed record PixevalHistoryListDto(
     string Type,
     int Skip,
-    int Limit,
+    int RequestedCount,
     int Total,
     int Count,
     IReadOnlyList<PixevalHistoryItemDto> Items,

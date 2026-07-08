@@ -8,7 +8,7 @@ using Mako.Model;
 using Pixeval.Mcp.Dtos;
 using Pixeval.ViewModels;
 
-namespace Pixeval.Utilities.McpServer;
+namespace Pixeval.Models.McpServer;
 
 public sealed partial class PixevalMcpService
 {
@@ -17,7 +17,7 @@ public sealed partial class PixevalMcpService
         bool includeMarkdown,
         CancellationToken cancellationToken)
     {
-        var novelTask = MakoClient.GetNovelFromIdAsync(id).WaitAsync(cancellationToken);
+        var novelTask = GetNovelAsync(id, cancellationToken);
         var contentTask = MakoClient.GetNovelContentAsync(id).WaitAsync(cancellationToken);
         await Task.WhenAll(novelTask, contentTask).ConfigureAwait(false);
 

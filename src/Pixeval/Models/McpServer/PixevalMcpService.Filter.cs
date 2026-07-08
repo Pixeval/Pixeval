@@ -10,7 +10,7 @@ using Pixeval.Mcp;
 using Pixeval.Mcp.Dtos;
 using Pixeval.Models.Filters;
 
-namespace Pixeval.Utilities.McpServer;
+namespace Pixeval.Models.McpServer;
 
 public sealed partial class PixevalMcpService
 {

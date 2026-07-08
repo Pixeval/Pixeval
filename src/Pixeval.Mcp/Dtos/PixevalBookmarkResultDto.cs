@@ -6,5 +6,5 @@ namespace Pixeval.Mcp.Dtos;
 public sealed record PixevalBookmarkResultDto(
     bool Success,
     string Message,
-    bool IsBookmarked,
-    PixevalWorkDto Work);
+    bool? IsBookmarked,
+    PixevalWorkDto? Work);

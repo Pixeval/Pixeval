@@ -5,4 +5,6 @@ namespace Pixeval.Mcp.Dtos;
 
 public sealed record PixevalUserListDto(
     int Count,
-    IReadOnlyList<PixevalUserDto> Users);
+    IReadOnlyList<PixevalUserDto> Users,
+    bool HasMore = false,
+    string? NextCursor = null);
