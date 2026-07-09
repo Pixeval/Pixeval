@@ -181,7 +181,7 @@ public class WorkSubscriptionDownloadService(
                 _ => (WorkType?) null
             };
             if (workType is { } type)
-                yield return makoClient.WorkPosts(subscription.UserId, type);
+                yield return makoClient.WorkPosted(subscription.UserId, type);
         }
     }
 

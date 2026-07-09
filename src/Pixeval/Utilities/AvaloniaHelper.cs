@@ -56,7 +56,10 @@ public static class AvaloniaHelper
         new(typeof(UserFollowingPage), Symbol.PersonHeart, MainPageResources.TabUserFollowing),
         new(typeof(SpotlightPage), Symbol.SlideTextSparkle, MainPageResources.TabSpotlight),
         new(typeof(UserRecommendPage), Symbol.PeopleCommunity, MainPageResources.TabUserRecommended),
+        new(typeof(UserFollowerPage), Symbol.People, MainPageResources.TabUserFollower),
+        new(typeof(UserMyPixivPage), Symbol.PeopleInterwoven, MainPageResources.TabUserMyPixiv),
         new(typeof(WorkFollowingPage), Symbol.AlertUrgent, MainPageResources.TabWorkFollowing),
+        new(typeof(WorkMyPixivPage), Symbol.Molecule, MainPageResources.TabWorkMyPixiv),
         new(typeof(WorkNewPage), Symbol.ArrowSync, MainPageResources.TabWorkNew),
         // new (typeof(FeedsPage), Symbol.Molecule, MainPageResources.FeedTabContent),
     ];

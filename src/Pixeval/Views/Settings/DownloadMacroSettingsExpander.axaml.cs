@@ -44,7 +44,6 @@ public partial class DownloadMacroSettingsExpander : SettingsExpander, IEntryCon
     {
         InitializeComponent();
         DownloadPathMacroTextBox.TextArea.TextView.LineTransformers.Add(_colorizer);
-        DownloadPathMacroTextBox.TextChanged += DownloadPathMacroTextBox_OnTextChanged;
     }
 
     private void DownloadPathMacroTextBox_OnTextChanged(object? sender, EventArgs e)

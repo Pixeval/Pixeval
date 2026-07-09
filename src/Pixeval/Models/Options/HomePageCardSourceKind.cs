@@ -29,6 +29,14 @@ public enum HomePageCardSourceKind
     [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionWorkFollowing, Key = nameof(HomeCardTemplate.Description))]
     WorkFollowing,
 
+    [LocalizedResource(MainPageResources.TabWorkMyPixiv)]
+    [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionWorkMyPixiv, Key = nameof(HomeCardTemplate.Description))]
+    WorkMyPixiv,
+
+    [LocalizedResource(MainPageResources.TabWorkRelated)]
+    [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionWorkRelated, Key = nameof(HomeCardTemplate.Description))]
+    WorkRelated,
+
     [LocalizedResource(MainPageResources.TabWorkPosts)]
     [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionWorkPosts, Key = nameof(HomeCardTemplate.Description))]
     WorkPosts,
@@ -48,6 +56,10 @@ public enum HomePageCardSourceKind
     [LocalizedResource(MainPageResources.TabUserFollowing)]
     [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionUserFollowing, Key = nameof(HomeCardTemplate.Description))]
     UserFollowing,
+
+    [LocalizedResource(MainPageResources.TabUserFollower)]
+    [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionUserFollower, Key = nameof(HomeCardTemplate.Description))]
+    UserFollower,
 
     [LocalizedResource(MainPageResources.TabUserMyPixiv)]
     [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionUserMyPixiv, Key = nameof(HomeCardTemplate.Description))]

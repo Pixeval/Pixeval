@@ -126,7 +126,7 @@ public class WorkPostsPage : WorkTypeWorksPage
 
     protected override IFetchEngine<IWorkEntry> GetFetchEngine(MakoClient makoClient, WorkType workType)
     {
-        return makoClient.WorkPosts(_user.Id, workType);
+        return makoClient.WorkPosted(_user.Id, workType);
     }
 
     protected override void OnSourceChanged(IFetchEngine<IWorkEntry> engine, WorkType workType)

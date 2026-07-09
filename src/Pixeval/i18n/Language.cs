@@ -284,15 +284,18 @@ namespace Pixeval
         public const string HomePageCardSourceKindDescriptionSingleNovel = "Enum.HomePageCardSourceKindDescription.SingleNovel";
         public const string HomePageCardSourceKindDescriptionSingleUser = "Enum.HomePageCardSourceKindDescription.SingleUser";
         public const string HomePageCardSourceKindDescriptionSpotlight = "Enum.HomePageCardSourceKindDescription.Spotlight";
+        public const string HomePageCardSourceKindDescriptionUserFollower = "Enum.HomePageCardSourceKindDescription.UserFollower";
         public const string HomePageCardSourceKindDescriptionUserFollowing = "Enum.HomePageCardSourceKindDescription.UserFollowing";
         public const string HomePageCardSourceKindDescriptionUserMyPixiv = "Enum.HomePageCardSourceKindDescription.UserMyPixiv";
         public const string HomePageCardSourceKindDescriptionUserRecommended = "Enum.HomePageCardSourceKindDescription.UserRecommended";
         public const string HomePageCardSourceKindDescriptionUserSearch = "Enum.HomePageCardSourceKindDescription.UserSearch";
         public const string HomePageCardSourceKindDescriptionWorkBookmarks = "Enum.HomePageCardSourceKindDescription.WorkBookmarks";
         public const string HomePageCardSourceKindDescriptionWorkFollowing = "Enum.HomePageCardSourceKindDescription.WorkFollowing";
+        public const string HomePageCardSourceKindDescriptionWorkMyPixiv = "Enum.HomePageCardSourceKindDescription.WorkMyPixiv";
         public const string HomePageCardSourceKindDescriptionWorkNew = "Enum.HomePageCardSourceKindDescription.WorkNew";
         public const string HomePageCardSourceKindDescriptionWorkPosts = "Enum.HomePageCardSourceKindDescription.WorkPosts";
         public const string HomePageCardSourceKindDescriptionWorkRanking = "Enum.HomePageCardSourceKindDescription.WorkRanking";
+        public const string HomePageCardSourceKindDescriptionWorkRelated = "Enum.HomePageCardSourceKindDescription.WorkRelated";
         public const string HomePageCardSourceKindDescriptionWorkRecommended = "Enum.HomePageCardSourceKindDescription.WorkRecommended";
         public const string HomePageCardSourceKindDescriptionWorkSearch = "Enum.HomePageCardSourceKindDescription.WorkSearch";
         public const string IllustrationDownloadFormatOriginal = "Enum.IllustrationDownloadFormat.Original";
@@ -643,6 +646,7 @@ namespace Pixeval
         public const string TabSingleNovel = "MainPage.Tab.SingleNovel";
         public const string TabSingleUser = "MainPage.Tab.SingleUser";
         public const string TabSpotlight = "MainPage.Tab.Spotlight";
+        public const string TabUserFollower = "MainPage.Tab.UserFollower";
         public const string TabUserFollowing = "MainPage.Tab.UserFollowing";
         public const string TabUserMyPixiv = "MainPage.Tab.UserMyPixiv";
         public const string TabUserRecommended = "MainPage.Tab.UserRecommended";
@@ -650,9 +654,11 @@ namespace Pixeval
         public const string TabWatchLater = "MainPage.Tab.WatchLater";
         public const string TabWorkBookmarks = "MainPage.Tab.WorkBookmarks";
         public const string TabWorkFollowing = "MainPage.Tab.WorkFollowing";
+        public const string TabWorkMyPixiv = "MainPage.Tab.WorkMyPixiv";
         public const string TabWorkNew = "MainPage.Tab.WorkNew";
         public const string TabWorkPosts = "MainPage.Tab.WorkPosts";
         public const string TabWorkRanking = "MainPage.Tab.WorkRanking";
+        public const string TabWorkRelated = "MainPage.Tab.WorkRelated";
         public const string TabWorkRecommended = "MainPage.Tab.WorkRecommended";
         public const string TabWorkSearch = "MainPage.Tab.WorkSearch";
     }

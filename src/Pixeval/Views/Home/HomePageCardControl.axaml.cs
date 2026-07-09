@@ -315,6 +315,12 @@ public sealed partial class HomePageCardControl : TemplatedControl, IDisposable
             case HomePageCardSourceKind.WorkFollowing:
                 viewContainer.NavigateTo(new WorkFollowingPage(Card.SimpleWorkType, Card.PrivacyPolicy, CloneWorkViewModel()));
                 break;
+            case HomePageCardSourceKind.WorkMyPixiv:
+                viewContainer.NavigateTo(new WorkMyPixivPage(Card.SimpleWorkType, CloneWorkViewModel()));
+                break;
+            case HomePageCardSourceKind.WorkRelated:
+                viewContainer.NavigateTo(new WorkRelatedPage(Card.EntryId, Card.SimpleWorkType, CloneWorkViewModel()));
+                break;
             case HomePageCardSourceKind.WorkSearch:
                 var searchText = Card.SearchText ?? "";
                 viewContainer.NavigateTo(new WorkSearchResultPage(
@@ -332,6 +338,9 @@ public sealed partial class HomePageCardControl : TemplatedControl, IDisposable
                 break;
             case HomePageCardSourceKind.UserFollowing:
                 viewContainer.NavigateTo(new UserFollowingPage(Card.UserId, Card.PrivacyPolicy, CloneUserViewModel()));
+                break;
+            case HomePageCardSourceKind.UserFollower:
+                viewContainer.NavigateTo(new UserFollowerPage(CloneUserViewModel()));
                 break;
             case HomePageCardSourceKind.UserMyPixiv:
                 viewContainer.NavigateTo(new UserMyPixivPage(Card.UserId, CloneUserViewModel()));

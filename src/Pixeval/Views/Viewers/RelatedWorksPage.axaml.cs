@@ -3,6 +3,7 @@
 
 using Avalonia;
 using Avalonia.Controls;
+using Mako.Global.Enum;
 
 namespace Pixeval.Views.Viewers;
 
@@ -27,7 +28,7 @@ public partial class RelatedWorksPage : ContentPage
             var id = change.GetNewValue<long>();
             if (id is 0)
                 return;
-            RelatedWorksView.ResetEngine(App.AppViewModel.MakoClient.IllustrationRelated(id));
+            RelatedWorksView.ResetEngine(App.AppViewModel.MakoClient.WorkRelated(id, SimpleWorkType.Illustration));
         }
     }
 }

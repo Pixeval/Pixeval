@@ -411,7 +411,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         CancellationToken cancellationToken = default) =>
         ExecuteWorkCursorAsync(
             nameof(PostsAsync),
-            () => runtime.MakoClient.WorkPosts(userId, workType),
+            () => runtime.MakoClient.WorkPosted(userId, workType),
             count,
             workFilter,
             cancellationToken);
@@ -419,9 +419,8 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
     [McpServerTool(Name = "my_pixiv_works", Title = "Get Pixiv MyPixiv works", ReadOnly = true,
         OpenWorld = true, UseStructuredContent = true, OutputSchemaType = typeof(PixevalWorkListDto))]
     [Description(
-        "Gets works from a user's MyPixiv users for illustrations/manga or novels. If hasMore is true, call more(nextCursor) to continue.")]
+        "Gets works from MyPixiv users for illustrations/manga or novels. If hasMore is true, call more(nextCursor) to continue.")]
     public Task<CallToolResult> MyPixivWorksAsync(
-        [Description("Pixiv user id.")] long userId,
         [Description("Work type.")] SimpleWorkType workType = SimpleWorkType.Illustration,
         [Description("Maximum number of works to return in this call. Clamped to 1..100.")]
         int count = DefaultCount,
@@ -431,7 +430,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         CancellationToken cancellationToken = default) =>
         ExecuteWorkCursorAsync(
             nameof(MyPixivWorksAsync),
-            () => runtime.MakoClient.WorkMyPixiv(workType, userId),
+            () => runtime.MakoClient.WorkMyPixiv(workType),
             count,
             workFilter,
             cancellationToken);
@@ -439,10 +438,11 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
     [McpServerTool(Name = "related_works", Title = "Get Pixiv related works", ReadOnly = true,
         OpenWorld = true, UseStructuredContent = true, OutputSchemaType = typeof(PixevalWorkListDto))]
     [Description(
-        "Gets works related to a Pixiv illustration or manga. If hasMore is true, call more(nextCursor) to continue.")]
+        "Gets works related to a Pixiv illustration/manga or novel. If hasMore is true, call more(nextCursor) to continue.")]
     public Task<CallToolResult> RelatedWorksAsync(
-        [Description("Pixiv illustration or manga id.")]
-        long illustrationId,
+        [Description("Work type.")] SimpleWorkType workType,
+        [Description("Pixiv illustration/manga or novel id.")]
+        long id,
         [Description("Maximum number of works to return in this call. Clamped to 1..100.")]
         int count = DefaultCount,
         [Description(
@@ -451,7 +451,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         CancellationToken cancellationToken = default) =>
         ExecuteWorkCursorAsync(
             nameof(RelatedWorksAsync),
-            () => runtime.MakoClient.IllustrationRelated(illustrationId),
+            () => runtime.MakoClient.WorkRelated(id, workType),
             count,
             workFilter,
             cancellationToken);
@@ -461,16 +461,13 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
     [Description(
         "Gets the logged-in account's Pixiv manga or novel series watchlist. If hasMore is true, call more(nextCursor) to continue.")]
     public Task<CallToolResult> SeriesWatchlistAsync(
-        [Description("Series work type. Illustration is not supported by Pixiv series watchlists.")]
-        WorkType workType = WorkType.Manga,
+        [Description("Series work type.")] SimpleWorkType workType = SimpleWorkType.Illustration,
         [Description("Maximum number of series to return in this call. Clamped to 1..100.")]
         int count = DefaultCount,
         CancellationToken cancellationToken = default) =>
         ExecuteAsync(nameof(SeriesWatchlistAsync), async () =>
         {
             runtime.EnsureLoggedIn();
-            if (workType is WorkType.Illustration)
-                throw new PixevalMcpException("Pixiv series watchlist only supports manga and novel.");
 
             return PixevalMcpResult.Success(await cursorStore.CreateSeriesCursorAsync(
                     runtime.MakoClient.WorkSeriesWatchlist(workType),
@@ -524,6 +521,23 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
             }
 
             return PixevalMcpResult.Success(new PixevalUserListDto(users.Count, users));
+        });
+
+    [McpServerTool(Name = "related_users", Title = "Get Pixiv related users", ReadOnly = true,
+        OpenWorld = true, UseStructuredContent = true, OutputSchemaType = typeof(PixevalUserListDto))]
+    [Description("Gets Pixiv users related to a seed user. Pixiv returns a fixed-size result set, so this tool does not use a cursor.")]
+    public Task<CallToolResult> RelatedUsersAsync(
+        [Description("Seed Pixiv user id.")] long userId,
+        CancellationToken cancellationToken = default) =>
+        ExecuteAsync(nameof(RelatedUsersAsync), async () =>
+        {
+            runtime.EnsureLoggedIn();
+            var users = await runtime.MakoClient.RelatedUserAsync(userId)
+                .WaitAsync(cancellationToken)
+                .ConfigureAwait(false);
+            runtime.CacheUsers(users);
+            var result = users.Select(PixevalUserDto.FromUser).ToArray();
+            return PixevalMcpResult.Success(new PixevalUserListDto(result.Length, result));
         });
 
     [McpServerTool(Name = "thumbnails", Title = "Get Pixiv work thumbnails",
@@ -723,6 +737,24 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
                 throw new PixevalMcpException("Current Pixiv user is not available.");
             return PixevalMcpResult.Success(await cursorStore.CreateUserCursorAsync(
                     runtime.MakoClient.UserFollowing(uid, privacy),
+                    runtime,
+                    count,
+                    cancellationToken)
+                .ConfigureAwait(false));
+        });
+
+    [McpServerTool(Name = "followers", Title = "Get Pixiv followers", ReadOnly = true,
+        OpenWorld = true, UseStructuredContent = true, OutputSchemaType = typeof(PixevalUserListDto))]
+    [Description("Gets users who follow the logged-in Pixiv account. If hasMore is true, call more(nextCursor) to continue.")]
+    public Task<CallToolResult> FollowersAsync(
+        [Description("Maximum number of users to return in this call. Clamped to 1..100.")]
+        int count = DefaultCount,
+        CancellationToken cancellationToken = default) =>
+        ExecuteAsync(nameof(FollowersAsync), async () =>
+        {
+            runtime.EnsureLoggedIn();
+            return PixevalMcpResult.Success(await cursorStore.CreateUserCursorAsync(
+                    runtime.MakoClient.UserFollower(),
                     runtime,
                     count,
                     cancellationToken)

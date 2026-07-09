@@ -31,9 +31,7 @@ public class CommentsViewViewModel(SimpleWorkType parentType, long parentId) : E
 
     public virtual void RefreshEngine()
     {
-        ResetEngine(ParentType is SimpleWorkType.Novel
-                ? App.AppViewModel.MakoClient.NovelComments(ParentId)
-                : App.AppViewModel.MakoClient.IllustrationComments(ParentId),
+        ResetEngine(App.AppViewModel.MakoClient.WorkComments(ParentType, ParentId),
             (comment, _) => new(comment, ParentType, ParentId, true));
     }
 }

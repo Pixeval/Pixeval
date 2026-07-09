@@ -49,7 +49,7 @@ public partial class HomePageViewModel : ViewModelBase
     public bool HasSelectedCard => _selectedCard is not null;
 
     public string SelectedCardDescription => _selectedCard?.ToString()
-                                           ?? I18NManager.GetResource(HomePageResources.NoSelectedCardTextBlockText);
+                                             ?? I18NManager.GetResource(HomePageResources.NoSelectedCardTextBlockText);
 
     [ObservableProperty]
     public partial decimal SelectedColumnValue { get; set; } = 1;
@@ -82,7 +82,8 @@ public partial class HomePageViewModel : ViewModelBase
         or HomePageCardSourceKind.WorkNew or HomePageCardSourceKind.WorkPosts;
 
     public bool IsSourceSimpleWorkTypePanelVisible => PendingTemplate?.SourceKind is HomePageCardSourceKind.WorkBookmarks
-        or HomePageCardSourceKind.WorkRanking or HomePageCardSourceKind.WorkFollowing or HomePageCardSourceKind.WorkSearch;
+        or HomePageCardSourceKind.WorkRanking or HomePageCardSourceKind.WorkFollowing or HomePageCardSourceKind.WorkMyPixiv
+        or HomePageCardSourceKind.WorkRelated or HomePageCardSourceKind.WorkSearch;
 
     public bool IsSourcePrivacyPolicyPanelVisible => PendingTemplate?.SourceKind is HomePageCardSourceKind.WorkBookmarks
         or HomePageCardSourceKind.WorkFollowing or HomePageCardSourceKind.UserFollowing;
@@ -95,8 +96,8 @@ public partial class HomePageViewModel : ViewModelBase
         or HomePageCardSourceKind.WorkPosts or HomePageCardSourceKind.UserFollowing or HomePageCardSourceKind.UserMyPixiv
         or HomePageCardSourceKind.SingleUser;
 
-    public bool IsSourceEntryIdPanelVisible => PendingTemplate?.SourceKind is HomePageCardSourceKind.SingleImage
-        or HomePageCardSourceKind.SingleNovel;
+    public bool IsSourceEntryIdPanelVisible => PendingTemplate?.SourceKind is HomePageCardSourceKind.WorkRelated
+        or HomePageCardSourceKind.SingleImage or HomePageCardSourceKind.SingleNovel;
 
     public bool IsSourceSearchTextPanelVisible => PendingTemplate?.SourceKind is HomePageCardSourceKind.WorkSearch
         or HomePageCardSourceKind.UserSearch;
@@ -307,7 +308,7 @@ public partial class HomePageViewModel : ViewModelBase
             or HomePageCardSourceKind.UserFollowing or HomePageCardSourceKind.UserMyPixiv or HomePageCardSourceKind.SingleUser;
 
     private static bool NeedsEntryId(HomePageCardSourceKind sourceKind) =>
-        sourceKind is HomePageCardSourceKind.SingleImage or HomePageCardSourceKind.SingleNovel;
+        sourceKind is HomePageCardSourceKind.WorkRelated or HomePageCardSourceKind.SingleImage or HomePageCardSourceKind.SingleNovel;
 
     private static bool TryReadUInt64(string? text, out long value) =>
         long.TryParse(text, out value) && value > 0;
@@ -319,11 +320,14 @@ public partial class HomePageViewModel : ViewModelBase
         new(HomePageCardSourceKind.WorkRanking),
         new(HomePageCardSourceKind.WorkNew),
         new(HomePageCardSourceKind.WorkFollowing),
+        new(HomePageCardSourceKind.WorkMyPixiv),
+        new(HomePageCardSourceKind.WorkRelated),
         new(HomePageCardSourceKind.WorkPosts),
         new(HomePageCardSourceKind.WorkSearch),
         new(HomePageCardSourceKind.UserRecommended),
         new(HomePageCardSourceKind.UserSearch),
         new(HomePageCardSourceKind.UserFollowing),
+        new(HomePageCardSourceKind.UserFollower),
         new(HomePageCardSourceKind.UserMyPixiv),
         new(HomePageCardSourceKind.Spotlight),
         new(HomePageCardSourceKind.SingleImage),

@@ -59,6 +59,7 @@
                     FontSize="14"
                     HorizontalScrollBarVisibility="Auto"
                     ShowLineNumbers="False"
+                    TextChanged="DownloadPathMacroTextBox_OnTextChanged"
                     VerticalScrollBarVisibility="Auto" />
                 <TextBlock>
                     <Run Text="{I18N {x:Static pixeval:SettingsMainViewResources.SinglePathBlockText}}" />

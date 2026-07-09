@@ -72,12 +72,15 @@ public record HomePageCardLayout
             or HomePageCardSourceKind.WorkRanking
             or HomePageCardSourceKind.WorkNew
             or HomePageCardSourceKind.WorkFollowing
+            or HomePageCardSourceKind.WorkMyPixiv
+            or HomePageCardSourceKind.WorkRelated
             or HomePageCardSourceKind.WorkPosts
             or HomePageCardSourceKind.WorkSearch
-            =>  HomePageCardTemplateKind.WorkList,
+            => HomePageCardTemplateKind.WorkList,
         HomePageCardSourceKind.UserRecommended
             or HomePageCardSourceKind.UserSearch
             or HomePageCardSourceKind.UserFollowing
+            or HomePageCardSourceKind.UserFollower
             or HomePageCardSourceKind.UserMyPixiv
             => HomePageCardTemplateKind.UserList,
         HomePageCardSourceKind.Spotlight => HomePageCardTemplateKind.SpotlightList,
@@ -120,6 +123,13 @@ public record HomePageCardLayout
                 case HomePageCardSourceKind.WorkFollowing:
                     yield return GetDescription(SimpleWorkType);
                     yield return GetDescription(PrivacyPolicy);
+                    break;
+                case HomePageCardSourceKind.WorkMyPixiv:
+                    yield return GetDescription(SimpleWorkType);
+                    break;
+                case HomePageCardSourceKind.WorkRelated:
+                    yield return EntryId.ToString();
+                    yield return GetDescription(SimpleWorkType);
                     break;
                 case HomePageCardSourceKind.WorkSearch:
                     yield return GetDescription(SimpleWorkType);

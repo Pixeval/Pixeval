@@ -74,14 +74,14 @@ public static class HomePageCardSourceFactory
         var client = App.AppViewModel.MakoClient;
         return card.SourceKind switch
         {
-            HomePageCardSourceKind.WorkRecommended => card.WorkType is WorkType.Manga
-                ? client.MangaRecommended()
-                : client.IllustrationRecommended(),
-            HomePageCardSourceKind.WorkBookmarks => client.IllustrationBookmarks(card.UserId, card.Tag, card.PrivacyPolicy),
-            HomePageCardSourceKind.WorkRanking => client.IllustrationRanking(card.RankOption, card.GetRankingDate()),
-            HomePageCardSourceKind.WorkNew => client.IllustrationNew(card.WorkType is WorkType.Manga, null),
-            HomePageCardSourceKind.WorkFollowing => client.IllustrationFollowing(card.PrivacyPolicy),
-            HomePageCardSourceKind.WorkPosts => client.IllustrationPosted(card.UserId, card.WorkType is WorkType.Manga ? WorkType.Manga : WorkType.Illustration),
+            HomePageCardSourceKind.WorkRecommended => client.WorkRecommended(card.WorkType),
+            HomePageCardSourceKind.WorkBookmarks => client.WorkBookmarks(card.UserId, card.SimpleWorkType, card.PrivacyPolicy, card.Tag),
+            HomePageCardSourceKind.WorkRanking => client.WorkRanking(card.SimpleWorkType, card.RankOption, card.GetRankingDate()),
+            HomePageCardSourceKind.WorkNew => client.WorkNew(card.WorkType),
+            HomePageCardSourceKind.WorkFollowing => client.WorkFollowing(card.SimpleWorkType, card.PrivacyPolicy),
+            HomePageCardSourceKind.WorkMyPixiv => client.WorkMyPixiv(card.SimpleWorkType),
+            HomePageCardSourceKind.WorkRelated => client.WorkRelated(card.EntryId, card.SimpleWorkType),
+            HomePageCardSourceKind.WorkPosts => client.WorkPosted(card.UserId, card.WorkType),
             HomePageCardSourceKind.WorkSearch => string.IsNullOrWhiteSpace(card.SearchText)
                 ? client.Computed(AsyncEnumerable.Empty<IArtworkInfo>())
                 : client.IllustrationSearch(new IllustrationSearchArguments(card.SearchText)),
@@ -94,18 +94,23 @@ public static class HomePageCardSourceFactory
         var client = App.AppViewModel.MakoClient;
         return card.SourceKind switch
         {
-            HomePageCardSourceKind.WorkRecommended => client.NovelRecommended(),
-            HomePageCardSourceKind.WorkBookmarks => client.NovelBookmarks(card.UserId, card.Tag, card.PrivacyPolicy),
-            HomePageCardSourceKind.WorkRanking => client.NovelRanking(card.RankOption, card.GetRankingDate()),
-            HomePageCardSourceKind.WorkNew => client.NovelNew(null),
-            HomePageCardSourceKind.WorkFollowing => client.NovelFollowing(card.PrivacyPolicy),
-            HomePageCardSourceKind.WorkPosts => client.NovelPosted(card.UserId),
+            HomePageCardSourceKind.WorkRecommended => CreateNovelEngine(client.WorkRecommended(WorkType.Novel)),
+            HomePageCardSourceKind.WorkBookmarks => CreateNovelEngine(client.WorkBookmarks(card.UserId, SimpleWorkType.Novel, card.PrivacyPolicy, card.Tag)),
+            HomePageCardSourceKind.WorkRanking => CreateNovelEngine(client.WorkRanking(SimpleWorkType.Novel, card.RankOption, card.GetRankingDate())),
+            HomePageCardSourceKind.WorkNew => CreateNovelEngine(client.WorkNew(WorkType.Novel)),
+            HomePageCardSourceKind.WorkFollowing => CreateNovelEngine(client.WorkFollowing(SimpleWorkType.Novel, card.PrivacyPolicy)),
+            HomePageCardSourceKind.WorkMyPixiv => CreateNovelEngine(client.WorkMyPixiv(SimpleWorkType.Novel)),
+            HomePageCardSourceKind.WorkRelated => CreateNovelEngine(client.WorkRelated(card.EntryId, SimpleWorkType.Novel)),
+            HomePageCardSourceKind.WorkPosts => CreateNovelEngine(client.WorkPosted(card.UserId, WorkType.Novel)),
             HomePageCardSourceKind.WorkSearch => string.IsNullOrWhiteSpace(card.SearchText)
                 ? client.Computed(AsyncEnumerable.Empty<Novel>())
                 : client.NovelSearch(new NovelSearchArguments(card.SearchText)),
             _ => client.Computed(AsyncEnumerable.Empty<Novel>())
         };
     }
+
+    private static IFetchEngine<Novel> CreateNovelEngine(IFetchEngine<IWorkEntry> engine) =>
+        engine.MakoClient.Computed(SelectNovels(engine));
 
     private static IFetchEngine<User> CreateUserEngine(HomePageCardLayout card)
     {
@@ -117,6 +122,7 @@ public static class HomePageCardSourceFactory
                 ? client.Computed(AsyncEnumerable.Empty<User>())
                 : client.UserSearch(card.SearchText),
             HomePageCardSourceKind.UserFollowing => client.UserFollowing(card.UserId, card.PrivacyPolicy),
+            HomePageCardSourceKind.UserFollower => client.UserFollower(),
             HomePageCardSourceKind.UserMyPixiv => client.UserMyPixiv(card.UserId),
             _ => client.Computed(AsyncEnumerable.Empty<User>())
         };
@@ -126,7 +132,8 @@ public static class HomePageCardSourceFactory
         card.SourceKind switch
         {
             HomePageCardSourceKind.WorkRecommended or HomePageCardSourceKind.WorkNew or HomePageCardSourceKind.WorkPosts => card.WorkType is WorkType.Novel,
-            HomePageCardSourceKind.WorkBookmarks or HomePageCardSourceKind.WorkRanking or HomePageCardSourceKind.WorkFollowing or HomePageCardSourceKind.WorkSearch => card.SimpleWorkType is SimpleWorkType.Novel,
+            HomePageCardSourceKind.WorkBookmarks or HomePageCardSourceKind.WorkRanking or HomePageCardSourceKind.WorkFollowing
+                or HomePageCardSourceKind.WorkMyPixiv or HomePageCardSourceKind.WorkRelated or HomePageCardSourceKind.WorkSearch => card.SimpleWorkType is SimpleWorkType.Novel,
             _ => false
         };
 
@@ -144,4 +151,12 @@ public static class HomePageCardSourceFactory
         await Task.CompletedTask;
     }
 
+    private static async IAsyncEnumerable<Novel> SelectNovels(IAsyncEnumerable<IWorkEntry> source)
+    {
+        await foreach (var item in source)
+        {
+            if (item is Novel novel)
+                yield return novel;
+        }
+    }
 }

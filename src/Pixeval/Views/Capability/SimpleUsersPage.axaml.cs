@@ -91,6 +91,24 @@ public class UserSearchPage : SimpleUsersPage
     }
 }
 
+public class UserFollowerPage : SimpleUsersPage
+{
+    public UserFollowerPage() : this(null)
+    {
+    }
+
+    public UserFollowerPage(UserViewViewModel? viewModel) : base(I18NManager.GetResource(MainPageResources.TabUserFollower), Symbol.People)
+    {
+        InitializeSource(viewModel);
+    }
+
+    /// <inheritdoc />
+    protected override IFetchEngine<User> GetFetchEngine(MakoClient makoClient)
+    {
+        return makoClient.UserFollower();
+    }
+}
+
 public class UserMyPixivPage : SimpleUsersPage
 {
     private readonly long _userId;
@@ -99,7 +117,7 @@ public class UserMyPixivPage : SimpleUsersPage
     {
     }
 
-    public UserMyPixivPage(long id, UserViewViewModel? viewModel = null) : base(I18NManager.GetResource(MainPageResources.TabUserMyPixiv), Symbol.People)
+    public UserMyPixivPage(long id, UserViewViewModel? viewModel = null) : base(I18NManager.GetResource(MainPageResources.TabUserMyPixiv), Symbol.PeopleInterwoven)
     {
         _userId = id;
         InitializeSource(viewModel);
