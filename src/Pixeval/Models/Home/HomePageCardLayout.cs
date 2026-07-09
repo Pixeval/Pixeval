@@ -2,12 +2,9 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using System.Collections.Generic;
-using System.Globalization;
+using System.Text.Json.Serialization;
 using Mako;
 using Mako.Global.Enum;
-using Pixeval.Controls;
-using Pixeval.I18N;
 using Pixeval.Models.Options;
 using Pixeval.Views.Home;
 
@@ -19,14 +16,17 @@ public record HomePageCardLayout
     {
     }
 
-    public HomePageCardLayout(HomeCardTemplate template, int column, int row, int columnSpan = 1, int rowSpan = 1)
+    public HomePageCardLayout(HomeCardDefinition definition, int column, int row, int columnSpan = 1, int rowSpan = 1)
     {
-        SourceKind = template.SourceKind;
-        WorkType = template.WorkType;
-        SimpleWorkType = template.SimpleWorkType;
-        PrivacyPolicy = template.PrivacyPolicy;
-        RankOption = template.RankOption;
-        RankingDate = MakoClient.RankingMaxDateTime;
+        SourceKind = definition.SourceKind;
+        if (definition.HasParameter(HomeCardParameterKinds.WorkType))
+            WorkType = definition.WorkType;
+        if (definition.HasParameter(HomeCardParameterKinds.SimpleWorkType))
+            SimpleWorkType = definition.SimpleWorkType;
+        if (definition.HasParameter(HomeCardParameterKinds.PrivacyPolicy))
+            PrivacyPolicy = definition.PrivacyPolicy;
+        if (definition.HasParameter(HomeCardParameterKinds.RankOption))
+            RankOption = definition.RankOption;
         Column = column;
         Row = row;
         ColumnSpan = columnSpan;
@@ -35,130 +35,62 @@ public record HomePageCardLayout
 
     public HomePageCardSourceKind SourceKind { get; set; }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public WorkType WorkType { get; set; } = WorkType.Illustration;
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public SimpleWorkType SimpleWorkType { get; set; } = SimpleWorkType.Illustration;
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public PrivacyPolicy PrivacyPolicy { get; set; } = PrivacyPolicy.Public;
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public RankOption RankOption { get; set; } = RankOption.Day;
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public long UserId { get; set; }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public long EntryId { get; set; }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? SearchText { get; set; }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Tag { get; set; }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public uint BackgroundColor { get; set; }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public bool UseSpecifiedRankingDate { get; set; }
 
-    public DateTimeOffset RankingDate { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public DateTimeOffset RankingDate
+    {
+        get => UseSpecifiedRankingDate ? field : default;
+        set;
+    }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public int Column { get; set; }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public int Row { get; set; }
 
     public int ColumnSpan { get; set; } = 1;
 
     public int RowSpan { get; set; } = 1;
 
-    public HomePageCardTemplateKind TemplateKind => SourceKind switch
-    {
-        HomePageCardSourceKind.WorkRecommended
-            or HomePageCardSourceKind.WorkBookmarks
-            or HomePageCardSourceKind.WorkRanking
-            or HomePageCardSourceKind.WorkNew
-            or HomePageCardSourceKind.WorkFollowing
-            or HomePageCardSourceKind.WorkMyPixiv
-            or HomePageCardSourceKind.WorkRelated
-            or HomePageCardSourceKind.WorkPosts
-            or HomePageCardSourceKind.WorkSearch
-            => HomePageCardTemplateKind.WorkList,
-        HomePageCardSourceKind.UserRecommended
-            or HomePageCardSourceKind.UserSearch
-            or HomePageCardSourceKind.UserFollowing
-            or HomePageCardSourceKind.UserFollower
-            or HomePageCardSourceKind.UserMyPixiv
-            => HomePageCardTemplateKind.UserList,
-        HomePageCardSourceKind.Spotlight => HomePageCardTemplateKind.SpotlightList,
-        HomePageCardSourceKind.SingleImage => HomePageCardTemplateKind.SingleImage,
-        HomePageCardSourceKind.SingleNovel => HomePageCardTemplateKind.SingleNovel,
-        HomePageCardSourceKind.SingleUser => HomePageCardTemplateKind.SingleUser,
-        _ => throw new ArgumentOutOfRangeException(nameof(SourceKind), SourceKind, null)
-    };
+    [JsonIgnore]
+    public HomePageCardTemplateKind TemplateKind => Definition.TemplateKind;
 
-    public override string ToString()
-    {
-        var parts = new List<string> { SymbolComboBoxItem.GetResource(SourceKind) };
-        parts.AddRange(GetParameterParts());
-        return string.Join(I18NManager.GetResource(HomePageResources.CardTitleParameterSeparator), parts);
+    [JsonIgnore]
+    public HomeCardDefinition Definition => HomeCardDefinitions.Get(SourceKind);
 
-        IEnumerable<string> GetParameterParts()
-        {
-            switch (SourceKind)
-            {
-                case HomePageCardSourceKind.WorkRecommended or HomePageCardSourceKind.WorkNew:
-                    yield return GetDescription(WorkType);
-                    break;
-                case HomePageCardSourceKind.WorkPosts:
-                    yield return $"@{UserId}";
-                    yield return GetDescription(WorkType);
-                    break;
-                case HomePageCardSourceKind.WorkBookmarks:
-                    yield return $"@{UserId}";
-                    yield return GetDescription(SimpleWorkType);
-                    yield return GetDescription(PrivacyPolicy);
-                    if (!string.IsNullOrWhiteSpace(Tag))
-                        yield return $"#{Tag}";
-                    break;
-                case HomePageCardSourceKind.WorkRanking:
-                    yield return GetDescription(SimpleWorkType);
-                    yield return GetRankOptionDescription(this);
-                    if (UseSpecifiedRankingDate)
-                        yield return GetRankingDate().LocalDateTime.ToString("d", CultureInfo.CurrentCulture);
-                    break;
-                case HomePageCardSourceKind.WorkFollowing:
-                    yield return GetDescription(SimpleWorkType);
-                    yield return GetDescription(PrivacyPolicy);
-                    break;
-                case HomePageCardSourceKind.WorkMyPixiv:
-                    yield return GetDescription(SimpleWorkType);
-                    break;
-                case HomePageCardSourceKind.WorkRelated:
-                    yield return EntryId.ToString();
-                    yield return GetDescription(SimpleWorkType);
-                    break;
-                case HomePageCardSourceKind.WorkSearch:
-                    yield return GetDescription(SimpleWorkType);
-                    yield return SearchText ?? "";
-                    break;
-                case HomePageCardSourceKind.UserSearch:
-                    yield return SearchText ?? "";
-                    break;
-                case HomePageCardSourceKind.UserFollowing:
-                    yield return $"@{UserId}";
-                    yield return GetDescription(PrivacyPolicy);
-                    break;
-                case HomePageCardSourceKind.UserMyPixiv or HomePageCardSourceKind.SingleUser:
-                    yield return $"@{UserId}";
-                    break;
-                case HomePageCardSourceKind.SingleImage or HomePageCardSourceKind.SingleNovel:
-                    yield return EntryId.ToString();
-                    break;
-                default:
-                    break;
-            }
-        }
+    public string BuildTitle() => Definition.BuildTitle(this);
 
-        static string GetDescription<TEnum>(TEnum value)
-            where TEnum : struct, Enum =>
-            SymbolComboBoxItem.GetResource(value);
-
-        static string GetRankOptionDescription(HomePageCardLayout card) => SymbolComboBoxItem.GetResource(card.RankOption, card.SimpleWorkType);
-    }
+    public override string ToString() => BuildTitle();
 
     public DateTimeOffset GetRankingDate() =>
         UseSpecifiedRankingDate && RankingDate != default

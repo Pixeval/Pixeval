@@ -3,7 +3,6 @@
 
 using System;
 using System.Linq;
-using Avalonia.Controls;
 using Mako.Engine.Implements;
 using Mako.Global.Enum;
 using Mako.Model;
@@ -13,7 +12,7 @@ using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Search;
 
-public partial class WorkSearchResultPage : ContentPage
+public partial class WorkSearchResultPage : IconContentPage
 {
     public WorkSearchResultPage() : this("")
     {

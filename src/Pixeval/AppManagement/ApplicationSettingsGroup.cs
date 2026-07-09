@@ -8,6 +8,7 @@ using FluentIcons.Common;
 using Mako.Global.Enum;
 using Pixeval.Models.Home;
 using Pixeval.Models.Options;
+using Pixeval.Views.Home;
 using static Pixeval.AppSettingsResources;
 
 namespace Pixeval.AppManagement;
@@ -65,9 +66,9 @@ public record ApplicationSettingsGroup
 
     public ObservableCollection<HomePageCardLayout> HomePageCards { get; set; } =
     [
-        new(new(HomePageCardSourceKind.Spotlight), 0, 0, 1, 2),
-        new(new(HomePageCardSourceKind.UserRecommended), 0, 2, 1, 2),
-        new(new(HomePageCardSourceKind.WorkRecommended), 0, 4, 1, 3)
+        new(HomeCardDefinitions.Get(HomePageCardSourceKind.Spotlight), 0, 0, 1, 2),
+        new(HomeCardDefinitions.Get(HomePageCardSourceKind.UserRecommended), 0, 2, 1, 2),
+        new(HomeCardDefinitions.Get(HomePageCardSourceKind.WorkRecommended), 0, 4, 1, 3)
         {
             SimpleWorkType = SimpleWorkType.Illustration
         }

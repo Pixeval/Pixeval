@@ -11,7 +11,7 @@ using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Capability;
 
-public partial class WorkRankingPage : ContentPage
+public partial class WorkRankingPage : IconContentPage
 {
     public WorkRankingPage() : this(PixevalSettings.SimpleWorkType, App.AppViewModel.AppSettings.SearchSettings.IllustrationRankOption, MaxDate)
     {

@@ -1,18 +1,13 @@
-<ContentPage
+<views:IconContentPage
     x:Class="Pixeval.Views.Capability.SpotlightPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:entry="using:Pixeval.Views.Entry"
-    xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:pixeval="using:Pixeval"
-    Header="{I18N {x:Static pixeval:MainPageResources.TabSpotlight}}"
-    Icon="{markup:SymbolIcon SlideTextSparkle,
-                             FontSize=16,
-                             IconVariant=Color}"
+    xmlns:views="using:Pixeval.Views"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
     <entry:SpotlightView x:Name="SpotlightView" />
-</ContentPage>
+</views:IconContentPage>

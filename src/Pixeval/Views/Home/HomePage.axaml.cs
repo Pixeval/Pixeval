@@ -29,7 +29,7 @@ public sealed partial class HomePage : DrawerPage
         DataContext = ViewModel = new HomePageViewModel();
         InitializeComponent();
 
-        _cards = App.AppViewModel.AppSettings.ApplicationSettings.HomePageCards;
+        _cards = App.AppViewModel.HomePageCards;
         ViewModel.PropertyChanged += ViewModel_OnPropertyChanged;
         UpdateGridSizeControls();
 

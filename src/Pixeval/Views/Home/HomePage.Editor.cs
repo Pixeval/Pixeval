@@ -103,7 +103,7 @@ public sealed partial class HomePage
             newRowSpan = RowCount - newRow;
 
         if (newColumnSpan < 1 || newRowSpan < 1
-            || !CanPlace(_selectedCard, newColumn, newRow, newColumnSpan, newRowSpan))
+                              || !CanPlace(_selectedCard, newColumn, newRow, newColumnSpan, newRowSpan))
         {
             UpdateSelectedCardControls();
             TopLevel.GetTopLevel(this)?.ViewContainer?.ShowWarning(
@@ -237,5 +237,9 @@ public sealed partial class HomePage
 
     private static int DecimalToPositiveInt(decimal? value) => int.Max(1, (int) (value ?? 1));
 
-    private static void SaveLayout() => AppInfo.SaveSettings(App.AppViewModel.AppSettings);
+    private static void SaveLayout()
+    {
+        AppInfo.SaveAppSettings(App.AppViewModel.AppSettings);
+        AppInfo.SaveHomePageCards(App.AppViewModel.HomePageCards);
+    }
 }

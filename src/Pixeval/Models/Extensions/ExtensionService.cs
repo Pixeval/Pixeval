@@ -344,7 +344,7 @@ public sealed class ExtensionService : IDisposable
 
         _ = _pendingExtensionUninstallTargets.Add(model.UninstallTargetRelativePath);
         model.IsPendingUninstall = true;
-        AppInfo.SaveSettings(App.AppViewModel.AppSettings);
+        AppInfo.SaveAppSettings(App.AppViewModel.AppSettings);
         return true;
     }
 
@@ -355,7 +355,7 @@ public sealed class ExtensionService : IDisposable
 
         _ = _pendingExtensionUninstallTargets.Remove(model.UninstallTargetRelativePath);
         model.IsPendingUninstall = false;
-        AppInfo.SaveSettings(App.AppViewModel.AppSettings);
+        AppInfo.SaveAppSettings(App.AppViewModel.AppSettings);
         return true;
     }
 
@@ -382,7 +382,7 @@ public sealed class ExtensionService : IDisposable
         foreach (var model in HostModels)
             model.IsPendingUninstall = _pendingExtensionUninstallTargets.Contains(model.UninstallTargetRelativePath);
 
-        AppInfo.SaveSettings(App.AppViewModel.AppSettings);
+        AppInfo.SaveAppSettings(App.AppViewModel.AppSettings);
         return scheduledTargets.Count;
     }
 
@@ -404,7 +404,7 @@ public sealed class ExtensionService : IDisposable
         }
 
         pendingExtensionUninstallTargets.Clear();
-        AppInfo.SaveSettings(App.AppViewModel.AppSettings);
+        AppInfo.SaveAppSettings(App.AppViewModel.AppSettings);
     }
 
     /// <summary>

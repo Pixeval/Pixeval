@@ -2,7 +2,6 @@
 // Licensed under the GPL-3.0 License.
 
 using System.Linq;
-using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Mako.Global.Enum;
 using Mako.Model;
@@ -10,7 +9,7 @@ using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Capability;
 
-public partial class WorkRelatedPage : ContentPage
+public partial class WorkRelatedPage : IconContentPage
 {
     private readonly long _id;
     private readonly SimpleWorkType _simpleWorkType;

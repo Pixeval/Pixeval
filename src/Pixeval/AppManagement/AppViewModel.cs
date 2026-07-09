@@ -43,9 +43,19 @@ public sealed class AppViewModel(App app, FileLogger logger) : IAsyncDisposable
 
     public MakoClient MakoClient => (MakoClient) GetRequiredPlatformService<IGetArtworkService>(IPlatformInfo.Pixiv);
 
-    public AppSettings AppSettings { get; } = AppInfo.LoadConfig(logger) ?? new AppSettings();
+    public AppSettings AppSettings { get; } = AppInfo.LoadAppSettings(logger) ?? new AppSettings();
 
     public LoginContext LoginContext { get; } = AppInfo.LoadLoginContext(logger) ?? new LoginContext();
+
+    public ObservableCollection<HomePageCardLayout> HomePageCards { get; } =
+        AppInfo.LoadHomePageCards(logger) ?? HomePageCardsSettings.CreateDefaultCards();
+
+    public void ResetHomePageCards()
+    {
+        HomePageCards.Clear();
+        foreach (var card in HomePageCardsSettings.CreateDefaultCards())
+            HomePageCards.Add(card);
+    }
 
     public void InitializeProvider()
     {

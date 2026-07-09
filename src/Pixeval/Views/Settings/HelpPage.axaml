@@ -1,4 +1,4 @@
-<ContentPage
+<views:IconContentPage
     x:Class="Pixeval.Views.Settings.HelpPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -11,7 +11,7 @@
     xmlns:mcpServer="using:Pixeval.Models.McpServer"
     xmlns:pixeval="using:Pixeval"
     xmlns:settings="using:Pixeval.Views.Settings"
-    Header="{I18N {x:Static pixeval:HelpPageResources.TitleTextBlockText}}"
+    xmlns:views="using:Pixeval.Views"
     mc:Ignorable="d"
     d:DesignHeight="800"
     d:DesignWidth="600">
@@ -22,21 +22,28 @@
                 Text="{I18N {x:Static pixeval:HelpPageResources.TitleTextBlockText}}"
                 Theme="{StaticResource TitleTextBlockStyle}" />
             <!--  TODO 支持app protocol或删除该帮助  -->
-            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.AppProtocolLinkHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Link}">
+            <controls:SettingsExpander
+                Header="{I18N {x:Static pixeval:HelpPageResources.AppProtocolLinkHelpExpanderHeader}}"
+                HeaderIcon="{markup:SymbolIcon Link}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
-                        <TextBlock Text="{I18N {x:Static pixeval:HelpPageResources.AppLinkHelpText}}" TextWrapping="Wrap" />
+                        <TextBlock Text="{I18N {x:Static pixeval:HelpPageResources.AppLinkHelpText}}"
+                                   TextWrapping="Wrap" />
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
-            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.DownloadMacroHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Rename}">
+            <controls:SettingsExpander
+                Header="{I18N {x:Static pixeval:HelpPageResources.DownloadMacroHelpExpanderHeader}}"
+                HeaderIcon="{markup:SymbolIcon Rename}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
                         <local:MarkdownBox Markdown="{I18N {x:Static pixeval:MarkdownResources.DownloadMacroHelp}}" />
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
-            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.QueryFilterHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Filter}">
+            <controls:SettingsExpander
+                Header="{I18N {x:Static pixeval:HelpPageResources.QueryFilterHelpExpanderHeader}}"
+                HeaderIcon="{markup:SymbolIcon Filter}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Vertical">
                         <controls:SettingsCard.Header>
@@ -58,7 +65,9 @@
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
-            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.ExtensionsHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon PuzzlePiece}">
+            <controls:SettingsExpander
+                Header="{I18N {x:Static pixeval:HelpPageResources.ExtensionsHelpExpanderHeader}}"
+                HeaderIcon="{markup:SymbolIcon PuzzlePiece}">
 
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
@@ -66,14 +75,17 @@
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
-            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.McpHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Bot}">
+            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.McpHelpExpanderHeader}}"
+                                       HeaderIcon="{markup:SymbolIcon Bot}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
                         <local:MarkdownBox Markdown="{I18N {x:Static pixeval:MarkdownResources.McpHelp}}" />
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
-            <controls:SettingsExpander Description="{I18N {x:Static pixeval:HelpPageResources.McpToolsExpanderDescription}}" Header="{I18N {x:Static pixeval:HelpPageResources.McpToolsExpanderHeader}}">
+            <controls:SettingsExpander
+                Description="{I18N {x:Static pixeval:HelpPageResources.McpToolsExpanderDescription}}"
+                Header="{I18N {x:Static pixeval:HelpPageResources.McpToolsExpanderHeader}}">
                 <controls:SettingsExpander.HeaderIcon>
                     <PathIcon Data="{markup1:SvgPath {x:Static pixeval:SvgResources.MCP}}" />
                 </controls:SettingsExpander.HeaderIcon>
@@ -130,9 +142,11 @@
                                                     Grid.Row="3"
                                                     Margin="0,6,0,0"
                                                     Spacing="6">
-                                                    <ItemsControl IsVisible="{Binding HasParameters}" ItemsSource="{Binding Parameters}">
+                                                    <ItemsControl IsVisible="{Binding HasParameters}"
+                                                                  ItemsSource="{Binding Parameters}">
                                                         <ItemsControl.ItemTemplate>
-                                                            <DataTemplate x:DataType="{x:Type mcpServer:McpToolParameterItemViewModel}">
+                                                            <DataTemplate
+                                                                x:DataType="{x:Type mcpServer:McpToolParameterItemViewModel}">
                                                                 <Grid Margin="0,0,0,4" RowDefinitions="Auto,Auto">
                                                                     <TextBlock
                                                                         FontFamily="Cascadia Code,Consolas,Monospace"
@@ -167,4 +181,4 @@
             </controls:SettingsExpander>
         </StackPanel>
     </ScrollViewer>
-</ContentPage>
+</views:IconContentPage>

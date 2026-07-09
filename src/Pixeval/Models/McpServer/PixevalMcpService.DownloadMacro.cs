@@ -61,7 +61,7 @@ public sealed partial class PixevalMcpService
         }
 
         ViewModel.AppSettings.DownloadSettings.DownloadPathMacro = normalized;
-        AppInfo.SaveSettings(ViewModel.AppSettings);
+        AppInfo.SaveAppSettings(ViewModel.AppSettings);
         return new(true, "Download macro updated.", previous, normalized, analysis);
     }
 

@@ -71,7 +71,7 @@ public sealed partial class HomePage
 
     private void AddCardControl(HomePageCardLayout card)
     {
-        var control = new HomePageCardControl(card, ViewModel.GetTemplate(card), RowCount, ColumnCount)
+        var control = new HomePageCardControl(card, ViewModel.GetDefinition(card), RowCount, ColumnCount)
         {
             IsEditing = ViewModel.IsEditMode,
             IsSelected = card == _selectedCard

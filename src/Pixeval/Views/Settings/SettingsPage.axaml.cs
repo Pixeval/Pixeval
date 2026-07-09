@@ -36,8 +36,8 @@ public partial class SettingsPage : NavigationPage
         foreach (var extensionGroup in vm.ExtensionGroups)
             foreach (var settingsEntry in extensionGroup)
                 settingsEntry.ValueSaving(extensionGroup.Model.Values);
-        
-        AppInfo.SaveSettings(vm.AppSettings);
+
+        AppInfo.SaveSettings();
         // Parent is TabsView
         TopLevel.GetTopLevel(parent as Control)?.ViewContainer?.ShowSuccess(I18NManager.GetResource(SettingsMainViewResources.SettingsSaved));
     }

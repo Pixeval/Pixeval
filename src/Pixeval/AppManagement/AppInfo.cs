@@ -2,11 +2,13 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform;
+using Pixeval.Models.Home;
 using Pixeval.Utilities;
 using SharpYaml;
 
@@ -36,6 +38,8 @@ public static class AppInfo
     private static string AppSettingsPath { get; } = Path.Combine(SettingsFolder, "settings.yaml");
 
     private static string LoginContextPath { get; } = Path.Combine(SettingsFolder, "login_context.yaml");
+
+    private static string HomePageCardsPath { get; } = Path.Combine(SettingsFolder, "home_page_cards.yaml");
 
     public static string DatabaseFilePath { get; } = Path.Combine(SettingsFolder, "PixevalData4.3.12.sqlite");
 
@@ -88,27 +92,15 @@ public static class AppInfo
 
     public static void ClearConfig()
     {
-        try
-        {
-            File.Delete(AppSettingsPath);
-        }
-        catch
-        {
-            // ignored
-        }
+        TryDelete(AppSettingsPath);
+        TryDelete(HomePageCardsPath);
+        TryDelete(NavigationMenuPath);
     }
 
     public static void ClearLoginContext()
     {
-        try
-        {
-            File.Delete(LoginContextPath);
+        TryDelete(LoginContextPath);
         }
-        catch
-        {
-            // ignored
-        }
-    }
 
     public static void SaveWindowContext(Window window)
     {
@@ -125,11 +117,14 @@ public static class AppInfo
     public static void SaveContext()
     {
         SaveLoginContext(App.AppViewModel.LoginContext);
-        SaveSettings(App.AppViewModel.AppSettings);
+        SaveSettings();
     }
 
-    public static AppSettings? LoadConfig(FileLogger logger)
+    public static AppSettings? LoadAppSettings(FileLogger logger)
     {
+        if (!File.Exists(AppSettingsPath))
+            return null;
+
         try
         {
             return YamlSerializer.DeserializeFile(AppSettingsPath, SettingsSerializerContext.Default.AppSettings);
@@ -143,6 +138,9 @@ public static class AppInfo
 
     public static LoginContext? LoadLoginContext(FileLogger logger)
     {
+        if (!File.Exists(LoginContextPath))
+            return null;
+
         try
         {
             return YamlSerializer.DeserializeFile(LoginContextPath, SettingsSerializerContext.Default.LoginContext);
@@ -151,10 +149,32 @@ public static class AppInfo
         {
             logger.LogError("Failed to load settings", e);
             return null;
+    }
+    }
+
+    public static ObservableCollection<HomePageCardLayout>? LoadHomePageCards(FileLogger logger)
+    {
+        if (!File.Exists(HomePageCardsPath))
+            return null;
+
+        try
+        {
+            return YamlSerializer.DeserializeFile(HomePageCardsPath, SettingsSerializerContext.Default.HomePageCardsSettings)?.Cards;
+        }
+        catch (Exception e)
+        {
+            logger.LogError("Failed to load home page cards", e);
+            return null;
         }
     }
 
-    public static void SaveSettings(AppSettings? configuration)
+    public static void SaveSettings()
+    {
+        SaveAppSettings(App.AppViewModel.AppSettings);
+        SaveHomePageCards(App.AppViewModel.HomePageCards);
+    }
+
+    public static void SaveAppSettings(AppSettings? configuration)
     {
         if (configuration is null)
             return;
@@ -168,5 +188,28 @@ public static class AppInfo
             return;
 
         YamlSerializer.SerializeToFile(LoginContextPath, configuration, SettingsSerializerContext.Default.LoginContext);
+    }
+
+    public static void SaveHomePageCards(ObservableCollection<HomePageCardLayout>? cards)
+    {
+        if (cards is null)
+            return;
+
+        YamlSerializer.SerializeToFile(
+            HomePageCardsPath,
+            new HomePageCardsSettings { Cards = cards },
+            SettingsSerializerContext.Default.HomePageCardsSettings);
+    }
+
+    private static void TryDelete(string path)
+    {
+        try
+        {
+            File.Delete(path);
+        }
+        catch
+        {
+            // ignored
+        }
     }
 }

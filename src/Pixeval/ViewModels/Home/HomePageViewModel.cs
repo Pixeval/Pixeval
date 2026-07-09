@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -13,7 +12,6 @@ using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.I18N;
 using Pixeval.Models.Home;
-using Pixeval.Models.Options;
 using Pixeval.Views;
 using Pixeval.Views.Home;
 
@@ -31,7 +29,7 @@ public partial class HomePageViewModel : ViewModelBase
         SyncSelectedCardEditorValues();
     }
 
-    public IReadOnlyList<HomeCardTemplate> CardTemplates { get; } = CreateCardTemplates();
+    public IReadOnlyList<HomeCardDefinition> CardTemplates => HomeCardDefinitions.All;
 
     [ObservableProperty]
     public partial bool IsEditMode { get; set; }
@@ -48,7 +46,7 @@ public partial class HomePageViewModel : ViewModelBase
 
     public bool HasSelectedCard => _selectedCard is not null;
 
-    public string SelectedCardDescription => _selectedCard?.ToString()
+    public string SelectedCardDescription => _selectedCard?.BuildTitle()
                                              ?? I18NManager.GetResource(HomePageResources.NoSelectedCardTextBlockText);
 
     [ObservableProperty]
@@ -66,7 +64,7 @@ public partial class HomePageViewModel : ViewModelBase
     [ObservableProperty]
     public partial Color SelectedBackgroundColor { get; set; } = Color.FromUInt32(0);
 
-    public HomeCardTemplate? PendingTemplate { get; private set; }
+    public HomeCardDefinition? PendingTemplate { get; private set; }
 
     public bool IsAddingConfiguredCard { get; private set; }
 
@@ -78,31 +76,23 @@ public partial class HomePageViewModel : ViewModelBase
 
     public bool CanAddConfiguredCard => PendingTemplate is not null && !IsAddingConfiguredCard;
 
-    public bool IsSourceWorkTypePanelVisible => PendingTemplate?.SourceKind is HomePageCardSourceKind.WorkRecommended
-        or HomePageCardSourceKind.WorkNew or HomePageCardSourceKind.WorkPosts;
+    public bool IsSourceWorkTypePanelVisible => HasPendingParameter(HomeCardParameterKinds.WorkType);
 
-    public bool IsSourceSimpleWorkTypePanelVisible => PendingTemplate?.SourceKind is HomePageCardSourceKind.WorkBookmarks
-        or HomePageCardSourceKind.WorkRanking or HomePageCardSourceKind.WorkFollowing or HomePageCardSourceKind.WorkMyPixiv
-        or HomePageCardSourceKind.WorkRelated or HomePageCardSourceKind.WorkSearch;
+    public bool IsSourceSimpleWorkTypePanelVisible => HasPendingParameter(HomeCardParameterKinds.SimpleWorkType);
 
-    public bool IsSourcePrivacyPolicyPanelVisible => PendingTemplate?.SourceKind is HomePageCardSourceKind.WorkBookmarks
-        or HomePageCardSourceKind.WorkFollowing or HomePageCardSourceKind.UserFollowing;
+    public bool IsSourcePrivacyPolicyPanelVisible => HasPendingParameter(HomeCardParameterKinds.PrivacyPolicy);
 
-    public bool IsSourceRankOptionPanelVisible => PendingTemplate?.SourceKind is HomePageCardSourceKind.WorkRanking;
+    public bool IsSourceRankOptionPanelVisible => HasPendingParameter(HomeCardParameterKinds.RankOption);
 
-    public bool IsSourceRankingDatePanelVisible => PendingTemplate?.SourceKind is HomePageCardSourceKind.WorkRanking;
+    public bool IsSourceRankingDatePanelVisible => HasPendingParameter(HomeCardParameterKinds.RankingDate);
 
-    public bool IsSourceUserIdPanelVisible => PendingTemplate?.SourceKind is HomePageCardSourceKind.WorkBookmarks
-        or HomePageCardSourceKind.WorkPosts or HomePageCardSourceKind.UserFollowing or HomePageCardSourceKind.UserMyPixiv
-        or HomePageCardSourceKind.SingleUser;
+    public bool IsSourceUserIdPanelVisible => HasPendingParameter(HomeCardParameterKinds.UserId);
 
-    public bool IsSourceEntryIdPanelVisible => PendingTemplate?.SourceKind is HomePageCardSourceKind.WorkRelated
-        or HomePageCardSourceKind.SingleImage or HomePageCardSourceKind.SingleNovel;
+    public bool IsSourceEntryIdPanelVisible => HasPendingParameter(HomeCardParameterKinds.EntryId);
 
-    public bool IsSourceSearchTextPanelVisible => PendingTemplate?.SourceKind is HomePageCardSourceKind.WorkSearch
-        or HomePageCardSourceKind.UserSearch;
+    public bool IsSourceSearchTextPanelVisible => HasPendingParameter(HomeCardParameterKinds.SearchText);
 
-    public bool IsSourceTagPanelVisible => PendingTemplate?.SourceKind is HomePageCardSourceKind.WorkBookmarks;
+    public bool IsSourceTagPanelVisible => HasPendingParameter(HomeCardParameterKinds.Tag);
 
     [ObservableProperty]
     public partial WorkType SelectedSourceWorkType { get; set; } = WorkType.Illustration;
@@ -180,7 +170,7 @@ public partial class HomePageViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    public void SelectTemplate(HomeCardTemplate template)
+    public void SelectTemplate(HomeCardDefinition template)
     {
         PendingTemplate = template;
         NotifySourceParameterStateChanged();
@@ -194,36 +184,12 @@ public partial class HomePageViewModel : ViewModelBase
         UseSpecifiedRankingDate = false;
         SelectedRankingDate = MakoClient.RankingMaxDateTime.LocalDateTime;
 
-        switch (template.SourceKind)
-        {
-            case HomePageCardSourceKind.WorkBookmarks or HomePageCardSourceKind.WorkPosts
-                or HomePageCardSourceKind.UserFollowing or HomePageCardSourceKind.UserMyPixiv:
-            {
-                SourceUserIdText = PixevalSettings.MyId.ToString();
-                SourceEntryIdText = "";
-                SourceSearchText = "";
-                if (template.SourceKind is not HomePageCardSourceKind.WorkBookmarks)
-                    SourceTagText = "";
-                break;
-            }
-            case HomePageCardSourceKind.WorkSearch or HomePageCardSourceKind.UserSearch:
-                SourceUserIdText = "";
-                SourceEntryIdText = "";
-                SourceTagText = "";
-                break;
-            case HomePageCardSourceKind.SingleUser:
-                SourceUserIdText = "";
-                SourceEntryIdText = "";
-                SourceSearchText = "";
-                SourceTagText = "";
-                break;
-            default:
-                SourceUserIdText = "";
-                SourceEntryIdText = "";
-                SourceSearchText = "";
-                SourceTagText = "";
-                break;
-        }
+        SourceUserIdText = template.UseCurrentUserAsDefault ? PixevalSettings.MyId.ToString() : "";
+        SourceEntryIdText = "";
+        if (!template.HasParameter(HomeCardParameterKinds.SearchText))
+            SourceSearchText = "";
+        if (!template.HasParameter(HomeCardParameterKinds.Tag))
+            SourceTagText = "";
     }
 
     public void SetAddingConfiguredCard(bool isAddingConfiguredCard)
@@ -246,17 +212,14 @@ public partial class HomePageViewModel : ViewModelBase
 
         var userId = 0L;
         var entryId = 0L;
-        if (NeedsUserId(template.SourceKind) && !TryReadUInt64(SourceUserIdText, out userId))
+        if (template.HasParameter(HomeCardParameterKinds.UserId) && !TryReadUInt64(SourceUserIdText, out userId))
             return false;
 
-        if (NeedsEntryId(template.SourceKind) && !TryReadUInt64(SourceEntryIdText, out entryId))
+        if (template.HasParameter(HomeCardParameterKinds.EntryId) && !TryReadUInt64(SourceEntryIdText, out entryId))
             return false;
 
-        if (template.SourceKind is HomePageCardSourceKind.WorkSearch or HomePageCardSourceKind.UserSearch
-            && string.IsNullOrWhiteSpace(SourceSearchText))
-        {
+        if (template.HasParameter(HomeCardParameterKinds.SearchText) && string.IsNullOrWhiteSpace(SourceSearchText))
             return false;
-        }
 
         draft.WorkType = SelectedSourceWorkType;
         draft.SimpleWorkType = SelectedSourceSimpleWorkType;
@@ -274,8 +237,8 @@ public partial class HomePageViewModel : ViewModelBase
         return true;
     }
 
-    public HomeCardTemplate GetTemplate(HomePageCardLayout card) =>
-        CardTemplates.FirstOrDefault(template => template.SourceKind == card.SourceKind) ?? CardTemplates[0];
+    public HomeCardDefinition GetDefinition(HomePageCardLayout card) =>
+        HomeCardDefinitions.Get(card.SourceKind);
 
     private void NotifySourceParameterStateChanged()
     {
@@ -303,35 +266,10 @@ public partial class HomePageViewModel : ViewModelBase
             : Settings.SearchSettings.NovelRankOption;
     }
 
-    private static bool NeedsUserId(HomePageCardSourceKind sourceKind) =>
-        sourceKind is HomePageCardSourceKind.WorkBookmarks or HomePageCardSourceKind.WorkPosts
-            or HomePageCardSourceKind.UserFollowing or HomePageCardSourceKind.UserMyPixiv or HomePageCardSourceKind.SingleUser;
-
-    private static bool NeedsEntryId(HomePageCardSourceKind sourceKind) =>
-        sourceKind is HomePageCardSourceKind.WorkRelated or HomePageCardSourceKind.SingleImage or HomePageCardSourceKind.SingleNovel;
+    private bool HasPendingParameter(HomeCardParameterKinds parameter) =>
+        PendingTemplate?.HasParameter(parameter) is true;
 
     private static bool TryReadUInt64(string? text, out long value) =>
         long.TryParse(text, out value) && value > 0;
 
-    private static IReadOnlyList<HomeCardTemplate> CreateCardTemplates() =>
-    [
-        new(HomePageCardSourceKind.WorkRecommended),
-        new(HomePageCardSourceKind.WorkBookmarks),
-        new(HomePageCardSourceKind.WorkRanking),
-        new(HomePageCardSourceKind.WorkNew),
-        new(HomePageCardSourceKind.WorkFollowing),
-        new(HomePageCardSourceKind.WorkMyPixiv),
-        new(HomePageCardSourceKind.WorkRelated),
-        new(HomePageCardSourceKind.WorkPosts),
-        new(HomePageCardSourceKind.WorkSearch),
-        new(HomePageCardSourceKind.UserRecommended),
-        new(HomePageCardSourceKind.UserSearch),
-        new(HomePageCardSourceKind.UserFollowing),
-        new(HomePageCardSourceKind.UserFollower),
-        new(HomePageCardSourceKind.UserMyPixiv),
-        new(HomePageCardSourceKind.Spotlight),
-        new(HomePageCardSourceKind.SingleImage),
-        new(HomePageCardSourceKind.SingleNovel, WorkType.Novel, SimpleWorkType.Novel),
-        new(HomePageCardSourceKind.SingleUser)
-    ];
 }

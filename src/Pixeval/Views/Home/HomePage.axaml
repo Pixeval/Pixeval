@@ -338,7 +338,7 @@
                     <TextBlock FontWeight="SemiBold" Text="{I18N {x:Static pixeval:HomePageResources.CardLibraryTitleTextBlockText}}" />
                     <ItemsControl ItemsSource="{Binding CardTemplates}">
                         <ItemsControl.ItemTemplate>
-                            <DataTemplate x:DataType="{x:Type home:HomeCardTemplate}">
+                            <DataTemplate x:DataType="{x:Type home:HomeCardDefinition}">
                                 <Button
                                     Margin="0,0,0,8"
                                     Padding="0"

@@ -3,10 +3,7 @@
 
 using System;
 using System.Linq;
-using Avalonia.Controls;
 using Avalonia.Interactivity;
-using FluentIcons.Avalonia;
-using FluentIcons.Common;
 using Mako;
 using Mako.Engine;
 using Mako.Model;
@@ -16,14 +13,9 @@ using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Capability;
 
-public abstract partial class SimpleUsersPage : ContentPage
+public abstract partial class SimpleUsersPage : IconContentPage
 {
-    protected SimpleUsersPage(string header, Symbol symbol)
-    {
-        Header = header;
-        Icon = new SymbolIcon { Symbol = symbol, FontSize = 16, IconVariant = IconVariant.Color };
-        InitializeComponent();
-    }
+    protected SimpleUsersPage() => InitializeComponent();
 
     protected void InitializeSource(UserViewViewModel? viewModel = null)
     {
@@ -57,7 +49,7 @@ public class UserRecommendPage : SimpleUsersPage
     {
     }
 
-    public UserRecommendPage(UserViewViewModel? viewModel) : base(I18NManager.GetResource(MainPageResources.TabUserRecommended), Symbol.PeopleCommunity)
+    public UserRecommendPage(UserViewViewModel? viewModel)
     {
         InitializeSource(viewModel);
     }
@@ -76,8 +68,9 @@ public class UserSearchPage : SimpleUsersPage
     {
     }
 
-    public UserSearchPage(string? searchText, UserViewViewModel? viewModel = null) : base(I18NManager.GetResource(MainPageResources.SearchResultFormatted, searchText), Symbol.Person)
+    public UserSearchPage(string? searchText, UserViewViewModel? viewModel = null)
     {
+        Header = I18NManager.GetResource(MainPageResources.SearchResultFormatted, searchText);
         _searchText = searchText;
         InitializeSource(viewModel);
     }
@@ -97,7 +90,7 @@ public class UserFollowerPage : SimpleUsersPage
     {
     }
 
-    public UserFollowerPage(UserViewViewModel? viewModel) : base(I18NManager.GetResource(MainPageResources.TabUserFollower), Symbol.People)
+    public UserFollowerPage(UserViewViewModel? viewModel)
     {
         InitializeSource(viewModel);
     }
@@ -117,7 +110,7 @@ public class UserMyPixivPage : SimpleUsersPage
     {
     }
 
-    public UserMyPixivPage(long id, UserViewViewModel? viewModel = null) : base(I18NManager.GetResource(MainPageResources.TabUserMyPixiv), Symbol.PeopleInterwoven)
+    public UserMyPixivPage(long id, UserViewViewModel? viewModel = null)
     {
         _userId = id;
         InitializeSource(viewModel);
@@ -138,7 +131,7 @@ public class RelatedUsersPage : SimpleUsersPage
     {
     }
 
-    public RelatedUsersPage(long id) : base(I18NManager.GetResource(MainPageResources.TabRelatedUser), Symbol.PeopleCommunity)
+    public RelatedUsersPage(long id)
     {
         _userId = id;
         ChangeSource();

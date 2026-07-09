@@ -1,4 +1,4 @@
-<ContentPage
+<views:IconContentPage
     x:Class="Pixeval.Views.ExtensionsPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,10 +10,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
     xmlns:views="using:Pixeval.Views"
-    Header="{I18N {x:Static pixeval:MainPageResources.TabExtensions}}"
-    Icon="{markup:SymbolIcon PuzzlePiece,
-                             FontSize=16,
-                             IconVariant=Color}"
     mc:Ignorable="d"
     d:DesignHeight="800"
     d:DesignWidth="600">
@@ -23,7 +19,8 @@
             DockPanel.Dock="Top"
             Orientation="Horizontal"
             Spacing="20">
-            <TextBlock Text="{I18N {x:Static pixeval:ExtensionsPageResources.TitleTextBlockText}}" Theme="{StaticResource TitleTextBlockStyle}" />
+            <TextBlock Text="{I18N {x:Static pixeval:ExtensionsPageResources.TitleTextBlockText}}"
+                       Theme="{StaticResource TitleTextBlockStyle}" />
             <TextBlock VerticalAlignment="Bottom" Theme="{StaticResource SubtitleTextBlockStyle}">
                 <Run Text="{I18N {x:Static pixeval:ExtensionsPageResources.SubtitleTextBlockText}}" />
                 <Run Text="{x:Static extensions:ExtensionService.CurrentVersion}" />
@@ -154,4 +151,4 @@
             </ItemsControl>
         </ScrollViewer>
     </DockPanel>
-</ContentPage>
+</views:IconContentPage>

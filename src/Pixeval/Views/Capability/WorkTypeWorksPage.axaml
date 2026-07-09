@@ -1,4 +1,4 @@
-<ContentPage
+<views:IconContentPage
     x:Class="Pixeval.Views.Capability.WorkTypeWorksPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -32,4 +32,4 @@
                 Label="{I18N {x:Static pixeval:WorkSubscriptionsSettingsExpanderResources.AddSubscriptionButtonLabel}}" />
         </work:WorkContainer.CommandBarSubElements>
     </work:WorkContainer>
-</ContentPage>
+</views:IconContentPage>

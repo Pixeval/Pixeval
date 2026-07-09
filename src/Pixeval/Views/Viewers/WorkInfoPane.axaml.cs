@@ -92,10 +92,9 @@ public class WorkInfoPane : TemplatedControl
         if (!blockedTags.Contains(tag.Name))
         {
             blockedTags.Add(tag.Name);
-            AppInfo.SaveSettings(App.AppViewModel.AppSettings);
+            AppInfo.SaveAppSettings(App.AppViewModel.AppSettings);
         }
     }
     
     public static IValueConverter HalfVerticalSpaceConverter { get; } = new FuncValueConverter<Rect, double>(x => x.Height / 2);
-
 }

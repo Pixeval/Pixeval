@@ -1,4 +1,4 @@
-<ContentPage
+<views:IconContentPage
     x:Class="Pixeval.Views.HistoryPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -21,4 +21,4 @@
                 SelectionChanged="SimpleWorkTypeComboBox_OnSelectionChanged" />
         </work:WorkContainer.CommandBarElements>
     </work:WorkContainer>
-</ContentPage>
+</views:IconContentPage>

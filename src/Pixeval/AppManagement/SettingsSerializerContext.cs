@@ -7,4 +7,5 @@ namespace Pixeval.AppManagement;
 
 [YamlSerializable(typeof(AppSettings))]
 [YamlSerializable(typeof(LoginContext))]
+[YamlSerializable(typeof(HomePageCardsSettings))]
 public partial class SettingsSerializerContext : YamlSerializerContext;

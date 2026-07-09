@@ -1,20 +1,14 @@
-<ContentPage
+<views:IconContentPage
     x:Class="Pixeval.Views.Capability.WorkMyPixivPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:enum="using:Mako.Global.Enum"
-    xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:pixeval="using:Pixeval"
     xmlns:views="using:Pixeval.Views"
     xmlns:work="using:Pixeval.Views.Work"
-    Header="{I18N {x:Static pixeval:MainPageResources.TabWorkMyPixiv}}"
-    Icon="{markup:SymbolIcon Molecule,
-                             FontSize=16,
-                             IconVariant=Color}"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
@@ -27,4 +21,4 @@
                 SelectionChanged="SimpleWorkTypeComboBox_OnSelectionChanged" />
         </work:WorkContainer.CommandBarElements>
     </work:WorkContainer>
-</ContentPage>
+</views:IconContentPage>

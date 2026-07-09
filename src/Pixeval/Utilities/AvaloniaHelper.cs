@@ -14,9 +14,12 @@ using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using FluentIcons.Common;
 using Pixeval.I18N;
+using Pixeval.Models.Options;
 using Pixeval.Views;
 using Pixeval.Views.Capability;
 using Pixeval.Views.Download;
+using Pixeval.Views.Home;
+using Pixeval.Views.Login;
 using Pixeval.Views.Search;
 using Pixeval.Views.Settings;
 using Pixeval.Views.ViewContainers;
@@ -46,31 +49,89 @@ public static class AvaloniaHelper
         }
     }
 
+    public static Dictionary<Type, (Symbol Symbol, string Header)> PageTypeToHeaderMap { get; } =
+        new()
+        {
+            [typeof(HomePage)] = (Symbol.Home, I18NManager.GetResource(MainPageResources.TabHome)),
+            [typeof(LoginPage)] = (Symbol.PersonKey, I18NManager.GetResource(MainPageResources.TabLogin)),
+            [typeof(SearchPage)] = (Symbol.SearchSparkle, I18NManager.GetResource(MainPageResources.TabSearch)),
+            [typeof(WorkRecommendedPage)] = (Symbol.Calendar, I18NManager.GetResource(MainPageResources.TabWorkRecommended)),
+            [typeof(WorkRankingPage)] = (Symbol.ArrowTrendingLines, I18NManager.GetResource(MainPageResources.TabWorkRanking)),
+            [typeof(WorkBookmarksPage)] = (Symbol.Library, I18NManager.GetResource(MainPageResources.TabWorkBookmarks)),
+            [typeof(WorkRelatedPage)] = (Symbol.LightbulbFilament, I18NManager.GetResource(MainPageResources.TabWorkRelated)),
+            [typeof(WorkPostsPage)] = (Symbol.Image, I18NManager.GetResource(MainPageResources.TabWorkPosts)),
+            [typeof(WorkSearchResultPage)] = (Symbol.SearchSparkle, I18NManager.GetResource(MainPageResources.TabWorkSearch)),
+            [typeof(UserFollowingPage)] = (Symbol.PersonHeart, I18NManager.GetResource(MainPageResources.TabUserFollowing)),
+            [typeof(SpotlightPage)] = (Symbol.SlideTextSparkle, I18NManager.GetResource(MainPageResources.TabSpotlight)),
+            [typeof(UserRecommendPage)] = (Symbol.PeopleCommunity, I18NManager.GetResource(MainPageResources.TabUserRecommended)),
+            [typeof(UserSearchPage)] = (Symbol.Person, I18NManager.GetResource(MainPageResources.TabUserSearch)),
+            [typeof(UserFollowerPage)] = (Symbol.People, I18NManager.GetResource(MainPageResources.TabUserFollower)),
+            [typeof(UserMyPixivPage)] = (Symbol.PeopleInterwoven, I18NManager.GetResource(MainPageResources.TabUserMyPixiv)),
+            [typeof(RelatedUsersPage)] = (Symbol.PeopleCommunity, I18NManager.GetResource(MainPageResources.TabRelatedUser)),
+            [typeof(WorkFollowingPage)] = (Symbol.AlertUrgent, I18NManager.GetResource(MainPageResources.TabWorkFollowing)),
+            [typeof(WorkMyPixivPage)] = (Symbol.Molecule, I18NManager.GetResource(MainPageResources.TabWorkMyPixiv)),
+            [typeof(WorkNewPage)] = (Symbol.ArrowSync, I18NManager.GetResource(MainPageResources.TabWorkNew)),
+            [typeof(BrowsingHistoryPage)] = (Symbol.History, I18NManager.GetResource(MainPageResources.TabBrowsingHistory)),
+            [typeof(WatchLaterPage)] = (Symbol.Clock, I18NManager.GetResource(MainPageResources.TabWatchLater)),
+            [typeof(DownloadPage)] = (Symbol.ArrowSquareDown, I18NManager.GetResource(MainPageResources.TabDownload)),
+            [typeof(ExtensionsPage)] = (Symbol.PuzzlePiece, I18NManager.GetResource(MainPageResources.TabExtensions)),
+            [typeof(SettingsPage)] = (Symbol.Settings, I18NManager.GetResource(MainPageResources.TabSettings)),
+            [typeof(AboutPage)] = (Symbol.PersonStarburst, I18NManager.GetResource(MainPageResources.TabAbout)),
+            [typeof(HelpPage)] = (Symbol.ChatBubblesQuestion, I18NManager.GetResource(MainPageResources.TabHelp))
+        };
+
+    public static Dictionary<HomePageCardSourceKind, (Symbol Symbol, string Header)> HomeCardSourceKindToHeaderMap { get; } =
+        new()
+        {
+            [HomePageCardSourceKind.WorkRecommended] = PageTypeToHeaderMap[typeof(WorkRecommendedPage)],
+            [HomePageCardSourceKind.WorkBookmarks] = PageTypeToHeaderMap[typeof(WorkBookmarksPage)],
+            [HomePageCardSourceKind.WorkRanking] = PageTypeToHeaderMap[typeof(WorkRankingPage)],
+            [HomePageCardSourceKind.WorkNew] = PageTypeToHeaderMap[typeof(WorkNewPage)],
+            [HomePageCardSourceKind.WorkFollowing] = PageTypeToHeaderMap[typeof(WorkFollowingPage)],
+            [HomePageCardSourceKind.WorkMyPixiv] = PageTypeToHeaderMap[typeof(WorkMyPixivPage)],
+            [HomePageCardSourceKind.WorkRelated] = PageTypeToHeaderMap[typeof(WorkRelatedPage)],
+            [HomePageCardSourceKind.WorkPosts] = PageTypeToHeaderMap[typeof(WorkPostsPage)],
+            [HomePageCardSourceKind.WorkSearch] = PageTypeToHeaderMap[typeof(WorkSearchResultPage)],
+            [HomePageCardSourceKind.UserRecommended] = PageTypeToHeaderMap[typeof(UserRecommendPage)],
+            [HomePageCardSourceKind.UserSearch] = PageTypeToHeaderMap[typeof(UserSearchPage)],
+            [HomePageCardSourceKind.UserFollowing] = PageTypeToHeaderMap[typeof(UserFollowingPage)],
+            [HomePageCardSourceKind.UserFollower] = PageTypeToHeaderMap[typeof(UserFollowerPage)],
+            [HomePageCardSourceKind.UserMyPixiv] = PageTypeToHeaderMap[typeof(UserMyPixivPage)],
+            [HomePageCardSourceKind.Spotlight] = PageTypeToHeaderMap[typeof(SpotlightPage)],
+            [HomePageCardSourceKind.SingleImage] = (Symbol.Image, I18NManager.GetResource(MainPageResources.TabSingleImage)),
+            [HomePageCardSourceKind.SingleNovel] = (Symbol.BookOpen, I18NManager.GetResource(MainPageResources.TabSingleNovel)),
+            [HomePageCardSourceKind.SingleUser] = (Symbol.Person, I18NManager.GetResource(MainPageResources.TabSingleUser))
+        };
+
+    public static (Symbol Symbol, string Header) GetPageHeader(Type pageType) => PageTypeToHeaderMap[pageType];
+
+    public static (Symbol Symbol, string Header) GetHomeCardHeader(HomePageCardSourceKind sourceKind) => HomeCardSourceKindToHeaderMap[sourceKind];
+
     public static IReadOnlyList<NavigationInfo> HeaderItems { get; } =
     [
-        // new(typeof(HomePage), Symbol.Home, MainPageResources.TabHome),
-        new(typeof(SearchPage), Symbol.SearchSparkle, MainPageResources.TabSearch),
-        new(typeof(WorkRecommendedPage), Symbol.Calendar, MainPageResources.TabWorkRecommended),
-        new(typeof(WorkRankingPage), Symbol.ArrowTrendingLines, MainPageResources.TabWorkRanking),
-        new(typeof(WorkBookmarksPage), Symbol.Library, MainPageResources.TabWorkBookmarks),
-        new(typeof(UserFollowingPage), Symbol.PersonHeart, MainPageResources.TabUserFollowing),
-        new(typeof(SpotlightPage), Symbol.SlideTextSparkle, MainPageResources.TabSpotlight),
-        new(typeof(UserRecommendPage), Symbol.PeopleCommunity, MainPageResources.TabUserRecommended),
-        new(typeof(UserFollowerPage), Symbol.People, MainPageResources.TabUserFollower),
-        new(typeof(UserMyPixivPage), Symbol.PeopleInterwoven, MainPageResources.TabUserMyPixiv),
-        new(typeof(WorkFollowingPage), Symbol.AlertUrgent, MainPageResources.TabWorkFollowing),
-        new(typeof(WorkMyPixivPage), Symbol.Molecule, MainPageResources.TabWorkMyPixiv),
-        new(typeof(WorkNewPage), Symbol.ArrowSync, MainPageResources.TabWorkNew),
-        // new (typeof(FeedsPage), Symbol.Molecule, MainPageResources.FeedTabContent),
+        // new(typeof(HomePage)),
+        new(typeof(SearchPage)),
+        new(typeof(WorkRecommendedPage)),
+        new(typeof(WorkRankingPage)),
+        new(typeof(WorkBookmarksPage)),
+        new(typeof(UserFollowingPage)),
+        new(typeof(SpotlightPage)),
+        new(typeof(UserRecommendPage)),
+        new(typeof(UserFollowerPage)),
+        new(typeof(UserMyPixivPage)),
+        new(typeof(WorkFollowingPage)),
+        new(typeof(WorkMyPixivPage)),
+        new(typeof(WorkNewPage)),
+        // new (typeof(FeedsPage)),
     ];
 
     public static IReadOnlyList<NavigationInfo> FooterItems { get; } =
     [
-        new(typeof(BrowsingHistoryPage), Symbol.History, MainPageResources.TabBrowsingHistory),
-        new(typeof(WatchLaterPage), Symbol.Clock, MainPageResources.TabWatchLater),
-        new(typeof(DownloadPage), Symbol.ArrowSquareDown, MainPageResources.TabDownload),
-        new(typeof(ExtensionsPage), Symbol.PuzzlePiece, MainPageResources.TabExtensions, false),
-        new(typeof(SettingsPage), Symbol.Settings, MainPageResources.TabSettings, false)
+        new(typeof(BrowsingHistoryPage)),
+        new(typeof(WatchLaterPage)),
+        new(typeof(DownloadPage)),
+        new(typeof(ExtensionsPage), false),
+        new(typeof(SettingsPage), false)
     ];
 
     public static EventHandler<RoutedEventArgs>? LaunchUriTagInWebBrowser { get; }
@@ -122,13 +183,26 @@ public static class AvaloniaHelper
         };
 }
 
-public record NavigationInfo(
-    [param: DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
-    [property: DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
-    Type PageType,
-    Symbol Icon,
-    string Header,
-    bool NeedLogin = true)
+public record NavigationInfo
 {
-    public string Header { get; } = I18NManager.GetResource(Header);
+    public NavigationInfo(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
+        Type PageType,
+        bool NeedLogin = true)
+    {
+        this.PageType = PageType;
+        this.NeedLogin = NeedLogin;
+        var tuple = AvaloniaHelper.GetPageHeader(PageType);
+        Header = tuple.Header;
+        Icon = tuple.Symbol;
+    }
+
+    public string Header { get; }
+
+    public Symbol Icon { get; }
+
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
+    public Type PageType { get; }
+
+    public bool NeedLogin { get; }
 }

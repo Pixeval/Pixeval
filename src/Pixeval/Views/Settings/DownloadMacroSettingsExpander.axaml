@@ -43,15 +43,14 @@
                 <ItemsControl ItemsPanel="{StaticResource WrapPanelTemplate}" ItemsSource="{x:Static entries:DownloadMacroSettingsEntry.AvailablePredicateMacros}" />
             </StackPanel>
         </controls:SettingsCard>
-        <controls:SettingsCard ContentAlignment="Left">
-            <StackPanel Spacing="6">
+        <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Vertical">
+            <StackPanel HorizontalAlignment="Stretch" Spacing="6">
                 <TextBlock
                     Opacity="0.7"
                     Text="{I18N {x:Static pixeval:SettingsMainViewResources.DownloadPathMacroTextBoxPlaceholderText}}"
                     TextWrapping="Wrap" />
                 <edit:TextEditor
                     x:Name="DownloadPathMacroTextBox"
-                    HorizontalAlignment="Left"
                     Background="Transparent"
                     BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
                     BorderThickness="1"

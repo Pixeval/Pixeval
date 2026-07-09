@@ -17,7 +17,7 @@ using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Capability;
 
-public partial class WorkBookmarksPage : ContentPage
+public partial class WorkBookmarksPage : IconContentPage
 {
     private readonly UserBasicInfo _user;
     private readonly string? _initialTag;

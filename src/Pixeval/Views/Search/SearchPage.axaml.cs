@@ -25,7 +25,7 @@ using Pixeval.Views.Viewers;
 
 namespace Pixeval.Views.Search;
 
-public partial class SearchPage : ContentPage
+public partial class SearchPage : IconContentPage
 {
     private const string SearchTextBoxPart = "PART_TextBox";
     private const string SearchSelectingItemsControlPart = "PART_SelectingItemsControl";
@@ -94,8 +94,9 @@ public partial class SearchPage : ContentPage
     {
         DetachSearchSuggestionItemsControl();
 
-        _searchTextBox = e.NameScope.Find<TextBox>(SearchTextBoxPart)
-                         ?? SearchAutoCompleteBox.GetVisualDescendants().OfType<TextBox>().FirstOrDefault();
+        _searchTextBox =
+            e.NameScope.Find<TextBox>(SearchTextBoxPart)
+            ?? SearchAutoCompleteBox.GetVisualDescendants().OfType<TextBox>().FirstOrDefault();
         _searchSuggestionItemsControl = e.NameScope.Find<SelectingItemsControl>(SearchSelectingItemsControlPart);
         if (_searchSuggestionItemsControl is not null)
         {
@@ -111,6 +112,7 @@ public partial class SearchPage : ContentPage
             _searchSuggestionItemsControl.SelectionChanged -= SearchSuggestionItemsControl_OnSelectionChanged;
             _searchSuggestionItemsControl.PointerReleased -= SearchSuggestionItemsControl_OnPointerReleased;
         }
+
         _searchSuggestionItemsControl = null;
     }
 

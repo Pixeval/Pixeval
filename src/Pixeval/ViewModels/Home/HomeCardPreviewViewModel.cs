@@ -11,7 +11,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Collections;
 using Pixeval.I18N;
 using Pixeval.Models.Home;
-using Pixeval.Views.Home;
 
 namespace Pixeval.ViewModels.Home;
 
@@ -59,7 +58,7 @@ public sealed partial class HomeCardPreviewViewModel(HomePageCardLayout card) : 
         {
             PlaceholderText = I18NManager.GetResource(HomePageResources.CardPreviewLoadingTextBlockText);
             var oldViewModel = ViewModel;
-            var viewModel = await HomePageCardSourceFactory.CreateViewModelAsync(Card);
+            var viewModel = await Card.Definition.CreatePreviewViewModelAsync(Card);
             if (_isDisposed)
             {
                 if (viewModel is IDisposable newDisposable)

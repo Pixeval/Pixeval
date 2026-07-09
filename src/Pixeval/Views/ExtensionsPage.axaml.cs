@@ -17,7 +17,7 @@ using Pixeval.Utilities;
 
 namespace Pixeval.Views;
 
-public partial class ExtensionsPage : ContentPage
+public partial class ExtensionsPage : IconContentPage
 {
     private ExtensionService ExtensionService { get; } =
         App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();

@@ -35,7 +35,7 @@ public class PixevalSettings : ViewModelBase
         set => SetProperty(Settings.BrowsingExperienceSettings.OpenWorkInfoByDefault, value, Settings.BrowsingExperienceSettings, (setting, v) =>
         {
             setting.OpenWorkInfoByDefault = v;
-            AppInfo.SaveSettings(Settings);
+            AppInfo.SaveAppSettings(Settings);
         });
     }
 
@@ -45,7 +45,7 @@ public class PixevalSettings : ViewModelBase
         set => SetProperty(Settings.BrowsingExperienceSettings.OpenUserInfoByDefault, value, Settings.BrowsingExperienceSettings, (setting, v) =>
         {
             setting.OpenUserInfoByDefault = v;
-            AppInfo.SaveSettings(Settings);
+            AppInfo.SaveAppSettings(Settings);
         });
     }
 
@@ -55,7 +55,7 @@ public class PixevalSettings : ViewModelBase
         set => SetProperty(Settings.ApplicationSettings.HideHomePageCardTitle, value, Settings.ApplicationSettings, (setting, v) =>
         {
             setting.HideHomePageCardTitle = v;
-            AppInfo.SaveSettings(Settings);
+            AppInfo.SaveAppSettings(Settings);
         });
     }
 
@@ -65,7 +65,7 @@ public class PixevalSettings : ViewModelBase
         set => SetProperty(Settings.ApplicationSettings.HideHomePageToolbar, value, Settings.ApplicationSettings, (setting, v) =>
         {
             setting.HideHomePageToolbar = v;
-            AppInfo.SaveSettings(Settings);
+            AppInfo.SaveAppSettings(Settings);
         });
     }
 }

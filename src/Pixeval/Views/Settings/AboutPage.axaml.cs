@@ -9,7 +9,7 @@ using Pixeval.AppManagement;
 
 namespace Pixeval.Views.Settings;
 
-public partial class AboutPage : ContentPage
+public partial class AboutPage : IconContentPage
 {
     public AboutPage()
     {

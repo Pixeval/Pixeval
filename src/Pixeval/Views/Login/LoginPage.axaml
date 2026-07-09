@@ -1,31 +1,27 @@
-<ContentPage
+<views:IconContentPage
     x:Class="Pixeval.Views.Login.LoginPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:database="using:Pixeval.Models.Database"
-    xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
     xmlns:viewModels="using:Pixeval.ViewModels"
+    xmlns:views="using:Pixeval.Views"
     x:DataType="{x:Type viewModels:LoginPageViewModel}"
-    Header="{I18N {x:Static pixeval:MainPageResources.TabLogin}}"
-    Icon="{markup:SymbolIcon PersonKey,
-                             FontSize=16,
-                             IconVariant=Color}"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
-    <ContentPage.DataContext>
+    <views:IconContentPage.DataContext>
         <viewModels:LoginPageViewModel />
-    </ContentPage.DataContext>
-    <ContentPage.Resources>
+    </views:IconContentPage.DataContext>
+    <views:IconContentPage.Resources>
         <DataTemplate x:DataType="{x:Type database:LoginUserEntry}" x:Key="LoginUserTemplate">
             <controls:UserBasicInfoPresenter Margin="20,5" User="{Binding TokenUser}" />
         </DataTemplate>
-    </ContentPage.Resources>
+    </views:IconContentPage.Resources>
     <StackPanel
         Width="300"
         Margin="50"
@@ -73,4 +69,4 @@
             Content="{I18N {x:Static pixeval:LoginPageResources.WebViewButtonContent}}"
             IsEnabled="{Binding !IsLoginInProgress}" />
     </StackPanel>
-</ContentPage>
+</views:IconContentPage>

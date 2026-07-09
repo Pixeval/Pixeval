@@ -14,7 +14,7 @@ using Pixeval.Views.Home;
 
 namespace Pixeval.Views.Login;
 
-public partial class LoginPage : ContentPage
+public partial class LoginPage : IconContentPage
 {
     public LoginPage()
     {

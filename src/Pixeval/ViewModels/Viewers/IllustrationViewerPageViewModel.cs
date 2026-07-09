@@ -195,6 +195,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
         {
             CurrentImage = new ImageViewerViewModel(currentIllustration);
         }
+
         return;
 
         async ValueTask<IllustrationItemViewModel?> GetCurrentIllustrationAsync(int index, CancellationToken token)
@@ -445,7 +446,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
         }
     }
 
-    private static void SaveAutoPlaySettings() => AppInfo.SaveSettings(App.AppViewModel.AppSettings);
+    private static void SaveAutoPlaySettings() => AppInfo.SaveAppSettings(App.AppViewModel.AppSettings);
 
     #endregion
 

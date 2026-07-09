@@ -52,6 +52,7 @@ public partial class SettingsMainView : ContentPage
             return;
 
         var settings = new AppSettings();
+        App.AppViewModel.ResetHomePageCards();
         foreach (var localGroup in vm.LocalGroups)
             foreach (var settingsEntry in localGroup)
                 settingsEntry.LocalValueReset(settings);
@@ -89,11 +90,14 @@ public partial class SettingsMainView : ContentPage
         {
             if (await provider.SaveFilePickerAsync(new()
                 {
-                    FileTypeChoices = [new("YAML")
-                    {
-                        Patterns = ["*.yaml"],
-                        MimeTypes = ["text/yaml", "application/x-yaml"]
-                    }],
+                    FileTypeChoices =
+                    [
+                        new("YAML")
+                        {
+                            Patterns = ["*.yaml"],
+                            MimeTypes = ["text/yaml", "application/x-yaml"]
+                        }
+                    ],
                     DefaultExtension = "yaml",
                     SuggestedFileName = "settings"
                 }) is not { } file)

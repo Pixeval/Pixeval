@@ -3,13 +3,11 @@
 
 using System;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
@@ -19,7 +17,7 @@ using Pixeval.Models.McpServer;
 
 namespace Pixeval.Views.Settings;
 
-public partial class HelpPage : ContentPage
+public partial class HelpPage : IconContentPage
 {
     public static readonly DirectProperty<HelpPage, string> McpToolsStatusProperty =
         AvaloniaProperty.RegisterDirect<HelpPage, string>(nameof(McpToolsStatus), static page => page.McpToolsStatus);

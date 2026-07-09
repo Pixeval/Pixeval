@@ -4,30 +4,21 @@
 using System.Collections.ObjectModel;
 using System;
 using Avalonia.Interactivity;
-using Avalonia.Controls;
-using FluentIcons.Avalonia;
-using FluentIcons.Common;
 using Mako.Global.Enum;
 using Misaki;
 using Pixeval.Controls;
-using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
 
 namespace Pixeval.Views;
 
-public abstract partial class HistoryPage : ContentPage, IDisposable
+public abstract partial class HistoryPage : IconContentPage, IDisposable
 {
     private SimpleOperableViewViewModel<IllustrationItemViewModel>? _illustrationViewModel;
     private SimpleOperableViewViewModel<NovelItemViewModel>? _novelViewModel;
     private bool _isDisposed;
 
-    protected HistoryPage(string header, Symbol symbol)
-    {
-        Header = header;
-        Icon = new SymbolIcon { Symbol = symbol, FontSize = 16, IconVariant = IconVariant.Color };
-        InitializeComponent();
-    }
+    protected HistoryPage() => InitializeComponent();
 
     private void SimpleWorkTypeComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e)
     {
@@ -78,17 +69,16 @@ public abstract partial class HistoryPage : ContentPage, IDisposable
 
 public class BrowsingHistoryPage : HistoryPage
 {
-    public BrowsingHistoryPage() : base(I18NManager.GetResource(MainPageResources.TabBrowsingHistory), Symbol.History) => SetSource();
+    public BrowsingHistoryPage() => SetSource();
 
     /// <inheritdoc />
     protected override ObservableCollection<IArtworkInfo> Source =>
         App.AppViewModel.HistoryPersistHelper.BrowseHistoryEntries;
 }
 
-
 public class WatchLaterPage : HistoryPage
 {
-    public WatchLaterPage() : base(I18NManager.GetResource(MainPageResources.TabWatchLater), Symbol.Clock) => SetSource();
+    public WatchLaterPage() => SetSource();
 
     /// <inheritdoc />
     protected override ObservableCollection<IArtworkInfo> Source =>

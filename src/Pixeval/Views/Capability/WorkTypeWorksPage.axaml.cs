@@ -4,8 +4,6 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using FluentIcons.Avalonia;
-using FluentIcons.Common;
 using Mako;
 using Mako.Engine;
 using Mako.Global.Enum;
@@ -19,14 +17,9 @@ using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Capability;
 
-public abstract partial class WorkTypeWorksPage : ContentPage
+public abstract partial class WorkTypeWorksPage : IconContentPage
 {
-    protected WorkTypeWorksPage(string header, Symbol symbol)
-    {
-        Header = header;
-        Icon = new SymbolIcon { Symbol = symbol, FontSize = 16, IconVariant = IconVariant.Color };
-        InitializeComponent();
-    }
+    protected WorkTypeWorksPage() => InitializeComponent();
 
     protected void InitializeSource(WorkType workType, IWorkViewViewModel? viewModel = null)
     {
@@ -77,7 +70,7 @@ public class WorkRecommendedPage : WorkTypeWorksPage
     {
     }
 
-    public WorkRecommendedPage(WorkType workType, IWorkViewViewModel? viewModel = null) : base(I18NManager.GetResource(MainPageResources.TabWorkRecommended), Symbol.Calendar)
+    public WorkRecommendedPage(WorkType workType, IWorkViewViewModel? viewModel = null)
     {
         InitializeSource(workType, viewModel);
     }
@@ -94,7 +87,7 @@ public class WorkNewPage : WorkTypeWorksPage
     {
     }
 
-    public WorkNewPage(WorkType workType, IWorkViewViewModel? viewModel = null) : base(I18NManager.GetResource(MainPageResources.TabWorkNew), Symbol.ArrowSync)
+    public WorkNewPage(WorkType workType, IWorkViewViewModel? viewModel = null)
     {
         InitializeSource(workType, viewModel);
     }
@@ -117,7 +110,7 @@ public class WorkPostsPage : WorkTypeWorksPage
     {
     }
 
-    public WorkPostsPage(UserBasicInfo user, WorkType workType, IWorkViewViewModel? viewModel = null) : base(string.Format(I18NManager.GetResource(MainPageResources.TabWorkPosts)), Symbol.Image)
+    public WorkPostsPage(UserBasicInfo user, WorkType workType, IWorkViewViewModel? viewModel = null)
     {
         _user = user;
         EnableAddSubscriptionButton();
