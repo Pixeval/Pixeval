@@ -41,7 +41,7 @@ public enum HomePageCardSourceKind
     [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionWorkPosts, Key = nameof(HomeCardDefinition.Description))]
     WorkPosts,
 
-    [LocalizedResource(MainPageResources.TabWorkSearch)]
+    [LocalizedResource(MainPageResources.TabWorkSearchResult)]
     [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionWorkSearch, Key = nameof(HomeCardDefinition.Description))]
     WorkSearch,
 
@@ -49,7 +49,7 @@ public enum HomePageCardSourceKind
     [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionUserRecommended, Key = nameof(HomeCardDefinition.Description))]
     UserRecommended,
 
-    [LocalizedResource(MainPageResources.TabUserSearch)]
+    [LocalizedResource(MainPageResources.TabUserSearchResult)]
     [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionUserSearch, Key = nameof(HomeCardDefinition.Description))]
     UserSearch,
 

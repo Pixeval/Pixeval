@@ -295,8 +295,8 @@ namespace Pixeval
         public const string HomePageCardSourceKindDescriptionWorkNew = "Enum.HomePageCardSourceKindDescription.WorkNew";
         public const string HomePageCardSourceKindDescriptionWorkPosts = "Enum.HomePageCardSourceKindDescription.WorkPosts";
         public const string HomePageCardSourceKindDescriptionWorkRanking = "Enum.HomePageCardSourceKindDescription.WorkRanking";
-        public const string HomePageCardSourceKindDescriptionWorkRelated = "Enum.HomePageCardSourceKindDescription.WorkRelated";
         public const string HomePageCardSourceKindDescriptionWorkRecommended = "Enum.HomePageCardSourceKindDescription.WorkRecommended";
+        public const string HomePageCardSourceKindDescriptionWorkRelated = "Enum.HomePageCardSourceKindDescription.WorkRelated";
         public const string HomePageCardSourceKindDescriptionWorkSearch = "Enum.HomePageCardSourceKindDescription.WorkSearch";
         public const string IllustrationDownloadFormatOriginal = "Enum.IllustrationDownloadFormat.Original";
         public const string IllustrationViewerAutoPlayModeLoop = "Enum.IllustrationViewerAutoPlayMode.Loop";
@@ -638,6 +638,7 @@ namespace Pixeval
         public const string TabHelp = "MainPage.Tab.Help";
         public const string TabHome = "MainPage.Tab.Home";
         public const string TabLogin = "MainPage.Tab.Login";
+        public const string TabNavigationSettings = "MainPage.Tab.NavigationSettings";
         public const string TabRelatedUser = "MainPage.Tab.RelatedUser";
         public const string TabSauceNaoResult = "MainPage.Tab.SauceNaoResult";
         public const string TabSearch = "MainPage.Tab.Search";
@@ -650,7 +651,7 @@ namespace Pixeval
         public const string TabUserFollowing = "MainPage.Tab.UserFollowing";
         public const string TabUserMyPixiv = "MainPage.Tab.UserMyPixiv";
         public const string TabUserRecommended = "MainPage.Tab.UserRecommended";
-        public const string TabUserSearch = "MainPage.Tab.UserSearch";
+        public const string TabUserSearchResult = "MainPage.Tab.UserSearchResult";
         public const string TabWatchLater = "MainPage.Tab.WatchLater";
         public const string TabWorkBookmarks = "MainPage.Tab.WorkBookmarks";
         public const string TabWorkFollowing = "MainPage.Tab.WorkFollowing";
@@ -658,9 +659,9 @@ namespace Pixeval
         public const string TabWorkNew = "MainPage.Tab.WorkNew";
         public const string TabWorkPosts = "MainPage.Tab.WorkPosts";
         public const string TabWorkRanking = "MainPage.Tab.WorkRanking";
-        public const string TabWorkRelated = "MainPage.Tab.WorkRelated";
         public const string TabWorkRecommended = "MainPage.Tab.WorkRecommended";
-        public const string TabWorkSearch = "MainPage.Tab.WorkSearch";
+        public const string TabWorkRelated = "MainPage.Tab.WorkRelated";
+        public const string TabWorkSearchResult = "MainPage.Tab.WorkSearchResult";
     }
     public static class MiscResources
     {
@@ -678,6 +679,43 @@ namespace Pixeval
         public const string Play = "Misc.Play";
         public const string RemovedFromWatchLater = "Misc.RemovedFromWatchLater";
         public const string UnexpectedBehavior = "Misc.UnexpectedBehavior";
+    }
+    public static class NavigationSettingsPageResources
+    {
+        public const string Applied = "NavigationSettingsPage.Applied";
+        public const string ApplyButtonContent = "NavigationSettingsPage.ApplyButton.Content";
+        public const string ApplyButtonToolTip = "NavigationSettingsPage.ApplyButton.ToolTip";
+        public const string DefaultFolderTitle = "NavigationSettingsPage.DefaultFolderTitle";
+        public const string FormatButtonContent = "NavigationSettingsPage.FormatButton.Content";
+        public const string FormatButtonToolTip = "NavigationSettingsPage.FormatButton.ToolTip";
+        public const string InsertFolderButtonContent = "NavigationSettingsPage.InsertFolderButton.Content";
+        public const string InsertFolderButtonToolTip = "NavigationSettingsPage.InsertFolderButton.ToolTip";
+        public const string ReferenceIconsHeader = "NavigationSettingsPage.ReferenceIcons.Header";
+        public const string ReferencePagesHeader = "NavigationSettingsPage.ReferencePages.Header";
+        public const string ResetButtonContent = "NavigationSettingsPage.ResetButton.Content";
+        public const string ResetButtonToolTip = "NavigationSettingsPage.ResetButton.ToolTip";
+        public const string StatusInvalidFormatted = "NavigationSettingsPage.StatusInvalidFormatted";
+        public const string StatusValid = "NavigationSettingsPage.StatusValid";
+        public const string StatusValidWithWarningsFormatted = "NavigationSettingsPage.StatusValidWithWarningsFormatted";
+        public const string UserFolderTitle = "NavigationSettingsPage.UserFolderTitle";
+        public const string WorkFolderTitle = "NavigationSettingsPage.WorkFolderTitle";
+    }
+    public static class NavigationYamlParserResources
+    {
+        public const string DiagnosticsBothHeaderAndFooterEmpty = "NavigationYamlParser.Diagnostics.BothHeaderAndFooterEmpty";
+        public const string DiagnosticsBuiltInNavigationYamlInvalid = "NavigationYamlParser.Diagnostics.BuiltInNavigationYamlInvalid";
+        public const string DiagnosticsEmptyFolderFormatted = "NavigationYamlParser.Diagnostics.EmptyFolderFormatted";
+        public const string DiagnosticsFieldNotAllowedFormatted = "NavigationYamlParser.Diagnostics.FieldNotAllowedFormatted";
+        public const string DiagnosticsI18NResourceKeyEmptyFormatted = "NavigationYamlParser.Diagnostics.I18NResourceKeyEmptyFormatted";
+        public const string DiagnosticsItemMustHaveEitherPageOrFolderFormatted = "NavigationYamlParser.Diagnostics.ItemMustHaveEitherPageOrFolderFormatted";
+        public const string DiagnosticsMaxDepthExceededFolderFormatted = "NavigationYamlParser.Diagnostics.MaxDepthExceededFolderFormatted";
+        public const string DiagnosticsMaxDepthExceededFormatted = "NavigationYamlParser.Diagnostics.MaxDepthExceededFormatted";
+        public const string DiagnosticsMenuMustContainSettingsPage = "NavigationYamlParser.Diagnostics.MenuMustContainSettingsPage";
+        public const string DiagnosticsUnknownFieldFormatted = "NavigationYamlParser.Diagnostics.UnknownFieldFormatted";
+        public const string DiagnosticsUnknownI18NResourceKeyFormatted = "NavigationYamlParser.Diagnostics.UnknownI18NResourceKeyFormatted";
+        public const string DiagnosticsUnknownIconFormatted = "NavigationYamlParser.Diagnostics.UnknownIconFormatted";
+        public const string DiagnosticsUnknownNewTabPageFormatted = "NavigationYamlParser.Diagnostics.UnknownNewTabPageFormatted";
+        public const string DiagnosticsUnknownPageFormatted = "NavigationYamlParser.Diagnostics.UnknownPageFormatted";
     }
     public static class NovelViewerPageResources
     {

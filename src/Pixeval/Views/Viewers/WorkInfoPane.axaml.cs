@@ -45,11 +45,11 @@ public class WorkInfoPane : TemplatedControl
         get => GetValue(ArtworkInfoProperty);
         set => SetValue(ArtworkInfoProperty, value);
     }
-    
+
     public IAsyncRelayCommand<IUser?> OpenAuthorCommand { get; }
 
     public IRelayCommand<ITag?> OpenTagCommand { get; }
-    
+
     public IRelayCommand<ITag?> BlockTagCommand { get; }
 
     public WorkInfoPane()
@@ -82,7 +82,7 @@ public class WorkInfoPane : TemplatedControl
         App.AppViewModel.HistoryPersistHelper.AddSearchHistory(tag.Name, tag.TranslatedName);
         viewContainer.NavigateTo(new WorkSearchResultPage(tag.Name, type));
     }
-    
+
     private void BlockTag(ITag? tag)
     {
         if (tag is null)
@@ -95,6 +95,6 @@ public class WorkInfoPane : TemplatedControl
             AppInfo.SaveAppSettings(App.AppViewModel.AppSettings);
         }
     }
-    
+
     public static IValueConverter HalfVerticalSpaceConverter { get; } = new FuncValueConverter<Rect, double>(x => x.Height / 2);
 }

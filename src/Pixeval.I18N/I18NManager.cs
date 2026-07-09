@@ -43,6 +43,15 @@ public static class I18NManager
         return _LangPlugin.GetResource(key);
     }
 
+    public static bool TryGetResource(string key, [NotNullWhen(true)] out string? value)
+    {
+        EnsureRegistered();
+        if (_LangPlugin.CurrentCultureResources?.TryGetValue(key, out value) ?? false)
+            return true;
+
+        return _LangPlugin.DefaultCultureResources.TryGetValue(key, out value);
+    }
+
     public static string GetResource(string key, params object?[] args)
     {
         return string.Format(GetResource(key), args);

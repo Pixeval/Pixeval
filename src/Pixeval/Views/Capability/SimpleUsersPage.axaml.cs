@@ -43,13 +43,13 @@ public abstract partial class SimpleUsersPage : IconContentPage
     protected abstract IFetchEngine<User> GetFetchEngine(MakoClient makoClient);
 }
 
-public class UserRecommendPage : SimpleUsersPage
+public class UserRecommendedPage : SimpleUsersPage
 {
-    public UserRecommendPage() : this(null)
+    public UserRecommendedPage() : this(null)
     {
     }
 
-    public UserRecommendPage(UserViewViewModel? viewModel)
+    public UserRecommendedPage(UserViewViewModel? viewModel)
     {
         InitializeSource(viewModel);
     }
@@ -60,15 +60,15 @@ public class UserRecommendPage : SimpleUsersPage
     }
 }
 
-public class UserSearchPage : SimpleUsersPage
+public class UserSearchResultPage : SimpleUsersPage
 {
     private readonly string? _searchText;
 
-    public UserSearchPage() : this(null)
+    public UserSearchResultPage() : this(null)
     {
     }
 
-    public UserSearchPage(string? searchText, UserViewViewModel? viewModel = null)
+    public UserSearchResultPage(string? searchText, UserViewViewModel? viewModel = null)
     {
         Header = I18NManager.GetResource(MainPageResources.SearchResultFormatted, searchText);
         _searchText = searchText;

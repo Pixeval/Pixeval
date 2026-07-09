@@ -362,12 +362,12 @@ public static class HomeCardDefinitions
 
     private static void OpenUserRecommendedPage(HomePageCardLayout card, HomeCardPreviewViewModel previewViewModel, TopLevel topLevel)
     {
-        topLevel.ViewContainer?.NavigateTo(new UserRecommendPage(previewViewModel.ViewModel.CloneAsUserViewModel()));
+        topLevel.ViewContainer?.NavigateTo(new UserRecommendedPage(previewViewModel.ViewModel.CloneAsUserViewModel()));
     }
 
     private static void OpenUserSearchPage(HomePageCardLayout card, HomeCardPreviewViewModel previewViewModel, TopLevel topLevel)
     {
-        topLevel.ViewContainer?.NavigateTo(new UserSearchPage(card.SearchText, previewViewModel.ViewModel.CloneAsUserViewModel()));
+        topLevel.ViewContainer?.NavigateTo(new UserSearchResultPage(card.SearchText, previewViewModel.ViewModel.CloneAsUserViewModel()));
     }
 
     private static void OpenUserFollowingPage(HomePageCardLayout card, HomeCardPreviewViewModel previewViewModel, TopLevel topLevel)

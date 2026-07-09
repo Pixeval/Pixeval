@@ -1,0 +1,167 @@
+<ContentPage
+    x:Class="Pixeval.Views.Settings.NavigationSettingsPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:common="using:FluentIcons.Common"
+    xmlns:controls="using:CommunityToolkit.Avalonia.Controls"
+    xmlns:controls1="using:Pixeval.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:edit="using:AvaloniaEdit"
+    xmlns:fluent="using:FluentIcons.Avalonia"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:navigation="using:Pixeval.Models.Navigation"
+    xmlns:pixeval="using:Pixeval"
+    xmlns:settings="using:Pixeval.Views.Settings"
+    xmlns:utilities="using:Pixeval.Utilities"
+    x:DataType="{x:Type settings:NavigationSettingsPage}"
+    Header="{I18N {x:Static pixeval:MainPageResources.TabNavigationSettings}}"
+    mc:Ignorable="d"
+    d:DesignHeight="720"
+    d:DesignWidth="1100">
+    <Grid
+        Margin="20"
+        ColumnDefinitions="*,320"
+        ColumnSpacing="12"
+        RowDefinitions="Auto,*,Auto"
+        RowSpacing="12">
+        <CommandBar DefaultLabelPosition="Right">
+            <CommandBarButton
+                x:Name="CanApplyButton"
+                Click="ApplyButton_OnClicked"
+                HotKey="Ctrl+S"
+                Icon="{markup:SymbolIcon Checkmark}"
+                Label="{I18N {x:Static pixeval:NavigationSettingsPageResources.ApplyButtonContent}}"
+                ToolTip.Tip="{I18N {x:Static pixeval:NavigationSettingsPageResources.ApplyButtonToolTip}}" />
+            <CommandBarButton
+                Click="FormatButton_OnClicked"
+                Icon="{markup:SymbolIcon TextNumberFormat}"
+                Label="{I18N {x:Static pixeval:NavigationSettingsPageResources.FormatButtonContent}}"
+                ToolTip.Tip="{I18N {x:Static pixeval:NavigationSettingsPageResources.FormatButtonToolTip}}" />
+            <CommandBarButton
+                Click="ResetButton_OnClicked"
+                Icon="{markup:SymbolIcon ArrowReset}"
+                Label="{I18N {x:Static pixeval:NavigationSettingsPageResources.ResetButtonContent}}"
+                ToolTip.Tip="{I18N {x:Static pixeval:NavigationSettingsPageResources.ResetButtonToolTip}}" />
+            <CommandBarButton
+                Click="InsertFolderButton_OnClicked"
+                Icon="{markup:SymbolIcon DocumentFolder}"
+                Label="{I18N {x:Static pixeval:NavigationSettingsPageResources.InsertFolderButtonContent}}"
+                ToolTip.Tip="{I18N {x:Static pixeval:NavigationSettingsPageResources.InsertFolderButtonToolTip}}" />
+        </CommandBar>
+
+        <Border
+            Grid.Row="1"
+            Grid.Column="0"
+            BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+            BorderThickness="1"
+            CornerRadius="{DynamicResource ControlCornerRadius}">
+            <edit:TextEditor
+                x:Name="YamlEditor"
+                Background="Transparent"
+                FontFamily="Cascadia Code,Consolas,Monospace"
+                FontSize="14"
+                HorizontalScrollBarVisibility="Auto"
+                ShowLineNumbers="True"
+                TextChanged="YamlEditor_OnTextChanged"
+                VerticalScrollBarVisibility="Auto">
+                <edit:TextEditor.Options>
+                    <edit:TextEditorOptions ConvertTabsToSpaces="True" IndentationSize="2" />
+                </edit:TextEditor.Options>
+            </edit:TextEditor>
+        </Border>
+
+        <ScrollViewer
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="1">
+            <StackPanel Spacing="12">
+                <controls:SettingsExpander Header="{I18N {x:Static pixeval:NavigationSettingsPageResources.ReferencePagesHeader}}" HeaderIcon="{markup:SymbolIcon DocumentBulletList}">
+                    <controls:SettingsExpander.Items>
+                        <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Vertical">
+                            <ItemsControl ItemsSource="{x:Static utilities:NavigationPageRegistry.Pages}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="{x:Type navigation:NavigationPageDefinition}">
+                                        <Button
+                                            HorizontalAlignment="Stretch"
+                                            Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
+                                            Tag="{Binding StringFormat={}{0}}">
+                                            <Grid ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="8">
+                                                <fluent:SymbolIcon
+                                                    Grid.Column="0"
+                                                    FontSize="16"
+                                                    IconVariant="Color"
+                                                    Symbol="{Binding Icon}" />
+                                                <TextBlock Grid.Column="1" Text="{Binding Header}" />
+                                                <TextBlock
+                                                    Grid.Column="3"
+                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                    Text="{Binding Key}" />
+                                            </Grid>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </controls:SettingsCard>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
+                <controls:SettingsExpander Header="{I18N {x:Static pixeval:NavigationSettingsPageResources.ReferenceIconsHeader}}" HeaderIcon="{markup:SymbolIcon Icons}">
+                    <controls:SettingsExpander.Items>
+                        <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Vertical">
+                            <ItemsControl ItemsSource="{x:Static utilities:NavigationPageRegistry.ColorSymbols}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="{x:Type common:Symbol}">
+                                        <Button
+                                            Padding="2"
+                                            Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
+                                            Tag="{Binding StringFormat={}{0}}"
+                                            ToolTip.Tip="{Binding}">
+                                            <fluent:SymbolIcon IconVariant="Color" Symbol="{Binding}" />
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <controls1:AdaptiveGrid
+                                            ItemSize="30"
+                                            ItemSpacing="0"
+                                            LineSize="30"
+                                            LineSpacing="0" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </controls:SettingsCard>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Padding="10"
+            Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}"
+            CornerRadius="{DynamicResource ControlCornerRadius}">
+            <Grid RowDefinitions="Auto,Auto" RowSpacing="6">
+                <TextBlock
+                    x:Name="StatusTextBlock"
+                    FontWeight="SemiBold"
+                    TextWrapping="Wrap" />
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding Diagnostics}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type navigation:NavigationDiagnostic}">
+                            <TextBlock TextWrapping="Wrap">
+                                <Run Text="{Binding Severity}" />
+                                <Run Text=" " />
+                                <Run Text="{Binding PositionText}" />
+                                <Run Text="  " />
+                                <Run Text="{Binding Message}" />
+                            </TextBlock>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

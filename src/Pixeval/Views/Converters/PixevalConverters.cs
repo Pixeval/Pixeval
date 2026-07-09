@@ -77,6 +77,13 @@ public static partial class PixevalConverters
     public static readonly FuncValueConverter<Symbol, SymbolIcon> SymbolIconConverter =
         new(value => new SymbolIcon { Symbol = value });
 
+    public static readonly FuncValueConverter<Symbol, SymbolIcon> ColorSymbolIconConverter =
+        new(value => new SymbolIcon
+        {
+            Symbol = value,
+            IconVariant = IconVariant.Color
+        });
+
     public static readonly FuncValueConverter<string, FontFamily?> FontFamilyConverter = new(font => font is null ? null : new FontFamily(font));
 
     [GeneratedRegex("<br\\s*/?>", RegexOptions.IgnoreCase)]

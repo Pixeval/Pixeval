@@ -41,6 +41,8 @@ public static class AppInfo
 
     private static string HomePageCardsPath { get; } = Path.Combine(SettingsFolder, "home_page_cards.yaml");
 
+    private static string NavigationMenuPath { get; } = Path.Combine(SettingsFolder, "navigation_menu.yaml");
+
     public static string DatabaseFilePath { get; } = Path.Combine(SettingsFolder, "PixevalData4.3.12.sqlite");
 
     public static readonly Uri IconApplicationUri = new($"avares://{AppIdentifier}/Assets/logo.ico");
@@ -100,7 +102,7 @@ public static class AppInfo
     public static void ClearLoginContext()
     {
         TryDelete(LoginContextPath);
-        }
+    }
 
     public static void SaveWindowContext(Window window)
     {
@@ -149,7 +151,7 @@ public static class AppInfo
         {
             logger.LogError("Failed to load settings", e);
             return null;
-    }
+        }
     }
 
     public static ObservableCollection<HomePageCardLayout>? LoadHomePageCards(FileLogger logger)
@@ -168,10 +170,27 @@ public static class AppInfo
         }
     }
 
+    public static string? LoadNavigationMenuYaml(FileLogger logger)
+    {
+        if (!File.Exists(NavigationMenuPath))
+            return null;
+
+        try
+        {
+            return File.ReadAllText(NavigationMenuPath);
+        }
+        catch (Exception e)
+        {
+            logger.LogError("Failed to load navigation menu", e);
+            return null;
+        }
+    }
+
     public static void SaveSettings()
     {
         SaveAppSettings(App.AppViewModel.AppSettings);
         SaveHomePageCards(App.AppViewModel.HomePageCards);
+        SaveNavigationMenuYaml(App.AppViewModel.NavigationMenuYamlText);
     }
 
     public static void SaveAppSettings(AppSettings? configuration)
@@ -199,6 +218,14 @@ public static class AppInfo
             HomePageCardsPath,
             new HomePageCardsSettings { Cards = cards },
             SettingsSerializerContext.Default.HomePageCardsSettings);
+    }
+
+    public static void SaveNavigationMenuYaml(string? yaml)
+    {
+        if (yaml is null)
+            return;
+
+        File.WriteAllText(NavigationMenuPath, yaml.ReplaceLineEndings(Environment.NewLine), Encoding.UTF8);
     }
 
     private static void TryDelete(string path)

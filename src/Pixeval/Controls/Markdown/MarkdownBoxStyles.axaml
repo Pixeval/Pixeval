@@ -2,9 +2,9 @@
     x:Class="Pixeval.Controls.MarkdownBoxStyles"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:ctxt="clr-namespace:ColorTextBlock.Avalonia;assembly=ColorTextBlock.Avalonia"
+    xmlns:ctxt="using:ColorTextBlock.Avalonia"
     xmlns:icons="using:FluentIcons.Avalonia"
-    xmlns:mdc="clr-namespace:Markdown.Avalonia.Controls;assembly=Markdown.Avalonia">
+    xmlns:mdc="using:Markdown.Avalonia.Controls">
 
     <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CTextBlock">
         <Setter Property="LineSpacing" Value="3" />

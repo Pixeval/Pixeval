@@ -11,6 +11,7 @@ using Pixeval.Controls;
 using Pixeval.I18N;
 using Pixeval.Models.Options;
 using Pixeval.Models.Settings;
+using Pixeval.Models.Navigation;
 using Pixeval.Utilities;
 using Pixeval.Utilities.IO.Caching;
 using Pixeval.ViewModels;
@@ -52,6 +53,7 @@ public partial class SettingsMainView : ContentPage
             return;
 
         var settings = new AppSettings();
+        App.AppViewModel.NavigationMenuYamlText = NavigationMenuYaml.DefaultYaml;
         App.AppViewModel.ResetHomePageCards();
         foreach (var localGroup in vm.LocalGroups)
             foreach (var settingsEntry in localGroup)
@@ -59,6 +61,9 @@ public partial class SettingsMainView : ContentPage
         foreach (var extensionGroup in vm.ExtensionGroups)
             foreach (var settingsEntry in extensionGroup)
                 settingsEntry.ValueReset();
+
+        if (viewContainer is ViewContainers.TabViewContainer container)
+            container.ReloadNavigation();
     }
 
     private async void ReleaseNotesHyperlink_OnClicked(object? sender, RoutedEventArgs e)
@@ -132,8 +137,8 @@ public partial class SettingsMainView : ContentPage
             if (YamlSerializer.Deserialize(stream, SettingsSerializerContext.Default.AppSettings) is { } appSettings)
             {
                 foreach (var localGroup in vm.LocalGroups)
-                    foreach (var settingsEntry in localGroup)
-                        settingsEntry.LocalValueReset(appSettings);
+                foreach (var settingsEntry in localGroup)
+                    settingsEntry.LocalValueReset(appSettings);
                 viewContainer.ShowSuccess(I18NManager.GetResource(SettingsMainViewResources.ImportSettingsSuccess), file.Name);
             }
         }
@@ -191,5 +196,11 @@ public partial class SettingsMainView : ContentPage
     {
         if (IsInNavigationPage && Parent is NavigationPage frame)
             await frame.PushAsync(new HelpPage());
+    }
+
+    private async void NavigationSettingsButton_OnClicked(object? sender, RoutedEventArgs e)
+    {
+        if (IsInNavigationPage && Parent is NavigationPage frame)
+            await frame.PushAsync(new NavigationSettingsPage());
     }
 }

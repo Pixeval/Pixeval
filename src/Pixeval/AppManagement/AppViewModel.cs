@@ -2,6 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -18,6 +19,8 @@ using Pixeval.Models.Database;
 using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Download;
 using Pixeval.Models.Extensions;
+using Pixeval.Models.Home;
+using Pixeval.Models.Navigation;
 using Pixeval.Models.McpServer;
 using Pixeval.Models.Subscriptions;
 using Pixeval.Utilities;
@@ -49,6 +52,9 @@ public sealed class AppViewModel(App app, FileLogger logger) : IAsyncDisposable
 
     public ObservableCollection<HomePageCardLayout> HomePageCards { get; } =
         AppInfo.LoadHomePageCards(logger) ?? HomePageCardsSettings.CreateDefaultCards();
+
+    public string NavigationMenuYamlText { get; set; } =
+        AppInfo.LoadNavigationMenuYaml(logger) ?? NavigationMenuYaml.DefaultYaml;
 
     public void ResetHomePageCards()
     {

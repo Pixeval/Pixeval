@@ -3,17 +3,20 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
+    xmlns:converters="using:Pixeval.Views.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:local="using:Pixeval.Views.ViewContainers"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:navigation="using:Pixeval.Models.Navigation"
     xmlns:pixeval="using:Pixeval"
     xmlns:tabView="using:TabView.Avalonia"
     xmlns:utilities="using:Pixeval.Utilities"
     xmlns:viewModels="using:Pixeval.ViewModels"
     xmlns:views="using:Pixeval.Views"
     x:DataType="{x:Type viewModels:TabViewContainerViewModel}"
+    x:Name="Root"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
@@ -41,8 +44,13 @@
             AddTabButtonClick="TabsView_OnAddTabButtonClick"
             Background="Transparent"
             LeftHeaderContentDraggable="True"
-            ShowDefaultAddButton="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
             TabClosing="TabsView_OnTabClosing">
+            <tabView:TabsView.ShowDefaultAddButton>
+                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                    <Binding Path="IsLoggedIn" Source="{x:Static views:PixevalSettings.Instance}" />
+                    <Binding Path="#Root.CanCreateNewTab" />
+                </MultiBinding>
+            </tabView:TabsView.ShowDefaultAddButton>
             <tabView:TabsView.LeftHeaderContent>
                 <Border
                     Width="25"
@@ -118,11 +126,12 @@
                     HorizontalAlignment="Stretch"
                     VerticalSpacing="5">
                     <DockPanel.DataTemplates>
-                        <DataTemplate x:DataType="{x:Type utilities:NavigationInfo}">
+                        <DataTemplate x:DataType="{x:Type navigation:NavigationPageItem}">
                             <Button
                                 HorizontalAlignment="Stretch"
                                 Background="Transparent"
-                                Click="NavigationButton_OnClick">
+                                Command="{x:Static local:TabViewContainer.OpenNavigationItemCommand}"
+                                CommandParameter="{Binding $self}">
                                 <Button.IsEnabled>
                                     <MultiBinding Converter="{x:Static BoolConverters.Or}">
                                         <Binding Path="!NeedLogin" />
@@ -142,12 +151,65 @@
                                 </Grid>
                             </Button>
                         </DataTemplate>
+
+                        <DataTemplate x:DataType="{x:Type navigation:NavigationFolderItem}">
+                            <Button
+                                HorizontalAlignment="Stretch"
+                                Background="Transparent">
+                                <Button.IsEnabled>
+                                    <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                                        <Binding Path="!NeedLogin" />
+                                        <Binding Path="IsLoggedIn" Source="{x:Static views:PixevalSettings.Instance}" />
+                                    </MultiBinding>
+                                </Button.IsEnabled>
+                                <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
+                                    <fluent:SymbolIcon
+                                        HorizontalAlignment="Center"
+                                        IconVariant="Color"
+                                        Symbol="{Binding Icon}" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        HorizontalAlignment="Center"
+                                        FontSize="10"
+                                        Text="{Binding Header}" />
+                                </Grid>
+                                <Button.Flyout>
+                                    <MenuFlyout ItemsSource="{Binding Children}" Placement="Right">
+                                        <MenuFlyout.ItemContainerTheme>
+                                            <!--  ItemContainerTheme好像会自动向下传递，不需要此处递归指定（也没法递归指定）  -->
+                                            <ControlTheme
+                                                x:DataType="{x:Type navigation:NavigationMenuItem}"
+                                                BasedOn="{StaticResource {x:Type MenuItem}}"
+                                                TargetType="{x:Type MenuItem}">
+                                                <Setter Property="Command"
+                                                        Value="{x:Static local:TabViewContainer.OpenNavigationItemCommand}" />
+                                                <Setter Property="CommandParameter" Value="{Binding $self}" />
+                                                <Setter Property="Header" Value="{Binding Header}" />
+                                                <Setter Property="Icon"
+                                                        Value="{Binding Icon, Converter={x:Static converters:PixevalConverters.ColorSymbolIconConverter}}" />
+                                                <Setter Property="ItemsSource" Value="{Binding Children}" />
+                                                <Setter Property="IsEnabled">
+                                                    <Setter.Value>
+                                                        <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                                                            <Binding Path="!NeedLogin" />
+                                                            <Binding Path="IsLoggedIn"
+                                                                     Source="{x:Static views:PixevalSettings.Instance}" />
+                                                        </MultiBinding>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </ControlTheme>
+                                        </MenuFlyout.ItemContainerTheme>
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+                        </DataTemplate>
                     </DockPanel.DataTemplates>
+
                     <ItemsControl
                         HorizontalAlignment="Stretch"
                         DockPanel.Dock="Bottom"
-                        ItemsSource="{x:Static utilities:AvaloniaHelper.FooterItems}" />
-                    <ItemsControl HorizontalAlignment="Stretch" ItemsSource="{x:Static utilities:AvaloniaHelper.HeaderItems}" />
+                        ItemsSource="{Binding #Root.FooterNavigationItems}" />
+                    <ItemsControl HorizontalAlignment="Stretch" ItemsSource="{Binding #Root.HeaderNavigationItems}" />
                 </DockPanel>
             </tabView:TabsView.LeftContent>
         </tabView:TabsView>

@@ -385,7 +385,7 @@ public partial class SearchPage : IconContentPage
         if (TopLevel.GetTopLevel(this)?.ViewContainer is not { } viewContainer)
             return;
 
-        viewContainer.NavigateTo(new UserSearchPage(SearchAutoCompleteBox.Text?.Trim()));
+        viewContainer.NavigateTo(new UserSearchResultPage(SearchAutoCompleteBox.Text?.Trim()));
     }
 
     private void CommitTagCompletion(string tag)

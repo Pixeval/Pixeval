@@ -25,12 +25,13 @@
     "Settings": "设置",
     "Extensions": "扩展",
     "RelatedUser": "相关用户",
-    "UserSearch": "用户搜索",
-    "WorkSearch": "作品搜索",
+    "UserSearchResult": "用户搜索",
+    "WorkSearchResult": "作品搜索",
     "SingleImage": "单独图片",
     "SingleNovel": "单独小说",
     "SingleUser": "单独用户",
-    "SauceNaoResult": "SauceNAO 搜索结果"
+    "SauceNaoResult": "SauceNAO 搜索结果",
+    "NavigationSettings": "导航栏"
   },
   "SearchResultFormatted": "{0} - 搜索",
   "SearchKeywordCannotBeBlank": {

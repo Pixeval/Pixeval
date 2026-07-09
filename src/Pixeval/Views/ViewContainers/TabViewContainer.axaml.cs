@@ -3,12 +3,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Interactivity;
+using Avalonia.Styling;
+using CommunityToolkit.Mvvm.Input;
+using Pixeval.Models.Navigation;
 using Pixeval.Utilities;
-using Pixeval.Views.Home;
 using Pixeval.Views.Login;
 using Pixeval.Views.Viewers;
 using TabView.Avalonia;
@@ -17,9 +23,30 @@ namespace Pixeval.Views.ViewContainers;
 
 public partial class TabViewContainer : ViewContainerBase
 {
+    public static readonly DirectProperty<TabViewContainer, bool> CanCreateNewTabProperty =
+        AvaloniaProperty.RegisterDirect<TabViewContainer, bool>(
+            nameof(CanCreateNewTab),
+            static container => container.CanCreateNewTab);
+
+    private NavigationConfiguration _navigationConfiguration = null!;
+
+    public ObservableCollection<NavigationMenuItem> HeaderNavigationItems { get; } = [];
+
+    public ObservableCollection<NavigationMenuItem> FooterNavigationItems { get; } = [];
+
+    public static ICommand OpenNavigationItemCommand { get; } = new RelayCommand<Control>(OpenNavigationItem);
+
+    public bool CanCreateNewTab
+    {
+        get;
+        private set => SetAndRaise(CanCreateNewTabProperty, ref field, value);
+    }
+
     public TabViewContainer()
     {
         InitializeComponent();
+
+        RebuildNavigation();
 
         AddHandler(
             ViewModelDisposal.ViewModelDisposalEvent,
@@ -71,18 +98,33 @@ public partial class TabViewContainer : ViewContainerBase
                 _ = pages.Remove(selected);
     }
 
-    private void NavigationButton_OnClick(object? sender, RoutedEventArgs e)
+    public void ReloadNavigation() => RebuildNavigation();
+
+    private void RebuildNavigation()
     {
-        if (sender is not Control { DataContext: NavigationInfo { PageType: { } type } })
+        _navigationConfiguration = NavigationYamlParser.ParseOrDefault(App.AppViewModel.NavigationMenuYamlText);
+        HeaderNavigationItems.Clear();
+        FooterNavigationItems.Clear();
+        foreach (var item in _navigationConfiguration.HeaderItems)
+            HeaderNavigationItems.Add(item);
+        foreach (var item in _navigationConfiguration.FooterItems)
+            FooterNavigationItems.Add(item);
+        CanCreateNewTab = _navigationConfiguration.NewTabPage is not null;
+    }
+
+    private static void OpenNavigationItem(Control? control)
+    {
+        if (control is not { DataContext: NavigationPageItem { PageType: { } type } }
+            || TopLevel.GetTopLevel(control) is not { ViewContainer: { } viewContainer })
             return;
 
-        // 默认参数是自己的Uid，无需指定
-        NavigateTo((Page) Activator.CreateInstance(type)!);
+        viewContainer.NavigateTo((Page) Activator.CreateInstance(type)!);
     }
 
     private void TabsView_OnAddTabButtonClick(TabsView sender, EventArgs e)
     {
-        NavigateTo(new HomePage());
+        if (_navigationConfiguration.NewTabPage is { PageType: { } type })
+            NavigateTo((Page) Activator.CreateInstance(type)!);
     }
 
     private void OpenMyPage_OnClick(object? sender, RoutedEventArgs e)

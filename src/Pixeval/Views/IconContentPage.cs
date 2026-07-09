@@ -10,7 +10,7 @@ namespace Pixeval.Views;
 
 public class IconContentPage : ContentPage
 {
-    public IconContentPage()
+    protected IconContentPage()
     {
         var tuple = AvaloniaHelper.GetPageHeader(GetType());
         Header = tuple.Header;
