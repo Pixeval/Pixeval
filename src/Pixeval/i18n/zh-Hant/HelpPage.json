@@ -17,6 +17,25 @@
   "McpHelpExpander": {
     "Header": "MCP 使用帮助"
   },
+  "McpToolsExpander": {
+    "Header": "MCP 工具列表",
+    "Description": "从当前运行的 Pixeval MCP 服务器读取 AI 可调用的方法"
+  },
+  "McpToolsRefreshButton": {
+    "ToolTip": "刷新 MCP 工具列表"
+  },
+  "McpToolsParameters": {
+    "Empty": "无参数"
+  },
+  "McpToolsStatus": {
+    "Disabled": "MCP 服务器未启用。请先在设置页的 MCP 分组中启用 MCP 服务器。",
+    "Unavailable": "当前运行的 Pixeval 没有注册 MCP 服务。MCP 只在 Pixeval Desktop 中可用。",
+    "NotRunning": "MCP 设置已启用，但服务器没有成功启动。请检查端口是否被占用，或查看 Pixeval 日志。",
+    "Loading": "正在从 {0} 读取 MCP 工具列表...",
+    "Loaded": "已从 {0} 读取到 {1} 个 MCP 工具。",
+    "Empty": "MCP 服务器已响应，但没有返回可用工具。",
+    "Failed": "读取 MCP 工具列表失败：{0}"
+  },
   "AppProtocolLinkHelpExpander": {
     "Header": "应用协议链接使用帮助"
   },
