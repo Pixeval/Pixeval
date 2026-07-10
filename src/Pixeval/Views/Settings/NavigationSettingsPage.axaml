@@ -59,7 +59,6 @@
             <edit:TextEditor
                 x:Name="YamlEditor"
                 Background="Transparent"
-                FontFamily="Cascadia Code,Consolas,Monospace"
                 FontSize="14"
                 HorizontalScrollBarVisibility="Auto"
                 ShowLineNumbers="True"

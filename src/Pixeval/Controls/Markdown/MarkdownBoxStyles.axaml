@@ -140,14 +140,14 @@
     </Style>
 
     <Style Selector=".Markdown_Avalonia_MarkdownViewer TextBlock.CodeBlock">
-        <Setter Property="FontFamily" Value="Cascadia Mono,Consolas,Menlo,Monaco,monospace" />
+        <Setter Property="FontFamily" Value="{DynamicResource PixevalMonospaceFontFamily}" />
         <Setter Property="FontSize" Value="13" />
         <Setter Property="LineHeight" Value="20" />
         <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
     </Style>
 
     <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CTextBlock.CodeBlock">
-        <Setter Property="FontFamily" Value="Cascadia Mono,Consolas,Menlo,Monaco,monospace" />
+        <Setter Property="FontFamily" Value="{DynamicResource PixevalMonospaceFontFamily}" />
         <Setter Property="FontSize" Value="13" />
         <Setter Property="LineHeight" Value="20" />
         <Setter Property="LineSpacing" Value="0" />

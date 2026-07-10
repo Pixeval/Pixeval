@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using AutoSettingsPage;
 using AutoSettingsPage.Models;
 using Avalonia;
-using Avalonia.Media;
 using Avalonia.Styling;
 using Mako;
 using Mako.Global.Enum;
@@ -55,7 +54,7 @@ public class SettingsPageViewModel : ViewModelBase
                         ApplicationTheme.Dark => ThemeVariant.Dark,
                         _ => ThemeVariant.Default
                     })
-                .Font(t => t.AppFontFamily, entry => entry.ValueChanged += t => Application.Current?.Resources["ContentControlThemeFontFamily"] = new FontFamily(string.Join(',', t)))
+                .Font(t => t.AppFontFamily, entry => entry.ValueChanged += App.ApplyAppFontFamily)
                 .Bool(t => t.UseFileCache)
                 .MultiValuesWithSwitch(t => t.LimitFileCacheSize,
                     entry => entry.Int(t => t.FileCacheSizeLimitInMegabytes, 1, 0x100000, 0x80,

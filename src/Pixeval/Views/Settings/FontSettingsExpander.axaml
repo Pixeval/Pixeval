@@ -27,7 +27,7 @@
         <controls:SettingsCard ContentAlignment="Left">
             <DockPanel HorizontalAlignment="Stretch" HorizontalSpacing="5">
                 <ComboBox
-                    x:Name="ComboBox"
+                    x:Name="FontComboBox"
                     Width="200"
                     DockPanel.Dock="Right"
                     ItemsSource="{x:Static local:SettingsEntryHelper.AvailableFonts}"
@@ -39,14 +39,16 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
                 <controls1:TokenizingBox
-                    x:Name="TokenizingBox"
+                    x:Name="FontTokenizingBox"
                     AllowDuplicateTokens="False"
                     ItemsSource="{Binding Value}"
                     PlaceholderText="{Binding Placeholder}"
                     TokenSeparator=",">
                     <controls1:TokenizingBox.ItemTemplate>
                         <DataTemplate x:DataType="{x:Type x:String}">
-                            <TextBlock FontFamily="{Binding Converter={x:Static converters:PixevalConverters.FontFamilyConverter}}" Text="{Binding}" />
+                            <TextBlock
+                                FontFamily="{Binding Converter={x:Static converters:PixevalConverters.FontFamilyConverter}}"
+                                Text="{Binding}" />
                         </DataTemplate>
                     </controls1:TokenizingBox.ItemTemplate>
                 </controls1:TokenizingBox>

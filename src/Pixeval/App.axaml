@@ -3,6 +3,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:autoSettingsPage="using:AutoSettingsPage.Avalonia"
+    xmlns:edit="using:AvaloniaEdit"
     xmlns:smoothScroll="using:SmoothScroll.Avalonia.Controls"
     xmlns:tabView="using:TabView.Avalonia"
     xmlns:ui="using:FluentAvalonia.UI.Themes">
@@ -14,6 +15,9 @@
         <autoSettingsPage:AutoSettingsPageTheme />
         <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />
         <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
+        <Style Selector="edit|TextEditor">
+            <Setter Property="FontFamily" Value="{DynamicResource PixevalMonospaceFontFamily}" />
+        </Style>
         <StyleInclude Source="/Controls/FloatingCommandBarStyles.axaml" />
         <smoothScroll:ScrollViewDefaultTheme />
         <smoothScroll:ScrollViewerSmoothTheme />
@@ -21,6 +25,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <x:Double x:Key="SmallIconFontSize">16</x:Double>
+            <FontFamily x:Key="PixevalMonospaceFontFamily">Cascadia Code,Cascadia Mono,SF Mono,Menlo,Monaco,Consolas,Liberation Mono,DejaVu Sans Mono,monospace</FontFamily>
             <ResourceDictionary.MergedDictionaries>
                 <MergeResourceInclude Source="Themes/Colors.axaml" />
                 <MergeResourceInclude Source="Themes/Brushes.axaml" />

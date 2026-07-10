@@ -54,7 +54,6 @@
                     Background="Transparent"
                     BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
                     BorderThickness="1"
-                    FontFamily="Cascadia Code,Consolas,Monospace"
                     FontSize="14"
                     HorizontalScrollBarVisibility="Auto"
                     ShowLineNumbers="False"

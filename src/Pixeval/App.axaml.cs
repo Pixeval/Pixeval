@@ -2,7 +2,9 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Avalonia;
@@ -42,7 +44,7 @@ public class App : Application
         AppViewModel.InitializeProvider();
 
         AvaloniaXamlLoader.Load(this);
-        Resources["ContentControlThemeFontFamily"] = new FontFamily(string.Join(',', AppViewModel.AppSettings.ApplicationSettings.AppFontFamily));
+        ApplyAppFontFamily(AppViewModel.AppSettings.ApplicationSettings.AppFontFamily);
         RequestedThemeVariant = AppViewModel.AppSettings.ApplicationSettings.Theme switch
         {
             ApplicationTheme.Light => ThemeVariant.Light,
@@ -56,6 +58,16 @@ public class App : Application
     }
 
     public static AppViewModel AppViewModel { get; private set; } = null!;
+
+    public static void ApplyAppFontFamily(IEnumerable<string> fontFamilies)
+    {
+        var resources = Current!.Resources;
+        var fontFamily = string.Join(',', fontFamilies.Where(static fontFamily => !string.IsNullOrWhiteSpace(fontFamily)));
+        if (string.IsNullOrWhiteSpace(fontFamily))
+            _ = resources.Remove("ContentControlThemeFontFamily");
+        else
+            resources["ContentControlThemeFontFamily"] = new FontFamily(fontFamily);
+    }
 
     public override void OnFrameworkInitializationCompleted()
     {

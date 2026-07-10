@@ -9,7 +9,6 @@ using Avalonia;
 using Avalonia.Styling;
 using FluentIcons.Common;
 using Mako;
-using Pixeval.I18N;
 using Pixeval.Models.Options;
 using Pixeval.Utilities;
 using static Pixeval.AppSettingsResources;
@@ -20,9 +19,6 @@ public record AppSettings
 {
     public AppSettings()
     {
-        var defaultFont = I18NManager.GetResource(CultureDefaultSettingsResources.AppDefaultFontFamilyName);
-        ApplicationSettings.AppFontFamily = [defaultFont];
-        NovelSettings.NovelFontFamily = [defaultFont];
         NovelSettings.ActualThemeProvider = () => ActualTheme;
 
         if (LastOpenedVersion != AppInfo.AppVersion.CurrentVersionShortText)

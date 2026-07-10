@@ -122,7 +122,7 @@
                                             CornerRadius="{DynamicResource ControlCornerRadius}">
                                             <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="3">
                                                 <TextBlock
-                                                    FontFamily="Cascadia Code,Consolas,Monospace"
+                                                    FontFamily="{DynamicResource PixevalMonospaceFontFamily}"
                                                     FontWeight="SemiBold"
                                                     Text="{Binding Name}"
                                                     TextWrapping="Wrap" />
@@ -149,7 +149,7 @@
                                                                 x:DataType="{x:Type mcpServer:McpToolParameterItemViewModel}">
                                                                 <Grid Margin="0,0,0,4" RowDefinitions="Auto,Auto">
                                                                     <TextBlock
-                                                                        FontFamily="Cascadia Code,Consolas,Monospace"
+                                                                        FontFamily="{DynamicResource PixevalMonospaceFontFamily}"
                                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                                         Text="{Binding Signature}"
                                                                         TextWrapping="Wrap" />

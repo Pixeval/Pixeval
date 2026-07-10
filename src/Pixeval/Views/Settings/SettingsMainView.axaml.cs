@@ -80,7 +80,7 @@ public partial class SettingsMainView : ContentPage
             return new MarkdownBox
             {
                 Markdown =
-                    AppInfo.AppVersion.NewestAppReleaseModel?.ReleaseNote ??
+                    AppInfo.AppVersion.CurrentAppReleaseModel?.ReleaseNote ??
                     I18NManager.GetResource(SettingsMainViewResources.ReleaseNoteDialogEmpty)
             };
         }

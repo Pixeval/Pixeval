@@ -17,7 +17,9 @@ public partial class FontSettingsExpander : SettingsExpander, IEntryControl<ISin
         set
         {
             DataContext = value;
-            ComboBox.SelectedItem = new FontFamily(value.Value[0]);
+            FontComboBox.SelectedItem = value.Value is [var fontFamilyName, ..] && !string.IsNullOrWhiteSpace(fontFamilyName)
+                ? new FontFamily(fontFamilyName)
+                : null;
         }
     }
 
@@ -26,6 +28,6 @@ public partial class FontSettingsExpander : SettingsExpander, IEntryControl<ISin
     private void SelectingItemsControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (e.AddedItems is [FontFamily fontFamily])
-            TokenizingBox.AddToken(fontFamily.Name);
+            FontTokenizingBox.AddToken(fontFamily.Name);
     }
 }
