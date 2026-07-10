@@ -9,10 +9,6 @@
     "Manga": "漫画",
     "Novel": "小说"
   },
-  "SimpleWorkType": {
-    "IllustrationAndManga": "插画和漫画",
-    "Novel": "小说"
-  },
   "LocalSortOption": {
     "DoNotSort": "不进行任何排序",
     "PopularityDescending": "收藏数降序",
@@ -152,7 +148,6 @@
     "Posts": "发布作品"
   },
   "WorkSubscriptionWorkKind": {
-    "IllustrationAndManga": "插画和漫画",
     "Illustration": "插画",
     "Manga": "漫画",
     "Novel": "小说"
@@ -163,12 +158,15 @@
     "WorkRanking": "指定作品范围、榜单类型和日期的排行列表。",
     "WorkNew": "按作品类型展示 Pixiv 最新作品。",
     "WorkFollowing": "来自已关注用户的新作品列表。",
+    "WorkMyPixiv": "来自自己的好P友的新作品列表。",
+    "WorkRelated": "指定作品 ID 和作品类型的相关作品列表。",
     "WorkPosts": "指定用户的插画、漫画或小说投稿。",
     "WorkSearch": "按关键词搜索插画、漫画或小说。",
     "UserRecommended": "Pixiv 推荐用户列表。",
     "UserSearch": "按关键词搜索用户。",
     "UserFollowing": "指定用户正在关注的用户列表。",
-    "UserMyPixiv": "指定用户的 My pixiv 用户列表。",
+    "UserFollower": "自己的粉丝列表。",
+    "UserMyPixiv": "自己的好P友列表。",
     "Spotlight": "Pixivision 特辑列表。",
     "SingleImage": "指定插画 ID 展示单个作品。",
     "SingleNovel": "指定小说 ID 展示单个小说。",
