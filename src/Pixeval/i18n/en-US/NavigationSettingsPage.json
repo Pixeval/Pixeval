@@ -23,8 +23,6 @@
   },
   "Applied": "导航栏设置已应用",
   "StatusInvalidFormatted": "配置无效：{0} 个问题",
-  "StatusValid": "配置有效",
-  "StatusValidWithWarningsFormatted": "配置有效，但有 {0} 个警告",
   "DefaultFolderTitle": "文件夹",
   "WorkFolderTitle": "作品",
   "UserFolderTitle": "用户"
