@@ -73,15 +73,10 @@
                     <Run x:Name="NovelPathBlock" />
                     <LineBreak />
                 </TextBlock>
-                <TextBlock
-                    Foreground="Red"
-                    IsVisible="{Binding #DownloadMacroInvalidInfoBar.IsVisible}"
-                    Text="{I18N {x:Static pixeval:SettingsMainViewResources.DownloadMacroInvalidInfoBarTitle}}" />
-                <TextBlock
+                <controls2:InfoBar
                     x:Name="DownloadMacroInvalidInfoBar"
-                    Foreground="Red"
                     IsVisible="False"
-                    TextWrapping="Wrap" />
+                    Mode="Error" />
             </StackPanel>
         </controls:SettingsCard>
     </controls:SettingsExpander.Items>

@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:markup="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
@@ -21,21 +20,11 @@
         Margin="12"
         IsEnabled="{Binding IsApiKeyExisted}"
         VerticalSpacing="5">
-        <Border
-            Padding="10"
-            Background="{DynamicResource SystemFillColorCautionBackgroundBrush}"
-            CornerRadius="{StaticResource ControlCornerRadius}"
+        <controls:InfoBar
             DockPanel.Dock="Top"
-            IsVisible="{Binding !IsApiKeyExisted}">
-            <DockPanel HorizontalSpacing="10">
-                <fluent:SymbolIcon
-                    DockPanel.Dock="Left"
-                    Foreground="{DynamicResource SystemFillColorCautionBrush}"
-                    IconVariant="Filled"
-                    Symbol="Warning" />
-                <TextBlock Text="{I18N {x:Static pixeval:SearchResources.SauceNAOProvideApiKey}}" />
-            </DockPanel>
-        </Border>
+            IsVisible="{Binding !IsApiKeyExisted}"
+            Mode="Warning"
+            Text="{I18N {x:Static pixeval:SearchResources.SauceNAOProvideApiKey}}" />
         <Button
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Center"

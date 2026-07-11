@@ -60,7 +60,6 @@ public static class NavigationYamlParser
         catch (Exception exception)
         {
             diagnostics.Add(new(
-                NavigationDiagnosticSeverity.Error,
                 exception.Message,
                 0,
                 int.Min(text.Length, 1),
@@ -82,7 +81,6 @@ public static class NavigationYamlParser
         catch (Exception exception)
         {
             diagnostics.Add(new(
-                NavigationDiagnosticSeverity.Error,
                 exception.Message,
                 0,
                 int.Min(text.Length, 1),
@@ -102,8 +100,7 @@ public static class NavigationYamlParser
                 sourceMap,
                 "newTab",
                 newTab,
-                Diagnostic(NavigationYamlParserResources.DiagnosticsUnknownNewTabPageFormatted, newTab),
-                NavigationDiagnosticSeverity.Warning));
+                Diagnostic(NavigationYamlParserResources.DiagnosticsUnknownPageFormatted, newTab)));
         }
 
         var header = document.Header.BuildItems("header", 1, diagnostics, sourceMap);
@@ -112,7 +109,6 @@ public static class NavigationYamlParser
         if (header.Count is 0 && footer.Count is 0)
         {
             diagnostics.Add(new(
-                NavigationDiagnosticSeverity.Error,
                 Diagnostic(NavigationYamlParserResources.DiagnosticsBothHeaderAndFooterEmpty),
                 0,
                 int.Min(text.Length, 1),
@@ -123,7 +119,6 @@ public static class NavigationYamlParser
         if (!header.ContainsPage(SettingsPageKey) && !footer.ContainsPage(SettingsPageKey))
         {
             diagnostics.Add(new(
-                NavigationDiagnosticSeverity.Error,
                 Diagnostic(NavigationYamlParserResources.DiagnosticsMenuMustContainSettingsPage),
                 0,
                 int.Min(text.Length, 1),
@@ -131,9 +126,9 @@ public static class NavigationYamlParser
                 1));
         }
 
-        var configuration = diagnostics.Any(static diagnostic => diagnostic.Severity is NavigationDiagnosticSeverity.Error)
-            ? null
-            : new NavigationConfiguration(newTab, newTabDefinition, header, footer);
+        var configuration = diagnostics.Count is 0
+            ? new NavigationConfiguration(newTab, newTabDefinition, header, footer)
+            : null;
         return new(document, configuration, diagnostics);
     }
 
@@ -194,8 +189,7 @@ public static class NavigationYamlParser
                     sourceMap,
                     source,
                     path,
-                    Diagnostic(NavigationYamlParserResources.DiagnosticsMaxDepthExceededFormatted, path, MaxDepth),
-                    NavigationDiagnosticSeverity.Error));
+                    Diagnostic(NavigationYamlParserResources.DiagnosticsMaxDepthExceededFormatted, path, MaxDepth)));
                 return null;
             }
 
@@ -211,8 +205,7 @@ public static class NavigationYamlParser
                     sourceMap,
                     source,
                     path,
-                    Diagnostic(NavigationYamlParserResources.DiagnosticsItemMustHaveEitherPageOrFolderFormatted, path),
-                    NavigationDiagnosticSeverity.Error));
+                    Diagnostic(NavigationYamlParserResources.DiagnosticsItemMustHaveEitherPageOrFolderFormatted, path)));
                 return null;
             }
 
@@ -228,8 +221,7 @@ public static class NavigationYamlParser
                     sourceMap,
                     source,
                     path,
-                    Diagnostic(NavigationYamlParserResources.DiagnosticsMaxDepthExceededFolderFormatted, path, MaxDepth),
-                    NavigationDiagnosticSeverity.Error));
+                    Diagnostic(NavigationYamlParserResources.DiagnosticsMaxDepthExceededFolderFormatted, path, MaxDepth)));
                 return null;
             }
 
@@ -248,8 +240,7 @@ public static class NavigationYamlParser
                     sourceMap,
                     $"{path}.page",
                     page,
-                    Diagnostic(NavigationYamlParserResources.DiagnosticsUnknownPageFormatted, page),
-                    NavigationDiagnosticSeverity.Error));
+                    Diagnostic(NavigationYamlParserResources.DiagnosticsUnknownPageFormatted, page)));
                 return null;
             }
 
@@ -278,8 +269,7 @@ public static class NavigationYamlParser
                     sourceMap,
                     $"{path}.folder",
                     folder,
-                    Diagnostic(NavigationYamlParserResources.DiagnosticsEmptyFolderFormatted, folder),
-                    NavigationDiagnosticSeverity.Error));
+                    Diagnostic(NavigationYamlParserResources.DiagnosticsEmptyFolderFormatted, folder)));
             }
 
             var icon = ResolveIcon(source.Icon, Symbol.Folder, $"{path}.icon", sourceMap, diagnostics);
@@ -313,8 +303,7 @@ public static class NavigationYamlParser
             sourceMap,
             path,
             trimmed,
-            Diagnostic(NavigationYamlParserResources.DiagnosticsUnknownIconFormatted, trimmed),
-            NavigationDiagnosticSeverity.Error));
+            Diagnostic(NavigationYamlParserResources.DiagnosticsUnknownIconFormatted, trimmed)));
         return fallback;
     }
 
@@ -346,8 +335,7 @@ public static class NavigationYamlParser
             trimmed,
             resourceKey.Length is 0
                 ? Diagnostic(NavigationYamlParserResources.DiagnosticsI18NResourceKeyEmptyFormatted, fieldName)
-                : Diagnostic(NavigationYamlParserResources.DiagnosticsUnknownI18NResourceKeyFormatted, resourceKey),
-            NavigationDiagnosticSeverity.Error));
+                : Diagnostic(NavigationYamlParserResources.DiagnosticsUnknownI18NResourceKeyFormatted, resourceKey)));
         return (trimmed, trimmed);
     }
 
@@ -359,7 +347,6 @@ public static class NavigationYamlParser
         var start = exception.Start.Index >= 0 ? int.Clamp(exception.Start.Index, 0, text.Length) : 0;
         var end = exception.End.Index > start ? int.Clamp(exception.End.Index, start, text.Length) : int.Min(start + 1, text.Length);
         return new(
-            NavigationDiagnosticSeverity.Error,
             exception.Message,
             start,
             int.Max(end - start, 1),
@@ -371,29 +358,26 @@ public static class NavigationYamlParser
         NavigationYamlSourceMap sourceMap,
         NavigationYamlItem source,
         string path,
-        string message,
-        NavigationDiagnosticSeverity severity)
+        string message)
     {
         if (!string.IsNullOrWhiteSpace(source.Page))
-            return CreateValueDiagnostic(sourceMap, $"{path}.page", source.Page, message, severity);
+            return CreateValueDiagnostic(sourceMap, $"{path}.page", source.Page, message);
 
         if (!string.IsNullOrWhiteSpace(source.Folder))
-            return CreateValueDiagnostic(sourceMap, $"{path}.folder", source.Folder, message, severity);
+            return CreateValueDiagnostic(sourceMap, $"{path}.folder", source.Folder, message);
 
         var location = sourceMap.GetNodeLocation(path) ?? new(0, 1, 1, 1);
-        return new(severity, message, location.Start, int.Max(location.Length, 1), location.Line, location.Column);
+        return new(message, location.Start, int.Max(location.Length, 1), location.Line, location.Column);
     }
 
     private static NavigationDiagnostic CreateValueDiagnostic(
         NavigationYamlSourceMap sourceMap,
         string path,
         string value,
-        string message,
-        NavigationDiagnosticSeverity severity)
+        string message)
     {
         var location = sourceMap.GetValueLocation(path) ?? sourceMap.GetNodeLocation(path) ?? new(0, int.Max(value.Length, 1), 1, 1);
         return new(
-            severity,
             message,
             location.Start,
             int.Max(location.Length, 1),
@@ -444,7 +428,6 @@ public static class NavigationYamlParser
 
                 var location = GetKeyLocation(fieldPath) ?? new(0, int.Max(key.Length, 1), 1, 1);
                 diagnostics.Add(new(
-                    NavigationDiagnosticSeverity.Warning,
                     Diagnostic(NavigationYamlParserResources.DiagnosticsUnknownFieldFormatted, key),
                     location.Start,
                     int.Max(location.Length, 1),
@@ -467,13 +450,11 @@ public static class NavigationYamlParser
                     continue;
 
                 var location = GetKeyLocation(fieldPath) ?? new(0, int.Max(key.Length, 1), 1, 1);
+                var message = schemaKeys.Contains(key)
+                    ? Diagnostic(NavigationYamlParserResources.DiagnosticsFieldNotAllowedFormatted, path, key)
+                    : Diagnostic(NavigationYamlParserResources.DiagnosticsUnknownFieldFormatted, key);
                 diagnostics.Add(new(
-                    schemaKeys.Contains(key)
-                        ? NavigationDiagnosticSeverity.Error
-                        : NavigationDiagnosticSeverity.Warning,
-                    schemaKeys.Contains(key)
-                        ? Diagnostic(NavigationYamlParserResources.DiagnosticsFieldNotAllowedFormatted, path, key)
-                        : Diagnostic(NavigationYamlParserResources.DiagnosticsUnknownFieldFormatted, key),
+                    message,
                     location.Start,
                     int.Max(location.Length, 1),
                     location.Line,

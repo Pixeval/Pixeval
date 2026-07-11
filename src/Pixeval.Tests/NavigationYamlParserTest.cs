@@ -82,7 +82,7 @@ public sealed class NavigationYamlParserTest
     }
 
     [TestMethod]
-    public void ParserShouldTreatVisibleAsUnknownField()
+    public void ParserShouldRejectUnknownField()
     {
         var result = NavigationYamlParser.Parse(
             """
@@ -96,36 +96,10 @@ public sealed class NavigationYamlParserTest
               - page: Settings
             """);
 
-        Assert.IsTrue(result.IsValid);
-        Assert.IsNotNull(result.Configuration);
-        Assert.HasCount(1, result.Configuration.HeaderItems);
+        Assert.IsFalse(result.IsValid);
+        Assert.IsNull(result.Configuration);
         Assert.Contains(static diagnostic =>
-            diagnostic.Severity is NavigationDiagnosticSeverity.Warning
-            && diagnostic.Message.Contains("visible", StringComparison.OrdinalIgnoreCase), result.Diagnostics);
-    }
-
-    [TestMethod]
-    public void ParserShouldTreatNeedLoginAsUnknownField()
-    {
-        var result = NavigationYamlParser.Parse(
-            """
-            newTab: Search
-
-            header:
-              - page: Search
-                needLogin: false
-
-            footer:
-              - page: Settings
-            """);
-
-        Assert.IsTrue(result.IsValid);
-        Assert.IsNotNull(result.Configuration);
-        var page = Assert.IsInstanceOfType<NavigationPageItem>(result.Configuration.HeaderItems[0]);
-        Assert.IsTrue(page.NeedLogin);
-        Assert.Contains(static diagnostic =>
-            diagnostic.Severity is NavigationDiagnosticSeverity.Warning
-            && diagnostic.Message.Contains("needLogin", StringComparison.OrdinalIgnoreCase), result.Diagnostics);
+            diagnostic.Message.Contains("visible", StringComparison.OrdinalIgnoreCase), result.Diagnostics);
     }
 
     [TestMethod]
@@ -141,7 +115,7 @@ public sealed class NavigationYamlParserTest
               - folder: $NavigationSettingsPage.WorkFolderTitle
                 icon: Folder
                 children:
-                  - page: Help
+                  - page: Search
 
             footer:
               - page: Settings
@@ -187,7 +161,6 @@ public sealed class NavigationYamlParserTest
 
         Assert.IsNull(result.Configuration);
         Assert.Contains(static diagnostic =>
-            diagnostic.Severity is NavigationDiagnosticSeverity.Error
-            && diagnostic.Message.Contains("超过最大层级", StringComparison.Ordinal), result.Diagnostics);
+            diagnostic.Message.Contains("超过最大层级", StringComparison.Ordinal), result.Diagnostics);
     }
 }

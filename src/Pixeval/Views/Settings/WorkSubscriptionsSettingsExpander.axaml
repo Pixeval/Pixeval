@@ -6,7 +6,6 @@
     xmlns:controls="using:CommunityToolkit.Avalonia.Controls"
     xmlns:controls1="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:database="using:Pixeval.Models.Database"
     xmlns:entries="using:Pixeval.Models.Settings.Entries"
     xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:local="using:Pixeval.Views.Settings"
@@ -53,14 +52,13 @@
                     Grid.Column="3"
                     Click="AddButton_OnClicked"
                     Content="{markup:SymbolIcon Add}" />
-                <TextBlock
+                <controls1:InfoBar
                     x:Name="ErrorTextBlock"
                     Grid.Row="1"
                     Grid.Column="0"
                     Grid.ColumnSpan="4"
-                    Foreground="{DynamicResource SystemFillColorCriticalBrush}"
                     IsVisible="False"
-                    TextWrapping="Wrap" />
+                    Mode="Error" />
             </Grid>
         </controls:SettingsCard>
         <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">

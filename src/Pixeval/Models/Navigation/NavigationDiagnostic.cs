@@ -3,15 +3,7 @@
 
 namespace Pixeval.Models.Navigation;
 
-public enum NavigationDiagnosticSeverity
-{
-    Info,
-    Warning,
-    Error
-}
-
 public sealed record NavigationDiagnostic(
-    NavigationDiagnosticSeverity Severity,
     string Message,
     int Start,
     int Length,

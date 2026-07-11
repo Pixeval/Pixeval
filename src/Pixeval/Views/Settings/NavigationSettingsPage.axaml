@@ -19,12 +19,7 @@
     mc:Ignorable="d"
     d:DesignHeight="720"
     d:DesignWidth="1100">
-    <Grid
-        Margin="20"
-        ColumnDefinitions="*,320"
-        ColumnSpacing="12"
-        RowDefinitions="Auto,*,Auto"
-        RowSpacing="12">
+    <NavigationPage.TopCommandBar>
         <CommandBar DefaultLabelPosition="Right">
             <CommandBarButton
                 x:Name="CanApplyButton"
@@ -49,9 +44,13 @@
                 Label="{I18N {x:Static pixeval:NavigationSettingsPageResources.InsertFolderButtonContent}}"
                 ToolTip.Tip="{I18N {x:Static pixeval:NavigationSettingsPageResources.InsertFolderButtonToolTip}}" />
         </CommandBar>
-
+    </NavigationPage.TopCommandBar>
+    <Grid
+        ColumnDefinitions="*,320"
+        ColumnSpacing="12"
+        RowDefinitions="*,Auto">
         <Border
-            Grid.Row="1"
+            Grid.Row="0"
             Grid.Column="0"
             BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
             BorderThickness="1"
@@ -135,32 +134,11 @@
             </StackPanel>
         </ScrollViewer>
 
-        <Border
-            Grid.Row="2"
+        <controls1:InfoBar
+            x:Name="StatusInfoBar"
+            Grid.Row="1"
             Grid.Column="0"
-            Grid.ColumnSpan="2"
-            Padding="10"
-            Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}"
-            CornerRadius="{DynamicResource ControlCornerRadius}">
-            <Grid RowDefinitions="Auto,Auto" RowSpacing="6">
-                <TextBlock
-                    x:Name="StatusTextBlock"
-                    FontWeight="SemiBold"
-                    TextWrapping="Wrap" />
-                <ItemsControl Grid.Row="1" ItemsSource="{Binding Diagnostics}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate x:DataType="{x:Type navigation:NavigationDiagnostic}">
-                            <TextBlock TextWrapping="Wrap">
-                                <Run Text="{Binding Severity}" />
-                                <Run Text=" " />
-                                <Run Text="{Binding PositionText}" />
-                                <Run Text="  " />
-                                <Run Text="{Binding Message}" />
-                            </TextBlock>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </Grid>
-        </Border>
+            IsVisible="False"
+            Mode="Error" />
     </Grid>
 </ContentPage>

@@ -17,10 +17,6 @@
     d:DesignWidth="600">
     <ScrollViewer>
         <StackPanel Margin="20" Spacing="10">
-            <TextBlock
-                Margin="0,20,0,10"
-                Text="{I18N {x:Static pixeval:HelpPageResources.TitleTextBlockText}}"
-                Theme="{StaticResource TitleTextBlockStyle}" />
             <!--  TODO 支持app protocol或删除该帮助  -->
             <controls:SettingsExpander
                 Header="{I18N {x:Static pixeval:HelpPageResources.AppProtocolLinkHelpExpanderHeader}}"

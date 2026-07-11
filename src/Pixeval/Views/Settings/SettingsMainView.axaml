@@ -15,7 +15,7 @@
     xmlns:utilities="using:Pixeval.Utilities"
     xmlns:viewModels="using:Pixeval.ViewModels"
     x:DataType="{x:Type viewModels:SettingsPageViewModel}"
-    Header="{I18N {x:Static pixeval:SettingsMainViewResources.TitleTextBlockText}}"
+    Header="{I18N {x:Static pixeval:MainPageResources.TabSettings}}"
     mc:Ignorable="d"
     d:DesignHeight="800"
     d:DesignWidth="800">

@@ -7,10 +7,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Avalonia.Controls;
 using Avalonia.Media;
 using FluentIcons.Common;
-using Pixeval.I18N;
 using Pixeval.Models.Navigation;
 
 namespace Pixeval.Utilities;
@@ -35,19 +33,6 @@ public static class NavigationPageRegistry
     public static bool TryGetPage(string key, [NotNullWhen(true)] out NavigationPageDefinition? definition) =>
         PagesByKey.TryGetValue(key, out definition);
 
-    private static NavigationPageDefinition Page<TPage>(
-        Symbol icon,
-        string headerResource,
-        bool needLogin = true)
-        where TPage : Page, new() =>
-        new(
-            typeof(TPage).Name[..^4], // XXPage
-            typeof(TPage),
-            icon,
-            headerResource,
-            I18NManager.GetResource(headerResource),
-            needLogin);
-
     private static IReadOnlyList<Symbol> GetColorSymbols()
     {
         if (!FontManager.Current.TryGetGlyphTypeface(GetFluent(), out var glyphTypeface))
@@ -57,6 +42,7 @@ public static class NavigationPageRegistry
         [
             .. Enum.GetValues<Symbol>()
                 .Where(symbol => ContainsGlyph(glyphTypeface, ToString(null, symbol, IconVariant.Color)))
+                .OrderBy(t => t.ToString())
         ];
     }
 

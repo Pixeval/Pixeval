@@ -1,0 +1,70 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:fluent="using:FluentIcons.Avalonia"
+    xmlns:local="using:Pixeval.Controls">
+
+    <Design.PreviewWith>
+        <StackPanel
+            Width="420"
+            Margin="20"
+            Background="{DynamicResource SystemRegionBrush}"
+            Spacing="8">
+            <local:InfoBar Mode="Success" Text="Success message" />
+            <local:InfoBar Mode="Info" Text="Info message" />
+            <local:InfoBar Mode="Warning" Text="Warning message" />
+            <local:InfoBar Mode="Error" Text="Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Error message" />
+        </StackPanel>
+    </Design.PreviewWith>
+
+    <ControlTheme x:Key="{x:Type local:InfoBar}" TargetType="{x:Type local:InfoBar}">
+        <Setter Property="Padding" Value="10" />
+        <Setter Property="CornerRadius" Value="{StaticResource ControlCornerRadius}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="{x:Type local:InfoBar}">
+                <Border
+                    Padding="{TemplateBinding Padding}"
+                    Background="{TemplateBinding Background}"
+                    CornerRadius="{TemplateBinding CornerRadius}">
+                    <DockPanel HorizontalSpacing="10">
+                        <fluent:SymbolIcon
+                            VerticalAlignment="Center"
+                            DockPanel.Dock="Left"
+                            Foreground="{TemplateBinding Foreground}"
+                            IconVariant="Color"
+                            Symbol="{TemplateBinding Symbol}" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Foreground="{TemplateBinding Foreground}"
+                            Text="{TemplateBinding Text}"
+                            TextWrapping="Wrap" />
+                    </DockPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^[Mode=Success]">
+            <Setter Property="Background" Value="{DynamicResource SystemFillColorSuccessBackgroundBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource SystemFillColorSuccessBrush}" />
+            <Setter Property="Symbol" Value="CheckmarkCircle" />
+        </Style>
+
+        <Style Selector="^[Mode=Info]">
+            <Setter Property="Background" Value="{DynamicResource SystemFillColorAttentionBackgroundBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource SystemFillColorAttentionBrush}" />
+            <Setter Property="Symbol" Value="QuestionCircle" />
+        </Style>
+
+        <Style Selector="^[Mode=Warning]">
+            <Setter Property="Background" Value="{DynamicResource SystemFillColorCautionBackgroundBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource SystemFillColorCautionBrush}" />
+            <Setter Property="Symbol" Value="Warning" />
+        </Style>
+
+        <Style Selector="^[Mode=Error]">
+            <Setter Property="Background" Value="{DynamicResource SystemFillColorCriticalBackgroundBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource SystemFillColorCriticalBrush}" />
+            <Setter Property="Symbol" Value="DismissCircle" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

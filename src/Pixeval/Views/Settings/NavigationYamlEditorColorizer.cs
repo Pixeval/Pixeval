@@ -16,7 +16,6 @@ public sealed class NavigationYamlEditorColorizer : DocumentColorizingTransforme
     private static readonly SolidColorBrush _LiteralBrush = new(Color.Parse("#B5CEA8"));
     private static readonly SolidColorBrush _CommentBrush = new(Color.Parse("#6A9955"));
     private static readonly SolidColorBrush _ErrorBackgroundBrush = new(Color.FromArgb(72, 224, 82, 82));
-    private static readonly SolidColorBrush _WarningBackgroundBrush = new(Color.FromArgb(64, 255, 185, 0));
 
     private IReadOnlyList<NavigationDiagnostic> _diagnostics = [];
     private int _documentLength;
@@ -97,10 +96,7 @@ public sealed class NavigationYamlEditorColorizer : DocumentColorizingTransforme
             if (intersectStart >= intersectEnd)
                 continue;
 
-            var brush = diagnostic.Severity is NavigationDiagnosticSeverity.Warning
-                ? _WarningBackgroundBrush
-                : _ErrorBackgroundBrush;
-            ChangeLinePart(intersectStart, intersectEnd, element => element.TextRunProperties.SetBackgroundBrush(brush));
+            ChangeLinePart(intersectStart, intersectEnd, element => element.TextRunProperties.SetBackgroundBrush(_ErrorBackgroundBrush));
         }
     }
 

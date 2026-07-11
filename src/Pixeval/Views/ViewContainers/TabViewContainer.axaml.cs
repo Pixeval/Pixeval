@@ -4,14 +4,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Interactivity;
-using Avalonia.Styling;
 using CommunityToolkit.Mvvm.Input;
 using Pixeval.Models.Navigation;
 using Pixeval.Utilities;

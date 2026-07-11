@@ -2,10 +2,11 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using System.Collections.ObjectModel;
+using System.Text;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Pixeval.AppManagement;
+using Pixeval.Controls;
 using Pixeval.I18N;
 using Pixeval.Models.Navigation;
 using Pixeval.Utilities;
@@ -16,8 +17,6 @@ public sealed partial class NavigationSettingsPage : ContentPage
 {
     private readonly NavigationYamlEditorColorizer _colorizer = new();
     private bool _isSynchronizingText;
-
-    public ObservableCollection<NavigationDiagnostic> Diagnostics { get; } = [];
 
     public NavigationSettingsPage()
     {
@@ -82,14 +81,11 @@ public sealed partial class NavigationSettingsPage : ContentPage
     {
         var result = NavigationYamlParser.Parse(YamlEditor.Text);
 
-        Diagnostics.Clear();
-        foreach (var diagnostic in result.Diagnostics)
-            Diagnostics.Add(diagnostic);
-
         _colorizer.Update(result.Diagnostics, YamlEditor.Text?.Length ?? 0);
         YamlEditor.TextArea.TextView.InvalidateVisual();
         CanApplyButton.IsEnabled = result.Configuration is not null;
-        StatusTextBlock.Text = GetStatusText(result);
+        StatusInfoBar.Text = GetStatusText(result);
+        StatusInfoBar.IsVisible = !result.IsValid;
         return result;
     }
 
@@ -118,13 +114,25 @@ public sealed partial class NavigationSettingsPage : ContentPage
         ValidateCurrentText();
     }
 
-    private static string GetStatusText(NavigationParseResult result)
+    private static string? GetStatusText(NavigationParseResult result)
     {
-        if (result.Configuration is null)
-            return I18NManager.GetResource(NavigationSettingsPageResources.StatusInvalidFormatted, result.Diagnostics.Count);
+        if (result.IsValid)
+            return null;
 
-        return result.Diagnostics.Count is 0
-            ? I18NManager.GetResource(NavigationSettingsPageResources.StatusValid)
-            : I18NManager.GetResource(NavigationSettingsPageResources.StatusValidWithWarningsFormatted, result.Diagnostics.Count);
+        var text = I18NManager.GetResource(NavigationSettingsPageResources.StatusInvalidFormatted, result.Diagnostics.Count);
+
+        var builder = new StringBuilder(text);
+        foreach (var diagnostic in result.Diagnostics)
+            _ = builder.AppendLine().Append(FormatDiagnostic(diagnostic));
+
+        return builder.ToString();
+    }
+
+    private static string FormatDiagnostic(NavigationDiagnostic diagnostic)
+    {
+        var position = string.IsNullOrEmpty(diagnostic.PositionText)
+            ? ""
+            : $" {diagnostic.PositionText}";
+        return $"{position}  {diagnostic.Message}".TrimStart();
     }
 }
