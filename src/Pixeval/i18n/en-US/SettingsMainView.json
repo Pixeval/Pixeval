@@ -31,9 +31,6 @@
     "Description": "该按钮会清空所有的搜索记录",
     "Header": "清空搜索记录"
   },
-  "DownloadMacroInvalidInfoBar": {
-    "Title": "宏解析失败"
-  },
   "DownloadMacroInvalidInfoBarInputCannotBeBlank": "输入不能为空",
   "DownloadMacroInvalidInfoBarMacroInvalidFormatted": "{0}, 请更正后重新填写",
   "LastCheckedPrefix": "上次检查时间：",
@@ -90,9 +87,6 @@
     "Header": "切换账号"
   },
   "ProxyTextBoxErrorUri": "代理服务器地址输入有误，请重新输入",
-  "TitleTextBlock": {
-    "Text": "Pixeval 设置"
-  },
   "PredicateMacroHeader": "以下条件宏，格式为 @{is_xxx?<正分支>:<反分支>}，如果条件成立则替换为<正分支>，否则替换为<反分支>",
   "OpenExtensionsEntry": {
     "Header": "打开扩展文件夹",
