@@ -33,13 +33,10 @@
     "Empty": "MCP 服务器已响应，但没有返回可用工具。",
     "Failed": "读取 MCP 工具列表失败：{0}"
   },
-  "AppProtocolLinkHelpExpander": {
-    "Header": "应用协议链接使用帮助"
-  },
-  "AppLinkHelp": {
-    "Text": "分享给你的朋友，或者在浏览器或 Windows 运行中输入该链接，可以直接在 Pixeval 打开当前页面"
-  },
   "ExtensionsHelpExpander": {
     "Header": "扩展系统帮助"
+  },
+  "WorkSubscriptionsHelpExpander": {
+    "Header": "下载订阅帮助"
   }
 }
