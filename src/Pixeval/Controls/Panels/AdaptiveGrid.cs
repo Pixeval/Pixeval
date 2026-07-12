@@ -17,7 +17,7 @@ namespace Pixeval.Controls;
 /// </summary>
 // 目前不论是不是End、Center模式，行内排列总是左对齐，整体按照ItemsAlignment对齐
 // 但这两个模式暂时用不到，所以先不改了
-public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasures
+public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasures, IAdaptiveGridLayoutInfo
 {
     public static readonly StyledProperty<double> ItemSpacingProperty =
         AvaloniaProperty.Register<AdaptiveGrid, double>(nameof(ItemSpacing));
@@ -424,7 +424,7 @@ public class AdaptiveGrid : Panel, INavigableContainer, IOrientationBasedMeasure
         if (lineCount >= fallbackCount)
             return fallbackCount;
 
-        return int.Max(0, (int)lineCount);
+        return int.Max(0, (int) lineCount);
     }
 
     private static double GetStackedSize(int itemCount, double spacing, double baseSize)

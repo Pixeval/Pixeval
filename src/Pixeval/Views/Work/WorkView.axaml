@@ -19,7 +19,6 @@
         IsLoadingMore="{Binding #WorkListBox.(controls:IncrementalLoadingBehavior.IsLoadingMore)}">
         <ListBox
             x:Name="WorkListBox"
-            controls:AdaptiveGridIncrementalLoadingBehavior.IsEnabled="True"
             controls:IncrementalLoadingBehavior.IsEnabled="True"
             controls:IncrementalLoadingBehavior.Threshold="200"
             ContainerClearing="ListBox_OnContainerClearing"
@@ -46,7 +45,7 @@
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
-                        <controls:WrapPanel
+                        <controls:VirtualizingWrapPanel
                             ItemHeight="200"
                             ItemSpacing="5"
                             ItemsAlignment="Stretch"
@@ -59,7 +58,7 @@
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
-                        <StackPanel Spacing="5" />
+                        <controls:ReversibleVirtualizingStackPanel BrowseDirection="TopDown" Spacing="5" />
                     </ItemsPanelTemplate>
                 </Setter.Value>
             </Setter>
@@ -68,7 +67,7 @@
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
-                        <controls:AdaptiveGrid
+                        <controls:VirtualizingAdaptiveGrid
                             ItemSize="350"
                             ItemSpacing="5"
                             ItemsAlignment="Stretch"
@@ -82,7 +81,7 @@
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
-                        <controls:MasonryPanel
+                        <controls:VirtualizingMasonryPanel
                             ColumnSpacing="5"
                             ColumnWidth="250"
                             RowSpacing="5" />

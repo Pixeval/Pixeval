@@ -20,7 +20,8 @@
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="IsCardTitleVisible" Value="{Binding !HideHomePageCardTitle, Source={x:Static views:PixevalSettings.Instance}}" />
+        <Setter Property="IsCardTitleVisible"
+                Value="{Binding !HideHomePageCardTitle, Source={x:Static views:PixevalSettings.Instance}}" />
         <Setter Property="Template">
             <ControlTemplate TargetType="{x:Type home:HomePageCardControl}">
                 <Panel x:Name="PART_RootPanel" ClipToBounds="False">
@@ -60,21 +61,19 @@
                             <Panel>
                                 <ItemsControl
                                     x:DataType="{x:Type homeViewModels:HomeCardPreviewViewModel}"
-                                    controls:AdaptiveGridIncrementalLoadingBehavior.IsEnabled="True"
+                                    controls:IncrementalLoadingBehavior.IsEnabled="True"
                                     ClipToBounds="True"
                                     DataContext="{TemplateBinding PreviewViewModel}"
                                     IsHitTestVisible="{Binding !IsEditing, RelativeSource={RelativeSource TemplatedParent}}"
                                     ItemsSource="{Binding Items}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
-                                            <controls:AdaptiveGrid
+                                            <controls:VirtualizingUniformGrid
                                                 ItemSize="150"
                                                 ItemSpacing="5"
                                                 ItemsAlignment="Stretch"
                                                 LineSize="100"
                                                 LineSpacing="5"
-                                                MaxItemsInLine="{Binding Items.Count}"
-                                                MaxLines="{Binding Items.Count}"
                                                 MinItemsInLine="1"
                                                 MinLines="1" />
                                         </ItemsPanelTemplate>
@@ -87,8 +86,10 @@
                                                 Command="{Binding $parent[home:HomePageCardControl].OpenPreviewItemCommand}"
                                                 CommandParameter="{Binding}"
                                                 Theme="{StaticResource TransparentButtonStyle}">
-                                                <Border ClipToBounds="True" CornerRadius="{StaticResource ControlCornerRadius}">
-                                                    <Image controls:Source.Cache="{Binding ThumbnailUrl}" Stretch="UniformToFill" />
+                                                <Border ClipToBounds="True"
+                                                        CornerRadius="{StaticResource ControlCornerRadius}">
+                                                    <Image controls:Source.Cache="{Binding ThumbnailUrl}"
+                                                           Stretch="UniformToFill" />
                                                 </Border>
                                             </Button>
                                         </DataTemplate>
@@ -106,7 +107,8 @@
                                                         ClipToBounds="True"
                                                         CornerRadius="{StaticResource ControlCornerRadius}"
                                                         DockPanel.Dock="Top">
-                                                        <Image controls:Source.Cache="{Binding ThumbnailUrl}" Stretch="UniformToFill" />
+                                                        <Image controls:Source.Cache="{Binding ThumbnailUrl}"
+                                                               Stretch="UniformToFill" />
                                                     </Border>
                                                     <TextBlock
                                                         FontSize="12"
@@ -144,8 +146,10 @@
                                                         Text="{Binding Entry.PureTitle}"
                                                         TextTrimming="CharacterEllipsis"
                                                         TextWrapping="Wrap" />
-                                                    <Border ClipToBounds="True" CornerRadius="{StaticResource ControlCornerRadius}">
-                                                        <Image controls:Source.Cache="{Binding ThumbnailUrl}" Stretch="UniformToFill" />
+                                                    <Border ClipToBounds="True"
+                                                            CornerRadius="{StaticResource ControlCornerRadius}">
+                                                        <Image controls:Source.Cache="{Binding ThumbnailUrl}"
+                                                               Stretch="UniformToFill" />
                                                     </Border>
                                                 </DockPanel>
                                             </Button>
@@ -182,7 +186,8 @@
                             <Style Selector="Panel > Border">
                                 <Setter Property="CornerRadius" Value="5" />
                                 <Setter Property="BorderThickness" Value="1" />
-                                <Setter Property="Background" Value="{DynamicResource ControlOnImageFillColorDefaultBrush}" />
+                                <Setter Property="Background"
+                                        Value="{DynamicResource ControlOnImageFillColorDefaultBrush}" />
                                 <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
                                 <Setter Property="BoxShadow" Value="0 2 8 0 #40000000" />
                                 <Setter Property="Opacity" Value="0.86" />
@@ -205,7 +210,8 @@
 
                             <Style Selector="Panel > Border.pressed">
                                 <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}" />
-                                <Setter Property="BorderBrush" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+                                <Setter Property="BorderBrush"
+                                        Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
                                 <Setter Property="BoxShadow" Value="0 1 5 0 #73000000" />
                                 <Setter Property="Opacity" Value="1" />
                                 <Setter Property="RenderTransform" Value="scale(0.95)" />

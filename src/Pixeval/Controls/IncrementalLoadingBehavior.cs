@@ -3,7 +3,9 @@
 
 using System;
 using System.Collections;
+using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -12,45 +14,34 @@ using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Pixeval.Collections;
+using Pixeval.Utilities;
 using SmoothScroll.Avalonia.Controls;
 
 namespace Pixeval.Controls;
 
 /// <summary>
-/// Provides attached properties for incremental loading behavior on <see cref="ItemsControl"/>.
+/// Coalesces collection, layout, size, and scroll signals into serialized incremental load checks.
 /// </summary>
 public static class IncrementalLoadingBehavior
 {
-    /// <summary>
-    /// Attached property to enable incremental loading on an <see cref="ItemsControl"/>.
-    /// </summary>
     public static readonly AttachedProperty<bool> IsEnabledProperty =
         AvaloniaProperty.RegisterAttached<ItemsControl, bool>(
             "IsEnabled",
             typeof(IncrementalLoadingBehavior),
             defaultValue: false);
 
-    /// <summary>
-    /// Attached property to set the threshold (in pixels) before the end to trigger loading.
-    /// </summary>
     public static readonly AttachedProperty<double> ThresholdProperty =
         AvaloniaProperty.RegisterAttached<ItemsControl, double>(
             "Threshold",
             typeof(IncrementalLoadingBehavior),
-            defaultValue: 100.0);
+            defaultValue: 100);
 
-    /// <summary>
-    /// Attached property to set the number of items to load per batch.
-    /// </summary>
     public static readonly AttachedProperty<int> ItemsPerBatchProperty =
         AvaloniaProperty.RegisterAttached<ItemsControl, int>(
             "ItemsPerBatch",
             typeof(IncrementalLoadingBehavior),
             defaultValue: 20);
 
-    /// <summary>
-    /// Attached property indicating whether the control is currently loading more items.
-    /// </summary>
     public static readonly AttachedProperty<bool> IsLoadingMoreProperty =
         AvaloniaProperty.RegisterAttached<ItemsControl, bool>(
             "IsLoadingMore",
@@ -62,7 +53,7 @@ public static class IncrementalLoadingBehavior
             "AttachedScrollViewer",
             typeof(IncrementalLoadingBehavior));
 
-    public static readonly AttachedProperty<ItemsControl?> ScrollViewerOwnerProperty =
+    private static readonly AttachedProperty<ItemsControl?> ScrollViewerOwnerProperty =
         AvaloniaProperty.RegisterAttached<ScrollViewer, ItemsControl?>(
             "ScrollViewerOwner",
             typeof(IncrementalLoadingBehavior));
@@ -70,14 +61,27 @@ public static class IncrementalLoadingBehavior
     private static readonly AttachedProperty<bool> IsLoadCheckQueuedProperty =
         AvaloniaProperty.RegisterAttached<ItemsControl, bool>(
             "IsLoadCheckQueued",
-            typeof(IncrementalLoadingBehavior),
-            defaultValue: false);
+            typeof(IncrementalLoadingBehavior));
 
     private static readonly AttachedProperty<bool> HasPendingLoadCheckProperty =
         AvaloniaProperty.RegisterAttached<ItemsControl, bool>(
             "HasPendingLoadCheck",
-            typeof(IncrementalLoadingBehavior),
-            defaultValue: false);
+            typeof(IncrementalLoadingBehavior));
+
+    private static readonly AttachedProperty<WeakEventListener<ItemsControl, object?, NotifyCollectionChangedEventArgs>?> ItemsListenerProperty =
+        AvaloniaProperty.RegisterAttached<ItemsControl, WeakEventListener<ItemsControl, object?, NotifyCollectionChangedEventArgs>?>(
+            "ItemsListener",
+            typeof(IncrementalLoadingBehavior));
+
+    private static readonly AttachedProperty<IAdaptiveGridLayoutInfo?> AttachedAdaptiveGridProperty =
+        AvaloniaProperty.RegisterAttached<ItemsControl, IAdaptiveGridLayoutInfo?>(
+            "AttachedAdaptiveGrid",
+            typeof(IncrementalLoadingBehavior));
+
+    private static readonly AttachedProperty<ItemsControl?> AdaptiveGridOwnerProperty =
+        AvaloniaProperty.RegisterAttached<Control, ItemsControl?>(
+            "AdaptiveGridOwner",
+            typeof(IncrementalLoadingBehavior));
 
     static IncrementalLoadingBehavior()
     {
@@ -86,37 +90,22 @@ public static class IncrementalLoadingBehavior
 
     extension(ItemsControl itemsControl)
     {
-        public bool IsEnabled
-        {
-            get => itemsControl.GetValue(IsEnabledProperty);
-            set => itemsControl.SetValue(IsEnabledProperty, value);
-        }
+        private bool IncrementalLoadingIsEnabled => itemsControl.GetValue(IsEnabledProperty);
 
-        public double Threshold
-        {
-            get => itemsControl.GetValue(ThresholdProperty);
-            set => itemsControl.SetValue(ThresholdProperty, value);
-        }
+        private double Threshold => itemsControl.GetValue(ThresholdProperty);
 
-        public int ItemsPerBatch
-        {
-            get => itemsControl.GetValue(ItemsPerBatchProperty);
-            set => itemsControl.SetValue(ItemsPerBatchProperty, value);
-        }
+        private int ItemsPerBatch => itemsControl.GetValue(ItemsPerBatchProperty);
 
-        /// <summary>
-        /// Gets a value indicating whether the control is currently loading more items.
-        /// </summary>
-        public bool IsLoadingMore
+        private bool IsLoadingMore
         {
             get => itemsControl.GetValue(IsLoadingMoreProperty);
-            private set => itemsControl.SetValue(IsLoadingMoreProperty, value);
+            set => itemsControl.SetValue(IsLoadingMoreProperty, value);
         }
 
-        public ScrollViewer? AttachedScrollViewer
+        private ScrollViewer? AttachedScrollViewer
         {
             get => itemsControl.GetValue(AttachedScrollViewerProperty);
-            private set => itemsControl.SetValue(AttachedScrollViewerProperty, value);
+            set => itemsControl.SetValue(AttachedScrollViewerProperty, value);
         }
 
         private bool IsLoadCheckQueued
@@ -131,8 +120,23 @@ public static class IncrementalLoadingBehavior
             set => itemsControl.SetValue(HasPendingLoadCheckProperty, value);
         }
 
+        private WeakEventListener<ItemsControl, object?, NotifyCollectionChangedEventArgs>? ItemsListener
+        {
+            get => itemsControl.GetValue(ItemsListenerProperty);
+            set => itemsControl.SetValue(ItemsListenerProperty, value);
+        }
+
+        private IAdaptiveGridLayoutInfo? AttachedAdaptiveGrid
+        {
+            get => itemsControl.GetValue(AttachedAdaptiveGridProperty);
+            set => itemsControl.SetValue(AttachedAdaptiveGridProperty, value);
+        }
+
         private void RequestLoadCheck()
         {
+            if (!itemsControl.IncrementalLoadingIsEnabled)
+                return;
+
             if (itemsControl.IsLoadingMore)
             {
                 itemsControl.HasPendingLoadCheck = true;
@@ -150,10 +154,11 @@ public static class IncrementalLoadingBehavior
                         return;
 
                     control.IsLoadCheckQueued = false;
-                    await control.TryLoadMoreItemsAsync();
+                    if (control.IncrementalLoadingIsEnabled)
+                        await control.TryLoadMoreItemsAsync();
                 },
                 itemsControl,
-                DispatcherPriority.Loaded);
+                DispatcherPriority.Background);
         }
 
         private async Task TryLoadMoreItemsAsync()
@@ -161,95 +166,172 @@ public static class IncrementalLoadingBehavior
             if (!itemsControl.IsLoaded || !itemsControl.IsEffectivelyVisible)
                 return;
 
-            if (itemsControl is not { IsLoadingMore: false })
+            if (itemsControl.IsLoadingMore)
+            {
+                itemsControl.HasPendingLoadCheck = true;
+                return;
+            }
+
+            if (itemsControl.ItemsSource is not IIncrementalLoading { HasMoreItems: true } source
+                || !itemsControl.ShouldLoadMore())
                 return;
 
+            var loadedCount = 0;
+            itemsControl.IsLoadingMore = true;
             try
             {
-                itemsControl.IsLoadingMore = true;
-
-                if (itemsControl is not { ItemsSource: IIncrementalLoading { HasMoreItems: true } source })
-                    return;
-
-                if ((itemsControl.AttachedScrollViewer ?? itemsControl.FindDescendantOfType<ScrollViewer>()) is not { IsEffectivelyVisible: true } scrollViewer)
-                    return;
-
-                if (scrollViewer.FindDescendantOfType<ScrollPresenter>() is not { ContentOrientation: var orientation and not ScrollContentOrientation.None })
-                    return;
-
-                var isCollectionEmpty = itemsControl.ItemsSource is ICollection { Count: 0 };
-
-                var isNearBottom =
-                    (orientation is ScrollContentOrientation.Vertical or ScrollContentOrientation.Both &&
-                     scrollViewer.Viewport.Height > 0 &&
-                     scrollViewer.Extent.Height > 0 &&
-                     scrollViewer.Offset.Y + scrollViewer.Viewport.Height >=
-                     scrollViewer.Extent.Height - itemsControl.Threshold)
-                    || (orientation is ScrollContentOrientation.Horizontal or ScrollContentOrientation.Both &&
-                        scrollViewer.Viewport.Width > 0 &&
-                        scrollViewer.Extent.Width > 0 &&
-                        scrollViewer.Offset.X + scrollViewer.Viewport.Width >=
-                        scrollViewer.Extent.Width - itemsControl.Threshold);
-
-                if (!isCollectionEmpty && !isNearBottom)
-                    return;
-
                 try
                 {
-                    await source.LoadMoreItemsAsync(itemsControl.ItemsPerBatch);
-                }
-                catch (TaskCanceledException)
-                {
-                    // ignored
+                    loadedCount = await source.LoadMoreItemsAsync(itemsControl.ItemsPerBatch);
                 }
                 catch (OperationCanceledException)
                 {
-                    // ignored
+                    // Closing or replacing the source is the expected cancellation path.
                 }
-
             }
             finally
             {
                 itemsControl.IsLoadingMore = false;
-
-                if (itemsControl.HasPendingLoadCheck)
-                {
-                    itemsControl.HasPendingLoadCheck = false;
+                var shouldCheckAgain = loadedCount > 0 || itemsControl.HasPendingLoadCheck;
+                itemsControl.HasPendingLoadCheck = false;
+                if (shouldCheckAgain)
                     itemsControl.RequestLoadCheck();
-                }
             }
+        }
+
+        private bool ShouldLoadMore()
+        {
+            if (itemsControl.ItemsSource is not IIncrementalLoading { HasMoreItems: true })
+                return false;
+
+            var itemCount = itemsControl.ItemsSource is ICollection collection
+                ? collection.Count
+                : itemsControl.Items.Count;
+            if (itemCount is 0)
+                return true;
+
+            if (itemsControl.AttachedAdaptiveGrid is { Lines: > 0, ItemsPerLine: > 0 } grid
+                && itemCount < grid.Lines * grid.ItemsPerLine)
+                return true;
+
+            if (itemsControl.AttachedScrollViewer is not { IsEffectivelyVisible: true } scrollViewer
+                || scrollViewer.FindDescendantOfType<ScrollPresenter>() is not { ContentOrientation: var orientation and not ScrollContentOrientation.None })
+                return false;
+
+            return orientation is ScrollContentOrientation.Vertical or ScrollContentOrientation.Both
+                   && scrollViewer.Viewport.Height > 0
+                   && scrollViewer.Extent.Height > 0
+                   && scrollViewer.Offset.Y + scrollViewer.Viewport.Height >= scrollViewer.Extent.Height - itemsControl.Threshold
+                   || orientation is ScrollContentOrientation.Horizontal or ScrollContentOrientation.Both
+                   && scrollViewer.Viewport.Width > 0
+                   && scrollViewer.Extent.Width > 0
+                   && scrollViewer.Offset.X + scrollViewer.Viewport.Width >= scrollViewer.Extent.Width - itemsControl.Threshold;
+        }
+
+        private void AttachSources()
+        {
+            itemsControl.AttachScrollViewer();
+            itemsControl.AttachItemsSource();
+            itemsControl.AttachAdaptiveGridLater();
+        }
+
+        private void DetachSources()
+        {
+            itemsControl.DetachScrollViewer();
+            itemsControl.DetachItemsSource();
+            itemsControl.DetachAdaptiveGrid();
+            itemsControl.IsLoadCheckQueued = false;
+            itemsControl.HasPendingLoadCheck = false;
         }
 
         private void AttachScrollViewer()
         {
             itemsControl.DetachScrollViewer();
-
-            var scrollViewer = itemsControl.FindDescendantOfType<ScrollViewer>();
-            if (scrollViewer is null)
+            if (itemsControl.FindDescendantOfType<ScrollViewer>() is not { } scrollViewer)
                 return;
 
             itemsControl.AttachedScrollViewer = scrollViewer;
             scrollViewer.SetValue(ScrollViewerOwnerProperty, itemsControl);
             scrollViewer.ScrollChanged += OnScrollViewerScrollChanged;
+            scrollViewer.SizeChanged += OnScrollViewerSizeChanged;
         }
 
         private void DetachScrollViewer()
         {
-            if (itemsControl.AttachedScrollViewer is { } scrollViewer)
-            {
-                scrollViewer.ScrollChanged -= OnScrollViewerScrollChanged;
-                scrollViewer.ClearValue(ScrollViewerOwnerProperty);
-                itemsControl.AttachedScrollViewer = null;
-            }
+            if (itemsControl.AttachedScrollViewer is not { } scrollViewer)
+                return;
 
-            itemsControl.IsLoadingMore = false;
-            itemsControl.IsLoadCheckQueued = false;
-            itemsControl.HasPendingLoadCheck = false;
+            scrollViewer.ScrollChanged -= OnScrollViewerScrollChanged;
+            scrollViewer.SizeChanged -= OnScrollViewerSizeChanged;
+            scrollViewer.ClearValue(ScrollViewerOwnerProperty);
+            itemsControl.AttachedScrollViewer = null;
         }
 
+        private void AttachItemsSource()
+        {
+            itemsControl.DetachItemsSource();
+            if (itemsControl.ItemsSource is not INotifyCollectionChanged collection)
+                return;
+
+            var listener = itemsControl.ItemsListener = new(itemsControl)
+            {
+                OnEventAction = static (control, _, _) =>
+                {
+                    // A completed load schedules one post-layout check. Its individual Add events
+                    // must not enqueue another check against the pre-layout scroll extent.
+                    if (!control.IsLoadingMore)
+                        control.RequestLoadCheck();
+                },
+                OnDetachAction = weakListener => collection.CollectionChanged -= weakListener.OnEvent
+            };
+            collection.CollectionChanged += listener.OnEvent;
+        }
+
+        private void DetachItemsSource()
+        {
+            itemsControl.ItemsListener?.Detach();
+            itemsControl.ItemsListener = null;
+        }
+
+        private void AttachAdaptiveGridLater()
+        {
+            Dispatcher.UIThread.Post(
+                static state =>
+                {
+                    if (state is not ItemsControl control
+                        || !control.IncrementalLoadingIsEnabled
+                        || !control.IsLoaded)
+                        return;
+
+                    control.AttachAdaptiveGrid();
+                    control.RequestLoadCheck();
+                },
+                itemsControl,
+                DispatcherPriority.Loaded);
+        }
+
+        private void AttachAdaptiveGrid()
+        {
+            itemsControl.DetachAdaptiveGrid();
+            if (itemsControl.GetVisualDescendants().OfType<IAdaptiveGridLayoutInfo>().FirstOrDefault() is not { } adaptiveGrid)
+                return;
+
+            itemsControl.AttachedAdaptiveGrid = adaptiveGrid;
+            ((Control) adaptiveGrid).SetValue(AdaptiveGridOwnerProperty, itemsControl);
+            adaptiveGrid.PropertyChanged += OnAdaptiveGridPropertyChanged;
+        }
+
+        private void DetachAdaptiveGrid()
+        {
+            if (itemsControl.AttachedAdaptiveGrid is not { } adaptiveGrid)
+                return;
+
+            adaptiveGrid.PropertyChanged -= OnAdaptiveGridPropertyChanged;
+            ((Control) adaptiveGrid).ClearValue(AdaptiveGridOwnerProperty);
+            itemsControl.AttachedAdaptiveGrid = null;
+        }
     }
 
-    // Static accessors for XAML
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static bool GetIsEnabled(ItemsControl element) => element.GetValue(IsEnabledProperty);
 
@@ -275,11 +357,12 @@ public static class IncrementalLoadingBehavior
             itemsControl.Loaded += OnItemsControlLoaded;
             itemsControl.TemplateApplied += OnItemsControlTemplateApplied;
             itemsControl.Unloaded += OnItemsControlUnloaded;
-            itemsControl.PropertyChanged += OnItemsControlOnPropertyChanged;
+            itemsControl.PropertyChanged += OnItemsControlPropertyChanged;
+            itemsControl.SizeChanged += OnItemsControlSizeChanged;
 
             if (itemsControl.IsLoaded)
             {
-                itemsControl.AttachScrollViewer();
+                itemsControl.AttachSources();
                 itemsControl.RequestLoadCheck();
             }
         }
@@ -288,17 +371,10 @@ public static class IncrementalLoadingBehavior
             itemsControl.Loaded -= OnItemsControlLoaded;
             itemsControl.TemplateApplied -= OnItemsControlTemplateApplied;
             itemsControl.Unloaded -= OnItemsControlUnloaded;
-            itemsControl.PropertyChanged -= OnItemsControlOnPropertyChanged;
-            itemsControl.DetachScrollViewer();
+            itemsControl.PropertyChanged -= OnItemsControlPropertyChanged;
+            itemsControl.SizeChanged -= OnItemsControlSizeChanged;
+            itemsControl.DetachSources();
         }
-    }
-
-    private static void OnItemsControlOnPropertyChanged(object? s, AvaloniaPropertyChangedEventArgs e)
-    {
-        if (s is not ItemsControl ic || e.Property != ItemsControl.ItemsSourceProperty)
-            return;
-
-        ic.HasPendingLoadCheck = false;
     }
 
     private static void OnItemsControlLoaded(object? sender, RoutedEventArgs e)
@@ -306,33 +382,74 @@ public static class IncrementalLoadingBehavior
         if (sender is not ItemsControl itemsControl)
             return;
 
-        itemsControl.AttachScrollViewer();
+        itemsControl.AttachSources();
         itemsControl.RequestLoadCheck();
     }
 
     private static void OnItemsControlTemplateApplied(object? sender, TemplateAppliedEventArgs e)
     {
-        if (sender is not ItemsControl itemsControl)
+        if (sender is not ItemsControl itemsControl || !itemsControl.IsLoaded)
             return;
 
-        itemsControl.AttachScrollViewer();
+        itemsControl.AttachSources();
         itemsControl.RequestLoadCheck();
     }
 
     private static void OnItemsControlUnloaded(object? sender, RoutedEventArgs e)
     {
+        if (sender is ItemsControl itemsControl)
+            itemsControl.DetachSources();
+    }
+
+    private static void OnItemsControlPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
         if (sender is not ItemsControl itemsControl)
             return;
 
-        itemsControl.DetachScrollViewer();
+        if (e.Property == ItemsControl.ItemsSourceProperty)
+        {
+            itemsControl.AttachItemsSource();
+            itemsControl.RequestLoadCheck();
+        }
+        else if (e.Property == ItemsControl.ItemsPanelProperty)
+        {
+            itemsControl.DetachAdaptiveGrid();
+            itemsControl.AttachAdaptiveGridLater();
+            itemsControl.RequestLoadCheck();
+        }
     }
 
-    private static void OnScrollViewerScrollChanged(object? sender, ScrollChangedEventArgs args)
+    private static void OnItemsControlSizeChanged(object? sender, SizeChangedEventArgs e)
     {
-        if (sender is not ScrollViewer scrollViewer)
+        if (sender is ItemsControl itemsControl)
+            itemsControl.RequestLoadCheck();
+    }
+
+    private static void OnScrollViewerScrollChanged(object? sender, ScrollChangedEventArgs e)
+    {
+        if (sender is ScrollViewer scrollViewer
+            && scrollViewer.GetValue(ScrollViewerOwnerProperty) is { } itemsControl)
+            itemsControl.RequestLoadCheck();
+    }
+
+    private static void OnScrollViewerSizeChanged(object? sender, SizeChangedEventArgs e)
+    {
+        if (sender is ScrollViewer scrollViewer
+            && scrollViewer.GetValue(ScrollViewerOwnerProperty) is { } itemsControl)
+            itemsControl.RequestLoadCheck();
+    }
+
+    private static void OnAdaptiveGridPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (sender is not IAdaptiveGridLayoutInfo adaptiveGrid
+            || sender is not Control control
+            || e.Property != AdaptiveGrid.LinesProperty
+            && e.Property != AdaptiveGrid.ItemsPerLineProperty
+            && e.Property != VirtualizingAdaptiveGrid.LinesProperty
+            && e.Property != VirtualizingAdaptiveGrid.ItemsPerLineProperty)
             return;
 
-        if (scrollViewer.GetValue(ScrollViewerOwnerProperty) is { } itemsControl)
+        if (control.GetValue(AdaptiveGridOwnerProperty) is { } itemsControl)
             itemsControl.RequestLoadCheck();
     }
 }

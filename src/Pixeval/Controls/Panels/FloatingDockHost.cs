@@ -176,7 +176,7 @@ public class FloatingDockHost : Panel
 
         _activeTransitionFloatingRect = rect;
         return rect;
-        
+
         Rect CalculateFloatingPaneRect(Control pane, Size finalSize)
         {
             var margin = double.Max(0, FloatingPaneMargin);
@@ -196,12 +196,12 @@ public class FloatingDockHost : Panel
 
             return new Rect(margin, double.Max(0, y), width, height);
         }
-        
+
         static bool IsTransitioning(double progress)
         {
             return progress is > ProgressEpsilon and < 1 - ProgressEpsilon;
         }
-        
+
         static Rect GetCurrentPaneRectOrFallback(Control pane, Rect fallback)
         {
             return pane.Bounds is { Width: > 0, Height: > 0 }

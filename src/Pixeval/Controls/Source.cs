@@ -2,6 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
@@ -96,7 +97,7 @@ public static class Source
         if (e.GetNewValue<string>() is not { } value)
         {
             element.Source = null;
-            CancelLoad(element, CacheLoadLifetimeProperty);
+            AbandonLoad(element, CacheLoadLifetimeProperty);
             SetLoaded(element, false);
             return;
         }
@@ -128,7 +129,7 @@ public static class Source
         if (e.GetNewValue<string>() is not { } value)
         {
             element.Source = null;
-            CancelLoad(element, CacheLoadLifetimeProperty);
+            AbandonLoad(element, CacheLoadLifetimeProperty);
             SetLoaded(element, false);
             return;
         }
@@ -160,7 +161,7 @@ public static class Source
         if (e.GetNewValue<string>() is not { } value)
         {
             element.Source = null;
-            CancelLoad(element, CacheLoadLifetimeProperty);
+            AbandonLoad(element, CacheLoadLifetimeProperty);
             SetLoaded(element, false);
             return;
         }
@@ -220,7 +221,7 @@ public static class Source
         if (e.GetNewValue<string>() is not { } value)
         {
             element.ClearValue(backgroundProperty);
-            CancelLoad(element, BackgroundCacheLoadLifetimeProperty);
+            AbandonLoad(element, BackgroundCacheLoadLifetimeProperty);
             SetLoaded(element, false);
             return;
         }
@@ -272,11 +273,11 @@ public static class Source
         return lifetime.BeginLoad();
     }
 
-    private static void CancelLoad(
+    private static void AbandonLoad(
         Control element,
         AttachedProperty<SourceLoadLifetime?> lifetimeProperty)
     {
-        element.GetValue(lifetimeProperty)?.CancelCurrent();
+        element.GetValue(lifetimeProperty)?.AbandonCurrent();
     }
 
     private static void OnElementLoaded(object? sender, RoutedEventArgs e)
@@ -318,6 +319,7 @@ public static class Source
 internal sealed class SourceLoadLifetime : IDisposable
 {
     private readonly Lock _gate = new();
+    private readonly HashSet<SourceLoadOperation> _operations = [];
     private SourceLoadOperation? _current;
 
     public bool IsRegistered { get; private set; }
@@ -328,25 +330,34 @@ internal sealed class SourceLoadLifetime : IDisposable
 
     public SourceLoadOperation BeginLoad()
     {
-        var operation = new SourceLoadOperation();
-        SourceLoadOperation? previous;
+        var operation = new SourceLoadOperation(OnOperationDisposed);
+        SourceLoadOperation? previous = null;
+        var isDisposed = false;
         lock (_gate)
         {
             if (IsDisposed)
+                isDisposed = true;
+            else
             {
-                operation.Dispose();
-                return operation;
+                previous = _current;
+                _current = operation;
+                _operations.Add(operation);
             }
-
-            previous = _current;
-            _current = operation;
         }
 
-        previous?.Dispose();
+        if (isDisposed)
+        {
+            operation.Dispose();
+            return operation;
+        }
+
+        // Recycling a container only makes its old result obsolete. Let the cache fill finish so
+        // virtualized scrolling doesn't turn every binding change into a canceled HTTP request.
+        previous?.Abandon();
         return operation;
     }
 
-    public void CancelCurrent()
+    public void AbandonCurrent()
     {
         SourceLoadOperation? current;
         lock (_gate)
@@ -355,35 +366,50 @@ internal sealed class SourceLoadLifetime : IDisposable
             _current = null;
         }
 
-        current?.Dispose();
+        current?.Abandon();
     }
 
     public void Dispose()
     {
-        SourceLoadOperation? current;
+        SourceLoadOperation[] operations;
         lock (_gate)
         {
             if (IsDisposed)
                 return;
 
             IsDisposed = true;
-            current = _current;
             _current = null;
+            operations = [.. _operations];
+            _operations.Clear();
         }
 
-        current?.Dispose();
+        foreach (var operation in operations)
+            operation.Dispose();
+    }
+
+    private void OnOperationDisposed(SourceLoadOperation operation)
+    {
+        lock (_gate)
+        {
+            _operations.Remove(operation);
+            if (ReferenceEquals(_current, operation))
+                _current = null;
+        }
     }
 }
 
 internal sealed class SourceLoadOperation : IDisposable
 {
+    private readonly Action<SourceLoadOperation> _onDisposed;
     private readonly Lock _gate = new();
     private readonly CancellationTokenSource _cancellationTokenSource = new();
     private IDisposable? _source;
+    private bool _isAbandoned;
     private bool _isDisposed;
 
-    public SourceLoadOperation()
+    public SourceLoadOperation(Action<SourceLoadOperation> onDisposed)
     {
+        _onDisposed = onDisposed;
         Token = _cancellationTokenSource.Token;
     }
 
@@ -391,17 +417,47 @@ internal sealed class SourceLoadOperation : IDisposable
 
     public bool TrySetSource(IDisposable source)
     {
+        var shouldComplete = false;
         lock (_gate)
         {
-            if (_isDisposed)
+            if (!_isDisposed && !_isAbandoned)
             {
-                source.Dispose();
-                return false;
+                _source = source;
+                return true;
             }
 
-            _source = source;
-            return true;
+            if (!_isDisposed)
+            {
+                _isDisposed = true;
+                shouldComplete = true;
+            }
         }
+
+        source.Dispose();
+        if (shouldComplete)
+            Complete(cancel: false);
+        return false;
+    }
+
+    public void Abandon()
+    {
+        IDisposable? source;
+        lock (_gate)
+        {
+            if (_isDisposed || _isAbandoned)
+                return;
+
+            _isAbandoned = true;
+            source = _source;
+            _source = null;
+            if (source is null)
+                return;
+
+            _isDisposed = true;
+        }
+
+        source.Dispose();
+        Complete(cancel: false);
     }
 
     public void Dispose()
@@ -417,8 +473,15 @@ internal sealed class SourceLoadOperation : IDisposable
             _source = null;
         }
 
-        _cancellationTokenSource.Cancel();
-        _cancellationTokenSource.Dispose();
         source?.Dispose();
+        Complete(cancel: true);
+    }
+
+    private void Complete(bool cancel)
+    {
+        if (cancel)
+            _cancellationTokenSource.Cancel();
+        _cancellationTokenSource.Dispose();
+        _onDisposed(this);
     }
 }

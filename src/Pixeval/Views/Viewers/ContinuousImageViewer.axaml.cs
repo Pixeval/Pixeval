@@ -193,7 +193,11 @@ public partial class ContinuousImageViewer : ImageViewerBase
 
             var index = int.Clamp(viewModel.SelectedPageIndex, 0, viewModel.Images.Count - 1);
             if (ImageItemsControl.ContainerFromIndex(index) is not { } container)
+            {
+                ImageItemsControl.ScrollIntoView(index);
+                QueueScrollToSelectedPage();
                 return;
+            }
 
             if (GetPageOriginInContent(container) is not { } origin)
             {
@@ -327,7 +331,9 @@ public partial class ContinuousImageViewer : ImageViewerBase
     {
         var anchor = IsHorizontal
             ? IsReversed ? origin.X + size.Width : origin.X
-            : IsReversed ? origin.Y + size.Height : origin.Y;
+            : IsReversed
+                ? origin.Y + size.Height
+                : origin.Y;
         return (anchor * ZoomFactor) - ViewportAnchor;
     }
 
@@ -340,7 +346,7 @@ public partial class ContinuousImageViewer : ImageViewerBase
     private double GetEnd(Rect bounds) => IsHorizontal ? bounds.Right : bounds.Bottom;
 
     private double GetPageAnchor(Rect bounds) => IsReversed ? GetEnd(bounds) : GetStart(bounds);
-    
+
     private void ViewerScrollView_OnSizeChanged(object? sender, SizeChangedEventArgs e) => QueueViewportUpdate();
 
     private void ImageItem_OnSizeChanged(object? sender, SizeChangedEventArgs e) => QueueViewportUpdate();
