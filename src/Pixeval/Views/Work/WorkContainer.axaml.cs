@@ -43,6 +43,17 @@ public partial class WorkContainer : UserControl
         o => o.IsRefreshEnabled,
         (o, v) => o.IsRefreshEnabled = v);
 
+    public static readonly DirectProperty<WorkContainer, bool> IsCommandBarCollapsedProperty = AvaloniaProperty.RegisterDirect<WorkContainer, bool>(
+        nameof(IsCommandBarCollapsed),
+        o => o.IsCommandBarCollapsed,
+        (o, v) => o.IsCommandBarCollapsed = v);
+
+    public bool IsCommandBarCollapsed
+    {
+        get;
+        set => SetAndRaise(IsCommandBarCollapsedProperty, ref field, value);
+    }
+
     public bool IsRefreshEnabled
     {
         get;

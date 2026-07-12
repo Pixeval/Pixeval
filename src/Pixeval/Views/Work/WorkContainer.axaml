@@ -17,7 +17,7 @@
     d:DesignHeight="450"
     d:DesignWidth="800">
     <DockPanel>
-        <DockPanel DockPanel.Dock="Top">
+        <DockPanel DockPanel.Dock="Top" IsVisible="{Binding !$parent[work:WorkContainer].IsCommandBarCollapsed, Mode=OneWay}">
             <!--  Non-selection toolbar (right side)  -->
             <CommandBar
                 x:Name="RightToolBar"

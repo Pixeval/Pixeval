@@ -2,13 +2,12 @@
 // Licensed under the GPL-3.0 License.
 
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Misaki;
 
 namespace Pixeval.Views.Viewers;
 
-public partial class WorkInfoPage : ContentPage
+public partial class WorkInfoPage : IconContentPage
 {
     public static readonly StyledProperty<object?> ActionZoneProperty =
         AvaloniaProperty.Register<WorkInfoPage, object?>(nameof(ActionZone));

@@ -1,12 +1,11 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
-using Avalonia.Controls;
 using Pixeval.ViewModels;
 
 namespace Pixeval.Views.Download;
 
-public partial class DownloadPage : NavigationPage
+public partial class DownloadPage : IconNavigationPage
 {
     public DownloadPage()
     {

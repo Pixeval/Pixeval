@@ -2,6 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System.Linq;
+using Avalonia;
 using Avalonia.Interactivity;
 using Mako.Global.Enum;
 using Mako.Model;
@@ -12,6 +13,17 @@ namespace Pixeval.Views.Capability;
 
 public partial class WorkRelatedPage : IconContentPage
 {
+    public static readonly DirectProperty<WorkRelatedPage, bool> IsCommandBarCollapsedProperty = AvaloniaProperty.RegisterDirect<WorkRelatedPage, bool>(
+        nameof(IsCommandBarCollapsed),
+        o => o.IsCommandBarCollapsed,
+        (o, v) => o.IsCommandBarCollapsed = v);
+
+    public bool IsCommandBarCollapsed
+    {
+        get;
+        set => SetAndRaise(IsCommandBarCollapsedProperty, ref field, value);
+    }
+
     private readonly long _id;
     private readonly SimpleWorkType _simpleWorkType;
 

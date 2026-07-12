@@ -16,6 +16,7 @@ using Misaki;
 using Pixeval.AppManagement;
 using Pixeval.I18N;
 using Pixeval.Models.Options;
+using Pixeval.Views.Capability;
 using Pixeval.Views.Viewers;
 
 namespace Pixeval.ViewModels.Viewers;
@@ -101,7 +102,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
                     }
                 },
                 new CommentsPage(new CommentsViewViewModel(SimpleWorkType.Illustration, id)),
-                new RelatedWorksPage { IllustrationId = id }
+                new WorkRelatedPage(illustration.Id, SimpleWorkType.Illustration) { IsCommandBarCollapsed = true }
             ]
             : [];
 

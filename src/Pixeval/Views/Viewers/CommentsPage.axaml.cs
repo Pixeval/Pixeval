@@ -1,12 +1,11 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
-using Avalonia.Controls;
 using Pixeval.ViewModels.Viewers;
 
 namespace Pixeval.Views.Viewers;
 
-public partial class CommentsPage : NavigationPage
+public partial class CommentsPage : IconNavigationPage
 {
     private CommentsViewViewModel? ViewModel => DataContext as CommentsViewViewModel;
 

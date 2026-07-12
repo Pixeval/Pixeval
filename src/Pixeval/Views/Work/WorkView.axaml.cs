@@ -104,7 +104,7 @@ public sealed partial class WorkView : UserControl, IDisposable
     }
 
     /// <summary>
-    /// 在调用<see cref="ResetEngine"/>前<see cref="StyledElement.DataContext"/>为<see langword="null"/>
+    /// 在调用<see cref="ResetEngine"/>前<see cref="Control.DataContext"/>为<see langword="null"/>
     /// </summary>
     public void ResetEngine(IAsyncEnumerable<IArtworkInfo> newEngine)
     {

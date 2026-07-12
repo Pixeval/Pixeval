@@ -88,7 +88,9 @@ public static class AvaloniaHelper
         Page<HelpPage>(Symbol.ChatBubblesQuestion, MainPageResources.TabHelp, false, false),
         Page<IllustrationViewerPage>(Symbol.Image, MainPageResources.TabSingleImage, true, false),
         Page<NovelViewerPage>(Symbol.BookOpen, MainPageResources.TabSingleNovel, true, false),
-        Page<UserViewerPage>(Symbol.Person, MainPageResources.TabSingleUser, true, false)
+        Page<UserViewerPage>(Symbol.Person, MainPageResources.TabSingleUser, true, false),
+        Page<WorkInfoPage>(Symbol.BookContacts, MainPageResources.TabWorkInfo, true, false),
+        Page<CommentsPage>(Symbol.ChatMultiple, MainPageResources.TabComments, true, false)
     ];
 
     public static Dictionary<HomePageCardSourceKind, (Symbol Symbol, string Header)> HomeCardSourceKindToHeaderMap { get; } =

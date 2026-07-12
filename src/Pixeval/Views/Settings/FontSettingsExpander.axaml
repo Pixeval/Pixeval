@@ -5,6 +5,7 @@
     xmlns:avalonia="using:AutoSettingsPage.Avalonia"
     xmlns:controls="using:CommunityToolkit.Avalonia.Controls"
     xmlns:controls1="using:Pixeval.Controls"
+    xmlns:ctkConverters="using:CommunityToolkit.Avalonia.Controls.Converters"
     xmlns:converters="using:Pixeval.Views.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.Avalonia"
@@ -20,24 +21,35 @@
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
+    <controls:SettingsExpander.Resources>
+        <ctkConverters:DoubleLessThanOrEqualConverter x:Key="NarrowLayoutConverter" Threshold="476" />
+    </controls:SettingsExpander.Resources>
+    <controls:SettingsExpander.Styles>
+        <Style Selector="Grid#FontPanel > ComboBox#FontComboBox">
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Margin" Value="5,0,0,0" />
+            <Setter Property="MinWidth" Value="200" />
+        </Style>
+        <Style Selector="Grid#FontPanel.narrow > ComboBox#FontComboBox">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Margin" Value="0,5,0,0" />
+        </Style>
+    </controls:SettingsExpander.Styles>
     <controls:SettingsExpander.HeaderIcon>
         <fluent:SymbolIcon Symbol="{Binding Icon}" />
     </controls:SettingsExpander.HeaderIcon>
     <controls:SettingsExpander.Items>
-        <controls:SettingsCard ContentAlignment="Left">
-            <DockPanel HorizontalAlignment="Stretch" HorizontalSpacing="5">
-                <ComboBox
-                    x:Name="FontComboBox"
-                    Width="200"
-                    DockPanel.Dock="Right"
-                    ItemsSource="{x:Static local:SettingsEntryHelper.AvailableFonts}"
-                    SelectionChanged="SelectingItemsControl_OnSelectionChanged">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate x:DataType="{x:Type FontFamily}">
-                            <TextBlock FontFamily="{Binding}" Text="{Binding Name}" />
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+        <controls:SettingsCard
+            ContentAlignment="Left"
+            HorizontalContentAlignment="Stretch">
+            <Grid
+                x:Name="FontPanel"
+                Classes.narrow="{Binding Bounds.Width,
+                                         RelativeSource={RelativeSource Self},
+                                         Converter={StaticResource NarrowLayoutConverter}}"
+                ColumnDefinitions="*,Auto"
+                RowDefinitions="Auto,Auto">
                 <controls1:TokenizingBox
                     x:Name="FontTokenizingBox"
                     AllowDuplicateTokens="False"
@@ -52,7 +64,17 @@
                         </DataTemplate>
                     </controls1:TokenizingBox.ItemTemplate>
                 </controls1:TokenizingBox>
-            </DockPanel>
+                <ComboBox
+                    x:Name="FontComboBox"
+                    ItemsSource="{x:Static local:SettingsEntryHelper.AvailableFonts}"
+                    SelectionChanged="SelectingItemsControl_OnSelectionChanged">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type FontFamily}">
+                            <TextBlock FontFamily="{Binding}" Text="{Binding Name}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </Grid>
         </controls:SettingsCard>
     </controls:SettingsExpander.Items>
 </controls:SettingsExpander>

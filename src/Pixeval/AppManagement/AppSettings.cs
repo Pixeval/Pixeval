@@ -62,7 +62,7 @@ public record AppSettings
     [SettingsEntry(Symbol.Bot, SettingsGroupMcpHeader, null)]
     public McpSettingsGroup McpSettings { get; set; } = new();
 
-    [SettingsEntry(Symbol.BookOpen, EntryViewerPageResources.NovelSettings, null)]
+    [SettingsEntry(Symbol.Settings, EntryViewerPageResources.NovelSettings, null)]
     public NovelSettingsGroup NovelSettings { get; set; } = new();
 
     /// <summary>

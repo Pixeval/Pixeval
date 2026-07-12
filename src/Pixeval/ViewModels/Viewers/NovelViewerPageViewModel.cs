@@ -18,6 +18,7 @@ using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.AppManagement;
 using Pixeval.Models.Settings;
+using Pixeval.Views.Capability;
 using Pixeval.Views.Settings;
 using Pixeval.Views.Viewers;
 
@@ -42,6 +43,7 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
         [
             new WorkInfoPage(currentNovel.Entry),
             new CommentsPage(new CommentsViewViewModel(SimpleWorkType.Novel, currentNovel.Entry.Id)),
+            new WorkRelatedPage(currentNovel.Entry.Id, SimpleWorkType.Novel) { IsCommandBarCollapsed = true },
             SettingsPage
         ]
         : [];
@@ -152,7 +154,7 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
         get
         {
             LocalSettingsEntryHelper.Initialize();
-            return field ??= new SettingsSubView(
+            return new SettingsSubView(
                 SettingsBuilder.CreateGroupList(App.AppViewModel.AppSettings)
                     .NewGroup(t => t.NovelSettings, group => group
                         .Color(t => t.NovelBackground, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelBackgroundBrush)))

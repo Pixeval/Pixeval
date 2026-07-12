@@ -207,12 +207,10 @@ namespace Pixeval
         public const string AutoPlayInterval30Seconds = "EntryViewerPage.AutoPlayInterval30Seconds";
         public const string AutoPlayInterval3Seconds = "EntryViewerPage.AutoPlayInterval3Seconds";
         public const string AutoPlayInterval5Seconds = "EntryViewerPage.AutoPlayInterval5Seconds";
-        public const string CommentsTabContent = "EntryViewerPage.CommentsTab.Content";
         public const string Copy = "EntryViewerPage.Copy";
         public const string FollowingUserItemTitle = "EntryViewerPage.FollowingUserItem.Title";
         public const string IllustrationCountItemTitle = "EntryViewerPage.IllustrationCountItem.Title";
         public const string InfoAndComments = "EntryViewerPage.InfoAndComments";
-        public const string InfoTabContent = "EntryViewerPage.InfoTab.Content";
         public const string LoadFailed = "EntryViewerPage.LoadFailed";
         public const string LoadingNovelTextBlockText = "EntryViewerPage.LoadingNovelTextBlock.Text";
         public const string MangaCountItemTitle = "EntryViewerPage.MangaCountItem.Title";
@@ -229,7 +227,6 @@ namespace Pixeval
         public const string PrevPage = "EntryViewerPage.Prev.Page";
         public const string PrevPageOrWork = "EntryViewerPage.Prev.PageOrWork";
         public const string PrevWork = "EntryViewerPage.Prev.Work";
-        public const string RelatedWorksTabContent = "EntryViewerPage.RelatedWorksTab.Content";
         public const string RotateClockwise = "EntryViewerPage.RotateClockwise";
         public const string RotateCounterclockwise = "EntryViewerPage.RotateCounterclockwise";
         public const string Save = "EntryViewerPage.Save";
@@ -626,6 +623,7 @@ namespace Pixeval
         public const string SwitchAccountItemText = "MainPage.SwitchAccountItem.Text";
         public const string TabAbout = "MainPage.Tab.About";
         public const string TabBrowsingHistory = "MainPage.Tab.BrowsingHistory";
+        public const string TabComments = "MainPage.Tab.Comments";
         public const string TabDownload = "MainPage.Tab.Download";
         public const string TabExtensions = "MainPage.Tab.Extensions";
         public const string TabFeed = "MainPage.Tab.Feed";
@@ -649,6 +647,7 @@ namespace Pixeval
         public const string TabWatchLater = "MainPage.Tab.WatchLater";
         public const string TabWorkBookmarks = "MainPage.Tab.WorkBookmarks";
         public const string TabWorkFollowing = "MainPage.Tab.WorkFollowing";
+        public const string TabWorkInfo = "MainPage.Tab.WorkInfo";
         public const string TabWorkMyPixiv = "MainPage.Tab.WorkMyPixiv";
         public const string TabWorkNew = "MainPage.Tab.WorkNew";
         public const string TabWorkPosts = "MainPage.Tab.WorkPosts";

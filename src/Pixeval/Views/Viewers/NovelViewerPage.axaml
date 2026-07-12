@@ -37,7 +37,7 @@
             Grid.Row="0"
             DisplayMode="Inline">
             <SplitView.Pane>
-                <TabbedPage Pages="{Binding PanePages}" />
+                <TabbedPage Pages="{Binding PanePages}" TabPlacement="Bottom" />
             </SplitView.Pane>
 
             <DockPanel>
