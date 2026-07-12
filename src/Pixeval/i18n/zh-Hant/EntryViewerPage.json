@@ -19,17 +19,8 @@
   "NovelCountItem": {
     "Title": "小说数"
   },
-  "CommentsTab": {
-    "Content": "评论"
-  },
   "Pin": "固定面板",
   "InfoAndComments": "详情",
-  "InfoTab": {
-    "Content": "详情"
-  },
-  "RelatedWorksTab": {
-    "Content": "推荐作品"
-  },
   "RotateClockwise": "顺时针旋转",
   "RotateCounterclockwise": "逆时针旋转",
   "Mirror": "镜像翻转",
