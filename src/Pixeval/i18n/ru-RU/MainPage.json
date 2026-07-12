@@ -31,7 +31,9 @@
     "SingleNovel": "单独小说",
     "SingleUser": "单独用户",
     "SauceNaoResult": "SauceNAO 搜索结果",
-    "NavigationSettings": "导航栏"
+    "NavigationSettings": "导航栏",
+    "WorkInfo": "作品信息",
+    "Comments": "评论"
   },
   "SearchResultFormatted": "{0} - 搜索",
   "SearchKeywordCannotBeBlank": {
