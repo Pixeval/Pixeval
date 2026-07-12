@@ -1,9 +1,9 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
-using Pixeval.AppManagement;
 using Mako.Global.Enum;
 using Mako.Model;
+using Pixeval.AppManagement;
 using Pixeval.Models.Options;
 using Pixeval.ViewModels;
 

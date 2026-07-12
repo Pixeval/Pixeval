@@ -9,13 +9,9 @@ using NovelViewDataProvider = Pixeval.ViewModels.SharableViewDataProvider<
 
 namespace Pixeval.ViewModels;
 
-public sealed class NovelViewViewModel : WorkViewViewModelBase<Novel, NovelItemViewModel>
+public sealed class NovelViewViewModel
+    : WorkViewViewModelBase<Novel, NovelItemViewModel>, IRefCloneable<NovelViewViewModel>
 {
-    public NovelViewViewModel(NovelViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef(), viewModel.CachedBlockedTags)
-    {
-        UserFilter = viewModel.UserFilter;
-    }
-
     public NovelViewViewModel() : this(new NovelViewDataProvider(), null)
     {
     }
@@ -29,4 +25,6 @@ public sealed class NovelViewViewModel : WorkViewViewModelBase<Novel, NovelItemV
     public override NovelViewDataProvider DataProvider { get; }
 
     public override bool RequireAdaptiveGrid => true;
+
+    public NovelViewViewModel CloneRef() => new(DataProvider.CloneRef(), CachedBlockedTags);
 }

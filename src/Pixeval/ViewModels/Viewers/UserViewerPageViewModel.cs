@@ -152,6 +152,7 @@ public sealed partial class UserViewerPageViewModel : ViewModelBase, IDisposable
             return;
 
         _disposed = true;
+        IsLoading = false;
         _loadingCts.Cancel();
         _loadingCts.Dispose();
     }

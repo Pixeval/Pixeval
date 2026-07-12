@@ -52,25 +52,28 @@ public sealed partial class HomeCardPreviewViewModel(HomePageCardLayout card) : 
 
     public Task EnsureLoadedAsync() => ViewModel is null ? LoadAsync() : Task.CompletedTask;
 
+    public ISimpleViewViewModel? CloneViewModel() =>
+        (ViewModel as IRefCloneable<ISimpleViewViewModel>)?.CloneRef();
+
     private async Task LoadCoreAsync()
     {
         try
         {
             PlaceholderText = I18NManager.GetResource(HomePageResources.CardPreviewLoadingTextBlockText);
             var oldViewModel = ViewModel;
-            var viewModel = await Card.Definition.CreatePreviewViewModelAsync(Card);
+            var source = await Card.Definition.CreatePreviewSourceAsync(Card);
             if (_isDisposed)
             {
-                if (viewModel is IDisposable newDisposable)
+                if (source.ViewModel is IDisposable newDisposable)
                     newDisposable.Dispose();
                 return;
             }
 
             DetachItems();
-            ViewModel = viewModel;
+            ViewModel = source.ViewModel;
             OnPropertyChanged(nameof(Items));
             AttachItems();
-            if (!ReferenceEquals(oldViewModel, viewModel) && oldViewModel is IDisposable disposable)
+            if (!ReferenceEquals(oldViewModel, source.ViewModel) && oldViewModel is IDisposable disposable)
                 disposable.Dispose();
 
             await LoadInitialItemsAsync();

@@ -2,8 +2,8 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,8 +11,8 @@ using AnimatedControls.Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input.Platform;
 using Avalonia.Media.Imaging;
-using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using FluentIcons.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
@@ -33,6 +33,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
 
     // Multiple viewer interactions can request the same page concurrently; share one load task to keep progress stable.
     private readonly Lock _loadOriginalImageTaskGate = new();
+    private readonly CancellationTokenSource _lifetimeCancellationTokenSource = new();
     private Task? _loadOriginalImageTask;
 
     [ObservableProperty]
@@ -73,8 +74,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
     [NotifyCanExecuteChangedFor(nameof(TransformExtensionCommand))]
     public partial IAnimatedBitmap? OriginalSource { get; private set; }
 
-    [ObservableProperty]
-    public partial Bitmap? ThumbnailSource { get; private set; }
+    [ObservableProperty] public partial Bitmap? ThumbnailSource { get; private set; }
 
     public bool IsPicGif => _entry.ImageType is ImageType.SingleAnimatedImage;
 
@@ -129,9 +129,13 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
         if (_disposed)
             return;
         _disposed = true;
-        TransformedSource?.Dispose();
+        _lifetimeCancellationTokenSource.Cancel();
+        _lifetimeCancellationTokenSource.Dispose();
+        TransformedSource = null;
         OriginalSource?.Dispose();
         ThumbnailSource?.Dispose();
+        OriginalSource = null;
+        ThumbnailSource = null;
     }
 
     public async Task LoadThumbnailImageAsync()
@@ -141,7 +145,20 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
 
         _thumbnailLoaded = true;
 
-        ThumbnailSource = await LoadThumbnailImageOverrideAsync();
+        try
+        {
+            var source = await LoadThumbnailImageOverrideAsync(_lifetimeCancellationTokenSource.Token);
+            if (_disposed)
+            {
+                source?.Dispose();
+                return;
+            }
+
+            ThumbnailSource = source;
+        }
+        catch (OperationCanceledException) when (_lifetimeCancellationTokenSource.IsCancellationRequested)
+        {
+        }
     }
 
     public Task LoadOriginalImageAsync()
@@ -168,7 +185,15 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
 
         AdvancePhase(LoadingPhase.LoadingImage);
 
-        var source = await LoadOriginalImageOverrideAsync();
+        IAnimatedBitmap? source;
+        try
+        {
+            source = await LoadOriginalImageOverrideAsync(_lifetimeCancellationTokenSource.Token);
+        }
+        catch (OperationCanceledException) when (_lifetimeCancellationTokenSource.IsCancellationRequested)
+        {
+            return;
+        }
 
         if (source is null)
             return;
@@ -205,6 +230,9 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
 
     private void AdvancePhase(LoadingPhase phase, double progress = 0)
     {
+        if (_disposed)
+            return;
+
         LoadingProgress = progress;
         LoadingText = phase is LoadingPhase.DownloadingImage
             ? I18NManager.GetResource(ImageViewerPageResources.DownloadingImageFormatted, (int) progress)
@@ -218,7 +246,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
             });
     }
 
-    public async Task<Bitmap?> LoadThumbnailImageOverrideAsync()
+    private async Task<Bitmap?> LoadThumbnailImageOverrideAsync(CancellationToken token)
     {
         var f = _entry.Thumbnails.PickMax();
         if (f is null)
@@ -227,10 +255,11 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
             _platform,
             f.ImageUri.OriginalString,
             null,
-            100);
+            100,
+            token);
     }
 
-    public async Task<IAnimatedBitmap?> LoadOriginalImageOverrideAsync()
+    private async Task<IAnimatedBitmap?> LoadOriginalImageOverrideAsync(CancellationToken token)
     {
         var isOriginal = false; // TODO: 设置项
         switch (_entry)
@@ -244,7 +273,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
                 return await CacheHelper.GetSingleImageAsync(
                     _platform,
                     f,
-                    new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, d)));
+                    new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, d)), token);
             }
             case ISingleAnimatedImage { ImageType: ImageType.SingleAnimatedImage } singleAnimatedImage:
             {
@@ -252,6 +281,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
                     ? singleAnimatedImage
                     : (await singleAnimatedImage.AnimatedThumbnails.ApplyAsync(t => t
                         .TryPreloadListAsync(singleAnimatedImage))).PickMax();
+                token.ThrowIfCancellationRequested();
                 if (f is null)
                     return null;
                 switch (f.PreferredAnimatedImageType)
@@ -261,14 +291,14 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
                         return await CacheHelper.GetAnimatedImageSeparatedAsync(
                             _platform,
                             f,
-                            new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, d)));
+                            new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, d)), token);
                     }
                     case SingleAnimatedImageType.SingleZipFile or SingleAnimatedImageType.SingleFile:
                     {
                         return await CacheHelper.GetSingleAnimatedImageAsync(
                             _platform,
                             f,
-                            new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, d)));
+                            new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, d)), token);
                     }
                 }
 
@@ -322,7 +352,11 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
             {
                 await extension.TransformAsync(source, destination);
                 destination.Position = 0;
-                TransformedSource = IAnimatedBitmap.Load(destination, true);
+                var transformedSource = IAnimatedBitmap.Load(destination, true);
+                if (_disposed)
+                    transformedSource.Dispose();
+                else
+                    TransformedSource = transformedSource;
             }
             catch
             {

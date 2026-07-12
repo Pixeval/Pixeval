@@ -1,7 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
-using System;
 using System.Linq;
 using Avalonia.Interactivity;
 using Mako;
@@ -19,15 +18,10 @@ public abstract partial class SimpleUsersPage : IconContentPage
 
     protected void InitializeSource(UserViewViewModel? viewModel = null)
     {
-        if (viewModel is null)
-        {
-            ChangeSource();
-            return;
-        }
-
-        var oldViewModel = UserContainer.UserView.DataContext as IDisposable;
-        UserContainer.UserView.DataContext = viewModel;
-        oldViewModel?.Dispose();
+        if (viewModel is not null)
+            UserContainer.UserView.SetViewModel(viewModel);
+        else
+            ResetEngine(GetFetchEngine(App.AppViewModel.MakoClient));
     }
 
     private void UserContainer_OnRefreshRequested(object? sender, RoutedEventArgs e)
@@ -37,8 +31,11 @@ public abstract partial class SimpleUsersPage : IconContentPage
 
     protected void ChangeSource()
     {
-        (UserContainer.UserView.DataContext as UserViewViewModel)?.ResetEngine(GetFetchEngine(App.AppViewModel.MakoClient), (user, _) => new(user));
+        ResetEngine(GetFetchEngine(App.AppViewModel.MakoClient));
     }
+
+    private void ResetEngine(IFetchEngine<User> fetchEngine) =>
+        (UserContainer.UserView.DataContext as UserViewViewModel)?.ResetEngine(fetchEngine, static (user, _) => new(user));
 
     protected abstract IFetchEngine<User> GetFetchEngine(MakoClient makoClient);
 }

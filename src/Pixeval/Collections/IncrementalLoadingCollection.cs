@@ -18,10 +18,12 @@ namespace Pixeval.Collections;
 /// </typeparam>
 /// <seealso cref="IIncrementalSource{TSource}"/>
 /// <seealso cref="IIncrementalLoading"/>
-public class IncrementalLoadingCollection<IType> : ObservableCollection<IType>, IIncrementalLoading
+public class IncrementalLoadingCollection<IType> : ObservableCollection<IType>, IIncrementalLoading, IDisposable
 {
+    private readonly CancellationTokenSource _lifetimeCts = new();
     private readonly Lock _loadingTaskGate = new();
     private Task<int>? _loadingTask;
+    private bool _isDisposed;
 
     /// <summary>
     /// Gets or sets an <see cref="Action"/> that is called when a retrieval operation begins.
@@ -132,6 +134,7 @@ public class IncrementalLoadingCollection<IType> : ObservableCollection<IType>, 
     /// <returns>This method does not return a result</returns>
     public async Task RefreshAsync(CancellationToken token = default)
     {
+        ObjectDisposedException.ThrowIf(_isDisposed, this);
         var loadingTask = GetRunningLoadingTask();
         if (loadingTask is not null)
         {
@@ -145,6 +148,7 @@ public class IncrementalLoadingCollection<IType> : ObservableCollection<IType>, 
             }
         }
 
+        ObjectDisposedException.ThrowIf(_isDisposed, this);
         token.ThrowIfCancellationRequested();
 
         var previousCount = Count;
@@ -189,18 +193,21 @@ public class IncrementalLoadingCollection<IType> : ObservableCollection<IType>, 
     /// </returns>
     public Task<int> LoadMoreItemsAsync(int count, CancellationToken token = default)
     {
+        ObjectDisposedException.ThrowIf(_isDisposed, this);
         if (token.IsCancellationRequested)
             return Task.FromCanceled<int>(token);
 
         lock (_loadingTaskGate)
         {
+            ObjectDisposedException.ThrowIf(_isDisposed, this);
             if (_loadingTask is { IsCompleted: false } loadingTask)
                 return WaitForLoadingTaskAsync(loadingTask, token);
 
-            var newLoadingTask = LoadMoreItemsCoreAsync(token);
+            // A caller may stop waiting without canceling a load shared by another view.
+            var newLoadingTask = LoadMoreItemsCoreAsync(_lifetimeCts.Token);
             _loadingTask = newLoadingTask;
             _ = ResetLoadingTaskAsync(newLoadingTask);
-            return newLoadingTask;
+            return WaitForLoadingTaskAsync(newLoadingTask, token);
         }
     }
 
@@ -270,6 +277,48 @@ public class IncrementalLoadingCollection<IType> : ObservableCollection<IType>, 
                 if (ReferenceEquals(_loadingTask, loadingTask))
                     _loadingTask = null;
             }
+        }
+    }
+
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        Task<int>? loadingTask;
+        lock (_loadingTaskGate)
+        {
+            if (_isDisposed)
+                return;
+
+            _isDisposed = true;
+            loadingTask = _loadingTask;
+        }
+
+        OnStartLoading = null;
+        OnEndLoading = null;
+        OnError = null;
+        _lifetimeCts.Cancel();
+        if (Source is IDisposable disposable)
+            disposable.Dispose();
+        if (loadingTask is { IsCompleted: false })
+            _ = DisposeLifetimeCtsAsync(loadingTask, _lifetimeCts);
+        else
+            _lifetimeCts.Dispose();
+    }
+
+    private static async Task DisposeLifetimeCtsAsync(Task loadingTask, CancellationTokenSource lifetimeCts)
+    {
+        try
+        {
+            await loadingTask.ConfigureAwait(false);
+        }
+        catch
+        {
+            // The initiating caller observes the load result; disposal only waits for it to finish.
+        }
+        finally
+        {
+            lifetimeCts.Dispose();
         }
     }
 }

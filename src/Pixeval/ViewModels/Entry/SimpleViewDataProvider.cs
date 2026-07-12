@@ -29,22 +29,27 @@ public sealed class SimpleViewDataProvider<T, TViewModel> : ViewModelBase, IData
         if (_isDisposed)
             return;
 
+        _isDisposed = true;
         DisposeSourceItems();
         View.Dispose();
-        _isDisposed = true;
     }
 
     public void ResetEngine(IAsyncEnumerable<T>? fetchEngine, Func<T, int, TViewModel> factory, int itemsPerPage = 20, int limit = -1)
     {
+        ObjectDisposedException.ThrowIf(_isDisposed, this);
         DisposeSourceItems();
 
-        Source = new IncrementalLoadingCollection<TViewModel>(new IncrementalSource<T,TViewModel>(fetchEngine!, factory, limit), itemsPerPage);
+        Source = new IncrementalLoadingCollection<TViewModel>(new IncrementalSource<T, TViewModel>(fetchEngine!, factory, limit), itemsPerPage);
     }
 
     private void DisposeSourceItems()
     {
-        if (Source is { } source)
-            foreach (var entry in source.OfType<IDisposable>())
-                entry.Dispose();
+        var source = Source;
+        Source = [];
+        if (source is IDisposable disposable)
+            disposable.Dispose();
+        foreach (var entry in source.OfType<IDisposable>())
+            entry.Dispose();
+        source.Clear();
     }
 }

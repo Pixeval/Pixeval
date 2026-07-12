@@ -11,6 +11,10 @@ namespace Pixeval.Collections;
 /// This interface represents a data source whose items can be loaded incrementally.
 /// </summary>
 /// <typeparam name="TSource">Type of collection element.</typeparam>
+/// <remarks>
+/// Implement <see cref="System.IDisposable"/> when the source owns resources. <see cref="IncrementalLoadingCollection{TSource}"/>
+/// disposes such sources when the collection is disposed.
+/// </remarks>
 public interface IIncrementalSource<TSource>
 {
     /// <summary>

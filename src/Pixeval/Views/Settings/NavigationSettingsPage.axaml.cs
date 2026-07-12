@@ -6,7 +6,6 @@ using System.Text;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Pixeval.AppManagement;
-using Pixeval.Controls;
 using Pixeval.I18N;
 using Pixeval.Models.Navigation;
 using Pixeval.Utilities;

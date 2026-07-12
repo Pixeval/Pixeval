@@ -15,8 +15,10 @@ using Pixeval.Models.Options;
 namespace Pixeval.ViewModels;
 
 public sealed class DownloadFolderViewModel(WorkSubscriptionEntry subscription)
-    : ViewModelBase, IDownloadListEntryViewModel
+    : ViewModelBase, IDownloadListEntryViewModel, IDisposable
 {
+    private bool _isDisposed;
+
     public WorkSubscriptionEntry Subscription { get; } = subscription;
 
     public ObservableCollection<DownloadItemViewModel> Items { get; } = [];
@@ -90,15 +92,19 @@ public sealed class DownloadFolderViewModel(WorkSubscriptionEntry subscription)
 
     public bool Remove(DownloadItemViewModel item)
     {
+        if (!Items.Remove(item))
+            return false;
+
         item.DownloadTask.PropertyChanged -= DownloadTaskOnPropertyChanged;
-        var result = Items.Remove(item);
-        if (result)
-            OnItemsChanged();
-        return result;
+        OnItemsChanged();
+        return true;
     }
 
     private void DownloadTaskOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        if (_isDisposed)
+            return;
+
         if (e.PropertyName is nameof(IDownloadTaskBase.CurrentState))
         {
             OnPropertyChanged(nameof(CurrentState));
@@ -107,6 +113,7 @@ public sealed class DownloadFolderViewModel(WorkSubscriptionEntry subscription)
             OnPropertyChanged(nameof(CompletedCount));
             OnPropertyChanged(nameof(ErrorCount));
         }
+
         if (e.PropertyName is nameof(IDownloadTaskBase.CurrentState)
             or nameof(IDownloadTaskBase.ProgressPercentage))
             OnPropertyChanged(nameof(ProgressPercentage));
@@ -123,5 +130,16 @@ public sealed class DownloadFolderViewModel(WorkSubscriptionEntry subscription)
         OnPropertyChanged(nameof(CompletedCount));
         OnPropertyChanged(nameof(ErrorCount));
         OnPropertyChanged(nameof(ProgressPercentage));
+    }
+
+    public void Dispose()
+    {
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
+        foreach (var item in Items)
+            item.DownloadTask.PropertyChanged -= DownloadTaskOnPropertyChanged;
+        Items.Clear();
     }
 }

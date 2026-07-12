@@ -14,6 +14,16 @@ public partial class SpotlightView : UserControl
 {
     public SpotlightView() => InitializeComponent();
 
+    public void SetViewModel(SpotlightViewViewModel viewModel)
+    {
+        ArgumentNullException.ThrowIfNull(viewModel);
+        var oldViewModel = DataContext as IDisposable;
+        DataContext = viewModel;
+        oldViewModel?.Dispose();
+        if (IsLoaded)
+            RegisterViewModelDisposal(viewModel);
+    }
+
     private async void SpotlightItem_OnTapped(object? sender, TappedEventArgs e)
     {
         if (sender is Control { DataContext: SpotlightItemViewModel vm } control)
@@ -33,9 +43,12 @@ public partial class SpotlightView : UserControl
     {
         base.OnLoaded(e);
 
-        if (DataContext is SpotlightViewViewModel vm)
-            RaiseEvent(new ViewModelDisposalEventArgs(ViewModelDisposal.ViewModelDisposalEvent, vm));
+        if (DataContext is SpotlightViewViewModel viewModel)
+            RegisterViewModelDisposal(viewModel);
     }
+
+    private void RegisterViewModelDisposal(SpotlightViewViewModel viewModel) =>
+        RaiseEvent(new ViewModelDisposalEventArgs(ViewModelDisposal.ViewModelDisposalEvent, viewModel));
 
     #endregion
 }

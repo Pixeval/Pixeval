@@ -30,11 +30,9 @@ public sealed partial class DownloadViewViewModel : ViewModelBase, IDisposable
 
     private bool _isDisposed;
 
-    [ObservableProperty]
-    public partial DownloadListOption CurrentOption { get; set; } = DownloadListOption.AllQueued;
+    [ObservableProperty] public partial DownloadListOption CurrentOption { get; set; } = DownloadListOption.AllQueued;
 
-    [ObservableProperty]
-    public partial string? FilterText { get; set; }
+    [ObservableProperty] public partial string? FilterText { get; set; }
 
     public AdvancedObservableCollection<IDownloadListEntryViewModel> View { get; }
 
@@ -76,12 +74,15 @@ public sealed partial class DownloadViewViewModel : ViewModelBase, IDisposable
 
         _isDisposed = true;
         _source.CollectionChanged -= SourceOnCollectionChanged;
+        DisposeEntries();
+        View.Filters.Clear();
+        View.Source = [];
         View.Dispose();
     }
 
     private void AddTask(IDownloadTaskGroupBase task)
     {
-        if (task is not IDownloadTaskGroup group)
+        if (_isDisposed || task is not IDownloadTaskGroup group)
             return;
 
         if (_lookup.ContainsKey(group.Destination))
@@ -117,26 +118,33 @@ public sealed partial class DownloadViewViewModel : ViewModelBase, IDisposable
 
     private void RemoveTask(IDownloadTaskGroupBase task)
     {
-        if (!_lookup.Remove(task.Destination, out var vm))
+        if (_isDisposed || !_lookup.Remove(task.Destination, out var vm))
             return;
 
         if (vm.DownloadTask.DatabaseEntry.WorkSubscriptionId > 0
             && _subscriptionFolders.TryGetValue(vm.DownloadTask.DatabaseEntry.WorkSubscriptionId, out var folder))
         {
             _ = folder.Remove(vm);
+            vm.Dispose();
             if (!folder.HasItems)
             {
                 _ = _subscriptionFolders.Remove(folder.Subscription.HistoryEntryId);
                 _ = _viewSource.Remove(folder);
+                folder.Dispose();
             }
+
             return;
         }
 
         _ = _viewSource.Remove(vm);
+        vm.Dispose();
     }
 
     private void SourceOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
+        if (_isDisposed)
+            return;
+
         switch (e.Action)
         {
             case NotifyCollectionChangedAction.Add when e.NewItems is { } newItems:
@@ -148,9 +156,7 @@ public sealed partial class DownloadViewViewModel : ViewModelBase, IDisposable
                     RemoveTask(item);
                 break;
             case NotifyCollectionChangedAction.Reset:
-                _viewSource.Clear();
-                _lookup.Clear();
-                _subscriptionFolders.Clear();
+                DisposeEntries();
                 foreach (var task in _source)
                     AddTask(task);
                 break;
@@ -175,5 +181,18 @@ public sealed partial class DownloadViewViewModel : ViewModelBase, IDisposable
                 _filteredTasks.Add(vm);
 
         ResetFilter(GetCustomSearchResult());
+    }
+
+    private void DisposeEntries()
+    {
+        foreach (var folder in _subscriptionFolders.Values)
+            folder.Dispose();
+        foreach (var item in _lookup.Values)
+            item.Dispose();
+
+        _filteredTasks.Clear();
+        _viewSource.Clear();
+        _subscriptionFolders.Clear();
+        _lookup.Clear();
     }
 }

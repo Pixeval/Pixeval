@@ -4,11 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Mako.Global.Enum;
 using Mako.Model;
 using Misaki;
 using Pixeval.Models.Options;
@@ -20,7 +20,6 @@ namespace Pixeval.Views.Work;
 
 public sealed partial class WorkView : UserControl, IDisposable
 {
-    private bool _ownsDataContext = true;
     private bool _isDisposed;
 
     public event EventHandler<Control, IWorkViewModel>? RequestAddToBookmark;
@@ -120,24 +119,33 @@ public sealed partial class WorkView : UserControl, IDisposable
             default:
                 IWorkViewViewModel newViewModel = isNovelEngine ? new NovelViewViewModel() : new IllustrationViewViewModel();
                 newViewModel.ResetEngine(newEngine);
-                SetViewModel(newViewModel);
+                SetOwnedViewModel(newViewModel);
                 break;
         }
     }
 
-    public void SetSource(IReadOnlyCollection<IArtworkInfo> source)
+    public void SetSource(IReadOnlyCollection<IArtworkInfo> source, SimpleWorkType workType, bool needRefreshOnOpen = false)
     {
-        SetViewModel(new SimpleOperableViewViewModel<IWorkViewModel>(source));
+        IOperableViewViewModel viewModel = workType is SimpleWorkType.Novel
+            ? new SimpleOperableViewViewModel<NovelItemViewModel>(source, needRefreshOnOpen)
+            : new SimpleOperableViewViewModel<IllustrationItemViewModel>(source, needRefreshOnOpen);
+        SetOwnedViewModel(viewModel);
     }
 
-    public void SetViewModel(ISimpleViewViewModel viewModel, bool ownsViewModel = true)
+    /// <summary>
+    /// Takes ownership of <paramref name="viewModel"/> and disposes it when it is replaced or this view is disposed.
+    /// </summary>
+    public void SetViewModel(IWorkViewViewModel viewModel)
+    {
+        ArgumentNullException.ThrowIfNull(viewModel);
+        SetOwnedViewModel(viewModel);
+    }
+
+    private void SetOwnedViewModel(ISimpleViewViewModel viewModel)
     {
         var oldViewModel = DataContext as IDisposable;
-        var oldOwnsDataContext = _ownsDataContext;
         DataContext = viewModel;
-        _ownsDataContext = ownsViewModel;
-        if (oldOwnsDataContext)
-            oldViewModel?.Dispose();
+        oldViewModel?.Dispose();
     }
 
     private void WorkItem_OnRequestAddToBookmark(Control sender, IWorkViewModel e) => RequestAddToBookmark?.Invoke(sender, e);
@@ -159,6 +167,15 @@ public sealed partial class WorkView : UserControl, IDisposable
         lbi.DoubleTapped += WorkItem_OnDoubleTapped;
     }
 
+    private void ListBox_OnContainerClearing(object? sender, ContainerClearingEventArgs e)
+    {
+        if (e.Container is not ListBoxItem lbi)
+            return;
+
+        lbi.Tapped -= WorkItem_OnTapped;
+        lbi.DoubleTapped -= WorkItem_OnDoubleTapped;
+    }
+
     #region Disposal
 
     /// <inheritdoc />
@@ -175,11 +192,12 @@ public sealed partial class WorkView : UserControl, IDisposable
             return;
 
         _isDisposed = true;
+        WorkListBox.ItemsSource = null;
+        RequestAddToBookmark = null;
         var d = DataContext;
         DataContext = null!;
-        if (_ownsDataContext && d is IDisposable viewModel)
+        if (d is IDisposable viewModel)
             viewModel.Dispose();
-        _ownsDataContext = true;
     }
 
     #endregion

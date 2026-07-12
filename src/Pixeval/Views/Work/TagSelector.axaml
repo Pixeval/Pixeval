@@ -69,7 +69,7 @@
             Width="160"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            IsIndeterminate="True"
+            IsIndeterminate="{Binding #Root.IsLoading}"
             IsVisible="{Binding #Root.IsLoading}" />
     </Grid>
 </UserControl>

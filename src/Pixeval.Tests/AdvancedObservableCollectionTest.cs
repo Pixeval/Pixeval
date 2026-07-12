@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pixeval.Collections;
+using Pixeval.Utilities;
 
 namespace Pixeval.Tests;
 
@@ -66,7 +67,7 @@ public sealed class AdvancedObservableCollectionTest
         }
     }
 
-    private sealed class ControlledIncrementalSource : IIncrementalSource<int>
+    private sealed class ControlledIncrementalSource : IIncrementalSource<int>, IDisposable
     {
         private readonly Lock _gate = new();
         private readonly List<Call> _calls = [];
@@ -83,8 +84,11 @@ public sealed class AdvancedObservableCollectionTest
             }
         }
 
+        public bool IsDisposed { get; private set; }
+
         public async Task<IReadOnlyCollection<int>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken token = default)
         {
+            ObjectDisposedException.ThrowIf(IsDisposed, this);
             var call = new Call(pageIndex, pageSize);
             lock (_gate)
             {
@@ -95,6 +99,8 @@ public sealed class AdvancedObservableCollectionTest
 
             return await call.Completion.Task.WaitAsync(token);
         }
+
+        public void Dispose() => IsDisposed = true;
 
         public async Task<Call> WaitForCallAsync(int index)
         {
@@ -277,8 +283,8 @@ public sealed class AdvancedObservableCollectionTest
         Assert.HasCount(1, col);
         Assert.AreEqual(1, adaptor.Count);
         _ = Assert.IsInstanceOfType<SampleViewModel>(adaptor[0]);
-        Assert.AreSame(adaptor[0], ((IList)adaptor)[0]);
-        Assert.IsTrue(((IList)adaptor).IsReadOnly);
+        Assert.AreSame(adaptor[0], ((IList) adaptor)[0]);
+        Assert.IsTrue(((IList) adaptor).IsReadOnly);
 
         adaptor.Filters.Add(IFilter<SampleViewModel>.Create(new HashSet<string> { nameof(SampleViewModel.Val) }, item => item.Val > 1, false));
         Assert.AreEqual(0, adaptor.Count);
@@ -449,6 +455,47 @@ public sealed class AdvancedObservableCollectionTest
     }
 
     [TestMethod]
+    public void Test_AdvancedObservableCollection_DisposeDetachesSourceSubscription()
+    {
+        var source = new ObservableCollection<SampleClass>
+        {
+            new(1)
+        };
+        var view = new AdvancedObservableCollection<SampleClass>(source);
+
+        view.Dispose();
+        source.Add(new(2));
+
+        Assert.AreEqual(1, view.Count);
+    }
+
+    [TestMethod]
+    public void Test_AdvancedObservableCollection_SourceSubscriptionIsWeak()
+    {
+        var source = new ObservableCollection<SampleClass>();
+        var weakView = CreateWeakView(source);
+
+        ForceGarbageCollection();
+
+        Assert.IsFalse(weakView.IsAlive);
+        source.Add(new(1));
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static WeakReference CreateWeakView(ObservableCollection<SampleClass> source)
+    {
+        var view = new AdvancedObservableCollection<SampleClass>(source);
+        return new WeakReference(view);
+    }
+
+    private static void ForceGarbageCollection()
+    {
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+    }
+
+    [TestMethod]
     public async Task Test_IncrementalLoadingCollection_CoalescesConcurrentLoads()
     {
         var source = new ControlledIncrementalSource();
@@ -490,7 +537,7 @@ public sealed class AdvancedObservableCollectionTest
     }
 
     [TestMethod]
-    public async Task Test_IncrementalLoadingCollection_CanceledSourceRequestKeepsPageRetryable()
+    public async Task Test_IncrementalLoadingCollection_CancelingCallerDoesNotCancelSharedLoad()
     {
         var source = new ControlledIncrementalSource();
         var collection = new IncrementalLoadingCollection<int>(source, 3);
@@ -505,12 +552,44 @@ public sealed class AdvancedObservableCollectionTest
         Assert.IsTrue(collection.HasMoreItems);
         Assert.AreEqual(0, canceledCall.PageIndex);
 
-        var retry = collection.LoadMoreItemsAsync(0);
-        var retryCall = await source.WaitForCallAsync(1);
-        retryCall.Completion.SetResult([1, 2, 3]);
+        var sharedLoad = collection.LoadMoreItemsAsync(0);
+        Assert.AreEqual(1, source.CallCount);
+        canceledCall.Completion.SetResult([1, 2, 3]);
 
-        Assert.AreEqual(3, await retry);
-        Assert.AreEqual(0, retryCall.PageIndex);
+        Assert.AreEqual(3, await sharedLoad);
+        Assert.AreEqual(0, canceledCall.PageIndex);
         CollectionAssert.AreEqual((int[]) [1, 2, 3], collection.ToArray());
+    }
+
+    [TestMethod]
+    public async Task Test_IncrementalLoadingCollection_DisposeCancelsLoadAndSource()
+    {
+        var source = new ControlledIncrementalSource();
+        var collection = new IncrementalLoadingCollection<int>(source, 3);
+
+        var loading = collection.LoadMoreItemsAsync(0);
+        _ = await source.WaitForCallAsync(0);
+
+        collection.Dispose();
+
+        await AssertOperationCanceledAsync(loading);
+        Assert.IsTrue(source.IsDisposed);
+        Assert.Throws<ObjectDisposedException>(() => collection.LoadMoreItemsAsync(0));
+    }
+
+    [TestMethod]
+    public void Test_IncrementalLoadingCollection_SharedRefDisposesOnlyLastOwner()
+    {
+        var source = new ControlledIncrementalSource();
+        var collection = new IncrementalLoadingCollection<int>(source, 3);
+        var firstOwner = new object();
+        var secondOwner = new object();
+        var shared = new SharedRef<IncrementalLoadingCollection<int>>(collection, firstOwner);
+        _ = shared.MakeShared(secondOwner);
+
+        Assert.IsFalse(shared.TryDispose(firstOwner));
+        Assert.IsFalse(source.IsDisposed);
+        Assert.IsTrue(shared.TryDispose(secondOwner));
+        Assert.IsTrue(source.IsDisposed);
     }
 }

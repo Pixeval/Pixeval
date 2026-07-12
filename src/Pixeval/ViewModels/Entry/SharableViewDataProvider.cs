@@ -16,26 +16,28 @@ namespace Pixeval.ViewModels;
 /// 初始化时调用<see cref="ResetEngine"/>
 /// </summary>
 public sealed class SharableViewDataProvider<T, TViewModel>
-    : ViewModelBase, IDataProvider<T, TViewModel>
+    : ViewModelBase, IDataProvider<T, TViewModel>, IRefCloneable<SharableViewDataProvider<T, TViewModel>>
     where T : class, IIdentityInfo
     where TViewModel : EntryViewModel<T>
 {
     private bool _isDisposed;
 
+    private SharedRef<IncrementalLoadingCollection<TViewModel>>? _entrySourceRef;
+
     private SharedRef<IncrementalLoadingCollection<TViewModel>> EntrySourceRef
     {
-        get;
+        get => _entrySourceRef ?? throw new InvalidOperationException("The data provider has no entry source.");
         set
         {
-            if (Equals(field, value))
+            if (ReferenceEquals(_entrySourceRef, value))
                 return;
 
             DisposeEntrySourceRef();
-            field = value;
+            _entrySourceRef = value;
             View.Source = value.Value;
             OnPropertyChanged();
         }
-    } = null!;
+    }
 
     public AdvancedObservableCollection<TViewModel> View { get; } = [];
 
@@ -49,13 +51,14 @@ public sealed class SharableViewDataProvider<T, TViewModel>
         if (_isDisposed)
             return;
 
+        _isDisposed = true;
         DisposeEntrySourceRef();
         View.Dispose();
-        _isDisposed = true;
     }
 
     public void ResetEngine(IAsyncEnumerable<T>? fetchEngine, Func<T, int, TViewModel> factory, int itemsPerPage = 20, int limit = -1)
     {
+        ObjectDisposedException.ThrowIf(_isDisposed, this);
         DisposeEntrySourceRef();
 
         EntrySourceRef = new(new(new IncrementalSource<T, TViewModel>(fetchEngine!, factory, limit), itemsPerPage), this);
@@ -63,6 +66,7 @@ public sealed class SharableViewDataProvider<T, TViewModel>
 
     public SharableViewDataProvider<T, TViewModel> CloneRef()
     {
+        ObjectDisposedException.ThrowIf(_isDisposed, this);
         var dataProvider = new SharableViewDataProvider<T, TViewModel>();
         dataProvider.EntrySourceRef = EntrySourceRef.MakeShared(dataProvider);
         dataProvider.View.FilterCombinationMode = View.FilterCombinationMode;
@@ -76,8 +80,17 @@ public sealed class SharableViewDataProvider<T, TViewModel>
 
     private void DisposeEntrySourceRef()
     {
-        if (EntrySourceRef?.TryDispose(this) is true)
-            foreach (var entry in Source.OfType<IDisposable>())
+        if (_entrySourceRef is not { } entrySourceRef)
+            return;
+
+        var source = entrySourceRef.Value;
+        View.Source = [];
+        _entrySourceRef = null;
+        if (entrySourceRef.TryDispose(this))
+        {
+            foreach (var entry in source.OfType<IDisposable>())
                 entry.Dispose();
+            source.Clear();
+        }
     }
 }

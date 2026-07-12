@@ -2,8 +2,8 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -20,13 +20,13 @@ using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Download;
 using Pixeval.Models.Extensions;
 using Pixeval.Models.Home;
-using Pixeval.Models.Navigation;
 using Pixeval.Models.McpServer;
+using Pixeval.Models.Navigation;
+using Pixeval.Models.Options;
 using Pixeval.Models.Subscriptions;
 using Pixeval.Utilities;
 using Pixeval.Utilities.GitHub;
 using Pixeval.Utilities.IO.Caching;
-using Pixeval.Models.Options;
 using Pixeval.Views;
 using SQLite;
 

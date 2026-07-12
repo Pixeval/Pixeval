@@ -8,12 +8,9 @@ using UserViewDataProvider = Pixeval.ViewModels.SharableViewDataProvider<
 
 namespace Pixeval.ViewModels;
 
-public sealed class UserViewViewModel : EntryViewViewModel<User, UserItemViewModel>
+public sealed class UserViewViewModel
+    : EntryViewViewModel<User, UserItemViewModel>, IRefCloneable<UserViewViewModel>
 {
-    public UserViewViewModel(UserViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef())
-    {
-    }
-
     public UserViewViewModel() : this(new UserViewDataProvider())
     {
     }
@@ -24,4 +21,6 @@ public sealed class UserViewViewModel : EntryViewViewModel<User, UserItemViewMod
     }
 
     public override UserViewDataProvider DataProvider { get; }
+
+    public UserViewViewModel CloneRef() => new(DataProvider.CloneRef());
 }

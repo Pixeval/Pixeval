@@ -2,6 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using AnimatedControls.Avalonia;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -13,8 +14,11 @@ using Pixeval.Utilities.IO.Caching;
 
 namespace Pixeval.ViewModels;
 
-public partial class TabViewContainerViewModel : ViewModelBase
+public partial class TabViewContainerViewModel : ViewModelBase, IDisposable
 {
+    private CancellationTokenSource? _avatarLoadCancellationTokenSource;
+    private bool _isDisposed;
+
     public TabViewContainerViewModel()
     {
         OnUserRefreshed(App.AppViewModel.MakoClient.Me);
@@ -28,10 +32,57 @@ public partial class TabViewContainerViewModel : ViewModelBase
 
     private async void OnUserRefreshed(TokenUser? user)
     {
+        if (_isDisposed)
+            return;
+
+        _avatarLoadCancellationTokenSource?.Cancel();
+        _avatarLoadCancellationTokenSource?.Dispose();
+        var cancellationTokenSource = new CancellationTokenSource();
+        _avatarLoadCancellationTokenSource = cancellationTokenSource;
         User = user;
-        Avatar = user is null ? null : await CacheHelper.GetAnimatedBitmapAsync(IPlatformInfo.Pixiv, user.ProfileImageUrls.Px50X50);
+        IAnimatedBitmap? avatar;
+        try
+        {
+            avatar = user is null
+                ? null
+                : await CacheHelper.GetAnimatedBitmapAsync(
+                    IPlatformInfo.Pixiv,
+                    user.ProfileImageUrls.Px50X50,
+                    token: cancellationTokenSource.Token);
+        }
+        catch (OperationCanceledException) when (cancellationTokenSource.IsCancellationRequested)
+        {
+            return;
+        }
+
+        if (_isDisposed || cancellationTokenSource.IsCancellationRequested)
+        {
+            avatar?.Dispose();
+            return;
+        }
+
+        var previousAvatar = Avatar;
+        Avatar = avatar;
+        if (!ReferenceEquals(previousAvatar, avatar))
+            previousAvatar?.Dispose();
         // await ToggleRestrictedModeAsync(true);
-        await ToggleAiShowAsync(true);
+        await RefreshAiShowAsync(cancellationTokenSource);
+    }
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
+        App.AppViewModel.MakoClient.TokenRefreshed -= OnTokenRefreshed;
+        _avatarLoadCancellationTokenSource?.Cancel();
+        _avatarLoadCancellationTokenSource?.Dispose();
+        _avatarLoadCancellationTokenSource = null;
+        Avatar?.Dispose();
+        Avatar = null;
+        User = null;
     }
 
     [ObservableProperty]
@@ -39,15 +90,13 @@ public partial class TabViewContainerViewModel : ViewModelBase
     [NotifyPropertyChangedFor(nameof(Url))]
     public partial TokenUser? User { get; private set; }
 
-    [ObservableProperty]
-    public partial IAnimatedBitmap? Avatar { get; private set; }
+    [ObservableProperty] public partial IAnimatedBitmap? Avatar { get; private set; }
 
     public string? IdText => User?.Id.ToString();
 
     public Uri? Url => User?.WebsiteUri;
 
-    [ObservableProperty]
-    public partial bool RestrictedModeIdle { get; private set; } = true;
+    [ObservableProperty] public partial bool RestrictedModeIdle { get; private set; } = true;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ToggleAiShowCommand))]
@@ -57,8 +106,7 @@ public partial class TabViewContainerViewModel : ViewModelBase
     [NotifyCanExecuteChangedFor(nameof(ToggleRestrictedModeCommand))]
     public partial bool RestrictedCache { get; private set; }
 
-    [ObservableProperty]
-    public partial bool AiShowCache { get; private set; }
+    [ObservableProperty] public partial bool AiShowCache { get; private set; }
 
     [RelayCommand(CanExecute = nameof(AiShowIdle))]
     private Task ToggleAiShowAsync() => ToggleAiShowAsync(false);
@@ -99,4 +147,28 @@ public partial class TabViewContainerViewModel : ViewModelBase
             AiShowIdle = true;
         }
     }
+
+    private async Task RefreshAiShowAsync(CancellationTokenSource generation)
+    {
+        if (!IsCurrentGeneration(generation))
+            return;
+
+        AiShowIdle = false;
+        try
+        {
+            var aiShow = await App.AppViewModel.MakoClient.GetAiShowSettingsAsync();
+            if (IsCurrentGeneration(generation))
+                AiShowCache = aiShow;
+        }
+        finally
+        {
+            if (IsCurrentGeneration(generation))
+                AiShowIdle = true;
+        }
+    }
+
+    private bool IsCurrentGeneration(CancellationTokenSource generation) =>
+        !_isDisposed
+        && !generation.IsCancellationRequested
+        && ReferenceEquals(_avatarLoadCancellationTokenSource, generation);
 }

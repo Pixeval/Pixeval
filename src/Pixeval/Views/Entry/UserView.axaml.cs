@@ -1,6 +1,7 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
+using System;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -13,6 +14,16 @@ namespace Pixeval.Views.Entry;
 public partial class UserView : UserControl
 {
     public UserView() => InitializeComponent();
+
+    public void SetViewModel(UserViewViewModel viewModel)
+    {
+        ArgumentNullException.ThrowIfNull(viewModel);
+        var oldViewModel = DataContext as IDisposable;
+        DataContext = viewModel;
+        oldViewModel?.Dispose();
+        if (IsLoaded)
+            RegisterViewModelDisposal(viewModel);
+    }
 
     private void UserItem_OnTapped(object? sender, TappedEventArgs tappedEventArgs)
     {
@@ -35,9 +46,12 @@ public partial class UserView : UserControl
     {
         base.OnLoaded(e);
 
-        if (DataContext is UserViewViewModel vm)
-            RaiseEvent(new ViewModelDisposalEventArgs(ViewModelDisposal.ViewModelDisposalEvent, vm));
+        if (DataContext is UserViewViewModel viewModel)
+            RegisterViewModelDisposal(viewModel);
     }
+
+    private void RegisterViewModelDisposal(UserViewViewModel viewModel) =>
+        RaiseEvent(new ViewModelDisposalEventArgs(ViewModelDisposal.ViewModelDisposalEvent, viewModel));
 
     #endregion
 }

@@ -3,7 +3,9 @@
 
 using System;
 using Avalonia.Interactivity;
+using Mako.Engine;
 using Mako.Global.Enum;
+using Mako.Model;
 using Pixeval.Controls;
 using Pixeval.ViewModels;
 
@@ -25,11 +27,7 @@ public partial class UserFollowingPage : IconContentPage
         if (id != PixevalSettings.MyId)
             PrivacyPolicyComboBox.IsEnabled = PrivacyPolicyComboBox.IsVisible = false;
         if (viewModel is not null)
-        {
-            var oldViewModel = UserContainer.UserView.DataContext as IDisposable;
-            UserContainer.UserView.DataContext = viewModel;
-            oldViewModel?.Dispose();
-        }
+            UserContainer.UserView.SetViewModel(viewModel);
         else
         {
             ChangeSource();
@@ -48,6 +46,9 @@ public partial class UserFollowingPage : IconContentPage
 
     private void ChangeSource()
     {
-        (UserContainer.UserView.DataContext as UserViewViewModel)?.ResetEngine(App.AppViewModel.MakoClient.UserFollowing(_userId, PrivacyPolicyComboBox.GetSelectedValue<PrivacyPolicy>()), (user, _) => new(user));
+        ResetEngine(App.AppViewModel.MakoClient.UserFollowing(_userId, PrivacyPolicyComboBox.GetSelectedValue<PrivacyPolicy>()));
     }
+
+    private void ResetEngine(IFetchEngine<User> fetchEngine) =>
+        (UserContainer.UserView.DataContext as UserViewViewModel)?.ResetEngine(fetchEngine, static (user, _) => new(user));
 }

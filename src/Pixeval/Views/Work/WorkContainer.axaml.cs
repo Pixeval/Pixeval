@@ -362,14 +362,15 @@ public partial class WorkContainer : UserControl
         WorkView.ResetEngine(newEngine);
     }
 
-    public void SetSource(IReadOnlyCollection<IArtworkInfo> source)
+    /// <inheritdoc cref="WorkView.SetViewModel" />
+    public void SetViewModel(IWorkViewViewModel viewModel)
     {
-        WorkView.SetSource(source);
+        WorkView.SetViewModel(viewModel);
     }
 
-    public void SetViewModel(ISimpleViewViewModel viewModel, bool ownsViewModel = true)
+    public void SetSource(IReadOnlyCollection<IArtworkInfo> source, SimpleWorkType workType, bool needRefreshOnOpen = false)
     {
-        WorkView.SetViewModel(viewModel, ownsViewModel);
+        WorkView.SetSource(source, workType, needRefreshOnOpen);
     }
 
     public static readonly FuncValueConverter<int, string> CancelSelectionButtonConverter = new(i => i > 0

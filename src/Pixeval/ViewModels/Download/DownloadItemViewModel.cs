@@ -14,8 +14,10 @@ using Pixeval.Models.Options;
 
 namespace Pixeval.ViewModels;
 
-public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo>, IDownloadListEntryViewModel
+public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo>, IDownloadListEntryViewModel, IDisposable
 {
+    private bool _isDisposed;
+
     public IDownloadTaskGroup DownloadTask { get; }
 
     public DownloadItemViewModel(IDownloadTaskGroup downloadTask)
@@ -130,6 +132,9 @@ public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo
 
     private void DownloadTaskOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        if (_isDisposed)
+            return;
+
         if (e.PropertyName is nameof(IDownloadTaskBase.CurrentState))
         {
             OnPropertyChanged(nameof(CurrentState));
@@ -141,6 +146,7 @@ public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo
             OnPropertyChanged(nameof(ActionButtonSymbol));
             OnPropertyChanged(nameof(ActionButtonContent));
         }
+
         if (e.PropertyName is nameof(IDownloadTaskBase.CurrentState)
             or nameof(IDownloadTaskBase.IsProcessing))
         {
@@ -148,6 +154,7 @@ public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo
             OnPropertyChanged(nameof(IsResetItemEnabled));
             OnPropertyChanged(nameof(IsCancelItemEnabled));
         }
+
         if (e.PropertyName is nameof(IDownloadTaskBase.CurrentState)
             or nameof(IDownloadTaskBase.ProgressPercentage)
             or nameof(IDownloadTaskBase.ErrorMessage))
@@ -155,5 +162,14 @@ public sealed class DownloadItemViewModel : ThumbnailEntryViewModel<IArtworkInfo
             OnPropertyChanged(nameof(ProgressMessage));
             OnPropertyChanged(nameof(ErrorMessage));
         }
+    }
+
+    public void Dispose()
+    {
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
+        DownloadTask.PropertyChanged -= DownloadTaskOnPropertyChanged;
     }
 }

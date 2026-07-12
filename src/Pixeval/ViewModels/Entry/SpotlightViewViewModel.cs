@@ -8,12 +8,9 @@ using SpotlightViewDataProvider = Pixeval.ViewModels.SharableViewDataProvider<
 
 namespace Pixeval.ViewModels;
 
-public sealed class SpotlightViewViewModel : EntryViewViewModel<Spotlight, SpotlightItemViewModel>
+public sealed class SpotlightViewViewModel
+    : EntryViewViewModel<Spotlight, SpotlightItemViewModel>, IRefCloneable<SpotlightViewViewModel>
 {
-    public SpotlightViewViewModel(SpotlightViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef())
-    {
-    }
-
     public SpotlightViewViewModel() : this(new SpotlightViewDataProvider())
     {
     }
@@ -24,4 +21,6 @@ public sealed class SpotlightViewViewModel : EntryViewViewModel<Spotlight, Spotl
     }
 
     public override SpotlightViewDataProvider DataProvider { get; }
+
+    public SpotlightViewViewModel CloneRef() => new(DataProvider.CloneRef());
 }

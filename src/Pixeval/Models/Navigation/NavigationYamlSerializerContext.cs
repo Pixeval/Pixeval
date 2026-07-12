@@ -1,9 +1,9 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
+using System.Text.Json.Serialization;
 using SharpYaml;
 using SharpYaml.Serialization;
-using System.Text.Json.Serialization;
 
 namespace Pixeval.Models.Navigation;
 

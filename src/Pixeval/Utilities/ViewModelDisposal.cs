@@ -19,6 +19,8 @@ public sealed class ViewModelDisposalEventArgs(
 
 public static class ViewModelDisposal
 {
+    private static readonly ConditionalWeakTable<Control, DisposableRegistry> _DisposableRegistries = new();
+
     public static readonly RoutedEvent<ViewModelDisposalEventArgs> ViewModelDisposalEvent =
         RoutedEvent.Register<Control, ViewModelDisposalEventArgs>(
             nameof(ViewModelDisposalEvent),
@@ -29,35 +31,43 @@ public static class ViewModelDisposal
             nameof(RequestDisposeEvent),
             RoutingStrategies.Bubble);
 
-    public static Dictionary<Control, HashSet<WeakReference<IDisposable>>> DisposableMap { get; } = [];
+    public static void Register(Control control, IDisposable disposable) =>
+        _DisposableRegistries.GetValue(control, static _ => new()).Add(disposable);
 
-    extension(Dictionary<Control, HashSet<WeakReference<IDisposable>>> disposableMap)
+    public static void Dispose(Control control)
     {
-        public HashSet<WeakReference<IDisposable>> GetValueOrAddNew(Control control)
-        {
-            if (!disposableMap.TryGetValue(control, out var set))
-            {
-                set = new(WeakReferenceEqualityComparer.Instance);
-                disposableMap.Add(control, set);
-            }
-            return set;
-        }
+        if (!_DisposableRegistries.TryGetValue(control, out var registry))
+            return;
+
+        _ = _DisposableRegistries.Remove(control);
+        registry.Dispose();
     }
 }
 
-file class WeakReferenceEqualityComparer : IEqualityComparer<WeakReference<IDisposable>>
+internal sealed class DisposableRegistry : IDisposable
 {
-    public static WeakReferenceEqualityComparer Instance { get; } = new();
+    private readonly HashSet<IDisposable> _disposables = new(ReferenceEqualityComparer.Instance);
+    private bool _isDisposed;
 
-    public bool Equals(WeakReference<IDisposable>? x, WeakReference<IDisposable>? y)
+    public void Add(IDisposable disposable)
     {
-        if (x is null || y is null)
-            return false;
-        return ReferenceEquals(x.TryGetTarget(out var xTarget) ? xTarget : null, y.TryGetTarget(out var yTarget) ? yTarget : null);
+        if (_isDisposed)
+        {
+            disposable.Dispose();
+            return;
+        }
+
+        _ = _disposables.Add(disposable);
     }
 
-    public int GetHashCode(WeakReference<IDisposable> obj)
+    public void Dispose()
     {
-        return obj.TryGetTarget(out var target) ? RuntimeHelpers.GetHashCode(target) : 0;
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
+        foreach (var disposable in _disposables)
+            disposable.Dispose();
+        _disposables.Clear();
     }
 }

@@ -12,6 +12,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Pixeval.Utilities;
 
 namespace Pixeval.Collections;
 
@@ -22,6 +23,8 @@ public class AdvancedObservableCollection<T>
     private readonly bool _liveShapingEnabled;
 
     private readonly List<T> _view = [];
+
+    private WeakEventListener<AdvancedObservableCollection<T>, object?, NotifyCollectionChangedEventArgs>? _sourceCollectionChangedListener;
 
     private bool _isDisposed;
 
@@ -250,7 +253,17 @@ public class AdvancedObservableCollection<T>
 
     private void AttachSourceHandler(IEnumerable? items)
     {
-        (items as INotifyCollectionChanged)?.CollectionChanged += SourceNcc_CollectionChanged;
+        if (items is INotifyCollectionChanged notifyCollectionChanged)
+        {
+            var listener = new WeakEventListener<AdvancedObservableCollection<T>, object?, NotifyCollectionChangedEventArgs>(this)
+            {
+                OnEventAction = static (collection, sender, args) => collection.SourceNcc_CollectionChanged(sender, args),
+                OnDetachAction = weakListener => notifyCollectionChanged.CollectionChanged -= weakListener.OnEvent
+            };
+            _sourceCollectionChangedListener = listener;
+            notifyCollectionChanged.CollectionChanged += listener.OnEvent;
+        }
+
         AttachPropertyChangedHandler(items);
     }
 
@@ -265,7 +278,8 @@ public class AdvancedObservableCollection<T>
 
     private void DetachSourceHandler(IEnumerable? items)
     {
-        (items as INotifyCollectionChanged)?.CollectionChanged -= SourceNcc_CollectionChanged;
+        _sourceCollectionChangedListener?.Detach();
+        _sourceCollectionChangedListener = null;
         DetachPropertyChangedHandler(items);
     }
 
@@ -618,7 +632,7 @@ public class AdvancedObservableCollection<T>
     int IList.Add(object? value)
     {
         ArgumentNullException.ThrowIfNull(value);
-        Source.Add((T)value);
+        Source.Add((T) value);
         return Source.Count - 1;
     }
 
@@ -629,7 +643,7 @@ public class AdvancedObservableCollection<T>
     void IList.Insert(int index, object? value)
     {
         ArgumentNullException.ThrowIfNull(value);
-        Insert(index, (T)value);
+        Insert(index, (T) value);
     }
 
     void IList.Remove(object? value)
@@ -638,11 +652,11 @@ public class AdvancedObservableCollection<T>
             _ = Source.Remove(item);
     }
 
-    void ICollection.CopyTo(Array array, int index) => ((ICollection)_view).CopyTo(array, index);
+    void ICollection.CopyTo(Array array, int index) => ((ICollection) _view).CopyTo(array, index);
 
     bool ICollection.IsSynchronized => false;
 
-    object ICollection.SyncRoot => ((ICollection)Source).SyncRoot;
+    object ICollection.SyncRoot => ((ICollection) Source).SyncRoot;
 
     bool IList.IsReadOnly => false;
 
@@ -652,7 +666,7 @@ public class AdvancedObservableCollection<T>
         set
         {
             ArgumentNullException.ThrowIfNull(value);
-            this[index] = (T)value;
+            this[index] = (T) value;
         }
     }
 

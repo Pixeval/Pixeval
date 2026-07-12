@@ -12,6 +12,7 @@ using CommunityToolkit.Mvvm.Input;
 using FluentIcons.Common;
 using Pixeval.Models.Home;
 using Pixeval.Models.Options;
+using Pixeval.Utilities;
 using Pixeval.ViewModels.Home;
 
 namespace Pixeval.Views.Home;
@@ -248,17 +249,26 @@ public sealed partial class HomePageCardControl : TemplatedControl, IDisposable
         if (TopLevel.GetTopLevel(this) is not { } topLevel)
             return;
 
-        HomeCardDefinitions.OpenPreviewItem(PreviewViewModel, topLevel, parameter);
+        HomeCardDefinitions.OpenPreviewItem(topLevel, parameter);
     }
 
     [RelayCommand]
     private async Task OpenCardPageAsync()
     {
-        if (PreviewViewModel is null || TopLevel.GetTopLevel(this) is not { } topLevel)
+        if (PreviewViewModel is not { } previewViewModel
+            || TopLevel.GetTopLevel(this) is not { } topLevel
+            || topLevel.ViewContainer is null)
             return;
 
-        await PreviewViewModel.EnsureLoadedAsync();
-        CardDefinition.OpenCardPage(Card, PreviewViewModel, topLevel);
+        await previewViewModel.EnsureLoadedAsync();
+        var requiresViewModel = CardDefinition.TemplateKind is HomePageCardTemplateKind.WorkList
+            or HomePageCardTemplateKind.UserList
+            or HomePageCardTemplateKind.SpotlightList;
+        var viewModel = requiresViewModel ? previewViewModel.CloneViewModel() : null;
+        if (requiresViewModel && viewModel is null)
+            return;
+
+        CardDefinition.OpenCardPage(Card, viewModel, topLevel);
     }
 
     public void Dispose()

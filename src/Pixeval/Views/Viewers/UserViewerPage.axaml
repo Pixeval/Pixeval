@@ -167,7 +167,7 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Spacing="10">
-                <ProgressBar Width="160" IsIndeterminate="True" />
+                <ProgressBar Width="160" IsIndeterminate="{Binding IsLoading}" />
                 <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.CardPreviewLoadingTextBlockText}}" />
             </StackPanel>
         </Border>

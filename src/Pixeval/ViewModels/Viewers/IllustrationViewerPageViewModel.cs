@@ -460,6 +460,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
             return;
 
         _disposed = true;
+        IsLoading = false;
         _loadingCts.Cancel();
         _loadingCts.Dispose();
         IsAutoPlaying = false;

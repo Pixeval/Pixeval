@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -143,6 +145,8 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
 
     #region Settings
 
+    private ObservableCollection<string>? _subscribedNovelFontFamily;
+
     private SettingsSubView SettingsPage
     {
         get
@@ -156,7 +160,8 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
                         .Font(t => t.NovelFontFamily, t =>
                         {
                             t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelFontFamilyObject));
-                            t.Value.CollectionChanged += (_, _) => OnPropertyChanged(nameof(NovelFontFamilyObject));
+                            _subscribedNovelFontFamily = t.Value;
+                            _subscribedNovelFontFamily.CollectionChanged += OnNovelFontFamilyChanged;
                         })
                         .Enum(t => t.NovelFontWeight, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelFontWeight)))
                         .Int(t => t.NovelFontSize, 5, 100, 1, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelFontSize)))
@@ -183,6 +188,9 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
     public int NovelLineHeight => Settings.NovelSettings.NovelLineHeight;
 
     public int NovelMaxWidth => Settings.NovelSettings.NovelMaxWidth;
+
+    private void OnNovelFontFamilyChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
+        OnPropertyChanged(nameof(NovelFontFamilyObject));
 
     #endregion
 
@@ -364,8 +372,14 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
             return;
 
         _disposed = true;
+        IsLoading = false;
         _loadingCts.Cancel();
         _loadingCts.Dispose();
+        if (_subscribedNovelFontFamily is { } novelFontFamily)
+        {
+            novelFontFamily.CollectionChanged -= OnNovelFontFamilyChanged;
+            _subscribedNovelFontFamily = null;
+        }
         _sourceView?.Dispose();
     }
 

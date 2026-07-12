@@ -26,7 +26,7 @@
                     <ProgressBar
                         Margin="-5,0"
                         DockPanel.Dock="Bottom"
-                        IsIndeterminate="True"
+                        IsIndeterminate="{TemplateBinding IsLoadingMore}"
                         IsVisible="{TemplateBinding IsLoadingMore}" />
                     <Grid>
                         <StackPanel

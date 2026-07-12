@@ -22,6 +22,7 @@
             controls:AdaptiveGridIncrementalLoadingBehavior.IsEnabled="True"
             controls:IncrementalLoadingBehavior.IsEnabled="True"
             controls:IncrementalLoadingBehavior.Threshold="200"
+            ContainerClearing="ListBox_OnContainerClearing"
             ContainerPrepared="ListBox_OnContainerPrepared"
             ItemsSource="{Binding View}"
             SelectedItems="{Binding SelectedEntries}"

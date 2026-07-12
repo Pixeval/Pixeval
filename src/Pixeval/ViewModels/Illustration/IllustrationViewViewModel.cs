@@ -9,13 +9,9 @@ using IllustrationViewDataProvider = Pixeval.ViewModels.SharableViewDataProvider
 
 namespace Pixeval.ViewModels;
 
-public sealed class IllustrationViewViewModel : WorkViewViewModelBase<IArtworkInfo, IllustrationItemViewModel>
+public sealed class IllustrationViewViewModel
+    : WorkViewViewModelBase<IArtworkInfo, IllustrationItemViewModel>, IRefCloneable<IllustrationViewViewModel>
 {
-    public IllustrationViewViewModel(IllustrationViewViewModel viewModel) : this(viewModel.DataProvider.CloneRef(), viewModel.CachedBlockedTags)
-    {
-        UserFilter = viewModel.UserFilter;
-    }
-
     public IllustrationViewViewModel() : this(new IllustrationViewDataProvider(), null)
     {
     }
@@ -29,4 +25,6 @@ public sealed class IllustrationViewViewModel : WorkViewViewModelBase<IArtworkIn
     public override IllustrationViewDataProvider DataProvider { get; }
 
     public override bool RequireAdaptiveGrid => false;
+
+    public IllustrationViewViewModel CloneRef() => new(DataProvider.CloneRef(), CachedBlockedTags);
 }

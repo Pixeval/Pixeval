@@ -68,12 +68,30 @@ public static class CacheHelper
 
         if (frame.PreferredAnimatedImageType is SingleAnimatedImageType.SingleZipFile)
         {
-            if (await GetStreamAsync(platform, key.OriginalString, progress, token) is not { } stream)
+            var sourceStream = await GetStreamAsync(platform, key.OriginalString, progress, token);
+            if (sourceStream is null)
                 return AnimatedImageNotAvailable.Value;
-            ArgumentNullException.ThrowIfNull(frame.ZipImageDelays);
-            await frame.ZipImageDelays.TryPreloadListAsync(platform);
-            var zip = await Streams.ReadZipAsync(stream, true);
-            return IAnimatedBitmap.Load(zip, frame.ZipImageDelays, true);
+
+            IReadOnlyList<MemoryStream>? zip = null;
+            try
+            {
+                ArgumentNullException.ThrowIfNull(frame.ZipImageDelays);
+                await frame.ZipImageDelays.TryPreloadListAsync(platform);
+                token.ThrowIfCancellationRequested();
+                zip = await Streams.ReadZipAsync(sourceStream, true);
+                sourceStream = null;
+                token.ThrowIfCancellationRequested();
+                var loadedBitmap = IAnimatedBitmap.Load(zip, frame.ZipImageDelays, true);
+                zip = null;
+                return loadedBitmap;
+            }
+            finally
+            {
+                sourceStream?.Dispose();
+                if (zip is not null)
+                    foreach (var stream in zip)
+                        stream.Dispose();
+            }
         }
 
         // SingleAnimatedImageType.SingleFile
@@ -122,6 +140,10 @@ public static class CacheHelper
 
             return AnimatedImageNotAvailable.Value;
         }
+        catch (OperationCanceledException) when (token.IsCancellationRequested)
+        {
+            throw;
+        }
         catch (Exception e)
         {
             App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
@@ -141,6 +163,7 @@ public static class CacheHelper
             throw new InvalidOperationException(
                 $"{nameof(IAnimatedImageFrame.PreferredAnimatedImageType)} should be {nameof(SingleAnimatedImageType.MultiFiles)}");
         await frame.MultiImageUris!.TryPreloadListAsync(platform);
+        token.ThrowIfCancellationRequested();
         var client = App.AppViewModel.AppServiceProvider.GetRequiredKeyedService<IDownloadHttpClientService>(platform)
             .GetImageDownloadClient();
         var count = frame.MultiImageUris!.Count;
@@ -148,48 +171,63 @@ public static class CacheHelper
         var delayList = new List<int>(count);
         var ratio = 1d / count;
         var startProgress = 0d;
-        foreach (var (uri, msDelay) in frame.MultiImageUris)
+        IAnimatedBitmap? bitmap = null;
+        try
         {
-            BitmapOrStream stream;
-            try
+            foreach (var (uri, msDelay) in frame.MultiImageUris)
             {
-                var key = uri.OriginalString;
-                if (TryGetStream(key) is { } s)
-                    stream = s;
-                else
+                BitmapOrStream stream;
+                try
                 {
-                    var useFileCache = App.AppViewModel.AppSettings.ApplicationSettings.UseFileCache;
-                    var sp = startProgress;
-                    if (await client.DownloadMemoryStreamAsync(
-                            uri,
-                            progress?.Let(t => new Progress<double>(d => t.Report(sp + (ratio * d)))),
-                            token: token) is Result<Stream>.Success(var s2))
-                    {
-                        if (useFileCache)
-                        {
-                            _ = TryCacheStream(key, s2);
-                            s2.Position = 0;
-                        }
-
-                        stream = s2;
-                    }
+                    var key = uri.OriginalString;
+                    if (TryGetStream(key) is { } s)
+                        stream = s;
                     else
-                        stream = WrappedImageNotAvailable.Value;
+                    {
+                        var useFileCache = App.AppViewModel.AppSettings.ApplicationSettings.UseFileCache;
+                        var sp = startProgress;
+                        if (await client.DownloadMemoryStreamAsync(
+                                uri,
+                                progress?.Let(t => new Progress<double>(d => t.Report(sp + (ratio * d)))),
+                                token: token) is Result<Stream>.Success(var s2))
+                        {
+                            if (useFileCache)
+                            {
+                                _ = TryCacheStream(key, s2);
+                                s2.Position = 0;
+                            }
+
+                            stream = s2;
+                        }
+                        else
+                            stream = WrappedImageNotAvailable.Value;
+                    }
                 }
-            }
-            catch (Exception e)
-            {
-                App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
-                    .LogError(nameof(GetAnimatedImageSeparatedAsync), e);
-                stream = WrappedImageNotAvailable.Value;
+                catch (OperationCanceledException) when (token.IsCancellationRequested)
+                {
+                    throw;
+                }
+                catch (Exception e)
+                {
+                    App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
+                        .LogError(nameof(GetAnimatedImageSeparatedAsync), e);
+                    stream = WrappedImageNotAvailable.Value;
+                }
+
+                imageList.Add(stream);
+                delayList.Add(msDelay);
+                startProgress += 100 * ratio;
             }
 
-            imageList.Add(stream);
-            delayList.Add(msDelay);
-            startProgress += 100 * ratio;
+            bitmap = IAnimatedBitmap.Load(imageList, delayList, true);
+            return bitmap;
         }
-
-        return IAnimatedBitmap.Load(imageList, delayList, true);
+        finally
+        {
+            if (bitmap is null)
+                foreach (var image in imageList)
+                    image.Dispose();
+        }
     }
 
     /// <summary>
@@ -204,6 +242,10 @@ public static class CacheHelper
         try
         {
             return await GetStreamAsync(platform, key, progress, cancellationToken);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
         }
         catch (Exception e)
         {
@@ -225,6 +267,10 @@ public static class CacheHelper
             if (await GetImageStreamAsync(platform, key, progress, token) is { } stream)
                 return IAnimatedBitmap.Load(stream, true);
             return AnimatedImageNotAvailable.Value;
+        }
+        catch (OperationCanceledException) when (token.IsCancellationRequested)
+        {
+            throw;
         }
         catch (Exception e)
         {
@@ -248,9 +294,9 @@ public static class CacheHelper
                 ? await stream.DecodeBitmapImageAsync(true, desiredWidth)
                 : WrappedImageNotAvailable.Value;
         }
-        catch (TaskCanceledException)
+        catch (OperationCanceledException) when (token.IsCancellationRequested)
         {
-            // ignored
+            throw;
         }
         catch (Exception e)
         {
@@ -330,7 +376,6 @@ public static class CacheHelper
 
 file class UndisposableBitmap(Stream stream) : Bitmap(stream)
 {
-
     /// <inheritdoc />
     public override void Dispose()
     {

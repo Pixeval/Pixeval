@@ -21,8 +21,8 @@ public sealed class HomeCardDefinition(
     HomePageCardSourceKind sourceKind,
     HomePageCardTemplateKind templateKind,
     HomeCardParameterKinds parameters,
-    Func<HomePageCardLayout, Task<ISimpleViewViewModel>> previewViewModelFactory,
-    Action<HomePageCardLayout, HomeCardPreviewViewModel, TopLevel> pageOpener,
+    Func<HomePageCardLayout, Task<HomeCardPreviewSource>> previewSourceFactory,
+    Action<HomePageCardLayout, ISimpleViewViewModel?, TopLevel> pageOpener,
     Func<HomePageCardLayout, IReadOnlyList<string>>? titleParameterFactory = null,
     int defaultColumnSpan = 2,
     int defaultRowSpan = 2,
@@ -61,11 +61,11 @@ public sealed class HomeCardDefinition(
     public bool HasParameter(HomeCardParameterKinds parameter) =>
         (Parameters & parameter) is not HomeCardParameterKinds.None;
 
-    public Task<ISimpleViewViewModel> CreatePreviewViewModelAsync(HomePageCardLayout card) =>
-        previewViewModelFactory(card);
+    public Task<HomeCardPreviewSource> CreatePreviewSourceAsync(HomePageCardLayout card) =>
+        previewSourceFactory(card);
 
-    public void OpenCardPage(HomePageCardLayout card, HomeCardPreviewViewModel previewViewModel, TopLevel topLevel) =>
-        pageOpener(card, previewViewModel, topLevel);
+    public void OpenCardPage(HomePageCardLayout card, ISimpleViewViewModel? viewModel, TopLevel topLevel) =>
+        pageOpener(card, viewModel, topLevel);
 
     public string BuildTitle(HomePageCardLayout card)
     {

@@ -4,12 +4,14 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using CommunityToolkit.Mvvm.Input;
 using Pixeval.Models.Navigation;
 using Pixeval.Utilities;
@@ -93,7 +95,10 @@ public partial class TabViewContainer : ViewContainerBase
 
         if (removeCurrentPage)
             if (selected is not null)
+            {
+                DisposeTab(selected);
                 _ = pages.Remove(selected);
+            }
     }
 
     public void ReloadNavigation() => RebuildNavigation();
@@ -155,10 +160,16 @@ public partial class TabViewContainer : ViewContainerBase
 
     private void OnViewModelDisposal(object? sender, ViewModelDisposalEventArgs e)
     {
-        if (TabsControl.SelectedPage is not { } page)
+        if (e.Source is not Control source || TabsControl.Pages is not IReadOnlyCollection<Page> pages)
             return;
-        var set = ViewModelDisposal.DisposableMap.GetValueOrAddNew(page);
-        set.Add(new(e.Disposable));
+
+        var page = source is Page sourcePage && pages.Contains(sourcePage)
+            ? sourcePage
+            : source.GetLogicalAncestors().OfType<Page>().FirstOrDefault(pages.Contains);
+        if (page is null)
+            return;
+
+        ViewModelDisposal.Register(page, e.Disposable);
         e.Handled = true;
     }
 
@@ -172,12 +183,7 @@ public partial class TabViewContainer : ViewContainerBase
 
     private static void DisposeTab(Control tabItem)
     {
-        if (!ViewModelDisposal.DisposableMap.Remove(tabItem, out var set))
-            return;
-        foreach (var disposable in set)
-            if (disposable.TryGetTarget(out var target))
-                target.Dispose();
-        set.Clear();
+        ViewModelDisposal.Dispose(tabItem);
     }
 
     /// <summary>
@@ -194,8 +200,13 @@ public partial class TabViewContainer : ViewContainerBase
             window.Closed += static (sender, args) =>
             {
                 if (sender is TopLevel { ViewContainer: TabViewContainer container })
+                {
                     foreach (var page in container.TabsControl.Pages ?? [])
                         DisposeTab(page);
+                    if (container.DataContext is IDisposable disposable)
+                        disposable.Dispose();
+                    container.DataContext = null;
+                }
             };
 
             return new TabsHost(window, container.TabsControl);

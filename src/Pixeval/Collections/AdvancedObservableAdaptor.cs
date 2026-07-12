@@ -12,6 +12,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Pixeval.Utilities;
 
 namespace Pixeval.Collections;
 
@@ -26,6 +27,8 @@ public class AdvancedObservableAdaptor<TIn, TOut>
     private readonly AdvancedObservableCollection<TOut> _inner;
 
     private ObservableCollection<TIn>? _source;
+
+    private WeakEventListener<AdvancedObservableAdaptor<TIn, TOut>, object?, NotifyCollectionChangedEventArgs>? _sourceCollectionChangedListener;
 
     private bool _isDisposed;
 
@@ -171,14 +174,22 @@ public class AdvancedObservableAdaptor<TIn, TOut>
 
     private void AttachSourceHandler(ObservableCollection<TIn>? items)
     {
-        if (items is not null)
-            items.CollectionChanged += SourceOnCollectionChanged;
+        if (items is null)
+            return;
+
+        var listener = new WeakEventListener<AdvancedObservableAdaptor<TIn, TOut>, object?, NotifyCollectionChangedEventArgs>(this)
+        {
+            OnEventAction = static (adaptor, sender, args) => adaptor.SourceOnCollectionChanged(sender, args),
+            OnDetachAction = weakListener => items.CollectionChanged -= weakListener.OnEvent
+        };
+        _sourceCollectionChangedListener = listener;
+        items.CollectionChanged += listener.OnEvent;
     }
 
     private void DetachSourceHandler(ObservableCollection<TIn>? items)
     {
-        if (items is not null)
-            items.CollectionChanged -= SourceOnCollectionChanged;
+        _sourceCollectionChangedListener?.Detach();
+        _sourceCollectionChangedListener = null;
     }
 
     private void SourceOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -214,7 +225,7 @@ public class AdvancedObservableAdaptor<TIn, TOut>
             case NotifyCollectionChangedAction.Replace when e is { NewItems: { } replacementItems, NewStartingIndex: >= 0 }:
             {
                 for (var index = 0; index < replacementItems.Count; ++index)
-                    MappedSource[e.NewStartingIndex + index] = _factory((TIn)replacementItems[index]!);
+                    MappedSource[e.NewStartingIndex + index] = _factory((TIn) replacementItems[index]!);
 
                 break;
             }
@@ -237,11 +248,11 @@ public class AdvancedObservableAdaptor<TIn, TOut>
 
     int ICollection.Count => _inner.Count;
 
-    void ICollection.CopyTo(Array array, int index) => ((ICollection)_inner).CopyTo(array, index);
+    void ICollection.CopyTo(Array array, int index) => ((ICollection) _inner).CopyTo(array, index);
 
     bool ICollection.IsSynchronized => false;
 
-    object ICollection.SyncRoot => ((ICollection)_inner).SyncRoot;
+    object ICollection.SyncRoot => ((ICollection) _inner).SyncRoot;
 
     bool IList.IsReadOnly => true;
 

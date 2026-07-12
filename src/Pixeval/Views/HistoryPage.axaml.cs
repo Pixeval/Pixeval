@@ -1,75 +1,40 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
-using System.Collections.ObjectModel;
 using System;
-using Avalonia.Interactivity;
+using System.Collections.ObjectModel;
 using Mako.Global.Enum;
 using Misaki;
 using Pixeval.Controls;
-using Pixeval.Utilities;
-using Pixeval.ViewModels;
 
 namespace Pixeval.Views;
 
-public abstract partial class HistoryPage : IconContentPage, IDisposable
+public abstract partial class HistoryPage : IconContentPage
 {
-    private SimpleOperableViewViewModel<IllustrationItemViewModel>? _illustrationViewModel;
-    private SimpleOperableViewViewModel<NovelItemViewModel>? _novelViewModel;
-    private bool _isDisposed;
+    private bool _isSourceInitialized;
 
     protected HistoryPage() => InitializeComponent();
 
     private void SimpleWorkTypeComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e)
     {
-        if (_illustrationViewModel is null || _novelViewModel is null)
+        if (!_isSourceInitialized)
             return;
 
-        IOperableViewViewModel? viewModel = sender.GetSelectedValue<SimpleWorkType>() is SimpleWorkType.Novel
-            ? _novelViewModel
-            : _illustrationViewModel;
-        // 保留viewModel到最后关闭时才dispose，避免切换时重新创建
-        WorkContainer.SetViewModel(viewModel, ownsViewModel: false);
+        WorkContainer.SetSource(Source, sender.GetSelectedValue<SimpleWorkType>(), needRefreshOnOpen: true);
     }
 
-    protected void SetSource()
+    protected void InitializeSource()
     {
-        _illustrationViewModel = new(Source, needRefreshOnOpen: true);
-        _novelViewModel = new(Source, needRefreshOnOpen: true);
+        _isSourceInitialized = true;
         SimpleWorkTypeComboBox_OnSelectionChanged(SimpleWorkTypeComboBox, EventArgs.Empty);
     }
 
     protected abstract ObservableCollection<IArtworkInfo> Source { get; }
-
-    #region Disposal
-
-    /// <inheritdoc />
-    protected override void OnLoaded(RoutedEventArgs e)
-    {
-        base.OnLoaded(e);
-
-        RaiseEvent(new ViewModelDisposalEventArgs(ViewModelDisposal.ViewModelDisposalEvent, this));
-    }
-
-    public void Dispose()
-    {
-        GC.SuppressFinalize(this);
-        if (_isDisposed)
-            return;
-
-        _isDisposed = true;
-        _illustrationViewModel?.Dispose();
-        _illustrationViewModel = null;
-        _novelViewModel?.Dispose();
-        _novelViewModel = null;
-    }
-
-    #endregion
 }
 
 public class BrowsingHistoryPage : HistoryPage
 {
-    public BrowsingHistoryPage() => SetSource();
+    public BrowsingHistoryPage() => InitializeSource();
 
     /// <inheritdoc />
     protected override ObservableCollection<IArtworkInfo> Source =>
@@ -78,7 +43,7 @@ public class BrowsingHistoryPage : HistoryPage
 
 public class WatchLaterPage : HistoryPage
 {
-    public WatchLaterPage() => SetSource();
+    public WatchLaterPage() => InitializeSource();
 
     /// <inheritdoc />
     protected override ObservableCollection<IArtworkInfo> Source =>
