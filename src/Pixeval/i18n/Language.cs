@@ -484,8 +484,6 @@ namespace Pixeval
     }
     public static class HelpPageResources
     {
-        public const string AppLinkHelpText = "HelpPage.AppLinkHelp.Text";
-        public const string AppProtocolLinkHelpExpanderHeader = "HelpPage.AppProtocolLinkHelpExpander.Header";
         public const string DownloadMacroHelpExpanderHeader = "HelpPage.DownloadMacroHelpExpander.Header";
         public const string ExtensionsHelpExpanderHeader = "HelpPage.ExtensionsHelpExpander.Header";
         public const string McpHelpExpanderHeader = "HelpPage.McpHelpExpander.Header";
@@ -503,6 +501,7 @@ namespace Pixeval
         public const string QueryFilterHelpExpanderHeader = "HelpPage.QueryFilterHelpExpander.Header";
         public const string QueryFilterHelpHeaderText = "HelpPage.QueryFilterHelpHeader.Text";
         public const string QueryFilterSimpleHelpHeaderText = "HelpPage.QueryFilterSimpleHelpHeader.Text";
+        public const string WorkSubscriptionsHelpExpanderHeader = "HelpPage.WorkSubscriptionsHelpExpander.Header";
     }
     public static class HomePageResources
     {
@@ -889,5 +888,6 @@ namespace Pixeval
         public const string McpHelp = "Markdown.McpHelp";
         public const string QueryFilterHelp = "Markdown.QueryFilterHelp";
         public const string QueryFilterSimpleHelp = "Markdown.QueryFilterSimpleHelp";
+        public const string WorkSubscriptionsHelp = "Markdown.WorkSubscriptionsHelp";
     }
 }

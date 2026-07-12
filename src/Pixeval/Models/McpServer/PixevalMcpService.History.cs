@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Mako.Model;
@@ -31,35 +30,34 @@ public sealed partial class PixevalMcpService
         CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        var typeName = JsonNamingPolicy.SnakeCaseLower.ConvertName(type.ToString());
         var normalizedSkip = int.Max(0, skip);
         var normalizedCount = int.Clamp(count, 1, MaxHistoryLimit);
         return Task.FromResult(type switch
         {
-            PixevalHistoryType.Search => GetSearchHistory(typeName, normalizedSkip, normalizedCount, keyword),
+            PixevalHistoryType.Search => GetSearchHistory(type, normalizedSkip, normalizedCount, keyword),
             PixevalHistoryType.Browse => GetArtworkHistory<BrowseHistoryPersistentManager, BrowseHistoryEntry>(
-                typeName,
+                type,
                 normalizedSkip,
                 normalizedCount,
                 keyword,
                 workFilter,
                 cancellationToken),
             PixevalHistoryType.WatchLater => GetArtworkHistory<WatchLaterPersistentManager, WatchLaterEntry>(
-                typeName,
+                type,
                 normalizedSkip,
                 normalizedCount,
                 keyword,
                 workFilter,
                 cancellationToken),
             PixevalHistoryType.Download => GetDownloadHistory(
-                typeName,
+                type,
                 normalizedSkip,
                 normalizedCount,
                 keyword,
                 workFilter,
                 cancellationToken),
             PixevalHistoryType.WorkSubscription => GetWorkSubscriptionHistory(
-                typeName,
+                type,
                 normalizedSkip,
                 normalizedCount,
                 keyword),
@@ -68,7 +66,7 @@ public sealed partial class PixevalMcpService
     }
 
     private PixevalHistoryListDto GetSearchHistory(
-        string type,
+        PixevalHistoryType type,
         int skip,
         int count,
         string? keyword)
@@ -92,7 +90,7 @@ public sealed partial class PixevalMcpService
     }
 
     private PixevalHistoryListDto GetArtworkHistory<TManager, TEntry>(
-        string type,
+        PixevalHistoryType type,
         int skip,
         int count,
         string? keyword,
@@ -122,7 +120,7 @@ public sealed partial class PixevalMcpService
     }
 
     private PixevalHistoryListDto GetDownloadHistory(
-        string type,
+        PixevalHistoryType type,
         int skip,
         int count,
         string? keyword,
@@ -159,7 +157,7 @@ public sealed partial class PixevalMcpService
     }
 
     private PixevalHistoryListDto GetWorkSubscriptionHistory(
-        string type,
+        PixevalHistoryType type,
         int skip,
         int count,
         string? keyword)
@@ -180,14 +178,7 @@ public sealed partial class PixevalMcpService
                 null,
                 null,
                 null,
-                new PixevalWorkSubscriptionDto(
-                    entry.HistoryEntryId,
-                    entry.UserId,
-                    entry.Name,
-                    entry.Account,
-                    entry.AvatarUrl,
-                    entry.SubscriptionType.ToString(),
-                    entry.WorkKind.ToString())))
+                ToWorkSubscriptionDto(entry)))
             .ToArray();
         return new(type, skip, count, entries.Length, items.Length, items);
     }
@@ -210,7 +201,7 @@ public sealed partial class PixevalMcpService
 
     private (IReadOnlyList<PixevalHistoryItemDto> Items, IReadOnlyList<WorkBase> Works) CreateArtworkHistoryItems<TEntry>(
         IEnumerable<TEntry> entries,
-        string type,
+        PixevalHistoryType type,
         Func<TEntry, PixevalDownloadHistoryDto?> createDownload)
         where TEntry : ArtworkHistoryEntry
     {
@@ -230,7 +221,7 @@ public sealed partial class PixevalMcpService
     }
 
     private PixevalHistoryItemDto? CreateArtworkHistoryItem(
-        string type,
+        PixevalHistoryType type,
         ArtworkHistoryEntry entry,
         PixevalDownloadHistoryDto? download,
         out WorkBase? work)

@@ -105,4 +105,5 @@ namespace Pixeval.Mcp;
 [JsonSerializable(typeof(PixevalWorkSubscriptionWorkKind?))]
 [JsonSerializable(typeof(IReadOnlyList<long>))]
 [JsonSerializable(typeof(IReadOnlyList<string>))]
+[JsonSerializable(typeof(IReadOnlyList<PixevalHelpTopic>))]
 internal sealed partial class PixevalMcpJsonContext : JsonSerializerContext;

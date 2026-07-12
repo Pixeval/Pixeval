@@ -1,6 +1,8 @@
 // Copyright (c) Pixeval.Mcp.
 // Licensed under the GPL-3.0 License.
 
+using Mako.Global.Enum;
+
 namespace Pixeval.Mcp.Dtos;
 
 public sealed record PixevalCursorPageDto(
@@ -16,5 +18,5 @@ public sealed record PixevalCursorPageDto(
     IReadOnlyList<PixevalBookmarkTagDto>? BookmarkTags = null,
     PixevalWorkFilterAnalysisDto? Filter = null,
     long? UserId = null,
-    string? WorkType = null,
-    string? Privacy = null);
+    SimpleWorkType? WorkType = null,
+    PrivacyPolicy? Privacy = null);

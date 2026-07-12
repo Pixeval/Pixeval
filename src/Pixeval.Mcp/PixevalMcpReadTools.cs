@@ -656,8 +656,8 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
                     runtime.MakoClient.WorkBookmarkTags(uid, workType, privacy),
                     runtime,
                     uid,
-                    workType.ToString(),
-                    privacy.ToString(),
+                    workType,
+                    privacy,
                     count,
                     cancellationToken)
                 .ConfigureAwait(false));

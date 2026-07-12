@@ -1,10 +1,12 @@
 // Copyright (c) Pixeval.Mcp.
 // Licensed under the GPL-3.0 License.
 
+using Pixeval.Mcp;
+
 namespace Pixeval.Mcp.Dtos;
 
 public sealed record PixevalHelpDocumentDto(
-    string Topic,
+    PixevalHelpTopic Topic,
     string Title,
     string ResourceKey,
     string Markdown,

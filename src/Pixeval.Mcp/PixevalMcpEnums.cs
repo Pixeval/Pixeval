@@ -13,6 +13,8 @@ public enum PixevalHelpTopic
 
     WorkFilter,
 
+    WorkSubscriptions,
+
     Extensions
 }
 

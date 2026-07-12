@@ -239,8 +239,27 @@ public sealed partial class PixevalMcpService
             entry.Name,
             entry.Account,
             entry.AvatarUrl,
-            entry.SubscriptionType.ToString(),
-            entry.WorkKind.ToString());
+            ToPixevalWorkSubscriptionType(entry.SubscriptionType),
+            ToPixevalWorkSubscriptionWorkKind(entry.WorkKind));
+
+    private static PixevalWorkSubscriptionType ToPixevalWorkSubscriptionType(
+        WorkSubscriptionType subscriptionType) =>
+        subscriptionType switch
+        {
+            WorkSubscriptionType.Bookmarks => PixevalWorkSubscriptionType.Bookmarks,
+            WorkSubscriptionType.Posts => PixevalWorkSubscriptionType.Posts,
+            _ => throw new ArgumentOutOfRangeException(nameof(subscriptionType))
+        };
+
+    private static PixevalWorkSubscriptionWorkKind ToPixevalWorkSubscriptionWorkKind(
+        WorkSubscriptionWorkKind workKind) =>
+        workKind switch
+        {
+            WorkSubscriptionWorkKind.Illustration => PixevalWorkSubscriptionWorkKind.Illustration,
+            WorkSubscriptionWorkKind.Manga => PixevalWorkSubscriptionWorkKind.Manga,
+            WorkSubscriptionWorkKind.Novel => PixevalWorkSubscriptionWorkKind.Novel,
+            _ => throw new ArgumentOutOfRangeException(nameof(workKind))
+        };
 
     private static WorkSubscriptionType ToWorkSubscriptionType(PixevalWorkSubscriptionType subscriptionType) =>
         subscriptionType switch

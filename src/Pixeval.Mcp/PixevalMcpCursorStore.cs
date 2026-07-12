@@ -2,6 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using Mako.Engine;
+using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.Mcp.Dtos;
 
@@ -166,8 +167,8 @@ internal sealed class PixevalMcpCursorStore : IAsyncDisposable
         IFetchEngine<BookmarkTag> engine,
         IPixevalMcpRuntime runtime,
         long userId,
-        string workType,
-        string privacy,
+        SimpleWorkType workType,
+        PrivacyPolicy privacy,
         int count,
         CancellationToken cancellationToken)
     {
@@ -561,8 +562,8 @@ internal sealed class PixevalMcpCursorStore : IAsyncDisposable
         IFetchEngine<BookmarkTag> engine,
         long? userId,
         long bookmarkUserId,
-        string workType,
-        string privacy)
+        SimpleWorkType workType,
+        PrivacyPolicy privacy)
         : CursorEntry(PixevalMcpCursorKind.BookmarkTag, engine.EngineHandle, userId)
     {
         private readonly IAsyncEnumerator<BookmarkTag> _enumerator = engine.GetAsyncEnumerator();

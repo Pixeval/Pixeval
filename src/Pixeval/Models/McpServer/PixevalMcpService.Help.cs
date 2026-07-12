@@ -11,39 +11,33 @@ namespace Pixeval.Models.McpServer;
 
 public sealed partial class PixevalMcpService
 {
-    private static readonly IReadOnlyList<string> _HelpTopics =
-    [
-        "all",
-        "mcp",
-        "download_macro",
-        "work_filter",
-        "extensions"
-    ];
+    private static readonly IReadOnlyList<PixevalHelpTopic> _HelpTopics = Enum.GetValues<PixevalHelpTopic>();
 
     public PixevalHelpDto Help(PixevalHelpTopic? topic)
     {
-        topic ??= PixevalHelpTopic.All;
-        var normalized = ToHelpTopicName(topic.Value);
-        return new(normalized, _HelpTopics, normalized switch
+        var normalizedTopic = topic ?? PixevalHelpTopic.All;
+        return new(normalizedTopic, _HelpTopics, normalizedTopic switch
         {
-            "all" =>
+            PixevalHelpTopic.All =>
             [
                 CreateMcpHelp(),
                 CreateDownloadMacroHelp(),
                 .. CreateWorkFilterHelp(),
+                CreateWorkSubscriptionsHelp(),
                 CreateExtensionsHelp()
             ],
-            "mcp" => [CreateMcpHelp()],
-            "download_macro" => [CreateDownloadMacroHelp()],
-            "work_filter" => CreateWorkFilterHelp(),
-            "extensions" => [CreateExtensionsHelp()],
+            PixevalHelpTopic.Mcp => [CreateMcpHelp()],
+            PixevalHelpTopic.DownloadMacro => [CreateDownloadMacroHelp()],
+            PixevalHelpTopic.WorkFilter => CreateWorkFilterHelp(),
+            PixevalHelpTopic.WorkSubscriptions => [CreateWorkSubscriptionsHelp()],
+            PixevalHelpTopic.Extensions => [CreateExtensionsHelp()],
             _ => throw new ArgumentOutOfRangeException(nameof(topic))
         });
     }
 
     private static PixevalHelpDocumentDto CreateMcpHelp() =>
         new(
-            "mcp",
+            PixevalHelpTopic.Mcp,
             I18NManager.GetResource(HelpPageResources.McpHelpExpanderHeader),
             MarkdownResources.McpHelp,
             I18NManager.GetResource(MarkdownResources.McpHelp),
@@ -51,7 +45,7 @@ public sealed partial class PixevalMcpService
 
     private static PixevalHelpDocumentDto CreateDownloadMacroHelp() =>
         new(
-            "download_macro",
+            PixevalHelpTopic.DownloadMacro,
             I18NManager.GetResource(HelpPageResources.DownloadMacroHelpExpanderHeader),
             MarkdownResources.DownloadMacroHelp,
             I18NManager.GetResource(MarkdownResources.DownloadMacroHelp),
@@ -60,7 +54,7 @@ public sealed partial class PixevalMcpService
     private static IReadOnlyList<PixevalHelpDocumentDto> CreateWorkFilterHelp() =>
     [
         new(
-            "work_filter",
+            PixevalHelpTopic.WorkFilter,
             I18NManager.GetResource(HelpPageResources.QueryFilterSimpleHelpHeaderText),
             MarkdownResources.QueryFilterSimpleHelp,
             I18NManager.GetResource(MarkdownResources.QueryFilterSimpleHelp),
@@ -69,7 +63,7 @@ public sealed partial class PixevalMcpService
                 "bookmarks", "history"
             ]),
         new(
-            "work_filter",
+            PixevalHelpTopic.WorkFilter,
             I18NManager.GetResource(HelpPageResources.QueryFilterHelpHeaderText),
             MarkdownResources.QueryFilterHelp,
             I18NManager.GetResource(MarkdownResources.QueryFilterHelp),
@@ -79,22 +73,19 @@ public sealed partial class PixevalMcpService
             ])
     ];
 
+    private static PixevalHelpDocumentDto CreateWorkSubscriptionsHelp() =>
+        new(
+            PixevalHelpTopic.WorkSubscriptions,
+            I18NManager.GetResource(HelpPageResources.WorkSubscriptionsHelpExpanderHeader),
+            MarkdownResources.WorkSubscriptionsHelp,
+            I18NManager.GetResource(MarkdownResources.WorkSubscriptionsHelp),
+            ["history", "add_subscription", "remove_subscription", "sync_subscriptions", "download_tasks"]);
+
     private static PixevalHelpDocumentDto CreateExtensionsHelp() =>
         new(
-            "extensions",
+            PixevalHelpTopic.Extensions,
             I18NManager.GetResource(HelpPageResources.ExtensionsHelpExpanderHeader),
             MarkdownResources.ExtensionsHelp,
             I18NManager.GetResource(MarkdownResources.ExtensionsHelp),
             ["extensions"]);
-
-    private static string ToHelpTopicName(PixevalHelpTopic topic) =>
-        topic switch
-        {
-            PixevalHelpTopic.All => "all",
-            PixevalHelpTopic.Mcp => "mcp",
-            PixevalHelpTopic.DownloadMacro => "download_macro",
-            PixevalHelpTopic.WorkFilter => "work_filter",
-            PixevalHelpTopic.Extensions => "extensions",
-            _ => throw new ArgumentOutOfRangeException(nameof(topic))
-        };
 }
