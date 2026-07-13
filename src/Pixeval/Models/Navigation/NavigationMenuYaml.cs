@@ -14,6 +14,7 @@ public static class NavigationMenuYaml
            - page: WorkRecommended
            - page: WorkRanking
            - page: WorkBookmarks
+           - page: Series
            - page: UserRecommended
            - folder: "${NavigationSettingsPageResources.WorkFolderTitle}"
              icon: DesignIdeas

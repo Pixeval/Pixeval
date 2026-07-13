@@ -145,7 +145,8 @@
   },
   "WorkSubscriptionType": {
     "Bookmarks": "收藏",
-    "Posts": "发布作品"
+    "Posts": "发布作品",
+    "Series": "系列作品"
   },
   "WorkSubscriptionWorkKind": {
     "Illustration": "插画",
@@ -155,7 +156,7 @@
   "HomePageCardSourceKindDescription": {
     "WorkRecommended": "来自 Pixiv 推荐引擎，可选择插画、漫画或小说。",
     "WorkBookmarks": "指定用户、公开范围和标签的收藏作品列表。",
-    "WorkRanking": "指定作品范围、榜单类型和日期的排行列表。",
+    "WorkRanking": "指定作品类型、榜单类型和日期的排行列表。",
     "WorkNew": "按作品类型展示 Pixiv 最新作品。",
     "WorkFollowing": "来自已关注用户的新作品列表。",
     "WorkMyPixiv": "来自自己的好P友的新作品列表。",
@@ -170,6 +171,7 @@
     "Spotlight": "Pixivision 特辑列表。",
     "SingleImage": "指定插画 ID 展示单个作品。",
     "SingleNovel": "指定小说 ID 展示单个小说。",
+    "SingleSeries": "指定系列 ID 和作品类型的系列作品列表。",
     "SingleUser": "指定用户 ID 展示单个用户。"
   },
   "DownloadListOption": {

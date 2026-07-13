@@ -1,0 +1,41 @@
+<views:IconContentPage
+    x:Class="Pixeval.Views.Capability.SeriesPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:entry="using:Pixeval.Views.Entry"
+    xmlns:enum="using:Mako.Global.Enum"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:markup1="using:Pixeval.Views.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
+    xmlns:views="using:Pixeval.Views"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top">
+            <CommandBar
+                DefaultLabelPosition="Collapsed"
+                DockPanel.Dock="Right"
+                IsDynamicOverflowEnabled="True">
+                <CommandBarButton
+                    Click="RefreshButton_OnClick"
+                    Icon="{markup:SymbolIcon ArrowClockwise}"
+                    ToolTip.Tip="{I18N {x:Static pixeval:WorkContainerResources.RefreshButtonLabel}}" />
+            </CommandBar>
+            <StackPanel
+                VerticalAlignment="Center"
+                Orientation="Horizontal"
+                Spacing="5">
+                <controls:SymbolComboBox
+                    x:Name="SimpleWorkTypeComboBox"
+                    ItemsSource="{markup1:EnumResources x:TypeArguments=enum:SimpleWorkType}"
+                    SelectedValue="{x:Static views:PixevalSettings.SimpleWorkType}"
+                    SelectionChanged="SimpleWorkTypeComboBox_OnSelectionChanged" />
+            </StackPanel>
+        </DockPanel>
+        <entry:SeriesView x:Name="SeriesView" />
+    </DockPanel>
+</views:IconContentPage>

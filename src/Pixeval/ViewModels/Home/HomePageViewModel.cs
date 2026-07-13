@@ -31,38 +31,30 @@ public partial class HomePageViewModel : ViewModelBase
 
     public IReadOnlyList<HomeCardDefinition> CardTemplates => HomeCardDefinitions.All;
 
-    [ObservableProperty]
-    public partial bool IsEditMode { get; set; }
+    [ObservableProperty] public partial bool IsEditMode { get; set; }
 
     public int RowCount => decimal.ToInt32(decimal.Clamp(Settings.ApplicationSettings.HomePageRows, HomePage.MinimumGridSize, HomePage.MaximumGridSize));
 
     public int ColumnCount => decimal.ToInt32(decimal.Clamp(Settings.ApplicationSettings.HomePageColumns, HomePage.MinimumGridSize, HomePage.MaximumGridSize));
 
-    [ObservableProperty]
-    public partial decimal GridColumnsValue { get; set; }
+    [ObservableProperty] public partial decimal GridColumnsValue { get; set; }
 
-    [ObservableProperty]
-    public partial decimal GridRowsValue { get; set; }
+    [ObservableProperty] public partial decimal GridRowsValue { get; set; }
 
     public bool HasSelectedCard => _selectedCard is not null;
 
     public string SelectedCardDescription => _selectedCard?.BuildTitle()
                                              ?? I18NManager.GetResource(HomePageResources.NoSelectedCardTextBlockText);
 
-    [ObservableProperty]
-    public partial decimal SelectedColumnValue { get; set; } = 1;
+    [ObservableProperty] public partial decimal SelectedColumnValue { get; set; } = 1;
 
-    [ObservableProperty]
-    public partial decimal SelectedRowValue { get; set; } = 1;
+    [ObservableProperty] public partial decimal SelectedRowValue { get; set; } = 1;
 
-    [ObservableProperty]
-    public partial decimal SelectedWidthValue { get; set; } = 1;
+    [ObservableProperty] public partial decimal SelectedWidthValue { get; set; } = 1;
 
-    [ObservableProperty]
-    public partial decimal SelectedHeightValue { get; set; } = 1;
+    [ObservableProperty] public partial decimal SelectedHeightValue { get; set; } = 1;
 
-    [ObservableProperty]
-    public partial Color SelectedBackgroundColor { get; set; } = Color.FromUInt32(0);
+    [ObservableProperty] public partial Color SelectedBackgroundColor { get; set; } = Color.FromUInt32(0);
 
     public HomeCardDefinition? PendingTemplate { get; private set; }
 
@@ -90,12 +82,13 @@ public partial class HomePageViewModel : ViewModelBase
 
     public bool IsSourceEntryIdPanelVisible => HasPendingParameter(HomeCardParameterKinds.EntryId);
 
+    public bool IsSourceSeriesIdPanelVisible => HasPendingParameter(HomeCardParameterKinds.SeriesId);
+
     public bool IsSourceSearchTextPanelVisible => HasPendingParameter(HomeCardParameterKinds.SearchText);
 
     public bool IsSourceTagPanelVisible => HasPendingParameter(HomeCardParameterKinds.Tag);
 
-    [ObservableProperty]
-    public partial WorkType SelectedSourceWorkType { get; set; } = WorkType.Illustration;
+    [ObservableProperty] public partial WorkType SelectedSourceWorkType { get; set; } = WorkType.Illustration;
 
     public SimpleWorkType SelectedSourceSimpleWorkType
     {
@@ -109,32 +102,25 @@ public partial class HomePageViewModel : ViewModelBase
         }
     } = SimpleWorkType.Illustration;
 
-    [ObservableProperty]
-    public partial PrivacyPolicy SelectedSourcePrivacyPolicy { get; set; } = PrivacyPolicy.Public;
+    [ObservableProperty] public partial PrivacyPolicy SelectedSourcePrivacyPolicy { get; set; } = PrivacyPolicy.Public;
 
-    [ObservableProperty]
-    public partial RankOption SelectedSourceRankOption { get; set; } = App.AppViewModel.AppSettings.SearchSettings.IllustrationRankOption;
+    [ObservableProperty] public partial RankOption SelectedSourceRankOption { get; set; } = App.AppViewModel.AppSettings.SearchSettings.IllustrationRankOption;
 
-    [ObservableProperty]
-    public partial IReadOnlyList<SymbolComboBoxItem> SourceRankOptionItems { get; private set; } = SymbolComboBoxItem.GetValues<RankOption>(SimpleWorkType.Illustration);
+    [ObservableProperty] public partial IReadOnlyList<SymbolComboBoxItem> SourceRankOptionItems { get; private set; } = SymbolComboBoxItem.GetValues<RankOption>(SimpleWorkType.Illustration);
 
-    [ObservableProperty]
-    public partial bool UseSpecifiedRankingDate { get; set; }
+    [ObservableProperty] public partial bool UseSpecifiedRankingDate { get; set; }
 
-    [ObservableProperty]
-    public partial DateTime SelectedRankingDate { get; set; } = MakoClient.RankingMaxDateTime.LocalDateTime;
+    [ObservableProperty] public partial DateTime SelectedRankingDate { get; set; } = MakoClient.RankingMaxDateTime.LocalDateTime;
 
-    [ObservableProperty]
-    public partial string SourceUserIdText { get; set; } = "";
+    [ObservableProperty] public partial string SourceUserIdText { get; set; } = "";
 
-    [ObservableProperty]
-    public partial string SourceEntryIdText { get; set; } = "";
+    [ObservableProperty] public partial string SourceEntryIdText { get; set; } = "";
 
-    [ObservableProperty]
-    public partial string SourceSearchText { get; set; } = "";
+    [ObservableProperty] public partial string SourceSeriesIdText { get; set; } = "";
 
-    [ObservableProperty]
-    public partial string SourceTagText { get; set; } = "";
+    [ObservableProperty] public partial string SourceSearchText { get; set; } = "";
+
+    [ObservableProperty] public partial string SourceTagText { get; set; } = "";
 
     public void NotifyGridSizeChanged()
     {
@@ -186,6 +172,7 @@ public partial class HomePageViewModel : ViewModelBase
 
         SourceUserIdText = template.UseCurrentUserAsDefault ? PixevalSettings.MyId.ToString() : "";
         SourceEntryIdText = "";
+        SourceSeriesIdText = "";
         if (!template.HasParameter(HomeCardParameterKinds.SearchText))
             SourceSearchText = "";
         if (!template.HasParameter(HomeCardParameterKinds.Tag))
@@ -212,10 +199,14 @@ public partial class HomePageViewModel : ViewModelBase
 
         var userId = 0L;
         var entryId = 0L;
+        var seriesId = 0L;
         if (template.HasParameter(HomeCardParameterKinds.UserId) && !TryReadUInt64(SourceUserIdText, out userId))
             return false;
 
         if (template.HasParameter(HomeCardParameterKinds.EntryId) && !TryReadUInt64(SourceEntryIdText, out entryId))
+            return false;
+
+        if (template.HasParameter(HomeCardParameterKinds.SeriesId) && !TryReadUInt64(SourceSeriesIdText, out seriesId))
             return false;
 
         if (template.HasParameter(HomeCardParameterKinds.SearchText) && string.IsNullOrWhiteSpace(SourceSearchText))
@@ -228,6 +219,7 @@ public partial class HomePageViewModel : ViewModelBase
         draft.UseSpecifiedRankingDate = UseSpecifiedRankingDate;
         draft.UserId = userId;
         draft.EntryId = entryId;
+        draft.SeriesId = seriesId;
         draft.SearchText = string.IsNullOrWhiteSpace(SourceSearchText) ? null : SourceSearchText.Trim();
         draft.Tag = string.IsNullOrWhiteSpace(SourceTagText) ? null : SourceTagText.Trim();
         draft.RankingDate = draft.UseSpecifiedRankingDate
@@ -253,6 +245,7 @@ public partial class HomePageViewModel : ViewModelBase
         OnPropertyChanged(nameof(IsSourceRankingDatePanelVisible));
         OnPropertyChanged(nameof(IsSourceUserIdPanelVisible));
         OnPropertyChanged(nameof(IsSourceEntryIdPanelVisible));
+        OnPropertyChanged(nameof(IsSourceSeriesIdPanelVisible));
         OnPropertyChanged(nameof(IsSourceSearchTextPanelVisible));
         OnPropertyChanged(nameof(IsSourceTagPanelVisible));
     }
@@ -271,5 +264,4 @@ public partial class HomePageViewModel : ViewModelBase
 
     private static bool TryReadUInt64(string? text, out long value) =>
         long.TryParse(text, out value) && value > 0;
-
 }

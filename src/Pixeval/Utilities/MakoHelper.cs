@@ -19,7 +19,7 @@ public static class MakoHelper
 {
     public static async Task<List<BookmarkTag>> GetBookmarkTagsAsync(long uid, SimpleWorkType type, PrivacyPolicy policy)
     {
-        var tags = await App.AppViewModel.MakoClient.WorkBookmarkTags(uid, type, policy).ToListAsync();
+        var tags = await App.AppViewModel.MakoClient.WorkBookmarkTags(type, uid, policy).ToListAsync();
         tags.Insert(0, AllBookmarkTag.Instance);
         return tags;
     }

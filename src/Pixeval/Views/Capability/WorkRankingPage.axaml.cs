@@ -65,8 +65,7 @@ public partial class WorkRankingPage : IconContentPage
     {
         if (!IsLoaded)
             return;
-        // 傻逼bug see also https://github.com/AvaloniaUI/Avalonia/issues/18418
-        // ChangeSource();
+        ChangeSource();
     }
 
     private void ChangeSource()

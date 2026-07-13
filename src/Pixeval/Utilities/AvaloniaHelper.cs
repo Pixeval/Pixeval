@@ -67,6 +67,7 @@ public static class AvaloniaHelper
         Page<WorkRankingPage>(Symbol.ArrowTrendingLines, MainPageResources.TabWorkRanking),
         Page<WorkBookmarksPage>(Symbol.Library, MainPageResources.TabWorkBookmarks),
         Page<WorkRelatedPage>(Symbol.LightbulbFilament, MainPageResources.TabWorkRelated, true, false),
+        Page<SeriesPage>(Symbol.LayerDiagonalPerson, MainPageResources.TabSeries),
         Page<WorkPostsPage>(Symbol.Image, MainPageResources.TabWorkPosts),
         Page<WorkSearchResultPage>(Symbol.SearchSparkle, MainPageResources.TabWorkSearchResult, true, false),
         Page<UserFollowingPage>(Symbol.PersonHeart, MainPageResources.TabUserFollowing),
@@ -89,6 +90,7 @@ public static class AvaloniaHelper
         Page<IllustrationViewerPage>(Symbol.Image, MainPageResources.TabSingleImage, true, false),
         Page<NovelViewerPage>(Symbol.BookOpen, MainPageResources.TabSingleNovel, true, false),
         Page<UserViewerPage>(Symbol.Person, MainPageResources.TabSingleUser, true, false),
+        Page<SeriesViewerPage>(Symbol.ListBar, MainPageResources.TabSingleSeries, true, false),
         Page<WorkInfoPage>(Symbol.BookContacts, MainPageResources.TabWorkInfo, true, false),
         Page<CommentsPage>(Symbol.ChatMultiple, MainPageResources.TabComments, true, false)
     ];
@@ -111,6 +113,7 @@ public static class AvaloniaHelper
             [HomePageCardSourceKind.UserFollower] = PageTypeToHeaderMap[typeof(UserFollowerPage)],
             [HomePageCardSourceKind.UserMyPixiv] = PageTypeToHeaderMap[typeof(UserMyPixivPage)],
             [HomePageCardSourceKind.Spotlight] = PageTypeToHeaderMap[typeof(SpotlightPage)],
+            [HomePageCardSourceKind.SingleSeries] = PageTypeToHeaderMap[typeof(SeriesViewerPage)],
             [HomePageCardSourceKind.SingleImage] = PageTypeToHeaderMap[typeof(IllustrationViewerPage)],
             [HomePageCardSourceKind.SingleNovel] = PageTypeToHeaderMap[typeof(NovelViewerPage)],
             [HomePageCardSourceKind.SingleUser] = PageTypeToHeaderMap[typeof(UserViewerPage)]
@@ -193,7 +196,7 @@ public static class AvaloniaHelper
         where TPage : Page, new()
     {
         var header = I18NManager.GetResource(headerResource);
-        if(inNavigation)
+        if (inNavigation)
         {
             var navigation = new NavigationPageDefinition(
                 typeof(TPage).Name[..^4], // XXPage
@@ -204,6 +207,7 @@ public static class AvaloniaHelper
                 needLogin);
             NavigationPageRegistry.Pages.Add(navigation);
         }
+
         return new(typeof(TPage), (icon, header));
     }
 }

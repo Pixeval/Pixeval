@@ -7,9 +7,9 @@ namespace Pixeval.Mcp.Dtos;
 
 public sealed record PixevalWorkSubscriptionDto(
     int HistoryEntryId,
-    long UserId,
+    long TargetId,
     string Name,
-    string Account,
-    string AvatarUrl,
+    string Description,
+    string ImageUrl,
     PixevalWorkSubscriptionType SubscriptionType,
     PixevalWorkSubscriptionWorkKind WorkKind);

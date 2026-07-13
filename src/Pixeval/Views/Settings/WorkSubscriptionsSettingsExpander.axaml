@@ -32,7 +32,7 @@
                 ColumnSpacing="8"
                 RowDefinitions="Auto,Auto"
                 RowSpacing="8">
-                <TextBox x:Name="UserIdTextBox" PlaceholderText="{I18N {x:Static pixeval:WorkSubscriptionsSettingsExpanderResources.UserIdTextBoxPlaceholderText}}" />
+                <TextBox x:Name="TargetIdTextBox" PlaceholderText="{I18N {x:Static pixeval:WorkSubscriptionsSettingsExpanderResources.TargetIdTextBoxPlaceholderText}}" />
                 <controls1:SymbolComboBox
                     x:Name="SubscriptionTypeComboBox"
                     Grid.Row="0"

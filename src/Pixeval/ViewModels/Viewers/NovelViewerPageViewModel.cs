@@ -32,11 +32,11 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
 
     private readonly ISourceView<NovelItemViewModel>? _sourceView;
 
-    [ObservableProperty]
-    public partial bool IsLoading { get; private set; }
+    [ObservableProperty] public partial bool IsLoading { get; private set; }
 
-    [ObservableProperty]
-    public partial string? LoadErrorMessage { get; private set; }
+    [ObservableProperty] public partial string? LoadErrorMessage { get; private set; }
+
+    [ObservableProperty] public partial WorkSeriesInfoViewModel? SeriesInfo { get; private set; }
 
     public IReadOnlyList<Page> PanePages => CurrentNovel is { } currentNovel
         ?
@@ -226,6 +226,7 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
 
         IsLoading = true;
         LoadErrorMessage = null;
+        SeriesInfo = null;
         try
         {
             var currentNovel = await GetCurrentNovelAsync(index, token);
@@ -233,11 +234,13 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
             if (currentNovel is null || index != CurrentWorkIndex || _disposed)
                 return;
 
+            SeriesInfo = WorkSeriesInfoViewModel.Create(currentNovel.Entry, SimpleWorkType.Novel);
             var content = await currentNovel.ContentAsync;
             token.ThrowIfCancellationRequested();
             if (index != CurrentWorkIndex || _disposed)
                 return;
 
+            SeriesInfo = WorkSeriesInfoViewModel.Create(content, currentNovel.Entry.Series);
             App.AppViewModel.HistoryPersistHelper.AddBrowseHistory(currentNovel.Entry);
             var markdowns = await Task.Run(() => BuildPageMarkdowns(content), token);
             token.ThrowIfCancellationRequested();
@@ -382,6 +385,7 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
             novelFontFamily.CollectionChanged -= OnNovelFontFamilyChanged;
             _subscribedNovelFontFamily = null;
         }
+
         _sourceView?.Dispose();
     }
 

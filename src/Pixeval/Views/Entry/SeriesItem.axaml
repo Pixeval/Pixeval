@@ -1,0 +1,97 @@
+<entry:EntryItem
+    x:Class="Pixeval.Views.Entry.SeriesItem"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:converters="using:Pixeval.Views.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:entry="using:Pixeval.Views.Entry"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
+    xmlns:utilities="using:Pixeval.Utilities"
+    xmlns:viewModels="using:Pixeval.ViewModels"
+    x:DataType="{x:Type viewModels:SeriesItemViewModel}"
+    HorizontalContentAlignment="Stretch"
+    VerticalContentAlignment="Stretch"
+    Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+    Design.DataContext="{x:Static utilities:DesignHelper.DesignSeriesViewModel}"
+    Theme="{StaticResource RoundedButtonStyle}"
+    mc:Ignorable="d"
+    d:DesignHeight="220"
+    d:DesignWidth="360">
+    <Grid ClipToBounds="True" ColumnDefinitions="Auto,*">
+        <Grid.ContextMenu>
+            <ContextMenu>
+                <MenuItem
+                    Click="LatestContentButton_OnClick"
+                    Header="{I18N {x:Static pixeval:SeriesPageResources.ViewLatestContent}}"
+                    Icon="{markup:SymbolIcon ArrowRight}" />
+                <MenuItem
+                    Click="AuthorButton_OnClick"
+                    Header="{I18N {x:Static pixeval:EntryItemResources.OpenUserInfoPage}}"
+                    Icon="{markup:SymbolIcon Person}" />
+                <Separator />
+                <MenuItem
+                    Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
+                    Header="{I18N {x:Static pixeval:EntryItemResources.OpenInWebBrowser}}"
+                    Icon="{markup:SymbolIcon GlobeArrowUp}"
+                    Tag="{Binding WebsiteUri}" />
+                <MenuItem
+                    Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
+                    Header="{I18N {x:Static pixeval:EntryItemResources.GenerateWebLink}}"
+                    Icon="{markup:SymbolIcon LinkMultiple}"
+                    Tag="{Binding WebsiteUri}" />
+                <MenuItem
+                    Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
+                    Header="{I18N {x:Static pixeval:EntryItemResources.GenerateLink}}"
+                    Icon="{markup:SymbolIcon Link}"
+                    Tag="{Binding AppUri}" />
+            </ContextMenu>
+        </Grid.ContextMenu>
+        <controls:ConstrainedBox AspectRatio="427:600">
+            <Image controls:Source.Cache="{Binding ThumbnailUrl}" Stretch="UniformToFill" />
+        </controls:ConstrainedBox>
+        <Grid
+            Grid.Column="1"
+            Margin="12"
+            RowDefinitions="Auto,Auto,*,Auto"
+            RowSpacing="7">
+            <TextBlock
+                MaxLines="5"
+                Text="{Binding Entry.Title}"
+                TextTrimming="CharacterEllipsis"
+                TextWrapping="Wrap"
+                Theme="{StaticResource BodyLargeStrongTextBlockStyle}" />
+            <DockPanel Grid.Row="1" HorizontalSpacing="8">
+                <TextBlock
+                    VerticalAlignment="Bottom"
+                    DockPanel.Dock="Right"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    Text="{Binding Entry.LastPublishedContentDatetime, Converter={x:Static converters:PixevalConverters.DateTimeShortDate}}"
+                    TextTrimming="CharacterEllipsis"
+                    Theme="{StaticResource CaptionTextBlockStyle}" />
+                <Button Padding="2" Click="AuthorButton_OnClick">
+                    <TextBlock
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        MaxLines="2"
+                        Text="{Binding Entry.User.Name}"
+                        TextTrimming="CharacterEllipsis"
+                        TextWrapping="Wrap" />
+                </Button>
+            </DockPanel>
+            <DockPanel Grid.Row="3" HorizontalSpacing="8">
+                <Button
+                    HorizontalAlignment="Right"
+                    Click="LatestContentButton_OnClick"
+                    DockPanel.Dock="Right">
+                    <controls:IconText Symbol="ArrowRight" Text="{I18N {x:Static pixeval:SeriesPageResources.ViewLatestContent}}" />
+                </Button>
+                <controls:IconText
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    Symbol="SquareMultiple"
+                    Text="{Binding Entry.PublishedContentCount}" />
+            </DockPanel>
+        </Grid>
+    </Grid>
+</entry:EntryItem>

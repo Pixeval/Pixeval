@@ -48,7 +48,9 @@ public enum PixevalWorkSubscriptionType
 {
     Bookmarks,
 
-    Posts
+    Posts,
+
+    Series
 }
 
 public enum PixevalWorkSubscriptionWorkKind

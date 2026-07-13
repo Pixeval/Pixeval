@@ -3,6 +3,8 @@
 
 using System;
 using System.Threading.Tasks;
+using Mako.Global.Enum;
+using Mako.Model;
 using Mako.Net.Responses;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
@@ -92,6 +94,25 @@ public static class ViewerHelper
         {
             var index = sourceView.View.IndexOf(novelViewModel);
             control.NavigateTo(new NovelViewerPage(new(sourceView, index, needRefresh)));
+        }
+
+        #endregion
+
+        #region Series
+
+        public void CreateSeriesPage(SimpleWorkType workType, long seriesId)
+        {
+            control.NavigateTo(new SeriesViewerPage(new(workType, seriesId)));
+        }
+
+        public void CreateSeriesPage(
+            SimpleWorkType workType,
+            long seriesId,
+            SeriesDetailBase seriesDetail,
+            IWorkEntry firstWork,
+            IWorkViewViewModel worksViewModel)
+        {
+            control.NavigateTo(new SeriesViewerPage(new(workType, seriesId, seriesDetail, firstWork, worksViewModel)));
         }
 
         #endregion

@@ -12,10 +12,12 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Mako.Global.Enum;
 using Mako.Model;
+using Microsoft.Extensions.DependencyInjection;
 using Misaki;
 using Pixeval.AppManagement;
 using Pixeval.I18N;
 using Pixeval.Models.Options;
+using Pixeval.Utilities;
 using Pixeval.Views.Capability;
 using Pixeval.Views.Viewers;
 
@@ -33,11 +35,11 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
 
     private readonly ISourceView<IllustrationItemViewModel>? _sourceView;
 
-    [ObservableProperty]
-    public partial bool IsLoading { get; private set; }
+    [ObservableProperty] public partial bool IsLoading { get; private set; }
 
-    [ObservableProperty]
-    public partial string? LoadErrorMessage { get; private set; }
+    [ObservableProperty] public partial string? LoadErrorMessage { get; private set; }
+
+    [ObservableProperty] public partial WorkSeriesInfoViewModel? SeriesInfo { get; private set; }
 
     public string? LogoUri => CurrentIllustration?.Entry.Platform is { } platform ? $"avares://Pixeval/Assets/Platforms/{platform}.png" : null;
 
@@ -187,6 +189,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
         var index = CurrentWorkIndex;
         var token = ResetLoadingToken();
         LoadErrorMessage = null;
+        SeriesInfo = null;
         CurrentImage = null;
 
         if (await GetCurrentIllustrationAsync(index, token) is { } currentIllustration
@@ -195,6 +198,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
             && index == CurrentWorkIndex)
         {
             CurrentImage = new ImageViewerViewModel(currentIllustration);
+            await LoadSeriesInfoAsync(currentIllustration.Entry, index, token);
         }
 
         return;
@@ -231,6 +235,30 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
                         _refreshedIllustrations[index] = item;
                 },
                 token);
+        }
+    }
+
+    private async Task LoadSeriesInfoAsync(IArtworkInfo entry, int index, CancellationToken token)
+    {
+        SeriesInfo = WorkSeriesInfoViewModel.Create(entry as WorkBase, SimpleWorkType.Illustration);
+        if (entry is not Illustration { Series: not null } illustration)
+            return;
+
+        try
+        {
+            var response = await App.AppViewModel.MakoClient.GetMangaSeriesContextAsync(illustration.Id);
+            token.ThrowIfCancellationRequested();
+            if (index == CurrentWorkIndex && !_disposed)
+                SeriesInfo = WorkSeriesInfoViewModel.Create(response);
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch (Exception e)
+        {
+            App.AppViewModel.AppServiceProvider
+                .GetRequiredService<FileLogger>()
+                .LogError(nameof(LoadSeriesInfoAsync), e);
         }
     }
 
@@ -387,8 +415,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
         }
     }
 
-    [ObservableProperty]
-    public partial bool IsAutoPlaying { get; set; }
+    [ObservableProperty] public partial bool IsAutoPlaying { get; set; }
 
     partial void OnIsAutoPlayingChanged(bool value)
     {

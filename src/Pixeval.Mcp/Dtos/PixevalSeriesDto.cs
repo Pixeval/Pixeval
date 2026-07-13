@@ -10,7 +10,7 @@ public sealed record PixevalSeriesDto(
     string Title,
     PixevalUserDto Author,
     string? MaskText,
-    string Url,
+    string CoverUrl,
     int PublishedContentCount,
     long LatestContentId,
     DateTimeOffset LastPublishedContentDatetime)
@@ -21,7 +21,7 @@ public sealed record PixevalSeriesDto(
             series.Title,
             PixevalUserDto.FromUserInfo(series.User),
             series.MaskText,
-            series.Url,
+            series.CoverUrl,
             series.PublishedContentCount,
             series.LatestContentId,
             series.LastPublishedContentDatetime);

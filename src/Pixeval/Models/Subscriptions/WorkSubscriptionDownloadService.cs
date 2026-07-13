@@ -35,23 +35,23 @@ public class WorkSubscriptionDownloadService(
     public void QueueSyncAll() => _ = SyncAllAsync();
 
     public void QueueSyncCurrentSource(
-        long uid,
+        long targetId,
         WorkSubscriptionType subscriptionType,
         WorkSubscriptionWorkKind workKind,
         IFetchEngine<IWorkEntry> engine)
     {
         if (!IsEngineUsable(engine)
-            || TryGetSubscription(uid, subscriptionType, workKind) is not { } subscription)
+            || TryGetSubscription(targetId, subscriptionType, workKind) is not { } subscription)
             return;
 
         _ = SyncSubscriptionAsync(subscription, engine);
     }
 
     public WorkSubscriptionEntry? TryGetSubscription(
-        long uid,
+        long targetId,
         WorkSubscriptionType subscriptionType,
         WorkSubscriptionWorkKind workKind) =>
-        subscriptionManager.GetBySubscriptionKey(uid, subscriptionType, workKind);
+        subscriptionManager.GetBySubscriptionKey(targetId, subscriptionType, workKind);
 
     private async Task SyncAllAsync()
     {
@@ -136,6 +136,7 @@ public class WorkSubscriptionDownloadService(
                     return;
                 continue;
             }
+
             if (!IsEngineUsable(engine))
                 return;
 
@@ -152,6 +153,7 @@ public class WorkSubscriptionDownloadService(
         {
             WorkSubscriptionType.Bookmarks => CreateBookmarkEngines(),
             WorkSubscriptionType.Posts => CreatePostEngines(),
+            WorkSubscriptionType.Series => CreateSeriesEngines(),
             _ => []
         };
 
@@ -159,16 +161,16 @@ public class WorkSubscriptionDownloadService(
         {
             var workType = subscription.WorkKind switch
             {
-                WorkSubscriptionWorkKind.Illustration => SimpleWorkType.Illustration,
+                WorkSubscriptionWorkKind.Illustration or WorkSubscriptionWorkKind.Manga => SimpleWorkType.Illustration,
                 WorkSubscriptionWorkKind.Novel => SimpleWorkType.Novel,
                 _ => (SimpleWorkType?) null
             };
             if (workType is not { } type)
                 yield break;
 
-            yield return makoClient.WorkBookmarks(subscription.UserId, type, PrivacyPolicy.Public, null);
-            if (subscription.UserId == PixevalSettings.MyId)
-                yield return makoClient.WorkBookmarks(subscription.UserId, type, PrivacyPolicy.Private, null);
+            yield return makoClient.WorkBookmarks(type, subscription.Id, PrivacyPolicy.Public, null);
+            if (subscription.Id == PixevalSettings.MyId)
+                yield return makoClient.WorkBookmarks(type, subscription.Id, PrivacyPolicy.Private, null);
         }
 
         IEnumerable<IFetchEngine<IWorkEntry>> CreatePostEngines()
@@ -181,7 +183,19 @@ public class WorkSubscriptionDownloadService(
                 _ => (WorkType?) null
             };
             if (workType is { } type)
-                yield return makoClient.WorkPosted(subscription.UserId, type);
+                yield return makoClient.WorkPosted(type, subscription.Id);
+        }
+
+        IEnumerable<IFetchEngine<IWorkEntry>> CreateSeriesEngines()
+        {
+            var workType = subscription.WorkKind switch
+            {
+                WorkSubscriptionWorkKind.Illustration or WorkSubscriptionWorkKind.Manga => SimpleWorkType.Illustration,
+                WorkSubscriptionWorkKind.Novel => SimpleWorkType.Novel,
+                _ => (SimpleWorkType?) null
+            };
+            if (workType is { } type)
+                yield return makoClient.WorkSeries(type, subscription.Id);
         }
     }
 
@@ -227,7 +241,8 @@ public class WorkSubscriptionDownloadService(
 
     private void TryUpdateSubscriptionName(WorkSubscriptionEntry subscription, IWorkEntry entry)
     {
-        if (!string.IsNullOrWhiteSpace(subscription.Name)
+        if (subscription.SubscriptionType is WorkSubscriptionType.Series
+            || !string.IsNullOrWhiteSpace(subscription.Name)
             || string.IsNullOrWhiteSpace(entry.User.Name))
             return;
 

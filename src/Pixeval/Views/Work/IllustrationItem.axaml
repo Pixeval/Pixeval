@@ -44,6 +44,11 @@
                     Click="OpenUserInfoPage_OnClicked"
                     Header="{I18N {x:Static pixeval:EntryItemResources.OpenUserInfoPage}}"
                     Icon="{markup:SymbolIcon Person}" />
+                <MenuItem
+                    Click="OpenSeriesPage_OnClicked"
+                    Header="{I18N {x:Static pixeval:EntryItemResources.OpenSeries}}"
+                    Icon="{markup:SymbolIcon SquareMultiple}"
+                    IsVisible="{Binding HasSeries}" />
                 <Separator />
                 <MenuItem
                     Command="{Binding CopyCommand}"
@@ -93,6 +98,19 @@
                     CommandParameter="{Binding $self, Mode=OneTime}"
                     IsVisible="{Binding IsBookmarkSupported}"
                     State="{Binding IsBookmarkedDisplay}" />
+                <Border
+                    Margin="5"
+                    Padding="5"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Background="{DynamicResource ControlOnImageFillColorDefaultBrush}"
+                    CornerRadius="{StaticResource ControlCornerRadius}"
+                    IsVisible="{Binding HasSeries}">
+                    <fluent:SymbolIcon
+                        FontSize="{StaticResource SmallIconFontSize}"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                        Symbol="SquareMultiple" />
+                </Border>
                 <DockPanel
                     Margin="10"
                     VerticalAlignment="Bottom"

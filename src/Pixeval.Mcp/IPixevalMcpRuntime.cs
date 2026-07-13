@@ -132,14 +132,14 @@ public interface IPixevalMcpRuntime
         bool deleteLocalFiles);
 
     Task<PixevalWorkSubscriptionOperationResultDto> AddSubscriptionAsync(
-        long userId,
+        long targetId,
         PixevalWorkSubscriptionType subscriptionType,
         PixevalWorkSubscriptionWorkKind workKind,
         CancellationToken cancellationToken);
 
     PixevalWorkSubscriptionOperationResultDto RemoveSubscription(
         int? historyEntryId,
-        long? userId,
+        long? targetId,
         PixevalWorkSubscriptionType? subscriptionType,
         PixevalWorkSubscriptionWorkKind? workKind);
 

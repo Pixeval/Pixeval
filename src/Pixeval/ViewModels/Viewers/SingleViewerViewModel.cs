@@ -344,7 +344,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
                 return;
 
             await using var source = Streams.RentStream();
-            frame.Save(source);
+            frame.Save(source, new PngBitmapEncoderOptions());
             source.Position = 0;
 
             var destination = Streams.RentStream();

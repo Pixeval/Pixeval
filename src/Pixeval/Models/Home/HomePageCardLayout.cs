@@ -53,6 +53,9 @@ public record HomePageCardLayout
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public long EntryId { get; set; }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public long SeriesId { get; set; }
+
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? SearchText { get; set; }
 
@@ -82,11 +85,9 @@ public record HomePageCardLayout
 
     public int RowSpan { get; set; } = 1;
 
-    [JsonIgnore]
-    public HomePageCardTemplateKind TemplateKind => Definition.TemplateKind;
+    [JsonIgnore] public HomePageCardTemplateKind TemplateKind => Definition.TemplateKind;
 
-    [JsonIgnore]
-    public HomeCardDefinition Definition => HomeCardDefinitions.Get(SourceKind);
+    [JsonIgnore] public HomeCardDefinition Definition => HomeCardDefinitions.Get(SourceKind);
 
     public string BuildTitle() => Definition.BuildTitle(this);
 

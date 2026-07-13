@@ -17,5 +17,6 @@ public enum HomeCardParameterKinds
     UserId = 1 << 5,
     EntryId = 1 << 6,
     SearchText = 1 << 7,
-    Tag = 1 << 8
+    Tag = 1 << 8,
+    SeriesId = 1 << 9
 }

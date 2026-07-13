@@ -1,0 +1,43 @@
+<UserControl
+    x:Class="Pixeval.Views.Entry.SeriesView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:entry="using:Pixeval.Views.Entry"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="using:Pixeval.ViewModels"
+    x:DataType="{x:Type viewModels:SeriesViewViewModel}"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
+    <UserControl.DataContext>
+        <viewModels:SeriesViewViewModel />
+    </UserControl.DataContext>
+    <entry:EntryView
+        HasNoItem="{Binding !View.Count}"
+        IsLoadingMore="{Binding #SeriesListBox.(controls:IncrementalLoadingBehavior.IsLoadingMore)}">
+        <ListBox
+            x:Name="SeriesListBox"
+            controls:IncrementalLoadingBehavior.IsEnabled="True"
+            controls:IncrementalLoadingBehavior.Threshold="200"
+            ContainerClearing="SeriesListBox_OnContainerClearing"
+            ContainerPrepared="SeriesListBox_OnContainerPrepared"
+            ItemsSource="{Binding View}">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <controls:AdaptiveGrid
+                        ItemSize="360"
+                        ItemSpacing="5"
+                        LineSize="220"
+                        LineSpacing="5" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type viewModels:SeriesItemViewModel}">
+                    <entry:SeriesItem />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </entry:EntryView>
+</UserControl>

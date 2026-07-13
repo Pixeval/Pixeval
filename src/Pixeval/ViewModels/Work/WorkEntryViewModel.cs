@@ -3,6 +3,7 @@
 
 using System;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Mako.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
 using Pixeval.Controls;
@@ -21,15 +22,17 @@ public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>
 
     public bool IsBookmarkSupported => Entry.Platform is IPlatformInfo.Pixiv;
 
+    public SimpleSeries? Series => Entry is WorkBase work ? work.Series : null;
+
+    public bool HasSeries => Series is not null;
+
     IArtworkInfo IWorkViewModel.Entry => Entry;
 
     public bool IsFavorite => Entry.IsFavorite;
 
-    [ObservableProperty]
-    public partial HeartButtonState IsBookmarkedDisplay { get; set; }
+    [ObservableProperty] public partial HeartButtonState IsBookmarkedDisplay { get; set; }
 
-    [ObservableProperty]
-    public partial bool IsInWatchLater { get; set; }
+    [ObservableProperty] public partial bool IsInWatchLater { get; set; }
 
     public DateTimeOffset CreateDate => Entry.CreateDate;
 

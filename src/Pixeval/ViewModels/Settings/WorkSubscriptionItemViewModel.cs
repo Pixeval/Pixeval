@@ -24,7 +24,7 @@ public class WorkSubscriptionItemViewModel(WorkSubscriptionEntry entry) : ViewMo
         [SetsRequiredMembers]
         public WorkSubscriptionShimmer(WorkSubscriptionEntry entry)
         {
-            Id = entry.UserId;
+            Id = entry.Id;
             Name = entry.DisplayName;
             Account = entry.Account;
             AvatarUrl = string.IsNullOrWhiteSpace(entry.AvatarUrl)

@@ -192,20 +192,25 @@ public sealed class MetaPathParserTest
         var sample = DesignHelper.DownloadParserSampleWork(ImageType.SingleImage);
 
         Assert.AreEqual(
-            "not-group-not-bookmark-not-post",
+            "not-group-not-bookmark-not-post-not-series",
             DownloadPathMacroParser.Reduce(
-                "@{is_group?group:not-group}-@{is_bookmark_group?bookmark:not-bookmark}-@{is_post_group?post:not-post}",
+                "@{is_group?group:not-group}-@{is_bookmark_group?bookmark:not-bookmark}-@{is_post_group?post:not-post}-@{is_series_group?series:not-series}",
                 new ParserContext(sample)));
         Assert.AreEqual(
-            "group-bookmark-not-post",
+            "group-bookmark-not-post-not-series",
             DownloadPathMacroParser.Reduce(
-                "@{is_group?group:not-group}-@{is_bookmark_group?bookmark:not-bookmark}-@{is_post_group?post:not-post}",
+                "@{is_group?group:not-group}-@{is_bookmark_group?bookmark:not-bookmark}-@{is_post_group?post:not-post}-@{is_series_group?series:not-series}",
                 new ParserContext(sample, WorkSubscriptionDownloadContext.FromSubscriptionType(WorkSubscriptionType.Bookmarks))));
         Assert.AreEqual(
-            "group-not-bookmark-post",
+            "group-not-bookmark-post-not-series",
             DownloadPathMacroParser.Reduce(
-                "@{is_group?group:not-group}-@{is_bookmark_group?bookmark:not-bookmark}-@{is_post_group?post:not-post}",
+                "@{is_group?group:not-group}-@{is_bookmark_group?bookmark:not-bookmark}-@{is_post_group?post:not-post}-@{is_series_group?series:not-series}",
                 new ParserContext(sample, WorkSubscriptionDownloadContext.FromSubscriptionType(WorkSubscriptionType.Posts))));
+        Assert.AreEqual(
+            "group-not-bookmark-not-post-series",
+            DownloadPathMacroParser.Reduce(
+                "@{is_group?group:not-group}-@{is_bookmark_group?bookmark:not-bookmark}-@{is_post_group?post:not-post}-@{is_series_group?series:not-series}",
+                new ParserContext(sample, WorkSubscriptionDownloadContext.FromSubscriptionType(WorkSubscriptionType.Series))));
     }
 
     [TestMethod]

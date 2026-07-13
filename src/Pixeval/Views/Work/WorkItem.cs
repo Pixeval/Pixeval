@@ -7,8 +7,12 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Rendering.Composition;
+using Mako.Global.Enum;
+using Mako.Model;
+using Pixeval.Utilities;
 using Pixeval.ViewModels;
 using Pixeval.Views.Entry;
+using Pixeval.Views.Viewers;
 
 namespace Pixeval.Views.Work;
 
@@ -26,6 +30,17 @@ public class WorkItem : EntryItem, IWorkAnimatable
     protected void OpenUserInfoPage_OnClicked(object sender, RoutedEventArgs e)
     {
         RequestOpenUserInfoPage?.Invoke(this, (IWorkViewModel) DataContext!);
+    }
+
+    protected void OpenSeriesPage_OnClicked(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Control { DataContext: IWorkViewModel { Entry: WorkBase { Series: { } series } work } }
+            || TopLevel.GetTopLevel(this)?.ViewContainer is not { } viewContainer)
+            return;
+
+        viewContainer.CreateSeriesPage(
+            work is Novel ? SimpleWorkType.Novel : SimpleWorkType.Illustration,
+            series.Id);
     }
 
     public void StartAnimation()

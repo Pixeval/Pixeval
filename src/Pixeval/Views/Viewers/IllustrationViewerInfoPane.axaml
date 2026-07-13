@@ -137,26 +137,29 @@
                 </CommandBar>
             </StackPanel>
 
-            <Grid VerticalAlignment="Stretch" ClipToBounds="True">
+            <DockPanel VerticalAlignment="Stretch" ClipToBounds="True">
+                <local:WorkSeriesInfoPane
+                    DockPanel.Dock="Bottom"
+                    DataContext="{Binding SeriesInfo}" />
+                <Panel>
+                    <local:WorkInfoPane Name="InfoPaneSection" ArtworkInfo="{Binding CurrentIllustration.Entry, FallbackValue={x:Null}}">
+                        <local:WorkInfoPane.ActionZone>
+                            <Border
+                                Width="32"
+                                Height="32"
+                                VerticalAlignment="Top"
+                                IsHitTestVisible="False" />
+                        </local:WorkInfoPane.ActionZone>
+                    </local:WorkInfoPane>
 
-                <local:WorkInfoPane Name="InfoPaneSection" ArtworkInfo="{Binding CurrentIllustration.Entry, FallbackValue={x:Null}}">
-                    <local:WorkInfoPane.ActionZone>
-                        <Border
-                            Width="32"
-                            Height="32"
-                            VerticalAlignment="Top"
-                            IsHitTestVisible="False" />
-                    </local:WorkInfoPane.ActionZone>
-                </local:WorkInfoPane>
-
-                <TabbedPage
-                    Name="TabbedPageSection"
-                    Background="Transparent"
-                    IsVisible="{Binding #InfoPaneRoot.IsDocked}"
-                    Pages="{Binding PanePages}"
-                    TabPlacement="Bottom" />
-
-            </Grid>
+                    <TabbedPage
+                        Name="TabbedPageSection"
+                        Background="Transparent"
+                        IsVisible="{Binding #InfoPaneRoot.IsDocked}"
+                        Pages="{Binding PanePages}"
+                        TabPlacement="Bottom" />
+                </Panel>
+            </DockPanel>
         </DockPanel>
 
         <ToggleButton

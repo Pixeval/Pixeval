@@ -14,7 +14,6 @@
     xmlns:viewModels="using:Pixeval.ViewModels"
     x:DataType="{x:Type viewModels:DownloadViewViewModel}"
     x:Name="Root"
-    Background="Transparent"
     Header="{I18N {x:Static pixeval:MainPageResources.TabDownload}}"
     mc:Ignorable="d"
     d:DesignHeight="450"

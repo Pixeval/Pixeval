@@ -81,7 +81,7 @@ public sealed class WorkFilterEvaluatorTest
             height: 600,
             xRestrict: XRestrict.Ordinary,
             aiType: AiType.NotAiGenerated,
-            illustrationType: IllustrationType.Illust);
+            illustrationType: IllustrationType.Illustration);
 
         AssertDoesNotMatch(work, "Red");
         AssertDoesNotMatch(work, "@Bob");

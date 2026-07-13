@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -111,10 +112,10 @@ public class App : Application
 
     private static async Task LoginAsync(ViewContainerBase viewContainer)
     {
-        if (AppViewModel.GetCurrentLoginUser() is { RefreshToken: { } token }
-            && !string.IsNullOrWhiteSpace(token))
+        if (AppViewModel.GetCurrentLoginUser() is { RefreshToken: { } refreshToken }
+            && !string.IsNullOrWhiteSpace(refreshToken))
         {
-            AppViewModel.MakoClient.SetToken(token);
+            AppViewModel.MakoClient.SetToken(refreshToken);
             if (await AppViewModel.MakoClient.IdentifyTokenAsync())
             {
                 viewContainer.NavigateTo(new HomePage());

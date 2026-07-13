@@ -146,7 +146,7 @@ public sealed partial class PixevalMcpService
     }
 
     public async Task<PixevalWorkSubscriptionOperationResultDto> AddSubscriptionAsync(
-        long userId,
+        long targetId,
         PixevalWorkSubscriptionType subscriptionType,
         PixevalWorkSubscriptionWorkKind workKind,
         CancellationToken cancellationToken)
@@ -155,19 +155,35 @@ public sealed partial class PixevalMcpService
         var kind = ToWorkSubscriptionWorkKind(workKind);
         ValidateWorkSubscriptionKind(type, kind);
 
-        var user = await GetUserBasicInfoAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (!WorkSubscriptionHelper.TryAddOrUpdate(user, type, kind))
+        bool wasAdded;
+        if (type is WorkSubscriptionType.Series)
+        {
+            var simpleWorkType = kind is WorkSubscriptionWorkKind.Novel
+                ? SimpleWorkType.Novel
+                : SimpleWorkType.Illustration;
+            var (detail, first, _) = await MakoClient.GetWorkSeriesAsync(simpleWorkType, targetId)
+                .WaitAsync(cancellationToken)
+                .ConfigureAwait(false);
+            wasAdded = WorkSubscriptionHelper.TryAddOrUpdateSeries(targetId, kind, detail, first);
+        }
+        else
+        {
+            var user = await GetUserBasicInfoAsync(targetId, cancellationToken).ConfigureAwait(false);
+            wasAdded = WorkSubscriptionHelper.TryAddOrUpdate(user, type, kind);
+        }
+
+        if (!wasAdded)
             return new(false, "Work subscription was not added.", null);
 
         var entry = ViewModel.AppServiceProvider.GetRequiredService<WorkSubscriptionPersistentManager>()
-            .GetBySubscriptionKey(userId, type, kind);
+            .GetBySubscriptionKey(targetId, type, kind);
         return new(true, "Work subscription added and sync was queued.",
-            entry is { } e ? ToWorkSubscriptionDto(e) : null);
+            entry is not null ? ToWorkSubscriptionDto(entry) : null);
     }
 
     public PixevalWorkSubscriptionOperationResultDto RemoveSubscription(
         int? historyEntryId,
-        long? userId,
+        long? targetId,
         PixevalWorkSubscriptionType? subscriptionType,
         PixevalWorkSubscriptionWorkKind? workKind)
     {
@@ -185,16 +201,16 @@ public sealed partial class PixevalMcpService
 
         WorkSubscriptionEntry? GetBySubscriptionKey()
         {
-            if (userId is not { } uid
+            if (targetId is not { } id
                 || subscriptionType is not { } mcpSubscriptionType
                 || workKind is not { } mcpWorkKind)
                 throw new PixevalMcpException(
-                    "Provide historyEntryId, or provide userId, subscriptionType, and workKind.");
+                    "Provide historyEntryId, or provide targetId, subscriptionType, and workKind.");
 
             var type = ToWorkSubscriptionType(mcpSubscriptionType);
             var kind = ToWorkSubscriptionWorkKind(mcpWorkKind);
             ValidateWorkSubscriptionKind(type, kind);
-            return manager.GetBySubscriptionKey(uid, type, kind);
+            return manager.GetBySubscriptionKey(id, type, kind);
         }
     }
 
@@ -235,7 +251,7 @@ public sealed partial class PixevalMcpService
     private static PixevalWorkSubscriptionDto ToWorkSubscriptionDto(WorkSubscriptionEntry entry) =>
         new(
             entry.HistoryEntryId,
-            entry.UserId,
+            entry.Id,
             entry.Name,
             entry.Account,
             entry.AvatarUrl,
@@ -248,6 +264,7 @@ public sealed partial class PixevalMcpService
         {
             WorkSubscriptionType.Bookmarks => PixevalWorkSubscriptionType.Bookmarks,
             WorkSubscriptionType.Posts => PixevalWorkSubscriptionType.Posts,
+            WorkSubscriptionType.Series => PixevalWorkSubscriptionType.Series,
             _ => throw new ArgumentOutOfRangeException(nameof(subscriptionType))
         };
 
@@ -266,6 +283,7 @@ public sealed partial class PixevalMcpService
         {
             PixevalWorkSubscriptionType.Bookmarks => WorkSubscriptionType.Bookmarks,
             PixevalWorkSubscriptionType.Posts => WorkSubscriptionType.Posts,
+            PixevalWorkSubscriptionType.Series => WorkSubscriptionType.Series,
             _ => throw new ArgumentOutOfRangeException(nameof(subscriptionType))
         };
 
@@ -289,11 +307,13 @@ public sealed partial class PixevalMcpService
             WorkSubscriptionType.Posts => workKind is WorkSubscriptionWorkKind.Illustration
                 or WorkSubscriptionWorkKind.Manga
                 or WorkSubscriptionWorkKind.Novel,
+            WorkSubscriptionType.Series => workKind is WorkSubscriptionWorkKind.Manga
+                or WorkSubscriptionWorkKind.Novel,
             _ => false
         };
         if (!isValid)
             throw new PixevalMcpException(
-                "For bookmarks, workKind must be illustration or novel. For posts, workKind must be illustration, manga, or novel.");
+                "For bookmarks, workKind must be illustration or novel. For posts, workKind must be illustration, manga, or novel. For series, workKind must be manga or novel.");
     }
 
     private static void RunOnUiThread(Action action)

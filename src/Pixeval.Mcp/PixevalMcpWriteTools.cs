@@ -7,7 +7,6 @@ using Mako.Model;
 using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
 using Pixeval.Mcp.Dtos;
-using static Pixeval.Mcp.PixevalMcpHelpers;
 
 namespace Pixeval.Mcp;
 
@@ -212,12 +211,12 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
         OpenWorld = true, UseStructuredContent = true,
         OutputSchemaType = typeof(PixevalWorkSubscriptionOperationResultDto))]
     [Description(
-        "Adds or updates a Pixeval work subscription and queues a subscription sync. Requires Pixeval MCP write tools to be enabled.")]
+        "Adds or updates a Pixeval user or series work subscription and queues a subscription sync. Requires Pixeval MCP write tools to be enabled.")]
     public Task<CallToolResult> AddSubscriptionAsync(
-        [Description("Pixiv user id.")] long userId,
+        [Description("Pixiv user id for bookmarks/posts, or series id for series subscriptions.")]
+        long targetId,
         [Description("Subscription type.")] PixevalWorkSubscriptionType subscriptionType,
-        [Description(
-            "Work kind for the subscription type.")]
+        [Description("Work kind for the subscription type.")]
         PixevalWorkSubscriptionWorkKind workKind,
         CancellationToken cancellationToken = default) =>
         ExecuteAsync(nameof(AddSubscriptionAsync), async () =>
@@ -225,7 +224,7 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
             runtime.EnsureLoggedIn();
             runtime.EnsureWriteToolsEnabled();
             return PixevalMcpResult.Success(await runtime.AddSubscriptionAsync(
-                    userId,
+                    targetId,
                     subscriptionType,
                     workKind,
                     cancellationToken)
@@ -235,12 +234,12 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
     [McpServerTool(Name = "remove_subscription", Title = "Remove Pixeval work subscription",
         UseStructuredContent = true, OutputSchemaType = typeof(PixevalWorkSubscriptionOperationResultDto))]
     [Description(
-        "Removes a Pixeval work subscription by historyEntryId, or by userId + subscriptionType + workKind. Requires write tools.")]
+        "Removes a Pixeval work subscription by historyEntryId, or by targetId + subscriptionType + workKind. Requires write tools.")]
     public CallToolResult RemoveSubscription(
         [Description("History entry id from work subscription history.")]
         int? historyEntryId = null,
-        [Description("Pixiv user id. Required when historyEntryId is empty.")]
-        long? userId = null,
+        [Description("Pixiv user or series id. Required when historyEntryId is empty.")]
+        long? targetId = null,
         [Description("Subscription type. Required when historyEntryId is empty.")]
         PixevalWorkSubscriptionType? subscriptionType = null,
         [Description("Work kind. Required when historyEntryId is empty.")]
@@ -250,7 +249,7 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
             runtime.EnsureWriteToolsEnabled();
             return PixevalMcpResult.Success(runtime.RemoveSubscription(
                 historyEntryId,
-                userId,
+                targetId,
                 subscriptionType,
                 workKind));
         });

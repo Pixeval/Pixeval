@@ -1,0 +1,119 @@
+<views:IconContentPage
+    x:Class="Pixeval.Views.Viewers.SeriesViewerPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:converters="using:Pixeval.Views.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
+    xmlns:viewModels="using:Pixeval.ViewModels.Viewers"
+    xmlns:views="using:Pixeval.Views"
+    x:DataType="{x:Type viewModels:SeriesViewerPageViewModel}"
+    Header="{Binding Header}"
+    mc:Ignorable="d"
+    d:DesignHeight="600"
+    d:DesignWidth="1200">
+    <Grid>
+        <DockPanel IsVisible="{Binding SeriesDetail, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <Expander
+                x:Name="SeriesInfoExpander"
+                Padding="0"
+                HorizontalAlignment="Stretch"
+                DockPanel.Dock="Top"
+                ExpandDirection="Up"
+                IsExpanded="True">
+                <Expander.Header>
+                    <DockPanel>
+                        <CommandBar
+                            DefaultLabelPosition="Right"
+                            DockPanel.Dock="Right"
+                            IsDynamicOverflowEnabled="True">
+                            <CommandBarButton
+                                Command="{Binding AddToWatchlistCommand}"
+                                Icon="{markup:SymbolIcon Alert}"
+                                IsVisible="{Binding !IsWatchlistAdded}"
+                                Label="{I18N {x:Static pixeval:SeriesViewerPageResources.AddToWatchlist}}" />
+                            <CommandBarButton
+                                Command="{Binding RemoveFromWatchlistCommand}"
+                                Icon="{markup:SymbolIcon AlertOff}"
+                                IsVisible="{Binding IsWatchlistAdded}"
+                                Label="{I18N {x:Static pixeval:SeriesViewerPageResources.RemoveFromWatchlist}}" />
+                        </CommandBar>
+                        <StackPanel
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal"
+                            Spacing="16">
+                            <StackPanel
+                                MaxWidth="320"
+                                VerticalAlignment="Center"
+                                IsVisible="{Binding !#SeriesInfoExpander.IsExpanded}"
+                                Spacing="4">
+                                <TextBlock
+                                    MaxLines="1"
+                                    Text="{Binding SeriesDetail.Title}"
+                                    TextTrimming="CharacterEllipsis"
+                                    Theme="{StaticResource CaptionStrongTextBlockStyle}" />
+                                <TextBlock
+                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                    Text="{Binding AuthorName}"
+                                    TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                            <controls:IconText
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Symbol="SquareMultiple"
+                                Text="{Binding ContentCountText}" />
+                        </StackPanel>
+                    </DockPanel>
+                </Expander.Header>
+                <Border MinHeight="190" Background="{DynamicResource PixevalTranslucentBackground}">
+                    <Grid
+                        Margin="40,20"
+                        ColumnDefinitions="Auto,*"
+                        ColumnSpacing="30">
+                        <Image
+                            Height="180"
+                            VerticalAlignment="Stretch"
+                            controls:Source.Cache="{Binding CoverUrl}"
+                            Stretch="UniformToFill" />
+                        <StackPanel
+                            Grid.Column="1"
+                            MaxWidth="650"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Spacing="8">
+                            <TextBlock
+                                Text="{Binding SeriesDetail.Title}"
+                                TextWrapping="Wrap"
+                                Theme="{StaticResource TitleTextBlockStyle}" />
+                            <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{Binding AuthorName}" />
+                            <TextBlock
+                                MaxHeight="72"
+                                Text="{Binding Caption, Converter={x:Static converters:PixevalConverters.HtmlToPlainText}}"
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Expander>
+            <ContentControl x:Name="SeriesContainerHost" />
+        </DockPanel>
+        <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" IsVisible="{Binding IsLoading}">
+            <StackPanel
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Spacing="10">
+                <ProgressBar Width="160" IsIndeterminate="{Binding IsLoading}" />
+                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.CardPreviewLoadingTextBlockText}}" />
+            </StackPanel>
+        </Border>
+        <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" IsVisible="{Binding LoadErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+            <TextBlock
+                MaxWidth="480"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Text="{Binding LoadErrorMessage}"
+                TextWrapping="Wrap" />
+        </Border>
+    </Grid>
+</views:IconContentPage>

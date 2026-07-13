@@ -1,0 +1,99 @@
+<UserControl
+    x:Class="Pixeval.Views.Viewers.WorkSeriesInfoPane"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="using:FluentIcons.Avalonia"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
+    xmlns:utilities="using:Pixeval.Utilities"
+    xmlns:viewers="using:Pixeval.ViewModels.Viewers"
+    x:DataType="{x:Type viewers:WorkSeriesInfoViewModel}"
+    HorizontalContentAlignment="Stretch"
+    Design.DataContext="{x:Static utilities:DesignHelper.DesignWorkSeriesInfoViewModel}"
+    mc:Ignorable="d"
+    d:DesignHeight="180"
+    d:DesignWidth="360">
+    <Border
+        Margin="8"
+        Padding="8"
+        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+        CornerRadius="{StaticResource ControlCornerRadius}">
+        <StackPanel Spacing="8">
+            <Button
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                Background="Transparent"
+                Click="OpenSeriesButton_OnClick"
+                ToolTip.Tip="{I18N {x:Static pixeval:EntryItemResources.OpenSeries}}">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                    <fluent:SymbolIcon VerticalAlignment="Center" Symbol="SquareMultiple" />
+                    <StackPanel Grid.Column="1">
+                        <TextBlock
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Text="{I18N {x:Static pixeval:EntryViewerPageResources.Series}}"
+                            Theme="{StaticResource CaptionTextBlockStyle}" />
+                        <TextBlock
+                            MaxLines="2"
+                            Text="{Binding Title}"
+                            TextTrimming="CharacterEllipsis"
+                            TextWrapping="Wrap"
+                            Theme="{StaticResource BodyStrongTextBlockStyle}" />
+                    </StackPanel>
+                    <TextBlock
+                        Grid.Column="2"
+                        VerticalAlignment="Center"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        IsVisible="{Binding PositionText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                        Text="{Binding PositionText}" />
+                </Grid>
+            </Button>
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                <Button
+                    Grid.Column="0"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"
+                    Background="Transparent"
+                    Click="NavigationButton_OnClick"
+                    IsVisible="{Binding Previous, Converter={x:Static ObjectConverters.IsNotNull}}"
+                    Tag="{Binding Previous}"
+                    ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.PreviousSeriesWork}}">
+                    <DockPanel HorizontalSpacing="6" LastChildFill="True">
+                        <fluent:SymbolIcon
+                            VerticalAlignment="Center"
+                            DockPanel.Dock="Left"
+                            Symbol="ChevronLeft" />
+                        <TextBlock
+                            HorizontalAlignment="Left"
+                            MaxLines="2"
+                            Text="{Binding Previous.Title}"
+                            TextTrimming="CharacterEllipsis"
+                            TextWrapping="Wrap" />
+                    </DockPanel>
+                </Button>
+                <Button
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"
+                    Background="Transparent"
+                    Click="NavigationButton_OnClick"
+                    IsVisible="{Binding Next, Converter={x:Static ObjectConverters.IsNotNull}}"
+                    Tag="{Binding Next}"
+                    ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.NextSeriesWork}}">
+                    <DockPanel HorizontalSpacing="6" LastChildFill="True">
+                        <fluent:SymbolIcon
+                            VerticalAlignment="Center"
+                            DockPanel.Dock="Right"
+                            Symbol="ChevronRight" />
+                        <TextBlock
+                            HorizontalAlignment="Right"
+                            MaxLines="2"
+                            Text="{Binding Next.Title}"
+                            TextTrimming="CharacterEllipsis"
+                            TextWrapping="Wrap" />
+                    </DockPanel>
+                </Button>
+            </Grid>
+        </StackPanel>
+    </Border>
+</UserControl>

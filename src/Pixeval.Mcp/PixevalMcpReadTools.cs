@@ -333,7 +333,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
     [Description(
         "Gets Pixiv recommended works for illustrations, manga, or novels. If hasMore is true, call more(nextCursor) to continue.")]
     public Task<CallToolResult> RecommendedWorksAsync(
-        [Description("Work type.")] WorkType workType = WorkType.Illustration,
+        [Description("Work type.")] WorkType workType,
         [Description("Maximum number of works to return in this call. Clamped to 1..100.")]
         int count = DefaultCount,
         [Description("Whether Pixiv ranking works should be included.")]
@@ -359,7 +359,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
     [Description(
         "Gets newest Pixiv illustrations, manga, or novels. If hasMore is true, call more(nextCursor) to continue.")]
     public Task<CallToolResult> NewWorksAsync(
-        [Description("Work type.")] WorkType workType = WorkType.Illustration,
+        [Description("Work type.")] WorkType workType,
         [Description("Maximum number of works to return in this call. Clamped to 1..100.")]
         int count = DefaultCount,
         [Description("Optional maximum Pixiv work id for continuing from an older server-side position.")]
@@ -380,7 +380,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
     [Description(
         "Gets new works from followed users for illustrations/manga or novels. If hasMore is true, call more(nextCursor) to continue.")]
     public Task<CallToolResult> FollowingWorksAsync(
-        [Description("Work type.")] SimpleWorkType workType = SimpleWorkType.Illustration,
+        [Description("Work type.")] SimpleWorkType workType,
         [Description("Follow privacy. Private only works for the logged-in account.")]
         PrivacyPolicy privacy = PrivacyPolicy.Public,
         [Description("Maximum number of works to return in this call. Clamped to 1..100.")]
@@ -401,8 +401,8 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
     [Description(
         "Gets works posted by a Pixiv user. If hasMore is true, call more(nextCursor) to continue.")]
     public Task<CallToolResult> PostsAsync(
+        [Description("Work type.")] WorkType workType,
         [Description("Pixiv user id.")] long userId,
-        [Description("Work type.")] WorkType workType = WorkType.Illustration,
         [Description("Maximum number of works to return in this call. Clamped to 1..100.")]
         int count = DefaultCount,
         [Description(
@@ -411,7 +411,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         CancellationToken cancellationToken = default) =>
         ExecuteWorkCursorAsync(
             nameof(PostsAsync),
-            () => runtime.MakoClient.WorkPosted(userId, workType),
+            () => runtime.MakoClient.WorkPosted(workType, userId),
             count,
             workFilter,
             cancellationToken);
@@ -421,7 +421,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
     [Description(
         "Gets works from MyPixiv users for illustrations/manga or novels. If hasMore is true, call more(nextCursor) to continue.")]
     public Task<CallToolResult> MyPixivWorksAsync(
-        [Description("Work type.")] SimpleWorkType workType = SimpleWorkType.Illustration,
+        [Description("Work type.")] SimpleWorkType workType,
         [Description("Maximum number of works to return in this call. Clamped to 1..100.")]
         int count = DefaultCount,
         [Description(
@@ -461,7 +461,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
     [Description(
         "Gets the logged-in account's Pixiv manga or novel series watchlist. If hasMore is true, call more(nextCursor) to continue.")]
     public Task<CallToolResult> SeriesWatchlistAsync(
-        [Description("Series work type.")] SimpleWorkType workType = SimpleWorkType.Illustration,
+        [Description("Series work type.")] SimpleWorkType workType,
         [Description("Maximum number of series to return in this call. Clamped to 1..100.")]
         int count = DefaultCount,
         CancellationToken cancellationToken = default) =>
@@ -560,7 +560,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
     [Description(
         "Gets Pixiv ranking works for illustrations/manga or novels. If hasMore is true, call more(nextCursor) to continue.")]
     public Task<CallToolResult> RankingAsync(
-        [Description("Work type.")] SimpleWorkType workType = SimpleWorkType.Illustration,
+        [Description("Work type.")] SimpleWorkType workType,
         [Description("Pixiv ranking option.")] RankOption rankOption = RankOption.Day,
         [Description("Ranking date in yyyy-MM-dd form. Empty uses Pixiv's latest available ranking day.")]
         string? date = null,
@@ -598,9 +598,9 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
     [Description(
         "Gets public or own private Pixiv bookmarks for a user. If hasMore is true, call more(nextCursor) to continue.")]
     public Task<CallToolResult> BookmarksAsync(
+        [Description("Work type.")] SimpleWorkType workType,
         [Description("Pixiv user id. Empty uses the currently logged-in Pixeval account.")]
         long? userId = null,
-        [Description("Work type.")] SimpleWorkType workType = SimpleWorkType.Illustration,
         [Description("Bookmark privacy. Private only works for the logged-in account.")]
         PrivacyPolicy privacy = PrivacyPolicy.Public,
         [Description("Optional bookmark tag name.")]
@@ -622,8 +622,8 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
                 throw new PixevalMcpException("Current Pixiv user is not available.");
             return PixevalMcpResult.Success(await cursorStore.CreateWorkCursorAsync(
                     runtime.MakoClient.WorkBookmarks(
-                        uid,
                         workType,
+                        uid,
                         privacy,
                         tag),
                     runtime,
@@ -639,9 +639,9 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
     [Description(
         "Gets actual Pixiv bookmark tag counts for the logged-in account or a public Pixiv user. If hasMore is true, call more(nextCursor) to continue.")]
     public Task<CallToolResult> BookmarkTagsAsync(
+        [Description("Work type.")] SimpleWorkType workType,
         [Description("Pixiv user id. Empty uses the currently logged-in Pixeval account.")]
         long? userId = null,
-        [Description("Work type.")] SimpleWorkType workType = SimpleWorkType.Illustration,
         [Description("Bookmark privacy. Private only works for the logged-in account.")]
         PrivacyPolicy privacy = PrivacyPolicy.Public,
         [Description("Maximum number of tags to return in this call. Clamped to 1..100.")]
@@ -653,7 +653,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
             var uid = userId ?? runtime.CurrentUser?.Id ??
                 throw new PixevalMcpException("Current Pixiv user is not available.");
             return PixevalMcpResult.Success(await cursorStore.CreateBookmarkTagCursorAsync(
-                    runtime.MakoClient.WorkBookmarkTags(uid, workType, privacy),
+                    runtime.MakoClient.WorkBookmarkTags(workType, uid, privacy),
                     runtime,
                     uid,
                     workType,
@@ -667,7 +667,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         OpenWorld = true, UseStructuredContent = true, OutputSchemaType = typeof(PixevalTrendingTagListDto))]
     [Description("Gets Pixiv trending tags for illustrations/manga or novels.")]
     public Task<CallToolResult> TrendingTagsAsync(
-        [Description("Work type.")] SimpleWorkType workType = SimpleWorkType.Illustration,
+        [Description("Work type.")] SimpleWorkType workType,
         [Description("Maximum number of tags to return. Clamped to 1..100.")]
         int count = DefaultCount,
         CancellationToken cancellationToken = default) =>

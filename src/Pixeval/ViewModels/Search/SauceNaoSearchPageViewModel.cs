@@ -62,7 +62,7 @@ public sealed partial class SauceNaoSearchPageViewModel : ViewModelBase, IDispos
                 Image?.Dispose();
                 Image = bitmap;
                 using var memoryStream = Streams.RentStream();
-                bitmap.Save(memoryStream);
+                bitmap.Save(memoryStream, new PngBitmapEncoderOptions());
                 File = memoryStream.ToArray();
                 FileSelected = true;
             }

@@ -32,9 +32,9 @@
 		
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
 		<PackageReference Include="Markdown.Avalonia" Version="12.0.0-a3" />
-		<PackageReference Include="SharpYaml" Version="3.11.0" />
+		<PackageReference Include="SharpYaml" Version="3.13.0" />
 		<!--<PackageReference Include="SmoothScroll.Avalonia" Version="12.0.0.12" />-->
-		<PackageReference Include="sqlite-net-pcl" Version="1.10.196-beta" />
+		<PackageReference Include="sqlite-net-pcl" Version="1.11.285" />
 		<PackageReference Include="Svg.Controls.Skia.Avalonia" Version="12.0.0.13" />
 		<PackageReference Include="TabView.Avalonia" Version="1.0.0" />
 	</ItemGroup>
@@ -59,6 +59,7 @@
 		<!-- 字符串资源相关 -->
 		<AdditionalFiles Include="i18n\**\*.json" />
 		<AdditionalFiles Include="Views\**\*.axaml" />
+		<AdditionalFiles Include="Assets\PathIcons\*.svg" />
 
 		<None Update="i18n\**">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -167,7 +167,7 @@ public sealed partial class PixevalMcpService
             .Where(entry =>
                 ContainsKeyword(entry.Name, keyword)
                 || ContainsKeyword(entry.Account, keyword)
-                || ContainsKeyword(entry.UserId.ToString(), keyword))
+                || ContainsKeyword(entry.Id.ToString(), keyword))
             .ToArray();
         var items = entries.Skip(skip)
             .Take(count)

@@ -7,7 +7,9 @@ using Avalonia.Interactivity;
 using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.Utilities;
+using Pixeval.ViewModels;
 using Pixeval.Views.Search;
+using Pixeval.Views.Viewers;
 
 namespace Pixeval.Views.Work;
 
@@ -23,6 +25,15 @@ public partial class NovelItem : WorkItem
             return;
         App.AppViewModel.HistoryPersistHelper.AddSearchHistory(tag.Name, tag.TranslatedName);
         viewContainer.NavigateTo(new WorkSearchResultPage(tag.Name, SimpleWorkType.Novel));
+    }
+
+    private void AuthorButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Control { DataContext: NovelItemViewModel vm })
+            return;
+        if (TopLevel.GetTopLevel(this)?.ViewContainer is not { } viewContainer)
+            return;
+        viewContainer.CreateUserPage(vm.Entry.User.Id);
     }
 
     private void InputElement_OnPointerEntered(object? sender, PointerEventArgs e)

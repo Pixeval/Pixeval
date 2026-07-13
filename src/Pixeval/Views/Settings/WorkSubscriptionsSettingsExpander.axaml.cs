@@ -9,6 +9,7 @@ using AutoSettingsPage.Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using CommunityToolkit.Avalonia.Controls;
+using Mako.Global.Enum;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Controls;
 using Pixeval.I18N;
@@ -48,6 +49,8 @@ public partial class WorkSubscriptionsSettingsExpander : SettingsExpander, IEntr
     private static IReadOnlyList<SymbolComboBoxItem> PostWorkKinds { get; } =
         [.. SymbolComboBoxItem.GetValues<WorkSubscriptionWorkKind>().Where(t => t.Value is WorkSubscriptionWorkKind.Illustration or WorkSubscriptionWorkKind.Manga or WorkSubscriptionWorkKind.Novel)];
 
+    private static IReadOnlyList<SymbolComboBoxItem> SeriesWorkKinds => BookmarkWorkKinds;
+
     private void Reload()
     {
         Subscriptions.Clear();
@@ -58,9 +61,9 @@ public partial class WorkSubscriptionsSettingsExpander : SettingsExpander, IEntr
     private async void AddButton_OnClicked(object? sender, RoutedEventArgs e)
     {
         ErrorTextBlock.IsVisible = false;
-        if (!long.TryParse(UserIdTextBox.Text, out var userId) || userId <= 0)
+        if (!long.TryParse(TargetIdTextBox.Text, out var targetId) || targetId <= 0)
         {
-            ShowError(I18NManager.GetResource(WorkSubscriptionsSettingsExpanderResources.InvalidUserId));
+            ShowError(I18NManager.GetResource(WorkSubscriptionsSettingsExpanderResources.InvalidTargetId));
             return;
         }
 
@@ -73,10 +76,22 @@ public partial class WorkSubscriptionsSettingsExpander : SettingsExpander, IEntr
 
             workKind = selectedWorkKind;
         }
-        var user = (await App.AppViewModel.MakoClient.GetUserFromIdAsync(userId)).UserEntity;
 
-        _ = WorkSubscriptionHelper.TryAddOrUpdate(user, subscriptionType, workKind);
-        UserIdTextBox.Text = "";
+        if (subscriptionType is WorkSubscriptionType.Series)
+        {
+            var simpleWorkType = workKind is WorkSubscriptionWorkKind.Novel
+                ? SimpleWorkType.Novel
+                : SimpleWorkType.Illustration;
+            var (detail, first, _) = await App.AppViewModel.MakoClient.GetWorkSeriesAsync(simpleWorkType, targetId);
+            _ = WorkSubscriptionHelper.TryAddOrUpdateSeries(targetId, workKind, detail, first);
+        }
+        else
+        {
+            var user = (await App.AppViewModel.MakoClient.GetUserFromIdAsync(targetId)).UserEntity;
+            _ = WorkSubscriptionHelper.TryAddOrUpdate(user, subscriptionType, workKind);
+        }
+
+        TargetIdTextBox.Text = "";
         Reload();
     }
 
@@ -96,9 +111,13 @@ public partial class WorkSubscriptionsSettingsExpander : SettingsExpander, IEntr
 
     private void UpdateWorkKindItems()
     {
-        var items = SubscriptionTypeComboBox.GetSelectedValue<WorkSubscriptionType>() is WorkSubscriptionType.Bookmarks
-            ? BookmarkWorkKinds
-            : PostWorkKinds;
+        var items = SubscriptionTypeComboBox.GetSelectedValue<WorkSubscriptionType>() switch
+        {
+            WorkSubscriptionType.Bookmarks => BookmarkWorkKinds,
+            WorkSubscriptionType.Posts => PostWorkKinds,
+            WorkSubscriptionType.Series => SeriesWorkKinds,
+            _ => throw new ArgumentOutOfRangeException()
+        };
         WorkKindComboBox.ItemsSource = items;
         if (items is not [])
             WorkKindComboBox.SelectedValue = items[0].Value;

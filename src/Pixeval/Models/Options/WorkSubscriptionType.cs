@@ -12,5 +12,8 @@ public enum WorkSubscriptionType
     Bookmarks,
 
     [LocalizedResource(EnumResources.WorkSubscriptionTypePosts)]
-    Posts
+    Posts,
+
+    [LocalizedResource(EnumResources.WorkSubscriptionTypeSeries)]
+    Series
 }

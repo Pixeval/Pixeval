@@ -16,7 +16,7 @@ using Pixeval.Views.Work;
 
 namespace Pixeval.Views.Viewers;
 
-public partial class NovelViewerPage : ContentPage
+public partial class NovelViewerPage : IconContentPage
 {
     private NovelViewerPageViewModel ViewModel => (NovelViewerPageViewModel) DataContext!;
 

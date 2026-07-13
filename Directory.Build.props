@@ -1,6 +1,6 @@
 <Project>
 	<PropertyGroup>
-		<AvaloniaVersion>12.0.5</AvaloniaVersion>
-		<FluentIconsVersion>2.1.328</FluentIconsVersion>
+		<AvaloniaVersion>12.1.0</AvaloniaVersion>
+		<FluentIconsVersion>2.1.331</FluentIconsVersion>
 	</PropertyGroup>
 </Project>

@@ -246,10 +246,12 @@ public sealed partial class HomePageCardControl : TemplatedControl, IDisposable
     [RelayCommand]
     private void OpenPreviewItem(object? parameter)
     {
-        if (TopLevel.GetTopLevel(this) is not { } topLevel)
+        if (PreviewViewModel is not { } previewViewModel
+            || parameter is not Control control
+            || TopLevel.GetTopLevel(control) is not { } topLevel)
             return;
 
-        HomeCardDefinitions.OpenPreviewItem(topLevel, parameter);
+        HomeCardDefinitions.OpenPreviewItem(topLevel, control.DataContext, previewViewModel.ViewModel);
     }
 
     [RelayCommand]
@@ -261,14 +263,11 @@ public sealed partial class HomePageCardControl : TemplatedControl, IDisposable
             return;
 
         await previewViewModel.EnsureLoadedAsync();
-        var requiresViewModel = CardDefinition.TemplateKind is HomePageCardTemplateKind.WorkList
-            or HomePageCardTemplateKind.UserList
-            or HomePageCardTemplateKind.SpotlightList;
-        var viewModel = requiresViewModel ? previewViewModel.CloneViewModel() : null;
-        if (requiresViewModel && viewModel is null)
+        var source = previewViewModel.CloneSource();
+        if (source is null)
             return;
 
-        CardDefinition.OpenCardPage(Card, viewModel, topLevel);
+        CardDefinition.OpenCardPage(Card, source, topLevel);
     }
 
     public void Dispose()

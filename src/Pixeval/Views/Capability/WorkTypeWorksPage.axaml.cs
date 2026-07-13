@@ -8,7 +8,6 @@ using Mako;
 using Mako.Engine;
 using Mako.Global.Enum;
 using Mako.Model;
-using Misaki;
 using Pixeval.Controls;
 using Pixeval.I18N;
 using Pixeval.Models.Options;
@@ -120,7 +119,7 @@ public class WorkPostsPage : WorkTypeWorksPage
 
     protected override IFetchEngine<IWorkEntry> GetFetchEngine(MakoClient makoClient, WorkType workType)
     {
-        return makoClient.WorkPosted(_user.Id, workType);
+        return makoClient.WorkPosted(workType, _user.Id);
     }
 
     protected override void OnSourceChanged(IFetchEngine<IWorkEntry> engine, WorkType workType)

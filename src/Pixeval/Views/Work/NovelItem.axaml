@@ -44,6 +44,11 @@
                         Click="OpenUserInfoPage_OnClicked"
                         Header="{I18N {x:Static pixeval:EntryItemResources.OpenUserInfoPage}}"
                         Icon="{markup:SymbolIcon Person}" />
+                    <MenuItem
+                        Click="OpenSeriesPage_OnClicked"
+                        Header="{I18N {x:Static pixeval:EntryItemResources.OpenSeries}}"
+                        Icon="{markup:SymbolIcon SquareMultiple}"
+                        IsVisible="{Binding HasSeries}" />
                     <Separator />
                     <MenuItem
                         Command="{Binding SaveCommand}"
@@ -129,21 +134,22 @@
                     Theme="{StaticResource CaptionStrongTextBlockStyle}" />
                 <DockPanel DockPanel.Dock="Top">
                     <TextBlock
+                        VerticalAlignment="Bottom"
                         DockPanel.Dock="Right"
-                        Foreground="DarkGray"
-                        MaxLines="1"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                         Text="{Binding Entry.CreateDate, Converter={x:Static converters:PixevalConverters.DateTimeShortDate}}"
                         TextTrimming="CharacterEllipsis"
-                        TextWrapping="Wrap"
                         Theme="{StaticResource BodyTextBlockStyle}" />
-                    <TextBlock
-                        x:Name="AuthorTextBlock"
-                        Foreground="DarkGray"
-                        MaxLines="1"
-                        Text="{Binding Entry.User.Name}"
-                        TextTrimming="CharacterEllipsis"
-                        TextWrapping="Wrap"
-                        Theme="{StaticResource BodyTextBlockStyle}" />
+                    <Button Padding="2" Click="AuthorButton_OnClick">
+                        <TextBlock
+                            x:Name="AuthorTextBlock"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            MaxLines="1"
+                            Text="{Binding Entry.User.Name}"
+                            TextTrimming="CharacterEllipsis"
+                            TextWrapping="Wrap"
+                            Theme="{StaticResource BodyTextBlockStyle}" />
+                    </Button>
                 </DockPanel>
                 <DockPanel
                     DockPanel.Dock="Bottom"
@@ -170,7 +176,8 @@
                         DockPanel.Dock="Left"
                         IsVisible="{Binding Entry.IsAiGenerated}"
                         Mode="Ai" />
-                    <controls:PixevalBadge DockPanel.Dock="Left" Mode="{Binding Entry.XRestrict, Converter={x:Static converters:PixevalConverters.RestrictBadgeModeConverter}}" />
+                    <controls:PixevalBadge DockPanel.Dock="Left"
+                                           Mode="{Binding Entry.XRestrict, Converter={x:Static converters:PixevalConverters.RestrictBadgeModeConverter}}" />
                 </DockPanel>
                 <ItemsControl
                     x:Name="TagsList"
@@ -185,10 +192,10 @@
                         <DataTemplate x:DataType="{x:Type model:Tag}">
                             <Button
                                 Padding="2"
-                                Background="#7F7F7F7F"
                                 Click="TagButton_OnClicked"
                                 CornerRadius="{StaticResource ControlCornerRadius}">
                                 <TextBlock
+                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Text="{Binding ToolTip, Mode=OneTime}"
                                     TextWrapping="NoWrap"
                                     Theme="{StaticResource CaptionTextBlockStyle}" />

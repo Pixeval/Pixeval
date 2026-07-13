@@ -309,6 +309,11 @@
                             <TextBox Text="{Binding SourceEntryIdText, Mode=TwoWay}" />
                         </StackPanel>
 
+                        <StackPanel IsVisible="{Binding IsSourceSeriesIdPanelVisible}" Spacing="4">
+                            <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceSeriesIdTextBlockText}}" />
+                            <TextBox Text="{Binding SourceSeriesIdText, Mode=TwoWay}" />
+                        </StackPanel>
+
                         <StackPanel IsVisible="{Binding IsSourceSearchTextPanelVisible}" Spacing="4">
                             <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceSearchTextTextBlockText}}" />
                             <TextBox Text="{Binding SourceSearchText, Mode=TwoWay}" />

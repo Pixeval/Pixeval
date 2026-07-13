@@ -17,6 +17,7 @@ namespace Pixeval.ViewModels.Home;
 public sealed partial class HomeCardPreviewViewModel(HomePageCardLayout card) : ObservableObject, IDisposable
 {
     private readonly CancellationTokenSource _loadingCts = new();
+    private HomeCardPreviewSource? _source;
     private INotifyCollectionChanged? _itemsCollectionChanged;
     private Task? _loadingTask;
     private bool _isDisposed;
@@ -52,29 +53,28 @@ public sealed partial class HomeCardPreviewViewModel(HomePageCardLayout card) : 
 
     public Task EnsureLoadedAsync() => ViewModel is null ? LoadAsync() : Task.CompletedTask;
 
-    public ISimpleViewViewModel? CloneViewModel() =>
-        (ViewModel as IRefCloneable<ISimpleViewViewModel>)?.CloneRef();
+    public HomeCardPreviewSource? CloneSource() => _source?.CloneRef();
 
     private async Task LoadCoreAsync()
     {
         try
         {
             PlaceholderText = I18NManager.GetResource(HomePageResources.CardPreviewLoadingTextBlockText);
-            var oldViewModel = ViewModel;
+            var oldSource = _source;
             var source = await Card.Definition.CreatePreviewSourceAsync(Card);
             if (_isDisposed)
             {
-                if (source.ViewModel is IDisposable newDisposable)
-                    newDisposable.Dispose();
+                source.Dispose();
                 return;
             }
 
             DetachItems();
+            _source = source;
             ViewModel = source.ViewModel;
             OnPropertyChanged(nameof(Items));
             AttachItems();
-            if (!ReferenceEquals(oldViewModel, source.ViewModel) && oldViewModel is IDisposable disposable)
-                disposable.Dispose();
+            if (!ReferenceEquals(oldSource, source))
+                oldSource?.Dispose();
 
             await LoadInitialItemsAsync();
             UpdatePlaceholder();
@@ -135,10 +135,10 @@ public sealed partial class HomeCardPreviewViewModel(HomePageCardLayout card) : 
         _loadingCts.Cancel();
         _loadingCts.Dispose();
         DetachItems();
-        var viewModel = ViewModel;
+        var source = _source;
+        _source = null;
         ViewModel = null;
         OnPropertyChanged(nameof(Items));
-        if (viewModel is IDisposable disposable)
-            disposable.Dispose();
+        source?.Dispose();
     }
 }

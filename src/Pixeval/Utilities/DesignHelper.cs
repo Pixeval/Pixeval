@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mako.Global.Enum;
 using Mako.Model;
 using Mako.Net.Responses;
 using Misaki;
@@ -23,10 +24,14 @@ public static class DesignHelper
 
     public static NovelItemViewModel DesignNovelViewModel => field ??= new(DesignNovel);
 
+    public static SeriesItemViewModel DesignSeriesViewModel => field ??= new(DesignSeries, SimpleWorkType.Illustration);
+
+    public static WorkSeriesInfoViewModel DesignWorkSeriesInfoViewModel => field ??= new(SimpleWorkType.Illustration, 123456, "Title", new(12345,"PrevTitle"), new(1234567, "NextTitle"), "2/3");
+
     public static SingleUserResponse DesignSingleUserResponse => field ??= new()
     {
         UserEntity = DesignUserInfo,
-        UserProfilePublicity = new ProfilePublicity
+        UserProfilePublicity = new()
         {
             Gender = "Gender",
             Region = "Region",
@@ -35,7 +40,7 @@ public static class DesignHelper
             Job = "Job",
             Pawoo = false
         },
-        UserProfile = new Profile
+        UserProfile = new()
         {
             Webpage = "Webpage",
             Gender = "Gender",
@@ -60,7 +65,7 @@ public static class DesignHelper
             TwitterUrl = "TwitterUrl",
             IsPremium = false,
             IsUsingCustomProfileImage = false
-        }, UserWorkspace = new Workspace
+        }, UserWorkspace = new()
         {
             Pc = "Pc",
             Monitor = "Monitor",
@@ -112,7 +117,11 @@ public static class DesignHelper
         IsXRestricted = true,
         TotalComments = 3,
         AiType = AiType.NotSpecified,
-        Series = null,
+        Series = new()
+        {
+            Id = 123,
+            Title = "SeriesTitle",
+        },
         Tags =
         [
             new() { Name = "Tag A", TranslatedName = null },
@@ -123,7 +132,7 @@ public static class DesignHelper
 
     public static Illustration DesignIllustration => field ??= new()
     {
-        Type = IllustrationType.Illust,
+        Type = IllustrationType.Illustration,
         Tools = [],
         PageCount = 3,
         Width = 800,
@@ -154,13 +163,29 @@ public static class DesignHelper
         TotalView = 456,
         Visible = true,
         IsMuted = false,
-        Series = null,
+        Series = new()
+        {
+            Id = 123,
+            Title = "SeriesTitle",
+        },
         Tags =
         [
             new() { Name = "Tag A", TranslatedName = null },
             new() { Name = "Tag B", TranslatedName = null },
             new() { Name = "Tag C", TranslatedName = null }
         ]
+    };
+
+    public static Series DesignSeries => field ??= new()
+    {
+        Id = 123456,
+        Title = "Title",
+        User = DesignUserInfo,
+        MaskText = null,
+        CoverUrl = AppInfo.ImageNotAvailablePath,
+        PublishedContentCount = 233,
+        LatestContentId = 0,
+        LastPublishedContentDatetime = DateTimeOffset.UtcNow
     };
 
     public static UserInfo DesignUserInfo => field ??= new()

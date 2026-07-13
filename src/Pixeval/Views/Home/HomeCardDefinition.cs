@@ -12,7 +12,6 @@ using Pixeval.I18N;
 using Pixeval.Models.Home;
 using Pixeval.Models.Options;
 using Pixeval.Utilities;
-using Pixeval.ViewModels;
 using Pixeval.ViewModels.Home;
 
 namespace Pixeval.Views.Home;
@@ -22,7 +21,7 @@ public sealed class HomeCardDefinition(
     HomePageCardTemplateKind templateKind,
     HomeCardParameterKinds parameters,
     Func<HomePageCardLayout, Task<HomeCardPreviewSource>> previewSourceFactory,
-    Action<HomePageCardLayout, ISimpleViewViewModel?, TopLevel> pageOpener,
+    Action<HomePageCardLayout, HomeCardPreviewSource, TopLevel> pageOpener,
     Func<HomePageCardLayout, IReadOnlyList<string>>? titleParameterFactory = null,
     int defaultColumnSpan = 2,
     int defaultRowSpan = 2,
@@ -64,8 +63,17 @@ public sealed class HomeCardDefinition(
     public Task<HomeCardPreviewSource> CreatePreviewSourceAsync(HomePageCardLayout card) =>
         previewSourceFactory(card);
 
-    public void OpenCardPage(HomePageCardLayout card, ISimpleViewViewModel? viewModel, TopLevel topLevel) =>
-        pageOpener(card, viewModel, topLevel);
+    public void OpenCardPage(HomePageCardLayout card, HomeCardPreviewSource source, TopLevel topLevel)
+    {
+        try
+        {
+            pageOpener(card, source, topLevel);
+        }
+        finally
+        {
+            source.Dispose();
+        }
+    }
 
     public string BuildTitle(HomePageCardLayout card)
     {

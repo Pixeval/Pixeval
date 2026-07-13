@@ -86,8 +86,8 @@ public partial class WorkBookmarksPage : IconContentPage
         var tag = (TagComboBox.SelectedItem as BookmarkTag)?.Name;
         var workType = SimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>();
         var engine = App.AppViewModel.MakoClient.WorkBookmarks(
-            _user.Id,
             workType,
+            _user.Id,
             PrivacyPolicyComboBox.GetSelectedValue<PrivacyPolicy>(),
             tag);
         WorkContainer.ResetEngine(engine);

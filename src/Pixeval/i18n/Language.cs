@@ -184,6 +184,7 @@ namespace Pixeval
         public const string GenerateWebLink = "EntryItem.GenerateWebLink";
         public const string MangaSave = "EntryItem.MangaSave";
         public const string OpenInWebBrowser = "EntryItem.OpenInWebBrowser";
+        public const string OpenSeries = "EntryItem.OpenSeries";
         public const string OpenUserInfoPage = "EntryItem.OpenUserInfoPage";
         public const string RemoveFromWatchLater = "EntryItem.RemoveFromWatchLater";
         public const string Save = "EntryItem.Save";
@@ -219,6 +220,7 @@ namespace Pixeval
         public const string NextPage = "EntryViewerPage.Next.Page";
         public const string NextPageOrWork = "EntryViewerPage.Next.PageOrWork";
         public const string NextWork = "EntryViewerPage.Next.Work";
+        public const string NextSeriesWork = "EntryViewerPage.NextSeriesWork";
         public const string NovelCountItemTitle = "EntryViewerPage.NovelCountItem.Title";
         public const string NovelSettings = "EntryViewerPage.NovelSettings";
         public const string NovelSettingsHeaderTextBlockText = "EntryViewerPage.NovelSettingsHeaderTextBlock.Text";
@@ -227,9 +229,11 @@ namespace Pixeval
         public const string PrevPage = "EntryViewerPage.Prev.Page";
         public const string PrevPageOrWork = "EntryViewerPage.Prev.PageOrWork";
         public const string PrevWork = "EntryViewerPage.Prev.Work";
+        public const string PreviousSeriesWork = "EntryViewerPage.PreviousSeriesWork";
         public const string RotateClockwise = "EntryViewerPage.RotateClockwise";
         public const string RotateCounterclockwise = "EntryViewerPage.RotateCounterclockwise";
         public const string Save = "EntryViewerPage.Save";
+        public const string Series = "EntryViewerPage.Series";
         public const string SetAsSucceededTitle = "EntryViewerPage.SetAsSucceededTitle";
         public const string Share = "EntryViewerPage.Share";
         public const string ShareTitleFormatted = "EntryViewerPage.ShareTitleFormatted";
@@ -274,6 +278,7 @@ namespace Pixeval
         public const string FontWeightThin = "Enum.FontWeight.Thin";
         public const string HomePageCardSourceKindDescriptionSingleImage = "Enum.HomePageCardSourceKindDescription.SingleImage";
         public const string HomePageCardSourceKindDescriptionSingleNovel = "Enum.HomePageCardSourceKindDescription.SingleNovel";
+        public const string HomePageCardSourceKindDescriptionSingleSeries = "Enum.HomePageCardSourceKindDescription.SingleSeries";
         public const string HomePageCardSourceKindDescriptionSingleUser = "Enum.HomePageCardSourceKindDescription.SingleUser";
         public const string HomePageCardSourceKindDescriptionSpotlight = "Enum.HomePageCardSourceKindDescription.Spotlight";
         public const string HomePageCardSourceKindDescriptionUserFollower = "Enum.HomePageCardSourceKindDescription.UserFollower";
@@ -355,6 +360,7 @@ namespace Pixeval
         public const string WorkSortOptionPublishDateDescending = "Enum.WorkSortOption.PublishDateDescending";
         public const string WorkSubscriptionTypeBookmarks = "Enum.WorkSubscriptionType.Bookmarks";
         public const string WorkSubscriptionTypePosts = "Enum.WorkSubscriptionType.Posts";
+        public const string WorkSubscriptionTypeSeries = "Enum.WorkSubscriptionType.Series";
         public const string WorkSubscriptionWorkKindIllustration = "Enum.WorkSubscriptionWorkKind.Illustration";
         public const string WorkSubscriptionWorkKindManga = "Enum.WorkSubscriptionWorkKind.Manga";
         public const string WorkSubscriptionWorkKindNovel = "Enum.WorkSubscriptionWorkKind.Novel";
@@ -541,6 +547,7 @@ namespace Pixeval
         public const string SourceRankingDateTextBlockText = "HomePage.Source.RankingDateTextBlock.Text";
         public const string SourceRankOptionTextBlockText = "HomePage.Source.RankOptionTextBlock.Text";
         public const string SourceSearchTextTextBlockText = "HomePage.Source.SearchTextTextBlock.Text";
+        public const string SourceSeriesIdTextBlockText = "HomePage.Source.SeriesIdTextBlock.Text";
         public const string SourceSimpleWorkTypeTextBlockText = "HomePage.Source.SimpleWorkTypeTextBlock.Text";
         public const string SourceTagTextBlockText = "HomePage.Source.TagTextBlock.Text";
         public const string SourceUserIdTextBlockText = "HomePage.Source.UserIdTextBlock.Text";
@@ -594,8 +601,12 @@ namespace Pixeval
         public const string MacroDescriptionIsPostGroup = "MacroParser.MacroDescription.IsPostGroup";
         public const string MacroDescriptionIsR18 = "MacroParser.MacroDescription.IsR18";
         public const string MacroDescriptionIsR18G = "MacroParser.MacroDescription.IsR18G";
+        public const string MacroDescriptionIsSeries = "MacroParser.MacroDescription.IsSeries";
+        public const string MacroDescriptionIsSeriesGroup = "MacroParser.MacroDescription.IsSeriesGroup";
         public const string MacroDescriptionPicSetIndex = "MacroParser.MacroDescription.PicSetIndex";
         public const string MacroDescriptionPublishTime = "MacroParser.MacroDescription.PublishTime";
+        public const string MacroDescriptionSeriesId = "MacroParser.MacroDescription.SeriesId";
+        public const string MacroDescriptionSeriesTitle = "MacroParser.MacroDescription.SeriesTitle";
         public const string MacroDescriptionTitle = "MacroParser.MacroDescription.Title";
         public const string MacroShouldBeContained = "MacroParser.MacroShouldBeContained";
         public const string MacroShouldBeInLastSegment = "MacroParser.MacroShouldBeInLastSegment";
@@ -633,9 +644,11 @@ namespace Pixeval
         public const string TabRelatedUser = "MainPage.Tab.RelatedUser";
         public const string TabSauceNaoResult = "MainPage.Tab.SauceNaoResult";
         public const string TabSearch = "MainPage.Tab.Search";
+        public const string TabSeries = "MainPage.Tab.Series";
         public const string TabSettings = "MainPage.Tab.Settings";
         public const string TabSingleImage = "MainPage.Tab.SingleImage";
         public const string TabSingleNovel = "MainPage.Tab.SingleNovel";
+        public const string TabSingleSeries = "MainPage.Tab.SingleSeries";
         public const string TabSingleUser = "MainPage.Tab.SingleUser";
         public const string TabSpotlight = "MainPage.Tab.Spotlight";
         public const string TabUserFollower = "MainPage.Tab.UserFollower";
@@ -777,6 +790,16 @@ namespace Pixeval
         public const string ValidationPremiumSortTitle = "Search.Validation.PremiumSort.Title";
         public const string ValidationSearchFailedTitle = "Search.Validation.SearchFailed.Title";
     }
+    public static class SeriesPageResources
+    {
+        public const string ViewLatestContent = "SeriesPage.ViewLatestContent";
+    }
+    public static class SeriesViewerPageResources
+    {
+        public const string AddToWatchlist = "SeriesViewerPage.AddToWatchlist";
+        public const string RemoveFromWatchlist = "SeriesViewerPage.RemoveFromWatchlist";
+        public const string WorksCountFormatted = "SeriesViewerPage.WorksCountFormatted";
+    }
     public static class SettingsMainViewResources
     {
         public const string AnimatedPathBlockText = "SettingsMainView.AnimatedPathBlock.Text";
@@ -877,9 +900,9 @@ namespace Pixeval
     public static class WorkSubscriptionsSettingsExpanderResources
     {
         public const string AddSubscriptionButtonLabel = "WorkSubscriptionsSettingsExpander.AddSubscriptionButton.Label";
-        public const string InvalidUserId = "WorkSubscriptionsSettingsExpander.InvalidUserId";
+        public const string InvalidTargetId = "WorkSubscriptionsSettingsExpander.InvalidTargetId";
         public const string SubscriptionAdded = "WorkSubscriptionsSettingsExpander.SubscriptionAdded";
-        public const string UserIdTextBoxPlaceholderText = "WorkSubscriptionsSettingsExpander.UserIdTextBox.PlaceholderText";
+        public const string TargetIdTextBoxPlaceholderText = "WorkSubscriptionsSettingsExpander.TargetIdTextBox.PlaceholderText";
     }
     public static class MarkdownResources
     {

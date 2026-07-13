@@ -9,7 +9,7 @@ namespace Pixeval.Models.Database;
 public class WorkSubscriptionEntry : HistoryEntry
 {
     [Indexed("IX_WorkSubscriptionEntry_Key", 0, Unique = true)]
-    public long UserId { get; set; }
+    public long Id { get; set; }
 
     [Indexed("IX_WorkSubscriptionEntry_Key", 1, Unique = true)]
     public WorkSubscriptionType SubscriptionType { get; set; }
@@ -24,11 +24,11 @@ public class WorkSubscriptionEntry : HistoryEntry
     public string Account { get; set; } = "";
 
     [Ignore]
-    public string DisplayName => string.IsNullOrWhiteSpace(Name) ? UserId.ToString() : Name;
+    public string DisplayName => string.IsNullOrWhiteSpace(Name) ? Id.ToString() : Name;
 
     public void UpdateFrom(WorkSubscriptionEntry entry)
     {
-        UserId = entry.UserId;
+        Id = entry.Id;
         SubscriptionType = entry.SubscriptionType;
         WorkKind = entry.WorkKind;
         Name = entry.Name;

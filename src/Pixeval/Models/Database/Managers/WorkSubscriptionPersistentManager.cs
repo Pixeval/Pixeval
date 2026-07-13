@@ -10,17 +10,17 @@ public class WorkSubscriptionPersistentManager(SQLiteConnection db)
     : SimplePersistentManager<WorkSubscriptionEntry>(db)
 {
     public WorkSubscriptionEntry? GetBySubscriptionKey(
-        long userId,
+        long targetId,
         WorkSubscriptionType subscriptionType,
         WorkSubscriptionWorkKind workKind) =>
         Queryable.FirstOrDefault(t =>
-            t.UserId == userId
+            t.Id == targetId
             && t.SubscriptionType == subscriptionType
             && t.WorkKind == workKind);
 
     public override void AddOrUpdate(WorkSubscriptionEntry entry)
     {
-        var existing = GetBySubscriptionKey(entry.UserId, entry.SubscriptionType, entry.WorkKind);
+        var existing = GetBySubscriptionKey(entry.Id, entry.SubscriptionType, entry.WorkKind);
         if (existing is not null)
         {
             existing.UpdateFrom(entry);
@@ -34,7 +34,7 @@ public class WorkSubscriptionPersistentManager(SQLiteConnection db)
     public override WorkSubscriptionEntry Upsert(WorkSubscriptionEntry entry)
     {
         AddOrUpdate(entry);
-        return GetBySubscriptionKey(entry.UserId, entry.SubscriptionType, entry.WorkKind)
+        return GetBySubscriptionKey(entry.Id, entry.SubscriptionType, entry.WorkKind)
                ?? entry;
     }
 
