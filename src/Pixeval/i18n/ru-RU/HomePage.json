@@ -87,6 +87,9 @@
     "EntryIdTextBlock": {
       "Text": "作品 ID"
     },
+    "SeriesIdTextBlock": {
+      "Text": "系列 ID"
+    },
     "SearchTextTextBlock": {
       "Text": "搜索关键词"
     },
@@ -122,6 +125,6 @@
   },
   "InvalidSourceParameterWarning": {
     "Title": "参数不完整",
-    "Content": "请填写当前卡片源所需的用户 ID、作品 ID 或搜索关键词。"
+    "Content": "请填写当前卡片源所需的用户 ID、作品 ID、系列 ID 或搜索关键词。"
   }
 }
