@@ -17,6 +17,8 @@
     "Title": "作品标题（字符串类型）",
     "ArtistId": "作者ID（字符串类型）",
     "ArtistName": "作者名（字符串类型）",
+    "SeriesId": "系列ID（字符串类型）",
+    "SeriesTitle": "系列标题（字符串类型）",
     "PublishTime": "作品发布时间（时间类型）",
     "PicSetIndex": "该宏会被替换为当前图片在多图中的索引（第几张）；必须与 @{is_pic_set?:} 宏配合使用，必须在文件名上使用（数字类型）",
     "IsPicSet": "作品是否为多图",
@@ -26,8 +28,10 @@
     "IsPicOne": "作品是否为静态单图",
     "IsNovel": "作品是否为小说",
     "IsPicGif": "作品是否为动图",
+    "IsSeries": "作品是否属于系列",
     "IsGroup": "作品是否在订阅下载组中",
     "IsBookmarkGroup": "作品是否在收藏订阅下载组中",
-    "IsPostGroup": "作品是否在投稿订阅下载组中"
+    "IsPostGroup": "作品是否在投稿订阅下载组中",
+    "IsSeriesGroup": "作品是否在系列订阅下载组中"
   }
 }
