@@ -3,8 +3,8 @@
     "Label": "添加订阅"
   },
   "SubscriptionAdded": "已添加订阅",
-  "UserIdTextBox": {
-    "PlaceholderText": "用户 ID"
+  "TargetIdTextBox": {
+    "PlaceholderText": "用户或系列 ID"
   },
-  "InvalidUserId": "请输入有效的用户 ID"
+  "InvalidTargetId": "请输入有效的用户或系列 ID"
 }
