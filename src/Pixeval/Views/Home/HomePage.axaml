@@ -1,4 +1,4 @@
-<DrawerPage
+﻿<DrawerPage
     x:Class="Pixeval.Views.Home.HomePage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -6,11 +6,9 @@
     xmlns:capability="using:Pixeval.Views.Capability"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:enum="using:Mako.Global.Enum"
     xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:home="using:Pixeval.Views.Home"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
-    xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
     xmlns:viewModels="using:Pixeval.ViewModels.Home"
@@ -30,6 +28,35 @@
     <DrawerPage.Styles>
         <Style Selector="DrawerPage /template/ Border#PART_TopBar">
             <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <Style Selector="Border.editor-section">
+            <Setter Property="Padding" Value="12" />
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+            <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+        </Style>
+
+        <Style Selector="Border.home-grid-guide-cell">
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Opacity" Value="0.65" />
+        </Style>
+
+        <Style Selector="TextBlock.editor-label">
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="NumericUpDown.integer-editor">
+            <Setter Property="AllowSpin" Value="True" />
+            <Setter Property="ClipValueToMinMax" Value="True" />
+            <Setter Property="FormatString" Value="F0" />
+            <Setter Property="Increment" Value="1" />
+        </Style>
+
+        <Style Selector="NumericUpDown.card-layout-editor">
+            <Setter Property="IsEnabled" Value="{Binding HasSelectedCard}" />
+            <Setter Property="Minimum" Value="1" />
         </Style>
     </DrawerPage.Styles>
     <DockPanel x:DataType="{x:Type viewModels:HomePageViewModel}" DataContext="{Binding $parent[home:HomePage].DataContext}">
@@ -103,36 +130,27 @@
                         TextWrapping="Wrap" />
                 </StackPanel>
 
-                <Border
-                    Padding="12"
-                    Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                    CornerRadius="{DynamicResource ControlCornerRadius}">
+                <Border Classes="editor-section">
                     <StackPanel Spacing="10">
                         <TextBlock FontWeight="SemiBold" Text="{I18N {x:Static pixeval:HomePageResources.GridSizeTitleTextBlockText}}" />
                         <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8">
                             <TextBlock
                                 Grid.Column="0"
-                                VerticalAlignment="Center"
+                                Classes="editor-label"
                                 Text="{I18N {x:Static pixeval:HomePageResources.GridColumnsTextBlockText}}" />
                             <NumericUpDown
                                 Grid.Column="1"
-                                AllowSpin="True"
-                                ClipValueToMinMax="True"
-                                FormatString="F0"
-                                Increment="1"
+                                Classes="integer-editor"
                                 Maximum="{x:Static home:HomePage.MaximumGridSize}"
                                 Minimum="{x:Static home:HomePage.MinimumGridSize}"
                                 Value="{Binding GridColumnsValue, Mode=TwoWay}" />
                             <TextBlock
                                 Grid.Column="2"
-                                VerticalAlignment="Center"
+                                Classes="editor-label"
                                 Text="{I18N {x:Static pixeval:HomePageResources.GridRowsTextBlockText}}" />
                             <NumericUpDown
                                 Grid.Column="3"
-                                AllowSpin="True"
-                                ClipValueToMinMax="True"
-                                FormatString="F0"
-                                Increment="1"
+                                Classes="integer-editor"
                                 Maximum="{x:Static home:HomePage.MaximumGridSize}"
                                 Minimum="{x:Static home:HomePage.MinimumGridSize}"
                                 Value="{Binding GridRowsValue, Mode=TwoWay}" />
@@ -140,10 +158,7 @@
                     </StackPanel>
                 </Border>
 
-                <Border
-                    Padding="12"
-                    Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                    CornerRadius="{DynamicResource ControlCornerRadius}">
+                <Border Classes="editor-section">
                     <StackPanel Spacing="10">
                         <TextBlock FontWeight="SemiBold" Text="{I18N {x:Static pixeval:HomePageResources.SelectedCardTitleTextBlockText}}" />
                         <TextBlock
@@ -153,61 +168,41 @@
                         <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8">
                             <TextBlock
                                 Grid.Column="0"
-                                VerticalAlignment="Center"
+                                Classes="editor-label"
                                 Text="{I18N {x:Static pixeval:HomePageResources.PositionXTextBlockText}}" />
                             <NumericUpDown
                                 Grid.Column="1"
-                                AllowSpin="True"
-                                ClipValueToMinMax="True"
-                                FormatString="F0"
-                                Increment="1"
-                                IsEnabled="{Binding HasSelectedCard}"
+                                Classes="integer-editor card-layout-editor"
                                 Maximum="{Binding ColumnCount}"
-                                Minimum="1"
                                 Value="{Binding SelectedColumnValue, Mode=TwoWay}" />
                             <TextBlock
                                 Grid.Column="2"
-                                VerticalAlignment="Center"
+                                Classes="editor-label"
                                 Text="{I18N {x:Static pixeval:HomePageResources.PositionYTextBlockText}}" />
                             <NumericUpDown
                                 Grid.Column="3"
-                                AllowSpin="True"
-                                ClipValueToMinMax="True"
-                                FormatString="F0"
-                                Increment="1"
-                                IsEnabled="{Binding HasSelectedCard}"
+                                Classes="integer-editor card-layout-editor"
                                 Maximum="{Binding RowCount}"
-                                Minimum="1"
                                 Value="{Binding SelectedRowValue, Mode=TwoWay}" />
                         </Grid>
                         <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8">
                             <TextBlock
                                 Grid.Column="0"
-                                VerticalAlignment="Center"
+                                Classes="editor-label"
                                 Text="{I18N {x:Static pixeval:HomePageResources.WidthTextBlockText}}" />
                             <NumericUpDown
                                 Grid.Column="1"
-                                AllowSpin="True"
-                                ClipValueToMinMax="True"
-                                FormatString="F0"
-                                Increment="1"
-                                IsEnabled="{Binding HasSelectedCard}"
+                                Classes="integer-editor card-layout-editor"
                                 Maximum="{Binding ColumnCount}"
-                                Minimum="1"
                                 Value="{Binding SelectedWidthValue, Mode=TwoWay}" />
                             <TextBlock
                                 Grid.Column="2"
-                                VerticalAlignment="Center"
+                                Classes="editor-label"
                                 Text="{I18N {x:Static pixeval:HomePageResources.HeightTextBlockText}}" />
                             <NumericUpDown
                                 Grid.Column="3"
-                                AllowSpin="True"
-                                ClipValueToMinMax="True"
-                                FormatString="F0"
-                                Increment="1"
-                                IsEnabled="{Binding HasSelectedCard}"
+                                Classes="integer-editor card-layout-editor"
                                 Maximum="{Binding RowCount}"
-                                Minimum="1"
                                 Value="{Binding SelectedHeightValue, Mode=TwoWay}" />
                         </Grid>
                         <StackPanel Spacing="4">
@@ -239,10 +234,7 @@
                     </StackPanel>
                 </Border>
 
-                <Border
-                    Padding="12"
-                    Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                    CornerRadius="{DynamicResource ControlCornerRadius}">
+                <Border Classes="editor-section">
                     <StackPanel Spacing="10">
                         <StackPanel Spacing="4">
                             <TextBlock FontWeight="SemiBold" Text="{Binding SourceParameterTitle}" />
@@ -252,77 +244,45 @@
                                 TextWrapping="Wrap" />
                         </StackPanel>
 
-                        <StackPanel IsVisible="{Binding IsSourceWorkTypePanelVisible}" Spacing="4">
-                            <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceWorkTypeTextBlockText}}" />
-                            <controls:SymbolComboBox
-                                HorizontalAlignment="Stretch"
-                                IconMode="False"
-                                ItemsSource="{markup1:EnumResources x:TypeArguments=enum:WorkType}"
-                                SelectedValue="{Binding SelectedSourceWorkType, Mode=TwoWay}" />
-                        </StackPanel>
+                        <ItemsControl ItemsSource="{Binding ActiveParameterEditors}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Spacing="10" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.DataTemplates>
+                                <DataTemplate x:DataType="{x:Type viewModels:HomeCardChoiceParameterEditorViewModel}">
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Text="{Binding Header}" />
+                                        <controls:SymbolComboBox
+                                            HorizontalAlignment="Stretch"
+                                            IconMode="False"
+                                            ItemsSource="{Binding Items}"
+                                            SelectedValue="{Binding Value, Mode=TwoWay}" />
+                                    </StackPanel>
+                                </DataTemplate>
 
-                        <StackPanel IsVisible="{Binding IsSourceSimpleWorkTypePanelVisible}" Spacing="4">
-                            <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceSimpleWorkTypeTextBlockText}}" />
-                            <controls:SymbolComboBox
-                                HorizontalAlignment="Stretch"
-                                IconMode="False"
-                                ItemsSource="{markup1:EnumResources x:TypeArguments=enum:SimpleWorkType}"
-                                SelectedValue="{Binding SelectedSourceSimpleWorkType, Mode=TwoWay}" />
-                        </StackPanel>
+                                <DataTemplate x:DataType="{x:Type viewModels:HomeCardTextParameterEditorViewModel}">
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Text="{Binding Header}" />
+                                        <TextBox Text="{Binding Text, Mode=TwoWay}" />
+                                    </StackPanel>
+                                </DataTemplate>
 
-                        <StackPanel IsVisible="{Binding IsSourcePrivacyPolicyPanelVisible}" Spacing="4">
-                            <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourcePrivacyPolicyTextBlockText}}" />
-                            <controls:SymbolComboBox
-                                HorizontalAlignment="Stretch"
-                                IconMode="False"
-                                ItemsSource="{markup1:EnumResources x:TypeArguments=enum:PrivacyPolicy}"
-                                SelectedValue="{Binding SelectedSourcePrivacyPolicy, Mode=TwoWay}" />
-                        </StackPanel>
-
-                        <StackPanel IsVisible="{Binding IsSourceRankOptionPanelVisible}" Spacing="4">
-                            <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceRankOptionTextBlockText}}" />
-                            <controls:SymbolComboBox
-                                HorizontalAlignment="Stretch"
-                                IconMode="False"
-                                ItemsSource="{Binding SourceRankOptionItems}"
-                                SelectedValue="{Binding SelectedSourceRankOption, Mode=TwoWay}" />
-                        </StackPanel>
-
-                        <StackPanel IsVisible="{Binding IsSourceRankingDatePanelVisible}" Spacing="4">
-                            <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceRankingDateTextBlockText}}" />
-                            <CheckBox Content="{I18N {x:Static pixeval:HomePageResources.SourceUseSpecifiedRankingDateCheckBoxContent}}" IsChecked="{Binding UseSpecifiedRankingDate, Mode=TwoWay}" />
-                            <CalendarDatePicker
-                                HorizontalAlignment="Stretch"
-                                DisplayDateEnd="{x:Static capability:WorkRankingPage.MaxDate}"
-                                IsEnabled="{Binding UseSpecifiedRankingDate}"
-                                SelectedDate="{Binding SelectedRankingDate, Mode=TwoWay}"
-                                SelectedDateFormat="Short" />
-                        </StackPanel>
-
-                        <StackPanel IsVisible="{Binding IsSourceUserIdPanelVisible}" Spacing="4">
-                            <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceUserIdTextBlockText}}" />
-                            <TextBox Text="{Binding SourceUserIdText, Mode=TwoWay}" />
-                        </StackPanel>
-
-                        <StackPanel IsVisible="{Binding IsSourceEntryIdPanelVisible}" Spacing="4">
-                            <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceEntryIdTextBlockText}}" />
-                            <TextBox Text="{Binding SourceEntryIdText, Mode=TwoWay}" />
-                        </StackPanel>
-
-                        <StackPanel IsVisible="{Binding IsSourceSeriesIdPanelVisible}" Spacing="4">
-                            <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceSeriesIdTextBlockText}}" />
-                            <TextBox Text="{Binding SourceSeriesIdText, Mode=TwoWay}" />
-                        </StackPanel>
-
-                        <StackPanel IsVisible="{Binding IsSourceSearchTextPanelVisible}" Spacing="4">
-                            <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceSearchTextTextBlockText}}" />
-                            <TextBox Text="{Binding SourceSearchText, Mode=TwoWay}" />
-                        </StackPanel>
-
-                        <StackPanel IsVisible="{Binding IsSourceTagPanelVisible}" Spacing="4">
-                            <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.SourceTagTextBlockText}}" />
-                            <TextBox Text="{Binding SourceTagText, Mode=TwoWay}" />
-                        </StackPanel>
+                                <DataTemplate x:DataType="{x:Type viewModels:HomeCardRankingDateParameterEditorViewModel}">
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Text="{Binding Header}" />
+                                        <CheckBox Content="{I18N {x:Static pixeval:HomePageResources.SourceUseSpecifiedRankingDateCheckBoxContent}}" IsChecked="{Binding UseSpecifiedDate, Mode=TwoWay}" />
+                                        <CalendarDatePicker
+                                            HorizontalAlignment="Stretch"
+                                            DisplayDateEnd="{x:Static capability:WorkRankingPage.MaxDate}"
+                                            IsEnabled="{Binding UseSpecifiedDate}"
+                                            SelectedDate="{Binding SelectedDate, Mode=TwoWay}"
+                                            SelectedDateFormat="Short" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.DataTemplates>
+                        </ItemsControl>
 
                         <Button
                             HorizontalAlignment="Stretch"

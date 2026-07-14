@@ -36,14 +36,12 @@ public static class HomeCardDefinitions
         [
             new(
                 HomePageCardSourceKind.WorkRecommended,
-                HomePageCardTemplateKind.WorkList,
                 HomeCardParameterKinds.WorkType,
                 CreateWorkPreviewSourceFactory(card => App.AppViewModel.MakoClient.WorkRecommended(card.WorkType)),
                 OpenWorkRecommendedPage,
                 card => [GetDescription(card.WorkType)]),
             new(
                 HomePageCardSourceKind.WorkBookmarks,
-                HomePageCardTemplateKind.WorkList,
                 HomeCardParameterKinds.UserId
                 | HomeCardParameterKinds.SimpleWorkType
                 | HomeCardParameterKinds.PrivacyPolicy
@@ -60,7 +58,6 @@ public static class HomeCardDefinitions
                 useCurrentUserAsDefault: true),
             new(
                 HomePageCardSourceKind.WorkRanking,
-                HomePageCardTemplateKind.WorkList,
                 HomeCardParameterKinds.SimpleWorkType
                 | HomeCardParameterKinds.RankOption
                 | HomeCardParameterKinds.RankingDate,
@@ -76,42 +73,36 @@ public static class HomeCardDefinitions
                 ]),
             new(
                 HomePageCardSourceKind.WorkNew,
-                HomePageCardTemplateKind.WorkList,
                 HomeCardParameterKinds.WorkType,
                 CreateWorkPreviewSourceFactory(card => App.AppViewModel.MakoClient.WorkNew(card.WorkType)),
                 OpenWorkNewPage,
                 card => [GetDescription(card.WorkType)]),
             new(
                 HomePageCardSourceKind.WorkFollowing,
-                HomePageCardTemplateKind.WorkList,
                 HomeCardParameterKinds.SimpleWorkType | HomeCardParameterKinds.PrivacyPolicy,
                 CreateWorkPreviewSourceFactory(card => App.AppViewModel.MakoClient.WorkFollowing(card.SimpleWorkType, card.PrivacyPolicy)),
                 OpenWorkFollowingPage,
                 card => [GetDescription(card.SimpleWorkType), GetDescription(card.PrivacyPolicy)]),
             new(
                 HomePageCardSourceKind.WorkMyPixiv,
-                HomePageCardTemplateKind.WorkList,
                 HomeCardParameterKinds.SimpleWorkType,
                 CreateWorkPreviewSourceFactory(card => App.AppViewModel.MakoClient.WorkMyPixiv(card.SimpleWorkType)),
                 OpenWorkMyPixivPage,
                 card => [GetDescription(card.SimpleWorkType)]),
             new(
                 HomePageCardSourceKind.WorkRelated,
-                HomePageCardTemplateKind.WorkList,
                 HomeCardParameterKinds.EntryId | HomeCardParameterKinds.SimpleWorkType,
                 CreateWorkPreviewSourceFactory(card => App.AppViewModel.MakoClient.WorkRelated(card.EntryId, card.SimpleWorkType)),
                 OpenWorkRelatedPage,
                 card => [card.EntryId.ToString(CultureInfo.InvariantCulture), GetDescription(card.SimpleWorkType)]),
             new(
                 HomePageCardSourceKind.SingleSeries,
-                HomePageCardTemplateKind.WorkList,
                 HomeCardParameterKinds.SeriesId | HomeCardParameterKinds.SimpleWorkType,
                 CreateSingleSeriesPreviewSourceAsync,
                 OpenSingleSeries,
                 card => [card.SeriesId.ToString(CultureInfo.InvariantCulture), GetDescription(card.SimpleWorkType)]),
             new(
                 HomePageCardSourceKind.WorkPosts,
-                HomePageCardTemplateKind.WorkList,
                 HomeCardParameterKinds.UserId | HomeCardParameterKinds.WorkType,
                 CreateWorkPreviewSourceFactory(card => App.AppViewModel.MakoClient.WorkPosted(card.WorkType, card.UserId)),
                 OpenWorkPostsPage,
@@ -119,7 +110,6 @@ public static class HomeCardDefinitions
                 useCurrentUserAsDefault: true),
             new(
                 HomePageCardSourceKind.WorkSearch,
-                HomePageCardTemplateKind.WorkList,
                 HomeCardParameterKinds.SimpleWorkType | HomeCardParameterKinds.SearchText,
                 CreateWorkPreviewSourceFactory(card => card.SimpleWorkType is SimpleWorkType.Novel
                     ? string.IsNullOrWhiteSpace(card.SearchText)
@@ -132,13 +122,11 @@ public static class HomeCardDefinitions
                 card => [GetDescription(card.SimpleWorkType), card.SearchText ?? ""]),
             new(
                 HomePageCardSourceKind.UserRecommended,
-                HomePageCardTemplateKind.UserList,
                 HomeCardParameterKinds.None,
                 CreateUserPreviewSourceFactory(_ => App.AppViewModel.MakoClient.UserRecommended()),
                 OpenUserRecommendedPage),
             new(
                 HomePageCardSourceKind.UserSearch,
-                HomePageCardTemplateKind.UserList,
                 HomeCardParameterKinds.SearchText,
                 CreateUserPreviewSourceFactory(card => string.IsNullOrWhiteSpace(card.SearchText)
                     ? App.AppViewModel.MakoClient.Computed(AsyncEnumerable.Empty<User>())
@@ -147,7 +135,6 @@ public static class HomeCardDefinitions
                 card => [card.SearchText ?? ""]),
             new(
                 HomePageCardSourceKind.UserFollowing,
-                HomePageCardTemplateKind.UserList,
                 HomeCardParameterKinds.UserId | HomeCardParameterKinds.PrivacyPolicy,
                 CreateUserPreviewSourceFactory(card => App.AppViewModel.MakoClient.UserFollowing(card.UserId, card.PrivacyPolicy)),
                 OpenUserFollowingPage,
@@ -155,13 +142,11 @@ public static class HomeCardDefinitions
                 useCurrentUserAsDefault: true),
             new(
                 HomePageCardSourceKind.UserFollower,
-                HomePageCardTemplateKind.UserList,
                 HomeCardParameterKinds.None,
                 CreateUserPreviewSourceFactory(_ => App.AppViewModel.MakoClient.UserFollower()),
                 OpenUserFollowerPage),
             new(
                 HomePageCardSourceKind.UserMyPixiv,
-                HomePageCardTemplateKind.UserList,
                 HomeCardParameterKinds.UserId,
                 CreateUserPreviewSourceFactory(card => App.AppViewModel.MakoClient.UserMyPixiv(card.UserId)),
                 OpenUserMyPixivPage,
@@ -169,20 +154,17 @@ public static class HomeCardDefinitions
                 useCurrentUserAsDefault: true),
             new(
                 HomePageCardSourceKind.Spotlight,
-                HomePageCardTemplateKind.SpotlightList,
                 HomeCardParameterKinds.None,
                 CreateSpotlightViewModelAsync,
                 OpenSpotlightPage),
             new(
                 HomePageCardSourceKind.SingleImage,
-                HomePageCardTemplateKind.SingleImage,
                 HomeCardParameterKinds.EntryId,
                 CreateSingleImageViewModelAsync,
                 OpenSingleImage,
                 card => [card.EntryId.ToString(CultureInfo.InvariantCulture)]),
             new(
                 HomePageCardSourceKind.SingleNovel,
-                HomePageCardTemplateKind.SingleNovel,
                 HomeCardParameterKinds.EntryId,
                 CreateSingleNovelViewModelAsync,
                 OpenSingleNovel,
@@ -191,7 +173,6 @@ public static class HomeCardDefinitions
                 simpleWorkType: SimpleWorkType.Novel),
             new(
                 HomePageCardSourceKind.SingleUser,
-                HomePageCardTemplateKind.SingleUser,
                 HomeCardParameterKinds.UserId,
                 CreateSingleUserViewModelAsync,
                 OpenSingleUser,
@@ -206,6 +187,8 @@ public static class HomeCardDefinitions
         _BySourceKind.TryGetValue(sourceKind, out var definition)
             ? definition
             : _BySourceKind[HomePageCardSourceKind.WorkRecommended];
+
+    public static string BuildTitle(HomePageCardLayout card) => Get(card.SourceKind).BuildTitle(card);
 
     public static void OpenPreviewItem(TopLevel topLevel, object? parameter, ISimpleViewViewModel? vm)
     {
@@ -425,7 +408,7 @@ public static class HomeCardDefinitions
     private static UserBasicInfo CreateUserBasicInfo(HomePageCardLayout card) =>
         PixevalSettings.Me is { Id: var meId } me && card.UserId == meId
             ? me
-            : new HomeCardUserBasicInfo(card.UserId, card.BuildTitle());
+            : new HomeCardUserBasicInfo(card.UserId, BuildTitle(card));
 
     private sealed record SingleSeriesOpeningContext(
         SeriesDetailBase SeriesDetail,

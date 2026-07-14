@@ -24,9 +24,7 @@ public sealed partial class HomePage
             HomeGrid.Children.Clear();
 
             foreach (var card in _cards)
-            {
                 AddCardControl(card);
-            }
         }
         finally
         {
@@ -56,22 +54,20 @@ public sealed partial class HomePage
 
     private void RefreshSelectionVisuals()
     {
-        foreach (var child in HomeGrid.Children)
-            if (child is HomePageCardControl control)
-                control.IsSelected = control.Card == _selectedCard;
+        foreach (var control in HomeGrid.Children.OfType<HomePageCardControl>())
+            control.IsSelected = control.Card == _selectedCard;
     }
 
     private void RefreshEditModeVisuals()
     {
         var isEditing = ViewModel.IsEditMode;
-        foreach (var child in HomeGrid.Children)
-            if (child is HomePageCardControl control)
-                control.IsEditing = isEditing;
+        foreach (var control in HomeGrid.Children.OfType<HomePageCardControl>())
+            control.IsEditing = isEditing;
     }
 
     private void AddCardControl(HomePageCardLayout card)
     {
-        var control = new HomePageCardControl(card, ViewModel.GetDefinition(card), RowCount, ColumnCount)
+        var control = new HomePageCardControl(card, RowCount, ColumnCount)
         {
             IsEditing = ViewModel.IsEditMode,
             IsSelected = card == _selectedCard
@@ -150,19 +146,7 @@ public sealed partial class HomePage
         return false;
     }
 
-    private void DetachCardControl(HomePageCardControl control)
-    {
-        control.CardSelected -= HomeCardControl_OnCardSelected;
-        control.EditPreview -= HomeCardControl_OnEditPreview;
-        control.EditCompleted -= HomeCardControl_OnEditCompleted;
-        control.DeleteRequested -= HomeCardControl_OnDeleteRequested;
-    }
-
-    private void DisposeCardControl(HomePageCardControl control)
-    {
-        DetachCardControl(control);
-        control.Dispose();
-    }
+    private static void DisposeCardControl(HomePageCardControl control) => control.Dispose();
 
     private static void ApplyCardLayout(HomePageCardControl control)
     {
@@ -192,17 +176,15 @@ public sealed partial class HomePage
         for (var row = 0; row < RowCount; row++)
             for (var column = 0; column < ColumnCount; column++)
             {
-                var guide = new HomeGridGuideCell();
+                var guide = new Border { Classes = { "home-grid-guide-cell" } };
                 Grid.SetColumn(guide, column);
                 Grid.SetRow(guide, row);
                 GuideGrid.Children.Add(guide);
             }
     }
 
-    private bool TryFindFreePosition(int columnSpan, int rowSpan, out int column, out int row)
-    {
-        return TryFindFreePosition(columnSpan, rowSpan, _cards, out column, out row);
-    }
+    private bool TryFindFreePosition(int columnSpan, int rowSpan, out int column, out int row) =>
+        TryFindFreePosition(columnSpan, rowSpan, _cards, out column, out row);
 
     private bool TryFindBestFittingFreePosition(
         int preferredColumnSpan,
@@ -241,60 +223,26 @@ public sealed partial class HomePage
     }
 
     private bool TryFindFreePosition(int columnSpan, int rowSpan, IReadOnlyCollection<HomePageCardLayout> occupiedCards, out int column, out int row)
-    {
-        for (row = 0; row <= RowCount - rowSpan; row++)
-            for (column = 0; column <= ColumnCount - columnSpan; column++)
-                if (CanPlace(occupiedCards, column, row, columnSpan, rowSpan))
-                    return true;
-
-        column = row = 0;
-        return false;
-    }
+        => HomeCardLayoutEngine.TryFindFreePosition(occupiedCards, columnSpan, rowSpan, RowCount, ColumnCount, out column, out row);
 
     private bool CanPlace(HomePageCardLayout? movingCard, int column, int row, int columnSpan, int rowSpan)
-    {
-        if (column < 0 || row < 0 || columnSpan < 1 || rowSpan < 1
-            || column + columnSpan > ColumnCount || row + rowSpan > RowCount)
-        {
-            return false;
-        }
-
-        return _cards.All(card => card == movingCard || !Overlaps(card.Column, card.Row, card.ColumnSpan, card.RowSpan, column, row, columnSpan, rowSpan));
-    }
+        => HomeCardLayoutEngine.CanPlace(_cards, movingCard, new(column, row, columnSpan, rowSpan), RowCount, ColumnCount);
 
     private bool CanPlace(HomePageCardLayout movingCard, HomeCardBounds bounds) =>
         CanPlace(movingCard, bounds.Column, bounds.Row, bounds.ColumnSpan, bounds.RowSpan);
 
     private bool CanResizeGrid(int rowCount, int columnCount) =>
-        _cards.All(card => card.Row + card.RowSpan <= rowCount && card.Column + card.ColumnSpan <= columnCount);
+        HomeCardLayoutEngine.CanResizeGrid(_cards, rowCount, columnCount);
 
     private bool CanPlace(IReadOnlyCollection<HomePageCardLayout> occupiedCards, int column, int row, int columnSpan, int rowSpan)
-    {
-        if (column < 0 || row < 0 || columnSpan < 1 || rowSpan < 1
-            || column + columnSpan > ColumnCount || row + rowSpan > RowCount)
-        {
-            return false;
-        }
-
-        return occupiedCards.All(card => !Overlaps(card.Column, card.Row, card.ColumnSpan, card.RowSpan, column, row, columnSpan, rowSpan));
-    }
-
-    private static bool Overlaps(int column1, int row1, int columnSpan1, int rowSpan1, int column2, int row2, int columnSpan2, int rowSpan2)
-    {
-        return column1 < column2 + columnSpan2
-            && column1 + columnSpan1 > column2
-            && row1 < row2 + rowSpan2
-            && row1 + rowSpan1 > row2;
-    }
+        => HomeCardLayoutEngine.CanPlace(occupiedCards, null, new(column, row, columnSpan, rowSpan), RowCount, ColumnCount);
 
     private bool ClampCard(HomePageCardLayout card)
     {
-        var old = card with { };
-        card.ColumnSpan = int.Clamp(card.ColumnSpan, 1, ColumnCount);
-        card.RowSpan = int.Clamp(card.RowSpan, 1, RowCount);
-        card.Column = int.Clamp(card.Column, 0, ColumnCount - card.ColumnSpan);
-        card.Row = int.Clamp(card.Row, 0, RowCount - card.RowSpan);
-        return old != card;
+        var oldBounds = HomeCardBounds.From(card);
+        var newBounds = HomeCardLayoutEngine.Clamp(oldBounds, RowCount, ColumnCount);
+        newBounds.ApplyTo(card);
+        return oldBounds != newBounds;
     }
 
     private void NormalizeCards()

@@ -6,27 +6,18 @@ using System.Text.Json.Serialization;
 using Mako;
 using Mako.Global.Enum;
 using Pixeval.Models.Options;
-using Pixeval.Views.Home;
 
 namespace Pixeval.Models.Home;
 
-public record HomePageCardLayout
+public sealed class HomePageCardLayout
 {
     public HomePageCardLayout()
     {
     }
 
-    public HomePageCardLayout(HomeCardDefinition definition, int column, int row, int columnSpan = 1, int rowSpan = 1)
+    public HomePageCardLayout(HomePageCardSourceKind sourceKind, int column, int row, int columnSpan = 1, int rowSpan = 1)
     {
-        SourceKind = definition.SourceKind;
-        if (definition.HasParameter(HomeCardParameterKinds.WorkType))
-            WorkType = definition.WorkType;
-        if (definition.HasParameter(HomeCardParameterKinds.SimpleWorkType))
-            SimpleWorkType = definition.SimpleWorkType;
-        if (definition.HasParameter(HomeCardParameterKinds.PrivacyPolicy))
-            PrivacyPolicy = definition.PrivacyPolicy;
-        if (definition.HasParameter(HomeCardParameterKinds.RankOption))
-            RankOption = definition.RankOption;
+        SourceKind = sourceKind;
         Column = column;
         Row = row;
         ColumnSpan = columnSpan;
@@ -84,14 +75,6 @@ public record HomePageCardLayout
     public int ColumnSpan { get; set; } = 1;
 
     public int RowSpan { get; set; } = 1;
-
-    [JsonIgnore] public HomePageCardTemplateKind TemplateKind => Definition.TemplateKind;
-
-    [JsonIgnore] public HomeCardDefinition Definition => HomeCardDefinitions.Get(SourceKind);
-
-    public string BuildTitle() => Definition.BuildTitle(this);
-
-    public override string ToString() => BuildTitle();
 
     public DateTimeOffset GetRankingDate() =>
         UseSpecifiedRankingDate && RankingDate != default

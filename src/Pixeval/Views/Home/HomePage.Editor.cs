@@ -140,9 +140,6 @@ public sealed partial class HomePage
         SelectCard(e.Card);
         if (sender is HomePageCardControl cardControl)
             _activeCardControl = cardControl;
-
-        if (e.RefreshSelection)
-            RefreshSelectionVisuals();
     }
 
     private void HomeCardControl_OnEditPreview(object? sender, HomeCardEditPreviewEventArgs e)
@@ -162,10 +159,7 @@ public sealed partial class HomePage
         UpdateSelectedCardControls();
     }
 
-    private void HomeCardControl_OnDeleteRequested(object? sender, HomeCardDeleteRequestedEventArgs e)
-    {
-        DeleteCard(e.Card);
-    }
+    private void HomeCardControl_OnDeleteRequested(object? sender, HomeCardDeleteRequestedEventArgs e) => DeleteCard(e.Card);
 
     private void DeleteCard(HomePageCardLayout card)
     {
@@ -225,12 +219,11 @@ public sealed partial class HomePage
         }
     }
 
-    private HomePageCardLayout? ShowInvalidParameterWarning()
+    private void ShowInvalidParameterWarning()
     {
         TopLevel.GetTopLevel(this)?.ViewContainer?.ShowWarning(
             I18NManager.GetResource(HomePageResources.InvalidSourceParameterWarningTitle),
             I18NManager.GetResource(HomePageResources.InvalidSourceParameterWarningContent));
-        return null;
     }
 
     private static int DecimalToZeroBasedInt(decimal? value) => int.Max(0, DecimalToPositiveInt(value) - 1);

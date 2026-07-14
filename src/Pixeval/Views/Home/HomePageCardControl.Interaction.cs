@@ -7,6 +7,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.VisualTree;
+using Pixeval.Models.Home;
 
 namespace Pixeval.Views.Home;
 
@@ -14,49 +15,40 @@ public sealed partial class HomePageCardControl
 {
     private const int MinimumSpan = 1;
 
-    private const string PartRootGrid = "PART_RootPanel";
-
-    private const string PartResizeHandlesLayer = "PART_ResizeHandlesLayer";
-
-    private const string PartQuickDeleteButton = "PART_QuickDeleteButton";
-
     private const string PressedClass = "pressed";
 
     private Border? _pressedResizeHandle;
 
     private void Card_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (_rootGrid is not Control captureTarget
-            || !IsEditing
+        if (!IsEditing
             || IsQuickDeleteEvent(e)
             || !e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
             return;
         }
 
-        BeginEdit(HomeCardEditAction.Move, captureTarget, e);
-        CardSelected?.Invoke(this, new(Card, false));
+        BeginEdit(HomeCardEditAction.Move, RootPanel, e);
+        CardSelected?.Invoke(this, new(Card));
         e.Handled = true;
     }
 
     private void ResizeHandle_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (e.Source is not Border { Tag: HomeCardEditAction action }
-            || _rootGrid is not { } captureTarget
             || !IsEditing
             || !e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
             return;
 
         SetPressedResizeHandle((Border) e.Source);
-        BeginEdit(action, captureTarget, e);
-        CardSelected?.Invoke(this, new(Card, false));
+        BeginEdit(action, RootPanel, e);
+        CardSelected?.Invoke(this, new(Card));
         e.Handled = true;
     }
 
     private bool IsQuickDeleteEvent(PointerPressedEventArgs e) =>
-        _quickDeleteButton is not null
-        && e.Source is Visual visual
-        && visual.GetSelfAndVisualAncestors().Contains(_quickDeleteButton);
+        e.Source is Visual visual
+        && visual.GetSelfAndVisualAncestors().Contains(QuickDeleteButton);
 
     private void BeginEdit(HomeCardEditAction action, Control captureTarget, PointerPressedEventArgs e)
     {
@@ -212,10 +204,7 @@ public sealed partial class HomePageCardControl
 
     private void ApplyBounds(HomeCardBounds bounds)
     {
-        Card.Column = bounds.Column;
-        Card.Row = bounds.Row;
-        Card.ColumnSpan = bounds.ColumnSpan;
-        Card.RowSpan = bounds.RowSpan;
+        bounds.ApplyTo(Card);
 
         Grid.SetColumn(this, Card.Column);
         Grid.SetRow(this, Card.Row);

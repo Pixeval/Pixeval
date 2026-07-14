@@ -18,7 +18,6 @@ namespace Pixeval.Views.Home;
 
 public sealed class HomeCardDefinition(
     HomePageCardSourceKind sourceKind,
-    HomePageCardTemplateKind templateKind,
     HomeCardParameterKinds parameters,
     Func<HomePageCardLayout, Task<HomeCardPreviewSource>> previewSourceFactory,
     Action<HomePageCardLayout, HomeCardPreviewSource, TopLevel> pageOpener,
@@ -28,12 +27,9 @@ public sealed class HomeCardDefinition(
     WorkType workType = WorkType.Illustration,
     SimpleWorkType simpleWorkType = SimpleWorkType.Illustration,
     PrivacyPolicy privacyPolicy = PrivacyPolicy.Public,
-    RankOption rankOption = RankOption.Day,
     bool useCurrentUserAsDefault = false)
 {
     public HomePageCardSourceKind SourceKind { get; } = sourceKind;
-
-    public HomePageCardTemplateKind TemplateKind { get; } = templateKind;
 
     public Symbol Symbol => AvaloniaHelper.GetHomeCardHeader(SourceKind).Symbol;
 
@@ -48,8 +44,6 @@ public sealed class HomeCardDefinition(
     public SimpleWorkType SimpleWorkType { get; } = simpleWorkType;
 
     public PrivacyPolicy PrivacyPolicy { get; } = privacyPolicy;
-
-    public RankOption RankOption { get; } = rankOption;
 
     public bool UseCurrentUserAsDefault { get; } = useCurrentUserAsDefault;
 
