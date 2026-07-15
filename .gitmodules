@@ -16,4 +16,4 @@
 	branch = master
 [submodule "src/lib/SmoothScroll.Avalonia"]
 	path = src/lib/SmoothScroll.Avalonia
-	url = https://github.com/zxbmmmmmmmmm/SmoothScroll.Avalonia.git
+	url = https://github.com/Poker-sang/SmoothScroll.Avalonia.git

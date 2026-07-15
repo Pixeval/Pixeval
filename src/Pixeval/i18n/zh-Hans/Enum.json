@@ -129,11 +129,9 @@
     "Swipe": "翻页",
     "Continuous": "连续"
   },
-  "BrowseDirection": {
-    "LeftRight": "从左到右",
-    "RightLeft": "从右到左",
-    "TopDown": "从上到下",
-    "BottomUp": "从下到上"
+  "Orientation": {
+    "Horizontal": "水平滚动",
+    "Vertical": "垂直滚动"
   },
   "IllustrationViewerAutoPlayMode": {
     "Sequential": "顺序播放",

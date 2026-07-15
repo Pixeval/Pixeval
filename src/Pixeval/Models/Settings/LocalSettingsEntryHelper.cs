@@ -8,6 +8,7 @@ using System.Linq.Expressions;
 using AutoSettingsPage;
 using AutoSettingsPage.Avalonia;
 using AutoSettingsPage.Models;
+using Avalonia.Layout;
 using Avalonia.Media;
 using FluentIcons.Common;
 using Mako;
@@ -137,6 +138,11 @@ public static class LocalSettingsEntryHelper
         {
             t.Register(SimpleWorkType.Illustration, Symbol.Image, EnumResources.WorkTypeIllustration);
             t.Register(SimpleWorkType.Novel, Symbol.Book, EnumResources.WorkTypeNovel);
+        });
+        RegisterAttach<Orientation>(t =>
+        {
+            t.Register(Orientation.Horizontal, Symbol.ArrowBidirectionalLeftRight, EnumResources.OrientationHorizontal);
+            t.Register(Orientation.Vertical, Symbol.ArrowBidirectionalUpDown, EnumResources.OrientationVertical);
         });
 
         RegisterAttach<RankOption>(SimpleWorkType.Illustration, t =>

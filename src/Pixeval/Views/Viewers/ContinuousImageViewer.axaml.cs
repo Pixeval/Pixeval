@@ -6,10 +6,11 @@ using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Layout;
 using Avalonia.Threading;
-using Pixeval.Models.Options;
 using Pixeval.ViewModels.Viewers;
 using SmoothScroll.Avalonia.Controls;
+using PixevalVirtualizingStackPanel = Pixeval.Controls.VirtualizingStackPanel;
 
 namespace Pixeval.Views.Viewers;
 
@@ -38,18 +39,22 @@ public partial class ContinuousImageViewer : ImageViewerBase
     private ImageViewerViewModel? _subscribedViewModel;
     private bool _isSelectingFromScroll;
     private bool _viewportUpdateQueued;
+    private bool _updateSelectionWhenViewportQueued;
     private bool _scrollToSelectedPageQueued;
+    private bool _pendingScrollToSelectedPageAnimated;
+    private int _pendingScrollToSelectedPageIndex = -1;
     private int _preloadedStartIndex = -1;
     private int _preloadedEndIndex = -1;
 
     public ContinuousImageViewer()
     {
         InitializeComponent();
+        UpdateScrollConfiguration();
     }
 
-    private void ViewerScrollView_OnScrollChanged(object? sender, ScrollChangedEventArgs e)
+    private void ViewerScrollView_OnScrollChanged(object? sender, ScrollViewChangedEventArgs e)
     {
-        QueueViewportUpdate();
+        QueueViewportUpdate(e.ChangeSource is ScrollChangeSource.User);
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -62,6 +67,7 @@ public partial class ContinuousImageViewer : ImageViewerBase
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
+        _pendingScrollToSelectedPageIndex = -1;
         UnsubscribeFromViewModel();
         SetCurrentPage(null, false);
         base.OnDetachedFromVisualTree(e);
@@ -80,20 +86,14 @@ public partial class ContinuousImageViewer : ImageViewerBase
     private ImageViewerViewModel? ViewModel => DataContext as ImageViewerViewModel;
 
     /// <inheritdoc />
-    protected override void OnBrowseDirectionChanged(BrowseDirection oldValue, BrowseDirection newValue)
+    protected override void OnBrowseDirectionChanged(Orientation oldValue, Orientation newValue)
     {
+        UpdateScrollConfiguration();
         QueueScrollToSelectedPage();
         QueueViewportUpdate();
     }
 
-    public ScrollContentOrientation ContentOrientation =>
-        IsHorizontal ? ScrollContentOrientation.Horizontal : ScrollContentOrientation.Vertical;
-
-    private bool IsHorizontal =>
-        BrowseDirection is BrowseDirection.LeftRight or BrowseDirection.RightLeft;
-
-    private bool IsReversed =>
-        BrowseDirection is BrowseDirection.RightLeft or BrowseDirection.BottomUp;
+    private bool IsHorizontal => BrowseDirection is Orientation.Horizontal;
 
     private void UpdateViewModelSubscription()
     {
@@ -120,7 +120,7 @@ public partial class ContinuousImageViewer : ImageViewerBase
 
         SetCurrentPage(GetSelectedPage());
         if (!_isSelectingFromScroll)
-            QueueScrollToSelectedPage();
+            QueueScrollToSelectedPage(isAnimated: true);
         QueueViewportUpdate();
     }
 
@@ -173,7 +173,23 @@ public partial class ContinuousImageViewer : ImageViewerBase
     /// <summary>
     /// 滚动到指定页码
     /// </summary>
-    private void QueueScrollToSelectedPage()
+    private void QueueScrollToSelectedPage(bool isAnimated = false)
+    {
+        if (ViewModel is not { Images.Count: > 0 } viewModel)
+        {
+            _pendingScrollToSelectedPageIndex = -1;
+            return;
+        }
+
+        _pendingScrollToSelectedPageIndex = int.Clamp(
+            viewModel.SelectedPageIndex,
+            0,
+            viewModel.Images.Count - 1);
+        _pendingScrollToSelectedPageAnimated = isAnimated;
+        QueuePendingScrollToSelectedPage();
+    }
+
+    private void QueuePendingScrollToSelectedPage()
     {
         if (_scrollToSelectedPageQueued)
             return;
@@ -182,44 +198,43 @@ public partial class ContinuousImageViewer : ImageViewerBase
         Dispatcher.UIThread.Post(() =>
         {
             _scrollToSelectedPageQueued = false;
-            ScrollToSelectedPage();
+            var index = _pendingScrollToSelectedPageIndex;
+            if (index < 0)
+                return;
+
+            if (TryScrollToPage(index, _pendingScrollToSelectedPageAnimated)
+                && _pendingScrollToSelectedPageIndex == index)
+                _pendingScrollToSelectedPageIndex = -1;
         }, DispatcherPriority.Loaded);
-        return;
+    }
 
-        void ScrollToSelectedPage()
-        {
-            if (ViewModel is not { Images.Count: > 0 } viewModel)
-                return;
+    private bool TryScrollToPage(int index, bool isAnimated)
+    {
+        if (ViewModel is not { Images.Count: > 0 } viewModel || index >= viewModel.Images.Count)
+            return true;
 
-            var index = int.Clamp(viewModel.SelectedPageIndex, 0, viewModel.Images.Count - 1);
-            if (ImageItemsControl.ContainerFromIndex(index) is not { } container)
-            {
-                ImageItemsControl.ScrollIntoView(index);
-                QueueScrollToSelectedPage();
-                return;
-            }
+        if (ImageItemsControl.ItemsPanelRoot is not PixevalVirtualizingStackPanel panel
+            || !panel.TryGetItemOffset(index, out var itemOffset))
+            return false;
 
-            if (GetPageOriginInContent(container) is not { } origin)
-            {
-                container.BringIntoView();
-                return;
-            }
-
-            var offset = double.Clamp(
-                GetScrollOffset(origin, container.Bounds.Size),
-                0,
-                IsHorizontal ? ViewerScrollView.ScrollBarMaximum.X : ViewerScrollView.ScrollBarMaximum.Y);
-            ViewerScrollView.Offset = IsHorizontal
+        var offset = double.Clamp(
+            itemOffset * ZoomFactor,
+            0,
+            IsHorizontal ? ViewerScrollView.ScrollBarMaximum.X : ViewerScrollView.ScrollBarMaximum.Y);
+        ViewerScrollView.ScrollTo(
+            IsHorizontal
                 ? new(offset, ViewerScrollView.Offset.Y)
-                : new(ViewerScrollView.Offset.X, offset);
-        }
+                : new(ViewerScrollView.Offset.X, offset),
+            isAnimated);
+        return true;
     }
 
     /// <summary>
     /// 用于更新页码和加载页码周围的图片
     /// </summary>
-    private void QueueViewportUpdate()
+    private void QueueViewportUpdate(bool updateSelection = false)
     {
+        _updateSelectionWhenViewportQueued |= updateSelection;
         if (_viewportUpdateQueued)
             return;
 
@@ -227,7 +242,10 @@ public partial class ContinuousImageViewer : ImageViewerBase
         Dispatcher.UIThread.Post(() =>
         {
             _viewportUpdateQueued = false;
-            UpdateSelectedPageFromViewport();
+            var shouldUpdateSelection = _updateSelectionWhenViewportQueued;
+            _updateSelectionWhenViewportQueued = false;
+            if (shouldUpdateSelection)
+                UpdateSelectedPageFromViewport();
             PreloadPagesAroundViewport();
         }, DispatcherPriority.Background);
         return;
@@ -243,7 +261,7 @@ public partial class ContinuousImageViewer : ImageViewerBase
             var nearestIndex = -1;
             var nearestAnchorDistance = double.MaxValue;
             var viewportLength = ViewportLength;
-            var viewportAnchor = ViewportAnchor;
+            const double viewportAnchor = 0;
 
             for (var i = 0; i < viewModel.Images.Count; i++)
             {
@@ -327,25 +345,15 @@ public partial class ContinuousImageViewer : ImageViewerBase
 
     private Point? GetPageOriginInContent(Control container) => container.TranslatePoint(default, ImageItemsControl);
 
-    private double GetScrollOffset(Point origin, Size size)
-    {
-        var anchor = IsHorizontal
-            ? IsReversed ? origin.X + size.Width : origin.X
-            : IsReversed
-                ? origin.Y + size.Height
-                : origin.Y;
-        return (anchor * ZoomFactor) - ViewportAnchor;
-    }
+    private double GetScrollOffset(Point origin) => (IsHorizontal ? origin.X : origin.Y) * ZoomFactor;
 
     private double ViewportLength => IsHorizontal ? ViewerScrollView.Viewport.Width : ViewerScrollView.Viewport.Height;
-
-    private double ViewportAnchor => IsReversed ? ViewportLength : 0;
 
     private double GetStart(Rect bounds) => IsHorizontal ? bounds.Left : bounds.Top;
 
     private double GetEnd(Rect bounds) => IsHorizontal ? bounds.Right : bounds.Bottom;
 
-    private double GetPageAnchor(Rect bounds) => IsReversed ? GetEnd(bounds) : GetStart(bounds);
+    private double GetPageAnchor(Rect bounds) => GetStart(bounds);
 
     private void ViewerScrollView_OnSizeChanged(object? sender, SizeChangedEventArgs e) => QueueViewportUpdate();
 
@@ -366,12 +374,20 @@ public partial class ContinuousImageViewer : ImageViewerBase
         }
     }
 
+    private void UpdateScrollConfiguration()
+    {
+        ViewerScrollView.GestureBindings = IsHorizontal
+            ? ImageViewerScrollGestureProfiles.Horizontal
+            : ImageViewerScrollGestureProfiles.Vertical;
+    }
+
     private void ImageItemsControl_OnContainerPrepared(object? sender, ContainerPreparedEventArgs e) => ViewerScrollView.RegisterAnchorCandidate(e.Container);
 
     private void ImageItemsControl_OnContainerClearing(object? sender, ContainerClearingEventArgs e) => ViewerScrollView.UnregisterAnchorCandidate(e.Container);
 
-    private async void SaveButton_OnRightClick(object? sender, ContextRequestedEventArgs e)
+    private void ImageItemsControl_OnLayoutUpdated(object? sender, EventArgs e)
     {
-        await SaveAsCommand.ExecuteAsync(null);
+        if (_pendingScrollToSelectedPageIndex >= 0)
+            QueuePendingScrollToSelectedPage();
     }
 }

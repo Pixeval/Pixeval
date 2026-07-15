@@ -3,6 +3,7 @@
 
 using System.Collections.ObjectModel;
 using AutoSettingsPage;
+using Avalonia.Layout;
 using FluentIcons.Common;
 using Mako.Global.Enum;
 using Pixeval.Models.Options;
@@ -19,7 +20,7 @@ public record BrowsingExperienceSettingsGroup
     public BrowseMode BrowseMode { get; set; } = BrowseMode.Swipe;
 
     [SettingsEntry(Symbol.ArrowBetweenDown, BrowseDirectionHeader, BrowseDirectionDescription)]
-    public BrowseDirection BrowseDirection { get; set; } = BrowseDirection.LeftRight;
+    public Orientation BrowseDirection { get; set; } = Orientation.Horizontal;
 
     [SettingsEntry(Symbol.SlideMultipleArrowRight, IllustrationViewerAutoPlayIntervalEntryHeader, IllustrationViewerAutoPlayIntervalEntryDescription)]
     public int IllustrationViewerAutoPlayInterval { get; set; } = 5;

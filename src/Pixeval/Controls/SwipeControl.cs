@@ -32,15 +32,6 @@ public class SwipeControl : TransitioningContentControl
         set => SetValue(SelectedIndexProperty, value);
     }
 
-    public static readonly StyledProperty<bool> IsTransitionDirectionReversedProperty =
-        AvaloniaProperty.Register<SwipeControl, bool>(nameof(IsTransitionDirectionReversed));
-
-    public bool IsTransitionDirectionReversed
-    {
-        get => GetValue(IsTransitionDirectionReversedProperty);
-        set => SetValue(IsTransitionDirectionReversedProperty, value);
-    }
-
     public static readonly StyledProperty<IDataTemplate?> ItemTemplateProperty = AvaloniaProperty.Register<SwipeControl, IDataTemplate?>(nameof(ItemTemplate));
 
     public IDataTemplate? ItemTemplate
@@ -68,8 +59,7 @@ public class SwipeControl : TransitioningContentControl
         {
             var oldItem = change.GetOldValue<int>();
             var newItem = change.GetNewValue<int>();
-            var isTransitionReversed = oldItem > newItem;
-            IsTransitionReversed = IsTransitionDirectionReversed ? !isTransitionReversed : isTransitionReversed;
+            IsTransitionReversed = oldItem > newItem;
         }
 
         if (ItemTemplate is null || !ItemTemplate.Match(item))

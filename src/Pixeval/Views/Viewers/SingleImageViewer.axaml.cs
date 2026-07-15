@@ -9,6 +9,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Presenters;
 using Avalonia.Input;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Pixeval.ViewModels.Viewers;
 using SmoothScroll.Avalonia.Controls;
@@ -30,6 +31,9 @@ public partial class SingleImageViewer : UserControl
             defaultValue: true);
 
     private SingleViewerViewModel? _subscribedViewModel;
+    private SingleViewerViewModel? _fitViewModel;
+    private bool _initialFitApplied;
+    private bool _initialFitQueued;
     internal AnimatedImage? ImageViewer;
     internal ScrollView? ViewerScrollView;
 
@@ -79,16 +83,21 @@ public partial class SingleImageViewer : UserControl
             return;
 
         _subscribedViewModel = viewModel;
+        _fitViewModel = viewModel;
+        _initialFitApplied = false;
+        _initialFitQueued = false;
         _subscribedViewModel.PropertyChanged += ViewModelOnPropertyChanged;
+        QueueInitialZoomToFit();
     }
 
     private void UnsubscribeFromViewModel()
     {
-        if (_subscribedViewModel is null)
-            return;
+        _subscribedViewModel?.PropertyChanged -= ViewModelOnPropertyChanged;
 
-        _subscribedViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
         _subscribedViewModel = null;
+        _fitViewModel = null;
+        _initialFitApplied = false;
+        _initialFitQueued = false;
     }
 
     private void ViewModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -96,10 +105,16 @@ public partial class SingleImageViewer : UserControl
         switch (e.PropertyName)
         {
             case nameof(SingleViewerViewModel.ZoomFactor):
+                _initialFitApplied = true;
                 ApplyViewModelZoomFactor();
                 break;
             case nameof(SingleViewerViewModel.LoadSuccessfully):
                 NotifyCommandCanExecuteChanged();
+                QueueInitialZoomToFit();
+                break;
+            case nameof(SingleViewerViewModel.DisplaySource):
+                _initialFitApplied = false;
+                QueueInitialZoomToFit();
                 break;
         }
     }
@@ -109,12 +124,16 @@ public partial class SingleImageViewer : UserControl
     private bool CanManipulateImage => DataContext is SingleViewerViewModel { LoadSuccessfully: true };
 
     [RelayCommand(CanExecute = nameof(CanManipulateImage))]
-    private void ZoomToFit() => ZoomToFitCore(true);
+    private void ZoomToFit()
+    {
+        if (TryZoomToFit(true))
+            _initialFitApplied = true;
+    }
 
     /// <summary>
     /// 默认缩放到适应窗口大小（Uniform）
     /// </summary>
-    private void ImageViewerOnSizeChanged(object? sender, SizeChangedEventArgs e) => ZoomToFitCore(false);
+    private void ImageViewerOnSizeChanged(object? sender, SizeChangedEventArgs e) => QueueInitialZoomToFit();
 
     private void ImagePresenter_OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
@@ -151,17 +170,53 @@ public partial class SingleImageViewer : UserControl
 
         ImageViewer?.SizeChanged += ImageViewerOnSizeChanged;
 
+        if (scrollView is not null)
+            scrollView.GestureBindings = ImageViewerScrollGestureProfiles.Paging;
+
         ApplyViewModelZoomFactor();
+        QueueInitialZoomToFit();
     }
 
-    private void ZoomToFitCore(bool animation)
+    private bool TryZoomToFit(bool animation)
     {
         if (ImageViewer is not Control { Bounds.Size: { Width: not 0, Height: not 0 } imageSize }
-            || ViewerScrollView is not { Bounds.Size: { Width: not 0, Height: not 0 } panelSize } scrollView)
-            return;
+            || ViewerScrollView is not { } scrollView)
+            return false;
+
+        var panelSize = scrollView.Viewport is { Width: > 0, Height: > 0 } viewport
+            ? viewport
+            : scrollView.Bounds.Size;
+        if (panelSize is not { Width: > 0, Height: > 0 })
+            return false;
 
         var ratio = panelSize / imageSize;
-        scrollView.ZoomTo(double.Min(ratio.X, ratio.Y), animation);
+        var fitFactor = double.Min(ratio.X, ratio.Y);
+        scrollView.MinZoomFactor = double.Min(scrollView.MinZoomFactor, fitFactor);
+        scrollView.MaxZoomFactor = double.Max(scrollView.MaxZoomFactor, fitFactor);
+        scrollView.ZoomTo(fitFactor, animation);
+        return true;
+    }
+
+    private void QueueInitialZoomToFit()
+    {
+        if (!UseScrollView
+            || _initialFitApplied
+            || _initialFitQueued
+            || _fitViewModel is not { LoadSuccessfully: true } viewModel)
+            return;
+
+        _initialFitQueued = true;
+        Dispatcher.UIThread.Post(() =>
+        {
+            _initialFitQueued = false;
+            if (!ReferenceEquals(_fitViewModel, viewModel)
+                || !ReferenceEquals(DataContext, viewModel)
+                || _initialFitApplied)
+                return;
+
+            if (TryZoomToFit(false))
+                _initialFitApplied = true;
+        }, DispatcherPriority.Loaded);
     }
 
     public bool UseScrollView
@@ -178,7 +233,7 @@ public partial class SingleImageViewer : UserControl
             || scrollView.ZoomFactor == viewModel.ZoomFactor)
             return;
 
-       // scrollView.ZoomTo(viewModel.ZoomFactor);
+        scrollView.ZoomTo(viewModel.ZoomFactor, false);
     }
 
     private async void SaveButton_OnRightClick(object? sender, ContextRequestedEventArgs e)

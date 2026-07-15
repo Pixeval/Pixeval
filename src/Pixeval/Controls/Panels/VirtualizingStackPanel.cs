@@ -11,38 +11,49 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
-using Pixeval.Models.Options;
 
 namespace Pixeval.Controls;
 
 /// <summary>
 /// A single-line virtualizing panel that measures every item once and keeps only viewport items realized.
 /// </summary>
-public class ReversibleVirtualizingStackPanel : VirtualizingPanel, IScrollSnapPointsInfo
+public class VirtualizingStackPanel : VirtualizingPanel, IScrollSnapPointsInfo
 {
-    public static readonly StyledProperty<BrowseDirection> BrowseDirectionProperty =
-        AvaloniaProperty.Register<ReversibleVirtualizingStackPanel, BrowseDirection>(nameof(BrowseDirection));
+    public static readonly StyledProperty<Orientation> OrientationProperty =
+        StackPanel.OrientationProperty.AddOwner<VirtualizingStackPanel>();
 
     public static readonly StyledProperty<double> SpacingProperty =
-        StackPanel.SpacingProperty.AddOwner<ReversibleVirtualizingStackPanel>();
+        StackPanel.SpacingProperty.AddOwner<VirtualizingStackPanel>();
 
     public static readonly StyledProperty<double> CacheLengthProperty =
-        AvaloniaProperty.Register<ReversibleVirtualizingStackPanel, double>(nameof(CacheLength), 0.5, validate: v => v is >= 0 and <= 2);
+        AvaloniaProperty.Register<VirtualizingStackPanel, double>(nameof(CacheLength), 0.5, validate: v => v is >= 0 and <= 2);
+
+    public static readonly StyledProperty<double> SnapPointScaleProperty =
+        AvaloniaProperty.Register<VirtualizingStackPanel, double>(nameof(SnapPointScale), 1, validate: v => double.IsFinite(v) && v > 0);
+
+    public static readonly StyledProperty<double> ViewportScaleProperty =
+        AvaloniaProperty.Register<VirtualizingStackPanel, double>(nameof(ViewportScale), 1, validate: v => double.IsFinite(v) && v > 0);
+
+    public static readonly StyledProperty<Vector> ViewportOffsetProperty =
+        AvaloniaProperty.Register<VirtualizingStackPanel, Vector>(nameof(ViewportOffset));
+
+    public static readonly StyledProperty<Size> ViewportSizeProperty =
+        AvaloniaProperty.Register<VirtualizingStackPanel, Size>(nameof(ViewportSize));
 
     public static readonly StyledProperty<bool> AreHorizontalSnapPointsRegularProperty =
-        AvaloniaProperty.Register<ReversibleVirtualizingStackPanel, bool>(nameof(AreHorizontalSnapPointsRegular));
+        AvaloniaProperty.Register<VirtualizingStackPanel, bool>(nameof(AreHorizontalSnapPointsRegular));
 
     public static readonly StyledProperty<bool> AreVerticalSnapPointsRegularProperty =
-        AvaloniaProperty.Register<ReversibleVirtualizingStackPanel, bool>(nameof(AreVerticalSnapPointsRegular));
+        AvaloniaProperty.Register<VirtualizingStackPanel, bool>(nameof(AreVerticalSnapPointsRegular));
 
     public static readonly RoutedEvent<RoutedEventArgs> HorizontalSnapPointsChangedEvent =
-        RoutedEvent.Register<ReversibleVirtualizingStackPanel, RoutedEventArgs>(nameof(HorizontalSnapPointsChanged), RoutingStrategies.Bubble);
+        RoutedEvent.Register<VirtualizingStackPanel, RoutedEventArgs>(nameof(HorizontalSnapPointsChanged), RoutingStrategies.Bubble);
 
     public static readonly RoutedEvent<RoutedEventArgs> VerticalSnapPointsChangedEvent =
-        RoutedEvent.Register<ReversibleVirtualizingStackPanel, RoutedEventArgs>(nameof(VerticalSnapPointsChanged), RoutingStrategies.Bubble);
+        RoutedEvent.Register<VirtualizingStackPanel, RoutedEventArgs>(nameof(VerticalSnapPointsChanged), RoutingStrategies.Bubble);
 
     private static readonly AttachedProperty<object?> RecycleKeyProperty =
-        AvaloniaProperty.RegisterAttached<ReversibleVirtualizingStackPanel, Control, object?>("RecycleKey");
+        AvaloniaProperty.RegisterAttached<VirtualizingStackPanel, Control, object?>("RecycleKey");
 
     private static readonly object _ItemIsItsOwnContainer = new();
 
@@ -54,6 +65,7 @@ public class ReversibleVirtualizingStackPanel : VirtualizingPanel, IScrollSnapPo
 
     private double _extentU;
     private double _maxV;
+    private Rect _effectiveViewport;
     private Rect _viewport;
     private Size _lastChildConstraint = new(double.NaN, double.NaN);
     private Size _lastAvailableSize = new(double.NaN, double.NaN);
@@ -63,15 +75,15 @@ public class ReversibleVirtualizingStackPanel : VirtualizingPanel, IScrollSnapPo
     private int _measureGeneration;
     private bool _isInLayout;
 
-    static ReversibleVirtualizingStackPanel()
+    static VirtualizingStackPanel()
     {
-        AffectsMeasure<ReversibleVirtualizingStackPanel>(
-            BrowseDirectionProperty,
+        AffectsMeasure<VirtualizingStackPanel>(
+            OrientationProperty,
             SpacingProperty,
             CacheLengthProperty);
     }
 
-    public ReversibleVirtualizingStackPanel()
+    public VirtualizingStackPanel()
     {
         EffectiveViewportChanged += OnEffectiveViewportChanged;
     }
@@ -88,10 +100,10 @@ public class ReversibleVirtualizingStackPanel : VirtualizingPanel, IScrollSnapPo
         remove => RemoveHandler(VerticalSnapPointsChangedEvent, value);
     }
 
-    public BrowseDirection BrowseDirection
+    public Orientation Orientation
     {
-        get => GetValue(BrowseDirectionProperty);
-        set => SetValue(BrowseDirectionProperty, value);
+        get => GetValue(OrientationProperty);
+        set => SetValue(OrientationProperty, value);
     }
 
     public double Spacing
@@ -104,6 +116,39 @@ public class ReversibleVirtualizingStackPanel : VirtualizingPanel, IScrollSnapPo
     {
         get => GetValue(CacheLengthProperty);
         set => SetValue(CacheLengthProperty, value);
+    }
+
+    public double SnapPointScale
+    {
+        get => GetValue(SnapPointScaleProperty);
+        set => SetValue(SnapPointScaleProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the composition scale applied to the panel by its scrolling ancestor.
+    /// </summary>
+    public double ViewportScale
+    {
+        get => GetValue(ViewportScaleProperty);
+        set => SetValue(ViewportScaleProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the current offset supplied by the scrolling ancestor in scaled scroll coordinates.
+    /// </summary>
+    public Vector ViewportOffset
+    {
+        get => GetValue(ViewportOffsetProperty);
+        set => SetValue(ViewportOffsetProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the current viewport size supplied by the scrolling ancestor.
+    /// </summary>
+    public Size ViewportSize
+    {
+        get => GetValue(ViewportSizeProperty);
+        set => SetValue(ViewportSizeProperty, value);
     }
 
     public bool AreHorizontalSnapPointsRegular
@@ -122,16 +167,21 @@ public class ReversibleVirtualizingStackPanel : VirtualizingPanel, IScrollSnapPo
 
     public int LastRealizedIndex => _realized.Count is 0 ? -1 : _realized.Keys.Max();
 
-    private Orientation Orientation => BrowseDirection is BrowseDirection.LeftRight or BrowseDirection.RightLeft
-        ? Orientation.Horizontal
-        : Orientation.Vertical;
+    /// <summary>
+    /// Gets the unscaled start offset of an item without realizing its container.
+    /// </summary>
+    internal bool TryGetItemOffset(int index, out double offset)
+    {
+        if (_unmeasuredCount is not 0 || index < 0 || index >= _measuredSizes.Count)
+        {
+            offset = default;
+            return false;
+        }
 
-    private static Orientation GetOrientation(BrowseDirection browseDirection) =>
-        browseDirection is BrowseDirection.LeftRight or BrowseDirection.RightLeft
-            ? Orientation.Horizontal
-            : Orientation.Vertical;
-
-    private bool IsReversed => BrowseDirection is BrowseDirection.RightLeft or BrowseDirection.BottomUp;
+        RebuildOffsetsIfDirty();
+        offset = _offsets[index];
+        return true;
+    }
 
     protected override Size MeasureOverride(Size availableSize)
     {
@@ -193,7 +243,7 @@ public class ReversibleVirtualizingStackPanel : VirtualizingPanel, IScrollSnapPo
             container.Arrange(rect);
         }
 
-        RaiseEvent(new RoutedEventArgs(orientation is Orientation.Horizontal ? HorizontalSnapPointsChangedEvent : VerticalSnapPointsChangedEvent));
+        RaiseSnapPointsChanged(orientation);
         return finalSize;
     }
 
@@ -260,13 +310,13 @@ public class ReversibleVirtualizingStackPanel : VirtualizingPanel, IScrollSnapPo
             NavigationDirection.Next => index + 1,
             NavigationDirection.Previous => index is -1 ? -1 : index - 1,
             NavigationDirection.Left when Orientation is Orientation.Horizontal && index is not -1 =>
-                index + (BrowseDirection is BrowseDirection.RightLeft ? 1 : -1),
+                index - 1,
             NavigationDirection.Right when Orientation is Orientation.Horizontal && index is not -1 =>
-                index + (BrowseDirection is BrowseDirection.RightLeft ? -1 : 1),
+                index + 1,
             NavigationDirection.Up when Orientation is Orientation.Vertical && index is not -1 =>
-                index + (BrowseDirection is BrowseDirection.BottomUp ? 1 : -1),
+                index - 1,
             NavigationDirection.Down when Orientation is Orientation.Vertical && index is not -1 =>
-                index + (BrowseDirection is BrowseDirection.BottomUp ? -1 : 1),
+                index + 1,
             _ => -1
         };
 
@@ -305,14 +355,26 @@ public class ReversibleVirtualizingStackPanel : VirtualizingPanel, IScrollSnapPo
     {
         base.OnPropertyChanged(change);
 
-        if (change.Property == SpacingProperty
-            || change.Property == BrowseDirectionProperty
-            && GetOrientation(change.GetOldValue<BrowseDirection>()) != GetOrientation(change.GetNewValue<BrowseDirection>()))
+        if (change.Property == SpacingProperty || change.Property == OrientationProperty)
             _offsetsDirty = true;
+        else if (change.Property == SnapPointScaleProperty)
+            RaiseSnapPointsChanged(Orientation);
+        else if (change.Property == ViewportScaleProperty
+                 || change.Property == ViewportOffsetProperty
+                 || change.Property == ViewportSizeProperty)
+            UpdateViewport();
     }
 
-    public IReadOnlyList<double> GetIrregularSnapPoints(Orientation orientation, SnapPointsAlignment snapPointsAlignment) =>
-        orientation == Orientation ? _offsets : [];
+    public IReadOnlyList<double> GetIrregularSnapPoints(Orientation orientation, SnapPointsAlignment snapPointsAlignment)
+    {
+        if (orientation != Orientation)
+            return [];
+
+        if (SnapPointScale is 1)
+            return _offsets;
+
+        return _offsets.Select(offset => offset * SnapPointScale).ToArray();
+    }
 
     public double GetRegularSnapPoints(Orientation orientation, SnapPointsAlignment snapPointsAlignment, out double offset)
     {
@@ -322,7 +384,17 @@ public class ReversibleVirtualizingStackPanel : VirtualizingPanel, IScrollSnapPo
 
     private void OnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
     {
-        _viewport = e.EffectiveViewport;
+        _effectiveViewport = e.EffectiveViewport;
+        UpdateViewport();
+    }
+
+    private void UpdateViewport()
+    {
+        _viewport = ResolveUnscaledViewport(
+            _effectiveViewport,
+            ViewportOffset,
+            ViewportSize,
+            ViewportScale);
 
         if (!_offsetsDirty && Items.Count > 0)
         {
@@ -333,6 +405,30 @@ public class ReversibleVirtualizingStackPanel : VirtualizingPanel, IScrollSnapPo
 
         InvalidateMeasure();
     }
+
+    internal static Rect ResolveUnscaledViewport(
+        Rect effectiveViewport,
+        Vector viewportOffset,
+        Size viewportSize,
+        double viewportScale)
+    {
+        var viewport = IsUsableViewport(viewportOffset, viewportSize)
+            ? new Rect(viewportOffset.X, viewportOffset.Y, viewportSize.Width, viewportSize.Height)
+            : effectiveViewport;
+        return ToUnscaledViewport(viewport, viewportScale);
+    }
+
+    internal static Rect ToUnscaledViewport(Rect effectiveViewport, double viewportScale) =>
+        new(
+            effectiveViewport.X / viewportScale,
+            effectiveViewport.Y / viewportScale,
+            effectiveViewport.Width / viewportScale,
+            effectiveViewport.Height / viewportScale);
+
+    private void RaiseSnapPointsChanged(Orientation orientation) =>
+        RaiseEvent(new RoutedEventArgs(orientation is Orientation.Horizontal
+            ? HorizontalSnapPointsChangedEvent
+            : VerticalSnapPointsChangedEvent));
 
     private void EnsureCacheShape(int itemCount)
     {
@@ -369,11 +465,11 @@ public class ReversibleVirtualizingStackPanel : VirtualizingPanel, IScrollSnapPo
 
             var wasRealized = _realized.TryGetValue(i, out var container);
             container ??= GetOrCreateElement(items[i], i);
-            container.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            container.Measure(childConstraint);
             var measuredSize = container.DesiredSize;
             if (!IsUsableSize(measuredSize))
             {
-                container.Measure(childConstraint);
+                container.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
                 measuredSize = container.DesiredSize;
             }
 
@@ -484,10 +580,8 @@ public class ReversibleVirtualizingStackPanel : VirtualizingPanel, IScrollSnapPo
             viewportLength = _sizeU.Count > 0 ? _sizeU[0] : 0;
 
         var cache = viewportLength * CacheLength;
-        var arrangedStart = double.Max(0, viewportStart - cache);
-        var arrangedEnd = double.Min(_extentU, viewportStart + viewportLength + cache);
-        var start = IsReversed ? double.Max(0, _extentU - arrangedEnd) : arrangedStart;
-        var end = IsReversed ? double.Min(_extentU, _extentU - arrangedStart) : arrangedEnd;
+        var start = double.Max(0, viewportStart - cache);
+        var end = double.Min(_extentU, viewportStart + viewportLength + cache);
 
         var first = FindFirstIntersecting(start);
         var last = FindLastIntersecting(end);
@@ -719,7 +813,7 @@ public class ReversibleVirtualizingStackPanel : VirtualizingPanel, IScrollSnapPo
         if (delta is 0 || _realized.Count is 0)
             return;
 
-        var generator = ItemContainerGenerator ?? throw new InvalidOperationException("The panel is not attached to an ItemsControl.");
+        var generator = ItemContainerGenerator ?? throw new InvalidOperationException($"The panel is not attached to an {nameof(ItemsControl)}.");
         var shifted = _realized
             .OrderByDescending(pair => pair.Key)
             .Where(pair => pair.Key >= startingIndex)
@@ -738,11 +832,12 @@ public class ReversibleVirtualizingStackPanel : VirtualizingPanel, IScrollSnapPo
         double.IsFinite(size.Width) && size.Width > 0
                                     && double.IsFinite(size.Height) && size.Height > 0;
 
-    private double GetArrangedU(int index)
-    {
-        var start = _offsets[index];
-        return IsReversed ? _extentU - start - _sizeU[index] : start;
-    }
+    private static bool IsUsableViewport(Vector offset, Size size) =>
+        double.IsFinite(offset.X)
+        && double.IsFinite(offset.Y)
+        && IsUsableSize(size);
+
+    private double GetArrangedU(int index) => _offsets[index];
 
     private double GetU(Size size) => Orientation is Orientation.Horizontal ? size.Width : size.Height;
 

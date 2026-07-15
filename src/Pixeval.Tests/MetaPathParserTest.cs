@@ -1,6 +1,8 @@
+using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Misaki;
+using Pixeval.AppManagement;
 using Pixeval.Download;
 using Pixeval.Download.MacroParser;
 using Pixeval.Models.Download;
@@ -177,13 +179,22 @@ public sealed class MetaPathParserTest
     }
 
     [TestMethod]
-    public void FormattedFileExtensionShouldReplaceWithLeadingDot()
+    public void DefaultDownloadPathShouldProvideExtensionSeparator()
+    {
+        var settings = new DownloadSettingsGroup();
+
+        Assert.IsTrue(settings.DownloadPathMacro.EndsWith(".@{ext}", StringComparison.Ordinal));
+    }
+
+    [TestMethod]
+    public void FormattedFileExtensionShouldUseExplicitSeparator()
     {
         var path = DownloadPathMacroParser.Reduce("@{ext:u}", new ParserContext(DesignHelper.DownloadParserSampleWork(ImageType.SingleImage)));
 
         Assert.AreEqual("<ext:u>", path);
-        Assert.AreEqual("work.PNG", IoHelper.ChangeExtension("work" + path, ".png"));
         Assert.AreEqual("work.PNG", IoHelper.ChangeExtension("work." + path, ".png"));
+        Assert.AreEqual("work.PNG", IoHelper.ChangeExtension("work." + path, "png"));
+        Assert.AreEqual("work", IoHelper.RemoveTokenExtension("work." + path));
     }
 
     [TestMethod]
@@ -218,10 +229,10 @@ public sealed class MetaPathParserTest
     {
         var sample = DesignHelper.DownloadParserSampleWork(ImageType.ImageSet);
         var path = DownloadPathMacroParser.Reduce(
-            "@{is_pic_set?p@{pic_set_index:00}:}@{ext}",
+            "@{is_pic_set?p@{pic_set_index:00}:}.@{ext}",
             new ParserContext(sample));
 
-        Assert.AreEqual("p<pic_set_index:00><ext>", path);
+        Assert.AreEqual("p<pic_set_index:00>.<ext>", path);
         Assert.AreEqual("p00.jpg", IoHelper.ReplaceTokenSetIndex(IoHelper.ChangeExtension(path, ".jpg"), sample.SetIndex));
     }
 

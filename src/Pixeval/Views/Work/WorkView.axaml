@@ -58,7 +58,7 @@
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
-                        <controls:ReversibleVirtualizingStackPanel BrowseDirection="TopDown" Spacing="5" />
+                        <controls:VirtualizingStackPanel Orientation="Vertical" Spacing="5" />
                     </ItemsPanelTemplate>
                 </Setter.Value>
             </Setter>

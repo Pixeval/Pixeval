@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input.Platform;
+using Avalonia.Layout;
 using CommunityToolkit.Mvvm.Input;
 using Pixeval.Controls;
 using Pixeval.I18N;
-using Pixeval.Models.Options;
 using Pixeval.Utilities;
 using Pixeval.ViewModels.Viewers;
 
@@ -26,15 +26,15 @@ public abstract partial class ImageViewerBase : UserControl
             o => o.ZoomFactor,
             (o, v) => o.ZoomFactor = v);
 
-    public static readonly DirectProperty<ImageViewerBase, BrowseDirection> BrowseDirectionProperty =
-        AvaloniaProperty.RegisterDirect<ImageViewerBase, BrowseDirection>(
+    public static readonly DirectProperty<ImageViewerBase, Orientation> BrowseDirectionProperty =
+        AvaloniaProperty.RegisterDirect<ImageViewerBase, Orientation>(
             nameof(BrowseDirection),
             o => o.BrowseDirection,
             (o, v) => o.BrowseDirection = v);
 
     public abstract double ZoomFactor { get; set; }
 
-    public BrowseDirection BrowseDirection
+    public Orientation BrowseDirection
     {
         get;
         set
@@ -77,7 +77,7 @@ public abstract partial class ImageViewerBase : UserControl
         SaveAsCommand.NotifyCanExecuteChanged();
     }
 
-    protected virtual void OnBrowseDirectionChanged(BrowseDirection oldValue, BrowseDirection newValue)
+    protected virtual void OnBrowseDirectionChanged(Orientation oldValue, Orientation newValue)
     {
     }
 

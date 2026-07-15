@@ -10,23 +10,29 @@
     x:Name="Root">
     <scroll:ScrollView
         x:Name="ViewerScrollView"
-        ContentOrientation="{Binding $parent[local:ContinuousImageViewer].ContentOrientation}"
         HorizontalScrollBarVisibility="Hidden"
+        IsHorizontalMeasureInfinite="{Binding $parent[local:ContinuousImageViewer].BrowseDirection, ConverterParameter={x:Static Orientation.Horizontal}, Converter={x:Static ObjectConverters.Equal}}"
+        IsVerticalMeasureInfinite="{Binding $parent[local:ContinuousImageViewer].BrowseDirection, ConverterParameter={x:Static Orientation.Vertical}, Converter={x:Static ObjectConverters.Equal}}"
         PropertyChanged="ViewerScrollView_OnPropertyChanged"
         ScrollChanged="ViewerScrollView_OnScrollChanged"
         SizeChanged="ViewerScrollView_OnSizeChanged"
-        Theme="{StaticResource ViewerScrollViewTheme}"
-        VerticalScrollBarVisibility="Hidden">
+        Theme="{StaticResource ViewerScrollViewTheme}">
         <ItemsControl
             x:Name="ImageItemsControl"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             ContainerClearing="ImageItemsControl_OnContainerClearing"
             ContainerPrepared="ImageItemsControl_OnContainerPrepared"
-            ItemsSource="{Binding Images}">
+            ItemsSource="{Binding Images}"
+            LayoutUpdated="ImageItemsControl_OnLayoutUpdated">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <controls:ReversibleVirtualizingStackPanel BrowseDirection="{Binding $parent[local:ContinuousImageViewer].BrowseDirection}" Spacing="8" />
+                    <controls:VirtualizingStackPanel
+                        Orientation="{Binding $parent[local:ContinuousImageViewer].BrowseDirection}"
+                        Spacing="8"
+                        ViewportOffset="{Binding $parent[scroll:ScrollView].Offset}"
+                        ViewportScale="{Binding $parent[scroll:ScrollView].ZoomFactor}"
+                        ViewportSize="{Binding $parent[scroll:ScrollView].Viewport}" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>

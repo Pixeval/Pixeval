@@ -19,11 +19,11 @@
                 <DataTemplate DataType="{x:Type vm:SingleViewerViewModel}">
                     <!--  图片查看器（缩放/平移）  -->
                     <scroll:ScrollView
-                        ContentOrientation="Both"
-                        HorizontalScrollBarVisibility="Auto"
+                        x:Name="ViewerScrollView"
+                        IsHorizontalMeasureInfinite="True"
+                        IsVerticalMeasureInfinite="True"
                         Theme="{StaticResource ViewerScrollViewTheme}"
-                        VerticalScrollBarVisibility="Auto"
-                        ZoomFactor="{Binding ZoomFactor, Mode=OneWayToSource}">
+                        ZoomFactor="{Binding ZoomFactor, Mode=TwoWay}">
                         <ai:AnimatedImage
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"

@@ -6,6 +6,7 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Animation;
 using Avalonia.Controls;
+using Avalonia.Layout;
 using Pixeval.Controls;
 using Pixeval.Models.Options;
 using Pixeval.ViewModels.Viewers;
@@ -37,15 +38,14 @@ public partial class SwipeImageViewer : ImageViewerBase
     }
 
     /// <inheritdoc />
-    protected override void OnBrowseDirectionChanged(BrowseDirection oldValue, BrowseDirection newValue)
+    protected override void OnBrowseDirectionChanged(Orientation oldValue, Orientation newValue)
     {
         UpdatePageTransition();
     }
 
     private void UpdatePageTransition()
     {
-        SwipeContent.PageTransition = new PageSlide(TimeSpan.FromSeconds(0.3), BrowseDirection.ToSlideAxis());
-        SwipeContent.IsTransitionDirectionReversed = BrowseDirection is BrowseDirection.RightLeft or BrowseDirection.BottomUp;
+        SwipeContent.PageTransition = new PageSlide(TimeSpan.FromSeconds(0.3), BrowseDirection is Orientation.Horizontal ? PageSlide.SlideAxis.Horizontal : PageSlide.SlideAxis.Vertical);
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -85,16 +85,5 @@ public partial class SwipeImageViewer : ImageViewerBase
         }
 
         RaiseSelectionChanged(e.NewIndex, e.NewItem);
-    }
-}
-
-file static class BrowseDirectionExtensions
-{
-    extension(BrowseDirection direction)
-    {
-        public PageSlide.SlideAxis ToSlideAxis() =>
-            direction is BrowseDirection.TopDown or BrowseDirection.BottomUp
-                ? PageSlide.SlideAxis.Vertical
-                : PageSlide.SlideAxis.Horizontal;
     }
 }

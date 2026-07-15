@@ -12,7 +12,7 @@
   "MacroShouldBeContained": "宏 '@{{{0}}}' 应该被包含在条件宏 '@{{{1}?:}}' 内",
   "MessageWithPositionFormatted": "{0}（位置 {1}）",
   "MacroDescription": {
-    "Ext": "文件后缀名，类似 .jpg, .png 等，注意该宏已经包含了后缀名前面的点号\".\"；必须在文件名上使用",
+    "Ext": "文件扩展名，例如 jpg、png；不包含前导点号，通常写作 .@{ext}；必须在文件名上使用",
     "Id": "作品ID（字符串类型）",
     "Title": "作品标题（字符串类型）",
     "ArtistId": "作者ID（字符串类型）",

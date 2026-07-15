@@ -215,14 +215,18 @@ public static class IncrementalLoadingBehavior
                 return true;
 
             if (itemsControl.AttachedScrollViewer is not { IsEffectivelyVisible: true } scrollViewer
-                || scrollViewer.FindDescendantOfType<ScrollPresenter>() is not { ContentOrientation: var orientation and not ScrollContentOrientation.None })
+                || scrollViewer.FindDescendantOfType<ScrollPresenter>() is not
+                {
+                    IsHorizontalMeasureInfinite: var canLoadHorizontally,
+                    IsVerticalMeasureInfinite: var canLoadVertically
+                })
                 return false;
 
-            return orientation is ScrollContentOrientation.Vertical or ScrollContentOrientation.Both
+            return canLoadVertically
                    && scrollViewer.Viewport.Height > 0
                    && scrollViewer.Extent.Height > 0
                    && scrollViewer.Offset.Y + scrollViewer.Viewport.Height >= scrollViewer.Extent.Height - itemsControl.Threshold
-                   || orientation is ScrollContentOrientation.Horizontal or ScrollContentOrientation.Both
+                   || canLoadHorizontally
                    && scrollViewer.Viewport.Width > 0
                    && scrollViewer.Extent.Width > 0
                    && scrollViewer.Offset.X + scrollViewer.Viewport.Width >= scrollViewer.Extent.Width - itemsControl.Threshold;

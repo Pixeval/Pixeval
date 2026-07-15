@@ -22,6 +22,6 @@ public class FileExtensionMacro : ITransducer<IArtworkInfo>, ILastSegment
     public string Substitute(IArtworkInfo context, string? formatter, out bool includeToken)
     {
         includeToken = true;
-        return $"<{NameConst}:{formatter}>";
+        return MacroHelper.CreateToken(NameConst, formatter);
     }
 }

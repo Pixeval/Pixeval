@@ -21,6 +21,8 @@ public static partial class IoHelper
 {
     public const string PixevalTempExtension = ".pixevaldownloading";
 
+    private const string FileExtensionTokenPrefix = "<" + FileExtensionMacro.NameConst;
+
     extension(Stream stream)
     {
         public async Task StreamSaveToFileAsync(string path)
@@ -259,10 +261,11 @@ public static partial class IoHelper
 
     private static string ReplaceFileExtensionTokens(string path, string extension)
     {
+        var extensionValue = extension.StartsWith('.') ? extension[1..] : extension;
         return ReplaceTokenValues(
             path,
-            "<" + FileExtensionMacro.NameConst,
-            formatter => MacroHelper.FormatString(extension, formatter));
+            FileExtensionTokenPrefix,
+            formatter => MacroHelper.FormatString(extensionValue, formatter));
     }
 
     private static string ReplaceTokenValues(string path, string tokenPrefix, Func<string?, string> valueFactory)
@@ -320,7 +323,8 @@ public static partial class IoHelper
 
     public static string RemoveTokenExtension(string path)
     {
-        return ReplaceFileExtensionTokens(path, "");
+        var withoutSeparatedTokens = ReplaceTokenValues(path, "." + FileExtensionTokenPrefix, static _ => "");
+        return ReplaceTokenValues(withoutSeparatedTokens, FileExtensionTokenPrefix, static _ => "");
     }
 
     private static string GetEncodedImageExtension(SKEncodedImageFormat encodedFormat) =>

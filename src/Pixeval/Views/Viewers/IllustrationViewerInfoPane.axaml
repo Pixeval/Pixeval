@@ -68,11 +68,6 @@
                             <Binding Converter="{x:Static ObjectConverters.IsNotNull}" Path="Illustrations" />
                         </MultiBinding>
                     </ListBox.IsVisible>
-                    <ListBox.Styles>
-                        <Style Selector="ListBox controls1|ScrollPresenter">
-                            <Setter Property="ContentOrientation" Value="Horizontal" />
-                        </Style>
-                    </ListBox.Styles>
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Horizontal" Spacing="5" />
@@ -138,9 +133,7 @@
             </StackPanel>
 
             <DockPanel VerticalAlignment="Stretch" ClipToBounds="True">
-                <local:WorkSeriesInfoPane
-                    DockPanel.Dock="Bottom"
-                    DataContext="{Binding SeriesInfo}" />
+                <local:WorkSeriesInfoPane DataContext="{Binding SeriesInfo}" DockPanel.Dock="Bottom" />
                 <Panel>
                     <local:WorkInfoPane Name="InfoPaneSection" ArtworkInfo="{Binding CurrentIllustration.Entry, FallbackValue={x:Null}}">
                         <local:WorkInfoPane.ActionZone>

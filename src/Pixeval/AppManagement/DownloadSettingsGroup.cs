@@ -16,7 +16,7 @@ public record DownloadSettingsGroup
     public string DownloadPathMacro { get; set; } = Path.Join(
         GetSpecialFolder(),
         "@{is_pic_set?[@{artist_name}] @{title}:}",
-        "[@{artist_name}] @{id}@{is_pic_set?p@{pic_set_index}:}@{ext}"
+        "[@{artist_name}] @{id}@{is_pic_set?p@{pic_set_index}:}.@{ext}"
     );
 
     [SettingsEntry(Symbol.TextPeriodAsterisk, WorkDownloadFormatEntryHeader, WorkDownloadFormatEntryDescription)]
