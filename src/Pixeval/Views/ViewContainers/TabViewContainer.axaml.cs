@@ -10,10 +10,10 @@ using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using CommunityToolkit.Mvvm.Input;
-using Pixeval.AppManagement;
 using Pixeval.Models.Navigation;
 using Pixeval.Utilities;
 using Pixeval.Views.Login;
@@ -42,6 +42,12 @@ public partial class TabViewContainer : ViewContainerBase
     {
         get;
         private set => SetAndRaise(CanCreateNewTabProperty, ref field, value);
+    }
+
+    static TabViewContainer()
+    {
+        RegisterNavigationItemInputHandlers<Button>();
+        RegisterNavigationItemInputHandlers<MenuItem>();
     }
 
     public TabViewContainer()
@@ -122,14 +128,72 @@ public partial class TabViewContainer : ViewContainerBase
         CanCreateNewTab = _navigationConfiguration.NewTabPage is not null;
     }
 
-    private static void OpenNavigationItem(Control? control)
+    private static void OpenNavigationItem(Control? control) => _ = TryOpenNavigationItem(control, openNew: false);
+
+    private static bool TryOpenNavigationItem(Control? control, bool openNew)
     {
         if (control is not { DataContext: NavigationPageItem { PageType: { } type } }
             || TopLevel.GetTopLevel(control) is not { ViewContainer: { } viewContainer })
-            return;
+            return false;
+
+        if (!openNew
+            && viewContainer is TabViewContainer tabViewContainer
+            && tabViewContainer.TrySelectPage(type))
+            return true;
 
         viewContainer.NavigateTo((Page) Activator.CreateInstance(type)!);
+        return true;
     }
+
+    private bool TrySelectPage(Type pageType)
+    {
+        if (TabsControl.Pages is not IList<Page> pages)
+            return false;
+
+        if (TabsControl.SelectedPage?.GetType() == pageType)
+            return true;
+
+        for (var index = pages.Count - 1; index >= 0; --index)
+        {
+            if (pages[index].GetType() != pageType)
+                continue;
+
+            TabsControl.SelectedIndex = index;
+            return true;
+        }
+
+        return false;
+    }
+
+    private static void RegisterNavigationItemInputHandlers<T>() where T : Control
+    {
+        PointerReleasedEvent.AddClassHandler<T>(NavigationItem_OnPointerReleased, RoutingStrategies.Bubble, handledEventsToo: true);
+        ContextRequestedEvent.AddClassHandler<T>(NavigationItem_OnContextRequested, RoutingStrategies.Bubble, handledEventsToo: true);
+    }
+
+    private static void NavigationItem_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (e.InitialPressMouseButton is MouseButton.Middle
+            && sender is Control control
+            && IsNavigationItemControl(control)
+            && TryOpenNavigationItem(control, openNew: true))
+            e.Handled = true;
+    }
+
+    private static void NavigationItem_OnContextRequested(object? sender, ContextRequestedEventArgs e)
+    {
+        if (sender is Control control
+            && IsNavigationItemControl(control)
+            && TryOpenNavigationItem(control, openNew: true))
+            e.Handled = true;
+    }
+
+    private static bool IsNavigationItemControl(Control control) => control switch
+    {
+        Button { Command: { } command } => ReferenceEquals(command, OpenNavigationItemCommand),
+        MenuItem { Command: { } command } => ReferenceEquals(command, OpenNavigationItemCommand),
+        _ => false
+    };
 
     private void TabsView_OnAddTabButtonClick(TabsView sender, EventArgs e)
     {

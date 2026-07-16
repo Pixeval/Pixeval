@@ -46,6 +46,7 @@ description: 工程代码格式化风格指引
 - 不要使用旧的扩展方法，而使用 C# 14 中新的 extension blocks，并将同一类型的扩展聚在一起。
 - 尽量使用 `stackalloc`、`Span<T>`、`Memory<T>` 等来增强性能。
 - 抛出异常时提供要意义的消息、参数名称。
+- 不论行长短，属性、方法、类型的特性（Attribute）都要单独一行；而方法参数、泛型参数的特性可以和参数在同一行。
 - 编写 XML 注释时：
   - 对于继承自接口或基类的成员，优先使用 `<inheritdoc />` 来继承文档。
   - 对于调用其他方法所以文档可以直接复用的成员，优先使用 `<inheritdoc cref="..." />` 来复用文档。
@@ -56,6 +57,7 @@ description: 工程代码格式化风格指引
 - 对于返回值，优先使用 `IReadOnlyCollection<T>` 或更严格的 `IReadOnlyList<T>` 而不是 `IEnumerable<T>`，以表达集合内元素有限。除非这些情况：
   - 迭代代价昂贵，需要使用迭代器方法（`yield return`）延迟加载。
   - 包装一个已有的 `IEnumerable<T>` 的方法。
+  - 仅进行管道式处理（例如 `Select`、`Where`、`OrderBy` 等）并返回一个新的 `IEnumerable<T>`。
   - 其他使用 `IEnumerable<T>` 更合理的情况。
 - 优先使用 `IReadOnlyList<T>`或`ReadOnlySpan<T>` 而不是 `T[]` 来表示数组，以避免潜在的数组协变。
 - 若一个类内容太多，可以拆成形如 `.Commands.cs` 的 partial 文件。
