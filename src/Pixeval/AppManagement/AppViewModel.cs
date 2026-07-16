@@ -65,6 +65,7 @@ public sealed class AppViewModel(App app, FileLogger logger) : IAsyncDisposable
 
     public void InitializeProvider()
     {
+        AppSettings.Initialize();
         AppServiceProvider = CreateServiceProvider();
         SetNameResolvers();
         // 触发卸载插件

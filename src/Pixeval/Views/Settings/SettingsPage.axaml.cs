@@ -1,9 +1,11 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Pixeval.AppManagement;
+using Pixeval.Controls;
 using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
@@ -40,5 +42,18 @@ public partial class SettingsPage : NavigationPage
         AppInfo.SaveSettings();
         // Parent is TabsView
         TopLevel.GetTopLevel(parent as Control)?.ViewContainer?.ShowSuccess(I18NManager.GetResource(SettingsMainViewResources.SettingsSaved));
+    }
+
+    public static string ReleaseTitle => I18NManager.GetResource(SettingsMainViewResources.ReleaseNoteDialogTitleFormatted, AppInfo.AppVersion.CurrentVersionShortText);
+
+    public static async Task<Control> GetReleaseNotesAsync()
+    {
+        await AppInfo.AppVersion.GitHubCheckForUpdateAsync();
+        return new MarkdownBox
+        {
+            Markdown =
+                AppInfo.AppVersion.CurrentAppReleaseModel?.ReleaseNote ??
+                I18NManager.GetResource(SettingsMainViewResources.ReleaseNoteDialogEmpty)
+        };
     }
 }

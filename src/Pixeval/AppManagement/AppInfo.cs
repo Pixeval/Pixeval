@@ -43,7 +43,7 @@ public static class AppInfo
 
     private static string NavigationMenuPath { get; } = Path.Combine(SettingsFolder, "navigation_menu.yaml");
 
-    public static string DatabaseFilePath { get; } = Path.Combine(SettingsFolder, "PixevalData4.3.12.sqlite");
+    public static string DatabaseFilePath { get; } = Path.Combine(SettingsFolder, "Pixeval5.0.0.sqlite");
 
     public static readonly Uri IconApplicationUri = new($"avares://{AppIdentifier}/Assets/logo.ico");
 
@@ -193,20 +193,20 @@ public static class AppInfo
         SaveNavigationMenuYaml(App.AppViewModel.NavigationMenuYamlText);
     }
 
-    public static void SaveAppSettings(AppSettings? configuration)
+    public static void SaveAppSettings(AppSettings? appSettings)
     {
-        if (configuration is null)
+        if (appSettings is null)
             return;
 
-        YamlSerializer.SerializeToFile(AppSettingsPath, configuration, SettingsSerializerContext.Default.AppSettings);
+        YamlSerializer.SerializeToFile(AppSettingsPath, appSettings, SettingsSerializerContext.Default.AppSettings);
     }
 
-    public static void SaveLoginContext(LoginContext? configuration)
+    public static void SaveLoginContext(LoginContext? loginContext)
     {
-        if (configuration is null)
+        if (loginContext is null)
             return;
 
-        YamlSerializer.SerializeToFile(LoginContextPath, configuration, SettingsSerializerContext.Default.LoginContext);
+        YamlSerializer.SerializeToFile(LoginContextPath, loginContext, SettingsSerializerContext.Default.LoginContext);
     }
 
     public static void SaveHomePageCards(ObservableCollection<HomePageCardLayout>? cards)

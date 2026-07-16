@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoSettingsPage.Models;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.I18N;
@@ -70,20 +71,13 @@ public partial class SettingsMainView : ContentPage
     {
         if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer)
             _ = await viewContainer.CreateAcknowledgementTaskAsync(
-                I18NManager.GetResource(SettingsMainViewResources.ReleaseNoteDialogTitleFormatted, AppInfo.AppVersion.CurrentVersionShortText),
-                GetReleaseNotesAsync());
-        return;
-
-        static async Task<object?> GetReleaseNotesAsync()
-        {
-            await AppInfo.AppVersion.GitHubCheckForUpdateAsync();
-            return new MarkdownBox
-            {
-                Markdown =
-                    AppInfo.AppVersion.CurrentAppReleaseModel?.ReleaseNote ??
-                    I18NManager.GetResource(SettingsMainViewResources.ReleaseNoteDialogEmpty)
-            };
-        }
+                I18NManager.GetResource(SettingsMainViewResources.ReleaseNoteDialogTitle),
+                async contentDialog =>
+                {
+                    var control = await SettingsPage.GetReleaseNotesAsync();
+                    contentDialog.Title = SettingsPage.ReleaseTitle;
+                    contentDialog.Content = control;
+                });
     }
 
     private async void ExportSettingsPlainText_OnClicked(object sender, RoutedEventArgs e)
@@ -137,8 +131,8 @@ public partial class SettingsMainView : ContentPage
             if (YamlSerializer.Deserialize(stream, SettingsSerializerContext.Default.AppSettings) is { } appSettings)
             {
                 foreach (var localGroup in vm.LocalGroups)
-                foreach (var settingsEntry in localGroup)
-                    settingsEntry.LocalValueReset(appSettings);
+                    foreach (var settingsEntry in localGroup)
+                        settingsEntry.LocalValueReset(appSettings);
                 viewContainer.ShowSuccess(I18NManager.GetResource(SettingsMainViewResources.ImportSettingsSuccess), file.Name);
             }
         }

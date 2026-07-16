@@ -21,6 +21,7 @@ using FluentIcons.Common;
 using Markdown.Avalonia;
 using Markdown.Avalonia.StyleCollections;
 using Markdown.Avalonia.Svg;
+using Markdown.Avalonia.SyntaxHigh;
 using Markdown.Avalonia.Utils;
 using Misaki;
 using Pixeval.AppManagement;
@@ -115,6 +116,7 @@ public class MarkdownBox : MarkdownScrollViewer
         MarkdownStyle = new MarkdownStyleFluentTheme();
         Styles.Add(new MarkdownBoxStyles());
         Plugins.Plugins.Add(new PixevalMarkdownPlugin());
+        Plugins.Plugins.Add(new SyntaxHighlight());
         Plugins.Plugins.Add(new PixevalHtmlPlugin());
         Plugins.Plugins.Add(new SvgFormat());
         Plugins.PathResolver = new PixevalPathResolver();

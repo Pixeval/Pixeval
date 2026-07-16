@@ -13,9 +13,11 @@ using Avalonia.Controls.Notifications;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using CommunityToolkit.Mvvm.Input;
+using Pixeval.AppManagement;
 using Pixeval.Models.Navigation;
 using Pixeval.Utilities;
 using Pixeval.Views.Login;
+using Pixeval.Views.Settings;
 using Pixeval.Views.Viewers;
 using TabView.Avalonia;
 
@@ -69,7 +71,7 @@ public partial class TabViewContainer : ViewContainerBase
     }
 
     /// <inheritdoc />
-    protected override void OnLoaded(RoutedEventArgs e)
+    protected override async void OnLoaded(RoutedEventArgs e)
     {
         base.OnLoaded(e);
         Manager = new WindowNotificationManager(TopLevel.GetTopLevel(this))
@@ -78,6 +80,11 @@ public partial class TabViewContainer : ViewContainerBase
             Position = NotificationPosition.BottomRight
         };
         RegisterContentDialogHost(TopLevel.GetTopLevel(this));
+        if (App.AppViewModel.AppSettings.IsNewVersion)
+        {
+            var notes = await SettingsPage.GetReleaseNotesAsync();
+            await CreateAcknowledgementAsync(SettingsPage.ReleaseTitle, notes);
+        }
     }
 
     /// <inheritdoc />

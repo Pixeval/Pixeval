@@ -1,6 +1,7 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
+using System;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
@@ -45,11 +46,8 @@ public abstract class ViewContainerBase : ContentControl
             DefaultButton = ContentDialogButton.Primary
         });
 
-    public Task<ContentDialogResult> CreateAcknowledgementTaskAsync(string title, Task<object?> content)
+    public Task<ContentDialogResult> CreateAcknowledgementTaskAsync(string title, Func<ContentDialog, Task> updateAsync)
     {
-        if (content.IsCompleted)
-            return CreateAcknowledgementAsync(title, content.Result);
-
         var contentDialog = new ContentDialog
         {
             Title = title,
@@ -60,7 +58,7 @@ public abstract class ViewContainerBase : ContentControl
             PrimaryButtonText = I18NManager.GetResource(ContentDialogResources.OkButtonContent),
             DefaultButton = ContentDialogButton.Primary
         };
-        _ = content.ContinueWith(t => Dispatcher.UIThread.Post(() => contentDialog.Content = t.Result));
+        _ = updateAsync(contentDialog);
         return ShowContentDialogAsync(contentDialog);
     }
 

@@ -20,7 +20,10 @@ public record AppSettings
     public AppSettings()
     {
         NovelSettings.ActualThemeProvider = () => ActualTheme;
+    }
 
+    public void Initialize()
+    {
         if (LastOpenedVersion != AppInfo.AppVersion.CurrentVersionShortText)
         {
             IsNewVersion = true;
@@ -62,7 +65,7 @@ public record AppSettings
     [SettingsEntry(Symbol.Bot, SettingsGroupMcpHeader, null)]
     public McpSettingsGroup McpSettings { get; set; } = new();
 
-    [SettingsEntry(Symbol.Settings, EntryViewerPageResources.NovelSettings, null)]
+    [SettingsEntry(Symbol.Settings, SettingsGroupNovelHeader, null)]
     public NovelSettingsGroup NovelSettings { get; set; } = new();
 
     /// <summary>
@@ -75,9 +78,10 @@ public record AppSettings
     /// </summary>
     public HashSet<string> PendingExtensionUninstallTargets { get; set; } = [];
 
-    public string LastOpenedVersion { get; } = "";
+    public string LastOpenedVersion { get; set; } = "";
 
-    public bool IsNewVersion { get; }
+    [JsonIgnore]
+    public bool IsNewVersion { get; private set; }
 
     [JsonIgnore]
     public ApplicationTheme ActualTheme => ApplicationSettings.Theme is ApplicationTheme.Default

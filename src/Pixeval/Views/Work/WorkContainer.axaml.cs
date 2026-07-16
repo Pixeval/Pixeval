@@ -175,7 +175,7 @@ public partial class WorkContainer : UserControl
         if (target is not null)
         {
             await target.AddToBookmarkCommand.ExecuteAsync((e.Tags, e.IsPrivate, this));
-            TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(I18NManager.GetResource(EntryViewResources.AddedToBookmark));
+            TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(I18NManager.GetResource(MiscResources.AddedToBookmark));
             return;
         }
 

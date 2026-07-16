@@ -70,7 +70,7 @@ public partial class IllustrationViewerInfoPane : UserControl
         {
             await current.AddToBookmarkCommand.ExecuteAsync((e.Tags, e.IsPrivate, this));
             TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(
-                I18NManager.GetResource(EntryViewerPageResources.AddedToBookmark));
+                I18NManager.GetResource(MiscResources.AddedToBookmark));
         }
     }
     

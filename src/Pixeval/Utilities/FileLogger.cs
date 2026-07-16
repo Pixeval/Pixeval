@@ -1,5 +1,5 @@
-// Copyright (c) Pixeval.Utilities.
-// Licensed under the GPL v3 License.
+// Copyright (c) Pixeval.
+// Licensed under the GPL-3.0 License.
 
 using System;
 using System.IO;
@@ -31,21 +31,30 @@ public partial class FileLogger : ILogger, Pixeval.Extensions.Common.ILogger
             _ = Directory.CreateDirectory(_basePath);
     }
 
-    private async void LogPrivate(LogLevel logLevel, string message, Exception? exception,
+    private async void LogPrivate(
+        LogLevel logLevel,
+        string message,
+        Exception? exception,
         string memberName,
         string filePath,
         int lineNumber)
     {
+        var networkDetails = exception is null
+            ? null
+            : await NetworkExceptionFormatter.TryFormatAsync(exception).ConfigureAwait(false);
+        var now = DateTime.Now;
         var log = new LogModel(
+            now,
             $"at {memberName} at {filePath}: {lineNumber}",
             logLevel.ToString(),
             message,
-            exception);
+            exception,
+            networkDetails);
 
         if (Logging is not null && Logging(this, log))
             return;
 
-        var logPath = Path.Combine(_basePath, DateTime.Now.ToString("yyyy-MM-dd HH") + ".log");
+        var logPath = Path.Combine(_basePath, now.ToString("yyyy-MM-dd HH") + ".log");
 
         await Task.Yield();
         lock (this)
@@ -111,27 +120,19 @@ public partial class FileLogger : ILogger, Pixeval.Extensions.Common.ILogger
         => LogPrivate((LogLevel) logLevel, message, exception?.ToException(), memberName, filePath, lineNumber);
 }
 
-public class LogModel
+public class LogModel(DateTime time, string position, string level, string message, Exception? exception, string? networkDetails = null)
 {
-    public LogModel(string position, string level, string message, Exception? exception)
-    {
-        Time = DateTime.Now;
-        Position = position;
-        Level = level;
-        Message = message;
-        if (exception is not null)
-            Exception = new(exception);
-    }
+    public DateTime Time { get; } = time;
 
-    public DateTime Time { get; }
+    public string Position { get; } = position;
 
-    public string Position { get; }
+    public string Level { get; } = level;
 
-    public string Level { get; }
+    public string Message { get; } = message;
 
-    public string Message { get; }
+    public ExceptionModel? Exception { get; } = exception is null ? null : new(exception);
 
-    public ExceptionModel? Exception { get; }
+    public string? NetworkDetails { get; } = networkDetails;
 
     public override string ToString() =>
         $"""
@@ -139,6 +140,7 @@ public class LogModel
          {Message}
          {Position}
          {Exception?.ToString(1)}
+         {NetworkDetails}
          """;
 }
 
@@ -172,7 +174,7 @@ public class ExceptionModel
          {Indent(indent)}StackTrace: 
          {Indent(indent + 1)}{StackTrace?.ReplaceLineEndings(Environment.NewLine + Indent(indent + 1)) ?? "null"}
          {InnerException?.ToString(indent + 1)}
-         
+
          """;
 
     private static string Indent(int indent) => new('\t', indent);
