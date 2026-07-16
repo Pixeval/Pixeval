@@ -2,11 +2,13 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Microsoft.Extensions.DependencyInjection;
 using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
@@ -16,6 +18,8 @@ namespace Pixeval.Views.Login;
 
 public partial class LoginPage : IconContentPage
 {
+    private CancellationTokenSource? _loadUsersCancellationTokenSource;
+
     public LoginPage()
     {
         InitializeComponent();
@@ -100,6 +104,36 @@ public partial class LoginPage : IconContentPage
         var viewContainer = TopLevel.GetTopLevel(this)?.ViewContainer;
         viewContainer?.NavigateTo(new HomePage(), true);
         App.AppViewModel.QueueWorkSubscriptionSyncAll();
+    }
+
+    protected override async void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+        _loadUsersCancellationTokenSource?.Cancel();
+        _loadUsersCancellationTokenSource?.Dispose();
+        var cancellationTokenSource = new CancellationTokenSource();
+        _loadUsersCancellationTokenSource = cancellationTokenSource;
+        try
+        {
+            if (DataContext is LoginPageViewModel viewModel)
+                await viewModel.LoadUsersAsync(cancellationTokenSource.Token);
+        }
+        catch (OperationCanceledException) when (cancellationTokenSource.IsCancellationRequested)
+        {
+        }
+        catch (Exception exception)
+        {
+            App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
+                .LogError(nameof(LoginPageViewModel.LoadUsersAsync), exception);
+        }
+    }
+
+    protected override void OnUnloaded(RoutedEventArgs e)
+    {
+        _loadUsersCancellationTokenSource?.Cancel();
+        _loadUsersCancellationTokenSource?.Dispose();
+        _loadUsersCancellationTokenSource = null;
+        base.OnUnloaded(e);
     }
 
     private void RefreshTokenBox_OnTapped(object? sender, TappedEventArgs e)

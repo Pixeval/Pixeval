@@ -13,31 +13,44 @@ public class WorkSubscriptionPersistentManager(SQLiteConnection db)
         long targetId,
         WorkSubscriptionType subscriptionType,
         WorkSubscriptionWorkKind workKind) =>
-        Queryable.FirstOrDefault(t =>
-            t.Id == targetId
-            && t.SubscriptionType == subscriptionType
-            && t.WorkKind == workKind);
+        AccessDatabase(connection => connection.Table<WorkSubscriptionEntry>()
+            .FirstOrDefault(entry =>
+                entry.Id == targetId
+                && entry.SubscriptionType == subscriptionType
+                && entry.WorkKind == workKind));
 
     public override void AddOrUpdate(WorkSubscriptionEntry entry)
     {
-        var existing = GetBySubscriptionKey(entry.Id, entry.SubscriptionType, entry.WorkKind);
-        if (existing is not null)
-        {
-            existing.UpdateFrom(entry);
-            Update(existing);
-            return;
-        }
-
-        Db.Insert(entry, typeof(WorkSubscriptionEntry));
+        AccessDatabase(connection => _ = AddOrUpdateCore(connection, entry));
     }
 
-    public override WorkSubscriptionEntry Upsert(WorkSubscriptionEntry entry)
-    {
-        AddOrUpdate(entry);
-        return GetBySubscriptionKey(entry.Id, entry.SubscriptionType, entry.WorkKind)
-               ?? entry;
-    }
+    public override WorkSubscriptionEntry Upsert(WorkSubscriptionEntry entry) =>
+        AccessDatabase(connection => AddOrUpdateCore(connection, entry));
 
     public WorkSubscriptionEntry? GetByKey(int key) =>
-        key <= 0 ? null : Db.Find<WorkSubscriptionEntry>(key);
+        key <= 0 ? null : AccessDatabase(connection => connection.Find<WorkSubscriptionEntry>(key));
+
+    private static WorkSubscriptionEntry AddOrUpdateCore(SQLiteConnection connection, WorkSubscriptionEntry entry)
+    {
+        if (FindBySubscriptionKey(connection, entry.Id, entry.SubscriptionType, entry.WorkKind) is not { } existing)
+        {
+            _ = connection.Insert(entry, typeof(WorkSubscriptionEntry));
+            return entry;
+        }
+
+        existing.UpdateFrom(entry);
+        _ = connection.Update(existing, typeof(WorkSubscriptionEntry));
+        return existing;
+    }
+
+    private static WorkSubscriptionEntry? FindBySubscriptionKey(
+        SQLiteConnection connection,
+        long targetId,
+        WorkSubscriptionType subscriptionType,
+        WorkSubscriptionWorkKind workKind) =>
+        connection.Table<WorkSubscriptionEntry>()
+            .FirstOrDefault(entry =>
+                entry.Id == targetId
+                && entry.SubscriptionType == subscriptionType
+                && entry.WorkKind == workKind);
 }

@@ -7,34 +7,42 @@ namespace Pixeval.Models.Database.Managers;
 
 public class LoginUserPersistentManager(SQLiteConnection db) : SimplePersistentManager<LoginUserEntry>(db)
 {
-    public LoginUserEntry? GetByKey(int key) => key <= 0 ? null : Db.Find<LoginUserEntry>(key);
+    public LoginUserEntry? GetByKey(int key) =>
+        key <= 0 ? null : AccessDatabase(connection => connection.Find<LoginUserEntry>(key));
 
     public LoginUserEntry? GetByRefreshToken(string refreshToken) =>
         string.IsNullOrWhiteSpace(refreshToken)
             ? null
-            : Queryable.FirstOrDefault(t => t.RefreshToken == refreshToken);
+            : AccessDatabase(connection => connection.Table<LoginUserEntry>()
+                .FirstOrDefault(entry => entry.RefreshToken == refreshToken));
 
     public LoginUserEntry? GetByUserId(long userId) =>
-        userId <= 0 ? null : Queryable.FirstOrDefault(t => t.UserId == userId);
+        userId <= 0
+            ? null
+            : AccessDatabase(connection => connection.Table<LoginUserEntry>()
+                .FirstOrDefault(entry => entry.UserId == userId));
 
     public override void AddOrUpdate(LoginUserEntry entry)
     {
-        var existing = GetByUserId(entry.UserId) ?? GetByRefreshToken(entry.RefreshToken);
-        if (existing is not null)
-        {
-            existing.UpdateFrom(entry);
-            Update(existing);
-            return;
-        }
-
-        Db.Insert(entry, typeof(LoginUserEntry));
+        AccessDatabase(connection => _ = AddOrUpdateCore(connection, entry));
     }
 
-    public override LoginUserEntry Upsert(LoginUserEntry entry)
+    public override LoginUserEntry Upsert(LoginUserEntry entry) =>
+        AccessDatabase(connection => AddOrUpdateCore(connection, entry));
+
+    private static LoginUserEntry AddOrUpdateCore(SQLiteConnection connection, LoginUserEntry entry)
     {
-        AddOrUpdate(entry);
-        return GetByUserId(entry.UserId)
-               ?? GetByRefreshToken(entry.RefreshToken)
-               ?? entry;
+        var table = connection.Table<LoginUserEntry>();
+        var existing = table.FirstOrDefault(item => item.UserId == entry.UserId)
+                       ?? table.FirstOrDefault(item => item.RefreshToken == entry.RefreshToken);
+        if (existing is null)
+        {
+            _ = connection.Insert(entry, typeof(LoginUserEntry));
+            return entry;
+        }
+
+        existing.UpdateFrom(entry);
+        _ = connection.Update(existing, typeof(LoginUserEntry));
+        return existing;
     }
 }

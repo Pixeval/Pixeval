@@ -2,7 +2,6 @@
 // Licensed under the GPL-3.0 License.
 
 using System.ComponentModel;
-using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Mako.Engine;
 using Mako.Model;
@@ -26,8 +25,7 @@ public partial class SeriesViewerPage : IconContentPage
             return;
 
         viewModel.PropertyChanged += ViewModel_OnPropertyChanged;
-        if (viewModel.SeriesDetail is { } seriesDetail
-            && viewModel.FirstWork is { } firstWork
+        if (viewModel is { SeriesDetail: { } seriesDetail, FirstWork: { } firstWork }
             && viewModel.TakeWorksViewModel() is { } worksViewModel)
         {
             SeriesContainerHost.Content = new SeriesContainer(
@@ -55,8 +53,7 @@ public partial class SeriesViewerPage : IconContentPage
         IFetchEngine<IWorkEntry>? engine)
     {
         SeriesContainerHost.Content = engine is not null
-                                      && viewModel.SeriesDetail is { } seriesDetail
-                                      && viewModel.FirstWork is { } firstWork
+                                      && viewModel is { SeriesDetail: { } seriesDetail, FirstWork: { } firstWork }
             ? new SeriesContainer(viewModel.WorkType, viewModel.Id, engine, seriesDetail, firstWork)
             : null;
     }

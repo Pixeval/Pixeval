@@ -12,7 +12,7 @@
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
-    <work:WorkContainer x:Name="WorkContainer">
+    <work:WorkContainer x:Name="WorkContainer" RefreshRequested="WorkContainer_OnRefreshRequested">
         <work:WorkContainer.CommandBarElements>
             <controls:SymbolComboBox
                 x:Name="SimpleWorkTypeComboBox"

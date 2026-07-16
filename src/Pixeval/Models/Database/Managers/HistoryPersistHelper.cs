@@ -5,70 +5,74 @@ using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
 using Pixeval.Download;
 using Pixeval.Models.Download.Tasks;
+using Pixeval.Utilities;
 
 namespace Pixeval.Models.Database.Managers;
 
 public sealed class HistoryPersistHelper : IDisposable
 {
+    private readonly BrowseHistoryPersistentManager _browseHistoryPersistentManager;
+    private readonly DownloadHistoryPersistentManager _downloadHistoryPersistentManager;
+    private readonly SearchHistoryPersistentManager _searchHistoryPersistentManager;
+    private readonly WatchLaterPersistentManager _watchLaterPersistentManager;
+    private readonly CancellationTokenSource _downloadRestoreCancellationTokenSource = new();
+    private readonly CancellationTokenSource _searchRestoreCancellationTokenSource = new();
+    private readonly FileLogger _logger;
     private bool _isDisposed;
+    private bool _isRestoringDownloadHistory;
+    private bool _isRestoringSearchHistory;
+    private bool _isUpdatingSearchHistory;
 
     public HistoryPersistHelper(
-        [FromKeyedServices(IPlatformInfo.Pixiv)] IDownloadHttpClientService service,
+        [FromKeyedServices(IPlatformInfo.Pixiv)]
+        IDownloadHttpClientService service,
         DownloadHistoryPersistentManager downloadHistoryPersistentManager,
         SearchHistoryPersistentManager searchHistoryPersistentManager,
         BrowseHistoryPersistentManager browseHistoryPersistentManager,
-        WatchLaterPersistentManager watchLaterPersistentManager)
+        WatchLaterPersistentManager watchLaterPersistentManager,
+        FileLogger logger)
     {
-        DownloadManager = new DownloadManager(service.GetImageDownloadClient(), App.AppViewModel.AppSettings.DownloadSettings.MaxDownloadTaskConcurrencyLevel);
+        _browseHistoryPersistentManager = browseHistoryPersistentManager;
+        _downloadHistoryPersistentManager = downloadHistoryPersistentManager;
+        _logger = logger;
+        _searchHistoryPersistentManager = searchHistoryPersistentManager;
+        _watchLaterPersistentManager = watchLaterPersistentManager;
+        BrowseHistorySource = browseHistoryPersistentManager;
+        WatchLaterSource = watchLaterPersistentManager;
 
-        foreach (var downloadTaskGroup in downloadHistoryPersistentManager)
-            DownloadManager.QueueTask(downloadTaskGroup);
-        SearchHistoryEntries = new(searchHistoryPersistentManager.Reverse());
-        BrowseHistoryEntries = new(browseHistoryPersistentManager.Queryable.Select(t => t.Entry).Reverse());
-        WatchLaterEntries = new(watchLaterPersistentManager.Queryable.Select(t => t.Entry).Reverse());
-
-        SearchHistoryEntries.CollectionChanged += (s, e) =>
-            OnCollectionChangedEventHandler<SearchHistoryPersistentManager, SearchHistoryEntry, SearchHistoryEntry>(s,
-                e, (m, t) => m.TryDelete(x => x.Value == t.Value), t => t);
-
-        BrowseHistoryEntries.CollectionChanged += (s, e) =>
-            OnCollectionChangedEventHandler<BrowseHistoryPersistentManager, BrowseHistoryEntry, IArtworkInfo>(s, e,
-                (m, t) =>
-                {
-                    if (BrowseHistoryEntry.TryCreateWorkKey(t, out var workKey))
-                        m.TryDelete(x => x.WorkKey == workKey);
-                }, t => new(t));
-
-        WatchLaterEntries.CollectionChanged += (s, e) =>
-            OnCollectionChangedEventHandler<WatchLaterPersistentManager, WatchLaterEntry, IArtworkInfo>(s, e,
-                (m, t) =>
-                {
-                    if (WatchLaterEntry.TryCreateWorkKey(t, out var workKey))
-                        m.TryDelete(x => x.WorkKey == workKey);
-                }, t => new(t));
-
-        DownloadManager.QueuedTasks.CollectionChanged += (s, e) =>
-            OnCollectionChangedEventHandler<DownloadHistoryPersistentManager, DownloadHistoryEntry,
-                IDownloadTaskGroupBase>(s, e, (m, t) =>
-            {
-                if (t is IDownloadTaskGroup { DatabaseEntry.Destination: { } dest })
-                    m.TryDelete(x => x.Destination == dest);
-            }, t => ((IDownloadTaskGroup) t).DatabaseEntry);
+        DownloadManager = new(
+            service.GetImageDownloadClient(),
+            App.AppViewModel.AppSettings.DownloadSettings.MaxDownloadTaskConcurrencyLevel);
+        SearchHistoryEntries = [];
+        SearchHistoryEntries.CollectionChanged += OnSearchHistoryCollectionChanged;
+        DownloadManager.QueuedTasks.CollectionChanged += OnDownloadHistoryCollectionChanged;
+        RestoreTask = Task.WhenAll(
+            RestoreSafelyAsync(
+                RestoreSearchHistoryAsync,
+                nameof(RestoreSearchHistoryAsync),
+                _searchRestoreCancellationTokenSource.Token),
+            RestoreSafelyAsync(
+                RestoreDownloadHistoryAsync,
+                nameof(RestoreDownloadHistoryAsync),
+                _downloadRestoreCancellationTokenSource.Token));
     }
-
-    private static ServiceProvider AppServiceProvider => App.AppViewModel.AppServiceProvider;
 
     public DownloadManager DownloadManager { get; }
 
     public ObservableCollection<SearchHistoryEntry> SearchHistoryEntries { get; }
 
-    public ObservableCollection<IArtworkInfo> BrowseHistoryEntries { get; }
+    public Task RestoreTask { get; }
 
-    public ObservableCollection<IArtworkInfo> WatchLaterEntries { get; }
+    public IArtworkHistorySource BrowseHistorySource { get; }
+
+    public IArtworkHistorySource WatchLaterSource { get; }
 
     public void AddSearchHistory(string text, string? translatedName = null)
     {
@@ -80,104 +84,213 @@ public sealed class HistoryPersistHelper : IDisposable
             TranslatedName = translatedName,
             Time = DateTime.UtcNow
         };
-        if (SearchHistoryEntries.FirstOrDefault(t => t.Value == text) is { } existing)
-            SearchHistoryEntries.Remove(existing);
-        SearchHistoryEntries.Insert(0, searchHistoryEntry);
+        _searchHistoryPersistentManager.AddOrUpdate(searchHistoryEntry);
+        _isUpdatingSearchHistory = true;
+        try
+        {
+            if (SearchHistoryEntries.FirstOrDefault(entry => entry.Value == text) is { } existing)
+                SearchHistoryEntries.Remove(existing);
+            SearchHistoryEntries.Insert(0, searchHistoryEntry);
+        }
+        finally
+        {
+            _isUpdatingSearchHistory = false;
+        }
     }
 
     public void AddBrowseHistory(IArtworkInfo entry)
     {
-        if (!BrowseHistoryEntry.TryCreateWorkKey(entry, out var workKey))
+        if (!BrowseHistoryEntry.TryCreateWorkKey(entry, out _))
             return;
-        if (BrowseHistoryEntries.FirstOrDefault(t =>
-                BrowseHistoryEntry.TryCreateWorkKey(t, out var itemWorkKey)
-                && itemWorkKey == workKey) is { } e)
-            BrowseHistoryEntries.Remove(e);
-        BrowseHistoryEntries.Insert(0, entry);
+        _browseHistoryPersistentManager.AddOrReplace(new(entry));
     }
 
-    public bool ContainsWatchLater(IArtworkInfo entry)
-    {
-        return WatchLaterEntry.TryCreateWorkKey(entry, out var workKey)
-               && WatchLaterEntries.FirstOrDefault(t =>
-                   WatchLaterEntry.TryCreateWorkKey(t, out var itemWorkKey)
-                   && itemWorkKey == workKey) is not null;
-    }
+    public bool ContainsWatchLater(IArtworkInfo entry) =>
+        WatchLaterEntry.TryCreateWorkKey(entry, out var workKey)
+        && _watchLaterPersistentManager.ContainsWorkKey(workKey);
 
     public bool AddWatchLater(IArtworkInfo entry)
     {
-        if (!WatchLaterEntry.TryCreateWorkKey(entry, out var workKey))
+        if (!WatchLaterEntry.TryCreateWorkKey(entry, out _))
             return false;
-
-        if (WatchLaterEntries.FirstOrDefault(t =>
-                WatchLaterEntry.TryCreateWorkKey(t, out var itemWorkKey)
-                && itemWorkKey == workKey) is { } existing)
-            WatchLaterEntries.Remove(existing);
-
-        WatchLaterEntries.Insert(0, entry);
+        _watchLaterPersistentManager.AddOrReplace(new(entry));
         return true;
     }
 
-    public bool RemoveWatchLater(IArtworkInfo entry)
-    {
-        if (!WatchLaterEntry.TryCreateWorkKey(entry, out var workKey))
-            return false;
+    public bool RemoveWatchLater(IArtworkInfo entry) =>
+        WatchLaterEntry.TryCreateWorkKey(entry, out var workKey)
+        && _watchLaterPersistentManager.TryDeleteByWorkKey(workKey);
 
-        if (WatchLaterEntries.FirstOrDefault(t =>
-                WatchLaterEntry.TryCreateWorkKey(t, out var itemWorkKey)
-                && itemWorkKey == workKey) is not { } existing)
-            return false;
+    public void ClearBrowseHistory() => _browseHistoryPersistentManager.Clear();
 
-        WatchLaterEntries.Remove(existing);
-        return true;
-    }
-
-    private static void OnCollectionChangedEventHandler<TManager, TEntry, TItem>(
+    private void OnSearchHistoryCollectionChanged(
         object? sender,
-        NotifyCollectionChangedEventArgs args,
-        Action<TManager, TItem> tryDelete,
-        Func<TItem, TEntry> convert)
-        where TManager : IWriteOnlyPersistentManager<TEntry>
-        where TEntry : HistoryEntry
+        NotifyCollectionChangedEventArgs args)
     {
-        var manager = AppServiceProvider.GetRequiredService<TManager>();
+        if (_isDisposed || _isRestoringSearchHistory || _isUpdatingSearchHistory)
+            return;
+
         switch (args.Action)
         {
             case NotifyCollectionChangedAction.Add:
-                if (args.NewItems is not null)
-                    foreach (var newItem in args.NewItems.OfType<TItem>())
-                        manager.Insert(convert(newItem));
+                if (args.NewItems is { } newItems)
+                    foreach (var newItem in newItems.OfType<SearchHistoryEntry>())
+                        _searchHistoryPersistentManager.AddOrUpdate(newItem);
                 break;
             case NotifyCollectionChangedAction.Remove:
-                if (args.OldItems is not null)
-                    foreach (var oldItem in args.OldItems.OfType<TItem>())
-                        tryDelete(manager, oldItem);
+                if (args.OldItems is { } oldItems)
+                    foreach (var oldItem in oldItems.OfType<SearchHistoryEntry>())
+                        _ = _searchHistoryPersistentManager.TryDeleteByValue(oldItem.Value);
                 break;
             case NotifyCollectionChangedAction.Replace:
-                if (args.NewItems is not null)
-                    foreach (var oldItem in args.NewItems.OfType<TItem>())
-                        tryDelete(manager, oldItem);
-                if (args.NewItems is not null)
-                    foreach (var newItem in args.NewItems.OfType<TItem>())
-                        manager.Insert(convert(newItem));
+                if (args.NewItems is { } replacementItems)
+                    foreach (var newItem in replacementItems.OfType<SearchHistoryEntry>())
+                        _searchHistoryPersistentManager.AddOrUpdate(newItem);
+                if (args.OldItems is { } replacedItems)
+                    foreach (var oldItem in replacedItems.OfType<SearchHistoryEntry>())
+                        if (args.NewItems?.OfType<SearchHistoryEntry>().Any(newItem =>
+                                newItem.Value == oldItem.Value) is not true)
+                            _ = _searchHistoryPersistentManager.TryDeleteByValue(oldItem.Value);
                 break;
             case NotifyCollectionChangedAction.Reset when args.NewItems is not { Count: > 0 }:
-                manager.Clear();
+                _searchRestoreCancellationTokenSource.Cancel();
+                _searchHistoryPersistentManager.Clear();
                 break;
             case NotifyCollectionChangedAction.Move:
                 break;
             default:
-                throw new InvalidOperationException();
+                throw new ArgumentOutOfRangeException(nameof(args.Action), args.Action, null);
+        }
+    }
+
+    private void OnDownloadHistoryCollectionChanged(
+        object? sender,
+        NotifyCollectionChangedEventArgs args)
+    {
+        if (_isDisposed || _isRestoringDownloadHistory)
+            return;
+
+        switch (args.Action)
+        {
+            case NotifyCollectionChangedAction.Add:
+                if (args.NewItems is { } newItems)
+                    foreach (var newItem in newItems.OfType<IDownloadTaskGroup>())
+                        _downloadHistoryPersistentManager.AddOrReplace(newItem.DatabaseEntry);
+                break;
+            case NotifyCollectionChangedAction.Remove:
+                if (args.OldItems is { } oldItems)
+                    foreach (var oldItem in oldItems.OfType<IDownloadTaskGroup>())
+                        _ = _downloadHistoryPersistentManager.TryDeleteByDestination(oldItem.DatabaseEntry.Destination);
+                break;
+            case NotifyCollectionChangedAction.Replace:
+                if (args.NewItems is { } replacementItems)
+                    foreach (var newItem in replacementItems.OfType<IDownloadTaskGroup>())
+                        _downloadHistoryPersistentManager.AddOrReplace(newItem.DatabaseEntry);
+                if (args.OldItems is { } replacedItems)
+                    foreach (var oldItem in replacedItems.OfType<IDownloadTaskGroup>())
+                        if (args.NewItems?.OfType<IDownloadTaskGroup>().Any(newItem =>
+                                newItem.DatabaseEntry.Destination == oldItem.DatabaseEntry.Destination) is not true)
+                            _ = _downloadHistoryPersistentManager.TryDeleteByDestination(oldItem.DatabaseEntry.Destination);
+                break;
+            case NotifyCollectionChangedAction.Reset when args.NewItems is not { Count: > 0 }:
+                _downloadRestoreCancellationTokenSource.Cancel();
+                _downloadHistoryPersistentManager.Clear();
+                break;
+            case NotifyCollectionChangedAction.Move:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(args.Action), args.Action, null);
+        }
+    }
+
+    private async Task RestoreSafelyAsync(
+        Func<CancellationToken, Task> restoreAsync,
+        string operationName,
+        CancellationToken token)
+    {
+        try
+        {
+            await restoreAsync(token).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (token.IsCancellationRequested)
+        {
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(operationName, e);
+        }
+    }
+
+    private async Task RestoreSearchHistoryAsync(CancellationToken token)
+    {
+        await foreach (var entry in _searchHistoryPersistentManager
+                           .StreamEntriesAsync(token: token)
+                           .ConfigureAwait(false))
+        {
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                token.ThrowIfCancellationRequested();
+                if (SearchHistoryEntries.Any(item => item.Value == entry.Value))
+                    return;
+
+                _isRestoringSearchHistory = true;
+                try
+                {
+                    SearchHistoryEntries.Add(entry);
+                }
+                finally
+                {
+                    _isRestoringSearchHistory = false;
+                }
+            });
+        }
+    }
+
+    private async Task RestoreDownloadHistoryAsync(CancellationToken token)
+    {
+        await foreach (var taskGroup in _downloadHistoryPersistentManager
+                           .StreamTaskGroupsAsync(token: token)
+                           .ConfigureAwait(false))
+        {
+            var isOwnedByDownloadManager = false;
+            try
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    token.ThrowIfCancellationRequested();
+                    _isRestoringDownloadHistory = true;
+                    try
+                    {
+                        isOwnedByDownloadManager = DownloadManager.TryRestoreTask(taskGroup);
+                    }
+                    finally
+                    {
+                        _isRestoringDownloadHistory = false;
+                    }
+                });
+            }
+            finally
+            {
+                if (!isOwnedByDownloadManager)
+                    taskGroup.Dispose();
+            }
         }
     }
 
     /// <inheritdoc />
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
         if (_isDisposed)
             return;
 
         _isDisposed = true;
+        _searchRestoreCancellationTokenSource.Cancel();
+        _downloadRestoreCancellationTokenSource.Cancel();
+        SearchHistoryEntries.CollectionChanged -= OnSearchHistoryCollectionChanged;
+        DownloadManager.QueuedTasks.CollectionChanged -= OnDownloadHistoryCollectionChanged;
         DownloadManager.Dispose();
+        _searchRestoreCancellationTokenSource.Dispose();
+        _downloadRestoreCancellationTokenSource.Dispose();
     }
 }

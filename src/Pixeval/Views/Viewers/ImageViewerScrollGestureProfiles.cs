@@ -1,7 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
-using Avalonia.Input;
 using SmoothScroll.Avalonia.Interaction;
 
 namespace Pixeval.Views.Viewers;

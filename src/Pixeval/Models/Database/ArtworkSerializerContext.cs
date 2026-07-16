@@ -13,12 +13,17 @@ namespace Pixeval.Models.Database;
 
 public static class ArtworkSerializerTable
 {
+    extension<T>(T) where T : ISerializable
+    {
+        public static string SerializeToken => typeof(T).FullName!;
+    }
+
     public static FrozenDictionary<string, Func<string, ISerializable>> ArtworkTypeMethodsTable { get; } =
         new Dictionary<string, Func<string, ISerializable>>
         {
             // 本地记录中IsFavorite已过时，反序列化时直接设为默认值false
-            [typeof(Illustration).FullName!] = s => Illustration.Deserialize(s).Apply(t => t.IsFavorite = false),
-            [typeof(Novel).FullName!] = s => Novel.Deserialize(s).Apply(t => t.IsFavorite = false),
-            [typeof(Post).FullName!] = Post.Deserialize
+            [Illustration.SerializeToken] = s => Illustration.Deserialize(s).Apply(t => t.IsFavorite = false),
+            [Novel.SerializeToken] = s => Novel.Deserialize(s).Apply(t => t.IsFavorite = false),
+            [Post.SerializeToken] = Post.Deserialize
         }.ToFrozenDictionary();
 }

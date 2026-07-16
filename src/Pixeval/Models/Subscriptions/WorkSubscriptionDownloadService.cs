@@ -60,9 +60,10 @@ public class WorkSubscriptionDownloadService(
 
         try
         {
-            foreach (var subscription in subscriptionManager.ToArray())
+            await historyPersistHelper.RestoreTask.ConfigureAwait(false);
+            await foreach (var subscription in subscriptionManager.StreamEntriesAsync().ConfigureAwait(false))
                 foreach (var engine in CreateEngines(subscription))
-                    await SyncSubscriptionCoreAsync(subscription, engine, CreateKnownKeys());
+                    await SyncSubscriptionCoreAsync(subscription, engine, CreateKnownKeys()).ConfigureAwait(false);
         }
         catch (Exception e)
         {
@@ -84,6 +85,7 @@ public class WorkSubscriptionDownloadService(
         var wasCompleted = engine.EngineHandle.IsCompleted;
         try
         {
+            await historyPersistHelper.RestoreTask.ConfigureAwait(false);
             await SyncSubscriptionCoreAsync(subscription, engine, CreateKnownKeys());
         }
         catch (Exception e)

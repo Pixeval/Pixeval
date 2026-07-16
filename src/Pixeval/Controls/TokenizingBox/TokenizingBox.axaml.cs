@@ -117,7 +117,7 @@ public class TokenizingBox : TemplatedControl
     public static readonly DirectProperty<TokenizingBox, IReadOnlyList<TokenizingBoxToken>> TokenItemsProperty =
         AvaloniaProperty.RegisterDirect<TokenizingBox, IReadOnlyList<TokenizingBoxToken>>(nameof(TokenItems), box => box.TokenItems);
 
-    public static readonly FuncValueConverter<int, bool> HasMaxCountConverter = new(maxCount => maxCount is >= 0);
+    public static readonly FuncValueConverter<int, bool> HasMaxCountConverter = new(maxCount => maxCount >= 0);
 
     private readonly List<object?> _internalItems = [];
     private Border? _root;

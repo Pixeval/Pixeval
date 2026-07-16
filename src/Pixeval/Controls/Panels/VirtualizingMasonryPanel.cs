@@ -8,7 +8,6 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
-using Pixeval.Utilities;
 
 namespace Pixeval.Controls;
 

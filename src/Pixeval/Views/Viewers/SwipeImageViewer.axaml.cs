@@ -8,7 +8,6 @@ using Avalonia.Animation;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Pixeval.Controls;
-using Pixeval.Models.Options;
 using Pixeval.ViewModels.Viewers;
 
 namespace Pixeval.Views.Viewers;

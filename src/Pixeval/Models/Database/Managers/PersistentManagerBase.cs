@@ -2,121 +2,149 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using SQLite;
 
 namespace Pixeval.Models.Database.Managers;
 
-public abstract class PersistentManagerBase<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntry, TModel> : IPersistentManager<TEntry, TModel>
+public abstract class PersistentManagerBase<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntry, TModel>
+    : SqlitePersistentManager, IPersistentManager<TEntry, TModel>
     where TEntry : HistoryEntry, new()
 {
-    private readonly SQLiteConnection _db;
+    private const int StreamPageSize = 100;
 
-    protected PersistentManagerBase(SQLiteConnection db)
+    protected PersistentManagerBase(SQLiteConnection db) : base(db) =>
+        AccessDatabase(static connection => _ = connection.CreateTable<TEntry>());
+
+    /// <inheritdoc />
+    public virtual int Count => AccessDatabase(static connection => connection.Table<TEntry>().Count());
+
+    /// <inheritdoc />
+    public virtual void Insert(TEntry entry) =>
+        AccessDatabase(connection => _ = connection.Insert(entry, typeof(TEntry)));
+
+    public IAsyncEnumerable<TModel> StreamEntriesAsync(int skip = 0, CancellationToken token = default) =>
+        StreamEntriesCoreAsync(null, skip, token);
+
+    protected IAsyncEnumerable<TModel> QueryEntriesAsync(
+        Expression<Func<TEntry, bool>> predicate,
+        int skip = 0,
+        CancellationToken token = default)
     {
-        _db = db;
-        _ = _db.CreateTable<TEntry>();
+        ArgumentNullException.ThrowIfNull(predicate);
+        return StreamEntriesCoreAsync(predicate, skip, token);
     }
 
     /// <inheritdoc />
-    public virtual TableQuery<TEntry> Queryable => _db.Table<TEntry>();
-
-    /// <inheritdoc />
-    public virtual int Count => Queryable.Count();
-
-    /// <inheritdoc />
-    public virtual void Insert(TEntry t) => _db.Insert(t, typeof(TEntry));
-
-    /// <inheritdoc />
-    public virtual IReadOnlyList<TModel> Query(Expression<Func<TEntry, bool>> predicate, int skip = 0, int limit = int.MaxValue) =>
-        [.. Queryable.Where(predicate).Skip(skip).Take(limit).Select(ToModel)];
-
-    /// <inheritdoc />
-    public virtual void AddOrUpdate(TEntry entry) => _db.InsertOrReplace(entry, typeof(TEntry));
+    public virtual void AddOrUpdate(TEntry entry) =>
+        AccessDatabase(connection => AddOrUpdateCore(connection, entry));
 
     /// <inheritdoc />
     public virtual TEntry Upsert(TEntry entry)
     {
-        AddOrUpdate(entry);
-        return Queryable.FirstOrDefault(t => t.HistoryEntryId == entry.HistoryEntryId) ?? entry;
+        AccessDatabase(connection => AddOrUpdateCore(connection, entry));
+        return entry;
     }
 
     /// <inheritdoc />
-    public virtual void Update(TEntry entry) => _db.Update(entry, typeof(TEntry));
+    public virtual void Update(TEntry entry) =>
+        AccessDatabase(connection => _ = connection.Update(entry, typeof(TEntry)));
 
     /// <inheritdoc />
-    public virtual IReadOnlyList<TModel> Take(int count) => [.. Queryable.Take(count).Select(ToModel)];
-
-    /// <inheritdoc />
-    public virtual IReadOnlyList<TModel> TakeLast(int count)
-    {
-        var c = Count;
-        if (count > c)
-            count = c;
-        return [.. Queryable.Skip(c - count).Take(count).Select(ToModel)];
-    }
-
-    /// <inheritdoc />
-    public virtual IReadOnlyList<TModel> Select(Expression<Func<TEntry, bool>> predicate) =>
-        [.. Queryable.Where(predicate).Select(ToModel)];
-
-    /// <inheritdoc />
-    public bool TryDelete(TEntry item) => _db.Delete<TEntry>(item.HistoryEntryId) is not 0;
+    public bool TryDelete(TEntry item) =>
+        AccessDatabase(connection => connection.Delete<TEntry>(item.HistoryEntryId) is not 0);
 
     /// <inheritdoc />
     public virtual TEntry? TryDelete(Expression<Func<TEntry, bool>> predicate)
     {
-        if (Queryable.FirstOrDefault(predicate) is { } e)
+        ArgumentNullException.ThrowIfNull(predicate);
+        return AccessDatabase<TEntry?>(connection =>
         {
-            _db.Delete<TEntry>(e.HistoryEntryId);
-            return e;
-        }
+            if (connection.Table<TEntry>().FirstOrDefault(predicate) is not { } entry)
+                return null;
 
-        return null;
+            _ = connection.Delete<TEntry>(entry.HistoryEntryId);
+            return entry;
+        });
     }
 
     /// <inheritdoc />
     public virtual int Delete(Expression<Func<TEntry, bool>> predicate)
     {
-        return Queryable.Delete(predicate);
+        ArgumentNullException.ThrowIfNull(predicate);
+        return AccessDatabase(connection => connection.Table<TEntry>().Delete(predicate));
     }
 
     /// <inheritdoc />
-    public virtual IReadOnlyList<TModel> ToArray()
+    public virtual void Clear() => AccessDatabase(static connection => _ = connection.DeleteAll<TEntry>());
+
+    protected abstract TModel ToModel(TEntry entry);
+
+    private static void AddOrUpdateCore(SQLiteConnection connection, TEntry entry)
     {
-        return [.. Queryable.Select(ToModel)];
+        if (entry.HistoryEntryId is 0)
+            _ = connection.Insert(entry, typeof(TEntry));
+        else
+            _ = connection.InsertOrReplace(entry, typeof(TEntry));
     }
 
-    /// <inheritdoc />
-    public virtual IReadOnlyList<TModel> Reverse()
+    private async IAsyncEnumerable<TModel> StreamEntriesCoreAsync(
+        Expression<Func<TEntry, bool>>? predicate,
+        int skip,
+        [EnumeratorCancellation] CancellationToken token = default)
     {
-        return [.. Queryable.OrderByDescending(t => t.HistoryEntryId).Select(ToModel)];
-    }
-
-    /// <inheritdoc />
-    public virtual void Purge(int limit)
-    {
-        var deleteCount = Count - limit;
-        if (deleteCount > 0)
+        ArgumentOutOfRangeException.ThrowIfNegative(skip);
+        int? beforeHistoryEntryId = null;
+        while (true)
         {
-            var toDelete = Queryable.Take(deleteCount).ToArray();
-            foreach (var item in toDelete)
-                _db.Delete<TEntry>(item.HistoryEntryId);
+            token.ThrowIfCancellationRequested();
+            var page = await Task.Run(
+                    () => LoadPage(beforeHistoryEntryId, predicate, skip),
+                    token)
+                .ConfigureAwait(false);
+            if (!page.HasRows)
+                yield break;
+
+            beforeHistoryEntryId = page.NextHistoryEntryId;
+            foreach (var model in page.Models)
+            {
+                token.ThrowIfCancellationRequested();
+                yield return model;
+            }
         }
     }
 
-    /// <inheritdoc />
-    public virtual void Clear() => _db.DeleteAll<TEntry>();
+    private EntryPage LoadPage(
+        int? beforeHistoryEntryId,
+        Expression<Func<TEntry, bool>>? predicate,
+        int initialSkip)
+    {
+        return AccessDatabase<EntryPage>(connection =>
+        {
+            var query = connection.Table<TEntry>();
+            if (predicate is not null)
+                query = query.Where(predicate);
+            if (beforeHistoryEntryId is { } id)
+                query = query.Where(entry => entry.HistoryEntryId < id);
 
-    public abstract TModel ToModel(TEntry entry);
+            query = query.OrderByDescending(static entry => entry.HistoryEntryId);
+            if (beforeHistoryEntryId is null && initialSkip > 0)
+                query = query.Skip(initialSkip);
+            var entries = query.Take(StreamPageSize).ToArray();
+            return entries.Length is 0
+                ? new([], null, false)
+                : new([.. entries.Select(ToModel)], entries[^1].HistoryEntryId, true);
+        });
+    }
 
-    /// <inheritdoc />
-    public IEnumerator<TModel> GetEnumerator() => Queryable.Select(ToModel).GetEnumerator();
-
-    /// <inheritdoc />
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    private readonly record struct EntryPage(
+        IReadOnlyList<TModel> Models,
+        int? NextHistoryEntryId,
+        bool HasRows);
 }

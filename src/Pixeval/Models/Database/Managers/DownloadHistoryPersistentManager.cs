@@ -2,27 +2,55 @@
 // Licensed under the GPL-3.0 License.
 
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using Mako.Model;
 using Misaki;
 using Pixeval.Models.Download.Tasks;
+using Pixeval.Utilities;
 using SQLite;
 
 namespace Pixeval.Models.Database.Managers;
 
-public class DownloadHistoryPersistentManager(SQLiteConnection db)
-    : PersistentManagerBase<DownloadHistoryEntry, IDownloadTaskGroup>(db)
+public sealed class DownloadHistoryPersistentManager(SQLiteConnection db, FileLogger logger)
+    : ArtworkHistoryPersistentManager<DownloadHistoryEntry>(db, logger)
 {
     public DownloadHistoryEntry? GetByDestination(string destination) =>
         string.IsNullOrWhiteSpace(destination)
             ? null
-            : Queryable.FirstOrDefault(t => t.Destination == destination);
+            : FindEntry(entry => entry.Destination == destination);
 
-    public IReadOnlyList<DownloadHistoryEntry> GetBySubscriptionId(int subscriptionEntryId) =>
-        subscriptionEntryId <= 0
-            ? []
-            : Queryable.Where(t => t.WorkSubscriptionId == subscriptionEntryId).ToArray();
+    public void AddOrReplace(DownloadHistoryEntry entry) =>
+        InsertReplacing(entry, query => query.FirstOrDefault(item => item.Destination == entry.Destination));
 
-    public override IDownloadTaskGroup ToModel(DownloadHistoryEntry entry)
+    public async IAsyncEnumerable<DownloadHistoryEntry> GetBySubscriptionIdAsync(
+        int subscriptionEntryId,
+        [EnumeratorCancellation] CancellationToken token = default)
+    {
+        if (subscriptionEntryId <= 0)
+            yield break;
+
+        await foreach (var entry in QueryEntriesAsync(
+                               item => item.WorkSubscriptionId == subscriptionEntryId,
+                               token: token)
+                           .ConfigureAwait(false))
+            yield return entry;
+    }
+
+    public async IAsyncEnumerable<IDownloadTaskGroup> StreamTaskGroupsAsync(
+        int skip = 0,
+        [EnumeratorCancellation] CancellationToken token = default)
+    {
+        await foreach (var entry in StreamEntriesAsync(skip, token).ConfigureAwait(false))
+            yield return ToModel(entry);
+    }
+
+    public bool TryDeleteByDestination(string destination) =>
+        !string.IsNullOrWhiteSpace(destination)
+        && TryDelete(query => query.FirstOrDefault(entry => entry.Destination == destination));
+
+    private static IDownloadTaskGroup ToModel(DownloadHistoryEntry entry)
     {
         return entry.Entry switch
         {

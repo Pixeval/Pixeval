@@ -472,7 +472,7 @@ public class AdvancedObservableCollection<T>
                     break;
                 }
 
-                if (e.OldStartingIndex >= 0 && e.NewStartingIndex >= 0 && e.NewItems is [T item])
+                if (e is { OldStartingIndex: >= 0, NewStartingIndex: >= 0, NewItems: [T item] })
                     HandleItemMoved(e.OldStartingIndex, e.NewStartingIndex, item);
                 else
                     HandleSourceChanged();
@@ -489,7 +489,7 @@ public class AdvancedObservableCollection<T>
                     break;
                 }
 
-                if (e.OldStartingIndex >= 0 && e.OldItems is [T oldItem] && e.NewItems is [T newItem])
+                if (e is { OldStartingIndex: >= 0, OldItems: [T oldItem], NewItems: [T newItem] })
                     HandleItemReplaced(e.OldStartingIndex, oldItem, newItem);
                 else
                     HandleSourceChanged();

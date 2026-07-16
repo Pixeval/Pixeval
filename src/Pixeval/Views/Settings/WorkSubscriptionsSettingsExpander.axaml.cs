@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoSettingsPage.Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -17,12 +19,15 @@ using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Options;
 using Pixeval.Models.Settings.Entries;
 using Pixeval.Models.Subscriptions;
+using Pixeval.Utilities;
 using Pixeval.ViewModels.Settings;
 
 namespace Pixeval.Views.Settings;
 
 public partial class WorkSubscriptionsSettingsExpander : SettingsExpander, IEntryControl<WorkSubscriptionsSettingsEntry>
 {
+    private CancellationTokenSource? _reloadCancellationTokenSource;
+
     public ObservableCollection<WorkSubscriptionItemViewModel> Subscriptions { get; } = [];
 
     public WorkSubscriptionsSettingsEntry Entry
@@ -30,7 +35,7 @@ public partial class WorkSubscriptionsSettingsExpander : SettingsExpander, IEntr
         set
         {
             DataContext = value;
-            Reload();
+            _ = ReloadAsync();
         }
     }
 
@@ -51,11 +56,26 @@ public partial class WorkSubscriptionsSettingsExpander : SettingsExpander, IEntr
 
     private static IReadOnlyList<SymbolComboBoxItem> SeriesWorkKinds => BookmarkWorkKinds;
 
-    private void Reload()
+    private async Task ReloadAsync()
     {
+        _reloadCancellationTokenSource?.Cancel();
+        _reloadCancellationTokenSource?.Dispose();
+        _reloadCancellationTokenSource = new();
+        var token = _reloadCancellationTokenSource.Token;
         Subscriptions.Clear();
-        foreach (var entry in SubscriptionManager.Reverse())
-            Subscriptions.Add(new(entry));
+        try
+        {
+            await foreach (var entry in SubscriptionManager.StreamEntriesAsync(token: token))
+                Subscriptions.Add(new(entry));
+        }
+        catch (OperationCanceledException) when (token.IsCancellationRequested)
+        {
+        }
+        catch (Exception e)
+        {
+            App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
+                .LogError(nameof(ReloadAsync), e);
+        }
     }
 
     private async void AddButton_OnClicked(object? sender, RoutedEventArgs e)
@@ -92,16 +112,16 @@ public partial class WorkSubscriptionsSettingsExpander : SettingsExpander, IEntr
         }
 
         TargetIdTextBox.Text = "";
-        Reload();
+        await ReloadAsync();
     }
 
-    private void DeleteButton_OnClicked(object? sender, RoutedEventArgs e)
+    private async void DeleteButton_OnClicked(object? sender, RoutedEventArgs e)
     {
         if (sender is not Button { Tag: WorkSubscriptionItemViewModel item })
             return;
 
         _ = SubscriptionManager.TryDelete(item.Entry);
-        Reload();
+        await ReloadAsync();
     }
 
     private void SubscriptionTypeComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e)
@@ -127,5 +147,19 @@ public partial class WorkSubscriptionsSettingsExpander : SettingsExpander, IEntr
     {
         ErrorTextBlock.Text = text;
         ErrorTextBlock.IsVisible = true;
+    }
+
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+        _ = ReloadAsync();
+    }
+
+    protected override void OnUnloaded(RoutedEventArgs e)
+    {
+        _reloadCancellationTokenSource?.Cancel();
+        _reloadCancellationTokenSource?.Dispose();
+        _reloadCancellationTokenSource = null;
+        base.OnUnloaded(e);
     }
 }

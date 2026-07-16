@@ -5,7 +5,6 @@ using System;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
-using Avalonia.Threading;
 using Pixeval.Controls;
 using Pixeval.I18N;
 

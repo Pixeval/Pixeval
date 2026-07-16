@@ -86,12 +86,35 @@ public sealed class DownloadManager : IDisposable
             return;
         _taskQuerySet[taskGroup.Destination] = taskGroup;
 
-        if (v is not null)
-            _ = QueuedTasks.Remove(v);
-        QueuedTasks.Insert(0, taskGroup);
+        if (v is not null && QueuedTasks.IndexOf(v) is var existingIndex and >= 0)
+        {
+            QueuedTasks[existingIndex] = taskGroup;
+            if (existingIndex > 0)
+                QueuedTasks.Move(existingIndex, 0);
+        }
+        else
+        {
+            QueuedTasks.Insert(0, taskGroup);
+        }
+
         taskGroup.SubscribeProgress(_downloadTaskChannel.Writer);
         if (taskGroup.CurrentState is DownloadState.Queued)
             _ = _downloadTaskChannel.Writer.TryWrite(taskGroup.GetToken());
+    }
+
+    /// <summary>
+    /// 恢复持久化任务，但不替换应用启动后新加入的同路径任务。
+    /// </summary>
+    public bool TryRestoreTask(IDownloadTaskGroupBase taskGroup)
+    {
+        if (_disposed || !_taskQuerySet.TryAdd(taskGroup.Destination, taskGroup))
+            return false;
+
+        QueuedTasks.Add(taskGroup);
+        taskGroup.SubscribeProgress(_downloadTaskChannel.Writer);
+        if (taskGroup.CurrentState is DownloadState.Queued)
+            _ = _downloadTaskChannel.Writer.TryWrite(taskGroup.GetToken());
+        return true;
     }
 
     /// <summary>
@@ -168,6 +191,7 @@ public sealed class DownloadManager : IDisposable
         _ = Download();
 
         return;
+
         async Task Download()
         {
             try
@@ -178,6 +202,7 @@ public sealed class DownloadManager : IDisposable
             {
                 // ignored
             }
+
             await DecrementCounterAsync();
         }
     }

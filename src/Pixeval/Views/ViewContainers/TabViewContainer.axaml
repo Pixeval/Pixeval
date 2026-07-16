@@ -153,9 +153,7 @@
                         </DataTemplate>
 
                         <DataTemplate x:DataType="{x:Type navigation:NavigationFolderItem}">
-                            <Button
-                                HorizontalAlignment="Stretch"
-                                Background="Transparent">
+                            <Button HorizontalAlignment="Stretch" Background="Transparent">
                                 <Button.IsEnabled>
                                     <MultiBinding Converter="{x:Static BoolConverters.Or}">
                                         <Binding Path="!NeedLogin" />
@@ -181,19 +179,16 @@
                                                 x:DataType="{x:Type navigation:NavigationMenuItem}"
                                                 BasedOn="{StaticResource {x:Type MenuItem}}"
                                                 TargetType="{x:Type MenuItem}">
-                                                <Setter Property="Command"
-                                                        Value="{x:Static local:TabViewContainer.OpenNavigationItemCommand}" />
+                                                <Setter Property="Command" Value="{x:Static local:TabViewContainer.OpenNavigationItemCommand}" />
                                                 <Setter Property="CommandParameter" Value="{Binding $self}" />
                                                 <Setter Property="Header" Value="{Binding Header}" />
-                                                <Setter Property="Icon"
-                                                        Value="{Binding Icon, Converter={x:Static converters:PixevalConverters.ColorSymbolIconConverter}}" />
+                                                <Setter Property="Icon" Value="{Binding Icon, Converter={x:Static converters:PixevalConverters.ColorSymbolIconConverter}}" />
                                                 <Setter Property="ItemsSource" Value="{Binding Children}" />
                                                 <Setter Property="IsEnabled">
                                                     <Setter.Value>
                                                         <MultiBinding Converter="{x:Static BoolConverters.Or}">
                                                             <Binding Path="!NeedLogin" />
-                                                            <Binding Path="IsLoggedIn"
-                                                                     Source="{x:Static views:PixevalSettings.Instance}" />
+                                                            <Binding Path="IsLoggedIn" Source="{x:Static views:PixevalSettings.Instance}" />
                                                         </MultiBinding>
                                                     </Setter.Value>
                                                 </Setter>

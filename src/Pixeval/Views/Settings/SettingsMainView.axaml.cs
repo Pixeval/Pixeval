@@ -2,11 +2,9 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using System.Threading.Tasks;
 using AutoSettingsPage.Models;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Threading;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.I18N;
@@ -88,8 +86,8 @@ public partial class SettingsMainView : ContentPage
         try
         {
             if (await provider.SaveFilePickerAsync(new()
-                {
-                    FileTypeChoices =
+            {
+                FileTypeChoices =
                     [
                         new("YAML")
                         {
@@ -97,9 +95,9 @@ public partial class SettingsMainView : ContentPage
                             MimeTypes = ["text/yaml", "application/x-yaml"]
                         }
                     ],
-                    DefaultExtension = "yaml",
-                    SuggestedFileName = "settings"
-                }) is not { } file)
+                DefaultExtension = "yaml",
+                SuggestedFileName = "settings"
+            }) is not { } file)
                 return;
             await using var stream = await file.OpenWriteAsync();
             YamlSerializer.Serialize(stream, vm.AppSettings, SettingsSerializerContext.Default.AppSettings);
@@ -120,10 +118,10 @@ public partial class SettingsMainView : ContentPage
         try
         {
             if (await provider.OpenFilePickerAsync(new()
-                {
-                    FileTypeFilter = [new("YAML") { Patterns = ["*.yaml"] }],
-                    AllowMultiple = false
-                }) is not [{ } file])
+            {
+                FileTypeFilter = [new("YAML") { Patterns = ["*.yaml"] }],
+                AllowMultiple = false
+            }) is not [{ } file])
                 return;
 
             await using var stream = await file.OpenReadAsync();
@@ -156,7 +154,7 @@ public partial class SettingsMainView : ContentPage
 
     private void DeleteBrowseHistoriesButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        App.AppViewModel.HistoryPersistHelper.BrowseHistoryEntries.Clear();
+        App.AppViewModel.HistoryPersistHelper.ClearBrowseHistory();
         ShowClearData(ClearDataKind.BrowseHistory);
     }
 

@@ -4,7 +4,6 @@
 using System;
 using Avalonia.Interactivity;
 using Mako.Global.Enum;
-using Misaki;
 using Pixeval.Controls;
 using Pixeval.ViewModels;
 
