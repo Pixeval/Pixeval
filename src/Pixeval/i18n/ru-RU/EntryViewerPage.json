@@ -1,9 +1,4 @@
 {
-  "AddToBookmarkTeachingTip": {
-    "CloseButtonContent": "添加收藏"
-  },
-  "AddedToBookmark": "已添加收藏",
-  "Share": "分享",
   "FollowingUserItem": {
     "Title": "关注中"
   },
@@ -37,15 +32,15 @@
     "PageOrWork": "L：上一页\nR：上一篇",
     "Work": "L/R：上一篇"
   },
-  "SetAsSucceededTitle": "设置成功",
-  "ShareTitleFormatted": "分享{0}",
   "AutoPlay": "自动播放",
-  "AutoPlayInterval1Second": "1 秒",
-  "AutoPlayInterval3Seconds": "3 秒",
-  "AutoPlayInterval5Seconds": "5 秒",
-  "AutoPlayInterval10Seconds": "10 秒",
-  "AutoPlayInterval15Seconds": "15 秒",
-  "AutoPlayInterval30Seconds": "30 秒",
+  "AutoPlayInterval": {
+    "1Second": "1 秒",
+    "3Seconds": "3 秒",
+    "5Seconds": "5 秒",
+    "10Seconds": "10 秒",
+    "15Seconds": "15 秒",
+    "30Seconds": "30 秒"
+  },
   "ZoomIn": "放大",
   "ZoomOut": "缩小",
   "ZoomToOriginal": "缩放到原始大小",
@@ -53,10 +48,6 @@
   "LoadFailed": "加载失败",
   "LoadingNovelTextBlock": {
     "Text": "正在加载小说"
-  },
-  "NovelSettings": "小说设置",
-  "NovelSettingsHeaderTextBlock": {
-    "Text": "小说设置"
   },
   "Copy": "复制显示的图片",
   "Save": "保存显示的图片",
