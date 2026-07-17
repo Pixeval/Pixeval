@@ -37,25 +37,6 @@ public partial class IllustrationItemViewModel
             await SaveInternalAsync(viewContainer, App.AppViewModel.AppSettings.DownloadSettings.DownloadPathMacro);
     }
 
-    /// <inheritdoc />
-    protected override async Task SaveAsAsync(Control? parameter)
-    {
-        // 必须有TopLevel来显示Picker
-        if (TopLevel.GetTopLevel(parameter) is not { ViewContainer: { } viewContainer } topLevel)
-            return;
-
-        var folder = await topLevel.StorageProvider.OpenFolderPickerAsync(new() { AllowMultiple = false });
-        if (folder is not [{ } single])
-        {
-            viewContainer.ShowInformation(I18NManager.GetResource(EntryItemResources.SaveAsCancelled));
-            return;
-        }
-
-        var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadSettings.DownloadPathMacro);
-        var path = Path.Combine(single.Path.OriginalString, name);
-        await SaveInternalAsync(viewContainer, path);
-    }
-
     /// <summary>
     /// 
     /// </summary>

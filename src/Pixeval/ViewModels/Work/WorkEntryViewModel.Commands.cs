@@ -60,7 +60,4 @@ public partial class WorkEntryViewModel<T>
 
     [RelayCommand]
     protected abstract Task SaveAsync(Control? parameter);
-
-    [RelayCommand]
-    protected abstract Task SaveAsAsync(Control? parameter);
 }

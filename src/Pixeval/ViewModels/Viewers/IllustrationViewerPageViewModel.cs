@@ -35,11 +35,14 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
 
     private readonly ISourceView<IllustrationItemViewModel>? _sourceView;
 
-    [ObservableProperty] public partial bool IsLoading { get; private set; }
+    [ObservableProperty]
+    public partial bool IsLoading { get; private set; }
 
-    [ObservableProperty] public partial string? LoadErrorMessage { get; private set; }
+    [ObservableProperty]
+    public partial string? LoadErrorMessage { get; private set; }
 
-    [ObservableProperty] public partial WorkSeriesInfoViewModel? SeriesInfo { get; private set; }
+    [ObservableProperty]
+    public partial WorkSeriesInfoViewModel? SeriesInfo { get; private set; }
 
     public string? LogoUri => CurrentIllustration?.Entry.Platform is { } platform ? $"avares://Pixeval/Assets/Platforms/{platform}.png" : null;
 
@@ -89,7 +92,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
     }
 
     public IReadOnlyList<Page> PanePages =>
-        CurrentImage?.ThumbnailViewModel.Entry is Illustration { Id: var id } illustration
+        CurrentIllustration?.Entry is Illustration { Id: var id } illustration
             ?
             [
                 new WorkInfoPage(illustration)
@@ -203,7 +206,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
 
         return;
 
-        async ValueTask<IllustrationItemViewModel?> GetCurrentIllustrationAsync(int index, CancellationToken token)
+        async ValueTask<IllustrationItemViewModel?> GetCurrentIllustrationAsync(int workIndex, CancellationToken cancellationToken)
         {
             if (!_needRefresh)
             {
@@ -211,7 +214,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
                 return CurrentIllustration;
             }
 
-            if (_sourceView is not null && _refreshedIllustrations.TryGetValue(index, out var cached))
+            if (_sourceView is not null && _refreshedIllustrations.TryGetValue(workIndex, out var cached))
             {
                 IsLoading = false;
                 return cached;
@@ -232,7 +235,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
                     if (_sourceView is null)
                         CurrentIllustration = item;
                     else
-                        _refreshedIllustrations[index] = item;
+                        _refreshedIllustrations[workIndex] = item;
                 },
                 token);
         }

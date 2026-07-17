@@ -45,12 +45,6 @@ public partial class NovelViewerPage : IconContentPage
             ViewModel.CurrentPageIndex = pageIndex;
     }
 
-    private async void SaveButton_OnRightClick(object? sender, ContextRequestedEventArgs e)
-    {
-        if (ViewModel.CurrentNovel is { } current)
-            await current.SaveAsCommand.ExecuteAsync(sender);
-    }
-
     private async void AddToBookmarkButton_OnClick(object? sender, ContextRequestedEventArgs e)
     {
         if (sender is Control c)

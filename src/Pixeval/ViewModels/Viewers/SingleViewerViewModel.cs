@@ -410,27 +410,33 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
     }
 
     [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
-    private async Task SaveAsync(Control control)
-    {
-        if (DisplaySource?.Frames is not [var singleFrame])
-            return;
-        if (TopLevel.GetTopLevel(control) is not
-            { ViewContainer: { } viewContainer, Clipboard: { } clipboard })
-            return;
-        await clipboard.SetBitmapAsync(singleFrame);
-        viewContainer?.ShowSuccess(I18NManager.GetResource(MiscResources.Copied));
-    }
-
-    [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
     private async Task SaveAsAsync(Control control)
     {
         if (DisplaySource?.Frames is not [var singleFrame])
             return;
         if (TopLevel.GetTopLevel(control) is not
-            { ViewContainer: { } viewContainer, Clipboard: { } clipboard })
+            { ViewContainer: { } viewContainer, StorageProvider: { } storageProvider })
             return;
-        await clipboard.SetBitmapAsync(singleFrame);
-        viewContainer?.ShowSuccess(I18NManager.GetResource(MiscResources.Copied));
+        var file = await storageProvider.SaveFilePickerAsync(new()
+        {
+            FileTypeChoices =
+            [
+                new("PNG")
+                {
+                    Patterns = ["*.png"],
+                    MimeTypes = ["image/png"]
+                }
+            ],
+            DefaultExtension = "png",
+            SuggestedFileName = _entry.Id
+        });
+
+        if (file is null)
+            return;
+
+        var stream = await file.OpenWriteAsync();
+        singleFrame.Save(stream, new PngBitmapEncoderOptions());
+        viewContainer?.ShowSuccess(I18NManager.GetResource(MiscResources.Saved), file.Path.OriginalString);
     }
 
     private static ExtensionService ExtensionService => App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();

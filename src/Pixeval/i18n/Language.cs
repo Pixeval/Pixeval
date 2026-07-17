@@ -183,7 +183,6 @@ namespace Pixeval
         public const string DownloadTaskCreated = "EntryItem.DownloadTaskCreated";
         public const string GenerateLink = "EntryItem.GenerateLink";
         public const string GenerateWebLink = "EntryItem.GenerateWebLink";
-        public const string MangaSave = "EntryItem.MangaSave";
         public const string OpenInWebBrowser = "EntryItem.OpenInWebBrowser";
         public const string OpenSeries = "EntryItem.OpenSeries";
         public const string OpenUserInfoPage = "EntryItem.OpenUserInfoPage";
@@ -228,7 +227,7 @@ namespace Pixeval
         public const string PreviousSeriesWork = "EntryViewerPage.PreviousSeriesWork";
         public const string RotateClockwise = "EntryViewerPage.RotateClockwise";
         public const string RotateCounterclockwise = "EntryViewerPage.RotateCounterclockwise";
-        public const string Save = "EntryViewerPage.Save";
+        public const string SaveAs = "EntryViewerPage.SaveAs";
         public const string Series = "EntryViewerPage.Series";
         public const string ZoomIn = "EntryViewerPage.ZoomIn";
         public const string ZoomOut = "EntryViewerPage.ZoomOut";
@@ -675,6 +674,7 @@ namespace Pixeval
         public const string PixevalBadgeFollowing = "Misc.PixevalBadge.Following";
         public const string Play = "Misc.Play";
         public const string RemovedFromWatchLater = "Misc.RemovedFromWatchLater";
+        public const string Saved = "Misc.Saved";
         public const string UnexpectedBehavior = "Misc.UnexpectedBehavior";
     }
     public static class NavigationSettingsPageResources

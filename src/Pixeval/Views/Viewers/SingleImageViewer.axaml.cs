@@ -170,8 +170,7 @@ public partial class SingleImageViewer : UserControl
 
         ImageViewer?.SizeChanged += ImageViewerOnSizeChanged;
 
-        if (scrollView is not null)
-            scrollView.GestureBindings = ImageViewerScrollGestureProfiles.Paging;
+        scrollView?.GestureBindings = ImageViewerScrollGestureProfiles.Paging;
 
         ApplyViewModelZoomFactor();
         QueueInitialZoomToFit();
@@ -234,11 +233,5 @@ public partial class SingleImageViewer : UserControl
             return;
 
         scrollView.ZoomTo(viewModel.ZoomFactor, false);
-    }
-
-    private async void SaveButton_OnRightClick(object? sender, ContextRequestedEventArgs e)
-    {
-        if (DataContext is SingleViewerViewModel viewModel)
-            await viewModel.SaveAsCommand.ExecuteAsync(sender as Control);
     }
 }

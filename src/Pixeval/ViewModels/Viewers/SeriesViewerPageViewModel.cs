@@ -173,8 +173,7 @@ public sealed partial class SeriesViewerPageViewModel : ViewModelBase, IDisposab
         _loadingCts.Dispose();
         var worksEngine = WorksEngine;
         WorksEngine = null;
-        if (worksEngine is not null)
-            worksEngine.EngineHandle.Cancel();
+        worksEngine?.EngineHandle.Cancel();
         _worksViewModel?.Dispose();
         _worksViewModel = null;
     }

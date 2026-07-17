@@ -27,27 +27,8 @@ public partial class NovelItemViewModel
             SaveInternalAsync(viewContainer, await ContentAsync, App.AppViewModel.AppSettings.DownloadSettings.DownloadPathMacro);
     }
 
-    /// <inheritdoc />
-    protected override async Task SaveAsAsync(Control? parameter)
-    {
-        // 必须有TopLevel来显示Picker
-        if (TopLevel.GetTopLevel(parameter) is not { ViewContainer: { } viewContainer } topLevel)
-            return;
-
-        var folder = await topLevel.StorageProvider.OpenFolderPickerAsync(new() { AllowMultiple = false });
-        if (folder is not [{ } single])
-        {
-            viewContainer.ShowInformation(I18NManager.GetResource(EntryItemResources.SaveAsCancelled));
-            return;
-        }
-
-        var name = Path.GetFileName(App.AppViewModel.AppSettings.DownloadSettings.DownloadPathMacro);
-        var path = Path.Combine(single.Path.OriginalString, name);
-        SaveInternalAsync(viewContainer, await ContentAsync, path);
-    }
-
     /// <summary>
-    /// <see cref="IllustrationDownloadTaskFactory"/>
+    /// <see cref="NovelDownloadTaskFactory"/>
     /// </summary>
     /// <param name="viewContainerBase">承载提示的控件，为<see langword="null"/>则不显示</param>
     /// <param name="content">为<see langword="null"/>则创建新的下载任务</param>

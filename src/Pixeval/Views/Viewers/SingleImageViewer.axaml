@@ -86,12 +86,11 @@
                 InputGesture="Ctrl+C"
                 IsVisible="{Binding IsPicGif, Converter={x:Static BoolConverters.Not}}" />
             <MenuItem
-                Command="{Binding SaveCommand}"
+                Command="{Binding SaveAsCommand}"
                 CommandParameter="{Binding $self}"
-                ContextRequested="SaveButton_OnRightClick"
-                Header="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}"
+                Header="{I18N {x:Static pixeval:EntryViewerPageResources.SaveAs}}"
                 Icon="{markup:SymbolIcon Save}"
-                InputGesture="Ctrl+S" />
+                InputGesture="Ctrl+Shift+S" />
             <Separator IsVisible="{x:Static vm:SingleViewerViewModel.HasTransformerExtensions}" />
             <MenuItem
                 Command="{Binding PrimaryTransformerExtensionItem.Command, FallbackValue={x:Null}}"

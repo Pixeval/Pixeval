@@ -34,9 +34,7 @@
             DisplayMode="Inline">
             <SplitView.Pane>
                 <DockPanel>
-                    <local:WorkSeriesInfoPane
-                        DockPanel.Dock="Bottom"
-                        DataContext="{Binding SeriesInfo}" />
+                    <local:WorkSeriesInfoPane DataContext="{Binding SeriesInfo}" DockPanel.Dock="Bottom" />
                     <TabbedPage Pages="{Binding PanePages}" TabPlacement="Bottom" />
                 </DockPanel>
             </SplitView.Pane>
@@ -60,9 +58,8 @@
                     <CommandBarButton
                         Command="{Binding CurrentNovel.SaveCommand, FallbackValue={x:Null}}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
-                        ContextRequested="SaveButton_OnRightClick"
                         Icon="{markup:SymbolIcon Save}"
-                        Label="{I18N {x:Static pixeval:EntryViewerPageResources.Save}}" />
+                        Label="{I18N {x:Static pixeval:EntryItemResources.Save}}" />
                     <CommandBarSeparator />
                     <CommandBarButton
                         Command="{Binding CurrentNovel.AddToWatchLaterCommand, FallbackValue={x:Null}}"
@@ -107,13 +104,11 @@
                                 VerticalAlignment="Center"
                                 Spacing="10">
                                 <ProgressBar Width="160" IsIndeterminate="{Binding IsLoading}" />
-                                <TextBlock Foreground="White"
-                                           Text="{I18N {x:Static pixeval:EntryViewerPageResources.LoadingNovelTextBlockText}}" />
+                                <TextBlock Foreground="White" Text="{I18N {x:Static pixeval:EntryViewerPageResources.LoadingNovelTextBlockText}}" />
                             </StackPanel>
                         </Grid>
 
-                        <Grid Background="#7F000000"
-                              IsVisible="{Binding LoadErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                        <Grid Background="#7F000000" IsVisible="{Binding LoadErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
                             <TextBlock
                                 MaxWidth="480"
                                 HorizontalAlignment="Center"
@@ -209,8 +204,7 @@
                         VerticalAlignment="Center"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                         IsVisible="{Binding IsMultiPage}">
-                        <Run
-                            Text="{Binding CurrentPageIndex, Mode=OneWay, Converter={x:Static converters:PixevalConverters.PlusOne}}" />
+                        <Run Text="{Binding CurrentPageIndex, Mode=OneWay, Converter={x:Static converters:PixevalConverters.PlusOne}}" />
                         <Run Text="/" />
                         <Run Text="{Binding PageCount}" />
                     </TextBlock>

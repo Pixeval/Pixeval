@@ -102,10 +102,8 @@
                     <CommandBarButton
                         Command="{Binding CurrentIllustration.SaveCommand, FallbackValue={x:Null}}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
-                        ContextRequested="SaveButton_OnRightClick"
                         Icon="{markup:SymbolIcon SaveMultiple}"
-                        IsVisible="{Binding CurrentIllustration.IsPicSet, FallbackValue={x:False}}"
-                        Label="{I18N {x:Static pixeval:EntryItemResources.MangaSave}}" />
+                        Label="{I18N {x:Static pixeval:EntryItemResources.Save}}" />
                     <CommandBarSeparator />
                     <CommandBarButton
                         Command="{Binding CurrentIllustration.AddToWatchLaterCommand, FallbackValue={x:Null}}"

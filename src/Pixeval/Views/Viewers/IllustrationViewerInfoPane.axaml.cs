@@ -78,10 +78,4 @@ public partial class IllustrationViewerInfoPane : UserControl
     {
         IsDocked = !IsDocked;
     }
-
-    private async void SaveButton_OnRightClick(object? sender, ContextRequestedEventArgs e)
-    {
-        if (ViewModel.CurrentIllustration is { } current)
-            await current.SaveAsCommand.ExecuteAsync(sender);
-    }
 }
