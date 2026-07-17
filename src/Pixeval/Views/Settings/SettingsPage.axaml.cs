@@ -1,6 +1,7 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
+using System;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -36,24 +37,24 @@ public partial class SettingsPage : NavigationPage
             return;
 
         foreach (var extensionGroup in vm.ExtensionGroups)
-            foreach (var settingsEntry in extensionGroup)
-                settingsEntry.ValueSaving(extensionGroup.Model.Values);
+        foreach (var settingsEntry in extensionGroup)
+            settingsEntry.ValueSaving(extensionGroup.Model.Values);
 
         AppInfo.SaveSettings();
         // Parent is TabsView
         TopLevel.GetTopLevel(parent as Control)?.ViewContainer?.ShowSuccess(I18NManager.GetResource(SettingsMainViewResources.SettingsSaved));
     }
 
-    public static string ReleaseTitle => I18NManager.GetResource(SettingsMainViewResources.ReleaseNoteDialogTitleFormatted, AppInfo.AppVersion.CurrentVersionShortText);
+    public static string ReleaseTitle => GetReleaseTitle(AppInfo.AppVersion.CurrentVersion);
+
+    public static string GetReleaseTitle(Version version) =>
+        I18NManager.GetResource(SettingsMainViewResources.ReleaseNoteDialogTitleFormatted, version.ToString());
+
+    public static Control CreateReleaseNotes(AppReleaseModel? release) => new MarkdownBox { Markdown = release?.ReleaseNote ?? I18NManager.GetResource(SettingsMainViewResources.ReleaseNoteDialogEmpty) };
 
     public static async Task<Control> GetReleaseNotesAsync()
     {
         await AppInfo.AppVersion.GitHubCheckForUpdateAsync();
-        return new MarkdownBox
-        {
-            Markdown =
-                AppInfo.AppVersion.CurrentAppReleaseModel?.ReleaseNote ??
-                I18NManager.GetResource(SettingsMainViewResources.ReleaseNoteDialogEmpty)
-        };
+        return CreateReleaseNotes(AppInfo.AppVersion.CurrentAppReleaseModel);
     }
 }

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Mako.Global.Enum;
 using Mako.Model;
@@ -17,9 +18,9 @@ namespace Pixeval.Utilities;
 
 public static class MakoHelper
 {
-    public static async Task<List<BookmarkTag>> GetBookmarkTagsAsync(long uid, SimpleWorkType type, PrivacyPolicy policy)
+    public static async Task<List<BookmarkTag>> GetBookmarkTagsAsync(long uid, SimpleWorkType type, PrivacyPolicy policy, CancellationToken token = default)
     {
-        var tags = await App.AppViewModel.MakoClient.WorkBookmarkTags(type, uid, policy).ToListAsync();
+        var tags = await App.AppViewModel.MakoClient.WorkBookmarkTags(type, uid, policy).ToListAsync(token);
         tags.Insert(0, AllBookmarkTag.Instance);
         return tags;
     }
@@ -49,17 +50,17 @@ public static class MakoHelper
         yield return ISortDescription<IWorkViewModel>.Create(t => t.Entry.Id);
     }
 
-    public static async Task<bool> SetFollowAsync(User id, bool isFollowed, bool privately = false)
+    public static async Task<bool> SetFollowAsync(User id, bool isFollowed, bool privately = false, CancellationToken token = default)
     {
         var result = await (isFollowed
-            ? App.AppViewModel.MakoClient.PostFollowUserAsync(id.Id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public)
-            : App.AppViewModel.MakoClient.RemoveFollowUserAsync(id.Id));
+            ? App.AppViewModel.MakoClient.PostFollowUserAsync(id.Id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public, token)
+            : App.AppViewModel.MakoClient.RemoveFollowUserAsync(id.Id, token));
         if (result)
             id.UserInfo.IsFollowed = isFollowed;
         return id.UserInfo.IsFollowed;
     }
 
-    public static async Task<bool> SetWorkBookmarkAsync(WorkBase entry, bool favorite, bool privately = false, IReadOnlyCollection<string>? tags = null)
+    public static async Task<bool> SetWorkBookmarkAsync(WorkBase entry, bool favorite, bool privately = false, IReadOnlyCollection<string>? tags = null, CancellationToken token = default)
     {
         var simpleWorkType = entry switch
         {
@@ -68,8 +69,8 @@ public static class MakoHelper
             _ => throw new ArgumentOutOfRangeException(nameof(entry))
         };
         var result = await (favorite
-            ? App.AppViewModel.MakoClient.PostWorkBookmarkAsync(simpleWorkType, entry.Id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public, tags)
-            : App.AppViewModel.MakoClient.RemoveWorkBookmarkAsync(simpleWorkType, entry.Id));
+            ? App.AppViewModel.MakoClient.PostWorkBookmarkAsync(simpleWorkType, entry.Id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public, tags, token)
+            : App.AppViewModel.MakoClient.RemoveWorkBookmarkAsync(simpleWorkType, entry.Id, token));
         if (result)
             entry.IsFavorite = favorite;
         return entry.IsFavorite;
@@ -98,16 +99,16 @@ public static class MakoHelper
 
     extension<T>(IPreloadableList<T> list)
     {
-        public async ValueTask TryPreloadListAsync(IPlatformInfo platform)
+        public async ValueTask TryPreloadListAsync(IPlatformInfo platform, CancellationToken token = default)
         {
             if (!list.IsPreloaded)
-                await list.PreloadListAsync(App.AppViewModel.GetRequiredPlatformService<IGetArtworkService>(platform.Platform));
+                await list.PreloadListAsync(App.AppViewModel.GetRequiredPlatformService<IGetArtworkService>(platform.Platform), token);
         }
 
-        public async ValueTask TryPreloadListAsync(string platform)
+        public async ValueTask TryPreloadListAsync(string platform, CancellationToken token = default)
         {
             if (!list.IsPreloaded)
-                await list.PreloadListAsync(App.AppViewModel.GetRequiredPlatformService<IGetArtworkService>(platform));
+                await list.PreloadListAsync(App.AppViewModel.GetRequiredPlatformService<IGetArtworkService>(platform), token);
         }
     }
 

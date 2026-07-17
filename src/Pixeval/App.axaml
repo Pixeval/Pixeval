@@ -19,6 +19,7 @@
             <Setter Property="FontFamily" Value="{DynamicResource PixevalMonospaceFontFamily}" />
         </Style>
         <StyleInclude Source="/Controls/FloatingCommandBarStyles.axaml" />
+        <StyleInclude Source="/Controls/CommandBarStyles.axaml" />
         <smoothScroll:ScrollViewDefaultTheme />
         <smoothScroll:ScrollViewerSmoothTheme />
     </Application.Styles>

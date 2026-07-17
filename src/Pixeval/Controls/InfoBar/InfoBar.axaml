@@ -2,19 +2,64 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:fluent="using:FluentIcons.Avalonia"
-    xmlns:local="using:Pixeval.Controls">
+    xmlns:local="using:Pixeval.Controls"
+    xmlns:markup="using:Pixeval.Views.Markup">
 
     <Design.PreviewWith>
-        <StackPanel
-            Width="420"
-            Margin="20"
-            Background="{DynamicResource SystemRegionBrush}"
-            Spacing="8">
-            <local:InfoBar Mode="Success" Text="Success message" />
-            <local:InfoBar Mode="Info" Text="Info message" />
-            <local:InfoBar Mode="Warning" Text="Warning message" />
-            <local:InfoBar Mode="Error" Text="Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Error message" />
-        </StackPanel>
+        <Border Background="{DynamicResource SystemChromeGrayColor}">
+            <StackPanel
+                Width="420"
+                Margin="20"
+                Spacing="20">
+                <ThemeVariantScope RequestedThemeVariant="Light">
+                    <Border
+                        Padding="20"
+                        Background="{DynamicResource SystemRegionBrush}"
+                        CornerRadius="20">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Dark Theme" Theme="{StaticResource BodyLargeStrongTextBlockStyle}" />
+                            <ItemsControl ItemsSource="{markup:EnumValues x:TypeArguments=local:InfoBarMode}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Vertical" Spacing="10" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="{x:Type local:InfoBarMode}">
+                                        <local:InfoBar Mode="{Binding}" Text="{Binding StringFormat={}{0} message}" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <local:InfoBar Mode="Success" Text="Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Error message" />
+                        </StackPanel>
+                    </Border>
+                </ThemeVariantScope>
+
+                <ThemeVariantScope RequestedThemeVariant="Dark">
+                    <Border
+                        Padding="20"
+                        Background="{DynamicResource SystemRegionBrush}"
+                        CornerRadius="20">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Dark Theme" Theme="{StaticResource BodyLargeStrongTextBlockStyle}" />
+                            <ItemsControl ItemsSource="{markup:EnumValues x:TypeArguments=local:InfoBarMode}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Vertical" Spacing="10" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="{x:Type local:InfoBarMode}">
+                                        <local:InfoBar Mode="{Binding}" Text="{Binding StringFormat={}{0} message}" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <local:InfoBar Mode="Success" Text="Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Error message" />
+                        </StackPanel>
+                    </Border>
+                </ThemeVariantScope>
+            </StackPanel>
+        </Border>
     </Design.PreviewWith>
 
     <ControlTheme x:Key="{x:Type local:InfoBar}" TargetType="{x:Type local:InfoBar}">
@@ -45,25 +90,21 @@
 
         <Style Selector="^[Mode=Success]">
             <Setter Property="Background" Value="{DynamicResource SystemFillColorSuccessBackgroundBrush}" />
-            <Setter Property="Foreground" Value="{DynamicResource SystemFillColorSuccessBrush}" />
             <Setter Property="Symbol" Value="CheckmarkCircle" />
         </Style>
 
         <Style Selector="^[Mode=Info]">
             <Setter Property="Background" Value="{DynamicResource SystemFillColorAttentionBackgroundBrush}" />
-            <Setter Property="Foreground" Value="{DynamicResource SystemFillColorAttentionBrush}" />
             <Setter Property="Symbol" Value="QuestionCircle" />
         </Style>
 
         <Style Selector="^[Mode=Warning]">
             <Setter Property="Background" Value="{DynamicResource SystemFillColorCautionBackgroundBrush}" />
-            <Setter Property="Foreground" Value="{DynamicResource SystemFillColorCautionBrush}" />
             <Setter Property="Symbol" Value="Warning" />
         </Style>
 
         <Style Selector="^[Mode=Error]">
             <Setter Property="Background" Value="{DynamicResource SystemFillColorCriticalBackgroundBrush}" />
-            <Setter Property="Foreground" Value="{DynamicResource SystemFillColorCriticalBrush}" />
             <Setter Property="Symbol" Value="DismissCircle" />
         </Style>
     </ControlTheme>

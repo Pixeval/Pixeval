@@ -14,6 +14,8 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using CommunityToolkit.Mvvm.Input;
+using Pixeval.AppManagement;
+using Pixeval.Controls;
 using Pixeval.Models.Navigation;
 using Pixeval.Utilities;
 using Pixeval.Views.Login;
@@ -86,11 +88,19 @@ public partial class TabViewContainer : ViewContainerBase
             Position = NotificationPosition.BottomRight
         };
         RegisterContentDialogHost(TopLevel.GetTopLevel(this));
+
+        await AppInfo.AppVersion.GitHubCheckForUpdateAsync();
+        var dialogTasks = new List<Task<ContentDialogResult>>();
         if (App.AppViewModel.AppSettings.IsNewVersion)
-        {
-            var notes = await SettingsPage.GetReleaseNotesAsync();
-            await CreateAcknowledgementAsync(SettingsPage.ReleaseTitle, notes);
-        }
+            dialogTasks.Add(CreateAcknowledgementAsync(
+                SettingsPage.ReleaseTitle,
+                SettingsPage.CreateReleaseNotes(AppInfo.AppVersion.CurrentAppReleaseModel)));
+        if (AppInfo.AppVersion is { UpdateAvailable: true, NewestAppReleaseModel: { } release })
+            dialogTasks.Add(CreateAcknowledgementAsync(
+                SettingsPage.GetReleaseTitle(release.Version),
+                SettingsPage.CreateReleaseNotes(release)));
+
+        await Task.WhenAll(dialogTasks);
     }
 
     /// <inheritdoc />

@@ -117,7 +117,7 @@ public class App : Application
             if (AppViewModel.GetCurrentLoginUser() is { RefreshToken: { } refreshToken }
                 && !string.IsNullOrWhiteSpace(refreshToken))
             {
-                AppViewModel.MakoClient.SetToken(refreshToken);
+                await AppViewModel.MakoClient.SetTokenAsync(refreshToken);
                 if (await AppViewModel.MakoClient.IdentifyTokenAsync())
                 {
                     viewContainer.NavigateTo(new HomePage());

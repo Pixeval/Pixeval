@@ -19,8 +19,7 @@
             DockPanel.Dock="Top"
             Orientation="Horizontal"
             Spacing="20">
-            <TextBlock Text="{I18N {x:Static pixeval:ExtensionsPageResources.TitleTextBlockText}}"
-                       Theme="{StaticResource TitleTextBlockStyle}" />
+            <TextBlock Text="{I18N {x:Static pixeval:ExtensionsPageResources.TitleTextBlockText}}" Theme="{StaticResource TitleTextBlockStyle}" />
             <TextBlock VerticalAlignment="Bottom" Theme="{StaticResource SubtitleTextBlockStyle}">
                 <Run Text="{I18N {x:Static pixeval:ExtensionsPageResources.SubtitleTextBlockText}}" />
                 <Run Text="{x:Static extensions:ExtensionService.CurrentVersion}" />
@@ -47,51 +46,6 @@
                 Icon="{markup:SymbolIcon Alert}"
                 Label="{I18N {x:Static pixeval:ExtensionsPageResources.UninstallOutdatedExtensionsButtonLabel}}" />
         </CommandBar>
-        <!--  TODO 通过网络获取或删除  -->
-        <controls:SettingsExpander
-            Margin="20,10,20,0"
-            DockPanel.Dock="Top"
-            Header="可获取的扩展"
-            HeaderIcon="{markup:SymbolIcon Symbol=Rocket}">
-            <controls:SettingsExpander.Items>
-                <controls:SettingsCard
-                    Click="ExtensionCard_OnClick"
-                    Description="AI 提升画质扩展"
-                    Header="Real-ESRGAN 提升画质"
-                    HeaderIcon="{markup:SymbolIcon Symbol=ImageSparkle}"
-                    IsClickEnabled="True" />
-                <controls:SettingsCard
-                    Click="ExtensionCard_OnClick"
-                    Description="Aria2 下载转发扩展"
-                    Header="Aria2 下载"
-                    HeaderIcon="{markup:SymbolIcon Symbol=ArrowDownload}"
-                    IsClickEnabled="True" />
-                <controls:SettingsCard
-                    Click="ExtensionCard_OnClick"
-                    Description="DeepLX 翻译扩展，无需API Key"
-                    Header="DeepLX 翻译"
-                    HeaderIcon="{markup:SymbolIcon Symbol=Translate}"
-                    IsClickEnabled="True" />
-                <controls:SettingsCard
-                    Click="ExtensionCard_OnClick"
-                    Description="通过 Ollama 调用本地运行的大模型翻译服务，需要预先安装 Ollama"
-                    Header="Ollama 翻译"
-                    HeaderIcon="{markup:SymbolIcon Symbol=Translate}"
-                    IsClickEnabled="True" />
-                <controls:SettingsCard
-                    Click="ExtensionCard_OnClick"
-                    Description="百度翻译扩展，需要手动输入API Key"
-                    Header="百度翻译"
-                    HeaderIcon="{markup:SymbolIcon Symbol=Translate}"
-                    IsClickEnabled="True" />
-                <controls:SettingsCard
-                    Click="ExtensionCard_OnClick"
-                    Description="DeepL 翻译扩展，需要手动输入API Key"
-                    Header="DeepL 翻译"
-                    HeaderIcon="{markup:SymbolIcon Symbol=Translate}"
-                    IsClickEnabled="True" />
-            </controls:SettingsExpander.Items>
-        </controls:SettingsExpander>
         <ScrollViewer Margin="20,10,20,20">
             <ItemsControl ItemsSource="{Binding $parent[views:ExtensionsPage].Models}">
                 <ItemsControl.ItemTemplate>

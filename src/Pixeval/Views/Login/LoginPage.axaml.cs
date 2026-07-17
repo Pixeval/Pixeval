@@ -39,7 +39,7 @@ public partial class LoginPage : IconContentPage
             if (string.IsNullOrWhiteSpace(token))
                 return;
 
-            App.AppViewModel.MakoClient.SetToken(token);
+            await App.AppViewModel.MakoClient.SetTokenAsync(token);
             if (await App.AppViewModel.MakoClient.IdentifyTokenAsync())
                 LoginNavigate();
         }
@@ -75,7 +75,7 @@ public partial class LoginPage : IconContentPage
             var code = HttpUtility.ParseQueryString(callbackUri.Query)["code"];
             if (string.IsNullOrWhiteSpace(code))
                 return;
-            App.AppViewModel.MakoClient.SetCode(code, verifier);
+            await App.AppViewModel.MakoClient.SetCodeAsync(code, verifier);
             if (await App.AppViewModel.MakoClient.IdentifyTokenAsync())
                 LoginNavigate();
         }

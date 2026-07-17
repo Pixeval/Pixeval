@@ -210,7 +210,7 @@ public partial class SearchPage : IconContentPage
             if (keyword.Length is 0)
                 return;
 
-            var tags = await App.AppViewModel.MakoClient.GetAutoCompletionForKeyword(keyword);
+            var tags = await App.AppViewModel.MakoClient.GetAutoCompletionForKeyword(keyword, true, token);
             token.ThrowIfCancellationRequested();
             if (version != _searchCompletionUpdateVersion || !string.Equals(source, SearchAutoCompleteBox.Text ?? "", StringComparison.Ordinal))
                 return;

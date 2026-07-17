@@ -40,9 +40,11 @@ public partial class LoginPageViewModel : ViewModelBase
     [NotifyPropertyChangedFor(nameof(HasSelectedUser))]
     public partial LoginUserEntry? SelectedUser { get; set; }
 
-    [ObservableProperty] public partial string RefreshToken { get; set; }
+    [ObservableProperty]
+    public partial string RefreshToken { get; set; }
 
-    [ObservableProperty] public partial bool IsLoginInProgress { get; set; }
+    [ObservableProperty]
+    public partial bool IsLoginInProgress { get; set; }
 
     public bool HasSelectedUser => SelectedUser is not null;
 

@@ -26,11 +26,6 @@ public enum UpdateState
     BuildUpdate,
 
     /// <summary>
-    /// 修订更新
-    /// </summary>
-    RevisionUpdate,
-
-    /// <summary>
     /// 内部版本
     /// </summary>
     Insider,

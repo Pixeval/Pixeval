@@ -12,6 +12,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:AutoSettingsPage.Models"
     xmlns:pixeval="using:Pixeval"
+    xmlns:pixevalControls="using:Pixeval.Controls"
     xmlns:utilities="using:Pixeval.Utilities"
     xmlns:viewModels="using:Pixeval.ViewModels"
     x:DataType="{x:Type viewModels:SettingsPageViewModel}"
@@ -36,23 +37,9 @@
                         </TextBlock>
                     </StackPanel>
                 </controls:SettingsExpander.Description>
-                <!--<StackPanel Orientation="Horizontal" Spacing="10">
-                        <ProgressRing
-                            Width="35"
-                            Height="35"
-                            IsActive="True"
-                            IsIndeterminate="{x:Bind controls1:C.Negation(_viewModel.DownloadingUpdate), Mode=OneWay}"
-                            IsVisible="{x:Bind controls1:C.ToVisibility(_viewModel.CheckingUpdate), Mode=OneWay}"
-                            Value="{x:Bind DownloadingUpdateProgress, Mode=OneWay}" />
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            IsVisible="{x:Bind controls1:C.IsNotNullToVisibility(_viewModel.UpdateMessage), Mode=OneWay}"
-                            Text="{x:Bind _viewModel.UpdateMessage, Mode=OneWay}" />
-                        <Button
-                            Click="CheckForUpdateButton_OnClicked"
-                            Content="{I18N {x:Static pixeval:SettingsMainViewResources.CheckForUpdatesButtonContent}}"
-                            IsEnabled="{x:Bind controls1:C.Negation(_viewModel.CheckingUpdate), Mode=OneWay}" />
-                    </StackPanel>-->
+                <controls:SettingsExpander.Content>
+                    <Button Click="CheckForUpdateButton_OnClicked" Content="{I18N {x:Static pixeval:SettingsMainViewResources.CheckForUpdatesButtonContent}}" />
+                </controls:SettingsExpander.Content>
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard
                         ActionIcon="{markup:SymbolIcon Open}"
@@ -83,6 +70,10 @@
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
+            <pixevalControls:InfoBar
+                x:Name="UpdateStatusInfoBar"
+                Mode="Info"
+                Text="{I18N {x:Static pixeval:SettingsMainViewResources.UpdateAvailableUnknown}}" />
 
             <controls:SettingsExpander
                 Description="{I18N {x:Static pixeval:SettingsMainViewResources.BugReportEntryDescription}}"

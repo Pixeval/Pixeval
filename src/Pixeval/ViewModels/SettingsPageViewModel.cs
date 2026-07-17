@@ -31,6 +31,8 @@ public class SettingsPageViewModel : ViewModelBase
         set => SetProperty(AppSettings.ApplicationSettings.LastCheckedUpdate, value, AppSettings.ApplicationSettings, (setting, v) => setting.LastCheckedUpdate = v);
     }
 
+    public void RefreshLastCheckedUpdate() => OnPropertyChanged(nameof(LastCheckedUpdate));
+
     public AppSettings AppSettings => App.AppViewModel.AppSettings;
 
     public IEnumerable<ISettingsGroup> Groups => LocalGroups.Concat(ExtensionGroups);

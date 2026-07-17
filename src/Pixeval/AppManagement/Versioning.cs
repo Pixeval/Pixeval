@@ -44,31 +44,23 @@ public class Versioning
         if (newVersion is null)
             return UpdateState.Unknown;
 
-        var currentLong =
-            ((ulong) currentVersion.Major << 0x30) +
-            ((ulong) currentVersion.Minor << 0x20) +
-            ((ulong) currentVersion.Build << 0x10) +
-            (ulong) currentVersion.Revision;
-        var newLong =
-            ((ulong) newVersion.Major << 0x30) +
-            ((ulong) newVersion.Minor << 0x20) +
-            ((ulong) newVersion.Build << 0x10) +
-            (ulong) newVersion.Revision;
-
-        if (currentLong > newLong)
+        var comparison = currentVersion.CompareTo(newVersion);
+        if (comparison is > 0)
             return UpdateState.Insider;
+        if (comparison is 0)
+            return UpdateState.UpToDate;
+        if (currentVersion.Major != newVersion.Major)
+            return UpdateState.MajorUpdate;
+        if (currentVersion.Minor != newVersion.Minor)
+            return UpdateState.MinorUpdate;
+        if (currentVersion.Build != newVersion.Build)
+            return UpdateState.BuildUpdate;
 
-        return (newLong - currentLong) switch
-        {
-            0 => UpdateState.UpToDate,
-            >= 1ul << 0x30 => UpdateState.MajorUpdate,
-            >= 1ul << 0x20 => UpdateState.MinorUpdate,
-            >= 1ul << 0x10 => UpdateState.BuildUpdate,
-            _ => UpdateState.RevisionUpdate
-        };
+        // Pixeval 不单独发布 revision 更新，因此将仅 revision 不同的版本归为次要更新。
+        return UpdateState.MinorUpdate;
     }
 
-    public UpdateState UpdateState { get; private set; }
+    public UpdateState UpdateState { get; private set; } = UpdateState.Unknown;
 
     public bool UpdateAvailable => UpdateState is not UpdateState.UpToDate and not UpdateState.Insider and not UpdateState.Unknown;
 
@@ -157,16 +149,14 @@ public record AppReleaseModel(
 
 [JsonSerializable(typeof(GitHubRelease[]))]
 public partial class GitHubReleaseSerializeContext : JsonSerializerContext;
+
 public class GitHubRelease
 {
-    [JsonPropertyName("tag_name")]
-    public required string TagName { get; init; }
+    [JsonPropertyName("tag_name")] public required string TagName { get; init; }
 
-    [JsonPropertyName("assets")]
-    public required Assets[] Assets { get; init; }
+    [JsonPropertyName("assets")] public required Assets[] Assets { get; init; }
 
-    [JsonPropertyName("body")]
-    public required string Notes { get; init; }
+    [JsonPropertyName("body")] public required string Notes { get; init; }
 }
 
 public class Assets
