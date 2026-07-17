@@ -2,7 +2,6 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using System.IO;
 using System.Net;
 using System.Text;
 using Pixeval.I18N;
@@ -46,10 +45,10 @@ public class PixivNovelHtmlParser<TImage>(StringBuilder sb, int pageIndex) : Pix
 
     protected override void AddUploadedImage(StringBuilder currentText, INovelContext<TImage> viewModel, long imageId)
     {
-        var url = viewModel.ImageLookup[imageId].ThumbnailUrl;
+        var fileName = NovelContext.GetLocalImageFileName(viewModel.ImageLookup[imageId]);
         _ = currentText
-        .AppendLine("<br/><br/>")
-            .AppendLine($"<img src=\"{imageId}{Path.GetExtension(url)}\" alt=\"{imageId}\" />")
+            .AppendLine("<br/><br/>")
+            .AppendLine($"<img src=\"{fileName}\" alt=\"{imageId}\" />")
             .AppendLine("<br/><br/>");
     }
 
@@ -57,9 +56,10 @@ public class PixivNovelHtmlParser<TImage>(StringBuilder sb, int pageIndex) : Pix
     {
         var key = (imageId, page);
         var info = viewModel.IllustrationLookup[key];
+        var fileName = NovelContext.GetLocalImageFileName(info);
         _ = currentText
             .AppendLine("<br/><br/>")
-            .AppendLine($"<a href=\"{info.WebsiteUri.OriginalString}\"><img src=\"{imageId}-{page}{Path.GetExtension(info.ThumbnailUrl)}\" alt=\"{imageId}-{page}\" /></a>")
+            .AppendLine($"<a href=\"{info.WebsiteUri.OriginalString}\"><img src=\"{fileName}\" alt=\"{imageId}-{page}\" /></a>")
             .AppendLine("<br/><br/>");
     }
 

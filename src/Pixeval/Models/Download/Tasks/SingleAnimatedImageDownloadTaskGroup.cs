@@ -57,7 +57,9 @@ public class SingleAnimatedImageDownloadTaskGroup : SingleImageDownloadTaskGroup
         var provider = GetExtensionService().GetAnimatedImageFormatProvider(extension)
             ?? throw new NotSupportedException(extension);
         var tempPath = sender.Destination + ".source";
-        FileHelper.Move(sender.Destination, tempPath, true);
+        if (File.Exists(tempPath))
+            File.Delete(tempPath);
+        FileHelper.Move(sender.Destination, tempPath);
         IReadOnlyDictionary<Stream, int>? streams = null;
         try
         {

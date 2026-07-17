@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
+using Pixeval.Download;
 using Pixeval.Extensions.Common.FormatProviders;
 using Pixeval.Models.Database;
 using Pixeval.Models.Extensions;
@@ -43,10 +44,26 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup
 
     private IReadOnlyList<int> MsDelays { get; set; } = null!;
 
+    private bool OverwriteDownloadedFile { get; set; }
+
+    private bool SkipFinalOutput { get; set; }
+
     private void SetTasksSet()
     {
         if (TasksSet.Count > 0)
             return;
+        SkipFinalOutput = false;
+        OverwriteDownloadedFile = App.AppViewModel.AppSettings.DownloadSettings.OverwriteDownloadedFile;
+        if (DatabaseEntry.State is DownloadState.Queued
+            && DestinationUgoiraFormat.IsExtension
+            && !OverwriteDownloadedFile
+            && File.Exists(DestinationFile))
+        {
+            SkipFinalOutput = true;
+            SetNotCreateFromEntry();
+            return;
+        }
+
         var msDelays = new int[Entry.MultiImageUris!.Count];
         for (var i = 0; i < Entry.MultiImageUris.Count; ++i)
         {
@@ -78,7 +95,7 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup
 
     public UgoiraDownloadTaskGroup(ISingleAnimatedImage entry, string destination) : base(entry, destination, DownloadItemType.Ugoira)
     {
-        if (entry.PreferredAnimatedImageType is not SingleAnimatedImageType.MultiFiles) 
+        if (entry.PreferredAnimatedImageType is not SingleAnimatedImageType.MultiFiles)
             throw new InvalidOperationException($"{nameof(ISingleAnimatedImage.PreferredAnimatedImageType)} should be {nameof(SingleAnimatedImageType.MultiFiles)}");
         if (!Entry.MultiImageUris!.IsPreloaded)
             throw new InvalidOperationException($"{nameof(ISingleAnimatedImage.MultiImageUris)} should be preloaded");
@@ -97,14 +114,19 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup
         // ---
     }
 
-    public override ValueTask InitializeTaskGroupAsync()
+    public override async ValueTask InitializeTaskGroupAsync()
     {
         SetTasksSet();
-        return ValueTask.CompletedTask;
+        if (DatabaseEntry.State is DownloadState.Queued && TasksSet.Count is 0)
+            await AllTasksDownloadedAsync();
     }
 
     protected override async Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender, CancellationToken token = default)
     {
+        OverwriteDownloadedFile = App.AppViewModel.AppSettings.DownloadSettings.OverwriteDownloadedFile;
+        if (SkipFinalOutput)
+            return;
+
         if (DestinationUgoiraFormat.ExtensionFormatExtension is { } extension)
         {
             await FormatByExtensionAsync(extension);
@@ -115,8 +137,27 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup
         if (builtInFormat is not UgoiraDownloadFormat.Original)
             throw new NotSupportedException(builtInFormat.ToString());
 
-        await File.WriteAllTextAsync(CsvFile,
-            string.Join(',', MsDelays.Select(t => t.ToString())), token);
+        if (DownloadTaskFileHelper.ShouldSkipExistingFile(CsvFile, OverwriteDownloadedFile))
+            return;
+
+        var temporaryFile = CsvFile + IoHelper.PixevalTempExtension;
+        if (File.Exists(temporaryFile))
+            File.Delete(temporaryFile);
+        try
+        {
+            FileHelper.CreateParentDirectory(temporaryFile);
+            await File.WriteAllTextAsync(temporaryFile,
+                string.Join(',', MsDelays.Select(t => t.ToString())), token);
+            _ = DownloadTaskFileHelper.CommitDownloadedFile(
+                temporaryFile,
+                CsvFile,
+                OverwriteDownloadedFile);
+        }
+        finally
+        {
+            if (File.Exists(temporaryFile))
+                File.Delete(temporaryFile);
+        }
     }
 
     private UgoiraDownloadFormatToken DestinationUgoiraFormat { get; }
@@ -140,9 +181,20 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup
 
     private async Task FormatByExtensionAsync(string extension)
     {
+        if (DownloadTaskFileHelper.ShouldSkipExistingFile(DestinationFile, OverwriteDownloadedFile))
+        {
+            foreach (var task in TasksSet)
+                task.Delete();
+            FileHelper.DeleteEmptyFolder(FolderPath);
+            return;
+        }
+
         var provider = GetExtensionService().GetAnimatedImageFormatProvider(extension)
             ?? throw new NotSupportedException(extension);
         var streams = new List<Stream>(TasksSet.Count);
+        var temporaryFile = Path.Combine(FolderPath, Path.GetFileName(DestinationFile));
+        if (File.Exists(temporaryFile))
+            File.Delete(temporaryFile);
         try
         {
             foreach (var task in TasksSet)
@@ -150,12 +202,18 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup
 
             var dict = streams.Zip(MsDelays).ToDictionary(t => t.First, t => t.Second);
 
-            await provider.FormatImageAsync(dict, DestinationFile);
+            await provider.FormatImageAsync(dict, temporaryFile);
+            _ = DownloadTaskFileHelper.CommitDownloadedFile(
+                temporaryFile,
+                DestinationFile,
+                OverwriteDownloadedFile);
         }
         finally
         {
             foreach (var stream in streams)
                 await stream.DisposeAsync();
+            if (File.Exists(temporaryFile))
+                File.Delete(temporaryFile);
         }
 
         foreach (var imageDownloadTask in TasksSet)

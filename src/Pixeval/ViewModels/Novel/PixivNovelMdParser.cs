@@ -2,7 +2,6 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using System.IO;
 using System.Net;
 using System.Text;
 using Avalonia.Media.Imaging;
@@ -47,10 +46,10 @@ public class PixivNovelMdParser<TImage>(StringBuilder sb, int pageIndex) : Pixiv
 
     protected override void AddUploadedImage(StringBuilder currentText, INovelContext<TImage> viewModel, long imageId)
     {
-        var url = viewModel.ImageLookup[imageId].ThumbnailUrl;
+        var fileName = NovelContext.GetLocalImageFileName(viewModel.ImageLookup[imageId]);
         _ = currentText
             .AppendLine()
-            .Append($"![{imageId}]({imageId}{Path.GetExtension(url)})")
+            .Append($"![{imageId}]({fileName})")
             .AppendLine();
     }
 
@@ -58,9 +57,10 @@ public class PixivNovelMdParser<TImage>(StringBuilder sb, int pageIndex) : Pixiv
     {
         var key = (imageId, page);
         var info = viewModel.IllustrationLookup[key];
+        var fileName = NovelContext.GetLocalImageFileName(info);
         _ = currentText
             .AppendLine()
-            .Append($"[![{imageId}-{page}]({imageId}-{page}{Path.GetExtension(info.ThumbnailUrl)})]({info.WebsiteUri.OriginalString})")
+            .Append($"[![{imageId}-{page}]({fileName})]({info.WebsiteUri.OriginalString})")
             .AppendLine();
     }
 

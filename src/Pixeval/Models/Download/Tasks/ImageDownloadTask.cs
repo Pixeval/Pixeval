@@ -35,7 +35,7 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
         DownloadStartedAsync += DownloadStartedAsyncOverride;
         DownloadStoppedAsync += DownloadStoppedAsyncOverride;
         DownloadErrorAsync += DownloadErrorAsyncOverride;
-        AfterDownloadAsync += AfterDownloadAsyncOverride;
+        AfterDownloadAsync += InvokeAfterDownloadAsyncOverride;
     }
 
     protected virtual Task DownloadStartedAsyncOverride(ImageDownloadTask sender) => Task.CompletedTask;
@@ -44,18 +44,28 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
 
     protected virtual Task DownloadErrorAsyncOverride(ImageDownloadTask sender)
     {
-        if (File.Exists(Destination))
+        if (File.Exists(DownloadTempDestination))
+            File.Delete(DownloadTempDestination);
+        if (_hasCommittedDestination && File.Exists(Destination))
             File.Delete(Destination);
         return Task.CompletedTask;
     }
 
     protected virtual Task AfterDownloadAsyncOverride(ImageDownloadTask sender, CancellationToken token = default) => Task.CompletedTask;
 
+    private Task InvokeAfterDownloadAsyncOverride(ImageDownloadTask sender, CancellationToken token) =>
+        WasDownloadSkipped ? Task.CompletedTask : AfterDownloadAsyncOverride(sender, token);
+
     public Uri Uri { get; }
 
     public string Destination { get; }
 
     private string DownloadTempDestination => Destination + IoHelper.PixevalTempExtension;
+
+    internal bool WasDownloadSkipped { get; private set; }
+
+    protected virtual bool OverwriteDownloadedFile =>
+        App.AppViewModel.AppSettings.DownloadSettings.OverwriteDownloadedFile;
 
     [ObservableProperty]
     public partial DownloadState CurrentState { get; protected set; }
@@ -75,6 +85,8 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
 
     private bool _isDisposed;
 
+    private bool _hasCommittedDestination;
+
     private async Task SetRunningAsync(bool value, bool suppressDownloadStartedAsync = false)
     {
         if (value == _isRunning)
@@ -86,26 +98,6 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
             await DownloadStartedAsync.Invoke(this);
     }
 
-    /// <summary>
-    /// 检查文件是否存在，如果存在则根据设置决定是否覆盖
-    /// </summary>
-    /// <returns><see langword="true"/>表示已存在不需要下载，<see langword="false"/>表示需要下载图片</returns>
-    private bool ValidateExistence()
-    {
-        if (File.Exists(Destination))
-            if (App.AppViewModel.AppSettings.DownloadSettings.OverwriteDownloadedFile)
-                File.Delete(Destination);
-            else
-                return true;
-
-        if (Uri.IsFile)
-        {
-            FileHelper.Copy(Uri.OriginalString, Destination);
-            return true;
-        }
-        return false;
-    }
-
     private async Task PendingCompleteAsync()
     {
         ProgressPercentage = 100;
@@ -114,8 +106,15 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
         await Task.Run(async () => await AfterDownloadAsync.Invoke(this, CancellationTokenSource.Token), CancellationTokenSource.Token);
     }
 
-    private readonly ExtensionService _extensionService =
-        App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
+    private async Task CommitDownloadedFileAsync(bool overwrite)
+    {
+        _hasCommittedDestination = DownloadTaskFileHelper.CommitDownloadedFile(
+            DownloadTempDestination,
+            Destination,
+            overwrite);
+        WasDownloadSkipped = !_hasCommittedDestination;
+        await PendingCompleteAsync();
+    }
 
     private async Task SetErrorAsync(Exception ex)
     {
@@ -124,7 +123,7 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
         await DownloadErrorAsync.Invoke(this);
     }
 
-    public virtual async Task StartAsync(HttpClient httpClient, bool resumeBreakpoint = false)
+    public virtual async Task StartAsync(HttpClient httpClient)
     {
         if (CurrentState is not DownloadState.Queued)
             return;
@@ -132,28 +131,44 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
         {
             CurrentState = DownloadState.Running;
             await SetRunningAsync(true);
-            if (CacheHelper.TryGetStream(Uri.OriginalString) is { } stream)
+            WasDownloadSkipped = false;
+            _hasCommittedDestination = false;
+            var overwrite = OverwriteDownloadedFile;
+
+            // Partial downloads are never resumed; a new run always starts from a known empty file.
+            if (File.Exists(DownloadTempDestination))
+                File.Delete(DownloadTempDestination);
+            if (DownloadTaskFileHelper.ShouldSkipExistingFile(Destination, overwrite))
             {
-                await using (var fs = FileHelper.OpenAsyncWriteCreateParent(DownloadTempDestination))
-                    await stream.CopyToAsync(fs, CancellationTokenSource.Token);
-                FileHelper.Move(DownloadTempDestination, Destination);
-                await PendingCompleteAsync();
-                return;
-            }
-            if (!resumeBreakpoint && ValidateExistence())
-            {
+                WasDownloadSkipped = true;
                 await PendingCompleteAsync();
                 return;
             }
 
-            if (_extensionService.ActiveDownloaders.FirstOrDefault() is { } downloader)
+            if (Uri.IsFile)
+            {
+                FileHelper.Copy(Uri.LocalPath, DownloadTempDestination);
+                await CommitDownloadedFileAsync(overwrite);
+                return;
+            }
+
+            if (CacheHelper.TryGetStream(Uri.OriginalString) is { } stream)
+            {
+                await using (var fs = FileHelper.OpenAsyncWriteCreateParent(DownloadTempDestination))
+                    await stream.CopyToAsync(fs, CancellationTokenSource.Token);
+                await CommitDownloadedFileAsync(overwrite);
+                return;
+            }
+
+            if (GetExtensionService().ActiveDownloaders.FirstOrDefault() is { } downloader)
             {
                 var notifier = new ProgressNotifier(this);
-                downloader.Download(notifier, Uri.OriginalString, Destination);
+                FileHelper.CreateParentDirectory(DownloadTempDestination);
+                downloader.Download(notifier, Uri.OriginalString, DownloadTempDestination);
                 while (!notifier.Finished)
                     await Task.Delay(1000, CancellationTokenSource.Token);
                 if (notifier.Exception is null)
-                    await PendingCompleteAsync();
+                    await CommitDownloadedFileAsync(overwrite);
                 else
                     await SetErrorAsync(notifier.Exception);
             }
@@ -169,8 +184,7 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
                 switch (ex)
                 {
                     case null:
-                        FileHelper.Move(DownloadTempDestination, Destination);
-                        await PendingCompleteAsync();
+                        await CommitDownloadedFileAsync(overwrite);
                         break;
                     case TaskCanceledException: break;
                     default: await SetErrorAsync(ex); break;
@@ -198,6 +212,8 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
         IsProcessing = true;
         ErrorMessage = null;
         ProgressPercentage = 0;
+        WasDownloadSkipped = false;
+        _hasCommittedDestination = false;
         Delete();
         if (CancellationTokenSource.IsCancellationRequested)
         {
@@ -282,6 +298,9 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
 
     public event Func<ImageDownloadTask, CancellationToken, Task> AfterDownloadAsync;
 
+    private static ExtensionService GetExtensionService() =>
+        App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
+
     void IProgress<double>.Report(double value) => ProgressPercentage = value;
 
     public void Dispose()
@@ -300,7 +319,7 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
         : IProgressNotifier
     {
         public bool Finished { get; private set; }
-        
+
         public Exception? Exception { get; private set; }
 
         public void ProgressChanged(double value) => progress.Report(value);

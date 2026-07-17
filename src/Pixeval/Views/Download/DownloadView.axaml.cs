@@ -21,7 +21,7 @@ using Pixeval.Views.Viewers;
 
 namespace Pixeval.Views.Download;
 
-public partial class DownloadView : ContentPage
+public partial class DownloadView : ContentPage, IDisposable
 {
     public static readonly DirectProperty<DownloadView, int> SelectedCountProperty =
         AvaloniaProperty.RegisterDirect<DownloadView, int>(
@@ -52,6 +52,8 @@ public partial class DownloadView : ContentPage
     private DownloadViewViewModel? _subscribedViewModel;
 
     private INotifyPropertyChanged? _subscribedItemsSource;
+
+    private bool _isDisposed;
 
     public int SelectedCount
     {
@@ -105,28 +107,24 @@ public partial class DownloadView : ContentPage
     {
         base.OnLoaded(e);
 
-        if (DataContext is not DownloadViewViewModel vm)
+        if (_isDisposed || DataContext is not DownloadViewViewModel vm)
             return;
 
         UpdateViewModelSubscription();
         SetListSource();
+        RaiseEvent(new ViewModelDisposalEventArgs(ViewModelDisposal.ViewModelDisposalEvent, this));
         if (_folder is null)
             RaiseEvent(new ViewModelDisposalEventArgs(ViewModelDisposal.ViewModelDisposalEvent, vm));
         else
             ApplyFolderFilter();
     }
 
-    protected override void OnUnloaded(RoutedEventArgs e)
-    {
-        UnsubscribeFromViewModel();
-        UnsubscribeFromItemsSource();
-        _folderView?.Dispose();
-        base.OnUnloaded(e);
-    }
-
     protected override void OnDataContextChanged(EventArgs e)
     {
         base.OnDataContextChanged(e);
+        if (_isDisposed)
+            return;
+
         UpdateViewModelSubscription();
 
         SetListSource();
@@ -204,7 +202,7 @@ public partial class DownloadView : ContentPage
                     }
                 }
 
-                App.AppViewModel.HistoryPersistHelper.DownloadManager.RemoveTask(item.DownloadTask);
+                _ = App.AppViewModel.HistoryPersistHelper.DownloadManager.TryRemoveTask(item.DownloadTask);
             }
 
             UnselectAll();
@@ -320,5 +318,18 @@ public partial class DownloadView : ContentPage
     private void ListBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         SelectedCount = ListBox.SelectedItems?.OfType<IDownloadListEntryViewModel>().Count() ?? 0;
+    }
+
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
+        UnsubscribeFromViewModel();
+        UnsubscribeFromItemsSource();
+        _folderView?.Dispose();
     }
 }

@@ -140,6 +140,29 @@ public sealed partial class DownloadViewViewModel : ViewModelBase, IDisposable
         vm.Dispose();
     }
 
+    private void MoveTaskToFront(IDownloadTaskGroupBase task)
+    {
+        if (task is not IDownloadTaskGroup group
+            || !_lookup.TryGetValue(group.Destination, out var vm))
+            return;
+
+        if (group.DatabaseEntry.WorkSubscriptionId > 0
+            && _subscriptionFolders.TryGetValue(group.DatabaseEntry.WorkSubscriptionId, out var folder))
+        {
+            var itemIndex = folder.Items.IndexOf(vm);
+            if (itemIndex > 0)
+                folder.Items.Move(itemIndex, 0);
+            var folderIndex = _viewSource.IndexOf(folder);
+            if (folderIndex > 0)
+                _viewSource.Move(folderIndex, 0);
+            return;
+        }
+
+        var viewIndex = _viewSource.IndexOf(vm);
+        if (viewIndex > 0)
+            _viewSource.Move(viewIndex, 0);
+    }
+
     private void SourceOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (_isDisposed)
@@ -149,7 +172,12 @@ public sealed partial class DownloadViewViewModel : ViewModelBase, IDisposable
         {
             case NotifyCollectionChangedAction.Add when e.NewItems is { } newItems:
                 foreach (IDownloadTaskGroupBase item in newItems)
+                {
                     AddTask(item);
+                    if (e.NewStartingIndex is 0)
+                        MoveTaskToFront(item);
+                }
+
                 break;
             case NotifyCollectionChangedAction.Remove when e.OldItems is { } oldItems:
                 foreach (IDownloadTaskGroupBase item in oldItems)
@@ -160,8 +188,22 @@ public sealed partial class DownloadViewViewModel : ViewModelBase, IDisposable
                 foreach (var task in _source)
                     AddTask(task);
                 break;
-            case NotifyCollectionChangedAction.Replace:
-            case NotifyCollectionChangedAction.Move:
+            case NotifyCollectionChangedAction.Replace
+                when e is { OldItems: { } replacedItems, NewItems: { } replacementItems }:
+                foreach (IDownloadTaskGroupBase item in replacedItems)
+                    RemoveTask(item);
+                foreach (IDownloadTaskGroupBase item in replacementItems)
+                {
+                    AddTask(item);
+                    if (e.NewStartingIndex is 0)
+                        MoveTaskToFront(item);
+                }
+
+                break;
+            case NotifyCollectionChangedAction.Move when e.NewItems is { } movedItems:
+                if (e.NewStartingIndex is 0)
+                    foreach (IDownloadTaskGroupBase item in movedItems)
+                        MoveTaskToFront(item);
                 break;
         }
 

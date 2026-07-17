@@ -149,11 +149,17 @@ public sealed class DownloadManager : IDisposable
     /// 清除指定任务
     /// </summary>
     /// <param name="taskGroup"></param>
-    public void RemoveTask(IDownloadTaskGroupBase taskGroup)
+    public bool TryRemoveTask(IDownloadTaskGroupBase taskGroup)
     {
-        taskGroup.Cancel();
-        _ = _taskQuerySet.Remove(taskGroup.Destination);
-        _ = QueuedTasks.Remove(taskGroup);
+        var taskToRemove = _taskQuerySet.TryGetValue(taskGroup.Destination, out var current)
+            ? current
+            : taskGroup;
+        taskToRemove.Cancel();
+        if (!QueuedTasks.Remove(taskToRemove))
+            return false;
+
+        _ = _taskQuerySet.Remove(taskToRemove.Destination);
+        return true;
     }
 
     /// <summary>

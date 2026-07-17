@@ -122,17 +122,20 @@ public static partial class IoHelper
         };
     }
 
-    public static string GetNovelExtension(string? novelDownloadFormat = null)
+    public static string GetNovelExtension(string? novelDownloadFormat = null) =>
+        GetNovelExtension(GetAvailableNovelDownloadFormatToken(novelDownloadFormat));
+
+    public static string GetNovelExtension(NovelDownloadFormatToken token)
     {
-        var token = GetAvailableNovelDownloadFormatToken(novelDownloadFormat);
         if (token.ExtensionFormatExtension is { } extension)
             return extension;
 
         return (token.BuiltInFormat ?? NovelDownloadFormatToken.DefaultBuiltInFormat) switch
         {
-            NovelDownloadFormat.OriginalTxt => "novel.txt",
-            NovelDownloadFormat.Html or NovelDownloadFormat.Md => "\\novel." + token.BuiltInFormat.ToString()!.ToLowerInvariant(),
-            _ => throw new ArgumentOutOfRangeException(nameof(novelDownloadFormat))
+            NovelDownloadFormat.OriginalTxt => "txt",
+            NovelDownloadFormat.Html => "html",
+            NovelDownloadFormat.Md => "md",
+            _ => throw new ArgumentOutOfRangeException(nameof(token))
         };
     }
 

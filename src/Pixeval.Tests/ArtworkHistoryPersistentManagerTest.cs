@@ -164,15 +164,42 @@ public sealed class ArtworkHistoryPersistentManagerTest
         var logger = CreateLogger();
         var manager = new BrowseHistoryPersistentManager(db, logger);
         var post = CreatePost("1");
+        var changedCount = 0;
+        manager.Changed += (_, _) => changedCount++;
 
         manager.AddOrReplace(new(post));
         manager.AddOrReplace(new(post));
 
+        Assert.AreEqual(2, changedCount);
         Assert.AreEqual(1, manager.Count);
         Assert.AreEqual(1, db.Table<ArtworkPayloadEntry>().Count());
         await using var enumerator = manager.StreamAsync(SimpleWorkType.Illustration).GetAsyncEnumerator();
         Assert.IsTrue(await enumerator.MoveNextAsync());
         Assert.AreEqual(post.Id.Id, enumerator.Current.Id);
+    }
+
+    [TestMethod]
+    public async Task SearchHistory_AddOrUpdateKeepsOnlyNewestEntry()
+    {
+        using var db = new SQLiteConnection(":memory:");
+        var manager = new SearchHistoryPersistentManager(db);
+        manager.AddOrUpdate(new()
+        {
+            Value = "same",
+            TranslatedName = "old"
+        });
+        manager.AddOrUpdate(new()
+        {
+            Value = "same",
+            TranslatedName = "new"
+        });
+
+        await using var enumerator = manager.StreamEntriesAsync().GetAsyncEnumerator();
+
+        Assert.IsTrue(await enumerator.MoveNextAsync());
+        Assert.AreEqual("new", enumerator.Current.TranslatedName);
+        Assert.IsFalse(await enumerator.MoveNextAsync());
+        Assert.AreEqual(1, manager.Count);
     }
 
     [TestMethod]

@@ -24,7 +24,20 @@ public sealed class NovelContext(NovelContent novelContent) : INovelContext<Stre
     /// <returns>小说图片是内嵌的，没必要用原图</returns>
     public string[] AllUrls { get; } = [.. novelContent.Images.Select(x => x.OriginalUrl), .. novelContent.Illustrations.Select(x => x.ThumbnailUrl)];
 
-    public string[] AllTokens { get; } = [.. novelContent.Images.Select(x => x.NovelImageId.ToString()), .. novelContent.Illustrations.Select(x => $"{x.Id}-{x.Page}")];
+    public string[] AllFileNames { get; } =
+    [
+        .. novelContent.Images.Select(GetLocalImageFileName),
+        .. novelContent.Illustrations.Select(GetLocalImageFileName)
+    ];
+
+    internal static string GetLocalImageFileName(NovelImage image) =>
+        GetLocalImageFileName(image.NovelImageId.ToString(), image.OriginalUrl);
+
+    internal static string GetLocalImageFileName(NovelIllustration illustration) =>
+        GetLocalImageFileName($"{illustration.Id}-{illustration.Page}", illustration.ThumbnailUrl);
+
+    private static string GetLocalImageFileName(string stem, string url) =>
+        stem + Path.GetExtension(new Uri(url).AbsolutePath);
 
     public StringBuilder LoadMdContent()
     {

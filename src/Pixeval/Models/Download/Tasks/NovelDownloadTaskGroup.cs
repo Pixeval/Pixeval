@@ -32,23 +32,42 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
 
     private string NovelFile { get; }
 
-    private string TempImageFolderPath { get; }
+    private string ImageFolderPath { get; }
+
+    private bool OverwriteDownloadedFile { get; set; }
+
+    private bool SkipFinalOutput { get; set; }
 
     [MemberNotNull(nameof(NovelContent), nameof(DocumentViewModel))]
     private void SetNovelContent(NovelContent novelContent)
     {
         NovelContent = novelContent;
         DocumentViewModel = new NovelContext(novelContent);
-        var directory = DestinationNovelFormat.BuiltInFormat is null
-            ? Path.GetDirectoryName(NovelFile)!
-            : TempImageFolderPath;
+        SetTasksSet();
+    }
+
+    private void SetTasksSet()
+    {
+        if (TasksSet.Count > 0)
+            return;
+
+        SkipFinalOutput = false;
+        OverwriteDownloadedFile = App.AppViewModel.AppSettings.DownloadSettings.OverwriteDownloadedFile;
+        if (DatabaseEntry.State is DownloadState.Queued
+            && DestinationNovelFormat.IsExtension
+            && !OverwriteDownloadedFile
+            && File.Exists(NovelFile))
+        {
+            SkipFinalOutput = true;
+            SetNotCreateFromEntry();
+            return;
+        }
 
         for (var i = 0; i < DocumentViewModel.TotalImagesCount; ++i)
         {
             var url = DocumentViewModel.AllUrls[i];
-            var name = Path.Combine(directory, DocumentViewModel.AllTokens[i]);
-            var imageDownloadTask = new ImageDownloadTask(new(url), IoHelper.ReplaceTokenExtensionFromUrl(name, url, -1),
-                DatabaseEntry.State);
+            var name = Path.Combine(ImageFolderPath, DocumentViewModel.AllFileNames[i]);
+            var imageDownloadTask = new ImageDownloadTask(new(url), name, DatabaseEntry.State);
             AddToTasksSet(imageDownloadTask);
         }
 
@@ -59,10 +78,7 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
     {
         DestinationNovelFormat = GetNovelFormat(entry);
 
-        // --- 设置只读路径
-        NovelFile = IoHelper.ChangeExtension(TokenizedDestination, IoHelper.GetNovelExtension(DestinationNovelFormat));
-        TempImageFolderPath = NovelFile + IoHelper.PixevalTempExtension;
-        // ---
+        (NovelFile, ImageFolderPath) = GetOutputPaths(TokenizedDestination, DestinationNovelFormat);
     }
 
     public NovelDownloadTaskGroup(
@@ -73,19 +89,33 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
         DestinationNovelFormat = IoHelper.GetAvailableNovelDownloadFormatToken();
         DatabaseEntry.FormatToken = DestinationNovelFormat.Value;
 
-        // --- 设置只读路径
-        NovelFile = IoHelper.ChangeExtension(TokenizedDestination, IoHelper.GetNovelExtension(DestinationNovelFormat));
-        TempImageFolderPath = NovelFile + IoHelper.PixevalTempExtension;
-        // ---
+        (NovelFile, ImageFolderPath) = GetOutputPaths(TokenizedDestination, DestinationNovelFormat);
 
         if (novelContent is not null)
             SetNovelContent(novelContent);
+    }
+
+    internal static (string NovelFile, string ImageFolderPath) GetOutputPaths(
+        string tokenizedDestination,
+        NovelDownloadFormatToken format)
+    {
+        var extension = IoHelper.GetNovelExtension(format);
+        if (format.BuiltInFormat is not null)
+        {
+            var imageFolderPath = IoHelper.RemoveTokenExtension(tokenizedDestination);
+            return (Path.Combine(imageFolderPath, $"novel.{extension}"), imageFolderPath);
+        }
+
+        var novelFile = IoHelper.ChangeExtension(tokenizedDestination, extension);
+        return (novelFile, novelFile + IoHelper.PixevalTempExtension);
     }
 
     public override async ValueTask InitializeTaskGroupAsync()
     {
         if (NovelContent == null!)
             SetNovelContent(await App.AppViewModel.MakoClient.GetNovelContentAsync(Entry.Id));
+        else
+            SetTasksSet();
 
         // 小说若无图片，则没有子任务。所以此类任务是瞬间完成，理论上不存在其他状态
         if (DatabaseEntry.State is DownloadState.Queued && TasksSet.Count is 0)
@@ -94,6 +124,10 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
 
     protected override async Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender, CancellationToken token = default)
     {
+        OverwriteDownloadedFile = App.AppViewModel.AppSettings.DownloadSettings.OverwriteDownloadedFile;
+        if (SkipFinalOutput)
+            return;
+
         ((INovelContext<Stream>) DocumentViewModel).InitImages();
         if (DestinationNovelFormat.ExtensionFormatExtension is { } extension)
         {
@@ -115,16 +149,43 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
             _ => throw new ArgumentOutOfRangeException(nameof(format))
         };
 
-        FileHelper.CreateParentDirectory(NovelFile);
-        await File.WriteAllTextAsync(NovelFile, content, token);
+        if (DownloadTaskFileHelper.ShouldSkipExistingFile(NovelFile, OverwriteDownloadedFile))
+            return;
+
+        var temporaryFile = NovelFile + IoHelper.PixevalTempExtension;
+        if (File.Exists(temporaryFile))
+            File.Delete(temporaryFile);
+        try
+        {
+            FileHelper.CreateParentDirectory(temporaryFile);
+            await File.WriteAllTextAsync(temporaryFile, content, token);
+            _ = DownloadTaskFileHelper.CommitDownloadedFile(
+                temporaryFile,
+                NovelFile,
+                OverwriteDownloadedFile);
+        }
+        finally
+        {
+            if (File.Exists(temporaryFile))
+                File.Delete(temporaryFile);
+        }
     }
 
     private async Task FormatByExtensionAsync(string extension)
     {
+        if (DownloadTaskFileHelper.ShouldSkipExistingFile(NovelFile, OverwriteDownloadedFile))
+        {
+            await DeleteTemporaryImageTasksAsync();
+            return;
+        }
+
         var provider = GetExtensionService().GetNovelFormatProvider(extension)
             ?? throw new NotSupportedException(extension);
 
         var streams = new Dictionary<string, Stream>();
+        var temporaryFile = Path.Combine(ImageFolderPath, Path.GetFileName(NovelFile));
+        if (File.Exists(temporaryFile))
+            File.Delete(temporaryFile);
         try
         {
             for (var i = 0; i < TasksSet.Count; i++)
@@ -135,11 +196,17 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
                 DocumentViewModel.SetStream(i, imageStream);
             }
 
-            FileHelper.CreateParentDirectory(NovelFile);
-            await provider.FormatNovelAsync(NovelContent.Text, NovelFile, streams);
+            FileHelper.CreateParentDirectory(temporaryFile);
+            await provider.FormatNovelAsync(NovelContent.Text, temporaryFile, streams);
+            _ = DownloadTaskFileHelper.CommitDownloadedFile(
+                temporaryFile,
+                NovelFile,
+                OverwriteDownloadedFile);
         }
         finally
         {
+            if (File.Exists(temporaryFile))
+                File.Delete(temporaryFile);
             await DeleteTemporaryImageTasksAsync();
             streams.Clear();
         }
@@ -154,7 +221,7 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
             TasksSet[i].Delete();
         }
 
-        FileHelper.DeleteEmptyFolder(TempImageFolderPath);
+        FileHelper.DeleteEmptyFolder(ImageFolderPath);
     }
 
     public override string OpenLocalDestination => NovelFile;
@@ -165,9 +232,7 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
             task.Delete();
         if (File.Exists(NovelFile))
             File.Delete(NovelFile);
-        FileHelper.DeleteEmptyFolder(DestinationNovelFormat.BuiltInFormat is null
-            ? Path.GetDirectoryName(NovelFile)
-            : TempImageFolderPath);
+        FileHelper.DeleteEmptyFolder(ImageFolderPath);
     }
 
     private static NovelDownloadFormatToken GetNovelFormat(DownloadHistoryEntry entry)

@@ -131,7 +131,7 @@ public sealed partial class PixevalMcpService
                 case PixevalDownloadAction.Remove:
                     if (deleteLocalFiles)
                         task.Delete();
-                    manager.RemoveTask(task);
+                    _ = manager.TryRemoveTask(task);
                     return new PixevalDownloadTaskControlResultDto(true, "Download task removed.", null);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(action));

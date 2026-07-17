@@ -58,12 +58,23 @@ public class MangaDownloadTaskGroup : DownloadTaskGroup
             ?? throw new NotSupportedException(extension);
         foreach (var task in TasksSet)
         {
+            if (task.WasDownloadSkipped)
+                continue;
+
             var tempPath = task.Destination + ".source";
-            FileHelper.Move(task.Destination, tempPath, true);
+            if (File.Exists(tempPath))
+                File.Delete(tempPath);
+            FileHelper.Move(task.Destination, tempPath);
             try
             {
                 await using var stream = File.OpenAsyncRead(tempPath);
                 await provider.FormatImageAsync(stream, task.Destination);
+            }
+            catch
+            {
+                if (File.Exists(task.Destination))
+                    File.Delete(task.Destination);
+                throw;
             }
             finally
             {

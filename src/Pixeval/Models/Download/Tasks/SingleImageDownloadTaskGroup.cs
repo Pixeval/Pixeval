@@ -40,7 +40,9 @@ public class SingleImageDownloadTaskGroup : SingleImageDownloadTaskGroupBase
         var provider = GetExtensionService().GetStaticImageFormatProvider(extension)
             ?? throw new NotSupportedException(extension);
         var tempPath = sender.Destination + ".source";
-        FileHelper.Move(sender.Destination, tempPath, true);
+        if (File.Exists(tempPath))
+            File.Delete(tempPath);
+        FileHelper.Move(sender.Destination, tempPath);
         try
         {
             await using var stream = File.OpenAsyncRead(tempPath);

@@ -8,5 +8,5 @@ namespace Pixeval.Download;
 
 public interface ISingleDownloadTaskBase : IDownloadTaskBase
 {
-    Task StartAsync(HttpClient httpClient, bool resumeBreakpoint = false);
+    Task StartAsync(HttpClient httpClient);
 }

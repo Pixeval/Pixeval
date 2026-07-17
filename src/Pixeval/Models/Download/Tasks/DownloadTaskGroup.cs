@@ -23,6 +23,8 @@ namespace Pixeval.Models.Download.Tasks;
 
 public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : ViewModelBase, IDownloadTaskGroup
 {
+    private readonly SemaphoreSlim _afterAllDownloadLock = new(1, 1);
+
     public DownloadHistoryEntry DatabaseEntry { get; } = entry;
 
     public abstract ValueTask InitializeTaskGroupAsync();
@@ -66,8 +68,13 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
 
     protected async Task AllTasksDownloadedAsync()
     {
-        if (IsAllCompleted && AfterAllDownloadAsync is not null)
+        await _afterAllDownloadLock.WaitAsync();
+        try
         {
+            if (!IsAllCompleted || IsAfterAllDownloadStarted || AfterAllDownloadAsync is null)
+                return;
+
+            IsAfterAllDownloadStarted = true;
             Dispatcher.UIThread.Invoke(() => IsPending = true);
             try
             {
@@ -83,7 +90,12 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
             {
                 SetError(ex);
             }
+
             _ = Dispatcher.UIThread.Invoke(() => IsPending = false);
+        }
+        finally
+        {
+            _ = _afterAllDownloadLock.Release();
         }
     }
 
@@ -97,6 +109,8 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
     private bool IsCreateFromEntry { get; set; } = true;
 
     private bool IsAfterAllDownloadCompleted { get; set; }
+
+    private bool IsAfterAllDownloadStarted { get; set; }
 
     private string? _errorMessage;
 
@@ -125,6 +139,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
             return;
         IsProcessing = true;
         IsAfterAllDownloadCompleted = false;
+        IsAfterAllDownloadStarted = false;
         _errorMessage = null;
         DatabaseEntry.ErrorMessage = null;
         OnPropertyChanged(nameof(ErrorMessage));
