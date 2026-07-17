@@ -13,6 +13,7 @@
   "UnexpectedBehavior": "发生了未定义的行为，如果你看到了该信息，请联系开发者寻求帮助",
   "GoToPageFormatted": "去{0}页",
   "Copied": "已复制",
+  "Saved": "已保存",
   "PixevalBadge": {
     "Following": "关注中"
   }
