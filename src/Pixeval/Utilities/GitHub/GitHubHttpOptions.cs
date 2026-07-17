@@ -29,7 +29,9 @@ public static class GitHubHttpOptions
         out IPAddress[] addresses)
     {
         var resolver = GetResolver(settings, host);
-        addresses = resolver is null ? [] : [.. resolver.Select(IPAddress.Parse)];
+        addresses = resolver is null
+            ? []
+            : [.. resolver.SelectNotNull(static ip => IPAddress.TryParse(ip, out var address) ? address : null)];
         return addresses.Length is not 0;
     }
 

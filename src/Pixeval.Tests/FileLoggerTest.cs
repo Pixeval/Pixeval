@@ -15,6 +15,29 @@ namespace Pixeval.Tests;
 public sealed class FileLoggerTest
 {
     [TestMethod]
+    public async Task UnavailableLogDirectoryShouldNotThrow()
+    {
+        var path = Path.GetTempFileName();
+        try
+        {
+            var logger = new FileLogger(path);
+            var completionSource = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            logger.Logging += (_, _) =>
+            {
+                completionSource.SetResult();
+                return false;
+            };
+
+            logger.LogError("Test log", new IOException("Test exception"));
+            await completionSource.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
     public async Task LogErrorShouldIncludeRedactedNetworkDetails()
     {
         using var request = new HttpRequestMessage(HttpMethod.Post,

@@ -13,6 +13,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Styling;
+using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
 using Pixeval.I18N;
@@ -111,17 +112,26 @@ public class App : Application
 
     private static async Task LoginAsync(ViewContainerBase viewContainer)
     {
-        if (AppViewModel.GetCurrentLoginUser() is { RefreshToken: { } refreshToken }
-            && !string.IsNullOrWhiteSpace(refreshToken))
+        try
         {
-            AppViewModel.MakoClient.SetToken(refreshToken);
-            if (await AppViewModel.MakoClient.IdentifyTokenAsync())
+            if (AppViewModel.GetCurrentLoginUser() is { RefreshToken: { } refreshToken }
+                && !string.IsNullOrWhiteSpace(refreshToken))
             {
-                viewContainer.NavigateTo(new HomePage());
-                AppViewModel.QueueWorkSubscriptionSyncAll();
-                return;
-            }
+                AppViewModel.MakoClient.SetToken(refreshToken);
+                if (await AppViewModel.MakoClient.IdentifyTokenAsync())
+                {
+                    viewContainer.NavigateTo(new HomePage());
+                    AppViewModel.QueueWorkSubscriptionSyncAll();
+                    return;
+                }
 
+                viewContainer.ShowError(I18NManager.GetResource(MainPageResources.LoggingInFailed));
+            }
+        }
+        catch (Exception e)
+        {
+            AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
+                .LogError(nameof(LoginAsync), e);
             viewContainer.ShowError(I18NManager.GetResource(MainPageResources.LoggingInFailed));
         }
 
@@ -130,6 +140,18 @@ public class App : Application
 
     private void RegisterUnhandledExceptionHandler()
     {
+        Dispatcher.UIThread.UnhandledException += (_, e) =>
+        {
+            if (e.Exception is OutOfMemoryException or StackOverflowException or AccessViolationException)
+            {
+                Logger.LogCritical(nameof(Dispatcher.UnhandledException), e.Exception);
+                return;
+            }
+
+            // Avalonia event handlers are necessarily async void; keep one final boundary on the UI dispatcher.
+            Logger.LogError(nameof(Dispatcher.UnhandledException), e.Exception);
+            e.Handled = true;
+        };
         TaskScheduler.UnobservedTaskException += (o, e) =>
         {
             Logger.LogError(nameof(TaskScheduler.UnobservedTaskException), e.Exception);

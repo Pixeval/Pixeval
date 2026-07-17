@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -50,8 +49,7 @@ public sealed class AppViewModel(App app, FileLogger logger) : IAsyncDisposable
 
     public LoginContext LoginContext { get; } = AppInfo.LoadLoginContext(logger) ?? new LoginContext();
 
-    public ObservableCollection<HomePageCardLayout> HomePageCards { get; } =
-        AppInfo.LoadHomePageCards(logger) ?? HomePageCardsSettings.CreateDefaultCards();
+    public ObservableCollection<HomePageCardLayout> HomePageCards { get; } = AppInfo.LoadHomePageCards(logger) ?? HomePageCardsSettings.CreateDefaultCards();
 
     public string NavigationMenuYamlText { get; set; } =
         AppInfo.LoadNavigationMenuYaml(logger) ?? NavigationMenuYaml.DefaultYaml;
@@ -144,46 +142,29 @@ public sealed class AppViewModel(App app, FileLogger logger) : IAsyncDisposable
     {
         var networkSettings = AppSettings.NetworkSettings;
         SetNameResolver(MakoHttpOptions.AppApiHost, networkSettings.PixivAppApiNameResolver);
-        networkSettings.PixivAppApiNameResolver.CollectionChanged += (sender, e) =>
-        {
-            if (sender is IEnumerable<string> ips)
-                SetNameResolver(MakoHttpOptions.AppApiHost, ips);
-        };
         SetNameResolver(MakoHttpOptions.ImageHost, networkSettings.PixivImageNameResolver);
-        networkSettings.PixivImageNameResolver.CollectionChanged += (sender, e) =>
-        {
-            if (sender is IEnumerable<string> ips)
-                SetNameResolver(MakoHttpOptions.ImageHost, ips);
-        };
         SetNameResolver(MakoHttpOptions.ImageHost2, networkSettings.PixivImageNameResolver2);
-        networkSettings.PixivImageNameResolver2.CollectionChanged += (sender, e) =>
-        {
-            if (sender is IEnumerable<string> ips)
-                SetNameResolver(MakoHttpOptions.ImageHost2, ips);
-        };
         SetNameResolver(MakoHttpOptions.OAuthHost, networkSettings.PixivOAuthNameResolver);
-        networkSettings.PixivOAuthNameResolver.CollectionChanged += (sender, e) =>
-        {
-            if (sender is IEnumerable<string> ips)
-                SetNameResolver(MakoHttpOptions.OAuthHost, ips);
-        };
         SetNameResolver(MakoHttpOptions.AccountHost, networkSettings.PixivAccountNameResolver);
-        networkSettings.PixivAccountNameResolver.CollectionChanged += (sender, e) =>
-        {
-            if (sender is IEnumerable<string> ips)
-                SetNameResolver(MakoHttpOptions.AccountHost, ips);
-        };
         SetNameResolver(MakoHttpOptions.WebApiHost, networkSettings.PixivWebApiNameResolver);
-        networkSettings.PixivWebApiNameResolver.CollectionChanged += (sender, e) =>
-        {
-            if (sender is IEnumerable<string> ips)
-                SetNameResolver(MakoHttpOptions.WebApiHost, ips);
-        };
-    }
 
-    public void SetNameResolver(string host, IEnumerable<string> ips)
-    {
-        MakoClient.Configuration.NameResolvers[host] = [.. ips.Select(IPAddress.Parse)];
+        SetNameResolver(GitHubHttpOptions.Host, networkSettings.GitHubNameResolver);
+        SetNameResolver(GitHubHttpOptions.ApiHost, networkSettings.GitHubApiNameResolver);
+        SetNameResolver(GitHubHttpOptions.AvatarHost, networkSettings.GitHubAvatarNameResolver);
+        SetNameResolver(GitHubHttpOptions.UserContentHost, networkSettings.GitHubUserContentNameResolver);
+        SetNameResolver(GitHubHttpOptions.AssetsHost, networkSettings.GitHubAssetsNameResolver);
+        SetNameResolver(GitHubHttpOptions.CodeloadHost, networkSettings.GitHubCodeloadNameResolver);
+        return;
+
+        static void SetNameResolver(string host, ObservableCollection<string> ips)
+        {
+            App.AppViewModel.MakoClient.Configuration.NameResolvers[host] = [.. ips.SelectNotNull(static ip => IPAddress.TryParse(ip, out var address) ? address : null)];
+            ips.CollectionChanged += static (sender, e) =>
+            {
+                if (sender is ObservableCollection<string> ips)
+                    SetNameResolver(MakoHttpOptions.WebApiHost, ips);
+            };
+        }
     }
 
     public T? GetPlatformService<T>(string platformKey) where T : IMisakiService

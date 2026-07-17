@@ -34,12 +34,22 @@ public static partial class IoHelper
         }
 
         /// <inheritdoc cref="DownloadStreamAsync"/>
-        public Task<Result<Stream>> DownloadMemoryStreamAsync(string url,
+        public async Task<Result<Stream>> DownloadMemoryStreamAsync(string url,
             IProgress<double>? progress = null,
             long startPosition = 0,
             int bufferSize = 4096,
-            CancellationToken token = default) =>
-            httpClient.DownloadMemoryStreamAsync(new Uri(url), progress, startPosition, bufferSize, token);
+            CancellationToken token = default)
+        {
+            try
+            {
+                return await httpClient.DownloadMemoryStreamAsync(
+                    new Uri(url), progress, startPosition, bufferSize, token);
+            }
+            catch (Exception e)
+            {
+                return Result<Stream>.AsFailure(e);
+            }
+        }
 
         /// <inheritdoc cref="DownloadStreamAsync"/>
         public async Task<Result<Stream>> DownloadMemoryStreamAsync(Uri uri,
@@ -48,25 +58,48 @@ public static partial class IoHelper
             int bufferSize = 4096,
             CancellationToken token = default)
         {
-            if (uri.IsFile)
+            Stream? streamToDispose = null;
+            try
             {
-                progress?.Report(100);
-                return Result<Stream>.AsSuccess(File.OpenAsyncRead(uri.OriginalString));
-            }
-            if (uri.Scheme is "avares")
-            {
-                progress?.Report(100);
-                return Result<Stream>.AsSuccess(AssetLoader.Open(uri));
-            }
-            var stream = Streams.RentStream();
-            var result = await httpClient.DownloadStreamAsync(stream, uri, progress, startPosition, bufferSize, token);
-            if (result is null)
-            {
+                if (uri.IsFile)
+                {
+                    progress?.Report(100);
+                    return Result<Stream>.AsSuccess(File.OpenAsyncRead(uri.LocalPath));
+                }
+
+                if (uri.Scheme is "avares")
+                {
+                    progress?.Report(100);
+                    return Result<Stream>.AsSuccess(AssetLoader.Open(uri));
+                }
+
+                var stream = Streams.RentStream();
+                streamToDispose = stream;
+                var result = await httpClient.DownloadStreamAsync(
+                    stream, uri, progress, startPosition, bufferSize, token);
+                if (result is not null)
+                    return Result<Stream>.AsFailure(result);
+
                 stream.Position = 0;
+                streamToDispose = null;
                 return Result<Stream>.AsSuccess(stream);
             }
-            await stream.DisposeAsync();
-            return Result<Stream>.AsFailure(result);
+            catch (Exception e)
+            {
+                return Result<Stream>.AsFailure(e);
+            }
+            finally
+            {
+                if (streamToDispose is not null)
+                    try
+                    {
+                        await streamToDispose.DisposeAsync();
+                    }
+                    catch
+                    {
+                        // Disposal must not replace the original download failure.
+                    }
+            }
         }
 
         /// <summary>
@@ -86,7 +119,7 @@ public static partial class IoHelper
                 if (0 > startPosition)
                     return new ArgumentOutOfRangeException(nameof(startPosition), "Too small");
 
-                var request = new HttpRequestMessage(HttpMethod.Get, uri);
+                using var request = new HttpRequestMessage(HttpMethod.Get, uri);
 
                 if (startPosition is not 0)
                     request.Headers.Range = new(startPosition, null);

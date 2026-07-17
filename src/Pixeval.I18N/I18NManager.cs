@@ -66,16 +66,25 @@ public static class I18NManager
 
     private static void ResolveResourceDirectory()
     {
-        var candidateDirectories = CandidatePaths
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .Select(path => new DirectoryInfo(Path.Combine(path, "i18n")))
-            .Where(t => t.Exists);
-
         var dictionary = (Dictionary<CultureInfo, DirectoryInfo>) AvailableCultures;
 
-        foreach (var candidateDirectory in candidateDirectories)
+        foreach (var path in CandidatePaths.Distinct(StringComparer.OrdinalIgnoreCase))
         {
-            foreach (var languageDirectory in candidateDirectory.EnumerateDirectories())
+            DirectoryInfo[] languageDirectories;
+            try
+            {
+                var candidateDirectory = new DirectoryInfo(Path.Combine(path, "i18n"));
+                if (!candidateDirectory.Exists)
+                    continue;
+
+                languageDirectories = candidateDirectory.GetDirectories();
+            }
+            catch
+            {
+                continue;
+            }
+
+            foreach (var languageDirectory in languageDirectories)
             {
                 CultureInfo cultureInfo;
                 try

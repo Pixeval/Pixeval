@@ -4,6 +4,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -53,15 +54,14 @@ public static class AppInfo
 
     static AppInfo()
     {
-        if (Directory.Exists(TempFolder))
-            Directory.Delete(TempFolder, true);
+        _ = FileHelper.TryDeleteDirectory(TempFolder);
         // Ensure directories exist
-        _ = Directory.CreateDirectory(ApplicationFolderPath);
-        _ = Directory.CreateDirectory(SettingsFolder);
-        _ = Directory.CreateDirectory(CacheFolder);
-        _ = Directory.CreateDirectory(LogsFolder);
-        _ = Directory.CreateDirectory(TempFolder);
-        _ = Directory.CreateDirectory(ExtensionsFolder);
+        _ = FileHelper.TryCreateDirectory(ApplicationFolderPath);
+        _ = FileHelper.TryCreateDirectory(SettingsFolder);
+        _ = FileHelper.TryCreateDirectory(CacheFolder);
+        _ = FileHelper.TryCreateDirectory(LogsFolder);
+        _ = FileHelper.TryCreateDirectory(TempFolder);
+        _ = FileHelper.TryCreateDirectory(ExtensionsFolder);
     }
 
     public const string ImageNotAvailablePath = $"avares://{AppIdentifier}/Assets/image-not-available.png";
@@ -92,18 +92,6 @@ public static class AppInfo
         return await reader.ReadToEndAsync();
     }
 
-    public static void ClearConfig()
-    {
-        TryDelete(AppSettingsPath);
-        TryDelete(HomePageCardsPath);
-        TryDelete(NavigationMenuPath);
-    }
-
-    public static void ClearLoginContext()
-    {
-        TryDelete(LoginContextPath);
-    }
-
     public static void SaveWindowContext(Window window)
     {
         var applicationSettings = App.AppViewModel.AppSettings.ApplicationSettings;
@@ -127,15 +115,8 @@ public static class AppInfo
         if (!File.Exists(AppSettingsPath))
             return null;
 
-        try
-        {
-            return YamlSerializer.DeserializeFile(AppSettingsPath, SettingsSerializerContext.Default.AppSettings);
-        }
-        catch (Exception e)
-        {
-            logger.LogError("Failed to load settings", e);
-            return null;
-        }
+
+        return TryLoad(() => YamlSerializer.DeserializeFile(AppSettingsPath, SettingsSerializerContext.Default.AppSettings), logger);
     }
 
     public static LoginContext? LoadLoginContext(FileLogger logger)
@@ -143,15 +124,7 @@ public static class AppInfo
         if (!File.Exists(LoginContextPath))
             return null;
 
-        try
-        {
-            return YamlSerializer.DeserializeFile(LoginContextPath, SettingsSerializerContext.Default.LoginContext);
-        }
-        catch (Exception e)
-        {
-            logger.LogError("Failed to load settings", e);
-            return null;
-        }
+        return TryLoad(() => YamlSerializer.DeserializeFile(LoginContextPath, SettingsSerializerContext.Default.LoginContext), logger);
     }
 
     public static ObservableCollection<HomePageCardLayout>? LoadHomePageCards(FileLogger logger)
@@ -159,15 +132,7 @@ public static class AppInfo
         if (!File.Exists(HomePageCardsPath))
             return null;
 
-        try
-        {
-            return YamlSerializer.DeserializeFile(HomePageCardsPath, SettingsSerializerContext.Default.HomePageCardsSettings)?.Cards;
-        }
-        catch (Exception e)
-        {
-            logger.LogError("Failed to load home page cards", e);
-            return null;
-        }
+        return TryLoad(() => YamlSerializer.DeserializeFile(HomePageCardsPath, SettingsSerializerContext.Default.ObservableCollectionHomePageCardLayout), logger);
     }
 
     public static string? LoadNavigationMenuYaml(FileLogger logger)
@@ -175,15 +140,7 @@ public static class AppInfo
         if (!File.Exists(NavigationMenuPath))
             return null;
 
-        try
-        {
-            return File.ReadAllText(NavigationMenuPath);
-        }
-        catch (Exception e)
-        {
-            logger.LogError("Failed to load navigation menu", e);
-            return null;
-        }
+        return TryLoad(() => File.ReadAllText(NavigationMenuPath), logger);
     }
 
     public static void SaveSettings()
@@ -198,7 +155,8 @@ public static class AppInfo
         if (appSettings is null)
             return;
 
-        YamlSerializer.SerializeToFile(AppSettingsPath, appSettings, SettingsSerializerContext.Default.AppSettings);
+        _ = TrySave(() =>
+            YamlSerializer.SerializeToFile(AppSettingsPath, appSettings, SettingsSerializerContext.Default.AppSettings));
     }
 
     public static void SaveLoginContext(LoginContext? loginContext)
@@ -206,7 +164,8 @@ public static class AppInfo
         if (loginContext is null)
             return;
 
-        YamlSerializer.SerializeToFile(LoginContextPath, loginContext, SettingsSerializerContext.Default.LoginContext);
+        _ = TrySave(() =>
+            YamlSerializer.SerializeToFile(LoginContextPath, loginContext, SettingsSerializerContext.Default.LoginContext));
     }
 
     public static void SaveHomePageCards(ObservableCollection<HomePageCardLayout>? cards)
@@ -214,10 +173,8 @@ public static class AppInfo
         if (cards is null)
             return;
 
-        YamlSerializer.SerializeToFile(
-            HomePageCardsPath,
-            new HomePageCardsSettings { Cards = cards },
-            SettingsSerializerContext.Default.HomePageCardsSettings);
+        _ = TrySave(() =>
+            YamlSerializer.SerializeToFile(HomePageCardsPath, cards, SettingsSerializerContext.Default.ObservableCollectionHomePageCardLayout));
     }
 
     public static void SaveNavigationMenuYaml(string? yaml)
@@ -225,18 +182,33 @@ public static class AppInfo
         if (yaml is null)
             return;
 
-        File.WriteAllText(NavigationMenuPath, yaml.ReplaceLineEndings(Environment.NewLine), Encoding.UTF8);
+        _ = TrySave(() =>
+            File.WriteAllText(NavigationMenuPath, yaml.ReplaceLineEndings(Environment.NewLine), Encoding.UTF8));
     }
 
-    private static void TryDelete(string path)
+    private static T? TryLoad<T>(Func<T> load, FileLogger logger, [CallerMemberName] string? callerName = null)
     {
         try
         {
-            File.Delete(path);
+            return load();
+        }
+        catch (Exception e)
+        {
+            logger.LogError($"Failed to {callerName}", e);
+            return default;
+        }
+    }
+
+    private static bool TrySave(Action save)
+    {
+        try
+        {
+            save();
+            return true;
         }
         catch
         {
-            // ignored
+            return false;
         }
     }
 }

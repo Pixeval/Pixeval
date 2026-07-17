@@ -101,8 +101,21 @@ public static class Objects
     /// <returns></returns>
     public static async Task<Result<string>> GetStringResultAsync(this HttpClient httpClient, string url, Func<HttpResponseMessage, Task<Exception>>? exceptionSelector = null)
     {
-        var responseMessage = await httpClient.GetAsync(url).ConfigureAwait(false);
-        return responseMessage.IsSuccessStatusCode ? Result<string>.AsSuccess(await responseMessage.Content.ReadAsStringAsync()) : Result<string>.AsFailure(exceptionSelector is { } selector ? await selector.Invoke(responseMessage).ConfigureAwait(false) : null);
+        try
+        {
+            using var responseMessage = await httpClient.GetAsync(url).ConfigureAwait(false);
+            if (responseMessage.IsSuccessStatusCode)
+                return Result<string>.AsSuccess(
+                    await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false));
+
+            return Result<string>.AsFailure(exceptionSelector is { } selector
+                ? await selector.Invoke(responseMessage).ConfigureAwait(false)
+                : null);
+        }
+        catch (Exception e)
+        {
+            return Result<string>.AsFailure(e);
+        }
     }
 
     public static Task<TResult[]> WhenAll<TResult>(this IEnumerable<Task<TResult>> tasks)

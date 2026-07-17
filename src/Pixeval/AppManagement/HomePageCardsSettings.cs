@@ -8,10 +8,8 @@ using Pixeval.Models.Options;
 
 namespace Pixeval.AppManagement;
 
-public record HomePageCardsSettings
+public static class HomePageCardsSettings
 {
-    public ObservableCollection<HomePageCardLayout> Cards { get; set; } = CreateDefaultCards();
-
     public static ObservableCollection<HomePageCardLayout> CreateDefaultCards() =>
     [
         new(HomePageCardSourceKind.Spotlight, 0, 0, 1, 2),

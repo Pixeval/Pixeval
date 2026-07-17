@@ -31,7 +31,7 @@ public partial class Supporter : ViewModelBase
 
     static Supporter()
     {
-        Supporters.Sort((_, _) => Random.Shared.Next(0, 2) is 0 ? -1 : 1);
+        Random.Shared.Shuffle(Supporters);
     }
 
     public static string BasePath { get; } = Path.Combine(AppInfo.CacheFolder, "GitHubSupporters");
@@ -43,7 +43,18 @@ public partial class Supporter : ViewModelBase
         get
         {
             var path = Path.Combine(BasePath, Name + ".png");
-            return File.Exists(path) ? new Bitmap(path) : null;
+            if (!File.Exists(path))
+                return null;
+
+            try
+            {
+                return new Bitmap(path);
+            }
+            catch
+            {
+                _ = FileHelper.TryDeleteFile(path);
+                return null;
+            }
         }
     }
 

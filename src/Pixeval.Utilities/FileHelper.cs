@@ -19,7 +19,7 @@ public static class FileHelper
         {
             return Directory.GetFiles(directory, searchPattern, searchOption);
         }
-        catch (DirectoryNotFoundException)
+        catch
         {
             return [];
         }
@@ -37,9 +37,22 @@ public static class FileHelper
         {
             return Directory.GetDirectories(directory, searchPattern, searchOption);
         }
-        catch (DirectoryNotFoundException)
+        catch
         {
             return [];
+        }
+    }
+
+    public static bool TryCreateDirectory(string path)
+    {
+        try
+        {
+            _ = Directory.CreateDirectory(path);
+            return true;
+        }
+        catch
+        {
+            return false;
         }
     }
 

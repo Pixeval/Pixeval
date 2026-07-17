@@ -29,34 +29,42 @@ public class JsonMarkdownLangPlugin : ILangPlugin
             dictionary = CurrentCultureResources = new();
         }
 
-        foreach (var file in resourceDirectory.GetFiles())
+        FileInfo[] files;
+        try
         {
-            var nameWithoutExtension = Path.GetFileNameWithoutExtension(file.Name);
-            var extension = file.Extension.ToLowerInvariant();
-            switch (extension)
+            files = resourceDirectory.GetFiles();
+        }
+        catch
+        {
+            return;
+        }
+
+        foreach (var file in files)
+        {
+            try
             {
-                case ".json":
+                var nameWithoutExtension = Path.GetFileNameWithoutExtension(file.Name);
+                switch (file.Extension.ToLowerInvariant())
                 {
-                    try
+                    case ".json":
                     {
                         using var doc = JsonDocument.Parse(File.ReadAllText(file.FullName));
                         var root = doc.RootElement;
 
                         // 递归收集所有键值对
                         CollectJsonProperties(root, nameWithoutExtension, dictionary);
+                        break;
                     }
-                    catch
+                    case ".md":
                     {
-                        // ignored
+                        dictionary["Markdown." + nameWithoutExtension] = File.ReadAllText(file.FullName);
+                        break;
                     }
-
-                    break;
                 }
-                case ".md":
-                {
-                    dictionary["Markdown." + nameWithoutExtension] = File.ReadAllText(file.FullName);
-                    break;
-                }
+            }
+            catch
+            {
+                // A broken optional language file must not prevent the remaining resources from loading.
             }
         }
     }
@@ -81,6 +89,7 @@ public class JsonMarkdownLangPlugin : ILangPlugin
 
                     CollectJsonProperties(property.Value, newPath, result);
                 }
+
                 break;
 
             // 处理数组（按索引拼接键名）
@@ -92,6 +101,7 @@ public class JsonMarkdownLangPlugin : ILangPlugin
                     CollectJsonProperties(item, newPath, result);
                     index++;
                 }
+
                 break;
 
             // 处理基本类型值

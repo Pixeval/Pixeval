@@ -160,9 +160,9 @@ public sealed class ExtensionService : IDisposable
 
         var pattern = "*" + extension;
 
-        var rootLibraries = Directory.GetFiles(directory, pattern, SearchOption.TopDirectoryOnly);
-        var childLibraries = Directory.GetDirectories(directory)
-            .SelectMany(t => Directory.GetFiles(t, pattern, SearchOption.TopDirectoryOnly));
+        var rootLibraries = FileHelper.EnumerateFiles(directory, pattern);
+        var childLibraries = FileHelper.EnumerateDirectories(directory)
+            .SelectMany(t => FileHelper.EnumerateFiles(t, pattern));
 
         var libraries = rootLibraries.Concat(childLibraries)
             .Where(IsExtensionHostNativeLibrary)
