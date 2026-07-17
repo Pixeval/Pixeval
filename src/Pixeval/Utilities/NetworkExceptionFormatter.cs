@@ -39,7 +39,7 @@ internal static partial class NetworkExceptionFormatter
         }
         catch (Exception e)
         {
-            return Task.FromResult($"\tNetwork:\n\t\t<failed to format: {e.GetType().FullName}: {e.Message}>\n");
+            return Task.FromResult<string?>($"\tNetwork:\n\t\t<failed to format: {e.GetType().FullName}: {e.Message}>\n");
         }
     }
 

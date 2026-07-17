@@ -1,4 +1,4 @@
-name: Build
+name: Test
 
 on:
   workflow_dispatch:
@@ -11,124 +11,25 @@ on:
     branches-ignore:
       - l10n_main
 
-defaults:
-  run:
-    shell: pwsh
+permissions:
+  contents: read
 
 jobs:
-  build:
-    name: Build ${{ matrix.target }}
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      fail-fast: true
-      matrix:
-        include:
-          - target: windows
-            os: windows-latest
-            project: src/Pixeval.Desktop/Pixeval.Desktop.csproj
-            runtime: win-x64
-            command: publish
-            output: artifacts/windows
-          - target: android
-            os: windows-latest
-            project: src/Pixeval.Android/Pixeval.Android.csproj
-            runtime: android-arm64
-            command: publish
-            output: artifacts/android
-          - target: macos
-            os: macos-latest
-            project: src/Pixeval.Desktop/Pixeval.Desktop.csproj
-            runtime: osx-arm64
-            command: publish
-            output: artifacts/macos
-          - target: linux
-            os: ubuntu-latest
-            project: src/Pixeval.Desktop/Pixeval.Desktop.csproj
-            runtime: linux-x64
-            command: publish
-            output: artifacts/linux
-          - target: browser
-            os: ubuntu-latest
-            project: src/Pixeval.Browser/Pixeval.Browser.csproj
-            runtime: browser-wasm
-            command: publish
-            output: artifacts/browser
-
-        # GitHub-hosted macOS runners currently expose Xcode 16.4, while
-        # net10.0-ios from SDK 10.0.300 requires Xcode 26.5. Keep the iOS build
-        # out of the default matrix until the runner image catches up or a
-        # compatible self-hosted runner is introduced.
-
-    env:
-      CONFIGURATION: Release
-      MINVERBUILDMETADATA: build.${{ github.run_id }}.${{ github.run_attempt }}
+  test:
+    name: Run unit tests
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
-          fetch-depth: 0
           submodules: recursive
           filter: tree:0
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
 
-      - name: Resolve package version
-        id: package-version
-        run: |
-          $version = "5.0.0-ci.$env:GITHUB_RUN_NUMBER"
-          "version=$version" >> $env:GITHUB_OUTPUT
-
-      - name: Restore workload
-        run: dotnet workload restore ${{ matrix.project }}
-
-      - name: Restore files
-        run: dotnet restore ${{ matrix.project }} -r ${{ matrix.runtime }} -p:Configuration=$env:CONFIGURATION
-
-      - name: Build
-        if: ${{ matrix.command == 'build' }}
-        run: |
-          dotnet build ${{ matrix.project }} `
-            -c $env:CONFIGURATION `
-            -r ${{ matrix.runtime }} `
-            --no-restore
-
-      - name: Publish
-        if: ${{ matrix.command == 'publish' }}
-        run: |
-          dotnet publish ${{ matrix.project }} `
-            -c $env:CONFIGURATION `
-            -r ${{ matrix.runtime }} `
-            --no-restore `
-            -o ${{ matrix.output }}
-
-      - name: Package AppImage
-        if: ${{ matrix.target == 'linux' }}
-        shell: bash
-        run: |
-          bash scripts/package-appimage.sh \
-            "${{ matrix.output }}" \
-            artifacts/linux-appimage \
-            "${{ steps.package-version.outputs.version }}"
-
-      - name: Upload artifact
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: Pixeval-${{ matrix.target }}
-          path: ${{ matrix.output }}
-          if-no-files-found: warn
-          retention-days: 14
-
-      - name: Upload AppImage artifact
-        if: ${{ always() && matrix.target == 'linux' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: Pixeval-linux-appimage
-          path: artifacts/linux-appimage/*.AppImage
-          if-no-files-found: error
-          retention-days: 14
+      - name: Run unit tests
+        run: dotnet test src/Pixeval.Tests/Pixeval.Tests.csproj --configuration Release

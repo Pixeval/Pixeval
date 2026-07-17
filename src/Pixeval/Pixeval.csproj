@@ -6,12 +6,21 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<IsAotCompatible>true</IsAotCompatible>
 		<AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+		<EnableMcp Condition="'$(EnableMcp)' == ''">true</EnableMcp>
+		<DefineConstants Condition="'$(EnableMcp)' == 'true'">$(DefineConstants);PIXEVAL_MCP</DefineConstants>
 		
 		<Version>5.0.0.0</Version>
 		<AssemblyVersion>$(Version)</AssemblyVersion>
 		<FileVersion>$(Version)</FileVersion>
 		<InformationalVersion>$(Version)</InformationalVersion>
 	</PropertyGroup>
+
+	<!-- EnableMcp controls this GUI project only; dependencies must not be rebuilt with a second global-property set. -->
+	<ItemDefinitionGroup>
+		<ProjectReference>
+			<GlobalPropertiesToRemove>EnableMcp</GlobalPropertiesToRemove>
+		</ProjectReference>
+	</ItemDefinitionGroup>
 
 	<ItemGroup>
 		<AvaloniaResource Include="Assets\**" />
@@ -47,12 +56,21 @@
 		<ProjectReference Include="..\lib\Imouto\Imouto.BooruParser\Imouto.BooruParser.csproj" />
 		<ProjectReference Include="..\lib\Mako\Mako\Mako.csproj" />
 		<ProjectReference Include="..\lib\SmoothScroll.Avalonia\src\SmoothScroll.Avalonia.Controls\SmoothScroll.Avalonia.Controls.csproj" />
-		<ProjectReference Include="..\Pixeval.Mcp\Pixeval.Mcp.csproj" />
+		<ProjectReference Include="..\Pixeval.Mcp\Pixeval.Mcp.csproj" Condition="'$(EnableMcp)' == 'true'" />
 		<ProjectReference Include="..\Pixeval.I18N\Pixeval.I18N.csproj" />
 		<!--<ProjectReference Include="..\Pixeval.Caching\Pixeval.Caching.csproj" />-->
 		<ProjectReference Include="..\Pixeval.Download\Pixeval.Download.csproj" />
 		<ProjectReference Include="..\Pixeval.Filters\Pixeval.Filters.csproj" />
 		<ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="False" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(EnableMcp)' != 'true'">
+		<AvaloniaXaml Remove="Views\Settings\McpHelpSection.axaml" />
+		<Compile Remove="AppManagement\IPixevalMcpService.cs" />
+		<Compile Remove="AppManagement\McpSettingsGroup.cs" />
+		<Compile Remove="Models\McpServer\**\*.cs" />
+		<Compile Remove="Views\Settings\McpHelpSection.Mcp.cs" />
+		<Compile Remove="Views\Settings\McpHelpSection.McpTools.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

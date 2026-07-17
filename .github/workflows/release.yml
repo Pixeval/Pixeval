@@ -1,0 +1,668 @@
+name: Draft Release
+
+on:
+  push:
+    tags:
+      - '*.*.*'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  CONFIGURATION: Release
+
+jobs:
+  metadata:
+    name: Validate release metadata
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      package_version: ${{ steps.version.outputs.package_version }}
+    steps:
+      - name: Validate tag version
+        id: version
+        shell: pwsh
+        env:
+          RELEASE_VERSION: ${{ github.ref_name }}
+        run: |
+          if ($env:RELEASE_VERSION -notmatch '^\d+\.\d+\.\d+$') {
+            throw "Release tags must use the numeric format 5.0.0."
+          }
+
+          $segments = $env:RELEASE_VERSION.Split('.') | ForEach-Object { [uint32] $_ }
+          if ($segments.Where({ $_ -gt [uint16]::MaxValue }).Count -ne 0) {
+            throw "Every version segment must be between 0 and 65535 for MSIX."
+          }
+
+          "version=$env:RELEASE_VERSION" >> $env:GITHUB_OUTPUT
+          "package_version=$($env:RELEASE_VERSION).0" >> $env:GITHUB_OUTPUT
+
+  windows:
+    name: Windows ${{ matrix.architecture }}
+    needs: metadata
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - architecture: x64
+            runtime: win-x64
+            publish_aot: true
+          - architecture: x86
+            runtime: win-x86
+            publish_aot: false
+          - architecture: arm64
+            runtime: win-arm64
+            publish_aot: true
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          filter: tree:0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore
+        env:
+          PUBLISH_AOT: ${{ matrix.publish_aot }}
+          RUNTIME: ${{ matrix.runtime }}
+        run: |
+          [string[]] $aotArguments = @()
+          if ($env:PUBLISH_AOT -eq 'false') {
+            $aotArguments += '-p:PublishAot=false'
+          }
+
+          dotnet restore src/Pixeval.Desktop/Pixeval.Desktop.csproj `
+            -r $env:RUNTIME `
+            -p:Configuration=$env:CONFIGURATION `
+            @aotArguments
+
+      - name: Publish
+        id: publish
+        env:
+          PACKAGE_VERSION: ${{ needs.metadata.outputs.package_version }}
+          PUBLISH_AOT: ${{ matrix.publish_aot }}
+          RELEASE_VERSION: ${{ needs.metadata.outputs.version }}
+          RUNTIME: ${{ matrix.runtime }}
+        run: |
+          [string[]] $aotArguments = @()
+          if ($env:PUBLISH_AOT -eq 'false') {
+            $aotArguments += '-p:PublishAot=false'
+          }
+
+          $publishDirectory = Join-Path $env:RUNNER_TEMP "pixeval-$env:RUNTIME"
+          dotnet publish src/Pixeval.Desktop/Pixeval.Desktop.csproj `
+            -c $env:CONFIGURATION `
+            -r $env:RUNTIME `
+            --no-restore `
+            --self-contained true `
+            -o $publishDirectory `
+            -p:DebugSymbols=false `
+            -p:DebugType=None `
+            -p:Version=$env:RELEASE_VERSION `
+            -p:AssemblyVersion=$env:PACKAGE_VERSION `
+            -p:FileVersion=$env:PACKAGE_VERSION `
+            -p:InformationalVersion=$env:RELEASE_VERSION `
+            @aotArguments
+
+          "directory=$publishDirectory" >> $env:GITHUB_OUTPUT
+
+      - name: Package ZIP and unsigned MSIX
+        env:
+          ARCHITECTURE: ${{ matrix.architecture }}
+          PACKAGE_VERSION: ${{ needs.metadata.outputs.package_version }}
+          PUBLISH_DIRECTORY: ${{ steps.publish.outputs.directory }}
+          RELEASE_VERSION: ${{ needs.metadata.outputs.version }}
+        run: |
+          $releaseDirectory = Join-Path $PWD "artifacts\release"
+          $null = New-Item -ItemType Directory -Force -Path $releaseDirectory
+
+          $zipPath = Join-Path $releaseDirectory "Pixeval-$env:RELEASE_VERSION-windows-$env:ARCHITECTURE.zip"
+          tar -a -c -f $zipPath `
+            --exclude='*.pdb' `
+            --exclude='*.dbg' `
+            -C $env:PUBLISH_DIRECTORY .
+          if ($LASTEXITCODE -ne 0) {
+            throw "ZIP packaging failed with exit code $LASTEXITCODE."
+          }
+
+          & scripts/package-msix.ps1 `
+            -PublishDirectory $env:PUBLISH_DIRECTORY `
+            -Architecture $env:ARCHITECTURE `
+            -ReleaseVersion $env:RELEASE_VERSION `
+            -PackageVersion $env:PACKAGE_VERSION `
+            -OutputDirectory $releaseDirectory
+
+      - name: Upload Windows release assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-windows-${{ matrix.architecture }}
+          path: artifacts/release/*
+          if-no-files-found: error
+          retention-days: 14
+
+  macos:
+    name: macOS ${{ matrix.architecture }}
+    needs: metadata
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - architecture: x64
+            runtime: osx-x64
+            os: macos-15-intel
+            publish_aot: true
+          - architecture: arm64
+            runtime: osx-arm64
+            os: macos-15
+            # TODO: Re-enable NativeAOT after the linker issue is fixed:
+            # https://github.com/dotnet/runtime/issues/119380
+            publish_aot: false
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          filter: tree:0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore
+        shell: bash
+        env:
+          PUBLISH_AOT: ${{ matrix.publish_aot }}
+          RUNTIME: ${{ matrix.runtime }}
+        run: |
+          aot_arguments=()
+          if [[ "$PUBLISH_AOT" == false ]]; then
+            aot_arguments+=("-p:PublishAot=false")
+          fi
+
+          dotnet restore src/Pixeval.Desktop/Pixeval.Desktop.csproj \
+            -r "$RUNTIME" \
+            -p:Configuration="$CONFIGURATION" \
+            "${aot_arguments[@]}"
+
+      - name: Publish
+        shell: bash
+        env:
+          PUBLISH_AOT: ${{ matrix.publish_aot }}
+          RELEASE_VERSION: ${{ needs.metadata.outputs.version }}
+          RUNTIME: ${{ matrix.runtime }}
+        run: |
+          aot_arguments=()
+          if [[ "$PUBLISH_AOT" == false ]]; then
+            aot_arguments+=("-p:PublishAot=false")
+          fi
+
+          publish_directory="$RUNNER_TEMP/pixeval-$RUNTIME"
+          dotnet publish src/Pixeval.Desktop/Pixeval.Desktop.csproj \
+            -c "$CONFIGURATION" \
+            -r "$RUNTIME" \
+            --no-restore \
+            --self-contained true \
+            -o "$publish_directory" \
+            -p:DebugSymbols=false \
+            -p:DebugType=None \
+            -p:Version="$RELEASE_VERSION" \
+            -p:AssemblyVersion="$RELEASE_VERSION" \
+            -p:FileVersion="$RELEASE_VERSION" \
+            -p:InformationalVersion="$RELEASE_VERSION" \
+            "${aot_arguments[@]}"
+          printf 'PUBLISH_DIRECTORY=%s\n' "$publish_directory" >> "$GITHUB_ENV"
+
+      - name: Package ad-hoc signed app ZIP
+        shell: bash
+        env:
+          ARCHITECTURE: ${{ matrix.architecture }}
+          RELEASE_VERSION: ${{ needs.metadata.outputs.version }}
+        run: |
+          app_directory="$RUNNER_TEMP/Pixeval.app"
+          contents_directory="$app_directory/Contents"
+          executable="$contents_directory/MacOS/Pixeval.Desktop"
+          info_plist="$contents_directory/Info.plist"
+          release_directory="$GITHUB_WORKSPACE/artifacts/release"
+
+          mkdir -p "$contents_directory/MacOS" "$contents_directory/Resources" "$release_directory"
+          ditto "$PUBLISH_DIRECTORY" "$contents_directory/MacOS"
+          cp src/Pixeval.Desktop/Assets/macOS/Pixeval.icns "$contents_directory/Resources/Pixeval.icns"
+          chmod +x "$executable"
+
+          plutil -create xml1 "$info_plist"
+          plutil -insert CFBundleDisplayName -string Pixeval "$info_plist"
+          plutil -insert CFBundleExecutable -string Pixeval.Desktop "$info_plist"
+          plutil -insert CFBundleIconFile -string Pixeval.icns "$info_plist"
+          plutil -insert CFBundleIdentifier -string io.github.pixeval.pixeval "$info_plist"
+          plutil -insert CFBundleName -string Pixeval "$info_plist"
+          plutil -insert CFBundlePackageType -string APPL "$info_plist"
+          plutil -insert CFBundleShortVersionString -string "$RELEASE_VERSION" "$info_plist"
+          plutil -insert CFBundleVersion -string "$RELEASE_VERSION" "$info_plist"
+          plutil -insert NSHighResolutionCapable -bool true "$info_plist"
+
+          codesign --force --deep --sign - --timestamp=none "$app_directory"
+          codesign --verify --deep --strict "$app_directory"
+
+          zip_path="$release_directory/Pixeval-$RELEASE_VERSION-macos-$ARCHITECTURE.zip"
+          ditto -c -k --sequesterRsrc --keepParent "$app_directory" "$zip_path"
+
+      - name: Upload macOS release asset
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-macos-${{ matrix.architecture }}
+          path: artifacts/release/*
+          if-no-files-found: error
+          retention-days: 14
+
+  linux:
+    name: Linux ${{ matrix.architecture }}
+    needs: metadata
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - architecture: x64
+            runtime: linux-x64
+            os: ubuntu-22.04
+          - architecture: arm64
+            runtime: linux-arm64
+            os: ubuntu-24.04-arm
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          filter: tree:0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Install NativeAOT prerequisites
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes clang zlib1g-dev
+
+      - name: Restore
+        shell: bash
+        env:
+          RUNTIME: ${{ matrix.runtime }}
+        run: |
+          dotnet restore src/Pixeval.Desktop/Pixeval.Desktop.csproj \
+            -r "$RUNTIME" \
+            -p:Configuration="$CONFIGURATION"
+
+      - name: Publish
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ needs.metadata.outputs.version }}
+          RUNTIME: ${{ matrix.runtime }}
+        run: |
+          publish_directory="$RUNNER_TEMP/pixeval-$RUNTIME"
+          dotnet publish src/Pixeval.Desktop/Pixeval.Desktop.csproj \
+            -c "$CONFIGURATION" \
+            -r "$RUNTIME" \
+            --no-restore \
+            --self-contained true \
+            -o "$publish_directory" \
+            -p:DebugSymbols=false \
+            -p:DebugType=None \
+            -p:Version="$RELEASE_VERSION" \
+            -p:AssemblyVersion="$RELEASE_VERSION" \
+            -p:FileVersion="$RELEASE_VERSION" \
+            -p:InformationalVersion="$RELEASE_VERSION"
+          printf 'PUBLISH_DIRECTORY=%s\n' "$publish_directory" >> "$GITHUB_ENV"
+
+      - name: Package AppImage and tar.gz
+        shell: bash
+        env:
+          ARCHITECTURE: ${{ matrix.architecture }}
+          RELEASE_VERSION: ${{ needs.metadata.outputs.version }}
+        run: |
+          release_directory="$GITHUB_WORKSPACE/artifacts/release"
+          mkdir -p "$release_directory"
+
+          bash scripts/package-appimage.sh \
+            "$PUBLISH_DIRECTORY" \
+            "$release_directory" \
+            "$RELEASE_VERSION"
+
+          tar \
+            --exclude='*.pdb' \
+            --exclude='*.dbg' \
+            -czf "$release_directory/Pixeval-$RELEASE_VERSION-linux-$ARCHITECTURE.tar.gz" \
+            -C "$PUBLISH_DIRECTORY" .
+
+      - name: Upload Linux release assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-linux-${{ matrix.architecture }}
+          path: artifacts/release/*
+          if-no-files-found: error
+          retention-days: 14
+
+  android:
+    name: Android ${{ matrix.architecture }}
+    needs: metadata
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - architecture: arm64
+            runtime: android-arm64
+          - architecture: x64
+            runtime: android-x64
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          filter: tree:0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore Android workload
+        run: dotnet workload restore src/Pixeval.Android/Pixeval.Android.csproj
+
+      - name: Restore signing keystore
+        id: keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:KEYSTORE_BASE64)) {
+            throw "ANDROID_KEYSTORE_BASE64 is not configured."
+          }
+
+          $keystorePath = Join-Path $env:RUNNER_TEMP "pixeval-release.jks"
+          [IO.File]::WriteAllBytes(
+            $keystorePath,
+            [Convert]::FromBase64String($env:KEYSTORE_BASE64))
+          "path=$keystorePath" >> $env:GITHUB_OUTPUT
+
+      - name: Restore Android packages
+        env:
+          RUNTIME: ${{ matrix.runtime }}
+        run: |
+          dotnet restore src/Pixeval.Android/Pixeval.Android.csproj `
+            -r $env:RUNTIME `
+            -p:Configuration=$env:CONFIGURATION `
+            -p:EnableMcp=false `
+            -p:BuildInParallel=false `
+            -p:RestoreBuildInParallel=false `
+            -p:PublishReadyToRun=true `
+            -p:PublishReadyToRunComposite=false `
+            -p:AndroidPackageFormat=apk
+
+      - name: Publish signed APK
+        env:
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ARCHITECTURE: ${{ matrix.architecture }}
+          KEYSTORE_PATH: ${{ steps.keystore.outputs.path }}
+          RELEASE_VERSION: ${{ needs.metadata.outputs.version }}
+          RUNTIME: ${{ matrix.runtime }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:ANDROID_KEYSTORE_PASSWORD) `
+              -or [string]::IsNullOrWhiteSpace($env:ANDROID_KEY_PASSWORD)) {
+            throw "Android signing passwords are not configured."
+          }
+
+          $publishDirectory = Join-Path $env:RUNNER_TEMP "pixeval-$env:RUNTIME"
+          dotnet publish src/Pixeval.Android/Pixeval.Android.csproj `
+            -c $env:CONFIGURATION `
+            -r $env:RUNTIME `
+            --no-restore `
+            --disable-build-servers `
+            -maxcpucount:1 `
+            -o $publishDirectory `
+            -p:BuildInParallel=false `
+            -p:PublishReadyToRun=true `
+            -p:PublishReadyToRunComposite=false `
+            -p:UseSharedCompilation=false `
+            -p:GeneratePackageOnBuild=false `
+            -p:DebugSymbols=false `
+            -p:DebugType=None `
+            -p:Version=$env:RELEASE_VERSION `
+            -p:ApplicationVersion=$env:GITHUB_RUN_NUMBER `
+            -p:ApplicationDisplayVersion=$env:RELEASE_VERSION `
+            -p:EnableMcp=false `
+            -p:AndroidPackageFormat=apk `
+            -p:AndroidKeyStore=true `
+            -p:AndroidSigningKeyStore=$env:KEYSTORE_PATH `
+            -p:AndroidSigningStorePass=$env:ANDROID_KEYSTORE_PASSWORD `
+            -p:AndroidSigningKeyAlias=pixeval `
+            -p:AndroidSigningKeyPass=$env:ANDROID_KEY_PASSWORD
+          if ($LASTEXITCODE -ne 0) {
+            throw "Android publish failed with exit code $LASTEXITCODE."
+          }
+
+          $apk = Get-ChildItem -LiteralPath $publishDirectory -Filter *-Signed.apk -Recurse `
+            | Select-Object -First 1
+          if ($null -eq $apk) {
+            $apk = Get-ChildItem -LiteralPath $publishDirectory -Filter *.apk -Recurse `
+              | Where-Object Name -NotMatch 'unsigned' `
+              | Select-Object -First 1
+          }
+          if ($null -eq $apk) {
+            throw "The signed APK was not found in $publishDirectory."
+          }
+
+          $releaseDirectory = Join-Path $PWD "artifacts\release"
+          $null = New-Item -ItemType Directory -Force -Path $releaseDirectory
+          $releaseApk = Join-Path $releaseDirectory "Pixeval-$env:RELEASE_VERSION-android-$env:ARCHITECTURE.apk"
+          Copy-Item -LiteralPath $apk.FullName -Destination $releaseApk
+
+          $apksigner = Get-ChildItem -LiteralPath (Join-Path $env:ANDROID_HOME "build-tools") `
+              -Filter apksigner.bat -Recurse `
+            | Sort-Object FullName -Descending `
+            | Select-Object -First 1
+          if ($null -eq $apksigner) {
+            throw "apksigner.bat was not found."
+          }
+
+          & $apksigner.FullName verify --verbose $releaseApk
+          if ($LASTEXITCODE -ne 0) {
+            throw "APK signature verification failed with exit code $LASTEXITCODE."
+          }
+
+      - name: Upload Android release asset
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-android-${{ matrix.architecture }}
+          path: artifacts/release/*
+          if-no-files-found: error
+          retention-days: 14
+
+  microsoft-store:
+    name: Submit Windows packages to Microsoft Store
+    needs:
+      - metadata
+      - windows
+      - macos
+      - linux
+      - android
+    runs-on: windows-latest
+    steps:
+      - name: Download Windows packages
+        uses: actions/download-artifact@v4
+        with:
+          pattern: release-windows-*
+          path: artifacts/windows
+          merge-multiple: true
+
+      - name: Build MSIXBundle
+        id: bundle
+        shell: pwsh
+        env:
+          PACKAGE_VERSION: ${{ needs.metadata.outputs.package_version }}
+          RELEASE_VERSION: ${{ needs.metadata.outputs.version }}
+        run: |
+          $msixFiles = @(Get-ChildItem -LiteralPath (Join-Path $PWD "artifacts\windows") `
+            -Filter "*-unsigned.msix" -File)
+          if ($msixFiles.Count -ne 3) {
+            throw "Expected exactly three unsigned Windows MSIX packages, found $($msixFiles.Count)."
+          }
+
+          $bundleInput = Join-Path $env:RUNNER_TEMP "pixeval-msixbundle-input"
+          $null = New-Item -ItemType Directory -Force -Path $bundleInput
+          foreach ($msix in $msixFiles) {
+            Copy-Item -LiteralPath $msix.FullName -Destination $bundleInput
+          }
+
+          $makeAppx = Get-Command MakeAppx.exe -ErrorAction SilentlyContinue
+          if ($null -eq $makeAppx) {
+            $windowsKitRoot = Join-Path ${env:ProgramFiles(x86)} "Windows Kits\10\bin"
+            $makeAppx = Get-ChildItem -LiteralPath $windowsKitRoot -Filter MakeAppx.exe -Recurse `
+              | Where-Object FullName -Match "\\x64\\MakeAppx\.exe$" `
+              | Sort-Object FullName -Descending `
+              | Select-Object -First 1
+          }
+          if ($null -eq $makeAppx) {
+            throw "MakeAppx.exe was not found on the runner."
+          }
+
+          $makeAppxPath = if ($makeAppx -is [System.Management.Automation.CommandInfo]) {
+            $makeAppx.Source
+          } else {
+            $makeAppx.FullName
+          }
+
+          $bundlePath = Join-Path $env:RUNNER_TEMP `
+            "Pixeval-$env:RELEASE_VERSION-windows.msixbundle"
+          & $makeAppxPath bundle `
+            /d $bundleInput `
+            /p $bundlePath `
+            /bv $env:PACKAGE_VERSION `
+            /o
+          if ($LASTEXITCODE -ne 0) {
+            throw "MakeAppx bundle failed with exit code $LASTEXITCODE."
+          }
+
+          "path=$bundlePath" >> $env:GITHUB_OUTPUT
+
+      - name: Install Microsoft Store CLI
+        uses: microsoft/microsoft-store-apppublisher@v1.3
+
+      - name: Configure Microsoft Store credentials
+        shell: pwsh
+        env:
+          AZURE_AD_APPLICATION_CLIENT_ID: ${{ secrets.AZURE_AD_APPLICATION_CLIENT_ID }}
+          AZURE_AD_APPLICATION_SECRET: ${{ secrets.AZURE_AD_APPLICATION_SECRET }}
+          AZURE_AD_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+          SELLER_ID: ${{ secrets.SELLER_ID }}
+          MSSTORE_PRODUCT_ID: ${{ vars.MSSTORE_PRODUCT_ID }}
+        run: |
+          $required = @{
+            AZURE_AD_APPLICATION_CLIENT_ID = $env:AZURE_AD_APPLICATION_CLIENT_ID
+            AZURE_AD_APPLICATION_SECRET = $env:AZURE_AD_APPLICATION_SECRET
+            AZURE_AD_TENANT_ID = $env:AZURE_AD_TENANT_ID
+            SELLER_ID = $env:SELLER_ID
+            MSSTORE_PRODUCT_ID = $env:MSSTORE_PRODUCT_ID
+          }
+          foreach ($entry in $required.GetEnumerator()) {
+            if ([string]::IsNullOrWhiteSpace($entry.Value)) {
+              throw "$($entry.Key) is not configured."
+            }
+          }
+
+          msstore reconfigure `
+            --tenantId $env:AZURE_AD_TENANT_ID `
+            --sellerId $env:SELLER_ID `
+            --clientId $env:AZURE_AD_APPLICATION_CLIENT_ID `
+            --clientSecret $env:AZURE_AD_APPLICATION_SECRET
+
+      - name: Submit MSIXBundle for certification
+        shell: pwsh
+        env:
+          BUNDLE_PATH: ${{ steps.bundle.outputs.path }}
+          MSSTORE_PRODUCT_ID: ${{ vars.MSSTORE_PRODUCT_ID }}
+        run: |
+          # --noCommit is intentionally omitted: publish commits the submission.
+          msstore publish $env:BUNDLE_PATH --appId $env:MSSTORE_PRODUCT_ID
+
+  release:
+    name: Create draft release
+    needs:
+      - metadata
+      - windows
+      - macos
+      - linux
+      - android
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download release assets
+        uses: actions/download-artifact@v4
+        with:
+          pattern: release-*
+          path: artifacts/release
+          merge-multiple: true
+
+      - name: Exclude unsigned Windows Store packages
+        shell: bash
+        run: |
+          find artifacts/release -maxdepth 1 -type f \
+            \( -name '*-unsigned.msix' -o -name '*-unsigned.msixbundle' \) \
+            -delete
+
+      - name: Generate SHA256 checksums
+        shell: bash
+        run: |
+          checksum_file="$RUNNER_TEMP/SHA256SUMS.txt"
+          : > "$checksum_file"
+          while IFS= read -r -d '' asset; do
+            sha256sum "$asset" | sed 's#  artifacts/release/#  #' >> "$checksum_file"
+          done < <(find artifacts/release -maxdepth 1 -type f -print0 | sort -z)
+          mv "$checksum_file" artifacts/release/SHA256SUMS.txt
+
+      - name: Create or update draft release
+        shell: bash
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ needs.metadata.outputs.version }}
+        run: |
+          mapfile -d '' assets < <(find artifacts/release -maxdepth 1 -type f -print0 | sort -z)
+          if [[ ${#assets[@]} -eq 0 ]]; then
+            printf 'No release assets were downloaded.\n' >&2
+            exit 1
+          fi
+
+          if gh release view "$RELEASE_VERSION" >/dev/null 2>&1; then
+            is_draft=$(gh release view "$RELEASE_VERSION" --json isDraft --jq .isDraft)
+            if [[ "$is_draft" != true ]]; then
+              printf 'Release %s already exists and is not a draft.\n' "$RELEASE_VERSION" >&2
+              exit 1
+            fi
+
+            gh release upload "$RELEASE_VERSION" "${assets[@]}" --clobber
+          else
+            gh release create "$RELEASE_VERSION" "${assets[@]}" \
+              --draft \
+              --verify-tag \
+              --title "Pixeval $RELEASE_VERSION" \
+              --generate-notes
+          fi

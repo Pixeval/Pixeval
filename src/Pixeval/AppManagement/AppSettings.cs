@@ -62,8 +62,10 @@ public record AppSettings
     [SettingsEntry(Symbol.ArrowSquareDown, SettingsGroupDownloadHeader, null)]
     public DownloadSettingsGroup DownloadSettings { get; set; } = new();
 
+#if PIXEVAL_MCP
     [SettingsEntry(Symbol.Bot, SettingsGroupMcpHeader, null)]
     public McpSettingsGroup McpSettings { get; set; } = new();
+#endif
 
     [SettingsEntry(Symbol.Settings, SettingsGroupNovelHeader, null)]
     public NovelSettingsGroup NovelSettings { get; set; } = new();

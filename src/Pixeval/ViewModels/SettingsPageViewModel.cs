@@ -126,6 +126,7 @@ public class SettingsPageViewModel : ViewModelBase
                         .UgoiraDownloadFormat()
                         .NovelDownloadFormat())
                 .WorkSubscriptions(t => t.WorkSubscriptions))
+#if PIXEVAL_MCP
             .NewGroup(t => t.McpSettings, group => group
                 .Bool(t => t.EnableServer, entry => entry.ValueChanged += value =>
                 {
@@ -137,9 +138,11 @@ public class SettingsPageViewModel : ViewModelBase
                 })
                 .Bool(t => t.EnableWriteTools)
                 .Int(t => t.MaxBinaryResourceMegabytes, 1, McpSettingsGroup.MaxBinaryResourceMegabytesLimit, 1))
+#endif
             .Build();
     }
 
+#if PIXEVAL_MCP
     private static async Task ApplyMcpSettingsAsync()
     {
         try
@@ -153,4 +156,5 @@ public class SettingsPageViewModel : ViewModelBase
                 .LogError("Failed to apply Pixeval MCP settings", e);
         }
     }
+#endif
 }

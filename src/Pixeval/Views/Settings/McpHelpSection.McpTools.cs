@@ -12,7 +12,7 @@ using Pixeval.Models.McpServer;
 
 namespace Pixeval.Views.Settings;
 
-public partial class HelpPage
+public partial class McpHelpSection
 {
     private const string ToolsListMethod = "tools/list";
 

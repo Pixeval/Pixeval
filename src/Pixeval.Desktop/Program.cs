@@ -1,6 +1,5 @@
 using System;
 using Avalonia;
-using Pixeval.AppManagement;
 
 namespace Pixeval.Desktop;
 
@@ -14,11 +13,8 @@ sealed class Program
         .StartWithClassicDesktopLifetime(args);
 
     // Avalonia configuration, don't remove; also used by visual designer.
-    public static AppBuilder BuildAvaloniaApp()
-    {
-        AppViewModel.UseMcpService = true;
-
-        return AppBuilder.Configure<App>()
+    public static AppBuilder BuildAvaloniaApp() =>
+        AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .With(new SkiaOptions
             {
@@ -28,5 +24,4 @@ sealed class Program
             })
             .WithInterFont()
             .LogToTrace();
-    }
 }

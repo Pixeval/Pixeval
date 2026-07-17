@@ -4,6 +4,7 @@
 		<TargetFramework>net10.0-ios</TargetFramework>
 		<SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
 		<Nullable>enable</Nullable>
+		<EnableMcp>false</EnableMcp>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
 		<CodesignKey>iPhone Developer</CodesignKey>
@@ -14,7 +15,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Pixeval\Pixeval.csproj" />
+		<ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Pixeval\Pixeval.csproj" AdditionalProperties="EnableMcp=$(EnableMcp)" />
 	</ItemGroup>
 
 	<ItemGroup>

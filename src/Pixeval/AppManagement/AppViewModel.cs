@@ -2,7 +2,6 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net;
 using System.Net.Http;
@@ -19,7 +18,9 @@ using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Download;
 using Pixeval.Models.Extensions;
 using Pixeval.Models.Home;
+#if PIXEVAL_MCP
 using Pixeval.Models.McpServer;
+#endif
 using Pixeval.Models.Navigation;
 using Pixeval.Models.Options;
 using Pixeval.Models.Subscriptions;
@@ -34,8 +35,6 @@ namespace Pixeval.AppManagement;
 public sealed class AppViewModel(App app, FileLogger logger) : IAsyncDisposable
 {
     private bool _disposed;
-
-    public static bool UseMcpService { get; set; }
 
     public ServiceProvider AppServiceProvider { get; private set; } = null!;
 
@@ -76,7 +75,7 @@ public sealed class AppViewModel(App app, FileLogger logger) : IAsyncDisposable
         var makoClient = new MakoClient(App.AppViewModel.AppSettings.ToMakoConfiguration(), logger);
         makoClient.TokenRefreshed += MakoClientOnTokenRefreshed;
 
-        var services = new ServiceCollection()
+        return new ServiceCollection()
             .AddSingleton(_ => logger)
             .AddBooruParsers()
             .AddKeyedSingleton<IGetArtworkService, MakoClient>(IPlatformInfo.Pixiv, (provider, key) => makoClient)
@@ -97,11 +96,12 @@ public sealed class AppViewModel(App app, FileLogger logger) : IAsyncDisposable
             .AddSingleton<BrowseHistoryPersistentManager>()
             .AddSingleton<WatchLaterPersistentManager>()
             .AddSingleton<LoginUserPersistentManager>()
-            .AddSingleton<HistoryPersistHelper>();
-        if (UseMcpService)
-            services.AddSingleton<IPixevalMcpService>(t =>
-                new PixevalMcpService(this, t.GetRequiredService<FileLogger>()));
-        return services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
+            .AddSingleton<HistoryPersistHelper>()
+#if PIXEVAL_MCP
+            .AddSingleton<IPixevalMcpService>(t =>
+                new PixevalMcpService(this, t.GetRequiredService<FileLogger>()))
+#endif
+            .BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
 
         void MakoClientOnTokenRefreshed(MakoClient sender, TokenResponse? tokenResponse)
         {

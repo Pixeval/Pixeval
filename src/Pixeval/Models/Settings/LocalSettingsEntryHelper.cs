@@ -218,8 +218,10 @@ public static class LocalSettingsEntryHelper
                 search.ValueReset(resetAppSettings.SearchSettings);
             if (entry is ISettingsValueReset<DownloadSettingsGroup> download)
                 download.ValueReset(resetAppSettings.DownloadSettings);
+#if PIXEVAL_MCP
             if (entry is ISettingsValueReset<McpSettingsGroup> mcp)
                 mcp.ValueReset(resetAppSettings.McpSettings);
+#endif
             if (entry is ISettingsValueReset<NovelSettingsGroup> novel)
                 novel.ValueReset(resetAppSettings.NovelSettings);
 

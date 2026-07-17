@@ -1,4 +1,3 @@
-
 namespace Pixeval.Models.McpServer;
 
 internal sealed record McpToolSchema

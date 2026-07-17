@@ -4,6 +4,7 @@
 		<OutputType>Exe</OutputType>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<Nullable>enable</Nullable>
+		<EnableMcp>false</EnableMcp>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -11,6 +12,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Pixeval\Pixeval.csproj" />
+		<ProjectReference Include="..\Pixeval\Pixeval.csproj" AdditionalProperties="EnableMcp=$(EnableMcp)" />
 	</ItemGroup>
 </Project>

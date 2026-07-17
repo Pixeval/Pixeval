@@ -19,6 +19,19 @@ app_id=io.github.Pixeval.Pixeval
 app_dir=$(mktemp -d)
 appimage_tool=${APPIMAGETOOL:-}
 
+case $(uname -m) in
+	x86_64 | amd64)
+		appimage_arch=x86_64
+		;;
+	aarch64 | arm64)
+		appimage_arch=aarch64
+		;;
+	*)
+		printf 'Unsupported AppImage architecture: %s\n' "$(uname -m)" >&2
+		exit 1
+		;;
+esac
+
 cleanup() {
 	rm -rf "$app_dir"
 }
@@ -41,7 +54,11 @@ mkdir -p \
 	"$app_dir/usr/share/metainfo" \
 	"$output_dir"
 
-cp -a "$publish_dir"/. "$app_dir/usr/bin/"
+tar \
+	--exclude='*.pdb' \
+	--exclude='*.dbg' \
+	-C "$publish_dir" \
+	-cf - . | tar -C "$app_dir/usr/bin" -xf -
 chmod +x "$app_dir/usr/bin/Pixeval.Desktop"
 
 desktop_file="$app_dir/$app_id.desktop"
@@ -50,11 +67,10 @@ cat > "$desktop_file" <<EOF
 Type=Application
 Name=$app_name
 Comment=Wow. Yet another Pixiv client!
-Exec=Pixeval.Desktop %u
+Exec=Pixeval.Desktop
 Icon=$app_id
 Terminal=false
 Categories=Graphics;
-MimeType=x-scheme-handler/pixeval;
 StartupWMClass=Pixeval
 EOF
 
@@ -102,16 +118,16 @@ if [[ -z "$appimage_tool" ]]; then
 	fi
 
 	mkdir -p "$tool_cache_dir"
-	appimage_tool="$tool_cache_dir/appimagetool-x86_64.AppImage"
+	appimage_tool="$tool_cache_dir/appimagetool-$appimage_arch.AppImage"
 	if [[ ! -f "$appimage_tool" ]]; then
 		curl -fsSL \
 			-o "$appimage_tool" \
-			https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+			"https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-$appimage_arch.AppImage"
 		chmod +x "$appimage_tool"
 	fi
 fi
 
-appimage_name="$app_name-$version-linux-x86_64.AppImage"
-ARCH=x86_64 VERSION="$version" APPIMAGE_EXTRACT_AND_RUN=1 "$appimage_tool" "$app_dir" "$output_dir/$appimage_name"
+appimage_name="$app_name-$version-linux-$appimage_arch.AppImage"
+ARCH=$appimage_arch VERSION="$version" APPIMAGE_EXTRACT_AND_RUN=1 "$appimage_tool" "$app_dir" "$output_dir/$appimage_name"
 chmod +x "$output_dir/$appimage_name"
 printf '%s\n' "$output_dir/$appimage_name"

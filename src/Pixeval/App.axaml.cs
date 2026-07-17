@@ -85,7 +85,9 @@ public class App : Application
                 };
 
                 viewContainer.SetInterTabController(true);
+#if PIXEVAL_MCP
                 _ = AppViewModel.AppServiceProvider.GetService<IPixevalMcpService>()?.StartAsync();
+#endif
 
                 // 这个窗口可能会被用户关闭，所以不设为desktop.MainWindow
                 new Window { Content = viewContainer }

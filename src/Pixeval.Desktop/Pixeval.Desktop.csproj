@@ -6,10 +6,12 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<PublishAot>true</PublishAot>
+		<EnableMcp>true</EnableMcp>
 	</PropertyGroup>
 
 	<PropertyGroup>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<ApplicationIcon Condition="$([MSBuild]::IsOSPlatform('Windows'))">..\Pixeval\Assets\logo.ico</ApplicationIcon>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -17,6 +19,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Pixeval\Pixeval.csproj" />
+		<ProjectReference Include="..\Pixeval\Pixeval.csproj" AdditionalProperties="EnableMcp=$(EnableMcp)" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="Assets\macOS\Pixeval.icns"
+		      Condition="$([System.String]::Copy('$(RuntimeIdentifier)').StartsWith('osx-'))">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 </Project>

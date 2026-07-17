@@ -123,7 +123,7 @@ public class UnusedI18NResourceAnalyzer : DiagnosticAnalyzer
 
     private static bool IsI18NJsonFile(string path)
         => string.Equals(Path.GetExtension(path), ".json", StringComparison.OrdinalIgnoreCase)
-            && path.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).Any(static part => string.Equals(part, "i18n", StringComparison.OrdinalIgnoreCase));
+           && path.Split('/', '\\').Any(static part => string.Equals(part, "i18n", StringComparison.OrdinalIgnoreCase));
 
     private sealed class ResourceInfo
     {
@@ -248,7 +248,9 @@ public class UnusedI18NResourceAnalyzer : DiagnosticAnalyzer
 
         private JsonResourceScanner(string path, SourceText sourceText)
         {
-            _fileRoot = Path.GetFileNameWithoutExtension(path);
+            // AdditionalText paths may use separators from a different operating system.
+            var fileNameStart = Math.Max(path.LastIndexOf('/'), path.LastIndexOf('\\')) + 1;
+            _fileRoot = Path.GetFileNameWithoutExtension(path.Substring(fileNameStart));
             _text = sourceText.ToString();
         }
 
