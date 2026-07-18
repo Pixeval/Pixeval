@@ -232,6 +232,6 @@ public partial class SingleImageViewer : UserControl
             || scrollView.ZoomFactor == viewModel.ZoomFactor)
             return;
 
-        scrollView.ZoomTo(viewModel.ZoomFactor, false);
+        scrollView.ZoomTo(viewModel.ZoomFactor);
     }
 }

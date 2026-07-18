@@ -60,14 +60,14 @@ jobs:
             publish_aot: true
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           submodules: recursive
           filter: tree:0
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
 
@@ -143,7 +143,7 @@ jobs:
             -OutputDirectory $releaseDirectory
 
       - name: Upload Windows release assets
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: release-windows-${{ matrix.architecture }}
           path: artifacts/release/*
@@ -170,14 +170,14 @@ jobs:
             publish_aot: false
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           submodules: recursive
           filter: tree:0
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
 
@@ -260,7 +260,7 @@ jobs:
           ditto -c -k --sequesterRsrc --keepParent "$app_directory" "$zip_path"
 
       - name: Upload macOS release asset
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: release-macos-${{ matrix.architecture }}
           path: artifacts/release/*
@@ -283,14 +283,14 @@ jobs:
             os: ubuntu-24.04-arm
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           submodules: recursive
           filter: tree:0
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
 
@@ -351,7 +351,7 @@ jobs:
             -C "$PUBLISH_DIRECTORY" .
 
       - name: Upload Linux release assets
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: release-linux-${{ matrix.architecture }}
           path: artifacts/release/*
@@ -372,14 +372,14 @@ jobs:
             runtime: android-x64
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           submodules: recursive
           filter: tree:0
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
 
@@ -488,7 +488,7 @@ jobs:
           }
 
       - name: Upload Android release asset
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: release-android-${{ matrix.architecture }}
           path: artifacts/release/*
@@ -506,7 +506,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Download Windows packages
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: release-windows-*
           path: artifacts/windows
@@ -615,7 +615,7 @@ jobs:
       contents: write
     steps:
       - name: Download release assets
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: release-*
           path: artifacts/release

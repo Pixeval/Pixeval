@@ -23,7 +23,7 @@
                         IsHorizontalMeasureInfinite="True"
                         IsVerticalMeasureInfinite="True"
                         Theme="{StaticResource ViewerScrollViewTheme}"
-                        ZoomFactor="{Binding ZoomFactor, Mode=TwoWay}">
+                        ZoomFactor="{Binding ZoomFactor, Mode=OneWayToSource}">
                         <ai:AnimatedImage
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"

@@ -13,11 +13,11 @@ public enum LocalSortOption
     DoNotSort,
 
     [LocalizedResource(Symbol.ArrowTrendingSparkle, EnumResources.LocalSortOptionPopularityDescending)]
+    PopularityDescending,
+
+    [LocalizedResource(Symbol.ArrowSortDownLines, EnumResources.LocalSortOptionPublishDateDescending)]
     PublishDateDescending,
 
     [LocalizedResource(Symbol.ArrowSortUpLines, EnumResources.LocalSortOptionPublishDateAscending)]
-    PublishDateAscending,
-
-    [LocalizedResource(Symbol.ArrowSortDownLines, EnumResources.LocalSortOptionPublishDateDescending)]
-    PopularityDescending
+    PublishDateAscending
 }

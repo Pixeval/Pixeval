@@ -56,11 +56,11 @@ public partial class SettingsMainView : ContentPage
         App.AppViewModel.NavigationMenuYamlText = NavigationMenuYaml.DefaultYaml;
         App.AppViewModel.ResetHomePageCards();
         foreach (var localGroup in vm.LocalGroups)
-        foreach (var settingsEntry in localGroup)
-            settingsEntry.LocalValueReset(settings);
+            foreach (var settingsEntry in localGroup)
+                settingsEntry.LocalValueReset(settings);
         foreach (var extensionGroup in vm.ExtensionGroups)
-        foreach (var settingsEntry in extensionGroup)
-            settingsEntry.ValueReset();
+            foreach (var settingsEntry in extensionGroup)
+                settingsEntry.ValueReset();
 
         if (viewContainer is ViewContainers.TabViewContainer container)
             container.ReloadNavigation();
@@ -178,8 +178,8 @@ public partial class SettingsMainView : ContentPage
             if (YamlSerializer.Deserialize(stream, SettingsSerializerContext.Default.AppSettings) is { } appSettings)
             {
                 foreach (var localGroup in vm.LocalGroups)
-                foreach (var settingsEntry in localGroup)
-                    settingsEntry.LocalValueReset(appSettings);
+                    foreach (var settingsEntry in localGroup)
+                        settingsEntry.LocalValueReset(appSettings);
                 viewContainer.ShowSuccess(I18NManager.GetResource(SettingsMainViewResources.ImportSettingsSuccess), file.Name);
             }
         }

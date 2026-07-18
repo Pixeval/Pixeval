@@ -46,10 +46,12 @@
                     BoxShadow="0 18 44 0 #40000000"
                     ClipToBounds="True"
                     CornerRadius="8">
-                    <Grid RowDefinitions="Auto,*,Auto">
+                    <Grid
+                        Margin="24"
+                        RowDefinitions="Auto,*,Auto"
+                        RowSpacing="24">
                         <ContentPresenter
                             x:Name="PART_TitlePresenter"
-                            Margin="24,22,24,0"
                             Content="{TemplateBinding Title}"
                             ContentTemplate="{TemplateBinding TitleTemplate}"
                             IsVisible="{TemplateBinding Title,
@@ -69,7 +71,6 @@
                         <ScrollViewer
                             Grid.Row="1"
                             MaxHeight="420"
-                            Margin="24,12,24,20"
                             VerticalScrollBarVisibility="Auto">
                             <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}">
                                 <ContentPresenter.DataTemplates>
@@ -86,10 +87,19 @@
                         <StackPanel
                             x:Name="PART_ButtonPanel"
                             Grid.Row="2"
-                            Margin="24,0,24,24"
                             HorizontalAlignment="Right"
                             Orientation="Horizontal"
                             Spacing="8">
+                            <Button
+                                x:Name="PART_PrimaryButton"
+                                MinWidth="84"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                Content="{TemplateBinding PrimaryButtonText}"
+                                IsEnabled="{TemplateBinding IsPrimaryButtonEnabled}"
+                                IsVisible="{TemplateBinding PrimaryButtonText,
+                                                            Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
                             <Button
                                 x:Name="PART_SecondaryButton"
                                 MinWidth="84"
@@ -107,15 +117,6 @@
                                 Content="{TemplateBinding CloseButtonText}"
                                 IsEnabled="{TemplateBinding IsCloseButtonEnabled}"
                                 IsVisible="{TemplateBinding CloseButtonText,
-                                                            Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
-                            <Button
-                                x:Name="PART_PrimaryButton"
-                                MinWidth="84"
-                                HorizontalContentAlignment="Center"
-                                VerticalContentAlignment="Center"
-                                Content="{TemplateBinding PrimaryButtonText}"
-                                IsEnabled="{TemplateBinding IsPrimaryButtonEnabled}"
-                                IsVisible="{TemplateBinding PrimaryButtonText,
                                                             Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
                         </StackPanel>
                     </Grid>
