@@ -88,13 +88,8 @@ public sealed class AppViewModel(App app, FileLogger logger) : IAsyncDisposable
             .AddSingleton<IllustrationDownloadTaskFactory>()
             .AddSingleton<NovelDownloadTaskFactory>()
             .AddSingleton(provider => new ExtensionService(provider.GetRequiredService<FileLogger>(), AppSettings))
-            .AddSingleton(_ =>
-            {
-                var db = new SQLiteConnection(AppInfo.DatabaseFilePath,
-                    SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex);
-                DownloadHistoryMigration.Migrate(db);
-                return db;
-            })
+            .AddSingleton(_ => new SQLiteConnection(AppInfo.DatabaseFilePath,
+                SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex))
             .AddSingleton<DownloadHistoryPersistentManager>()
             .AddSingleton<SubscriptionDownloadHistoryPersistentManager>()
             .AddSingleton<WorkSubscriptionPersistentManager>()
