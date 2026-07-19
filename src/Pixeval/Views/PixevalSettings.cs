@@ -32,21 +32,23 @@ public class PixevalSettings : ViewModelBase
     public bool OpenWorkInfo
     {
         get => Settings.BrowsingExperienceSettings.OpenWorkInfoByDefault;
-        set => SetProperty(Settings.BrowsingExperienceSettings.OpenWorkInfoByDefault, value, Settings.BrowsingExperienceSettings, (setting, v) =>
+        set
         {
-            setting.OpenWorkInfoByDefault = v;
+            // 仅更新设置
+            Settings.BrowsingExperienceSettings.OpenWorkInfoByDefault = value;
             AppInfo.SaveAppSettings(Settings);
-        });
+        }
     }
 
     public bool OpenUserInfo
     {
         get => Settings.BrowsingExperienceSettings.OpenUserInfoByDefault;
-        set => SetProperty(Settings.BrowsingExperienceSettings.OpenUserInfoByDefault, value, Settings.BrowsingExperienceSettings, (setting, v) =>
+        set
         {
-            setting.OpenUserInfoByDefault = v;
+            // 仅更新设置
+            Settings.BrowsingExperienceSettings.OpenUserInfoByDefault = value;
             AppInfo.SaveAppSettings(Settings);
-        });
+        }
     }
 
     public bool HideHomePageCardTitle

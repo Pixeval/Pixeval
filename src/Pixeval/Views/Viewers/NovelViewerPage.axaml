@@ -31,7 +31,8 @@
         <SplitView
             x:Name="InfoSplitView"
             Grid.Row="0"
-            DisplayMode="Inline">
+            DisplayMode="Inline"
+            IsPaneOpen="{Binding OpenWorkInfo, Source={x:Static views:PixevalSettings.Instance}, Mode=TwoWay}">
             <SplitView.Pane>
                 <DockPanel>
                     <local:WorkSeriesInfoPane DataContext="{Binding SeriesInfo}" DockPanel.Dock="Bottom" />
