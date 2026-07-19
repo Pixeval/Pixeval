@@ -41,115 +41,6 @@ jobs:
           "version=$env:RELEASE_VERSION" >> $env:GITHUB_OUTPUT
           "package_version=$($env:RELEASE_VERSION).0" >> $env:GITHUB_OUTPUT
 
-  windows:
-    name: Windows ${{ matrix.architecture }}
-    needs: metadata
-    runs-on: windows-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - architecture: x64
-            runtime: win-x64
-            publish_aot: true
-          - architecture: x86
-            runtime: win-x86
-            publish_aot: false
-          - architecture: arm64
-            runtime: win-arm64
-            publish_aot: true
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-          submodules: recursive
-          filter: tree:0
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v6
-        with:
-          global-json-file: global.json
-
-      - name: Restore
-        env:
-          PUBLISH_AOT: ${{ matrix.publish_aot }}
-          RUNTIME: ${{ matrix.runtime }}
-        run: |
-          [string[]] $aotArguments = @()
-          if ($env:PUBLISH_AOT -eq 'false') {
-            $aotArguments += '-p:PublishAot=false'
-          }
-
-          dotnet restore src/Pixeval.Desktop/Pixeval.Desktop.csproj `
-            -r $env:RUNTIME `
-            -p:Configuration=$env:CONFIGURATION `
-            @aotArguments
-
-      - name: Publish
-        id: publish
-        env:
-          PACKAGE_VERSION: ${{ needs.metadata.outputs.package_version }}
-          PUBLISH_AOT: ${{ matrix.publish_aot }}
-          RELEASE_VERSION: ${{ needs.metadata.outputs.version }}
-          RUNTIME: ${{ matrix.runtime }}
-        run: |
-          [string[]] $aotArguments = @()
-          if ($env:PUBLISH_AOT -eq 'false') {
-            $aotArguments += '-p:PublishAot=false'
-          }
-
-          $publishDirectory = Join-Path $env:RUNNER_TEMP "pixeval-$env:RUNTIME"
-          dotnet publish src/Pixeval.Desktop/Pixeval.Desktop.csproj `
-            -c $env:CONFIGURATION `
-            -r $env:RUNTIME `
-            --no-restore `
-            --self-contained true `
-            -o $publishDirectory `
-            -p:DebugSymbols=false `
-            -p:DebugType=None `
-            -p:Version=$env:RELEASE_VERSION `
-            -p:AssemblyVersion=$env:PACKAGE_VERSION `
-            -p:FileVersion=$env:PACKAGE_VERSION `
-            -p:InformationalVersion=$env:RELEASE_VERSION `
-            @aotArguments
-
-          "directory=$publishDirectory" >> $env:GITHUB_OUTPUT
-
-      - name: Package ZIP and unsigned MSIX
-        env:
-          ARCHITECTURE: ${{ matrix.architecture }}
-          PACKAGE_VERSION: ${{ needs.metadata.outputs.package_version }}
-          PUBLISH_DIRECTORY: ${{ steps.publish.outputs.directory }}
-          RELEASE_VERSION: ${{ needs.metadata.outputs.version }}
-        run: |
-          $releaseDirectory = Join-Path $PWD "artifacts\release"
-          $null = New-Item -ItemType Directory -Force -Path $releaseDirectory
-
-          $zipPath = Join-Path $releaseDirectory "Pixeval-$env:RELEASE_VERSION-windows-$env:ARCHITECTURE.zip"
-          tar -a -c -f $zipPath `
-            --exclude='*.pdb' `
-            --exclude='*.dbg' `
-            -C $env:PUBLISH_DIRECTORY .
-          if ($LASTEXITCODE -ne 0) {
-            throw "ZIP packaging failed with exit code $LASTEXITCODE."
-          }
-
-          & scripts/package-msix.ps1 `
-            -PublishDirectory $env:PUBLISH_DIRECTORY `
-            -Architecture $env:ARCHITECTURE `
-            -ReleaseVersion $env:RELEASE_VERSION `
-            -PackageVersion $env:PACKAGE_VERSION `
-            -OutputDirectory $releaseDirectory
-
-      - name: Upload Windows release assets
-        uses: actions/upload-artifact@v7
-        with:
-          name: release-windows-${{ matrix.architecture }}
-          path: artifacts/release/*
-          if-no-files-found: error
-          retention-days: 14
-
   macos:
     name: macOS ${{ matrix.architecture }}
     needs: metadata
@@ -491,6 +382,115 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: release-android-${{ matrix.architecture }}
+          path: artifacts/release/*
+          if-no-files-found: error
+          retention-days: 14
+
+  windows:
+    name: Windows ${{ matrix.architecture }}
+    needs: metadata
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - architecture: x64
+            runtime: win-x64
+            publish_aot: true
+          - architecture: x86
+            runtime: win-x86
+            publish_aot: false
+          - architecture: arm64
+            runtime: win-arm64
+            publish_aot: true
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          filter: tree:0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+
+      - name: Restore
+        env:
+          PUBLISH_AOT: ${{ matrix.publish_aot }}
+          RUNTIME: ${{ matrix.runtime }}
+        run: |
+          [string[]] $aotArguments = @()
+          if ($env:PUBLISH_AOT -eq 'false') {
+            $aotArguments += '-p:PublishAot=false'
+          }
+
+          dotnet restore src/Pixeval.Desktop/Pixeval.Desktop.csproj `
+            -r $env:RUNTIME `
+            -p:Configuration=$env:CONFIGURATION `
+            @aotArguments
+
+      - name: Publish
+        id: publish
+        env:
+          PACKAGE_VERSION: ${{ needs.metadata.outputs.package_version }}
+          PUBLISH_AOT: ${{ matrix.publish_aot }}
+          RELEASE_VERSION: ${{ needs.metadata.outputs.version }}
+          RUNTIME: ${{ matrix.runtime }}
+        run: |
+          [string[]] $aotArguments = @()
+          if ($env:PUBLISH_AOT -eq 'false') {
+            $aotArguments += '-p:PublishAot=false'
+          }
+
+          $publishDirectory = Join-Path $env:RUNNER_TEMP "pixeval-$env:RUNTIME"
+          dotnet publish src/Pixeval.Desktop/Pixeval.Desktop.csproj `
+            -c $env:CONFIGURATION `
+            -r $env:RUNTIME `
+            --no-restore `
+            --self-contained true `
+            -o $publishDirectory `
+            -p:DebugSymbols=false `
+            -p:DebugType=None `
+            -p:Version=$env:RELEASE_VERSION `
+            -p:AssemblyVersion=$env:PACKAGE_VERSION `
+            -p:FileVersion=$env:PACKAGE_VERSION `
+            -p:InformationalVersion=$env:RELEASE_VERSION `
+            @aotArguments
+
+          "directory=$publishDirectory" >> $env:GITHUB_OUTPUT
+
+      - name: Package ZIP and unsigned MSIX
+        env:
+          ARCHITECTURE: ${{ matrix.architecture }}
+          PACKAGE_VERSION: ${{ needs.metadata.outputs.package_version }}
+          PUBLISH_DIRECTORY: ${{ steps.publish.outputs.directory }}
+          RELEASE_VERSION: ${{ needs.metadata.outputs.version }}
+        run: |
+          $releaseDirectory = Join-Path $PWD "artifacts\release"
+          $null = New-Item -ItemType Directory -Force -Path $releaseDirectory
+
+          $zipPath = Join-Path $releaseDirectory "Pixeval-$env:RELEASE_VERSION-windows-$env:ARCHITECTURE.zip"
+          tar -a -c -f $zipPath `
+            --exclude='*.pdb' `
+            --exclude='*.dbg' `
+            -C $env:PUBLISH_DIRECTORY .
+          if ($LASTEXITCODE -ne 0) {
+            throw "ZIP packaging failed with exit code $LASTEXITCODE."
+          }
+
+          & scripts/package-msix.ps1 `
+            -PublishDirectory $env:PUBLISH_DIRECTORY `
+            -Architecture $env:ARCHITECTURE `
+            -ReleaseVersion $env:RELEASE_VERSION `
+            -PackageVersion $env:PACKAGE_VERSION `
+            -OutputDirectory $releaseDirectory
+
+      - name: Upload Windows release assets
+        uses: actions/upload-artifact@v7
+        with:
+          name: release-windows-${{ matrix.architecture }}
           path: artifacts/release/*
           if-no-files-found: error
           retention-days: 14
