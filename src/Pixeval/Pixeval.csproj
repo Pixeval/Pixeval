@@ -79,7 +79,10 @@
 		<AdditionalFiles Include="Views\**\*.axaml" />
 		<AdditionalFiles Include="Assets\PathIcons\*.svg" />
 
-		<None Update="i18n\**">
+		<None Update="i18n\**\*.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="i18n\**\*.md">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 

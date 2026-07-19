@@ -59,6 +59,7 @@
                             <ContentPresenter.DataTemplates>
                                 <DataTemplate DataType="{x:Type x:String}">
                                     <TextBlock
+                                        FontFamily="{DynamicResource ContentControlThemeFontFamily}"
                                         FontSize="20"
                                         FontWeight="SemiBold"
                                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"

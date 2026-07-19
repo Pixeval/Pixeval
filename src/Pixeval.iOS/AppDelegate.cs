@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.iOS;
 using Avalonia.Media;
 using Foundation;
+using Pixeval.Utilities;
 using UIKit;
 
 namespace Pixeval.iOS;
@@ -18,6 +19,6 @@ public partial class AppDelegate : AvaloniaAppDelegate<App>
     protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)
     {
         return base.CustomizeAppBuilder(builder)
-            .WithInterFont();
+            .WithPixevalFonts();
     }
 }

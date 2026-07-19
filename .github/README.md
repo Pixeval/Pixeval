@@ -33,7 +33,7 @@
 * Windows 8 及更高
 * MacOS
 * Linux
-* Android 23 及更高
+* Android 16 （API 36） 及更高
 * iOS 13 及更高
 <!-- * 浏览器 -->
 
@@ -48,10 +48,3 @@
 [![Toolkit Contributors](https://contrib.rocks/image?repo=Pixeval/Pixeval)](https://github.com/Pixeval/Pixeval/graphs/contributors)
 
 Made with [contrib.rocks](https://contrib.rocks).
-
-<div>
-  <a href="https://www.jetbrains.com/?from=Pixeval" align="right"><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="JetBrains" class="logo-footer" width="100" align="left"></a>
-  <br/>
-  
-  本项目重度依赖于 [JetBrains](https://www.jetbrains.com/?from=ImageSharp) ReSharper，感谢JetBrains s.r.o为本项目提供 [开源许可证](https://www.jetbrains.com/community/opensource/#support)，如果你同样对开发充满热情并且经常使用JetBrains s.r.o的产品，你也可以尝试通过JetBrains官方渠道 [申请](https://www.jetbrains.com/shop/eform/opensource) 开源许可证以供核心开发者使用
-</div>

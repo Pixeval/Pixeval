@@ -64,10 +64,9 @@ public class App : Application
     {
         var resources = Current!.Resources;
         var fontFamily = string.Join(',', fontFamilies.Where(static fontFamily => !string.IsNullOrWhiteSpace(fontFamily)));
-        if (string.IsNullOrWhiteSpace(fontFamily))
-            _ = resources.Remove("ContentControlThemeFontFamily");
-        else
-            resources["ContentControlThemeFontFamily"] = new FontFamily(fontFamily);
+        resources["ContentControlThemeFontFamily"] = string.IsNullOrWhiteSpace(fontFamily)
+            ? FontFamily.Default
+            : new FontFamily(fontFamily);
     }
 
     public override void OnFrameworkInitializationCompleted()

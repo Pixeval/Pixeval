@@ -15,6 +15,9 @@
         <autoSettingsPage:AutoSettingsPageTheme />
         <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />
         <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
+        <Style Selector="Control">
+            <Setter Property="TextElement.FontFamily" Value="{DynamicResource ContentControlThemeFontFamily}" />
+        </Style>
         <Style Selector="edit|TextEditor">
             <Setter Property="FontFamily" Value="{DynamicResource PixevalMonospaceFontFamily}" />
         </Style>
@@ -26,6 +29,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <x:Double x:Key="SmallIconFontSize">16</x:Double>
+            <FontFamily x:Key="ContentControlThemeFontFamily">$Default</FontFamily>
             <FontFamily x:Key="PixevalMonospaceFontFamily">Cascadia Code,Cascadia Mono,SF Mono,Menlo,Monaco,Consolas,Liberation Mono,DejaVu Sans Mono,monospace</FontFamily>
             <ResourceDictionary.MergedDictionaries>
                 <MergeResourceInclude Source="Themes/Colors.axaml" />

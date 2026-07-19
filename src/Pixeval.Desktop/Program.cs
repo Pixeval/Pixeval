@@ -1,5 +1,6 @@
 using System;
 using Avalonia;
+using Pixeval.Utilities;
 
 namespace Pixeval.Desktop;
 
@@ -22,6 +23,6 @@ sealed class Program
                 // 再往上拉还能有提升，不过必要性不高（？）
                 MaxGpuResourceSizeBytes = 128 * 1024 * 1024
             })
-            .WithInterFont()
+            .WithPixevalFonts()
             .LogToTrace();
 }

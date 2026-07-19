@@ -495,14 +495,11 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-  microsoft-store:
-    name: Submit Windows packages to Microsoft Store
+  windows-bundle:
+    name: Build Windows MSIXBundle
     needs:
       - metadata
       - windows
-      - macos
-      - linux
-      - android
     runs-on: windows-latest
     steps:
       - name: Download Windows packages
@@ -561,6 +558,30 @@ jobs:
           }
 
           "path=$bundlePath" >> $env:GITHUB_OUTPUT
+      - name: Upload MSIXBundle
+        uses: actions/upload-artifact@v7
+        with:
+          name: windows-msixbundle
+          path: ${{ steps.bundle.outputs.path }}
+          if-no-files-found: error
+          retention-days: 14
+
+  microsoft-store:
+    name: Submit Windows packages to Microsoft Store
+    needs:
+      - metadata
+      - windows-bundle
+      - macos
+      - linux
+      - android
+    runs-on: windows-latest
+    steps:
+      - name: Download MSIXBundle
+        id: bundle
+        uses: actions/download-artifact@v8
+        with:
+          name: windows-msixbundle
+          path: artifacts/windows-bundle
 
       - name: Install Microsoft Store CLI
         uses: microsoft/microsoft-store-apppublisher@v1.3
@@ -596,7 +617,7 @@ jobs:
       - name: Submit MSIXBundle for certification
         shell: pwsh
         env:
-          BUNDLE_PATH: ${{ steps.bundle.outputs.path }}
+          BUNDLE_PATH: ${{ steps.bundle.outputs.download-path }}\Pixeval-${{ needs.metadata.outputs.version }}-windows.msixbundle
           MSSTORE_PRODUCT_ID: ${{ vars.MSSTORE_PRODUCT_ID }}
         run: |
           # --noCommit is intentionally omitted: publish commits the submission.

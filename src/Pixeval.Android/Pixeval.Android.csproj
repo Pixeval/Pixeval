@@ -22,6 +22,12 @@
 		<AndroidResource Include="Icon.png">
 			<Link>Resources\drawable\Icon.png</Link>
 		</AndroidResource>
+		<AndroidAsset Include="..\Pixeval\i18n\**\*.json">
+			<Link>Assets\i18n\%(RecursiveDir)%(Filename)%(Extension)</Link>
+		</AndroidAsset>
+		<AndroidAsset Include="..\Pixeval\i18n\**\*.md">
+			<Link>Assets\i18n\%(RecursiveDir)%(Filename)%(Extension)</Link>
+		</AndroidAsset>
 	</ItemGroup>
 
 	<ItemGroup>

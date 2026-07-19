@@ -1,16 +1,17 @@
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Browser;
-using System.Threading.Tasks;
 using Pixeval;
+using Pixeval.Utilities;
 
 internal sealed partial class Program
 {
     private static Task Main(string[] args) => BuildAvaloniaApp()
-            .WithInterFont()
+        .WithPixevalFonts()
 #if DEBUG
-            .WithDeveloperTools()
+        .WithDeveloperTools()
 #endif
-            .StartBrowserAppAsync("out");
+        .StartBrowserAppAsync("out");
 
     public static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>();
