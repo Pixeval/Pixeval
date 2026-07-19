@@ -86,8 +86,7 @@ public sealed partial class PixevalMcpService
             macro.Name,
             macro.Description,
             kind,
-            contextType,
-            macro is IContextRestrictedMacro restricted ? restricted.RequiredPredicateName : null);
+            contextType);
     }
 
     private static PixevalDownloadMacroDiagnosticDto ToDownloadMacroDiagnosticDto(MacroDiagnostic diagnostic) =>

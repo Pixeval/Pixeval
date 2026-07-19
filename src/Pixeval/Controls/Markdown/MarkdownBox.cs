@@ -485,7 +485,7 @@ public class MarkdownBox : MarkdownScrollViewer
             HorizontalAlignment = HorizontalAlignment.Right,
             VerticalAlignment = VerticalAlignment.Top
         };
-        toolbar.SetValue(Panel.ZIndexProperty, 1);
+        toolbar.SetValue(ZIndexProperty, 1);
         toolbar.Classes.Add(CodeBlockToolbarClass);
         toolbar.Children.Add(langLabel);
         toolbar.Children.Add(copyButton);

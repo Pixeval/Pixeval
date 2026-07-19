@@ -22,7 +22,7 @@ public class MacroParseException(MacroParseException.ErrorType type, MacroTextSp
         NonParameterizedMacroBearingParameter,
         ConditionalBranchesMissing,
         InvalidFormatter,
-        MacroShouldBeContained,
+        MacroContextRestrictionNotSatisfied,
         MacroShouldBeInLastSegment,
         ResultIsEmpty,
         ReductionNotCompleted
@@ -36,7 +36,7 @@ public class MacroParseException(MacroParseException.ErrorType type, MacroTextSp
             MacroDiagnosticKind.NonParameterizedMacroBearingParameter => ErrorType.NonParameterizedMacroBearingParameter,
             MacroDiagnosticKind.ConditionalBranchesMissing => ErrorType.ConditionalBranchesMissing,
             MacroDiagnosticKind.InvalidFormatter => ErrorType.InvalidFormatter,
-            MacroDiagnosticKind.MacroShouldBeContained => ErrorType.MacroShouldBeContained,
+            MacroDiagnosticKind.MacroContextRestrictionNotSatisfied => ErrorType.MacroContextRestrictionNotSatisfied,
             MacroDiagnosticKind.MacroShouldBeInLastSegment => ErrorType.MacroShouldBeInLastSegment,
             _ => ErrorType.UnexpectedToken
         };

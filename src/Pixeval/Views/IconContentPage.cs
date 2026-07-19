@@ -37,3 +37,18 @@ public class IconNavigationPage : NavigationPage
         };
     }
 }
+
+public class IconTabbedPage : TabbedPage
+{
+    protected IconTabbedPage()
+    {
+        var tuple = AvaloniaHelper.GetPageHeader(GetType());
+        Header = tuple.Header;
+        Icon = new SymbolIcon
+        {
+            Symbol = tuple.Symbol,
+            FontSize = 16,
+            IconVariant = IconVariant.Color
+        };
+    }
+}

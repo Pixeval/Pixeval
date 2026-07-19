@@ -21,13 +21,16 @@ public class SingleImageDownloadTaskGroup : SingleImageDownloadTaskGroupBase
 
     private IllustrationDownloadFormatToken DestinationIllustrationFormat { get; }
 
-    public SingleImageDownloadTaskGroup(ISingleImage entry, string destination) : base(entry, destination)
+    public SingleImageDownloadTaskGroup(
+        ISingleImage entry,
+        string destination,
+        int? workSubscriptionId = null) : base(entry, destination, workSubscriptionId)
     {
         DestinationIllustrationFormat = IoHelper.GetAvailableIllustrationDownloadFormatToken();
         DatabaseEntry.FormatToken = DestinationIllustrationFormat.Value;
     }
 
-    public SingleImageDownloadTaskGroup(DownloadHistoryEntry entry) : base(entry)
+    public SingleImageDownloadTaskGroup(DownloadHistoryEntryBase entry) : base(entry)
     {
         DestinationIllustrationFormat = GetFormatToken(entry);
     }
@@ -38,7 +41,7 @@ public class SingleImageDownloadTaskGroup : SingleImageDownloadTaskGroupBase
             return;
 
         var provider = GetExtensionService().GetStaticImageFormatProvider(extension)
-            ?? throw new NotSupportedException(extension);
+                       ?? throw new NotSupportedException(extension);
         var tempPath = sender.Destination + ".source";
         if (File.Exists(tempPath))
             File.Delete(tempPath);
@@ -55,7 +58,7 @@ public class SingleImageDownloadTaskGroup : SingleImageDownloadTaskGroupBase
         }
     }
 
-    private static IllustrationDownloadFormatToken GetFormatToken(DownloadHistoryEntry entry)
+    private static IllustrationDownloadFormatToken GetFormatToken(DownloadHistoryEntryBase entry)
     {
         if (!string.IsNullOrWhiteSpace(entry.FormatToken))
             return IoHelper.GetAvailableIllustrationDownloadFormatToken(entry.FormatToken);

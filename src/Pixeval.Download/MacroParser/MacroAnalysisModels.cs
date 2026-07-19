@@ -48,7 +48,7 @@ public enum MacroDiagnosticKind
     NonParameterizedMacroBearingParameter,
     ConditionalBranchesMissing,
     InvalidFormatter,
-    MacroShouldBeContained,
+    MacroContextRestrictionNotSatisfied,
     MacroShouldBeInLastSegment
 }
 

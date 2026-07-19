@@ -16,7 +16,8 @@ public class SeriesTitleMacro : ITransducer<IArtworkInfo>, IContextRestrictedMac
 
     public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionSeriesTitle);
 
-    public string RequiredPredicateName => IsSeriesMacro.NameConst;
+    public MacroContextPredicate ContextPredicate => static context =>
+        context.TryGetValue(IsSeriesMacro.NameConst, out var value) && value;
 
     public bool IsFormatterValid(string? formatter) => MacroHelper.IsStringFormatterValid(formatter);
 

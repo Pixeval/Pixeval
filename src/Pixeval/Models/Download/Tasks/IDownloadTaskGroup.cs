@@ -11,5 +11,7 @@ public interface IDownloadTaskGroup : IDownloadTaskGroupBase, IIdentityInfo
 {
     string IPlatformInfo.Platform => Pixiv;
 
-    DownloadHistoryEntry DatabaseEntry { get; }
+    DownloadHistoryEntryBase DatabaseEntry { get; }
+
+    DownloadTaskKey IDownloadTaskGroupBase.Key => DatabaseEntry.DownloadTaskKey;
 }

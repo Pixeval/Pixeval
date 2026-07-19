@@ -25,6 +25,12 @@
     <controls:SettingsExpander.HeaderIcon>
         <fluent:SymbolIcon Symbol="{Binding Icon}" />
     </controls:SettingsExpander.HeaderIcon>
+    <controls:SettingsExpander.Content>
+        <Button
+            Click="SyncAllButton_OnClicked"
+            Content="{markup:SymbolIcon ArrowSync}"
+            ToolTip.Tip="{I18N {x:Static pixeval:WorkSubscriptionsSettingsExpanderResources.SyncAllSubscriptionsButtonLabel}}" />
+    </controls:SettingsExpander.Content>
     <controls:SettingsExpander.Items>
         <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
             <Grid

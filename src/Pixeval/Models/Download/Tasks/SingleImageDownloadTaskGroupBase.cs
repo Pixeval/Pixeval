@@ -6,18 +6,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Misaki;
 using Pixeval.Download;
 using Pixeval.Models.Database;
-using Pixeval.Models.Database.Managers;
 using Pixeval.Utilities.IO;
 
 namespace Pixeval.Models.Download.Tasks;
 
 public abstract class SingleImageDownloadTaskGroupBase : ImageDownloadTask, IDownloadTaskGroup
 {
-    public DownloadHistoryEntry DatabaseEntry { get; }
+    public DownloadHistoryEntryBase DatabaseEntry { get; }
 
     public ValueTask InitializeTaskGroupAsync()
     {
@@ -27,13 +25,16 @@ public abstract class SingleImageDownloadTaskGroupBase : ImageDownloadTask, IDow
 
     public string Id => DatabaseEntry.Entry.Id;
 
-    protected SingleImageDownloadTaskGroupBase(IArtworkInfo entry, string destination) : this(new(destination, entry))
+    protected SingleImageDownloadTaskGroupBase(
+        IArtworkInfo entry,
+        string destination,
+        int? workSubscriptionId = null) : this(DownloadHistoryEntryBase.Create(destination, entry, workSubscriptionId))
     {
         CurrentState = DownloadState.Queued;
         ProgressPercentage = 0;
     }
 
-    protected SingleImageDownloadTaskGroupBase(DownloadHistoryEntry entry) : base(GetImageUri(entry.Entry),
+    protected SingleImageDownloadTaskGroupBase(DownloadHistoryEntryBase entry) : base(GetImageUri(entry.Entry),
         IoHelper.ReplaceTokenExtensionFromUrl(entry.Destination, GetImageUri(entry.Entry), entry.Entry.TryGetSetIndex()))
     {
         DatabaseEntry = entry;
@@ -72,9 +73,7 @@ public abstract class SingleImageDownloadTaskGroupBase : ImageDownloadTask, IDow
                 g.DatabaseEntry.ErrorMessage = g.CurrentState is DownloadState.Error
                     ? g.ErrorMessage
                     : null;
-                var manager = App.AppViewModel.AppServiceProvider
-                    .GetRequiredService<DownloadHistoryPersistentManager>();
-                manager.Update(g.DatabaseEntry);
+                App.AppViewModel.HistoryPersistHelper.UpdateDownloadHistory(g.DatabaseEntry);
             }
         };
     }

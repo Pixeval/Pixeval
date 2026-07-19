@@ -104,7 +104,7 @@ internal static class MacroContextResolver<[DynamicallyAccessedMembers(Dynamical
             .Where(static property => property.GetMethod is not null && property.GetIndexParameters().Length is 0)
     ]);
 
-    public static bool TryResolve(TContext context, Type contextType, [NotNullWhen(true)] out object? value)
+    public static bool TryResolve(TContext context, Type contextType, out object? value)
     {
         foreach (var property in _ContextProperties.Value)
         {
@@ -112,7 +112,7 @@ internal static class MacroContextResolver<[DynamicallyAccessedMembers(Dynamical
                 continue;
 
             value = property.GetValue(context);
-            return value is not null;
+            return true;
         }
 
         value = null;

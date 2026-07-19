@@ -19,12 +19,15 @@ public class MangaDownloadTaskGroup : DownloadTaskGroup
 {
     public IImageSet Entry => (IImageSet) DatabaseEntry.Entry;
 
-    public MangaDownloadTaskGroup(DownloadHistoryEntry entry) : base(entry)
+    public MangaDownloadTaskGroup(DownloadHistoryEntryBase entry) : base(entry)
     {
         DestinationIllustrationFormat = GetFormatToken(entry);
     }
 
-    public MangaDownloadTaskGroup(IImageSet entry, string destination) : base(entry, destination, DownloadItemType.Manga)
+    public MangaDownloadTaskGroup(
+        IImageSet entry,
+        string destination,
+        int? workSubscriptionId = null) : base(entry, destination, workSubscriptionId)
     {
         DestinationIllustrationFormat = IoHelper.GetAvailableIllustrationDownloadFormatToken();
         DatabaseEntry.FormatToken = DestinationIllustrationFormat.Value;
@@ -46,6 +49,7 @@ public class MangaDownloadTaskGroup : DownloadTaskGroup
             var imageDownloadTask = new ImageDownloadTask(page.ImageUri, path, DatabaseEntry.State);
             AddToTasksSet(imageDownloadTask);
         }
+
         SetNotCreateFromEntry();
     }
 
@@ -55,7 +59,7 @@ public class MangaDownloadTaskGroup : DownloadTaskGroup
             return;
 
         var provider = GetExtensionService().GetStaticImageFormatProvider(extension)
-            ?? throw new NotSupportedException(extension);
+                       ?? throw new NotSupportedException(extension);
         foreach (var task in TasksSet)
         {
             if (task.WasDownloadSkipped)
@@ -103,7 +107,7 @@ public class MangaDownloadTaskGroup : DownloadTaskGroup
         FileHelper.DeleteEmptyFolder(OpenLocalDestination);
     }
 
-    private static IllustrationDownloadFormatToken GetFormatToken(DownloadHistoryEntry entry)
+    private static IllustrationDownloadFormatToken GetFormatToken(DownloadHistoryEntryBase entry)
     {
         if (!string.IsNullOrWhiteSpace(entry.FormatToken))
             return IoHelper.GetAvailableIllustrationDownloadFormatToken(entry.FormatToken);

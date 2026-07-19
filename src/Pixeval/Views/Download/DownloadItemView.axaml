@@ -1,5 +1,5 @@
 <ContentPage
-    x:Class="Pixeval.Views.Download.DownloadView"
+    x:Class="Pixeval.Views.Download.DownloadItemView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
@@ -12,9 +12,9 @@
     xmlns:options="using:Pixeval.Models.Options"
     xmlns:pixeval="using:Pixeval"
     xmlns:viewModels="using:Pixeval.ViewModels"
-    x:DataType="{x:Type viewModels:DownloadViewViewModel}"
+    x:DataType="{x:Type viewModels:DownloadItemPageViewModel}"
     x:Name="Root"
-    Header="{I18N {x:Static pixeval:MainPageResources.TabDownload}}"
+    Header="{I18N {x:Static pixeval:DownloadPageResources.OrdinaryDownloadsButtonLabel}}"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
@@ -46,7 +46,7 @@
                     Click="CancelSelectButton_OnClicked"
                     Icon="{icons:SymbolIcon SelectAllOff}"
                     IsEnabled="{Binding !!#Root.SelectedCount}"
-                    Label="{Binding #Root.SelectedCount, Converter={x:Static local:DownloadView.SelectionCountLabelConverter}}" />
+                    Label="{Binding #Root.SelectedCount, Converter={x:Static local:DownloadItemView.SelectionCountLabelConverter}}" />
                 <CommandBarButton
                     Click="SelectAllButton_OnClicked"
                     Icon="{icons:SymbolIcon SelectAllOn}"
@@ -89,9 +89,6 @@
                     <controls:ItemsViewListBoxStyles />
                 </ListBox.Styles>
                 <ListBox.DataTemplates>
-                    <DataTemplate x:DataType="{x:Type viewModels:DownloadFolderViewModel}">
-                        <local:DownloadFolder OpenRequested="DownloadFolder_OnOpenRequested" />
-                    </DataTemplate>
                     <DataTemplate x:DataType="{x:Type viewModels:DownloadItemViewModel}">
                         <Border Padding="16" Background="Transparent">
                             <local:DownloadItem OpenIllustrationRequested="DownloadItem_OnOpenIllustrationRequested" />

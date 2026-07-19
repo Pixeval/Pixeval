@@ -88,9 +88,15 @@ public sealed class AppViewModel(App app, FileLogger logger) : IAsyncDisposable
             .AddSingleton<IllustrationDownloadTaskFactory>()
             .AddSingleton<NovelDownloadTaskFactory>()
             .AddSingleton(provider => new ExtensionService(provider.GetRequiredService<FileLogger>(), AppSettings))
-            .AddSingleton(_ => new SQLiteConnection(AppInfo.DatabaseFilePath,
-                SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex))
+            .AddSingleton(_ =>
+            {
+                var db = new SQLiteConnection(AppInfo.DatabaseFilePath,
+                    SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex);
+                DownloadHistoryMigration.Migrate(db);
+                return db;
+            })
             .AddSingleton<DownloadHistoryPersistentManager>()
+            .AddSingleton<SubscriptionDownloadHistoryPersistentManager>()
             .AddSingleton<WorkSubscriptionPersistentManager>()
             .AddSingleton<SearchHistoryPersistentManager>()
             .AddSingleton<BrowseHistoryPersistentManager>()
@@ -129,6 +135,12 @@ public sealed class AppViewModel(App app, FileLogger logger) : IAsyncDisposable
     public void QueueWorkSubscriptionSyncAll()
     {
         AppServiceProvider.GetRequiredService<WorkSubscriptionDownloadService>().QueueSyncAll();
+    }
+
+    public void QueueWorkSubscriptionSync(WorkSubscriptionEntry subscription)
+    {
+        AppServiceProvider.GetRequiredService<WorkSubscriptionDownloadService>()
+            .QueueSyncSubscription(subscription);
     }
 
     public void QueueWorkSubscriptionSyncCurrentSource(long uid, WorkSubscriptionType subscriptionType,

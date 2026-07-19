@@ -7,5 +7,4 @@ public sealed record PixevalDownloadMacroDefinitionDto(
     string Name,
     string Description,
     string Kind,
-    string ContextType,
-    string? RequiredPredicateName);
+    string ContextType);

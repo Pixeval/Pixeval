@@ -10,8 +10,9 @@ Pixeval 提供宏用于更精细的设定下载路径。
 ### 特殊约束
 
 有些宏有些特殊约束：
-- `@{series_id}` 和 `@{series_title}` 必须在条件宏 `@{is_series?<正分支>:<反分支>}` 的 `<正分支>` 中使用。
-- `@{pic_set_index}` 必须在条件宏 `@{is_pic_set?<正分支>:<反分支>}` 的 `<正分支>` 中使用。
+- `@{series_id}` 和 `@{series_title}` 必须在条件宏 `@{is_series?:}` 的正分支中使用。
+- `@{pic_set_index}` 必须在条件宏 `@{is_pic_set?:}` 的正分支中使用。
+- `@{group_id}` 会输出订阅下载组 ID，必须在 `@{is_group?:}`、`@{is_bookmark_group?:}`、`@{is_post_group?:}` 或 `@{is_series_group?:}` 任意一个条件宏的正分支中使用。
 - `@{pic_set_index}` 和 `@{ext}` 必须在文件名中使用。
 - `@{ext}` 不包含扩展名前的点号，例如它会输出 `jpg` 而不是 `.jpg`；需要完整扩展名时应写作 `.@{ext}`。
 

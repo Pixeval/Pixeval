@@ -124,6 +124,11 @@ public partial class WorkSubscriptionsSettingsExpander : SettingsExpander, IEntr
         await ReloadAsync();
     }
 
+    private void SyncAllButton_OnClicked(object? sender, RoutedEventArgs e)
+    {
+        App.AppViewModel.QueueWorkSubscriptionSyncAll();
+    }
+
     private void SubscriptionTypeComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e)
     {
         UpdateWorkKindItems();

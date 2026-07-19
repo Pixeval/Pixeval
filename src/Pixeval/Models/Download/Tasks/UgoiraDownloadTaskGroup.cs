@@ -73,11 +73,12 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup
                 Path.Combine(FolderPath, $"{i}{Path.GetExtension(uri.OriginalString)}"), DatabaseEntry.State);
             AddToTasksSet(imageDownloadTask);
         }
+
         MsDelays = msDelays;
         SetNotCreateFromEntry();
     }
 
-    public UgoiraDownloadTaskGroup(DownloadHistoryEntry entry) : base(entry)
+    public UgoiraDownloadTaskGroup(DownloadHistoryEntryBase entry) : base(entry)
     {
         DestinationUgoiraFormat = GetFormatToken(entry);
 
@@ -93,7 +94,10 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup
         // ---
     }
 
-    public UgoiraDownloadTaskGroup(ISingleAnimatedImage entry, string destination) : base(entry, destination, DownloadItemType.Ugoira)
+    public UgoiraDownloadTaskGroup(
+        ISingleAnimatedImage entry,
+        string destination,
+        int? workSubscriptionId = null) : base(entry, destination, workSubscriptionId)
     {
         if (entry.PreferredAnimatedImageType is not SingleAnimatedImageType.MultiFiles)
             throw new InvalidOperationException($"{nameof(ISingleAnimatedImage.PreferredAnimatedImageType)} should be {nameof(SingleAnimatedImageType.MultiFiles)}");
@@ -190,7 +194,7 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup
         }
 
         var provider = GetExtensionService().GetAnimatedImageFormatProvider(extension)
-            ?? throw new NotSupportedException(extension);
+                       ?? throw new NotSupportedException(extension);
         var streams = new List<Stream>(TasksSet.Count);
         var temporaryFile = Path.Combine(FolderPath, Path.GetFileName(DestinationFile));
         if (File.Exists(temporaryFile))
@@ -221,7 +225,7 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup
         FileHelper.DeleteEmptyFolder(FolderPath);
     }
 
-    private static UgoiraDownloadFormatToken GetFormatToken(DownloadHistoryEntry entry)
+    private static UgoiraDownloadFormatToken GetFormatToken(DownloadHistoryEntryBase entry)
     {
         if (!string.IsNullOrWhiteSpace(entry.FormatToken))
             return IoHelper.GetAvailableUgoiraDownloadFormatToken(entry.FormatToken);

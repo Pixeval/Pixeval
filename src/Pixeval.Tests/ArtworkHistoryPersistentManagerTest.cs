@@ -127,7 +127,7 @@ public sealed class ArtworkHistoryPersistentManagerTest
         await foreach (var entry in manager.StreamEntriesAsync(7))
             values.Add(entry.Value);
 
-        Assert.AreEqual(38, values.Count);
+        Assert.HasCount(38, values);
         for (var i = 0; i < values.Count; i++)
             Assert.AreEqual((37 - i).ToString(), values[i]);
     }
@@ -219,28 +219,27 @@ public sealed class ArtworkHistoryPersistentManagerTest
         await foreach (var entry in manager.StreamEntriesAsync(7))
             destinations.Add(entry.Destination);
 
-        Assert.AreEqual(38, destinations.Count);
+        Assert.HasCount(38, destinations);
         for (var i = 0; i < destinations.Count; i++)
             Assert.AreEqual((37 - i).ToString(), destinations[i]);
-        Assert.AreEqual(3, commands.Count);
+        Assert.HasCount(3, commands);
     }
 
     [TestMethod]
-    public async Task QueryEntriesAsync_FiltersAndOrdersNewestFirst()
+    public void SubscriptionHistory_ContainsIdentityDoesNotLoadPayload()
     {
         using var db = new SQLiteConnection(":memory:");
         var logger = CreateLogger();
-        var manager = new DownloadHistoryPersistentManager(db, logger);
+        var manager = new SubscriptionDownloadHistoryPersistentManager(db, logger);
+        var commands = new List<string>();
         for (var i = 0; i < 45; i++)
-            manager.Insert(new(i.ToString(), CreatePost(i.ToString())) { WorkSubscriptionId = i % 2 });
+            manager.Insert(new(i.ToString(), CreatePost(i.ToString()), i % 2 + 1));
+        db.Trace = true;
+        db.Tracer = commands.Add;
 
-        var destinations = new List<string>();
-        await foreach (var entry in manager.GetBySubscriptionIdAsync(1))
-            destinations.Add(entry.Destination);
-
-        Assert.AreEqual(22, destinations.Count);
-        for (var i = 0; i < destinations.Count; i++)
-            Assert.AreEqual((43 - i * 2).ToString(), destinations[i]);
+        Assert.IsTrue(manager.ContainsIdentity(2, "43", "43"));
+        Assert.IsFalse(manager.ContainsIdentity(1, "43", "43"));
+        Assert.DoesNotContain(command => command.Contains(nameof(ArtworkPayloadEntry), StringComparison.Ordinal), commands);
     }
 
     [TestMethod]
@@ -257,6 +256,76 @@ public sealed class ArtworkHistoryPersistentManagerTest
         Assert.IsTrue(await enumerator.MoveNextAsync());
         Assert.AreEqual("new", enumerator.Current.Entry.Id);
         Assert.IsFalse(await enumerator.MoveNextAsync());
+    }
+
+    [TestMethod]
+    public async Task SubscriptionHistory_AddOrReplaceUsesCompositeIdentity()
+    {
+        using var db = new SQLiteConnection(":memory:");
+        var manager = new SubscriptionDownloadHistoryPersistentManager(db, CreateLogger());
+        manager.AddOrReplace(new("same", CreatePost("artwork"), 1));
+        var firstHistoryEntryId = db.Table<SubscriptionDownloadHistoryEntry>().Single().HistoryEntryId;
+
+        manager.AddOrReplace(new("same", CreatePost("artwork"), 1));
+        manager.AddOrReplace(new("same", CreatePost("artwork"), 2));
+        manager.AddOrReplace(new("same", CreatePost("other"), 1));
+
+        Assert.AreEqual(3, manager.Count);
+        Assert.AreEqual(3, db.Table<ArtworkPayloadEntry>().Count());
+        Assert.AreNotEqual(
+            firstHistoryEntryId,
+            db.Table<SubscriptionDownloadHistoryEntry>()
+                .Single(entry => entry.WorkSubscriptionId == 1 && entry.ArtworkId == "artwork")
+                .HistoryEntryId);
+        var identities = new List<(int SubscriptionId, string ArtworkId, string Destination)>();
+        await foreach (var entry in manager.StreamEntriesAsync())
+            identities.Add((entry.WorkSubscriptionId, entry.ArtworkId, entry.Destination));
+        CollectionAssert.AreEquivalent(
+            new[] { (1, "artwork", "same"), (2, "artwork", "same"), (1, "other", "same") },
+            identities);
+    }
+
+    [TestMethod]
+    public void DownloadHistory_ClearOnlyRemovesOwnedPayloads()
+    {
+        using var db = new SQLiteConnection(":memory:");
+        var logger = CreateLogger();
+        var ordinaryManager = new DownloadHistoryPersistentManager(db, logger);
+        var subscriptionManager = new SubscriptionDownloadHistoryPersistentManager(db, logger);
+        ordinaryManager.AddOrReplace(new("ordinary", CreatePost("ordinary")));
+        subscriptionManager.AddOrReplace(new("subscription", CreatePost("subscription"), 1));
+        Assert.AreEqual(2, db.Table<ArtworkPayloadEntry>().Count());
+
+        ordinaryManager.Clear();
+
+        Assert.AreEqual(0, ordinaryManager.Count);
+        Assert.AreEqual(1, subscriptionManager.Count);
+        Assert.AreEqual(1, db.Table<ArtworkPayloadEntry>().Count());
+
+        subscriptionManager.Clear();
+
+        Assert.AreEqual(0, subscriptionManager.Count);
+        Assert.AreEqual(0, db.Table<ArtworkPayloadEntry>().Count());
+    }
+
+    [TestMethod]
+    public void DownloadHistoryTables_HaveSeparateSchemas()
+    {
+        using var db = new SQLiteConnection(":memory:");
+        var logger = CreateLogger();
+        _ = new DownloadHistoryPersistentManager(db, logger);
+        _ = new SubscriptionDownloadHistoryPersistentManager(db, logger);
+        var ordinaryColumns = db.GetTableInfo(nameof(DownloadHistoryEntry))
+            .Select(static column => column.Name)
+            .ToArray();
+        var subscriptionColumns = db.GetTableInfo(nameof(SubscriptionDownloadHistoryEntry))
+            .Select(static column => column.Name)
+            .ToArray();
+
+        CollectionAssert.DoesNotContain(ordinaryColumns, nameof(SubscriptionDownloadHistoryEntry.WorkSubscriptionId));
+        CollectionAssert.DoesNotContain(ordinaryColumns, nameof(SubscriptionDownloadHistoryEntry.ArtworkId));
+        Assert.Contains(nameof(SubscriptionDownloadHistoryEntry.WorkSubscriptionId), subscriptionColumns);
+        Assert.Contains(nameof(SubscriptionDownloadHistoryEntry.ArtworkId), subscriptionColumns);
     }
 
     [TestMethod]
@@ -304,7 +373,7 @@ public sealed class ArtworkHistoryPersistentManagerTest
         Assert.AreEqual(existing.HistoryEntryId, result.HistoryEntryId);
         Assert.AreEqual("new-token", result.RefreshToken);
         Assert.AreEqual("new-name", result.Name);
-        Assert.AreEqual(2, commands.Count);
+        Assert.HasCount(2, commands);
     }
 
     private static FileLogger CreateLogger() => new(Path.Combine(

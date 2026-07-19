@@ -265,8 +265,8 @@ public sealed class FilterLanguageTest
         var displayTexts = result.Completions.Select(t => t.DisplayText).ToArray();
 
         Assert.IsTrue(result.IsSuccess);
-        CollectionAssert.Contains(displayTexts, "+ai");
-        CollectionAssert.Contains(displayTexts, "-ai");
+        Assert.Contains("+ai", displayTexts);
+        Assert.Contains("-ai", displayTexts);
         CollectionAssert.DoesNotContain(displayTexts, "+r18");
         CollectionAssert.DoesNotContain(displayTexts, "+r18g");
         CollectionAssert.DoesNotContain(displayTexts, "+gif");

@@ -4,17 +4,20 @@
 using Pixeval.Download.MacroParser;
 using Pixeval.Download.Macros;
 using Pixeval.I18N;
+using Pixeval.Models.Database;
 using Pixeval.Models.Options;
 
 namespace Pixeval.Models.Download.Macros;
 
 [MetaPathMacro]
-public class IsBookmarkGroupMacro : IPredicate<WorkSubscriptionDownloadContext>
+public class IsBookmarkGroupMacro : IPredicate<WorkSubscriptionEntry?>
 {
-    public string Name => "is_bookmark_group";
+    public const string NameConst = "is_bookmark_group";
+
+    public string Name => NameConst;
 
     public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionIsBookmarkGroup);
 
-    public bool Match(WorkSubscriptionDownloadContext context) =>
-        context is { IsGroup: true, SubscriptionType: WorkSubscriptionType.Bookmarks };
+    public bool Match(WorkSubscriptionEntry? context) =>
+        context is { SubscriptionType: WorkSubscriptionType.Bookmarks };
 }

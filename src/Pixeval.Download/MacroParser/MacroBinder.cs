@@ -85,8 +85,8 @@ public sealed class MacroBinder<[DynamicallyAccessedMembers(DynamicallyAccessedM
             ITransducer transducer when !transducer.IsFormatterValid(formatterText)
                 => AddDiagnostic(diagnostics, MacroDiagnosticKind.InvalidFormatter, formatterSpan, name, formatterText),
             ITransducer when branches is not null => AddDiagnostic(diagnostics, MacroDiagnosticKind.NonParameterizedMacroBearingParameter, span, name),
-            IContextRestrictedMacro restricted when !(context.TryGetValue(restricted.RequiredPredicateName, out var value) && value)
-                => AddDiagnostic(diagnostics, MacroDiagnosticKind.MacroShouldBeContained, span, restricted.Name, restricted.RequiredPredicateName),
+            IContextRestrictedMacro restricted when !restricted.ContextPredicate(context)
+                => AddDiagnostic(diagnostics, MacroDiagnosticKind.MacroContextRestrictionNotSatisfied, span, restricted.Name),
             ITransducer transducer => BindTransducer(transducer, formatterText, context, span, lastSegmentContexts),
             IPredicate when formatter is not null => AddDiagnostic(diagnostics, MacroDiagnosticKind.InvalidFormatter, formatterSpan, name, formatterText),
             IPredicate when branches is null => AddDiagnostic(diagnostics, MacroDiagnosticKind.ConditionalBranchesMissing, span, name),

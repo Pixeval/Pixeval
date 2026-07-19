@@ -11,27 +11,29 @@ using System.Threading.Tasks;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Mako.Model;
-using Microsoft.Extensions.DependencyInjection;
 using Misaki;
 using Pixeval.Download;
 using Pixeval.Models.Database;
-using Pixeval.Models.Database.Managers;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
 
 namespace Pixeval.Models.Download.Tasks;
 
-public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : ViewModelBase, IDownloadTaskGroup
+public abstract partial class DownloadTaskGroup(DownloadHistoryEntryBase entry) : ViewModelBase, IDownloadTaskGroup
 {
     private readonly SemaphoreSlim _afterAllDownloadLock = new(1, 1);
 
-    public DownloadHistoryEntry DatabaseEntry { get; } = entry;
+    public DownloadHistoryEntryBase DatabaseEntry { get; } = entry;
 
     public abstract ValueTask InitializeTaskGroupAsync();
 
     public string Id => DatabaseEntry.Entry.Id;
 
-    protected DownloadTaskGroup(IArtworkInfo entry, string destination, DownloadItemType type) : this(new(destination, entry)) => SetNotCreateFromEntry();
+    protected DownloadTaskGroup(
+        IArtworkInfo entry,
+        string destination,
+        int? workSubscriptionId = null) : this(DownloadHistoryEntryBase.Create(destination, entry, workSubscriptionId)) =>
+        SetNotCreateFromEntry();
 
     /// <summary>
     /// 将<see cref="IsCreateFromEntry"/>设置为<see langword="false"/>以便启动。<br/>
@@ -58,8 +60,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
             g.DatabaseEntry.ErrorMessage = g.DatabaseEntry.State is DownloadState.Error
                 ? g.ErrorMessage
                 : null;
-            var manager = App.AppViewModel.AppServiceProvider.GetRequiredService<DownloadHistoryPersistentManager>();
-            manager.Update(g.DatabaseEntry);
+            App.AppViewModel.HistoryPersistHelper.UpdateDownloadHistory(g.DatabaseEntry);
         };
         // 外部包裹了Task.Run
         AfterItemDownloadAsync += (_, _) => AllTasksDownloadedAsync();
@@ -144,8 +145,8 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
         DatabaseEntry.ErrorMessage = null;
         OnPropertyChanged(nameof(ErrorMessage));
         (CurrentState is DownloadState.Error
-            ? TasksSet.Where(t => t.CurrentState is DownloadState.Error)
-            : TasksSet)
+                ? TasksSet.Where(t => t.CurrentState is DownloadState.Error)
+                : TasksSet)
             .ForEach(t => t.Reset());
         if (TasksSet.Count is 0)
             SetDatabaseState(DownloadState.Queued);
@@ -154,6 +155,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
             CancellationTokenSource.Dispose();
             CancellationTokenSource = new();
         }
+
         DownloadTryReset?.Invoke(this);
         IsProcessing = false;
     }
@@ -218,8 +220,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
     [NotifyPropertyChangedFor(nameof(CurrentState))]
     public partial bool IsPending { get; set; }
 
-    [ObservableProperty]
-    public partial bool IsProcessing { get; set; }
+    [ObservableProperty] public partial bool IsProcessing { get; set; }
 
     public DownloadState CurrentState
     {
@@ -317,10 +318,9 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
             DatabaseEntry.ErrorMessage = null;
             OnPropertyChanged(nameof(ErrorMessage));
         }
+
         DatabaseEntry.State = state;
-        App.AppViewModel.AppServiceProvider
-            .GetRequiredService<DownloadHistoryPersistentManager>()
-            .Update(DatabaseEntry);
+        App.AppViewModel.HistoryPersistHelper.UpdateDownloadHistory(DatabaseEntry);
         OnPropertyChanged(nameof(CurrentState));
     }
 
@@ -329,9 +329,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntry entry) : Vi
         _errorMessage = exception.ToString();
         DatabaseEntry.State = DownloadState.Error;
         DatabaseEntry.ErrorMessage = _errorMessage;
-        App.AppViewModel.AppServiceProvider
-            .GetRequiredService<DownloadHistoryPersistentManager>()
-            .Update(DatabaseEntry);
+        App.AppViewModel.HistoryPersistHelper.UpdateDownloadHistory(DatabaseEntry);
         OnPropertyChanged(nameof(ErrorMessage));
         OnPropertyChanged(nameof(CurrentState));
         OnPropertyChanged(nameof(ErrorCount));

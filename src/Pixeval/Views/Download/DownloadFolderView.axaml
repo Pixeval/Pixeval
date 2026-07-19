@@ -1,11 +1,11 @@
-<views:IconTabbedPage
-    x:Class="Pixeval.Views.Download.DownloadPage"
+<NavigationPage
+    x:Class="Pixeval.Views.Download.DownloadFolderView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:views="using:Pixeval.Views"
+    xmlns:pixeval="using:Pixeval"
+    Header="{I18N {x:Static pixeval:DownloadPageResources.SubscriptionDownloadsButtonLabel}}"
     mc:Ignorable="d"
     d:DesignHeight="450"
-    d:DesignWidth="800"
-    TabPlacement="Top" />
+    d:DesignWidth="800" />

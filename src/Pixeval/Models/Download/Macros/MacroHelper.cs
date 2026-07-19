@@ -37,7 +37,7 @@ internal static class MacroHelper
         }
     }
 
-    public static string FormatInteger(int value, string? formatter) =>
+    public static string FormatInteger(long value, string? formatter) =>
         formatter is null
             ? value.ToString(CultureInfo.InvariantCulture)
             : value.ToString(formatter, CultureInfo.InvariantCulture);

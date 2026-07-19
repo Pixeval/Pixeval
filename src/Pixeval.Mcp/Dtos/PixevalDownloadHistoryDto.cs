@@ -7,5 +7,4 @@ public sealed record PixevalDownloadHistoryDto(
     string Destination,
     string State,
     string? FormatToken,
-    string? ErrorMessage,
-    int WorkSubscriptionId);
+    string? ErrorMessage);

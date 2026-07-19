@@ -16,13 +16,14 @@ public class SeriesIdMacro : ITransducer<IArtworkInfo>, IContextRestrictedMacro
 
     public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionSeriesId);
 
-    public string RequiredPredicateName => IsSeriesMacro.NameConst;
+    public MacroContextPredicate ContextPredicate => static context =>
+        context.TryGetValue(IsSeriesMacro.NameConst, out var value) && value;
 
-    public bool IsFormatterValid(string? formatter) => MacroHelper.IsStringFormatterValid(formatter);
+    public bool IsFormatterValid(string? formatter) => MacroHelper.IsIntegerFormatterValid(formatter);
 
     public string Substitute(IArtworkInfo context, string? formatter, out bool includeToken)
     {
         includeToken = false;
-        return context is WorkBase { Series.Id: var id } ? MacroHelper.FormatString(id.ToString(), formatter) : "";
+        return context is WorkBase { Series.Id: var id } ? MacroHelper.FormatInteger(id, formatter) : "";
     }
 }

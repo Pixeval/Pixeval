@@ -5,6 +5,7 @@ using Misaki;
 using Pixeval.AppManagement;
 using Pixeval.Download;
 using Pixeval.Download.MacroParser;
+using Pixeval.Models.Database;
 using Pixeval.Models.Download;
 using Pixeval.Models.Options;
 using Pixeval.Utilities;
@@ -23,9 +24,13 @@ public sealed class MetaPathParserTest
         Assert.IsTrue(result.IsSuccess);
         Assert.IsNotNull(result.Root);
         Assert.HasCount(4, result.Highlights);
-        CollectionAssert.AreEqual(
-            new[] { MacroHighlightKind.Delimiter, MacroHighlightKind.Delimiter, MacroHighlightKind.Name, MacroHighlightKind.Delimiter },
-            result.Highlights.Select(highlight => highlight.Kind).ToArray());
+        Assert.AreSequenceEqual(
+        [
+            MacroHighlightKind.Delimiter,
+            MacroHighlightKind.Delimiter,
+            MacroHighlightKind.Name,
+            MacroHighlightKind.Delimiter
+        ], result.Highlights.Select(highlight => highlight.Kind).ToArray());
     }
 
     [TestMethod]
@@ -36,17 +41,15 @@ public sealed class MetaPathParserTest
         Assert.IsTrue(result.IsSuccess);
         Assert.IsNotNull(result.Root);
         Assert.HasCount(6, result.Highlights);
-        CollectionAssert.AreEqual(
-            new[]
-            {
-                MacroHighlightKind.Delimiter,
-                MacroHighlightKind.Delimiter,
-                MacroHighlightKind.Name,
-                MacroHighlightKind.Separator,
-                MacroHighlightKind.Formatter,
-                MacroHighlightKind.Delimiter
-            },
-            result.Highlights.Select(highlight => highlight.Kind).ToArray());
+        Assert.AreSequenceEqual(
+        [
+            MacroHighlightKind.Delimiter,
+            MacroHighlightKind.Delimiter,
+            MacroHighlightKind.Name,
+            MacroHighlightKind.Separator,
+            MacroHighlightKind.Formatter,
+            MacroHighlightKind.Delimiter
+        ], result.Highlights.Select(highlight => highlight.Kind).ToArray());
     }
 
     [TestMethod]
@@ -137,9 +140,37 @@ public sealed class MetaPathParserTest
         var result = DownloadPathMacroParser.Analyze("@{pic_set_index}");
 
         Assert.IsFalse(result.IsSuccess);
-        Assert.AreEqual(MacroDiagnosticKind.MacroShouldBeContained, result.Diagnostics[0].Kind);
+        Assert.AreEqual(MacroDiagnosticKind.MacroContextRestrictionNotSatisfied, result.Diagnostics[0].Kind);
         Assert.AreEqual("pic_set_index", result.Diagnostics[0].Arguments[0]);
-        Assert.AreEqual("is_pic_set", result.Diagnostics[0].Arguments[1]);
+    }
+
+    [TestMethod]
+    [DataRow("is_group")]
+    [DataRow("is_bookmark_group")]
+    [DataRow("is_post_group")]
+    [DataRow("is_series_group")]
+    public void GroupIdShouldBeAllowedByAnyGroupPredicate(string predicateName)
+    {
+        var result = DownloadPathMacroParser.Analyze("@{" + predicateName + "?@{group_id}:}");
+
+        Assert.IsTrue(result.IsSuccess);
+    }
+
+    [TestMethod]
+    public void ContextRestrictionDelegateShouldSupportMixedConditions()
+    {
+        var analyzer = new MetaPathAnalyzer<EmptyParserContext>(
+        [
+            new TestPredicateMacro("a"),
+            new TestPredicateMacro("b"),
+            new TestPredicateMacro("c"),
+            new TestContextRestrictedMacro()
+        ]);
+
+        Assert.IsTrue(analyzer.Analyze("@{a?@{b?@{restricted}:}:}").IsSuccess);
+        Assert.IsTrue(analyzer.Analyze("@{a?@{c?@{restricted}:}:}").IsSuccess);
+        Assert.IsFalse(analyzer.Analyze("@{a?@{restricted}:}").IsSuccess);
+        Assert.IsFalse(analyzer.Analyze("@{b?@{restricted}:}").IsSuccess);
     }
 
     [TestMethod]
@@ -211,17 +242,34 @@ public sealed class MetaPathParserTest
             "group-bookmark-not-post-not-series",
             DownloadPathMacroParser.Reduce(
                 "@{is_group?group:not-group}-@{is_bookmark_group?bookmark:not-bookmark}-@{is_post_group?post:not-post}-@{is_series_group?series:not-series}",
-                new ParserContext(sample, WorkSubscriptionDownloadContext.FromSubscriptionType(WorkSubscriptionType.Bookmarks))));
+                new ParserContext(sample, new() { SubscriptionType = WorkSubscriptionType.Bookmarks })));
         Assert.AreEqual(
             "group-not-bookmark-post-not-series",
             DownloadPathMacroParser.Reduce(
                 "@{is_group?group:not-group}-@{is_bookmark_group?bookmark:not-bookmark}-@{is_post_group?post:not-post}-@{is_series_group?series:not-series}",
-                new ParserContext(sample, WorkSubscriptionDownloadContext.FromSubscriptionType(WorkSubscriptionType.Posts))));
+                new ParserContext(sample, new() { SubscriptionType = WorkSubscriptionType.Posts })));
         Assert.AreEqual(
             "group-not-bookmark-not-post-series",
             DownloadPathMacroParser.Reduce(
                 "@{is_group?group:not-group}-@{is_bookmark_group?bookmark:not-bookmark}-@{is_post_group?post:not-post}-@{is_series_group?series:not-series}",
-                new ParserContext(sample, WorkSubscriptionDownloadContext.FromSubscriptionType(WorkSubscriptionType.Series))));
+                new ParserContext(sample, new() { SubscriptionType = WorkSubscriptionType.Series })));
+    }
+
+    [TestMethod]
+    public void GroupIdShouldUseIntegerFormatter()
+    {
+        var sample = DesignHelper.DownloadParserSampleWork(ImageType.SingleImage);
+        var subscription = new WorkSubscriptionEntry
+        {
+            Id = 42,
+            SubscriptionType = WorkSubscriptionType.Posts
+        };
+
+        var path = DownloadPathMacroParser.Reduce(
+            "@{is_post_group?@{group_id:000}:}",
+            new ParserContext(sample, subscription));
+
+        Assert.AreEqual("042", path);
     }
 
     [TestMethod]
@@ -270,4 +318,33 @@ public sealed class MetaPathParserTest
     }
 
     private sealed record EmptyParserContext;
+
+    private sealed class TestPredicateMacro(string name) : IPredicate<EmptyParserContext>
+    {
+        public string Name { get; } = name;
+
+        public string Description => "";
+
+        public bool Match(EmptyParserContext context) => true;
+    }
+
+    private sealed class TestContextRestrictedMacro : ITransducer<EmptyParserContext>, IContextRestrictedMacro
+    {
+        public string Name => "restricted";
+
+        public string Description => "";
+
+        public MacroContextPredicate ContextPredicate => static context =>
+            context.TryGetValue("a", out var a) && a
+            && (context.TryGetValue("b", out var b) && b
+                || context.TryGetValue("c", out var c) && c);
+
+        public bool IsFormatterValid(string? formatter) => true;
+
+        public string Substitute(EmptyParserContext context, string? formatter, out bool includeToken)
+        {
+            includeToken = false;
+            return "restricted";
+        }
+    }
 }

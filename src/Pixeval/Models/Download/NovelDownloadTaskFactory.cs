@@ -19,7 +19,11 @@ public class NovelDownloadTaskFactory : IDownloadTaskFactory<Novel, NovelDownloa
             throw new ArgumentException($"The parser context must contain a {nameof(Novel)}.", nameof(parserContext));
 
         var path = IoHelper.NormalizePath(DownloadPathMacroParser.Reduce(rawPath, parserContext));
-        var task = new NovelDownloadTaskGroup(context, path, parameter);
+        var task = new NovelDownloadTaskGroup(
+            context,
+            path,
+            parameter,
+            parserContext.WorkSubscription?.HistoryEntryId);
         return task;
     }
 }

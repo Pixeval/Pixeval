@@ -12,6 +12,8 @@ namespace Pixeval.Download;
 
 public interface IDownloadTaskGroupBase : IDownloadTaskBase, INotifyPropertyChanged, INotifyPropertyChanging, IReadOnlyCollection<ISingleDownloadTaskBase>, IDisposable
 {
+    DownloadTaskKey Key { get; }
+
     ValueTask InitializeTaskGroupAsync();
 
     void SubscribeProgress(ChannelWriter<DownloadToken> writer);

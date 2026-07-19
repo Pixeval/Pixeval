@@ -21,10 +21,11 @@ public sealed class HistoryPersistHelper : IDisposable
 {
     private readonly BrowseHistoryPersistentManager _browseHistoryPersistentManager;
     private readonly DownloadHistoryPersistentManager _downloadHistoryPersistentManager;
+    private readonly SubscriptionDownloadHistoryPersistentManager _subscriptionDownloadHistoryPersistentManager;
     private readonly SearchHistoryPersistentManager _searchHistoryPersistentManager;
     private readonly WatchLaterPersistentManager _watchLaterPersistentManager;
     private readonly CancellationTokenSource _downloadRestoreCancellationTokenSource = new();
-    private readonly HashSet<string> _removedDownloadHistoryDestinations = new(StringComparer.Ordinal);
+    private readonly HashSet<DownloadTaskKey> _removedDownloadHistoryKeys = [];
     private readonly HashSet<string> _removedSearchHistoryValues = new(StringComparer.Ordinal);
     private readonly CancellationTokenSource _searchRestoreCancellationTokenSource = new();
     private readonly FileLogger _logger;
@@ -39,6 +40,7 @@ public sealed class HistoryPersistHelper : IDisposable
         [FromKeyedServices(IPlatformInfo.Pixiv)]
         IDownloadHttpClientService service,
         DownloadHistoryPersistentManager downloadHistoryPersistentManager,
+        SubscriptionDownloadHistoryPersistentManager subscriptionDownloadHistoryPersistentManager,
         SearchHistoryPersistentManager searchHistoryPersistentManager,
         BrowseHistoryPersistentManager browseHistoryPersistentManager,
         WatchLaterPersistentManager watchLaterPersistentManager,
@@ -46,6 +48,7 @@ public sealed class HistoryPersistHelper : IDisposable
     {
         _browseHistoryPersistentManager = browseHistoryPersistentManager;
         _downloadHistoryPersistentManager = downloadHistoryPersistentManager;
+        _subscriptionDownloadHistoryPersistentManager = subscriptionDownloadHistoryPersistentManager;
         _logger = logger;
         _searchHistoryPersistentManager = searchHistoryPersistentManager;
         _watchLaterPersistentManager = watchLaterPersistentManager;
@@ -129,6 +132,21 @@ public sealed class HistoryPersistHelper : IDisposable
 
     public void ClearBrowseHistory() => _browseHistoryPersistentManager.Clear();
 
+    public void UpdateDownloadHistory(DownloadHistoryEntryBase entry)
+    {
+        switch (entry)
+        {
+            case DownloadHistoryEntry downloadEntry:
+                _downloadHistoryPersistentManager.Update(downloadEntry);
+                break;
+            case SubscriptionDownloadHistoryEntry subscriptionEntry:
+                _subscriptionDownloadHistoryPersistentManager.Update(subscriptionEntry);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(entry));
+        }
+    }
+
     private void OnSearchHistoryCollectionChanged(
         object? sender,
         NotifyCollectionChangedEventArgs args)
@@ -200,8 +218,8 @@ public sealed class HistoryPersistHelper : IDisposable
                 if (args.NewItems is { } newItems)
                     foreach (var newItem in newItems.OfType<IDownloadTaskGroup>())
                     {
-                        _ = _removedDownloadHistoryDestinations.Remove(newItem.DatabaseEntry.Destination);
-                        _downloadHistoryPersistentManager.AddOrReplace(newItem.DatabaseEntry);
+                        _ = _removedDownloadHistoryKeys.Remove(newItem.Key);
+                        AddOrReplaceDownloadHistory(newItem.DatabaseEntry);
                     }
 
                 break;
@@ -210,8 +228,8 @@ public sealed class HistoryPersistHelper : IDisposable
                     foreach (var oldItem in oldItems.OfType<IDownloadTaskGroup>())
                     {
                         if (!_isDownloadHistoryRestoreCompleted)
-                            _ = _removedDownloadHistoryDestinations.Add(oldItem.DatabaseEntry.Destination);
-                        _ = _downloadHistoryPersistentManager.TryDeleteByDestination(oldItem.DatabaseEntry.Destination);
+                            _ = _removedDownloadHistoryKeys.Add(oldItem.Key);
+                        _ = TryDeleteDownloadHistory(oldItem.DatabaseEntry);
                     }
 
                 break;
@@ -219,24 +237,25 @@ public sealed class HistoryPersistHelper : IDisposable
                 if (args.NewItems is { } replacementItems)
                     foreach (var newItem in replacementItems.OfType<IDownloadTaskGroup>())
                     {
-                        _ = _removedDownloadHistoryDestinations.Remove(newItem.DatabaseEntry.Destination);
-                        _downloadHistoryPersistentManager.AddOrReplace(newItem.DatabaseEntry);
+                        _ = _removedDownloadHistoryKeys.Remove(newItem.Key);
+                        AddOrReplaceDownloadHistory(newItem.DatabaseEntry);
                     }
 
                 if (args.OldItems is { } replacedItems)
                     foreach (var oldItem in replacedItems.OfType<IDownloadTaskGroup>())
                         if (args.NewItems?.OfType<IDownloadTaskGroup>().Any(newItem =>
-                                newItem.DatabaseEntry.Destination == oldItem.DatabaseEntry.Destination) is not true)
+                                newItem.Key == oldItem.Key) is not true)
                         {
                             if (!_isDownloadHistoryRestoreCompleted)
-                                _ = _removedDownloadHistoryDestinations.Add(oldItem.DatabaseEntry.Destination);
-                            _ = _downloadHistoryPersistentManager.TryDeleteByDestination(oldItem.DatabaseEntry.Destination);
+                                _ = _removedDownloadHistoryKeys.Add(oldItem.Key);
+                            _ = TryDeleteDownloadHistory(oldItem.DatabaseEntry);
                         }
 
                 break;
             case NotifyCollectionChangedAction.Reset when args.NewItems is not { Count: > 0 }:
                 _downloadRestoreCancellationTokenSource.Cancel();
                 _downloadHistoryPersistentManager.Clear();
+                _subscriptionDownloadHistoryPersistentManager.Clear();
                 break;
             case NotifyCollectionChangedAction.Move:
                 break;
@@ -244,6 +263,33 @@ public sealed class HistoryPersistHelper : IDisposable
                 throw new ArgumentOutOfRangeException(nameof(args.Action), args.Action, null);
         }
     }
+
+    private void AddOrReplaceDownloadHistory(DownloadHistoryEntryBase entry)
+    {
+        switch (entry)
+        {
+            case DownloadHistoryEntry downloadEntry:
+                _downloadHistoryPersistentManager.AddOrReplace(downloadEntry);
+                break;
+            case SubscriptionDownloadHistoryEntry subscriptionEntry:
+                _subscriptionDownloadHistoryPersistentManager.AddOrReplace(subscriptionEntry);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(entry));
+        }
+    }
+
+    private bool TryDeleteDownloadHistory(DownloadHistoryEntryBase entry) => entry switch
+    {
+        DownloadHistoryEntry downloadEntry =>
+            _downloadHistoryPersistentManager.TryDeleteByDestination(downloadEntry.Destination),
+        SubscriptionDownloadHistoryEntry subscriptionEntry =>
+            _subscriptionDownloadHistoryPersistentManager.TryDeleteByIdentity(
+                subscriptionEntry.WorkSubscriptionId,
+                subscriptionEntry.ArtworkId,
+                subscriptionEntry.Destination),
+        _ => throw new ArgumentOutOfRangeException(nameof(entry))
+    };
 
     private async Task RestoreSafelyAsync(
         Func<CancellationToken, Task> restoreAsync,
@@ -304,34 +350,42 @@ public sealed class HistoryPersistHelper : IDisposable
     {
         try
         {
-            await foreach (var taskGroup in _downloadHistoryPersistentManager
-                               .StreamTaskGroupsAsync(token: token)
-                               .ConfigureAwait(false))
-            {
-                var isOwnedByDownloadManager = false;
-                try
-                {
-                    await Dispatcher.UIThread.InvokeAsync(() =>
-                    {
-                        token.ThrowIfCancellationRequested();
-                        if (_removedDownloadHistoryDestinations.Contains(taskGroup.Destination))
-                            return;
+            await Task.WhenAll(
+                    RestoreSourceAsync(_downloadHistoryPersistentManager.StreamTaskGroupsAsync(token: token)),
+                    RestoreSourceAsync(_subscriptionDownloadHistoryPersistentManager.StreamTaskGroupsAsync(token: token)))
+                .ConfigureAwait(false);
 
-                        _isRestoringDownloadHistory = true;
-                        try
-                        {
-                            isOwnedByDownloadManager = DownloadManager.TryRestoreTask(taskGroup);
-                        }
-                        finally
-                        {
-                            _isRestoringDownloadHistory = false;
-                        }
-                    });
-                }
-                finally
+            return;
+
+            async Task RestoreSourceAsync(IAsyncEnumerable<IDownloadTaskGroup> source)
+            {
+                await foreach (var taskGroup in source.ConfigureAwait(false))
                 {
-                    if (!isOwnedByDownloadManager)
-                        taskGroup.Dispose();
+                    var isOwnedByDownloadManager = false;
+                    try
+                    {
+                        await Dispatcher.UIThread.InvokeAsync(() =>
+                        {
+                            token.ThrowIfCancellationRequested();
+                            if (_removedDownloadHistoryKeys.Contains(taskGroup.Key))
+                                return;
+
+                            _isRestoringDownloadHistory = true;
+                            try
+                            {
+                                isOwnedByDownloadManager = DownloadManager.TryRestoreTask(taskGroup);
+                            }
+                            finally
+                            {
+                                _isRestoringDownloadHistory = false;
+                            }
+                        });
+                    }
+                    finally
+                    {
+                        if (!isOwnedByDownloadManager)
+                            taskGroup.Dispose();
+                    }
                 }
             }
         }
@@ -340,7 +394,7 @@ public sealed class HistoryPersistHelper : IDisposable
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 _isDownloadHistoryRestoreCompleted = true;
-                _removedDownloadHistoryDestinations.Clear();
+                _removedDownloadHistoryKeys.Clear();
             });
         }
     }

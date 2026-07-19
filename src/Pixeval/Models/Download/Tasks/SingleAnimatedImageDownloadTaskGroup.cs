@@ -24,7 +24,10 @@ public class SingleAnimatedImageDownloadTaskGroup : SingleImageDownloadTaskGroup
 
     private UgoiraDownloadFormatToken DestinationUgoiraFormat { get; }
 
-    public SingleAnimatedImageDownloadTaskGroup(ISingleAnimatedImage entry, string destination) : base(entry, destination)
+    public SingleAnimatedImageDownloadTaskGroup(
+        ISingleAnimatedImage entry,
+        string destination,
+        int? workSubscriptionId = null) : base(entry, destination, workSubscriptionId)
     {
         if (entry.PreferredAnimatedImageType is not SingleAnimatedImageType.SingleZipFile and not SingleAnimatedImageType.SingleFile)
             throw new InvalidOperationException($"{nameof(ISingleAnimatedImage.PreferredAnimatedImageType)} should be {nameof(SingleAnimatedImageType.SingleZipFile)} or {nameof(SingleAnimatedImageType.SingleFile)}");
@@ -32,7 +35,7 @@ public class SingleAnimatedImageDownloadTaskGroup : SingleImageDownloadTaskGroup
         DatabaseEntry.FormatToken = DestinationUgoiraFormat.Value;
     }
 
-    public SingleAnimatedImageDownloadTaskGroup(DownloadHistoryEntry entry) : base(entry)
+    public SingleAnimatedImageDownloadTaskGroup(DownloadHistoryEntryBase entry) : base(entry)
     {
         DestinationUgoiraFormat = GetFormatToken(entry);
     }
@@ -55,7 +58,7 @@ public class SingleAnimatedImageDownloadTaskGroup : SingleImageDownloadTaskGroup
     private async Task FormatByExtensionAsync(ImageDownloadTask sender, string extension)
     {
         var provider = GetExtensionService().GetAnimatedImageFormatProvider(extension)
-            ?? throw new NotSupportedException(extension);
+                       ?? throw new NotSupportedException(extension);
         var tempPath = sender.Destination + ".source";
         if (File.Exists(tempPath))
             File.Delete(tempPath);
@@ -93,7 +96,7 @@ public class SingleAnimatedImageDownloadTaskGroup : SingleImageDownloadTaskGroup
         }
     }
 
-    private static UgoiraDownloadFormatToken GetFormatToken(DownloadHistoryEntry entry)
+    private static UgoiraDownloadFormatToken GetFormatToken(DownloadHistoryEntryBase entry)
     {
         if (!string.IsNullOrWhiteSpace(entry.FormatToken))
             return IoHelper.GetAvailableUgoiraDownloadFormatToken(entry.FormatToken);

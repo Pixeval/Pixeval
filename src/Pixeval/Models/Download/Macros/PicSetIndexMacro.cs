@@ -15,7 +15,8 @@ public class PicSetIndexMacro : ITransducer<IArtworkInfo>, ILastSegment, IContex
 
     public string Name => NameConst;
 
-    public string RequiredPredicateName => IsPicSetMacro.NameConst;
+    public MacroContextPredicate ContextPredicate => static context =>
+        context.TryGetValue(IsPicSetMacro.NameConst, out var value) && value;
 
     public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionPicSetIndex);
 

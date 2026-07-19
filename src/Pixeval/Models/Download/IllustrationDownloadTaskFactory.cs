@@ -17,25 +17,26 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IArtworkInfo
     {
         var context = parserContext.ArtworkInfo;
         var path = IoHelper.NormalizePath(DownloadPathMacroParser.Reduce(rawPath, parserContext));
+        var workSubscriptionId = parserContext.WorkSubscription?.HistoryEntryId;
 
         IDownloadTaskGroup task = context switch
         {
             ISingleImage { ImageType: ImageType.SingleImage } singleImage => new SingleImageDownloadTaskGroup(
-                singleImage, path),
+                singleImage, path, workSubscriptionId),
             ISingleImage { ImageType: ImageType.ImageSet, SetIndex: > -1 } singleImage =>
-                new SingleImageDownloadTaskGroup(singleImage, path),
+                new SingleImageDownloadTaskGroup(singleImage, path, workSubscriptionId),
             ISingleAnimatedImage
             {
                 ImageType: ImageType.SingleAnimatedImage,
                 PreferredAnimatedImageType: SingleAnimatedImageType.MultiFiles
-            } singleAnimatedImage => new UgoiraDownloadTaskGroup(singleAnimatedImage, path),
+            } singleAnimatedImage => new UgoiraDownloadTaskGroup(singleAnimatedImage, path, workSubscriptionId),
             ISingleAnimatedImage
             {
                 ImageType: ImageType.SingleAnimatedImage,
                 PreferredAnimatedImageType: SingleAnimatedImageType.SingleFile
                 or SingleAnimatedImageType.SingleZipFile
-            } singleAnimatedImage => new SingleAnimatedImageDownloadTaskGroup(singleAnimatedImage, path),
-            IImageSet { ImageType: ImageType.ImageSet } imageSet => new MangaDownloadTaskGroup(imageSet, path),
+            } singleAnimatedImage => new SingleAnimatedImageDownloadTaskGroup(singleAnimatedImage, path, workSubscriptionId),
+            IImageSet { ImageType: ImageType.ImageSet } imageSet => new MangaDownloadTaskGroup(imageSet, path, workSubscriptionId),
             _ => throw new NotSupportedException()
         };
 

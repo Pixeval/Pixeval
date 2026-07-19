@@ -40,7 +40,7 @@ public sealed class DownloadManager : IDisposable
     /// <summary>
     /// 与<see cref="QueuedTasks"/>内容一样，但是用于快速查询
     /// </summary>
-    private readonly Dictionary<string, IDownloadTaskGroupBase> _taskQuerySet = [];
+    private readonly Dictionary<DownloadTaskKey, IDownloadTaskGroupBase> _taskQuerySet = [];
 
     private bool _disposed;
 
@@ -82,12 +82,13 @@ public sealed class DownloadManager : IDisposable
     /// </remarks>
     public void QueueTask(IDownloadTaskGroupBase taskGroup)
     {
-        if (_taskQuerySet.TryGetValue(taskGroup.Destination, out var v) && v == taskGroup)
+        if (_taskQuerySet.TryGetValue(taskGroup.Key, out var v) && v == taskGroup)
             return;
-        _taskQuerySet[taskGroup.Destination] = taskGroup;
+        _taskQuerySet[taskGroup.Key] = taskGroup;
 
         if (v is not null && QueuedTasks.IndexOf(v) is var existingIndex and >= 0)
         {
+            v.Cancel();
             QueuedTasks[existingIndex] = taskGroup;
             if (existingIndex > 0)
                 QueuedTasks.Move(existingIndex, 0);
@@ -107,7 +108,7 @@ public sealed class DownloadManager : IDisposable
     /// </summary>
     public bool TryRestoreTask(IDownloadTaskGroupBase taskGroup)
     {
-        if (_disposed || !_taskQuerySet.TryAdd(taskGroup.Destination, taskGroup))
+        if (_disposed || !_taskQuerySet.TryAdd(taskGroup.Key, taskGroup))
             return false;
 
         QueuedTasks.Add(taskGroup);
@@ -125,20 +126,20 @@ public sealed class DownloadManager : IDisposable
         try
         {
             while (await _downloadTaskChannel.Reader.WaitToReadAsync())
-                while (await _throttle && _downloadTaskChannel.Reader.TryRead(out var taskToken) && taskToken is { Token.IsCancellationRequested: false, Task: var taskGroup })
-                {
-                    await taskGroup.InitializeTaskGroupAsync();
+            while (await _throttle && _downloadTaskChannel.Reader.TryRead(out var taskToken) && taskToken is { Token.IsCancellationRequested: false, Task: var taskGroup })
+            {
+                await taskGroup.InitializeTaskGroupAsync();
 
-                    foreach (var subTask in taskGroup)
+                foreach (var subTask in taskGroup)
+                {
+                    // 需要判断是否处于Queued状态才能运行
+                    if (subTask.CurrentState is DownloadState.Queued)
                     {
-                        // 需要判断是否处于Queued状态才能运行
-                        if (subTask.CurrentState is DownloadState.Queued)
-                        {
-                            await DownloadAsync(subTask);
-                            _ = await _throttle;
-                        }
+                        await DownloadAsync(subTask);
+                        _ = await _throttle;
                     }
                 }
+            }
         }
         catch (ObjectDisposedException) when (_disposed)
         {
@@ -151,14 +152,14 @@ public sealed class DownloadManager : IDisposable
     /// <param name="taskGroup"></param>
     public bool TryRemoveTask(IDownloadTaskGroupBase taskGroup)
     {
-        var taskToRemove = _taskQuerySet.TryGetValue(taskGroup.Destination, out var current)
+        var taskToRemove = _taskQuerySet.TryGetValue(taskGroup.Key, out var current)
             ? current
             : taskGroup;
         taskToRemove.Cancel();
         if (!QueuedTasks.Remove(taskToRemove))
             return false;
 
-        _ = _taskQuerySet.Remove(taskToRemove.Destination);
+        _ = _taskQuerySet.Remove(taskToRemove.Key);
         return true;
     }
 

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Controls;
 using Pixeval.Download;
 using Pixeval.I18N;
@@ -14,7 +15,7 @@ using Pixeval.Models.Options;
 
 namespace Pixeval.ViewModels;
 
-public sealed class DownloadFolderViewModel(WorkSubscriptionEntry subscription)
+public sealed partial class DownloadFolderViewModel(WorkSubscriptionEntry subscription)
     : ViewModelBase, IDownloadListEntryViewModel, IDisposable
 {
     private bool _isDisposed;
@@ -23,7 +24,10 @@ public sealed class DownloadFolderViewModel(WorkSubscriptionEntry subscription)
 
     public ObservableCollection<DownloadItemViewModel> Items { get; } = [];
 
-    public IReadOnlyList<DownloadItemViewModel> DownloadItems => [.. Items];
+    public IReadOnlyList<DownloadItemViewModel> DownloadItems => Items;
+
+    [ObservableProperty]
+    public partial bool DeleteLocalFiles { get; set; }
 
     public string Title => GetDisplayName(Subscription);
 
@@ -83,9 +87,12 @@ public sealed class DownloadFolderViewModel(WorkSubscriptionEntry subscription)
         _ => Items.Any(t => t.MatchesOption(option, null))
     };
 
-    public void Add(DownloadItemViewModel item)
+    public void Add(DownloadItemViewModel item, bool insertAtFront)
     {
-        Items.Insert(0, item);
+        if (insertAtFront)
+            Items.Insert(0, item);
+        else
+            Items.Add(item);
         item.DownloadTask.PropertyChanged += DownloadTaskOnPropertyChanged;
         OnItemsChanged();
     }

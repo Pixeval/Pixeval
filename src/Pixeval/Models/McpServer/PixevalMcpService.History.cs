@@ -185,8 +185,7 @@ public sealed partial class PixevalMcpService
                 entry.Destination,
                 entry.State.ToString(),
                 entry.FormatToken,
-                entry.ErrorMessage,
-                entry.WorkSubscriptionId));
+                entry.ErrorMessage));
         CacheWorks(works);
         cancellationToken.ThrowIfCancellationRequested();
         return new(type, skip, count, total, items.Count, items, filterDto);

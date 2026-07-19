@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using Mako.Engine;
 using Mako.Global.Enum;
 using Mako.Model;
@@ -23,6 +24,7 @@ namespace Pixeval.Models.Subscriptions;
 
 public class WorkSubscriptionDownloadService(
     WorkSubscriptionPersistentManager subscriptionManager,
+    SubscriptionDownloadHistoryPersistentManager subscriptionDownloadHistoryManager,
     HistoryPersistHelper historyPersistHelper,
     IllustrationDownloadTaskFactory illustrationDownloadTaskFactory,
     NovelDownloadTaskFactory novelDownloadTaskFactory,
@@ -33,6 +35,8 @@ public class WorkSubscriptionDownloadService(
     private readonly SemaphoreSlim _syncLock = new(1, 1);
 
     public void QueueSyncAll() => _ = SyncAllAsync();
+
+    public void QueueSyncSubscription(WorkSubscriptionEntry subscription) => _ = SyncSubscriptionAsync(subscription);
 
     public void QueueSyncCurrentSource(
         long targetId,
@@ -60,10 +64,12 @@ public class WorkSubscriptionDownloadService(
 
         try
         {
-            await historyPersistHelper.RestoreTask.ConfigureAwait(false);
             await foreach (var subscription in subscriptionManager.StreamEntriesAsync().ConfigureAwait(false))
+            {
+                var knownKeys = new HashSet<SubscriptionDownloadKey>();
                 foreach (var engine in CreateEngines(subscription))
-                    await SyncSubscriptionCoreAsync(subscription, engine, CreateKnownKeys()).ConfigureAwait(false);
+                    await SyncSubscriptionCoreAsync(subscription, engine, knownKeys).ConfigureAwait(false);
+            }
         }
         catch (Exception e)
         {
@@ -85,8 +91,8 @@ public class WorkSubscriptionDownloadService(
         var wasCompleted = engine.EngineHandle.IsCompleted;
         try
         {
-            await historyPersistHelper.RestoreTask.ConfigureAwait(false);
-            await SyncSubscriptionCoreAsync(subscription, engine, CreateKnownKeys());
+            var knownKeys = new HashSet<SubscriptionDownloadKey>();
+            await SyncSubscriptionCoreAsync(subscription, engine, knownKeys);
         }
         catch (Exception e)
         {
@@ -100,10 +106,31 @@ public class WorkSubscriptionDownloadService(
         }
     }
 
+    private async Task SyncSubscriptionAsync(WorkSubscriptionEntry subscription)
+    {
+        if (!await _syncLock.WaitAsync(0))
+            return;
+
+        try
+        {
+            var knownKeys = new HashSet<SubscriptionDownloadKey>();
+            foreach (var engine in CreateEngines(subscription))
+                await SyncSubscriptionCoreAsync(subscription, engine, knownKeys).ConfigureAwait(false);
+        }
+        catch (Exception e)
+        {
+            logger.LogError(nameof(WorkSubscriptionDownloadService), e);
+        }
+        finally
+        {
+            _ = _syncLock.Release();
+        }
+    }
+
     private async Task SyncSubscriptionCoreAsync(
         WorkSubscriptionEntry subscription,
         IFetchEngine<IWorkEntry> engine,
-        HashSet<string> knownKeys)
+        HashSet<SubscriptionDownloadKey> knownKeys)
     {
         if (!IsEngineUsable(engine))
             return;
@@ -117,34 +144,61 @@ public class WorkSubscriptionDownloadService(
 
             TryUpdateSubscriptionName(subscription, entry);
 
-            if (!TryGetKey(entry, out var key))
-                continue;
-
-            if (knownKeys.Contains(key))
+            var task = await CreateDownloadTaskAsync(entry, subscription);
+            if (!IsEngineUsable(engine))
             {
+                task.Dispose();
+                return;
+            }
+
+            if (task.DatabaseEntry is not SubscriptionDownloadHistoryEntry historyEntry)
+            {
+                task.Dispose();
+                throw new InvalidOperationException("A subscription download must use subscription history.");
+            }
+
+            var key = new SubscriptionDownloadKey(historyEntry.ArtworkId, historyEntry.Destination);
+            if (!knownKeys.Add(key)
+                || subscriptionDownloadHistoryManager.ContainsIdentity(
+                    historyEntry.WorkSubscriptionId,
+                    historyEntry.ArtworkId,
+                    historyEntry.Destination))
+            {
+                task.Dispose();
                 if (++duplicateCount >= DuplicateStopThreshold)
                     return;
                 continue;
             }
-
-            var task = await CreateDownloadTaskAsync(entry, subscription);
-            if (!IsEngineUsable(engine))
-                return;
 
             if (await HasLocalFilesAsync(task))
             {
-                _ = knownKeys.Add(key);
+                task.Dispose();
                 if (++duplicateCount >= DuplicateStopThreshold)
                     return;
                 continue;
             }
 
             if (!IsEngineUsable(engine))
+            {
+                task.Dispose();
                 return;
+            }
+
+            var isQueued = await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                if (!IsEngineUsable(engine))
+                    return false;
+
+                historyPersistHelper.DownloadManager.QueueTask(task);
+                return true;
+            });
+            if (!isQueued)
+            {
+                task.Dispose();
+                return;
+            }
 
             duplicateCount = 0;
-            historyPersistHelper.DownloadManager.QueueTask(task);
-            _ = knownKeys.Add(key);
         }
     }
 
@@ -201,27 +255,15 @@ public class WorkSubscriptionDownloadService(
         }
     }
 
-    private HashSet<string> CreateKnownKeys()
-    {
-        var keys = new HashSet<string>(StringComparer.Ordinal);
-
-        foreach (var task in historyPersistHelper.DownloadManager.QueuedTasks.OfType<IDownloadTaskGroup>())
-            if (TryGetKey(task.DatabaseEntry, out var key))
-                _ = keys.Add(key);
-
-        return keys;
-    }
-
     private async Task<IDownloadTaskGroup> CreateDownloadTaskAsync(IArtworkInfo entry, WorkSubscriptionEntry subscription)
     {
         var parserContext = new ParserContext(
             entry,
-            WorkSubscriptionDownloadContext.FromSubscriptionType(subscription.SubscriptionType));
+            subscription);
         var task = entry is Novel
             ? novelDownloadTaskFactory.Create(parserContext, App.AppViewModel.AppSettings.DownloadSettings.DownloadPathMacro, null)
             : await CreateIllustrationDownloadTaskAsync(parserContext);
 
-        task.DatabaseEntry.WorkSubscriptionId = subscription.HistoryEntryId;
         return task;
 
         async Task<IDownloadTaskGroup> CreateIllustrationDownloadTaskAsync(ParserContext context)
@@ -267,25 +309,5 @@ public class WorkSubscriptionDownloadService(
         return task.Count is not 0 && task.All(t => File.Exists(t.Destination));
     }
 
-    private static bool TryGetKey(DownloadHistoryEntry entry, out string key)
-    {
-        key = "";
-        if (string.IsNullOrWhiteSpace(entry.SerializeKey)
-            || string.IsNullOrWhiteSpace(entry.Entry.Id))
-            return false;
-
-        key = $"{entry.SerializeKey}:{entry.Entry.Id}";
-        return true;
-    }
-
-    private static bool TryGetKey(IArtworkInfo entry, out string key)
-    {
-        key = "";
-        if (entry is not ISerializable { SerializeKey: { } serializeKey }
-            || string.IsNullOrWhiteSpace(entry.Id))
-            return false;
-
-        key = $"{serializeKey}:{entry.Id}";
-        return true;
-    }
+    private readonly record struct SubscriptionDownloadKey(string ArtworkId, string Destination);
 }

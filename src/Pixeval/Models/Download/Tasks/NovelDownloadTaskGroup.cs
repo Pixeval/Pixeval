@@ -74,7 +74,7 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
         SetNotCreateFromEntry();
     }
 
-    public NovelDownloadTaskGroup(DownloadHistoryEntry entry) : base(entry)
+    public NovelDownloadTaskGroup(DownloadHistoryEntryBase entry) : base(entry)
     {
         DestinationNovelFormat = GetNovelFormat(entry);
 
@@ -84,7 +84,8 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
     public NovelDownloadTaskGroup(
         Novel entry,
         string destination,
-        NovelContent? novelContent) : base(entry, destination, DownloadItemType.Novel)
+        NovelContent? novelContent,
+        int? workSubscriptionId = null) : base(entry, destination, workSubscriptionId)
     {
         DestinationNovelFormat = IoHelper.GetAvailableNovelDownloadFormatToken();
         DatabaseEntry.FormatToken = DestinationNovelFormat.Value;
@@ -180,7 +181,7 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
         }
 
         var provider = GetExtensionService().GetNovelFormatProvider(extension)
-            ?? throw new NotSupportedException(extension);
+                       ?? throw new NotSupportedException(extension);
 
         var streams = new Dictionary<string, Stream>();
         var temporaryFile = Path.Combine(ImageFolderPath, Path.GetFileName(NovelFile));
@@ -235,7 +236,7 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
         FileHelper.DeleteEmptyFolder(ImageFolderPath);
     }
 
-    private static NovelDownloadFormatToken GetNovelFormat(DownloadHistoryEntry entry)
+    private static NovelDownloadFormatToken GetNovelFormat(DownloadHistoryEntryBase entry)
     {
         if (!string.IsNullOrWhiteSpace(entry.FormatToken))
             return IoHelper.GetAvailableNovelDownloadFormatToken(entry.FormatToken);

@@ -1,0 +1,63 @@
+<ContentPage
+    x:Class="Pixeval.Views.Download.DownloadFolderListView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:entry="using:Pixeval.Views.Entry"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:local="using:Pixeval.Views.Download"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
+    xmlns:viewModels="using:Pixeval.ViewModels"
+    x:DataType="{x:Type viewModels:DownloadFolderPageViewModel}"
+    x:Name="Root"
+    Header="{I18N {x:Static pixeval:DownloadPageResources.SubscriptionDownloadsButtonLabel}}"
+    mc:Ignorable="d">
+    <DockPanel>
+        <entry:EntryView HasNoItem="{Binding #Root.HasNoFolder}">
+            <ListBox ItemsSource="{Binding View}">
+                <ListBox.Styles>
+                    <Style Selector="ListBoxItem">
+                        <Setter Property="Padding" Value="0" />
+                    </Style>
+                </ListBox.Styles>
+                <ListBox.DataTemplates>
+                    <DataTemplate x:DataType="{x:Type viewModels:DownloadFolderViewModel}">
+                        <local:DownloadFolder OpenRequested="DownloadFolder_OnOpenRequested">
+                            <local:DownloadFolder.ContextMenu>
+                                <ContextMenu DataContext="{Binding}">
+                                    <MenuItem
+                                        Header="{I18N {x:Static pixeval:DownloadPageResources.ResumeButtonLabel}}"
+                                        Icon="{markup:SymbolIcon Play}"
+                                        Tag="{Binding}"
+                                        Click="ResumeAll_OnClicked" />
+                                    <MenuItem
+                                        Header="{I18N {x:Static pixeval:DownloadPageResources.PauseButtonLabel}}"
+                                        Icon="{markup:SymbolIcon Pause}"
+                                        Tag="{Binding}"
+                                        Click="PauseAll_OnClicked" />
+                                    <MenuItem
+                                        Header="{I18N {x:Static pixeval:DownloadPageResources.StopButtonLabel}}"
+                                        Icon="{markup:SymbolIcon Stop}"
+                                        Tag="{Binding}"
+                                        Click="CancelAll_OnClicked" />
+                                    <MenuItem
+                                        Header="{I18N {x:Static pixeval:DownloadPageResources.ResetButtonLabel}}"
+                                        Icon="{markup:SymbolIcon ArrowRepeatAll}"
+                                        Tag="{Binding}"
+                                        Click="ResetAll_OnClicked" />
+                                    <Separator />
+                                    <MenuItem
+                                        Header="{I18N {x:Static pixeval:DownloadPageResources.SyncSubscriptionButtonLabel}}"
+                                        Icon="{markup:SymbolIcon ArrowSync}"
+                                        Tag="{Binding}"
+                                        Click="SyncSubscription_OnClicked" />
+                                </ContextMenu>
+                            </local:DownloadFolder.ContextMenu>
+                        </local:DownloadFolder>
+                    </DataTemplate>
+                </ListBox.DataTemplates>
+            </ListBox>
+        </entry:EntryView>
+    </DockPanel>
+</ContentPage>

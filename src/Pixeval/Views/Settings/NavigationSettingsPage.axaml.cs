@@ -37,7 +37,7 @@ public sealed partial class NavigationSettingsPage : ContentPage
         TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(
             I18NManager.GetResource(NavigationSettingsPageResources.Applied));
 
-        if (TopLevel.GetTopLevel(this)?.ViewContainer is Views.ViewContainers.TabViewContainer container)
+        if (TopLevel.GetTopLevel(this)?.ViewContainer is ViewContainers.TabViewContainer container)
             container.ReloadNavigation();
     }
 
