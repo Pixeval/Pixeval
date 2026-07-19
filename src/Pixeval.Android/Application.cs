@@ -46,7 +46,7 @@ public class Application : AvaloniaAndroidApplication<App>
 
     private static void CopyAssetDirectory(AssetManager assets, string assetDirectory, string destinationDirectory)
     {
-        Directory.CreateDirectory(destinationDirectory);
+        _ = Directory.CreateDirectory(destinationDirectory);
         foreach (var assetName in assets.List(assetDirectory) ?? [])
         {
             var assetPath = $"{assetDirectory}/{assetName}";

@@ -11,13 +11,13 @@ using Avalonia.Layout;
 
 namespace Pixeval.Controls;
 
-[PseudoClasses(pcDocked, pcLocked)]
+[PseudoClasses(PcDocked, PcLocked)]
 public class FloatingPaneView : ContentControl
 {
-    const string pcDocked = ":docked";
-    const string pcLocked = ":locked";
+    private const string PcDocked = ":docked";
+    private const string PcLocked = ":locked";
 
-    const string partFloatingPaneBorder = "PART_FloatingPaneBorder";
+    private const string PartFloatingPaneBorder = "PART_FloatingPaneBorder";
 
     private Border? _floatingPaneBorder;
 
@@ -128,33 +128,33 @@ public class FloatingPaneView : ContentControl
 
     static FloatingPaneView()
     {
-        IsDockedProperty.Changed.AddClassHandler<FloatingPaneView>((x, e) =>
+        _ = IsDockedProperty.Changed.AddClassHandler<FloatingPaneView>((x, e) =>
         {
             var isDocked = e.GetNewValue<bool>();
 
             x.UpdatePseudoClasses();
-            x.SetValue(DockProgressProperty, isDocked ? 1 : 0);
+            _ = x.SetValue(DockProgressProperty, isDocked ? 1 : 0);
             if (x._floatingPaneBorder is { } border)
                 x.UpdateFloatingPaneVisibilityState(border, isDocked);
         });
-        IsLockedProperty.Changed.AddClassHandler<FloatingPaneView>((x, e) => x.UpdatePseudoClasses());
+        _ = IsLockedProperty.Changed.AddClassHandler<FloatingPaneView>((x, e) => x.UpdatePseudoClasses());
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
 
-        _floatingPaneBorder = e.NameScope.Find<Border>(partFloatingPaneBorder);
+        _floatingPaneBorder = e.NameScope.Find<Border>(PartFloatingPaneBorder);
         UpdatePseudoClasses();
-        SetValue(DockProgressProperty, IsDocked ? 1 : 0);
+        _ = SetValue(DockProgressProperty, IsDocked ? 1 : 0);
         if (_floatingPaneBorder is { } border)
             UpdateFloatingPaneVisibilityState(border, IsDocked);
     }
 
     private void UpdatePseudoClasses()
     {
-        PseudoClasses.Set(pcDocked, IsDocked);
-        PseudoClasses.Set(pcLocked, IsLocked && !IsDocked);
+        PseudoClasses.Set(PcDocked, IsDocked);
+        PseudoClasses.Set(PcLocked, IsLocked && !IsDocked);
     }
 
     private void UpdateFloatingPaneVisibilityState(Border border, bool isDocked)

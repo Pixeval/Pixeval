@@ -115,7 +115,6 @@ public static class AppInfo
         if (!File.Exists(AppSettingsPath))
             return null;
 
-
         return TryLoad(() => YamlSerializer.DeserializeFile(AppSettingsPath, SettingsSerializerContext.Default.AppSettings), logger);
     }
 

@@ -12,19 +12,22 @@ public sealed class ImageViewerScrollGestureProfilesTest
     [TestMethod]
     public void Paging_OnlyOverridesUnmodifiedWheelWithZoom()
     {
-        Assert.AreEqual(ScrollGestureAction.Zoom, Resolve(ImageViewerScrollGestureProfiles.Paging, ScrollInputGesture.MouseWheel));
-        Assert.AreEqual(ScrollGestureAction.HorizontalScroll, Resolve(ImageViewerScrollGestureProfiles.Paging, ScrollInputGesture.MouseWheel, KeyModifiers.Shift));
-        Assert.AreEqual(ScrollGestureAction.Zoom, Resolve(ImageViewerScrollGestureProfiles.Paging, ScrollInputGesture.MouseWheel, KeyModifiers.Control));
-        Assert.AreEqual(ScrollGestureAction.Pan, Resolve(ImageViewerScrollGestureProfiles.Paging, ScrollInputGesture.MouseLeftDrag));
-        Assert.AreEqual(ScrollGestureAction.Pan, Resolve(ImageViewerScrollGestureProfiles.Paging, ScrollInputGesture.TouchDrag));
-        Assert.AreEqual(ScrollGestureAction.Zoom, Resolve(ImageViewerScrollGestureProfiles.Paging, ScrollInputGesture.TouchPinch));
+        var paging = ImageViewerScrollGestureProfiles.Paging;
+        Assert.AreEqual(ScrollGestureAction.Zoom, Resolve(paging, ScrollInputGesture.MouseWheel));
+        Assert.AreEqual(ScrollGestureAction.HorizontalScroll, Resolve(paging, ScrollInputGesture.MouseWheel, KeyModifiers.Shift));
+        Assert.AreEqual(ScrollGestureAction.Zoom, Resolve(paging, ScrollInputGesture.MouseWheel, KeyModifiers.Control));
+        Assert.AreEqual(ScrollGestureAction.Pan, Resolve(paging, ScrollInputGesture.MouseLeftDrag));
+        Assert.AreEqual(ScrollGestureAction.Pan, Resolve(paging, ScrollInputGesture.TouchDrag));
+        Assert.AreEqual(ScrollGestureAction.Zoom, Resolve(paging, ScrollInputGesture.TouchPinch));
     }
 
     [TestMethod]
     public void Continuous_WheelFollowsStackOrientation()
     {
-        Assert.AreEqual(ScrollGestureAction.HorizontalScroll, Resolve(ImageViewerScrollGestureProfiles.Horizontal, ScrollInputGesture.MouseWheel));
-        Assert.AreEqual(ScrollGestureAction.AutoScroll, Resolve(ImageViewerScrollGestureProfiles.Vertical, ScrollInputGesture.MouseWheel));
+        var horizontal = ImageViewerScrollGestureProfiles.Horizontal;
+        var vertical = ImageViewerScrollGestureProfiles.Vertical;
+        Assert.AreEqual(ScrollGestureAction.HorizontalScroll, Resolve(horizontal, ScrollInputGesture.MouseWheel));
+        Assert.AreEqual(ScrollGestureAction.AutoScroll, Resolve(vertical, ScrollInputGesture.MouseWheel));
     }
 
     private static ScrollGestureAction Resolve(

@@ -62,7 +62,7 @@ public partial class WorkContainer : UserControl
             if (field == value)
                 return;
 
-            SetAndRaise(IsRefreshEnabledProperty, ref field, value);
+            _ = SetAndRaise(IsRefreshEnabledProperty, ref field, value);
             UpdateRefreshButton();
             return;
 
