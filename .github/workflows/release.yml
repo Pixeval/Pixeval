@@ -570,10 +570,7 @@ jobs:
     name: Submit Windows packages to Microsoft Store
     needs:
       - metadata
-      - windows-bundle
-      - macos
-      - linux
-      - android
+      - release
     runs-on: windows-latest
     steps:
       - name: Download MSIXBundle
@@ -627,7 +624,7 @@ jobs:
     name: Create draft release
     needs:
       - metadata
-      - windows
+      - windows-bundle
       - macos
       - linux
       - android
