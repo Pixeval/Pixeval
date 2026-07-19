@@ -3,6 +3,15 @@
   "CancelSelectionButtonFormatted": "取消选择（{0}）",
   "DeleteDownloadHistoryRecordsFormatted": "删除 {0} 条历史记录",
   "FolderSubtitleFormatted": "{0} 个下载任务",
+  "OrdinaryDownloadsButton": {
+    "Label": "普通下载"
+  },
+  "SubscriptionDownloadsButton": {
+    "Label": "订阅下载"
+  },
+  "SyncSubscriptionButton": {
+    "Label": "立即同步订阅"
+  },
   "FilterAutoSuggestBox": {
     "PlaceholderText": "作品名/作品ID"
   },
