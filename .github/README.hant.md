@@ -33,7 +33,7 @@
 - Windows 8 及更高
 - MacOS
 - Linux
-- Android 23 及更高
+- Android 16 （API 36） 及更高
 - iOS 13 及更高
 
 <!-- * 浏览器 -->
