@@ -16,6 +16,7 @@ using Avalonia.LogicalTree;
 using CommunityToolkit.Mvvm.Input;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
+using Pixeval.I18N;
 using Pixeval.Models.Navigation;
 using Pixeval.Utilities;
 using Pixeval.Views.Login;
@@ -50,6 +51,10 @@ public partial class TabViewContainer : ViewContainerBase
     {
         RegisterNavigationItemInputHandlers<Button>();
         RegisterNavigationItemInputHandlers<MenuItem>();
+        ContextRequestedEvent.AddClassHandler<TabsViewItem>(
+            TabsViewItem_OnContextRequested,
+            RoutingStrategies.Bubble,
+            handledEventsToo: true);
     }
 
     public TabViewContainer()
@@ -204,6 +209,70 @@ public partial class TabViewContainer : ViewContainerBase
         MenuItem { Command: { } command } => ReferenceEquals(command, OpenNavigationItemCommand),
         _ => false
     };
+
+    private static void TabsViewItem_OnContextRequested(object? sender, ContextRequestedEventArgs e)
+    {
+        if (sender is not TabsViewItem tabItem
+            || (tabItem.DataContext as Page ?? tabItem.Content as Page) is not { } contextPage
+            || TopLevel.GetTopLevel(tabItem)?.ViewContainer is not TabViewContainer container
+            || container.TabsControl.Pages is not IList<Page> pages
+            || !pages.Contains(contextPage))
+            return;
+
+        var snapshot = pages.ToList();
+        var menu = new ContextMenu
+        {
+            ItemsSource = new MenuItem[]
+            {
+                CreateTabCloseMenuItem(container, contextPage, snapshot, TabCloseScope.Others),
+                CreateTabCloseMenuItem(container, contextPage, snapshot, TabCloseScope.Left),
+                CreateTabCloseMenuItem(container, contextPage, snapshot, TabCloseScope.Right)
+            }
+        };
+        tabItem.ContextMenu = menu;
+        menu.Open(tabItem);
+        e.Handled = true;
+    }
+
+    private static MenuItem CreateTabCloseMenuItem(
+        TabViewContainer container,
+        Page contextPage,
+        IReadOnlyList<Page> pages,
+        TabCloseScope scope)
+    {
+        var item = new MenuItem
+        {
+            Header = I18NManager.GetResource(scope switch
+            {
+                TabCloseScope.Others => MainPageResources.TabContextMenuCloseOtherTabs,
+                TabCloseScope.Left => MainPageResources.TabContextMenuCloseTabsToLeft,
+                TabCloseScope.Right => MainPageResources.TabContextMenuCloseTabsToRight,
+                _ => throw new ArgumentOutOfRangeException(nameof(scope), scope, null)
+            }),
+            IsEnabled = TabClosePlanner.GetTargets(pages, contextPage, scope).Count is not 0
+        };
+        item.Click += (_, _) => container.CloseTabs(contextPage, scope);
+        return item;
+    }
+
+    private void CloseTabs(Page contextPage, TabCloseScope scope)
+    {
+        if (TabsControl.Pages is not IList<Page> pages || !pages.Contains(contextPage))
+            return;
+
+        TabsControl.SelectedIndex = pages.IndexOf(contextPage);
+        // 先固定关闭目标，避免移除页面时索引变化导致关闭范围漂移。
+        var targets = TabClosePlanner.GetTargets(pages.ToList(), contextPage, scope);
+        foreach (var target in targets)
+        {
+            // 复用单标签关闭的释放事件，让页面有机会处理自己的 ViewModel 生命周期。
+            var args = new RoutedEventArgs(ViewModelDisposal.RequestDisposeEvent, target);
+            target.RaiseEvent(args);
+            if (!args.Handled)
+                DisposeTab(target);
+            _ = pages.Remove(target);
+        }
+    }
 
     private void TabsView_OnAddTabButtonClick(TabsView sender, EventArgs e)
     {
