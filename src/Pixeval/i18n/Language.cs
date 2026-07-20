@@ -661,6 +661,9 @@ namespace Pixeval
         public const string TabWorkRecommended = "MainPage.Tab.WorkRecommended";
         public const string TabWorkRelated = "MainPage.Tab.WorkRelated";
         public const string TabWorkSearchResult = "MainPage.Tab.WorkSearchResult";
+        public const string TabContextMenuCloseOtherTabs = "MainPage.TabContextMenu.CloseOtherTabs";
+        public const string TabContextMenuCloseTabsToLeft = "MainPage.TabContextMenu.CloseTabsToLeft";
+        public const string TabContextMenuCloseTabsToRight = "MainPage.TabContextMenu.CloseTabsToRight";
     }
     public static class MiscResources
     {

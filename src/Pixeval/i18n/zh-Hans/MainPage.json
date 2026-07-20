@@ -64,5 +64,10 @@
   },
   "SwitchAccountItem": {
     "Text": "切换账号"
+  },
+  "TabContextMenu": {
+    "CloseOtherTabs": "关闭其他标签页",
+    "CloseTabsToLeft": "关闭左侧标签页",
+    "CloseTabsToRight": "关闭右侧标签页"
   }
 }
