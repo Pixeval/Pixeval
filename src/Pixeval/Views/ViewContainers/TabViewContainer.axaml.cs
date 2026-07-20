@@ -219,7 +219,7 @@ public partial class TabViewContainer : ViewContainerBase
             || !pages.Contains(contextPage))
             return;
 
-        var snapshot = pages.ToList();
+        var snapshot = pages.ToArray();
         var menu = new ContextMenu
         {
             ItemsSource = new MenuItem[]
@@ -262,7 +262,7 @@ public partial class TabViewContainer : ViewContainerBase
 
         TabsControl.SelectedIndex = pages.IndexOf(contextPage);
         // 先固定关闭目标，避免移除页面时索引变化导致关闭范围漂移。
-        var targets = TabClosePlanner.GetTargets(pages.ToList(), contextPage, scope);
+        var targets = TabClosePlanner.GetTargets(pages.ToArray(), contextPage, scope);
         foreach (var target in targets)
         {
             // 复用单标签关闭的释放事件，让页面有机会处理自己的 ViewModel 生命周期。
