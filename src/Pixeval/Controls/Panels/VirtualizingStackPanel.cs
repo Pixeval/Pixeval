@@ -373,7 +373,7 @@ public class VirtualizingStackPanel : VirtualizingPanel, IScrollSnapPointsInfo
         if (SnapPointScale is 1)
             return _offsets;
 
-        return _offsets.Select(offset => offset * SnapPointScale).ToArray();
+        return [.. _offsets.Select(offset => offset * SnapPointScale)];
     }
 
     public double GetRegularSnapPoints(Orientation orientation, SnapPointsAlignment snapPointsAlignment, out double offset)

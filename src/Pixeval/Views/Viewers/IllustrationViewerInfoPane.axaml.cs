@@ -66,12 +66,12 @@ public partial class IllustrationViewerInfoPane : UserControl
 
     private async Task AddToBookmarkAsync((bool IsPrivate, IReadOnlyList<string>? Tags) e)
     {
-        if (ViewModel.CurrentIllustration is IWorkViewModel current)
-        {
-            await current.AddToBookmarkCommand.ExecuteAsync((e.Tags, e.IsPrivate, this));
-            TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(
-                I18NManager.GetResource(MiscResources.AddedToBookmark));
-        }
+        if (ViewModel.CurrentIllustration is not IWorkViewModel current)
+            return;
+
+        await current.AddToBookmarkCommand.ExecuteAsync((e.Tags, e.IsPrivate, this));
+        TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(
+            I18NManager.GetResource(MiscResources.AddedToBookmark));
     }
     
     private void ChevronButtonClicked(object? sender, RoutedEventArgs e)

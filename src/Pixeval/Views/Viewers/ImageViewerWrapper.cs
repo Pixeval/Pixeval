@@ -2,6 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Pixeval.Controls;
@@ -13,6 +14,26 @@ namespace Pixeval.Views.Viewers;
 
 public class ImageViewerWrapper : ContentControl
 {
+    public static readonly DirectProperty<ImageViewerWrapper, int> CurrentWorkIndexProperty =
+        AvaloniaProperty.RegisterDirect<ImageViewerWrapper, int>(
+            nameof(CurrentWorkIndex),
+            o => o.CurrentWorkIndex,
+            (o, v) => o.CurrentWorkIndex = v);
+
+    public int CurrentWorkIndex
+    {
+        get;
+        set
+        {
+            if (field == value)
+                return;
+
+            var old = field;
+            SetAndRaise(CurrentWorkIndexProperty, ref field, value);
+            SwipeImageViewer?.SetWorkTransitionDirection(old, value);
+        }
+    } = -1;
+
     public ImageViewerBase ImageViewer => (ImageViewerBase) Content!;
 
     public bool IsSwipeMode { get; } = App.AppViewModel.AppSettings.BrowsingExperienceSettings.BrowseMode is BrowseMode.Swipe;

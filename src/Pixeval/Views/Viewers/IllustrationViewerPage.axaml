@@ -167,6 +167,7 @@
                         x:Name="I"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
+                        CurrentWorkIndex="{Binding #Root.((viewers:IllustrationViewerPageViewModel)DataContext).CurrentWorkIndex}"
                         DataContext="{Binding CurrentImage}"
                         SelectionChanged="ImageViewerPage_OnSelectionChanged" />
 

@@ -65,9 +65,9 @@ public class SwipeControl : TransitioningContentControl
 
         if (change.Property == SelectedIndexProperty)
         {
-            var oldItem = change.GetOldValue<int>();
-            var newItem = change.GetNewValue<int>();
-            IsTransitionReversed = oldItem > newItem;
+            var oldIndex = change.GetOldValue<int>();
+            var newIndex = change.GetNewValue<int>();
+            SetTransitionDirection(oldIndex, newIndex);
         }
 
         if (ItemTemplate is null || !ItemTemplate.Match(item))
@@ -82,6 +82,8 @@ public class SwipeControl : TransitioningContentControl
         RestoreKeyboardFocus(hadKeyboardFocus);
         SelectionChanged?.Invoke(this, new ImageViewerSelectionChangedEventArgs(SelectedIndex, item));
     }
+
+    internal void SetTransitionDirection(int oldIndex, int newIndex) => IsTransitionReversed = oldIndex > newIndex;
 
     private void RestoreKeyboardFocus(bool hadKeyboardFocus)
     {

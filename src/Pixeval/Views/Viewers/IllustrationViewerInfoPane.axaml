@@ -4,10 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:common="using:FluentIcons.Common"
     xmlns:controls="using:Pixeval.Controls"
-    xmlns:controls1="using:SmoothScroll.Avalonia.Controls"
     xmlns:converters="using:Pixeval.Views.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:layout="using:Avalonia.Layout"
     xmlns:local="using:Pixeval.Views.Viewers"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:markup1="using:Pixeval.Views.Markup"
@@ -51,7 +49,7 @@
             <StackPanel ClipToBounds="True" DockPanel.Dock="Bottom">
                 <ListBox
                     x:Name="ThumbnailListBox"
-                    Height="90"
+                    Height="85"
                     Margin="5,0"
                     Padding="0,0,0,5"
                     HorizontalAlignment="Stretch"
@@ -70,16 +68,18 @@
                     </ListBox.IsVisible>
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal" Spacing="5" />
+                            <controls:VirtualizingStackPanel Orientation="Horizontal" Spacing="5" />
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>
                         <DataTemplate x:DataType="{x:Type viewModels:IllustrationItemViewModel}">
-                            <Image
+                            <Border
                                 Width="80"
                                 Height="80"
-                                controls:Source.Cache="{Binding ThumbnailUrl}"
-                                Stretch="UniformToFill" />
+                                ClipToBounds="True"
+                                CornerRadius="{StaticResource ControlCornerRadius}">
+                                <Image controls:Source.Cache="{Binding ThumbnailUrl}" Stretch="UniformToFill" />
+                            </Border>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>

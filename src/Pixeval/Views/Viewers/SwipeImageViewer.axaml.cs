@@ -47,6 +47,8 @@ public partial class SwipeImageViewer : ImageViewerBase
         SwipeContent.PageTransition = new PageSlide(TimeSpan.FromSeconds(0.3), BrowseDirection is Orientation.Horizontal ? PageSlide.SlideAxis.Horizontal : PageSlide.SlideAxis.Vertical);
     }
 
+    internal void SetWorkTransitionDirection(int oldIndex, int newIndex) => SwipeContent.SetTransitionDirection(oldIndex, newIndex);
+
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
