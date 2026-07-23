@@ -1,0 +1,73 @@
+{
+  "Tab": {
+    "Home": "主页",
+    "Search": "搜索",
+    "Login": "Pixiv 登录",
+    "WorkRecommended": "作品推荐",
+    "WorkBookmarks": "收藏列表",
+    "Series": "系列追更",
+    "WorkFollowing": "关注新作",
+    "WorkMyPixiv": "好P友作品",
+    "WorkNew": "所有新作",
+    "WorkRanking": "作品榜单",
+    "WorkRelated": "相关作品",
+    "SingleSeries": "单个系列",
+    "WorkPosts": "用户投稿",
+    "UserRecommended": "推荐作者",
+    "UserFollowing": "关注列表",
+    "UserMyPixiv": "好P友",
+    "UserFollower": "我的粉丝",
+    "BrowsingHistory": "浏览历史",
+    "Spotlight": "特辑推荐",
+    "Feed": "关注动态",
+    "WatchLater": "稍后再看",
+    "Download": "下载列表",
+    "Help": "帮助",
+    "About": "关于",
+    "Settings": "设置",
+    "Extensions": "扩展",
+    "RelatedUser": "相关用户",
+    "UserSearchResult": "用户搜索",
+    "WorkSearchResult": "作品搜索",
+    "SingleImage": "单独图片",
+    "SingleNovel": "单独小说",
+    "SingleUser": "单独用户",
+    "SauceNaoResult": "SauceNAO 搜索结果",
+    "NavigationSettings": "导航栏",
+    "WorkInfo": "作品信息",
+    "Comments": "评论"
+  },
+  "SearchResultFormatted": "{0} - 搜索",
+  "SearchKeywordCannotBeBlank": {
+    "Title": "输入非法",
+    "Content": "关键字的长度不能为空"
+  },
+  "LoggingIn": {
+    "Header": "正在登录",
+    "Description": "如果长时间没有响应，可能是网络问题，请前往设置检查域前置功能是否开启，或者代理功能是否正常",
+    "Failed": "登录失败，请检查网络连接，或者尝试重新登录"
+  },
+  "OpenMyPageItem": {
+    "Text": "打开个人页面"
+  },
+  "OpenMyPageInBrowserItem": {
+    "Text": "打开网页"
+  },
+  "RestrictedModeItem": {
+    "Text": "受限模式"
+  },
+  "AiShowItem": {
+    "Text": "显示AI作品"
+  },
+  "MoreViewingSettingsItem": {
+    "Text": "更多浏览设置"
+  },
+  "SwitchAccountItem": {
+    "Text": "切换账号"
+  },
+  "TabContextMenu": {
+    "CloseOtherTabs": "关闭其他标签页",
+    "CloseTabsToLeft": "关闭左侧标签页",
+    "CloseTabsToRight": "关闭右侧标签页"
+  }
+}

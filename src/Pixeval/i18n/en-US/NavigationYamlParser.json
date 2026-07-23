@@ -1,0 +1,17 @@
+{
+  "Diagnostics": {
+    "BuiltInNavigationYamlInvalid": "内置导航栏 YAML 配置无效。",
+    "BothHeaderAndFooterEmpty": "header 和 footer 不能同时为空。",
+    "EmptyFolderFormatted": "文件夹 {0} 不能为空。",
+    "FieldNotAllowedFormatted": "{0} 不能包含 {1} 字段。",
+    "I18NResourceKeyEmptyFormatted": "{0} 的 i18n 资源 key 不能为空。",
+    "ItemMustHaveEitherPageOrFolderFormatted": "{0} 必须且只能指定 page 或 folder。",
+    "MenuMustContainSettingsPage": "导航菜单必须包含 Settings 页面，否则用户无法回到设置页修改导航栏。",
+    "MaxDepthExceededFormatted": "{0} 超过最大层级 {1}。",
+    "MaxDepthExceededFolderFormatted": "{0} 超过最大层级 {1}，第 {1} 层只能是页面。",
+    "UnknownFieldFormatted": "未知字段: {0}",
+    "UnknownI18NResourceKeyFormatted": "未知 i18n 资源 key: {0}",
+    "UnknownIconFormatted": "未知图标名: {0}",
+    "UnknownPageFormatted": "未知页面: {0}"
+  }
+}

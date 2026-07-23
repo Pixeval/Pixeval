@@ -1,0 +1,82 @@
+{
+  "SearchBox": {
+    "PlaceholderText": "输入关键字后按 Enter 开始搜索"
+  },
+  "AdvancedOptions": {
+    "IllustrationTab": "Pixiv 插画",
+    "NovelTab": "Pixiv 小说",
+    "SauceNaoTab": "SauceNAO 以图搜图"
+  },
+  "Sections": {
+    "Common": "通用条件",
+    "Illustration": "插画条件",
+    "Novel": "小说条件"
+  },
+  "Common": {
+    "Unspecified": "不指定",
+    "SortOption": "排序方式",
+    "StartDate": "开始日期",
+    "EndDate": "结束日期",
+    "ShowAiWorks": "显示 AI 作品",
+    "MergePlainKeywordResults": "合并普通关键字结果",
+    "IncludeTranslatedTagResults": "包含翻译标签结果",
+    "IncludePotentialViolationWorks": "包含潜在违规作品"
+  },
+  "Illustration": {
+    "MatchOption": "匹配范围",
+    "ContentType": "内容类型",
+    "RatioPattern": "宽高比",
+    "WidthMin": "最小宽度",
+    "WidthMax": "最大宽度",
+    "HeightMin": "最小高度",
+    "HeightMax": "最大高度",
+    "Tool": "创作工具"
+  },
+  "Novel": {
+    "MatchOption": "匹配范围",
+    "Language": "语言",
+    "ContentLengthOption": "长度维度",
+    "ContentLengthMin": "最小长度",
+    "ContentLengthMax": "最大长度",
+    "IsOriginalOnly": "仅原创小说",
+    "Genre": "题材",
+    "IsReplaceableOnly": "仅可替换名词"
+  },
+  "Validation": {
+    "InvalidDateRange": {
+      "Title": "日期范围无效",
+      "Content": "开始日期不能晚于结束日期，且不能选择未来日期。"
+    },
+    "InvalidNumericRange": {
+      "Title": "数值范围无效",
+      "Content": "最小值不能大于最大值。"
+    },
+    "PremiumSort": {
+      "Title": "排序方式不可用",
+      "Content": "收藏数降序需要 Pixiv 会员。"
+    },
+    "SearchFailed": {
+      "Title": "搜索失败"
+    }
+  },
+  "TrendingHeaderTextBlock": {
+    "Text": "标签趋势"
+  },
+  "OpenId": {
+    "User": "打开用户主页",
+    "Illustration": "打开图片页面",
+    "Novel": "打开小说页面"
+  },
+  "SearchUser": "搜索用户",
+  "SearchHistory": {
+    "Copy": "复制",
+    "Delete": "删除"
+  },
+  "SauceNAO": {
+    "Search": "SauceNAO 搜索",
+    "ProvideImage": "点击选择图片",
+    "Or": "或",
+    "PasteFromClipboard": "从剪切板粘贴图片",
+    "ProvideApiKey": "请先在设置页提供 SauceNAO API Key 再使用此功能"
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "CheckingForUpdate": "正在检查更新",
+  "IsUpToDate": "当前已经是最新版本",
+  "IsInsider": "正在使用内部版本",
+  "UpdateAvailable": {
+    "Major": "有可用的主要更新",
+    "Minor": "有可用的次要更新",
+    "Build": "有可用的构建更新",
+    "Unknown": "未知更新状态"
+  },
+  "LanguageSystemDefault": "系统默认",
+  "DownloadPathMacroTextBox": {
+    "PlaceholderText": "下载路径宏"
+  },
+  "DeleteHistoriesEntry": {
+    "Header": "清理历史记录"
+  },
+  "DeleteDownloadHistoriesEntry": {
+    "Description": "该按钮会清空所有的下载记录",
+    "Header": "清空下载记录"
+  },
+  "DeleteBrowseHistoriesEntry": {
+    "Description": "该按钮会清空所有的浏览记录",
+    "Header": "清空浏览记录"
+  },
+  "DeleteFileCacheEntry": {
+    "Description": "该按钮会清空所有的文件缓存",
+    "Header": "清空文件缓存"
+  },
+  "DeleteSearchHistoriesEntry": {
+    "Description": "该按钮会清空所有的搜索记录",
+    "Header": "清空搜索记录"
+  },
+  "DownloadMacroInvalidInfoBarInputCannotBeBlank": "输入不能为空",
+  "DownloadMacroInvalidInfoBarMacroInvalidFormatted": "{0}, 请更正后重新填写",
+  "LastCheckedPrefix": "上次检查时间：",
+  "CheckForUpdatesButton": {
+    "Content": "检查更新"
+  },
+  "GitHubCheckForUpdatesEntry": {
+    "Header": "从GitHub获取更新"
+  },
+  "MsStoreCheckForUpdatesEntry": {
+    "Header": "从微软商店获取更新"
+  },
+  "RateEntry": {
+    "Description": "喜欢Pixeval？请在微软商店给Pixeval五星好评~",
+    "Header": "为Pixeval打分"
+  },
+  "BugReportEntry": {
+    "Header": "软件问题反馈",
+    "Description": "关于软件BUG或者新功能提案（反馈软件BUG请附上相关日志文件）"
+  },
+  "BugReportChannelsEntry": {
+    "Header": "汇报问题渠道",
+    "Description": "可以通过以下渠道汇编问题"
+  },
+  "GitHubBugReportEntry": {
+    "ToolTip": "在 GitHub 上汇报问题"
+  },
+  "EMailBugReportEntry": {
+    "ToolTip": "使用电子邮件汇报问题"
+  },
+  "QQBugReportEntry": {
+    "ToolTip": "在QQ群内汇报问题"
+  },
+  "OpenLogEntry": {
+    "Header": "打开日志文件夹",
+    "Description": "反馈软件BUG请附上本文件夹内相关的日志文件"
+  },
+  "OpenTempEntry": {
+    "Header": "打开临时文件夹",
+    "Description": "此处存储的都是临时文件，每次打开软件时都会删除"
+  },
+  "OpenLocalEntry": {
+    "Header": "打开本地文件夹",
+    "Description": "此处存储了重要的配置文件，请不要修改此处的文件"
+  },
+  "ResetDefaultSettingsEntry": {
+    "Description": "点击该按钮将会将所有设置重置会默认状态，该操作不可撤销",
+    "Header": "重置默认设置"
+  },
+  "ResetSettingConfirmationDialogContent": "该操作将会无法撤销",
+  "ResetSettingConfirmationDialogTitle": "你确定要重置所有设置项吗？",
+  "SwitchAccountEntry": {
+    "Description": "在新的账号登录之后，当前账号将会自动退出登录，但已打开的页面需要手动刷新或重新打开才能正确显示当前账号的内容",
+    "Header": "切换账号"
+  },
+  "ProxyTextBoxErrorUri": "代理服务器地址输入有误，请重新输入",
+  "PredicateMacroHeader": "以下条件宏，格式为 @{is_xxx?<正分支>:<反分支>}，如果条件成立则替换为<正分支>，否则替换为<反分支>",
+  "OpenExtensionsEntry": {
+    "Header": "打开扩展文件夹",
+    "Description": "此处存储了软件会加载的扩展DLL文件"
+  },
+  "BackupSettingsEntry": {
+    "Header": "备份设置",
+    "Description": "选择导出或导入设置"
+  },
+  "OpenSettingsEntry": {
+    "Header": "打开设置文件夹",
+    "Description": "此处存储了软件的设置文件（包含账号等敏感信息）"
+  },
+  "ExportSettingsSuccess": "导出设置成功",
+  "ImportSettingsSuccess": "导入设置成功",
+  "ExportSettingsPlaintextEntry": {
+    "Header": "导出明文设置",
+    "Description": "以 YAML 格式导出设置"
+  },
+  "ImportSettingsPlaintextEntry": {
+    "Description": "导入 YAML 格式的明文设置",
+    "Header": "导入明文设置"
+  },
+  "AnimatedPathBlock": {
+    "Text": "动图："
+  },
+  "SinglePathBlock": {
+    "Text": "单图："
+  },
+  "SetPathBlock": {
+    "Text": "多图："
+  },
+  "NovelPathBlock": {
+    "Text": "小说："
+  },
+  "ReleaseNoteDialog": {
+    "Title": "更新日志",
+    "TitleFormatted": "更新日志 {0}",
+    "Empty": "暂无更新日志"
+  },
+  "SettingsSaved": "设置已保存"
+}

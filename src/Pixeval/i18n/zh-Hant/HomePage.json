@@ -1,0 +1,130 @@
+{
+  "EditButton": {
+    "Label": "编辑"
+  },
+  "HideCardTitleButton": {
+    "Label": "隐藏卡片标题"
+  },
+  "HideToolbarButton": {
+    "Label": "隐藏工具栏"
+  },
+  "EditPaneTitleTextBlock": {
+    "Text": "编辑主页布局"
+  },
+  "EditPaneDescriptionTextBlock": {
+    "Text": "选择卡片添加到主页，再调整它在网格中的位置和大小。"
+  },
+  "SelectedCardTitleTextBlock": {
+    "Text": "选中的卡片"
+  },
+  "GridSizeTitleTextBlock": {
+    "Text": "主页网格"
+  },
+  "GridRowsTextBlock": {
+    "Text": "行"
+  },
+  "GridColumnsTextBlock": {
+    "Text": "列"
+  },
+  "NoSelectedCardTextBlock": {
+    "Text": "点击主页上的卡片后可编辑位置和尺寸。"
+  },
+  "PositionXTextBlock": {
+    "Text": "列"
+  },
+  "PositionYTextBlock": {
+    "Text": "行"
+  },
+  "WidthTextBlock": {
+    "Text": "宽"
+  },
+  "HeightTextBlock": {
+    "Text": "高"
+  },
+  "CardBackgroundTextBlock": {
+    "Text": "背景色"
+  },
+  "DeleteSelectedCardButton": {
+    "Content": "删除卡片"
+  },
+  "OpenCardPageButton": {
+    "ToolTip": "查看页面"
+  },
+  "CardTitle": {
+    "ParameterSeparator": " · "
+  },
+  "CardLibraryTitleTextBlock": {
+    "Text": "可添加卡片"
+  },
+  "SourceParametersTitleTextBlock": {
+    "Text": "卡片参数"
+  },
+  "SelectCardSourcePromptTextBlock": {
+    "Text": "先选择一个卡片源，再填写参数添加到主页。"
+  },
+  "Source": {
+    "WorkTypeTextBlock": {
+      "Text": "作品类型"
+    },
+    "SimpleWorkTypeTextBlock": {
+      "Text": "作品范围"
+    },
+    "PrivacyPolicyTextBlock": {
+      "Text": "公开范围"
+    },
+    "RankOptionTextBlock": {
+      "Text": "榜单类型"
+    },
+    "RankingDateTextBlock": {
+      "Text": "榜单日期"
+    },
+    "UseSpecifiedRankingDateCheckBox": {
+      "Content": "使用指定日期"
+    },
+    "UserIdTextBlock": {
+      "Text": "用户 ID"
+    },
+    "EntryIdTextBlock": {
+      "Text": "作品 ID"
+    },
+    "SeriesIdTextBlock": {
+      "Text": "系列 ID"
+    },
+    "SearchTextTextBlock": {
+      "Text": "搜索关键词"
+    },
+    "TagTextBlock": {
+      "Text": "收藏标签"
+    }
+  },
+  "AddConfiguredCardButton": {
+    "Content": "添加卡片"
+  },
+  "CardPreview": {
+    "LoadingTextBlock": {
+      "Text": "正在加载"
+    },
+    "EmptyTextBlock": {
+      "Text": "暂无内容"
+    },
+    "FailedTextBlock": {
+      "Text": "加载失败"
+    }
+  },
+  "NoSpaceWarning": {
+    "Title": "没有可用空间",
+    "Content": "当前主页网格中没有能容纳这张卡片的位置。"
+  },
+  "LayoutConflictWarning": {
+    "Title": "布局冲突",
+    "Content": "该位置或尺寸会超出主页网格，或与其他卡片重叠。"
+  },
+  "GridShrinkBlockedWarning": {
+    "Title": "无法缩小网格",
+    "Content": "要删除的行或列上已有卡片，请先移动或删除这些卡片。"
+  },
+  "InvalidSourceParameterWarning": {
+    "Title": "参数不完整",
+    "Content": "请填写当前卡片源所需的用户 ID、作品 ID、系列 ID 或搜索关键词。"
+  }
+}
