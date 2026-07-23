@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Controls.Selection;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -57,11 +58,27 @@ public sealed partial class WorkView : UserControl, IDisposable
 
         if (WorkListBox.SelectionMode.HasFlag(SelectionMode.Multiple))
         {
-            lbi.IsSelected = !lbi.IsSelected;
+            UpdateSelection(lbi, tappedEventArgs);
             return;
         }
 
         await CreateWorkViewerPage(vm);
+    }
+
+    private void UpdateSelection(ListBoxItem item, TappedEventArgs e)
+    {
+        var index = WorkListBox.IndexFromContainer(item);
+        var anchorIndex = WorkListBox.Selection.AnchorIndex;
+
+        if (!e.KeyModifiers.HasFlag(KeyModifiers.Shift) || index < 0 || anchorIndex < 0)
+        {
+            item.IsSelected = !item.IsSelected;
+            return;
+        }
+
+        using var operation = WorkListBox.Selection.BatchUpdate();
+        WorkListBox.Selection.Clear();
+        WorkListBox.Selection.SelectRange(anchorIndex, index);
     }
 
     private async void WorkItem_OnDoubleTapped(object? sender, TappedEventArgs e)

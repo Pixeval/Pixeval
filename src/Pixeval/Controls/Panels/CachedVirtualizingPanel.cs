@@ -90,6 +90,8 @@ public abstract class CachedVirtualizingPanel : VirtualizingPanel
             generator.PrepareItemContainer(recycled, item, index);
             recycled.SetValue(RecycleKeyProperty, recycleKey);
             AddInternalChild(recycled);
+            if (recycled is ListBoxItem)
+                recycled.ClearValue(ListBoxItem.IsSelectedProperty);
             generator.ItemContainerPrepared(recycled, item, index);
             return recycled;
         }
