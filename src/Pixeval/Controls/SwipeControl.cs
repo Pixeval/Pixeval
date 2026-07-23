@@ -11,10 +11,16 @@ namespace Pixeval.Controls;
 
 public class SwipeControl : TransitioningContentControl
 {
+    static SwipeControl()
+    {
+        FocusableProperty.OverrideDefaultValue<SwipeControl>(true);
+        IsTabStopProperty.OverrideDefaultValue<SwipeControl>(false);
+    }
+
     /// <inheritdoc />
     protected override Type StyleKeyOverride => typeof(TransitioningContentControl);
 
-    public event EventHandler<Control, ImageViewerSelectionChangedEventArgs>? SelectionChanged; 
+    public event EventHandler<Control, ImageViewerSelectionChangedEventArgs>? SelectionChanged;
 
     public static readonly StyledProperty<IReadOnlyList<object>?> ItemsSourceProperty = AvaloniaProperty.Register<SwipeControl, IReadOnlyList<object>?>(nameof(ItemsSource));
 
@@ -47,9 +53,11 @@ public class SwipeControl : TransitioningContentControl
         if (change.Property != SelectedIndexProperty && change.Property != ItemsSourceProperty && change.Property != ItemTemplateProperty)
             return;
 
+        var hadKeyboardFocus = IsKeyboardFocusWithin;
         if (ItemsSource is not { } items || items.Count == 0 || SelectedIndex < 0 || SelectedIndex >= items.Count)
         {
             Content = null;
+            RestoreKeyboardFocus(hadKeyboardFocus);
             return;
         }
 
@@ -71,7 +79,15 @@ public class SwipeControl : TransitioningContentControl
             Content = content;
         }
 
+        RestoreKeyboardFocus(hadKeyboardFocus);
         SelectionChanged?.Invoke(this, new ImageViewerSelectionChangedEventArgs(SelectedIndex, item));
+    }
+
+    private void RestoreKeyboardFocus(bool hadKeyboardFocus)
+    {
+        // The selected content is transient; move focus to the stable owner before the old presenter is removed.
+        if (hadKeyboardFocus)
+            _ = Focus();
     }
 }
 

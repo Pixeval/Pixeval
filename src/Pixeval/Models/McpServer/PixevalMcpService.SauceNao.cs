@@ -54,7 +54,7 @@ public sealed partial class PixevalMcpService
         var response = await ViewModel.GetRequiredHttpClient()
             .PostAsync(request.ToQueryString(), form, cancellationToken)
             .ConfigureAwait(false);
-        response.EnsureSuccessStatusCode();
+        _ = response.EnsureSuccessStatusCode();
 
         var result = await response.Content
                          .ReadFromJsonAsync(SauceNaoResponseSerializerContext.Default.SauceNaoResponse,

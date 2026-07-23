@@ -55,8 +55,7 @@
                     CommandParameter="{Binding #ThumbnailImage, Mode=OneTime}"
                     Header="{I18N {x:Static pixeval:EntryItemResources.Copy}}"
                     Icon="{markup:SymbolIcon Copy}"
-                    IsEnabled="{Binding #ThumbnailImage.(controls:Source.Loaded)}"
-                    IsVisible="{Binding !IsPicGif}" />
+                    IsEnabled="{Binding #ThumbnailImage.(controls:Source.Loaded)}" />
                 <MenuItem
                     Command="{Binding SaveCommand}"
                     CommandParameter="{Binding $self, Mode=OneTime}"

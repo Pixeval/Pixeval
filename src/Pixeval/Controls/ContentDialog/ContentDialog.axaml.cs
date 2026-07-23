@@ -212,14 +212,6 @@ public class ContentDialog : ContentControl
     /// </summary>
     public event EventHandler<ContentDialog, ContentDialogClosedEventArgs>? Closed;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ContentDialog"/> class.
-    /// </summary>
-    public ContentDialog()
-    {
-        AddHandler(KeyDownEvent, OnDialogKeyDown, RoutingStrategies.Tunnel);
-    }
-
     static ContentDialog()
     {
         DefaultButtonProperty.Changed.AddClassHandler<ContentDialog>((x, _) => x.UpdateDefaultButton());
@@ -306,29 +298,25 @@ public class ContentDialog : ContentControl
     private async void CloseButtonOnClick(object? sender, RoutedEventArgs e) =>
         await RequestCloseAsync(ContentDialogResult.Close, ContentDialogButton.Close);
 
-    private async void OnDialogKeyDown(object? sender, KeyEventArgs e)
+    protected override async void OnKeyDown(KeyEventArgs e)
     {
-        if (e.Key is Key.Enter)
+        base.OnKeyDown(e);
+
+        if (e.Handled || e.KeyModifiers is not KeyModifiers.None)
+            return;
+
+        if (e.Key is Key.Enter && IsButtonAvailable(DefaultButton))
         {
-            if (await InvokeDefaultButtonAsync())
-                e.Handled = true;
+            e.Handled = true;
+            await RequestCloseAsync(ToResult(DefaultButton), DefaultButton);
             return;
         }
 
         if (e.Key is Key.Escape && IsButtonAvailable(ContentDialogButton.Close))
         {
-            await RequestCloseAsync(ContentDialogResult.Close, ContentDialogButton.Close);
             e.Handled = true;
+            await RequestCloseAsync(ContentDialogResult.Close, ContentDialogButton.Close);
         }
-    }
-
-    private async Task<bool> InvokeDefaultButtonAsync()
-    {
-        if (!IsButtonAvailable(DefaultButton))
-            return false;
-
-        await RequestCloseAsync(ToResult(DefaultButton), DefaultButton);
-        return true;
     }
 
     private async Task RequestCloseAsync(ContentDialogResult result, ContentDialogButton button)

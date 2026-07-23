@@ -83,14 +83,15 @@
                 CommandParameter="{Binding $self}"
                 Header="{I18N {x:Static pixeval:EntryViewerPageResources.Copy}}"
                 Icon="{markup:SymbolIcon Copy}"
-                InputGesture="Ctrl+C"
+                InputGesture="{markup1:PlatformCommandGesture C}"
                 IsVisible="{Binding IsPicGif, Converter={x:Static BoolConverters.Not}}" />
             <MenuItem
                 Command="{Binding SaveAsCommand}"
                 CommandParameter="{Binding $self}"
                 Header="{I18N {x:Static pixeval:EntryViewerPageResources.SaveAs}}"
                 Icon="{markup:SymbolIcon Save}"
-                InputGesture="Ctrl+Shift+S" />
+                InputGesture="{markup1:PlatformCommandGesture S,
+                                                              AdditionalModifiers=Shift}" />
             <Separator IsVisible="{x:Static vm:SingleViewerViewModel.HasTransformerExtensions}" />
             <MenuItem
                 Command="{Binding PrimaryTransformerExtensionItem.Command, FallbackValue={x:Null}}"

@@ -147,8 +147,7 @@ public class MarkdownBox : MarkdownScrollViewer
 
     protected override async void OnKeyDown(KeyEventArgs e)
     {
-        if (e.Key is Key.C
-            && (e.KeyModifiers & KeyModifiers.Control) != 0
+        if (KeyboardShortcut.MatchesCopy(e)
             && TryGetVisualSelectedText() is { Length: > 0 } selectedText
             && TopLevel.GetTopLevel(this)?.Clipboard is { } clipboard)
         {
@@ -157,8 +156,8 @@ public class MarkdownBox : MarkdownScrollViewer
             var data = new DataTransfer();
             data.Add(item);
 
-            await clipboard.SetDataAsync(data);
             e.Handled = true;
+            await clipboard.SetDataAsync(data);
             return;
         }
 

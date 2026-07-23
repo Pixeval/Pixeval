@@ -20,13 +20,6 @@
     mc:Ignorable="d"
     d:DesignHeight="600"
     d:DesignWidth="1000">
-    <views:IconContentPage.KeyBindings>
-        <KeyBinding Command="{Binding PrevCommand}" Gesture="Left" />
-        <KeyBinding Command="{Binding NextCommand}" Gesture="Right" />
-        <KeyBinding Command="{Binding PrevWorkCommand}" Gesture="Up" />
-        <KeyBinding Command="{Binding NextWorkCommand}" Gesture="Down" />
-    </views:IconContentPage.KeyBindings>
-
     <Grid RowDefinitions="*,Auto,Auto">
         <SplitView
             x:Name="InfoSplitView"

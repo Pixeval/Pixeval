@@ -25,6 +25,16 @@ public partial class IllustrationViewerPage : ContentPage
         InitializeComponent();
     }
 
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        base.OnKeyDown(e);
+
+        _ = KeyboardShortcut.TryExecute(e, Key.Left, ViewModel.PrevCommand)
+            || KeyboardShortcut.TryExecute(e, Key.Right, ViewModel.NextCommand)
+            || KeyboardShortcut.TryExecute(e, Key.Up, ViewModel.PrevWorkCommand)
+            || KeyboardShortcut.TryExecute(e, Key.Down, ViewModel.NextWorkCommand);
+    }
+
     private void PrevButton_OnRightClick(object? sender, ContextRequestedEventArgs e) => ViewModel.PrevWorkCommand.Execute(null);
 
     private void NextButton_OnRightClick(object? sender, ContextRequestedEventArgs e) => ViewModel.NextWorkCommand.Execute(null);

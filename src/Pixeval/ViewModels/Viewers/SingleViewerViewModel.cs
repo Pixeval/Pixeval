@@ -406,6 +406,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
             { ViewContainer: { } viewContainer, Clipboard: { } clipboard })
             return;
         await clipboard.SetBitmapAsync(singleFrame);
+        await clipboard.FlushAsync();
         viewContainer?.ShowSuccess(I18NManager.GetResource(MiscResources.Copied));
     }
 

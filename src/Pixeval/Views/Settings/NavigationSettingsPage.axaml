@@ -24,7 +24,6 @@
             <CommandBarButton
                 x:Name="CanApplyButton"
                 Click="ApplyButton_OnClicked"
-                HotKey="Ctrl+S"
                 Icon="{markup:SymbolIcon Checkmark}"
                 Label="{I18N {x:Static pixeval:NavigationSettingsPageResources.ApplyButtonContent}}"
                 ToolTip.Tip="{I18N {x:Static pixeval:NavigationSettingsPageResources.ApplyButtonToolTip}}" />

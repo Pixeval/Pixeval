@@ -60,8 +60,10 @@
                         </AutoCompleteBox.InnerRightContent>
                     </AutoCompleteBox>
                 </Expander.Header>
-                <TabbedPage x:Name="AdvancedOptionsTabControl"
-                            SelectedIndex="{Binding SelectedAdvancedOptionsType, Mode=TwoWay}">
+                <TabbedPage
+                    x:Name="AdvancedOptionsTabControl"
+                    KeyDown="AdvancedOptionsTabControl_OnKeyDown"
+                    SelectedIndex="{Binding SelectedAdvancedOptionsType, Mode=TwoWay}">
                     <search:IllustrationSearchOptionsPage DataContext="{Binding IllustrationForm}" />
                     <search:NovelSearchOptionsPage DataContext="{Binding NovelForm}" />
                     <search:SauceNaoSearchPage />

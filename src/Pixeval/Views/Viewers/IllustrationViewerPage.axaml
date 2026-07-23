@@ -134,20 +134,6 @@
         </Style>
     </ContentPage.Styles>
 
-    <ContentPage.KeyBindings>
-        <KeyBinding Command="{Binding PrevCommand}" Gesture="Left" />
-        <KeyBinding Command="{Binding NextCommand}" Gesture="Right" />
-        <KeyBinding Command="{Binding PrevWorkCommand}" Gesture="Up" />
-        <KeyBinding Command="{Binding NextWorkCommand}" Gesture="Down" />
-        <!--
-            TODO: Avalonia的HotKeyManager监听的是逻辑树，在多Tab的时候会出问题，所以先用局部的KeyBinding顶一下
-            需要等Avalonia行为改了，或者用其它workaround修复
-            因为是局部的KeyBindings，目前快捷键需要焦点在该ContentPage内部才会激活
-        -->
-        <KeyBinding Command="{Binding #I.ImageViewer.CopyCommand}" Gesture="Ctrl+C" />
-        <KeyBinding Command="{Binding #I.ImageViewer.SaveCommand}" Gesture="Ctrl+S" />
-    </ContentPage.KeyBindings>
-
     <Grid>
         <!--  主体区域：FloatingPaneView + 图片查看器  -->
         <controls:FloatingPaneView

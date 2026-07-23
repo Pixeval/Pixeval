@@ -7,32 +7,38 @@ namespace Pixeval.Models.SauceNao;
 public record SauceNaoData
 {
     [JsonPropertyName("pixiv_id")]
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
     public long? PixivId { get; set; }
 
     [JsonPropertyName("danbooru_id")]
-    public string? DanbooruId { get; set; }
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
+    public long? DanbooruId { get; set; }
 
     [JsonPropertyName("yandere_id")]
-    public string? YandereId { get; set; }
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
+    public long? YandereId { get; set; }
 
     [JsonPropertyName("gelbooru_id")]
-    public string? GelbooruId { get; set; }
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
+    public long? GelbooruId { get; set; }
 
     [JsonPropertyName("sankaku_id")]
-    public string? SankakuId { get; set; }
+    // 仅作兜底
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
+    public long? SankakuId { get; set; }
 
     public IIdentityInfo? ToIdentityInfo()
     {
-        if (PixivId is { } id)
-            return new SimpleIdentityInfo(id.ToString(), IPlatformInfo.Pixiv);
-        if (DanbooruId is not null)
-            return new SimpleIdentityInfo(DanbooruId, IPlatformInfo.Danbooru);
-        if (YandereId is not null)
-            return new SimpleIdentityInfo(YandereId, IPlatformInfo.Yandere);
-        if (GelbooruId is not null)
-            return new SimpleIdentityInfo(GelbooruId, IPlatformInfo.Gelbooru);
-        if (SankakuId is not null)
-            return new SimpleIdentityInfo(SankakuId, IPlatformInfo.Sankaku);
+        if (PixivId is { } pId)
+            return new SimpleIdentityInfo(pId.ToString(), IPlatformInfo.Pixiv);
+        if (DanbooruId is { } dId)
+            return new SimpleIdentityInfo(dId.ToString(), IPlatformInfo.Danbooru);
+        if (YandereId is { } yId)
+            return new SimpleIdentityInfo(yId.ToString(), IPlatformInfo.Yandere);
+        if (GelbooruId is { } gId)
+            return new SimpleIdentityInfo(gId.ToString(), IPlatformInfo.Gelbooru);
+        if (SankakuId is { } sId)
+            return new SimpleIdentityInfo(sId.ToString(), IPlatformInfo.Sankaku);
         return null;
     }
 }

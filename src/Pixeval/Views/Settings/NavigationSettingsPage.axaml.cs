@@ -4,6 +4,7 @@
 using System;
 using System.Text;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Pixeval.AppManagement;
 using Pixeval.I18N;
@@ -26,11 +27,23 @@ public sealed partial class NavigationSettingsPage : ContentPage
         ValidateCurrentText();
     }
 
-    private void ApplyButton_OnClicked(object? sender, RoutedEventArgs e)
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        base.OnKeyDown(e);
+
+        if (CanApplyButton.IsEffectivelyEnabled
+            && KeyboardShortcut.MatchesPlatformCommand(e, Key.S)
+            && TryApplyChanges())
+            e.Handled = true;
+    }
+
+    private void ApplyButton_OnClicked(object? sender, RoutedEventArgs e) => _ = TryApplyChanges();
+
+    private bool TryApplyChanges()
     {
         var result = ValidateCurrentText();
         if (result.Configuration is null)
-            return;
+            return false;
 
         App.AppViewModel.NavigationMenuYamlText = YamlEditor.Text ?? "";
         AppInfo.SaveNavigationMenuYaml(App.AppViewModel.NavigationMenuYamlText);
@@ -39,6 +52,8 @@ public sealed partial class NavigationSettingsPage : ContentPage
 
         if (TopLevel.GetTopLevel(this)?.ViewContainer is ViewContainers.TabViewContainer container)
             container.ReloadNavigation();
+
+        return true;
     }
 
     private void FormatButton_OnClicked(object? sender, RoutedEventArgs e)

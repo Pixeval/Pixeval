@@ -20,6 +20,7 @@ using Pixeval.I18N;
 using Pixeval.Models.Database;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
+using Pixeval.ViewModels.Search;
 using Pixeval.Views.Capability;
 using Pixeval.Views.Viewers;
 
@@ -73,6 +74,21 @@ public partial class SearchPage : IconContentPage
     private void SearchButton_OnClick(object? sender, RoutedEventArgs e)
     {
         ExecuteSearch(SearchAutoCompleteBox.Text?.Trim(), AdvancedExpander.IsExpanded);
+    }
+
+    private void AdvancedOptionsTabControl_OnKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (sender is not TabbedPage
+            {
+                CurrentPage: SauceNaoSearchPage
+                {
+                    DataContext: SauceNaoSearchPageViewModel viewModel
+                } page
+            }
+            || !SauceNaoSearchPageViewModel.IsApiKeyExisted)
+            return;
+
+        _ = KeyboardShortcut.TryExecutePaste(e, viewModel.PasteCommand, page);
     }
 
     private void SearchAutoCompleteBox_OnKeyDown(object? sender, KeyEventArgs e)

@@ -37,8 +37,7 @@
             HorizontalContentAlignment="Center"
             Command="{Binding PasteCommand}"
             CommandParameter="{Binding $self}"
-            DockPanel.Dock="Bottom"
-            HotKey="Ctrl+V">
+            DockPanel.Dock="Bottom">
             <Button.Content>
                 <controls:IconText Symbol="ClipboardPaste" Text="{I18N {x:Static pixeval:SearchResources.SauceNAOPasteFromClipboard}}" />
             </Button.Content>
