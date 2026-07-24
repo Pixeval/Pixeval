@@ -1,29 +1,29 @@
 {
   "ApplyButton": {
-    "Content": "应用",
-    "ToolTip": "验证通过后保存并刷新侧栏"
+    "Content": "Применить",
+    "ToolTip": "Сохранить и обновить боковую панель после проверки"
   },
   "FormatButton": {
-    "Content": "格式化",
-    "ToolTip": "按当前解析结果重新整理 YAML"
+    "Content": "Форматировать",
+    "ToolTip": "Упорядочить YAML на основе текущего синтаксиса"
   },
   "ResetButton": {
-    "Content": "恢复默认",
-    "ToolTip": "恢复为 Pixeval 默认侧栏配置"
+    "Content": "Сбросить по умолчанию",
+    "ToolTip": "Восстановить конфигурацию боковой панели Pixeval по умолчанию"
   },
   "InsertFolderButton": {
-    "Content": "插入文件夹",
-    "ToolTip": "在光标处插入一个文件夹菜单项模板"
+    "Content": "Вставить папку",
+    "ToolTip": "Вставить шаблон элемента меню папки в месте курсора"
   },
   "ReferencePages": {
-    "Header": "可用页面"
+    "Header": "Доступные страницы"
   },
   "ReferenceIcons": {
-    "Header": "可用图标"
+    "Header": "Доступные иконки"
   },
-  "Applied": "导航栏设置已应用",
-  "StatusInvalidFormatted": "配置无效：{0} 个问题",
-  "DefaultFolderTitle": "文件夹",
-  "WorkFolderTitle": "作品",
-  "UserFolderTitle": "用户"
+  "Applied": "Настройки панели навигации применены",
+  "StatusInvalidFormatted": "Недопустимая конфигурация: проблем — {0}",
+  "DefaultFolderTitle": "Папка",
+  "WorkFolderTitle": "Работы",
+  "UserFolderTitle": "Пользователи"
 }
