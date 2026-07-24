@@ -1,11 +1,11 @@
 {
   "BlockTagMenuItem": {
-    "Text": "屏蔽标签"
+    "Text": "Заблокировать тег"
   },
   "CopyOriginalTagMenuItem": {
-    "Text": "复制原文"
+    "Text": "Скопировать оригинал"
   },
   "CopyTranslatedTagMenuItem": {
-    "Text": "复制译文"
+    "Text": "Скопировать перевод"
   }
 }
