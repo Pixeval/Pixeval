@@ -1,13 +1,13 @@
 {
   "AddSubscriptionButton": {
-    "Label": "添加订阅"
+    "Label": "Добавить подписку"
   },
   "SyncAllSubscriptionsButton": {
-    "Label": "立即同步所有订阅"
+    "Label": "Синхронизировать все подписки"
   },
-  "SubscriptionAdded": "已添加订阅",
+  "SubscriptionAdded": "Подписка добавлена",
   "TargetIdTextBox": {
-    "PlaceholderText": "用户或系列 ID"
+    "PlaceholderText": "ID пользователя или серии"
   },
-  "InvalidTargetId": "请输入有效的用户或系列 ID"
+  "InvalidTargetId": "Введите корректный ID пользователя или серии"
 }
