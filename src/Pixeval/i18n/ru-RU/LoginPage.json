@@ -1,16 +1,16 @@
 {
   "RefreshTokenBox": {
-    "PlaceholderText": "刷新令牌"
+    "PlaceholderText": "Токен обновления (Refresh Token)"
   },
   "RefreshTokenButton": {
-    "Content": "使用刷新令牌登录"
+    "Content": "Войти по токену обновления"
   },
   "WebViewButton": {
-    "Content": "通过WebView登录"
+    "Content": "Войти через WebView"
   },
   "FetchingSessionFailed": {
-    "Content": "请重新启动应用程序\n如果该问题反复出现，请联系开发者寻求解决",
-    "Title": "获取对话失败"
+    "Content": "Пожалуйста, перезапустите приложение.\nЕсли проблема повторяется, обратитесь к разработчику",
+    "Title": "Не удалось получить сессию"
   },
-  "LoginHeader": "登录"
+  "LoginHeader": "Вход"
 }
