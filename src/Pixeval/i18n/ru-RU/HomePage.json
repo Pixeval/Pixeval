@@ -1,130 +1,130 @@
 {
   "EditButton": {
-    "Label": "编辑"
+    "Label": "Редактировать"
   },
   "HideCardTitleButton": {
-    "Label": "隐藏卡片标题"
+    "Label": "Скрыть заголовки карточек"
   },
   "HideToolbarButton": {
-    "Label": "隐藏工具栏"
+    "Label": "Скрыть панель инструментов"
   },
   "EditPaneTitleTextBlock": {
-    "Text": "编辑主页布局"
+    "Text": "Редактирование макета главной страницы"
   },
   "EditPaneDescriptionTextBlock": {
-    "Text": "选择卡片添加到主页，再调整它在网格中的位置和大小。"
+    "Text": "Выберите карточки для добавления на главную страницу, затем настройте их положение и размер в сетке."
   },
   "SelectedCardTitleTextBlock": {
-    "Text": "选中的卡片"
+    "Text": "Выбранная карточка"
   },
   "GridSizeTitleTextBlock": {
-    "Text": "主页网格"
+    "Text": "Сетка главной страницы"
   },
   "GridRowsTextBlock": {
-    "Text": "行"
+    "Text": "Строки"
   },
   "GridColumnsTextBlock": {
-    "Text": "列"
+    "Text": "Столбцы"
   },
   "NoSelectedCardTextBlock": {
-    "Text": "点击主页上的卡片后可编辑位置和尺寸。"
+    "Text": "Нажмите на карточку на главной странице, чтобы изменить её положение и размер."
   },
   "PositionXTextBlock": {
-    "Text": "列"
+    "Text": "Столбец"
   },
   "PositionYTextBlock": {
-    "Text": "行"
+    "Text": "Строка"
   },
   "WidthTextBlock": {
-    "Text": "宽"
+    "Text": "Ширина"
   },
   "HeightTextBlock": {
-    "Text": "高"
+    "Text": "Высота"
   },
   "CardBackgroundTextBlock": {
-    "Text": "背景色"
+    "Text": "Цвет фона"
   },
   "DeleteSelectedCardButton": {
-    "Content": "删除卡片"
+    "Content": "Удалить карточку"
   },
   "OpenCardPageButton": {
-    "ToolTip": "查看页面"
+    "ToolTip": "Просмотреть страницу"
   },
   "CardTitle": {
     "ParameterSeparator": " · "
   },
   "CardLibraryTitleTextBlock": {
-    "Text": "可添加卡片"
+    "Text": "Доступные карточки"
   },
   "SourceParametersTitleTextBlock": {
-    "Text": "卡片参数"
+    "Text": "Параметры карточки"
   },
   "SelectCardSourcePromptTextBlock": {
-    "Text": "先选择一个卡片源，再填写参数添加到主页。"
+    "Text": "Сначала выберите источник карточки, затем укажите параметры и добавьте на главную страницу."
   },
   "Source": {
     "WorkTypeTextBlock": {
-      "Text": "作品类型"
+      "Text": "Тип работы"
     },
     "SimpleWorkTypeTextBlock": {
-      "Text": "作品范围"
+      "Text": "Область работ"
     },
     "PrivacyPolicyTextBlock": {
-      "Text": "公开范围"
+      "Text": "Доступность"
     },
     "RankOptionTextBlock": {
-      "Text": "榜单类型"
+      "Text": "Тип рейтинга"
     },
     "RankingDateTextBlock": {
-      "Text": "榜单日期"
+      "Text": "Дата рейтинга"
     },
     "UseSpecifiedRankingDateCheckBox": {
-      "Content": "使用指定日期"
+      "Content": "Указать конкретную дату"
     },
     "UserIdTextBlock": {
-      "Text": "用户 ID"
+      "Text": "ID пользователя"
     },
     "EntryIdTextBlock": {
-      "Text": "作品 ID"
+      "Text": "ID работы"
     },
     "SeriesIdTextBlock": {
-      "Text": "系列 ID"
+      "Text": "ID серии"
     },
     "SearchTextTextBlock": {
-      "Text": "搜索关键词"
+      "Text": "Поисковый запрос"
     },
     "TagTextBlock": {
-      "Text": "收藏标签"
+      "Text": "Тег закладок"
     }
   },
   "AddConfiguredCardButton": {
-    "Content": "添加卡片"
+    "Content": "Добавить карточку"
   },
   "CardPreview": {
     "LoadingTextBlock": {
-      "Text": "正在加载"
+      "Text": "Загрузка..."
     },
     "EmptyTextBlock": {
-      "Text": "暂无内容"
+      "Text": "Содержимое отсутствует"
     },
     "FailedTextBlock": {
-      "Text": "加载失败"
+      "Text": "Ошибка загрузки"
     }
   },
   "NoSpaceWarning": {
-    "Title": "没有可用空间",
-    "Content": "当前主页网格中没有能容纳这张卡片的位置。"
+    "Title": "Нет свободного места",
+    "Content": "В сетке главной страницы нет места, способного вместить эту карточку."
   },
   "LayoutConflictWarning": {
-    "Title": "布局冲突",
-    "Content": "该位置或尺寸会超出主页网格，或与其他卡片重叠。"
+    "Title": "Конфликт макета",
+    "Content": "Это положение или размер выходит за пределы сетки или перекрывает другие карточки."
   },
   "GridShrinkBlockedWarning": {
-    "Title": "无法缩小网格",
-    "Content": "要删除的行或列上已有卡片，请先移动或删除这些卡片。"
+    "Title": "Невозможно уменьшить сетку",
+    "Content": "В удаляемых строках или столбцах находятся карточки. Переместите или удалите их."
   },
   "InvalidSourceParameterWarning": {
-    "Title": "参数不完整",
-    "Content": "请填写当前卡片源所需的用户 ID、作品 ID、系列 ID 或搜索关键词。"
+    "Title": "Неполные параметры",
+    "Content": "Укажите ID пользователя, ID работы, ID серии или поисковый запрос для выбранного источника карточки."
   }
 }
