@@ -1,183 +1,183 @@
 {
   "ApplicationTheme": {
-    "Default": "默认",
-    "Light": "浅色",
-    "Dark": "深色"
+    "Default": "По умолчанию",
+    "Light": "Светлая",
+    "Dark": "Тёмная"
   },
   "WorkType": {
-    "Illustration": "插画",
-    "Manga": "漫画",
-    "Novel": "小说"
+    "Illustration": "Иллюстрация",
+    "Manga": "Манга",
+    "Novel": "Новелла"
   },
   "LocalSortOption": {
-    "DoNotSort": "不进行任何排序",
-    "PopularityDescending": "收藏数降序",
-    "PublishDateAscending": "发布日期升序",
-    "PublishDateDescending": "发布日期降序"
+    "DoNotSort": "Не сортировать",
+    "PopularityDescending": "По популярности (по убыванию)",
+    "PublishDateAscending": "По дате публикации (по возрастанию)",
+    "PublishDateDescending": "По дате публикации (по убыванию)"
   },
   "DomainFrontingType": {
-    "Fragmentation": "TLS 分片",
-    "Desync": "去同步"
+    "Fragmentation": "Фрагментация TLS",
+    "Desync": "Рассинхронизация (Desync)"
   },
   "PrivacyPolicy": {
-    "Public": "公开",
-    "Private": "私有"
+    "Public": "Публичный",
+    "Private": "Приватный"
   },
   "SearchNovelTagMatchOption": {
-    "PartialMatchForTags": "标签（部分一致）",
-    "ExactMatchForTags": "标签（完全一致）",
-    "Text": "正文",
-    "Keyword": "标签、标题、说明文字"
+    "PartialMatchForTags": "Теги (частичное совпадение)",
+    "ExactMatchForTags": "Теги (точная копия)",
+    "Text": "Текст новеллы",
+    "Keyword": "Теги, заголовок, описание"
   },
   "SearchNovelContentLengthOption": {
-    "None": "不指定",
-    "TextLength": "字数",
-    "WordCount": "单词数",
-    "ReadingTime": "预计阅读时间"
+    "None": "Не указано",
+    "TextLength": "Количество символов",
+    "WordCount": "Количество слов",
+    "ReadingTime": "Примерное время чтения"
   },
   "SearchIllustrationTagMatchOption": {
-    "PartialMatchForTags": "标签（部分一致）",
-    "ExactMatchForTags": "标签（完全一致）",
-    "TitleAndCaption": "匹配标题与说明文字"
+    "PartialMatchForTags": "Теги (частичное совпадение)",
+    "ExactMatchForTags": "Теги (точная копия)",
+    "TitleAndCaption": "Заголовок и описание"
   },
   "SearchIllustrationContentType": {
-    "IllustrationAndMangaAndUgoira": "插画、漫画、动图",
-    "IllustrationAndUgoira": "插画、动图",
-    "Illustration": "插画",
-    "Manga": "漫画",
-    "Ugoira": "动图"
+    "IllustrationAndMangaAndUgoira": "Иллюстрации, манга, Ugoira",
+    "IllustrationAndUgoira": "Иллюстрации, Ugoira",
+    "Illustration": "Иллюстрация",
+    "Manga": "Манга",
+    "Ugoira": "Анимация (Ugoira)"
   },
   "SearchIllustrationRatioPattern": {
-    "All": "全部",
-    "Landscape": "横图",
-    "Portrait": "竖图",
-    "Square": "方图"
+    "All": "Все",
+    "Landscape": "Горизонтальная",
+    "Portrait": "Вертикальная",
+    "Square": "Квадратная"
   },
   "WorkSortOption": {
-    "PublishDateDescending": "发布日期降序",
-    "PublishDateAscending": "发布日期升序",
-    "PopularityDescending": "收藏数降序"
+    "PublishDateDescending": "По дате публикации (по убыванию)",
+    "PublishDateAscending": "По дате публикации (по возрастанию)",
+    "PopularityDescending": "По популярности (по убыванию)"
   },
   "FontWeight": {
-    "Thin": "极细",
-    "ExtraLight": "特细",
-    "Light": "细",
-    "SemiLight": "半细",
-    "Normal": "常规",
-    "Medium": "中等",
-    "SemiBold": "半粗",
-    "Bold": "粗",
-    "ExtraBold": "特粗",
-    "Black": "黑",
-    "ExtraBlack": "特黑"
+    "Thin": "Тонкое (Thin)",
+    "ExtraLight": "Сверхтонкое (ExtraLight)",
+    "Light": "Светлое (Light)",
+    "SemiLight": "Полусветлое (SemiLight)",
+    "Normal": "Обычное (Normal)",
+    "Medium": "Среднее (Medium)",
+    "SemiBold": "Полужирное (SemiBold)",
+    "Bold": "Жирное (Bold)",
+    "ExtraBold": "Сверхжирное (ExtraBold)",
+    "Black": "Тяжёлое (Black)",
+    "ExtraBlack": "Сверхтяжёлое (ExtraBlack)"
   },
   "IllustrationDownloadFormat": {
-    "Original": "图片原始格式"
+    "Original": "Оригинальный формат изображения"
   },
   "UgoiraDownloadFormat": {
-    "Original": "动图原始格式"
+    "Original": "Оригинальный формат анимации"
   },
   "NovelDownloadFormat": {
-    "OriginalTxt": "TXT外挂插图（Pixiv小说原生标签）",
-    "Html": "HTML外挂插图",
-    "Md": "MarkDown外挂插图"
+    "OriginalTxt": "TXT с внешними иллюстрациями (теги Pixiv)",
+    "Html": "HTML с внешними иллюстрациями",
+    "Md": "Markdown с внешними иллюстрациями"
   },
   "RankOption": {
-    "Day": "每日榜单",
-    "Week": "每周榜单",
-    "Month": "每月榜单",
-    "DayMale": "男性向日榜",
-    "DayFemale": "女性向日榜",
-    "WeekOriginal": "原创周榜",
-    "WeekRookie": "新人周榜",
-    "DayManga": "漫画日榜",
-    "WeekManga": "漫画周榜",
-    "MonthManga": "漫画月榜",
-    "DayR18": "R-18日榜",
-    "DayMaleR18": "男性向R-18日榜",
-    "DayFemaleR18": "女性向R-18日榜",
-    "WeekR18": "R-18周榜",
-    "WeekR18G": "R-18G周榜",
-    "DayAi": "AI日榜",
-    "DayR18Ai": "AI R-18日榜",
-    "WeekAi": "AI周榜",
-    "WeekAiR18": "AI R-18周榜"
+    "Day": "Дневной рейтинг",
+    "Week": "Недельный рейтинг",
+    "Month": "Месячный рейтинг",
+    "DayMale": "Мужской дневной",
+    "DayFemale": "Женский дневной",
+    "WeekOriginal": "Оригиналы за неделю",
+    "WeekRookie": "Новички за неделю",
+    "DayManga": "Манга за день",
+    "WeekManga": "Манга за неделю",
+    "MonthManga": "Манга за месяц",
+    "DayR18": "R-18 за день",
+    "DayMaleR18": "R-18 для мужчин за день",
+    "DayFemaleR18": "R-18 для женщин за день",
+    "WeekR18": "R-18 за неделю",
+    "WeekR18G": "R-18G за неделю",
+    "DayAi": "AI за день",
+    "DayR18Ai": "AI R-18 за день",
+    "WeekAi": "AI за неделю",
+    "WeekAiR18": "AI R-18 за неделю"
   },
   "ProxyOption": {
-    "Custom": "指定代理",
-    "None": "无代理",
-    "System": "系统代理"
+    "Custom": "Пользовательский прокси",
+    "None": "Без прокси",
+    "System": "Системный прокси"
   },
   "WorkTypeEnum": {
-    "Illustration": "插画",
-    "Manga": "漫画",
-    "Ugoira": "动图",
-    "Novel": "小说"
+    "Illustration": "Иллюстрация",
+    "Manga": "Манга",
+    "Ugoira": "Анимация (Ugoira)",
+    "Novel": "Новелла"
   },
   "ClearDataKind": {
-    "FileCache": "已删除所有的文件缓存",
-    "DownloadHistory": "已删除所有的下载记录",
-    "SearchHistory": "已删除所有的搜索记录",
-    "BrowseHistory": "已删除所有的浏览记录"
+    "FileCache": "Весь кэш файлов удалён",
+    "DownloadHistory": "Вся история загрузок удалена",
+    "SearchHistory": "Вся история поиска удалена",
+    "BrowseHistory": "Вся история просмотров удалена"
   },
   "ThumbnailLayoutType": {
-    "LinedFlow": "流式布局",
-    "Grid": "网格布局",
-    "Masonry": "瀑布流布局"
+    "LinedFlow": "Потоковый макет (Flow)",
+    "Grid": "Сетка (Grid)",
+    "Masonry": "Плитка (Masonry)"
   },
   "BrowseMode": {
-    "Swipe": "翻页",
-    "Continuous": "连续"
+    "Swipe": "Постранично",
+    "Continuous": "Непрерывно"
   },
   "Orientation": {
-    "Horizontal": "水平滚动",
-    "Vertical": "垂直滚动"
+    "Horizontal": "Горизонтальная прокрутка",
+    "Vertical": "Вертикальная прокрутка"
   },
   "IllustrationViewerAutoPlayMode": {
-    "Sequential": "顺序播放",
-    "Loop": "循环播放"
+    "Sequential": "Последовательно",
+    "Loop": "По кругу (цикл)"
   },
   "IllustrationViewerAutoPlayScope": {
-    "CurrentWork": "当前画集",
-    "AllWorks": "全部画集"
+    "CurrentWork": "Текущий альбом",
+    "AllWorks": "Все альбомы"
   },
   "WorkSubscriptionType": {
-    "Bookmarks": "收藏",
-    "Posts": "发布作品",
-    "Series": "系列作品"
+    "Bookmarks": "Закладки",
+    "Posts": "Опубликованные работы",
+    "Series": "Серии"
   },
   "WorkSubscriptionWorkKind": {
-    "Illustration": "插画",
-    "Manga": "漫画",
-    "Novel": "小说"
+    "Illustration": "Иллюстрация",
+    "Manga": "Манга",
+    "Novel": "Новелла"
   },
   "HomePageCardSourceKindDescription": {
-    "WorkRecommended": "来自 Pixiv 推荐引擎，可选择插画、漫画或小说。",
-    "WorkBookmarks": "指定用户、公开范围和标签的收藏作品列表。",
-    "WorkRanking": "指定作品类型、榜单类型和日期的排行列表。",
-    "WorkNew": "按作品类型展示 Pixiv 最新作品。",
-    "WorkFollowing": "来自已关注用户的新作品列表。",
-    "WorkMyPixiv": "来自自己的好P友的新作品列表。",
-    "WorkRelated": "指定作品 ID 和作品类型的相关作品列表。",
-    "WorkPosts": "指定用户的插画、漫画或小说投稿。",
-    "WorkSearch": "按关键词搜索插画、漫画或小说。",
-    "UserRecommended": "Pixiv 推荐用户列表。",
-    "UserSearch": "按关键词搜索用户。",
-    "UserFollowing": "指定用户正在关注的用户列表。",
-    "UserFollower": "自己的粉丝列表。",
-    "UserMyPixiv": "自己的好P友列表。",
-    "Spotlight": "Pixivision 特辑列表。",
-    "SingleImage": "指定插画 ID 展示单个作品。",
-    "SingleNovel": "指定小说 ID 展示单个小说。",
-    "SingleSeries": "指定系列 ID 和作品类型的系列作品列表。",
-    "SingleUser": "指定用户 ID 展示单个用户。"
+    "WorkRecommended": "Рекомендации Pixiv: иллюстрации, манга или новеллы.",
+    "WorkBookmarks": "Список закладок пользователя с фильтром по доступности и тегам.",
+    "WorkRanking": "Рейтинг по типу работы, типу рейтинга и дате.",
+    "WorkNew": "Новейшие публикации Pixiv по типу работы.",
+    "WorkFollowing": "Новые работы от пользователей, на которых вы подписаны.",
+    "WorkMyPixiv": "Новые работы от друзей Pixiv.",
+    "WorkRelated": "Похожие работы по ID указанной работы.",
+    "WorkPosts": "Публикации конкретного пользователя.",
+    "WorkSearch": "Поиск иллюстраций, манги или новелл по ключевым словам.",
+    "UserRecommended": "Рекомендованные пользователи Pixiv.",
+    "UserSearch": "Поиск пользователей по ключевым словам.",
+    "UserFollowing": "Список отслеживаемых пользователей.",
+    "UserFollower": "Список ваших подписчиков.",
+    "UserMyPixiv": "Список друзей Pixiv.",
+    "Spotlight": "Статьи и подборки Pixivision.",
+    "SingleImage": "Показать одну работу по ID.",
+    "SingleNovel": "Показать одну новеллу по ID.",
+    "SingleSeries": "Показать серию работ по ID.",
+    "SingleUser": "Показать профиль пользователя по ID."
   },
   "DownloadListOption": {
-    "AllQueued": "所有下载任务",
-    "Cancelled": "已取消",
-    "Completed": "已下载",
-    "CustomSearch": "自定义搜索",
-    "Error": "下载失败",
-    "Running": "正在下载"
+    "AllQueued": "Все задачи загрузки",
+    "Cancelled": "Отменённые",
+    "Completed": "Завершённые",
+    "CustomSearch": "Пользовательский поиск",
+    "Error": "Ошибка загрузки",
+    "Running": "Скачиваются"
   }
 }
