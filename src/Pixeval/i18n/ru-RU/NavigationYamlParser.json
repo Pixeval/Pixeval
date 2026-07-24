@@ -1,17 +1,17 @@
 {
   "Diagnostics": {
-    "BuiltInNavigationYamlInvalid": "内置导航栏 YAML 配置无效。",
-    "BothHeaderAndFooterEmpty": "header 和 footer 不能同时为空。",
-    "EmptyFolderFormatted": "文件夹 {0} 不能为空。",
-    "FieldNotAllowedFormatted": "{0} 不能包含 {1} 字段。",
-    "I18NResourceKeyEmptyFormatted": "{0} 的 i18n 资源 key 不能为空。",
-    "ItemMustHaveEitherPageOrFolderFormatted": "{0} 必须且只能指定 page 或 folder。",
-    "MenuMustContainSettingsPage": "导航菜单必须包含 Settings 页面，否则用户无法回到设置页修改导航栏。",
-    "MaxDepthExceededFormatted": "{0} 超过最大层级 {1}。",
-    "MaxDepthExceededFolderFormatted": "{0} 超过最大层级 {1}，第 {1} 层只能是页面。",
-    "UnknownFieldFormatted": "未知字段: {0}",
-    "UnknownI18NResourceKeyFormatted": "未知 i18n 资源 key: {0}",
-    "UnknownIconFormatted": "未知图标名: {0}",
-    "UnknownPageFormatted": "未知页面: {0}"
+    "BuiltInNavigationYamlInvalid": "Конфигурация YAML встроенной панели навигации недопустима.",
+    "BothHeaderAndFooterEmpty": "Поля header и footer не могут быть одновременно пустыми.",
+    "EmptyFolderFormatted": "Папка {0} не может быть пустой.",
+    "FieldNotAllowedFormatted": "{0} не может содержать поле {1}.",
+    "I18NResourceKeyEmptyFormatted": "Ключ ресурса i18n для {0} не может быть пустым.",
+    "ItemMustHaveEitherPageOrFolderFormatted": "{0} должен указывать только одно из полей: page или folder.",
+    "MenuMustContainSettingsPage": "Навигационное меню должно содержать страницу Settings, иначе пользователь не сможет вернуться в настройки для изменения навигации.",
+    "MaxDepthExceededFormatted": "{0} превышает максимальный уровень вложенности {1}.",
+    "MaxDepthExceededFolderFormatted": "{0} превышает максимальный уровень вложенности {1}, на уровне {1} могут быть только страницы.",
+    "UnknownFieldFormatted": "Неизвестное поле: {0}",
+    "UnknownI18NResourceKeyFormatted": "Неизвестный ключ ресурса i18n: {0}",
+    "UnknownIconFormatted": "Неизвестное имя иконки: {0}",
+    "UnknownPageFormatted": "Неизвестная страница: {0}"
   }
 }
