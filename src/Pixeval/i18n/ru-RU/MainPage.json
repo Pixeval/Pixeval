@@ -1,73 +1,73 @@
 {
   "Tab": {
-    "Home": "主页",
-    "Search": "搜索",
-    "Login": "Pixiv 登录",
-    "WorkRecommended": "作品推荐",
-    "WorkBookmarks": "收藏列表",
-    "Series": "系列追更",
-    "WorkFollowing": "关注新作",
-    "WorkMyPixiv": "好P友作品",
-    "WorkNew": "所有新作",
-    "WorkRanking": "作品榜单",
-    "WorkRelated": "相关作品",
-    "SingleSeries": "单个系列",
-    "WorkPosts": "用户投稿",
-    "UserRecommended": "推荐作者",
-    "UserFollowing": "关注列表",
-    "UserMyPixiv": "好P友",
-    "UserFollower": "我的粉丝",
-    "BrowsingHistory": "浏览历史",
-    "Spotlight": "特辑推荐",
-    "Feed": "关注动态",
-    "WatchLater": "稍后再看",
-    "Download": "下载列表",
-    "Help": "帮助",
-    "About": "关于",
-    "Settings": "设置",
-    "Extensions": "扩展",
-    "RelatedUser": "相关用户",
-    "UserSearchResult": "用户搜索",
-    "WorkSearchResult": "作品搜索",
-    "SingleImage": "单独图片",
-    "SingleNovel": "单独小说",
-    "SingleUser": "单独用户",
-    "SauceNaoResult": "SauceNAO 搜索结果",
-    "NavigationSettings": "导航栏",
-    "WorkInfo": "作品信息",
-    "Comments": "评论"
+    "Home": "Главная",
+    "Search": "Поиск",
+    "Login": "Вход Pixiv",
+    "WorkRecommended": "Рекомендации работ",
+    "WorkBookmarks": "Закладки",
+    "Series": "Отслеживание серий",
+    "WorkFollowing": "Новое от подписок",
+    "WorkMyPixiv": "Работы друзей Pixiv",
+    "WorkNew": "Все новые работы",
+    "WorkRanking": "Рейтинг работ",
+    "WorkRelated": "Похожие работы",
+    "SingleSeries": "Серия",
+    "WorkPosts": "Публикации пользователя",
+    "UserRecommended": "Рекомендованные авторы",
+    "UserFollowing": "Подписки",
+    "UserMyPixiv": "Друзья Pixiv",
+    "UserFollower": "Мои подписчики",
+    "BrowsingHistory": "История просмотров",
+    "Spotlight": "Рекомендации Pixivision",
+    "Feed": "Лента активности",
+    "WatchLater": "Просмотреть позже",
+    "Download": "Список загрузок",
+    "Help": "Справка",
+    "About": "О программе",
+    "Settings": "Настройки",
+    "Extensions": "Расширения",
+    "RelatedUser": "Похожие пользователи",
+    "UserSearchResult": "Поиск пользователей",
+    "WorkSearchResult": "Поиск работ",
+    "SingleImage": "Изображение",
+    "SingleNovel": "Новелла",
+    "SingleUser": "Пользователь",
+    "SauceNaoResult": "Результаты SauceNAO",
+    "NavigationSettings": "Панель навигации",
+    "WorkInfo": "Информация о работе",
+    "Comments": "Комментарии"
   },
-  "SearchResultFormatted": "{0} - 搜索",
+  "SearchResultFormatted": "{0} - Поиск",
   "SearchKeywordCannotBeBlank": {
-    "Title": "输入非法",
-    "Content": "关键字的长度不能为空"
+    "Title": "Недопустимый ввод",
+    "Content": "Длина ключевого слова не может быть пустой"
   },
   "LoggingIn": {
-    "Header": "正在登录",
-    "Description": "如果长时间没有响应，可能是网络问题，请前往设置检查域前置功能是否开启，或者代理功能是否正常",
-    "Failed": "登录失败，请检查网络连接，或者尝试重新登录"
+    "Header": "Выполняется вход",
+    "Description": "Если приложение не отвечает долгое время, возможно, возникли проблемы с сетью. Проверьте настройки Domain Fronting или прокси.",
+    "Failed": "Ошибка входа. Проверьте сетевое подключение или попробуйте войти снова."
   },
   "OpenMyPageItem": {
-    "Text": "打开个人页面"
+    "Text": "Открыть личный профиль"
   },
   "OpenMyPageInBrowserItem": {
-    "Text": "打开网页"
+    "Text": "Открыть в браузере"
   },
   "RestrictedModeItem": {
-    "Text": "受限模式"
+    "Text": "Безопасный режим (Ограниченный)"
   },
   "AiShowItem": {
-    "Text": "显示AI作品"
+    "Text": "Показывать работы AI"
   },
   "MoreViewingSettingsItem": {
-    "Text": "更多浏览设置"
+    "Text": "Дополнительные настройки просмотра"
   },
   "SwitchAccountItem": {
-    "Text": "切换账号"
+    "Text": "Сменить аккаунт"
   },
   "TabContextMenu": {
-    "CloseOtherTabs": "关闭其他标签页",
-    "CloseTabsToLeft": "关闭左侧标签页",
-    "CloseTabsToRight": "关闭右侧标签页"
+    "CloseOtherTabs": "Закрыть другие вкладки",
+    "CloseTabsToLeft": "Закрыть вкладки слева",
+    "CloseTabsToRight": "Закрыть вкладки справа"
   }
 }
