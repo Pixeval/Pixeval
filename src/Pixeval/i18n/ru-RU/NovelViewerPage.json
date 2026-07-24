@@ -1,5 +1,5 @@
 {
-  "ApplyingTransformerExtensions": "正在应用文字翻译扩展",
-  "TransformerExtensionFailed": "文字翻译扩展应用失败",
-  "TransformerExtensionFinishedSuccessfully": "文字翻译扩展应用成功"
+  "ApplyingTransformerExtensions": "Применение расширения текстового перевода...",
+  "TransformerExtensionFailed": "Ошибка применения расширения текстового перевода",
+  "TransformerExtensionFinishedSuccessfully": "Расширение текстового перевода успешно применено"
 }
