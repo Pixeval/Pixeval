@@ -4,7 +4,7 @@
 
 # Pixeval
 
-基于.NET 10 和 Avalonia 的强大、快速、漂亮的Pixiv第三方应用程序
+Мощное, быстрое и красивое стороннее приложение Pixiv на базе .NET 10 и Avalonia
 
 [<img src="https://get.microsoft.com/images/zh-cn%20dark.svg" width="200"/>](https://apps.microsoft.com/detail/Pixeval/9p1rzl9z8454?launch=true&mode=mini)
 
@@ -18,33 +18,33 @@
 
 </div>
 
-🌏: [**简体中文**](README.md)
+🌏: [**Русский**](README.md)
 
 ---
 
-**基于Avalonia的Pixeval已经正在开发中，而旧的WPF/WinUI3版本不再进行大量维护，请适时切换到新版Pixeval。**
+**Версия Pixeval на базе Avalonia активно разрабатывается, а старые версии WPF/WinUI3 больше не поддерживаются в полной мере. Пожалуйста, своевременно переходите на новую версию Pixeval.**
 
-更多详细信息请前往 [项目主页](https://pixeval.github.io/) 查看
+Для получения дополнительной информации посетите [домашнюю страницу проекта](https://pixeval.github.io/)
 
-**Avalonia版本提供了更好的UI，更好的项目结构以及更好的开发体验，如果你想要了解目前的开发进度，可以参考[贡献指南](CONTRIBUTING.md)来下载并编译该项目。**
+**Версия Avalonia предоставляет лучший интерфейс, лучшую структуру проекта и удобство разработки. Если вы хотите узнать текущий прогресс разработки, ознакомьтесь с [руководством по участию](CONTRIBUTING.md), чтобы скачать и скомпилировать проект.**
 
-## 支持平台
+## Поддерживаемые платформы
 
-- Windows 8 及更高
+- Windows 8 и выше
 - MacOS
 - Linux
-- Android 16 （API 36） 及更高
-- iOS 13 及更高
+- Android 16 (API 36) и выше
+- iOS 13 и выше
 
 <!-- * 浏览器 -->
 
-## 反馈问题（按照推荐程度优先级排序）
+## Обратная связь и отчёты об ошибках (в порядке приоритета)
 
-1. 在 [github](https://github.com/Pixeval/Pixeval/issues/new/choose) 提交新的Issue
-2. 给 [decem0730@hotmail.com](mailto:decem0730@hotmail.com) 发送邮件
-3. 加入QQ群815791942来面对面的和开发者反馈问题
+1. Создать новый Issue на [GitHub](https://github.com/Pixeval/Pixeval/issues/new/choose)
+2. Отправить письмо на [decem0730@hotmail.com](mailto:decem0730@hotmail.com)
+3. Обратная связь и отчёты об ошибках (в порядке приоритета)
 
-## 鸣谢（排名不分先后）
+## Благодарности (в произвольном порядке)
 
 [![Toolkit Contributors](https://contrib.rocks/image?repo=Pixeval/Pixeval)](https://github.com/Pixeval/Pixeval/graphs/contributors)
 
