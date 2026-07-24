@@ -1,42 +1,42 @@
 {
   "QueryFilterHelpExpander": {
-    "Header": "筛选查询语句帮助"
+    "Header": "Справка по фильтрам и запросам"
   },
   "QueryFilterSimpleHelpHeader": {
-    "Text": "简易教程"
+    "Text": "Краткое руководство"
   },
   "QueryFilterHelpHeader": {
-    "Text": "完整教程"
+    "Text": "Полное руководство"
   },
   "DownloadMacroHelpExpander": {
-    "Header": "下载宏帮助"
+    "Header": "Справка по макросам загрузки"
   },
   "McpHelpExpander": {
-    "Header": "MCP 使用帮助"
+    "Header": "Справка по использованию MCP"
   },
   "McpToolsExpander": {
-    "Header": "MCP 工具列表",
-    "Description": "从当前运行的 Pixeval MCP 服务器读取 AI 可调用的方法"
+    "Header": "Список инструментов MCP",
+    "Description": "Чтение методов, вызываемых ИИ, с текущего сервера Pixeval MCP"
   },
   "McpToolsRefreshButton": {
-    "ToolTip": "刷新 MCP 工具列表"
+    "ToolTip": "Обновить список инструментов MCP"
   },
   "McpToolsParameters": {
-    "Empty": "无参数"
+    "Empty": "Без параметров"
   },
   "McpToolsStatus": {
-    "Disabled": "MCP 服务器未启用。请先在设置页的 MCP 分组中启用 MCP 服务器。",
-    "Unavailable": "当前运行的 Pixeval 没有注册 MCP 服务。MCP 只在 Pixeval Desktop 中可用。",
-    "NotRunning": "MCP 设置已启用，但服务器没有成功启动。请检查端口是否被占用，或查看 Pixeval 日志。",
-    "Loading": "正在从 {0} 读取 MCP 工具列表...",
-    "Loaded": "已从 {0} 读取到 {1} 个 MCP 工具。",
-    "Empty": "MCP 服务器已响应，但没有返回可用工具。",
-    "Failed": "读取 MCP 工具列表失败：{0}"
+    "Disabled": "Сервер MCP отключён. Включите его в настройках в группе MCP.",
+    "Unavailable": "В запущенном Pixeval не зарегистрирована служба MCP. MCP доступен только в Pixeval Desktop.",
+    "NotRunning": "Настройки MCP включены, но сервер не запущен. Проверьте, не занят ли порт, или просмотрите журналы Pixeval.",
+    "Loading": "Чтение списка инструментов MCP из {0}...",
+    "Loaded": "Прочитано инструментов MCP из {0}: {1}.",
+    "Empty": "Сервер MCP ответил, но не вернул доступных инструментов.",
+    "Failed": "Не удалось прочитать список инструментов MCP: {0}"
   },
   "ExtensionsHelpExpander": {
-    "Header": "扩展系统帮助"
+    "Header": "Справка по системе расширений"
   },
   "WorkSubscriptionsHelpExpander": {
-    "Header": "下载订阅帮助"
+    "Header": "Справка по подпискам на скачивание"
   }
 }
