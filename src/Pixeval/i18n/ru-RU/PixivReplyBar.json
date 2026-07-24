@@ -1,10 +1,10 @@
 {
-  "CommentIsTooShortOrTooLongToastContentFormatted": "请发布长度在1到140之间的评论，当前评论字数：{0}",
-  "CommentIsTooShortOrTooLongToastTitle": "评论长度不符合规范",
+  "CommentIsTooShortOrTooLongToastContentFormatted": "Длина комментария должна быть от 1 до 140 символов. Текущая длина: {0}",
+  "CommentIsTooShortOrTooLongToastTitle": "Длина комментария не соответствует требованиям",
   "ReplyContentRichEditBox": {
-    "PlaceholderText": "输入评论"
+    "PlaceholderText": "Введите комментарий..."
   },
   "SendButton": {
-    "ToolTip": "发送"
+    "ToolTip": "Отправить"
   }
 }
