@@ -1,0 +1,55 @@
+{
+  "FollowingUserItem": {
+    "Title": "Отслеживаемые"
+  },
+  "MyPixivUserItem": {
+    "Title": "Друзья Pixiv"
+  },
+  "IllustrationCountItem": {
+    "Title": "Иллюстрации"
+  },
+  "MangaCountItem": {
+    "Title": "Манга"
+  },
+  "NovelCountItem": {
+    "Title": "Новеллы"
+  },
+  "Pin": "Закрепить панель",
+  "InfoAndComments": "Подробности",
+  "Series": "Серия",
+  "PreviousSeriesWork": "Пред. глава",
+  "NextSeriesWork": "След. глава",
+  "RotateClockwise": "Повернуть по часовой стрелке",
+  "RotateCounterclockwise": "Повернуть против часовой стрелки",
+  "Mirror": "Отразить по горизонтали",
+  "Next": {
+    "Page": "Л/П: След. страница",
+    "PageOrWork": "Л: След. страница\nП: След. работа",
+    "Work": "Л/П: След. работа"
+  },
+  "Prev": {
+    "Page": "Л/П: Пред. страница",
+    "PageOrWork": "Л: Пред. страница\nП: Пред. работа",
+    "Work": "Л/П: Пред. работа"
+  },
+  "AutoPlay": "Автовоспроизведение",
+  "AutoPlayInterval": {
+    "1Second": "1 сек.",
+    "3Seconds": "3 сек.",
+    "5Seconds": "5 сек.",
+    "10Seconds": "10 сек.",
+    "15Seconds": "15 сек.",
+    "30Seconds": "30 сек."
+  },
+  "ZoomIn": "Увеличить",
+  "ZoomOut": "Уменьшить",
+  "ZoomToOriginal": "Оригинальный размер",
+  "ZoomToFit": "По размеру экрана",
+  "LoadFailed": "Ошибка загрузки",
+  "LoadingNovelTextBlock": {
+    "Text": "Загрузка новеллы..."
+  },
+  "Copy": "Скопировать текущее изображение",
+  "SaveAs": "Сохранить текущее изображение",
+  "OtherImageTransformerExtensions": "Другие расширения обработки изображений"
+}
