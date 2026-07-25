@@ -1,0 +1,82 @@
+{
+  "SearchBox": {
+    "PlaceholderText": "Введите ключевые слова и нажмите Enter для поиска"
+  },
+  "AdvancedOptions": {
+    "IllustrationTab": "Иллюстрации Pixiv",
+    "NovelTab": "Новеллы Pixiv",
+    "SauceNaoTab": "Поиск по изображению (SauceNAO)"
+  },
+  "Sections": {
+    "Common": "Общие условия",
+    "Illustration": "Условия для иллюстраций",
+    "Novel": "Условия для новелл"
+  },
+  "Common": {
+    "Unspecified": "Не указано",
+    "SortOption": "Порядок сортировки",
+    "StartDate": "Начальная дата",
+    "EndDate": "Конечная дата",
+    "ShowAiWorks": "Показывать работы AI",
+    "MergePlainKeywordResults": "Объединять результаты по обычным ключам",
+    "IncludeTranslatedTagResults": "Включать переведённые теги",
+    "IncludePotentialViolationWorks": "Включать потенциально спорный контент"
+  },
+  "Illustration": {
+    "MatchOption": "Область совпадения",
+    "ContentType": "Тип контента",
+    "RatioPattern": "Соотношение сторон",
+    "WidthMin": "Мин. ширина",
+    "WidthMax": "Макс. ширина",
+    "HeightMin": "Мин. высота",
+    "HeightMax": "Макс. высота",
+    "Tool": "Инструмент создания"
+  },
+  "Novel": {
+    "MatchOption": "Область совпадения",
+    "Language": "Язык",
+    "ContentLengthOption": "Измерение длины",
+    "ContentLengthMin": "Мин. длина",
+    "ContentLengthMax": "Макс. длина",
+    "IsOriginalOnly": "Только оригинальные новеллы",
+    "Genre": "Жанр",
+    "IsReplaceableOnly": "Только с заменяемыми именами"
+  },
+  "Validation": {
+    "InvalidDateRange": {
+      "Title": "Недопустимый диапазон дат",
+      "Content": "Дата начала не может быть позже даты окончания, а также не может быть в будущем."
+    },
+    "InvalidNumericRange": {
+      "Title": "Недопустимый числовой диапазон",
+      "Content": "Минимальное значение не может быть больше максимального."
+    },
+    "PremiumSort": {
+      "Title": "Сортировка недоступна",
+      "Content": "Сортировка по популярности (закладкам) требует премиум-подписки Pixiv."
+    },
+    "SearchFailed": {
+      "Title": "Ошибка поиска"
+    }
+  },
+  "TrendingHeaderTextBlock": {
+    "Text": "Популярные теги"
+  },
+  "OpenId": {
+    "User": "Перейти в профиль пользователя",
+    "Illustration": "Перейти к изображению",
+    "Novel": "Перейти к новелле"
+  },
+  "SearchUser": "Поиск пользователей",
+  "SearchHistory": {
+    "Copy": "Скопировать",
+    "Delete": "Удалить"
+  },
+  "SauceNAO": {
+    "Search": "Поиск SauceNAO",
+    "ProvideImage": "Нажмите для выбора изображения",
+    "Or": "или",
+    "PasteFromClipboard": "Вставить изображение из буфера обмена",
+    "ProvideApiKey": "Пожалуйста, сначала укажите SauceNAO API Key в настройках"
+  }
+}
