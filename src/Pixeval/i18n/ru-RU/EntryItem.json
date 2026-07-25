@@ -1,0 +1,16 @@
+{
+  "GenerateLink": "Скопировать ссылку в приложении",
+  "GenerateWebLink": "Скопировать ссылку на веб-страницу",
+  "OpenInWebBrowser": "Открыть в браузере",
+  "AddToBookmark": "Добавить в закладки",
+  "AddToWatchLater": "Просмотреть позже",
+  "RemoveFromWatchLater": "Удалить из «Просмотреть позже»",
+  "Save": "Сохранить",
+  "OpenUserInfoPage": "Информация об авторе",
+  "OpenSeries": "Открыть серию",
+  "Copy": "Скопировать изображение в буфер обмена",
+  "SaveAsCancelled": "Операция «Сохранить как» отменена",
+  "DownloadTaskCreated": "Задача загрузки создана",
+  "TheIllustrationIsAMangaFormatted": "Это галерея из {0} изображений",
+  "TheIllustrationIsAnUgoira": "Это анимация (Ugoira)"
+}
