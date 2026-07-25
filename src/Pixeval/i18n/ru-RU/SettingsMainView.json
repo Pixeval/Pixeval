@@ -1,0 +1,131 @@
+{
+  "CheckingForUpdate": "Проверка обновлений...",
+  "IsUpToDate": "Установлена последняя версия",
+  "IsInsider": "Используется предварительная сборка (Insider)",
+  "UpdateAvailable": {
+    "Major": "Доступно крупное обновление",
+    "Minor": "Доступно обновление функций",
+    "Build": "Доступно исправление/сборка",
+    "Unknown": "Неизвестный статус обновления"
+  },
+  "LanguageSystemDefault": "Системный по умолчанию",
+  "DownloadPathMacroTextBox": {
+    "PlaceholderText": "Макрос пути скачивания"
+  },
+  "DeleteHistoriesEntry": {
+    "Header": "Очистить историю"
+  },
+  "DeleteDownloadHistoriesEntry": {
+    "Description": "Эта кнопка удалит всю историю загрузок",
+    "Header": "Очистить историю загрузок"
+  },
+  "DeleteBrowseHistoriesEntry": {
+    "Description": "Эта кнопка удалит всю историю просмотров",
+    "Header": "Очистить историю просмотров"
+  },
+  "DeleteFileCacheEntry": {
+    "Description": "Эта кнопка удалит весь кэш файлов",
+    "Header": "Очистить кэш файлов"
+  },
+  "DeleteSearchHistoriesEntry": {
+    "Description": "Эта кнопка удалит всю историю поиска",
+    "Header": "Очистить историю поиска"
+  },
+  "DownloadMacroInvalidInfoBarInputCannotBeBlank": "Ввод не может быть пустым",
+  "DownloadMacroInvalidInfoBarMacroInvalidFormatted": "{0}, исправьте и заполните снова",
+  "LastCheckedPrefix": "Последняя проверка: ",
+  "CheckForUpdatesButton": {
+    "Content": "Проверить обновления"
+  },
+  "GitHubCheckForUpdatesEntry": {
+    "Header": "Получить обновления с GitHub"
+  },
+  "MsStoreCheckForUpdatesEntry": {
+    "Header": "Получить обновления из Microsoft Store"
+  },
+  "RateEntry": {
+    "Description": "Нравится Pixeval? Пожалуйста, поставьте 5 звёзд в Microsoft Store~",
+    "Header": "Оценить Pixeval"
+  },
+  "BugReportEntry": {
+    "Header": "Обратная связь и ошибки",
+    "Description": "Отчёты об ошибках или предложения новых функций (прикрепите файлы журналов при сообщении об ошибке)"
+  },
+  "BugReportChannelsEntry": {
+    "Header": "Каналы связи",
+    "Description": "Вы можете отправить сообщение об ошибке через следующие каналы"
+  },
+  "GitHubBugReportEntry": {
+    "ToolTip": "Сообщить об ошибке на GitHub"
+  },
+  "EMailBugReportEntry": {
+    "ToolTip": "Сообщить об ошибке по эл. почте"
+  },
+  "QQBugReportEntry": {
+    "ToolTip": "Сообщить об ошибке в группе QQ"
+  },
+  "OpenLogEntry": {
+    "Header": "Открыть папку журналов (логов)",
+    "Description": "При отчёте об ошибках прикрепляйте соответствующие журналы из этой папки"
+  },
+  "OpenTempEntry": {
+    "Header": "Открыть папку временных файлов",
+    "Description": "Здесь хранятся временные файлы, они удаляются при каждом запуске программы"
+  },
+  "OpenLocalEntry": {
+    "Header": "Открыть локальную папку данных",
+    "Description": "Здесь хранятся важные конфигурационные файлы, пожалуйста, не меняйте их вручную"
+  },
+  "ResetDefaultSettingsEntry": {
+    "Description": "Сброс всех настроек до значений по умолчанию. Действие необратимо",
+    "Header": "Сбросить настройки"
+  },
+  "ResetSettingConfirmationDialogContent": "Это действие нельзя будет отменить",
+  "ResetSettingConfirmationDialogTitle": "Вы уверены, что хотите сбросить все настройки?",
+  "SwitchAccountEntry": {
+    "Description": "После входа в новый аккаунт текущий автоматически выйдет, но уже открытые страницы потребуется обновить вручную",
+    "Header": "Сменить аккаунт"
+  },
+  "ProxyTextBoxErrorUri": "Некорректный адрес прокси-сервера, введите снова",
+  "PredicateMacroHeader": "Следующие условные макросы имеют формат @{is_xxx?<истина>:<ложь>}. Если условие выполнено, применяется <истина>, иначе <ложь>",
+  "OpenExtensionsEntry": {
+    "Header": "Открыть папку расширений",
+    "Description": "Здесь хранятся загражаемые программой DLL-файлы расширений"
+  },
+  "BackupSettingsEntry": {
+    "Header": "Резервное копирование настроек",
+    "Description": "Экспорт или импорт параметров"
+  },
+  "OpenSettingsEntry": {
+    "Header": "Открыть папку настроек",
+    "Description": "Здесь хранятся файлы настроек (включая конфиденциальные данные аккаунта)"
+  },
+  "ExportSettingsSuccess": "Настройки успешно экспортированы",
+  "ImportSettingsSuccess": "Настройки успешно импортированы",
+  "ExportSettingsPlaintextEntry": {
+    "Header": "Экспортировать настройки в открытом тексте",
+    "Description": "Экспорт настроек в формате YAML"
+  },
+  "ImportSettingsPlaintextEntry": {
+    "Description": "Импорт настроек в открытом тексте формата YAML",
+    "Header": "Импортировать настройки из открытого текста"
+  },
+  "AnimatedPathBlock": {
+    "Text": "Анимации:"
+  },
+  "SinglePathBlock": {
+    "Text": "Одиночные изобр.:"
+  },
+  "SetPathBlock": {
+    "Text": "Галереи изображений:"
+  },
+  "NovelPathBlock": {
+    "Text": "Новеллы:"
+  },
+  "ReleaseNoteDialog": {
+    "Title": "Журнал изменений",
+    "TitleFormatted": "Журнал изменений {0}",
+    "Empty": "Журнал изменений отсутствует"
+  },
+  "SettingsSaved": "Настройки сохранены"
+}
