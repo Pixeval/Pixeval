@@ -1,0 +1,20 @@
+{
+  "AddedToWatchLater": "Добавлено в «Просмотреть позже»",
+  "AddedToBookmark": "Добавлено в закладки",
+  "RemovedFromWatchLater": "Удалено из «Просмотреть позже»",
+  "Pause": "Пауза",
+  "Play": "Воспроизвести",
+  "OpenBottomList": "Открыть нижний список изображений",
+  "CloseBottomList": "Закрыть нижний список изображений",
+  "ExceptionEncountered": "Произошла ошибка",
+  "AllCountedTagName": "Все теги",
+  "DownloadItemOpenFailed": "Не удалось открыть файл (папку)",
+  "DownloadItemMaybeDeleted": "Возможно, вы удалили эту работу",
+  "UnexpectedBehavior": "Произошло неопределённое поведение. Если вы видите это сообщение, обратитесь к разработчику",
+  "GoToPageFormatted": "Перейти на стр. {0}",
+  "Copied": "Скопировано",
+  "Saved": "Сохранено",
+  "PixevalBadge": {
+    "Following": "Вы подписаны"
+  }
+}
