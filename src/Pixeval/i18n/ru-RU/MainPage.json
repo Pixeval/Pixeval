@@ -1,0 +1,73 @@
+{
+  "Tab": {
+    "Home": "Главная",
+    "Search": "Поиск",
+    "Login": "Вход Pixiv",
+    "WorkRecommended": "Рекомендации работ",
+    "WorkBookmarks": "Закладки",
+    "Series": "Отслеживание серий",
+    "WorkFollowing": "Новое от подписок",
+    "WorkMyPixiv": "Работы друзей Pixiv",
+    "WorkNew": "Все новые работы",
+    "WorkRanking": "Рейтинг работ",
+    "WorkRelated": "Похожие работы",
+    "SingleSeries": "Серия",
+    "WorkPosts": "Публикации пользователя",
+    "UserRecommended": "Рекомендованные авторы",
+    "UserFollowing": "Подписки",
+    "UserMyPixiv": "Друзья Pixiv",
+    "UserFollower": "Мои подписчики",
+    "BrowsingHistory": "История просмотров",
+    "Spotlight": "Рекомендации Pixivision",
+    "Feed": "Лента активности",
+    "WatchLater": "Просмотреть позже",
+    "Download": "Список загрузок",
+    "Help": "Справка",
+    "About": "О программе",
+    "Settings": "Настройки",
+    "Extensions": "Расширения",
+    "RelatedUser": "Похожие пользователи",
+    "UserSearchResult": "Поиск пользователей",
+    "WorkSearchResult": "Поиск работ",
+    "SingleImage": "Изображение",
+    "SingleNovel": "Новелла",
+    "SingleUser": "Пользователь",
+    "SauceNaoResult": "Результаты SauceNAO",
+    "NavigationSettings": "Панель навигации",
+    "WorkInfo": "Информация о работе",
+    "Comments": "Комментарии"
+  },
+  "SearchResultFormatted": "{0} - Поиск",
+  "SearchKeywordCannotBeBlank": {
+    "Title": "Недопустимый ввод",
+    "Content": "Длина ключевого слова не может быть пустой"
+  },
+  "LoggingIn": {
+    "Header": "Выполняется вход",
+    "Description": "Если приложение не отвечает долгое время, возможно, возникли проблемы с сетью. Проверьте настройки Domain Fronting или прокси.",
+    "Failed": "Ошибка входа. Проверьте сетевое подключение или попробуйте войти снова."
+  },
+  "OpenMyPageItem": {
+    "Text": "Открыть личный профиль"
+  },
+  "OpenMyPageInBrowserItem": {
+    "Text": "Открыть в браузере"
+  },
+  "RestrictedModeItem": {
+    "Text": "Безопасный режим (Ограниченный)"
+  },
+  "AiShowItem": {
+    "Text": "Показывать работы AI"
+  },
+  "MoreViewingSettingsItem": {
+    "Text": "Дополнительные настройки просмотра"
+  },
+  "SwitchAccountItem": {
+    "Text": "Сменить аккаунт"
+  },
+  "TabContextMenu": {
+    "CloseOtherTabs": "Закрыть другие вкладки",
+    "CloseTabsToLeft": "Закрыть вкладки слева",
+    "CloseTabsToRight": "Закрыть вкладки справа"
+  }
+}
