@@ -1,0 +1,11 @@
+{
+  "SparseBookmarkFormatted": "Добавил(а) {0} в закладки",
+  "SparseFollowUserFormatted": "Подписался(лась) на {0}",
+  "CondensedBookmarkFormatted": "Добавил(а) {0} и ещё {1} работ в закладки",
+  "CondensedFollowUserFormatted": "Подписался(лась) на {0} и ещё {1} пользователей",
+  "CondensedPostIllustFormatted": "Опубликовал(а) {0} и ещё {1} работ",
+  "FeedListTextBlock": {
+    "Text": "Лента пользователей"
+  },
+  "SparsePostIllustFormatted": "Опубликовал(а) {0}"
+}

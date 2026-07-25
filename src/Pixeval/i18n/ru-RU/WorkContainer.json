@@ -1,0 +1,27 @@
+{
+  "CancelSelectionButtonFormatted": "Снять выделение ({0})",
+  "AddedAllToBookmarkContentFormatted": "Добавлено изображений в закладки: {0}",
+  "SelectAllButton": {
+    "Label": "Выбрать все"
+  },
+  "SelectedTooManyItems": {
+    "Content": "После завершения операцию нельзя будет отменить. Подтвердите действие.",
+    "ForBookmarkTitle": "Массовое добавление в закладки",
+    "ForSaveTitle": "Массовое скачивание",
+    "ForOpenInBrowser": {
+      "Content": "Вы выбрали более 15 работ для открытия в браузере. На компьютерах с небольшим объёмом памяти это может исчерпать системные ресурсы. Вы уверены?",
+      "Title": "Массовое открытие в браузере"
+    }
+  },
+  "SelectionButton": {
+    "Label": "Выбор элементов"
+  },
+  "RefreshButton": {
+    "Label": "Обновить"
+  },
+  "CancelSelectionButtonDefaultLabel": "Снять выделение",
+  "DownloadItemsQueuedFormatted": "Добавлено работ в очередь скачивания: {0}",
+  "FilterAutoSuggestBox": {
+    "PlaceholderText": "Фильтр работ (см. справку)"
+  }
+}

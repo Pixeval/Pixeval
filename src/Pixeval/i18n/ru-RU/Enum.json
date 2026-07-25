@@ -1,0 +1,183 @@
+{
+  "ApplicationTheme": {
+    "Default": "По умолчанию",
+    "Light": "Светлая",
+    "Dark": "Тёмная"
+  },
+  "WorkType": {
+    "Illustration": "Иллюстрация",
+    "Manga": "Манга",
+    "Novel": "Новелла"
+  },
+  "LocalSortOption": {
+    "DoNotSort": "Не сортировать",
+    "PopularityDescending": "По популярности (по убыванию)",
+    "PublishDateAscending": "По дате публикации (по возрастанию)",
+    "PublishDateDescending": "По дате публикации (по убыванию)"
+  },
+  "DomainFrontingType": {
+    "Fragmentation": "Фрагментация TLS",
+    "Desync": "Рассинхронизация (Desync)"
+  },
+  "PrivacyPolicy": {
+    "Public": "Публичный",
+    "Private": "Приватный"
+  },
+  "SearchNovelTagMatchOption": {
+    "PartialMatchForTags": "Теги (частичное совпадение)",
+    "ExactMatchForTags": "Теги (точная копия)",
+    "Text": "Текст новеллы",
+    "Keyword": "Теги, заголовок, описание"
+  },
+  "SearchNovelContentLengthOption": {
+    "None": "Не указано",
+    "TextLength": "Количество символов",
+    "WordCount": "Количество слов",
+    "ReadingTime": "Примерное время чтения"
+  },
+  "SearchIllustrationTagMatchOption": {
+    "PartialMatchForTags": "Теги (частичное совпадение)",
+    "ExactMatchForTags": "Теги (точная копия)",
+    "TitleAndCaption": "Заголовок и описание"
+  },
+  "SearchIllustrationContentType": {
+    "IllustrationAndMangaAndUgoira": "Иллюстрации, манга, Ugoira",
+    "IllustrationAndUgoira": "Иллюстрации, Ugoira",
+    "Illustration": "Иллюстрация",
+    "Manga": "Манга",
+    "Ugoira": "Анимация (Ugoira)"
+  },
+  "SearchIllustrationRatioPattern": {
+    "All": "Все",
+    "Landscape": "Горизонтальная",
+    "Portrait": "Вертикальная",
+    "Square": "Квадратная"
+  },
+  "WorkSortOption": {
+    "PublishDateDescending": "По дате публикации (по убыванию)",
+    "PublishDateAscending": "По дате публикации (по возрастанию)",
+    "PopularityDescending": "По популярности (по убыванию)"
+  },
+  "FontWeight": {
+    "Thin": "Тонкое (Thin)",
+    "ExtraLight": "Сверхтонкое (ExtraLight)",
+    "Light": "Светлое (Light)",
+    "SemiLight": "Полусветлое (SemiLight)",
+    "Normal": "Обычное (Normal)",
+    "Medium": "Среднее (Medium)",
+    "SemiBold": "Полужирное (SemiBold)",
+    "Bold": "Жирное (Bold)",
+    "ExtraBold": "Сверхжирное (ExtraBold)",
+    "Black": "Тяжёлое (Black)",
+    "ExtraBlack": "Сверхтяжёлое (ExtraBlack)"
+  },
+  "IllustrationDownloadFormat": {
+    "Original": "Оригинальный формат изображения"
+  },
+  "UgoiraDownloadFormat": {
+    "Original": "Оригинальный формат анимации"
+  },
+  "NovelDownloadFormat": {
+    "OriginalTxt": "TXT с внешними иллюстрациями (теги Pixiv)",
+    "Html": "HTML с внешними иллюстрациями",
+    "Md": "Markdown с внешними иллюстрациями"
+  },
+  "RankOption": {
+    "Day": "Дневной рейтинг",
+    "Week": "Недельный рейтинг",
+    "Month": "Месячный рейтинг",
+    "DayMale": "Мужской дневной",
+    "DayFemale": "Женский дневной",
+    "WeekOriginal": "Оригиналы за неделю",
+    "WeekRookie": "Новички за неделю",
+    "DayManga": "Манга за день",
+    "WeekManga": "Манга за неделю",
+    "MonthManga": "Манга за месяц",
+    "DayR18": "R-18 за день",
+    "DayMaleR18": "R-18 для мужчин за день",
+    "DayFemaleR18": "R-18 для женщин за день",
+    "WeekR18": "R-18 за неделю",
+    "WeekR18G": "R-18G за неделю",
+    "DayAi": "AI за день",
+    "DayR18Ai": "AI R-18 за день",
+    "WeekAi": "AI за неделю",
+    "WeekAiR18": "AI R-18 за неделю"
+  },
+  "ProxyOption": {
+    "Custom": "Пользовательский прокси",
+    "None": "Без прокси",
+    "System": "Системный прокси"
+  },
+  "WorkTypeEnum": {
+    "Illustration": "Иллюстрация",
+    "Manga": "Манга",
+    "Ugoira": "Анимация (Ugoira)",
+    "Novel": "Новелла"
+  },
+  "ClearDataKind": {
+    "FileCache": "Весь кэш файлов удалён",
+    "DownloadHistory": "Вся история загрузок удалена",
+    "SearchHistory": "Вся история поиска удалена",
+    "BrowseHistory": "Вся история просмотров удалена"
+  },
+  "ThumbnailLayoutType": {
+    "LinedFlow": "Потоковый макет (Flow)",
+    "Grid": "Сетка (Grid)",
+    "Masonry": "Плитка (Masonry)"
+  },
+  "BrowseMode": {
+    "Swipe": "Постранично",
+    "Continuous": "Непрерывно"
+  },
+  "Orientation": {
+    "Horizontal": "Горизонтальная прокрутка",
+    "Vertical": "Вертикальная прокрутка"
+  },
+  "IllustrationViewerAutoPlayMode": {
+    "Sequential": "Последовательно",
+    "Loop": "По кругу (цикл)"
+  },
+  "IllustrationViewerAutoPlayScope": {
+    "CurrentWork": "Текущий альбом",
+    "AllWorks": "Все альбомы"
+  },
+  "WorkSubscriptionType": {
+    "Bookmarks": "Закладки",
+    "Posts": "Опубликованные работы",
+    "Series": "Серии"
+  },
+  "WorkSubscriptionWorkKind": {
+    "Illustration": "Иллюстрация",
+    "Manga": "Манга",
+    "Novel": "Новелла"
+  },
+  "HomePageCardSourceKindDescription": {
+    "WorkRecommended": "Рекомендации Pixiv: иллюстрации, манга или новеллы.",
+    "WorkBookmarks": "Список закладок пользователя с фильтром по доступности и тегам.",
+    "WorkRanking": "Рейтинг по типу работы, типу рейтинга и дате.",
+    "WorkNew": "Новейшие публикации Pixiv по типу работы.",
+    "WorkFollowing": "Новые работы от пользователей, на которых вы подписаны.",
+    "WorkMyPixiv": "Новые работы от друзей Pixiv.",
+    "WorkRelated": "Похожие работы по ID указанной работы.",
+    "WorkPosts": "Публикации конкретного пользователя.",
+    "WorkSearch": "Поиск иллюстраций, манги или новелл по ключевым словам.",
+    "UserRecommended": "Рекомендованные пользователи Pixiv.",
+    "UserSearch": "Поиск пользователей по ключевым словам.",
+    "UserFollowing": "Список отслеживаемых пользователей.",
+    "UserFollower": "Список ваших подписчиков.",
+    "UserMyPixiv": "Список друзей Pixiv.",
+    "Spotlight": "Статьи и подборки Pixivision.",
+    "SingleImage": "Показать одну работу по ID.",
+    "SingleNovel": "Показать одну новеллу по ID.",
+    "SingleSeries": "Показать серию работ по ID.",
+    "SingleUser": "Показать профиль пользователя по ID."
+  },
+  "DownloadListOption": {
+    "AllQueued": "Все задачи загрузки",
+    "Cancelled": "Отменённые",
+    "Completed": "Завершённые",
+    "CustomSearch": "Пользовательский поиск",
+    "Error": "Ошибка загрузки",
+    "Running": "Скачиваются"
+  }
+}

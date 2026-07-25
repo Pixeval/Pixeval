@@ -1,0 +1,16 @@
+{
+  "RefreshTokenBox": {
+    "PlaceholderText": "Токен обновления (Refresh Token)"
+  },
+  "RefreshTokenButton": {
+    "Content": "Войти по токену обновления"
+  },
+  "WebViewButton": {
+    "Content": "Войти через WebView"
+  },
+  "FetchingSessionFailed": {
+    "Content": "Пожалуйста, перезапустите приложение.\nЕсли проблема повторяется, обратитесь к разработчику",
+    "Title": "Не удалось получить сессию"
+  },
+  "LoginHeader": "Вход"
+}

@@ -1,0 +1,54 @@
+{
+  "AddExtensionsButton": {
+    "Label": "Добавить расширение"
+  },
+  "ExtensionFileExistedError": "Файл уже находится в папке расширений, он будет пропущен",
+  "ExtensionLoadedSuccessfully": "Расширение успешно загружено",
+  "ExtensionLoadFailed": "Не удалось загрузить расширение",
+  "PlatformNotSupportExtensions": "Текущая платформа не поддерживает расширения",
+  "OpenExtensionsButton": {
+    "Label": "Открыть папку расширений"
+  },
+  "TitleTextBlock": {
+    "Text": "Менеджер расширений Pixeval"
+  },
+  "SubtitleTextBlock": {
+    "Text": "Версия расширения"
+  },
+  "UninstallExtensionsButton": {
+    "Label": "Удалить расширение"
+  },
+  "CancelPendingUninstallExtensionsButton": {
+    "Label": "Отменить удаление"
+  },
+  "UninstallAllExtensionsButton": {
+    "Label": "Удалить все расширения"
+  },
+  "UninstallOutdatedExtensionsButton": {
+    "Label": "Удалить устаревшие расширения"
+  },
+  "ExtensionWillUninstallOnNextStartup": "Расширение будет удалено при следующем запуске",
+  "ExtensionPendingUninstallCancelled": "Запланированное удаление расширения отменено",
+  "MarkedExtensionsPendingUninstallFormatted": "Отмечено расширений для удаления при следующем запуске: {0}",
+  "MarkedOutdatedExtensionsPendingUninstallFormatted": "Отмечено устаревших расширений для удаления при следующем запуске: {0}",
+  "NoExtensionsToUninstall": "Нет расширений для удаления",
+  "NoOutdatedExtensionsToUninstall": "Нет устаревших расширений для удаления",
+  "ExtensionsPriorityUpButton": {
+    "Label": "Повысить приоритет"
+  },
+  "ExtensionsPriorityDownButton": {
+    "Label": "Понизить приоритет"
+  },
+  "ExtensionsPriorityTopButton": {
+    "Label": "Максимальный приоритет"
+  },
+  "ExtensionsPriorityBottomButton": {
+    "Label": "Минимальный приоритет"
+  },
+  "ZipContainsNoExtension": "Архив не содержит допустимых библиотек расширений",
+  "ExtensionsHelpButton": {
+    "Label": "Справка"
+  },
+  "ExtensionOutdatedFormatted": "Расширение загружено, но его версия ({0}) устарела. Скачайте последнюю версию.",
+  "SomeExtensionsOutdatedFormatted": "Устаревших расширений: {0}. Пожалуйста, скачайте последние версии."
+}

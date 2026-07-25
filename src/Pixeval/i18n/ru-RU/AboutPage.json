@@ -1,0 +1,14 @@
+{
+  "DependenciesSubtitleTextBlock": {
+    "Text": "Зависимости"
+  },
+  "OpenSourceLicenseSubtitleTextBlock": {
+    "Text": "Лицензия с открытым исходным кодом"
+  },
+  "SpecialThanksSubtitleTextBlock": {
+    "Text": "Особая благодарность (в произвольном порядке)"
+  },
+  "AppDescriptionTextBlock": {
+    "Text": "Pixeval — это сторонний клиент Pixiv, разработанный на базе Avalonia. Сохраняя поддержку большинства функций Pixiv, он предоставляет множество дополнительных возможностей для улучшения пользовательского опыта, включая локальные закладки и просмотр без прокси."
+  }
+}

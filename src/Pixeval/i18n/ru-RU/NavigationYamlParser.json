@@ -1,0 +1,17 @@
+{
+  "Diagnostics": {
+    "BuiltInNavigationYamlInvalid": "Конфигурация YAML встроенной панели навигации недопустима.",
+    "BothHeaderAndFooterEmpty": "Поля header и footer не могут быть одновременно пустыми.",
+    "EmptyFolderFormatted": "Папка {0} не может быть пустой.",
+    "FieldNotAllowedFormatted": "{0} не может содержать поле {1}.",
+    "I18NResourceKeyEmptyFormatted": "Ключ ресурса i18n для {0} не может быть пустым.",
+    "ItemMustHaveEitherPageOrFolderFormatted": "{0} должен указывать только одно из полей: page или folder.",
+    "MenuMustContainSettingsPage": "Навигационное меню должно содержать страницу Settings, иначе пользователь не сможет вернуться в настройки для изменения навигации.",
+    "MaxDepthExceededFormatted": "{0} превышает максимальный уровень вложенности {1}.",
+    "MaxDepthExceededFolderFormatted": "{0} превышает максимальный уровень вложенности {1}, на уровне {1} могут быть только страницы.",
+    "UnknownFieldFormatted": "Неизвестное поле: {0}",
+    "UnknownI18NResourceKeyFormatted": "Неизвестный ключ ресурса i18n: {0}",
+    "UnknownIconFormatted": "Неизвестное имя иконки: {0}",
+    "UnknownPageFormatted": "Неизвестная страница: {0}"
+  }
+}

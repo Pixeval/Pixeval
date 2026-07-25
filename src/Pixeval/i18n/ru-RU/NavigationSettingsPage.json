@@ -1,0 +1,29 @@
+{
+  "ApplyButton": {
+    "Content": "Применить",
+    "ToolTip": "Сохранить и обновить боковую панель после проверки"
+  },
+  "FormatButton": {
+    "Content": "Форматировать",
+    "ToolTip": "Упорядочить YAML на основе текущего синтаксиса"
+  },
+  "ResetButton": {
+    "Content": "Сбросить по умолчанию",
+    "ToolTip": "Восстановить конфигурацию боковой панели Pixeval по умолчанию"
+  },
+  "InsertFolderButton": {
+    "Content": "Вставить папку",
+    "ToolTip": "Вставить шаблон элемента меню папки в месте курсора"
+  },
+  "ReferencePages": {
+    "Header": "Доступные страницы"
+  },
+  "ReferenceIcons": {
+    "Header": "Доступные иконки"
+  },
+  "Applied": "Настройки панели навигации применены",
+  "StatusInvalidFormatted": "Недопустимая конфигурация: проблем — {0}",
+  "DefaultFolderTitle": "Папка",
+  "WorkFolderTitle": "Работы",
+  "UserFolderTitle": "Пользователи"
+}
