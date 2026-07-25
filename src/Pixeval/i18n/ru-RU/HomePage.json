@@ -1,0 +1,130 @@
+{
+  "EditButton": {
+    "Label": "Редактировать"
+  },
+  "HideCardTitleButton": {
+    "Label": "Скрыть заголовки карточек"
+  },
+  "HideToolbarButton": {
+    "Label": "Скрыть панель инструментов"
+  },
+  "EditPaneTitleTextBlock": {
+    "Text": "Редактирование макета главной страницы"
+  },
+  "EditPaneDescriptionTextBlock": {
+    "Text": "Выберите карточки для добавления на главную страницу, затем настройте их положение и размер в сетке."
+  },
+  "SelectedCardTitleTextBlock": {
+    "Text": "Выбранная карточка"
+  },
+  "GridSizeTitleTextBlock": {
+    "Text": "Сетка главной страницы"
+  },
+  "GridRowsTextBlock": {
+    "Text": "Строки"
+  },
+  "GridColumnsTextBlock": {
+    "Text": "Столбцы"
+  },
+  "NoSelectedCardTextBlock": {
+    "Text": "Нажмите на карточку на главной странице, чтобы изменить её положение и размер."
+  },
+  "PositionXTextBlock": {
+    "Text": "Столбец"
+  },
+  "PositionYTextBlock": {
+    "Text": "Строка"
+  },
+  "WidthTextBlock": {
+    "Text": "Ширина"
+  },
+  "HeightTextBlock": {
+    "Text": "Высота"
+  },
+  "CardBackgroundTextBlock": {
+    "Text": "Цвет фона"
+  },
+  "DeleteSelectedCardButton": {
+    "Content": "Удалить карточку"
+  },
+  "OpenCardPageButton": {
+    "ToolTip": "Просмотреть страницу"
+  },
+  "CardTitle": {
+    "ParameterSeparator": " · "
+  },
+  "CardLibraryTitleTextBlock": {
+    "Text": "Доступные карточки"
+  },
+  "SourceParametersTitleTextBlock": {
+    "Text": "Параметры карточки"
+  },
+  "SelectCardSourcePromptTextBlock": {
+    "Text": "Сначала выберите источник карточки, затем укажите параметры и добавьте на главную страницу."
+  },
+  "Source": {
+    "WorkTypeTextBlock": {
+      "Text": "Тип работы"
+    },
+    "SimpleWorkTypeTextBlock": {
+      "Text": "Область работ"
+    },
+    "PrivacyPolicyTextBlock": {
+      "Text": "Доступность"
+    },
+    "RankOptionTextBlock": {
+      "Text": "Тип рейтинга"
+    },
+    "RankingDateTextBlock": {
+      "Text": "Дата рейтинга"
+    },
+    "UseSpecifiedRankingDateCheckBox": {
+      "Content": "Указать конкретную дату"
+    },
+    "UserIdTextBlock": {
+      "Text": "ID пользователя"
+    },
+    "EntryIdTextBlock": {
+      "Text": "ID работы"
+    },
+    "SeriesIdTextBlock": {
+      "Text": "ID серии"
+    },
+    "SearchTextTextBlock": {
+      "Text": "Поисковый запрос"
+    },
+    "TagTextBlock": {
+      "Text": "Тег закладок"
+    }
+  },
+  "AddConfiguredCardButton": {
+    "Content": "Добавить карточку"
+  },
+  "CardPreview": {
+    "LoadingTextBlock": {
+      "Text": "Загрузка..."
+    },
+    "EmptyTextBlock": {
+      "Text": "Содержимое отсутствует"
+    },
+    "FailedTextBlock": {
+      "Text": "Ошибка загрузки"
+    }
+  },
+  "NoSpaceWarning": {
+    "Title": "Нет свободного места",
+    "Content": "В сетке главной страницы нет места, способного вместить эту карточку."
+  },
+  "LayoutConflictWarning": {
+    "Title": "Конфликт макета",
+    "Content": "Это положение или размер выходит за пределы сетки или перекрывает другие карточки."
+  },
+  "GridShrinkBlockedWarning": {
+    "Title": "Невозможно уменьшить сетку",
+    "Content": "В удаляемых строках или столбцах находятся карточки. Переместите или удалите их."
+  },
+  "InvalidSourceParameterWarning": {
+    "Title": "Неполные параметры",
+    "Content": "Укажите ID пользователя, ID работы, ID серии или поисковый запрос для выбранного источника карточки."
+  }
+}
