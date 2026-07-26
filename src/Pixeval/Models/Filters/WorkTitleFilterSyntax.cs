@@ -17,7 +17,7 @@ internal sealed class WorkTitleFilterSyntax : FilterTextSyntax
 
     public override IReadOnlyList<FilterSyntaxPattern> Patterns { get; } =
     [
-        FilterSyntaxPattern.Default("keyword", I18NManager.GetResource(FilterResources.CompletionsTitle)),
-        FilterSyntaxPattern.Keyword("title", exampleValue: "keyword", description: I18NManager.GetResource(FilterResources.CompletionsTitle))
+        FilterSyntaxPattern.Default("keyword", I18NManager.GetResource(FilterResources.Completions.Title)),
+        FilterSyntaxPattern.Keyword("title", exampleValue: "keyword", description: I18NManager.GetResource(FilterResources.Completions.Title))
     ];
 }

@@ -15,20 +15,20 @@
     d:DesignWidth="600">
     <ScrollViewer>
         <StackPanel Margin="20" Spacing="10">
-            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.DownloadMacroHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Rename}">
+            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources+DownloadMacroHelpExpander.Header}}" HeaderIcon="{markup:SymbolIcon Rename}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
                         <local:MarkdownBox Markdown="{I18N {x:Static pixeval:MarkdownResources.DownloadMacroHelp}}" />
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
-            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.QueryFilterHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Filter}">
+            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources+QueryFilterHelpExpander.Header}}" HeaderIcon="{markup:SymbolIcon Filter}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Vertical">
                         <controls:SettingsCard.Header>
                             <TextBlock
                                 Margin="0,10"
-                                Text="{I18N {x:Static pixeval:HelpPageResources.QueryFilterSimpleHelpHeaderText}}"
+                                Text="{I18N {x:Static pixeval:HelpPageResources+QueryFilterSimpleHelpHeader.Text}}"
                                 Theme="{StaticResource SubtitleTextBlockStyle}" />
                         </controls:SettingsCard.Header>
                         <local:MarkdownBox Markdown="{I18N {x:Static pixeval:MarkdownResources.QueryFilterSimpleHelp}}" />
@@ -37,21 +37,21 @@
                         <controls:SettingsCard.Header>
                             <TextBlock
                                 Margin="0,10"
-                                Text="{I18N {x:Static pixeval:HelpPageResources.QueryFilterHelpHeaderText}}"
+                                Text="{I18N {x:Static pixeval:HelpPageResources+QueryFilterHelpHeader.Text}}"
                                 Theme="{StaticResource SubtitleTextBlockStyle}" />
                         </controls:SettingsCard.Header>
                         <local:MarkdownBox Markdown="{I18N {x:Static pixeval:MarkdownResources.QueryFilterHelp}}" />
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
-            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.WorkSubscriptionsHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Alert}">
+            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources+WorkSubscriptionsHelpExpander.Header}}" HeaderIcon="{markup:SymbolIcon Alert}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
                         <local:MarkdownBox Markdown="{I18N {x:Static pixeval:MarkdownResources.WorkSubscriptionsHelp}}" />
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
-            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.ExtensionsHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon PuzzlePiece}">
+            <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources+ExtensionsHelpExpander.Header}}" HeaderIcon="{markup:SymbolIcon PuzzlePiece}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
                         <local:MarkdownBox Markdown="{I18N {x:Static pixeval:MarkdownResources.ExtensionsHelp}}" />

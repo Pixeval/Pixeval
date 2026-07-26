@@ -25,7 +25,7 @@
             <Button.Flyout>
                 <Flyout Placement="TopEdgeAlignedLeft">
                     <TabbedPage SelectedIndex="0">
-                        <ContentPage Header="{I18N {x:Static pixeval:CommentRepliesBlockResources.EmojiButtonFlyoutEmojiSectionNavigationViewItemContent}}">
+                        <ContentPage Header="{I18N {x:Static pixeval:CommentRepliesBlockResources+EmojiButtonFlyoutEmojiSectionNavigationViewItem.Content}}">
                             <ScrollViewer
                                 Width="350"
                                 Height="150"
@@ -55,7 +55,7 @@
                                 </ItemsControl>
                             </ScrollViewer>
                         </ContentPage>
-                        <ContentPage Header="{I18N {x:Static pixeval:CommentRepliesBlockResources.EmojiButtonFlyoutStickersSectionNavigationViewItemContent}}">
+                        <ContentPage Header="{I18N {x:Static pixeval:CommentRepliesBlockResources+EmojiButtonFlyoutStickersSectionNavigationViewItem.Content}}">
                             <ScrollViewer
                                 Width="350"
                                 Height="150"
@@ -98,12 +98,12 @@
             Content="{markup:SymbolIcon Send,
                                         FontSize=16}"
             DockPanel.Dock="Right"
-            ToolTip.Tip="{I18N {x:Static pixeval:PixivReplyBarResources.SendButtonToolTip}}" />
+            ToolTip.Tip="{I18N {x:Static pixeval:PixivReplyBarResources+SendButton.ToolTip}}" />
         <TextBox
             x:Name="ReplyContentTextBox"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Center"
             MaxLength="140"
-            PlaceholderText="{I18N {x:Static pixeval:PixivReplyBarResources.ReplyContentRichEditBoxPlaceholderText}}" />
+            PlaceholderText="{I18N {x:Static pixeval:PixivReplyBarResources+ReplyContentRichEditBox.PlaceholderText}}" />
     </DockPanel>
 </UserControl>

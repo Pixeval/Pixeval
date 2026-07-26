@@ -185,8 +185,8 @@ public partial class WorkContainer : UserControl
         if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer
             && viewModel.SelectedEntries.Count >= 20
             && await viewContainer.CreateOkCancelAsync(
-                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItemsForBookmarkTitle),
-                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItemsContent)) is not ContentDialogResult.Primary)
+                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItems.ForBookmarkTitle),
+                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItems.Content)) is not ContentDialogResult.Primary)
             return;
 
         foreach (var i in viewModel.SelectedEntries)
@@ -208,8 +208,8 @@ public partial class WorkContainer : UserControl
         if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer
             && viewModel.SelectedEntries.Count >= 20
             && await viewContainer.CreateOkCancelAsync(
-                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItemsForSaveTitle),
-                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItemsContent)) is not ContentDialogResult.Primary)
+                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItems.ForSaveTitle),
+                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItems.Content)) is not ContentDialogResult.Primary)
             return;
 
         foreach (var i in viewModel.SelectedEntries)
@@ -227,8 +227,8 @@ public partial class WorkContainer : UserControl
         if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer
             && viewModel.SelectedEntries.Count > 15
             && await viewContainer.CreateOkCancelAsync(
-                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItemsForOpenInBrowserTitle),
-                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItemsForOpenInBrowserContent)) is not ContentDialogResult.Primary)
+                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItems.ForOpenInBrowser.Title),
+                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItems.ForOpenInBrowser.Content)) is not ContentDialogResult.Primary)
             return;
 
         foreach (var selectedEntry in viewModel.SelectedEntries)
@@ -348,11 +348,11 @@ public partial class WorkContainer : UserControl
         var diagnostic = analysis.Diagnostics[0];
         var completionSuffix = analysis.Completions.Count > 0
             ? I18NManager.GetResource(
-                FilterResources.DiagnosticsCompletionSuffixFormatted,
+                FilterResources.Diagnostics.CompletionSuffixFormatted,
                 string.Join(", ", analysis.Completions.Select(t => t.DisplayText).Distinct(StringComparer.OrdinalIgnoreCase).Take(6)))
             : "";
         return I18NManager.GetResource(
-            FilterResources.DiagnosticsMessageWithPositionFormatted,
+            FilterResources.Diagnostics.MessageWithPositionFormatted,
             FormatDiagnostic(diagnostic),
             diagnostic.Span.Start + 1,
             completionSuffix);

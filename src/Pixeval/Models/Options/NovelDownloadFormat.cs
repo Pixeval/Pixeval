@@ -8,12 +8,12 @@ namespace Pixeval.Models.Options;
 [LocalizationMetadata]
 public enum NovelDownloadFormat
 {
-    [LocalizedResource(EnumResources.NovelDownloadFormatHtml)]
+    [LocalizedResource(EnumResources.NovelDownloadFormat.Html)]
     Html,
 
-    [LocalizedResource(EnumResources.NovelDownloadFormatMd)]
+    [LocalizedResource(EnumResources.NovelDownloadFormat.Md)]
     Md,
 
-    [LocalizedResource(EnumResources.NovelDownloadFormatOriginalTxt)]
+    [LocalizedResource(EnumResources.NovelDownloadFormat.OriginalTxt)]
     OriginalTxt
 }

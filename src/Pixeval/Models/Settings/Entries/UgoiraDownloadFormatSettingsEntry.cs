@@ -22,7 +22,7 @@ public class UgoiraDownloadFormatSettingsEntry(DownloadSettingsGroup settings)
     : SingleValueSettingsEntry<DownloadSettingsGroup, object>(
         settings,
         nameof(DownloadSettingsGroup.UgoiraDownloadFormat),
-        I18NManager.GetResource(EnumResources.WorkTypeEnumUgoira),
+        I18NManager.GetResource(EnumResources.WorkTypeEnum.Ugoira),
         "",
         Symbol.Gif,
         null,

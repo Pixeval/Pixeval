@@ -17,7 +17,7 @@
     DrawerIcon="{markup:SymbolIcon Edit}"
     DrawerLayoutBehavior="Split"
     DrawerPlacement="Right"
-    Header="{I18N {x:Static pixeval:MainPageResources.TabHome}}"
+    Header="{I18N {x:Static pixeval:MainPageResources+Tab.Home}}"
     Icon="{markup:SymbolIcon Home,
                              FontSize=16,
                              IconVariant=Color}"
@@ -83,16 +83,16 @@
                 <CommandBarToggleButton
                     Icon="{markup:SymbolIcon AppTitle}"
                     IsChecked="{Binding HideHomePageCardTitle, Source={x:Static views:PixevalSettings.Instance}, Mode=TwoWay}"
-                    Label="{I18N {x:Static pixeval:HomePageResources.HideCardTitleButtonLabel}}" />
+                    Label="{I18N {x:Static pixeval:HomePageResources+HideCardTitleButton.Label}}" />
                 <CommandBarToggleButton
                     x:Name="HideHomePageToolbarButton"
                     Icon="{markup:SymbolIcon WindowHeaderHorizontal}"
                     IsChecked="{Binding HideHomePageToolbar, Source={x:Static views:PixevalSettings.Instance}, Mode=TwoWay}"
-                    Label="{I18N {x:Static pixeval:HomePageResources.HideToolbarButtonLabel}}" />
+                    Label="{I18N {x:Static pixeval:HomePageResources+HideToolbarButton.Label}}" />
                 <CommandBarToggleButton
                     Icon="{markup:SymbolIcon Edit}"
                     IsChecked="{Binding IsEditMode, Mode=TwoWay}"
-                    Label="{I18N {x:Static pixeval:HomePageResources.EditButtonLabel}}" />
+                    Label="{I18N {x:Static pixeval:HomePageResources+EditButton.Label}}" />
             </CommandBar>
         </DockPanel>
 
@@ -123,21 +123,21 @@
         <ScrollViewer>
             <StackPanel Margin="16" Spacing="16">
                 <StackPanel Spacing="4">
-                    <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.EditPaneTitleTextBlockText}}" Theme="{StaticResource BodyLargeStrongTextBlockStyle}" />
+                    <TextBlock Text="{I18N {x:Static pixeval:HomePageResources+EditPaneTitleTextBlock.Text}}" Theme="{StaticResource BodyLargeStrongTextBlockStyle}" />
                     <TextBlock
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="{I18N {x:Static pixeval:HomePageResources.EditPaneDescriptionTextBlockText}}"
+                        Text="{I18N {x:Static pixeval:HomePageResources+EditPaneDescriptionTextBlock.Text}}"
                         TextWrapping="Wrap" />
                 </StackPanel>
 
                 <Border Classes="editor-section">
                     <StackPanel Spacing="10">
-                        <TextBlock FontWeight="SemiBold" Text="{I18N {x:Static pixeval:HomePageResources.GridSizeTitleTextBlockText}}" />
+                        <TextBlock FontWeight="SemiBold" Text="{I18N {x:Static pixeval:HomePageResources+GridSizeTitleTextBlock.Text}}" />
                         <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8">
                             <TextBlock
                                 Grid.Column="0"
                                 Classes="editor-label"
-                                Text="{I18N {x:Static pixeval:HomePageResources.GridColumnsTextBlockText}}" />
+                                Text="{I18N {x:Static pixeval:HomePageResources+GridColumnsTextBlock.Text}}" />
                             <NumericUpDown
                                 Grid.Column="1"
                                 Classes="integer-editor"
@@ -147,7 +147,7 @@
                             <TextBlock
                                 Grid.Column="2"
                                 Classes="editor-label"
-                                Text="{I18N {x:Static pixeval:HomePageResources.GridRowsTextBlockText}}" />
+                                Text="{I18N {x:Static pixeval:HomePageResources+GridRowsTextBlock.Text}}" />
                             <NumericUpDown
                                 Grid.Column="3"
                                 Classes="integer-editor"
@@ -160,7 +160,7 @@
 
                 <Border Classes="editor-section">
                     <StackPanel Spacing="10">
-                        <TextBlock FontWeight="SemiBold" Text="{I18N {x:Static pixeval:HomePageResources.SelectedCardTitleTextBlockText}}" />
+                        <TextBlock FontWeight="SemiBold" Text="{I18N {x:Static pixeval:HomePageResources+SelectedCardTitleTextBlock.Text}}" />
                         <TextBlock
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="{Binding SelectedCardDescription}"
@@ -169,7 +169,7 @@
                             <TextBlock
                                 Grid.Column="0"
                                 Classes="editor-label"
-                                Text="{I18N {x:Static pixeval:HomePageResources.PositionXTextBlockText}}" />
+                                Text="{I18N {x:Static pixeval:HomePageResources+PositionXTextBlock.Text}}" />
                             <NumericUpDown
                                 Grid.Column="1"
                                 Classes="integer-editor card-layout-editor"
@@ -178,7 +178,7 @@
                             <TextBlock
                                 Grid.Column="2"
                                 Classes="editor-label"
-                                Text="{I18N {x:Static pixeval:HomePageResources.PositionYTextBlockText}}" />
+                                Text="{I18N {x:Static pixeval:HomePageResources+PositionYTextBlock.Text}}" />
                             <NumericUpDown
                                 Grid.Column="3"
                                 Classes="integer-editor card-layout-editor"
@@ -189,7 +189,7 @@
                             <TextBlock
                                 Grid.Column="0"
                                 Classes="editor-label"
-                                Text="{I18N {x:Static pixeval:HomePageResources.WidthTextBlockText}}" />
+                                Text="{I18N {x:Static pixeval:HomePageResources+WidthTextBlock.Text}}" />
                             <NumericUpDown
                                 Grid.Column="1"
                                 Classes="integer-editor card-layout-editor"
@@ -198,7 +198,7 @@
                             <TextBlock
                                 Grid.Column="2"
                                 Classes="editor-label"
-                                Text="{I18N {x:Static pixeval:HomePageResources.HeightTextBlockText}}" />
+                                Text="{I18N {x:Static pixeval:HomePageResources+HeightTextBlock.Text}}" />
                             <NumericUpDown
                                 Grid.Column="3"
                                 Classes="integer-editor card-layout-editor"
@@ -206,7 +206,7 @@
                                 Value="{Binding SelectedHeightValue, Mode=TwoWay}" />
                         </Grid>
                         <StackPanel Spacing="4">
-                            <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.CardBackgroundTextBlockText}}" />
+                            <TextBlock Text="{I18N {x:Static pixeval:HomePageResources+CardBackgroundTextBlock.Text}}" />
                             <ColorPicker
                                 HorizontalAlignment="Stretch"
                                 IsAlphaEnabled="True"
@@ -228,7 +228,7 @@
                                 Orientation="Horizontal"
                                 Spacing="8">
                                 <ContentControl Content="{markup:SymbolIcon Delete}" />
-                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.DeleteSelectedCardButtonContent}}" />
+                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources+DeleteSelectedCardButton.Content}}" />
                             </StackPanel>
                         </Button>
                     </StackPanel>
@@ -272,7 +272,7 @@
                                 <DataTemplate x:DataType="{x:Type viewModels:HomeCardRankingDateParameterEditorViewModel}">
                                     <StackPanel Spacing="4">
                                         <TextBlock Text="{Binding Header}" />
-                                        <CheckBox Content="{I18N {x:Static pixeval:HomePageResources.SourceUseSpecifiedRankingDateCheckBoxContent}}" IsChecked="{Binding UseSpecifiedDate, Mode=TwoWay}" />
+                                        <CheckBox Content="{I18N {x:Static pixeval:HomePageResources+Source+UseSpecifiedRankingDateCheckBox.Content}}" IsChecked="{Binding UseSpecifiedDate, Mode=TwoWay}" />
                                         <CalendarDatePicker
                                             HorizontalAlignment="Stretch"
                                             DisplayDateEnd="{x:Static capability:WorkRankingPage.MaxDate}"
@@ -293,14 +293,14 @@
                                 Orientation="Horizontal"
                                 Spacing="8">
                                 <ContentControl Content="{markup:SymbolIcon Add}" />
-                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.AddConfiguredCardButtonContent}}" />
+                                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources+AddConfiguredCardButton.Content}}" />
                             </StackPanel>
                         </Button>
                     </StackPanel>
                 </Border>
 
                 <StackPanel Spacing="8">
-                    <TextBlock FontWeight="SemiBold" Text="{I18N {x:Static pixeval:HomePageResources.CardLibraryTitleTextBlockText}}" />
+                    <TextBlock FontWeight="SemiBold" Text="{I18N {x:Static pixeval:HomePageResources+CardLibraryTitleTextBlock.Text}}" />
                     <ItemsControl ItemsSource="{Binding CardTemplates}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="{x:Type home:HomeCardDefinition}">

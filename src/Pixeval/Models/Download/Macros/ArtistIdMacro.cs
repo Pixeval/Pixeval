@@ -14,7 +14,7 @@ public class ArtistIdMacro : ITransducer<IArtworkInfo>
 {
     public string Name => "artist_id";
 
-    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionArtistId);
+    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescription.ArtistId);
 
     public bool IsFormatterValid(string? formatter) => MacroHelper.IsStringFormatterValid(formatter);
 

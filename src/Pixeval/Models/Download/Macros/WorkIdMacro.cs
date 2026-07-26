@@ -13,7 +13,7 @@ public class WorkIdMacro : ITransducer<IArtworkInfo>
 {
     public string Name => "id";
 
-    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionId);
+    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescription.Id);
 
     public bool IsFormatterValid(string? formatter) => MacroHelper.IsStringFormatterValid(formatter);
 

@@ -75,6 +75,6 @@ public sealed class HomeCardDefinition(
         if (titleParameterFactory is not null)
             parts.AddRange(titleParameterFactory(card));
 
-        return string.Join(I18NManager.GetResource(HomePageResources.CardTitleParameterSeparator), parts);
+        return string.Join(I18NManager.GetResource(HomePageResources.CardTitle.ParameterSeparator), parts);
     }
 }

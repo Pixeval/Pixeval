@@ -64,121 +64,121 @@ public static class LocalSettingsEntryHelper
         });
         RegisterAttach<DomainFrontingType>(t =>
         {
-            t.Register(DomainFrontingType.Fragmentation, EnumResources.DomainFrontingTypeFragmentation);
+            t.Register(DomainFrontingType.Fragmentation, EnumResources.DomainFrontingType.Fragmentation);
             // t.RegisterDirect(DomainFrontingType.Ech, "ECH");
-            // t.Register(DomainFrontingType.Desync, EnumResources.DomainFrontingTypeDesync);
+            // t.Register(DomainFrontingType.Desync, EnumResources.DomainFrontingType.Desync);
         });
         RegisterAttach<SearchIllustrationTagMatchOption>(t =>
         {
-            t.Register(SearchIllustrationTagMatchOption.PartialMatchForTags, EnumResources.SearchIllustrationTagMatchOptionPartialMatchForTags);
-            t.Register(SearchIllustrationTagMatchOption.ExactMatchForTags, EnumResources.SearchIllustrationTagMatchOptionExactMatchForTags);
-            t.Register(SearchIllustrationTagMatchOption.TitleAndCaption, EnumResources.SearchIllustrationTagMatchOptionTitleAndCaption);
+            t.Register(SearchIllustrationTagMatchOption.PartialMatchForTags, EnumResources.SearchIllustrationTagMatchOption.PartialMatchForTags);
+            t.Register(SearchIllustrationTagMatchOption.ExactMatchForTags, EnumResources.SearchIllustrationTagMatchOption.ExactMatchForTags);
+            t.Register(SearchIllustrationTagMatchOption.TitleAndCaption, EnumResources.SearchIllustrationTagMatchOption.TitleAndCaption);
         });
         RegisterAttach<SearchNovelTagMatchOption>(t =>
         {
-            t.Register(SearchNovelTagMatchOption.PartialMatchForTags, EnumResources.SearchNovelTagMatchOptionPartialMatchForTags);
-            t.Register(SearchNovelTagMatchOption.ExactMatchForTags, EnumResources.SearchNovelTagMatchOptionExactMatchForTags);
-            t.Register(SearchNovelTagMatchOption.Text, EnumResources.SearchNovelTagMatchOptionText);
-            t.Register(SearchNovelTagMatchOption.Keyword, EnumResources.SearchNovelTagMatchOptionKeyword);
+            t.Register(SearchNovelTagMatchOption.PartialMatchForTags, EnumResources.SearchNovelTagMatchOption.PartialMatchForTags);
+            t.Register(SearchNovelTagMatchOption.ExactMatchForTags, EnumResources.SearchNovelTagMatchOption.ExactMatchForTags);
+            t.Register(SearchNovelTagMatchOption.Text, EnumResources.SearchNovelTagMatchOption.Text);
+            t.Register(SearchNovelTagMatchOption.Keyword, EnumResources.SearchNovelTagMatchOption.Keyword);
         });
         RegisterAttach<SearchIllustrationContentType>(t =>
         {
-            t.Register(SearchIllustrationContentType.IllustrationAndMangaAndUgoira, EnumResources.SearchIllustrationContentTypeIllustrationAndMangaAndUgoira);
-            t.Register(SearchIllustrationContentType.IllustrationAndUgoira, EnumResources.SearchIllustrationContentTypeIllustrationAndUgoira);
-            t.Register(SearchIllustrationContentType.Illustration, EnumResources.SearchIllustrationContentTypeIllustration);
-            t.Register(SearchIllustrationContentType.Manga, EnumResources.SearchIllustrationContentTypeManga);
-            t.Register(SearchIllustrationContentType.Ugoira, EnumResources.SearchIllustrationContentTypeUgoira);
+            t.Register(SearchIllustrationContentType.IllustrationAndMangaAndUgoira, EnumResources.SearchIllustrationContentType.IllustrationAndMangaAndUgoira);
+            t.Register(SearchIllustrationContentType.IllustrationAndUgoira, EnumResources.SearchIllustrationContentType.IllustrationAndUgoira);
+            t.Register(SearchIllustrationContentType.Illustration, EnumResources.SearchIllustrationContentType.Illustration);
+            t.Register(SearchIllustrationContentType.Manga, EnumResources.SearchIllustrationContentType.Manga);
+            t.Register(SearchIllustrationContentType.Ugoira, EnumResources.SearchIllustrationContentType.Ugoira);
         });
         RegisterAttach<SearchIllustrationRatioPattern>(t =>
         {
-            t.Register(SearchIllustrationRatioPattern.All, EnumResources.SearchIllustrationRatioPatternAll);
-            t.Register(SearchIllustrationRatioPattern.Landscape, EnumResources.SearchIllustrationRatioPatternLandscape);
-            t.Register(SearchIllustrationRatioPattern.Portrait, EnumResources.SearchIllustrationRatioPatternPortrait);
-            t.Register(SearchIllustrationRatioPattern.Square, EnumResources.SearchIllustrationRatioPatternSquare);
+            t.Register(SearchIllustrationRatioPattern.All, EnumResources.SearchIllustrationRatioPattern.All);
+            t.Register(SearchIllustrationRatioPattern.Landscape, EnumResources.SearchIllustrationRatioPattern.Landscape);
+            t.Register(SearchIllustrationRatioPattern.Portrait, EnumResources.SearchIllustrationRatioPattern.Portrait);
+            t.Register(SearchIllustrationRatioPattern.Square, EnumResources.SearchIllustrationRatioPattern.Square);
         });
         RegisterAttach<SearchNovelContentLengthOption>(t =>
         {
-            t.Register(SearchNovelContentLengthOption.None, EnumResources.SearchNovelContentLengthOptionNone);
-            t.Register(SearchNovelContentLengthOption.TextLength, EnumResources.SearchNovelContentLengthOptionTextLength);
-            t.Register(SearchNovelContentLengthOption.WordCount, EnumResources.SearchNovelContentLengthOptionWordCount);
-            t.Register(SearchNovelContentLengthOption.ReadingTime, EnumResources.SearchNovelContentLengthOptionReadingTime);
+            t.Register(SearchNovelContentLengthOption.None, EnumResources.SearchNovelContentLengthOption.None);
+            t.Register(SearchNovelContentLengthOption.TextLength, EnumResources.SearchNovelContentLengthOption.TextLength);
+            t.Register(SearchNovelContentLengthOption.WordCount, EnumResources.SearchNovelContentLengthOption.WordCount);
+            t.Register(SearchNovelContentLengthOption.ReadingTime, EnumResources.SearchNovelContentLengthOption.ReadingTime);
         });
         RegisterAttach<WorkSortOption>(t =>
         {
-            t.Register(WorkSortOption.PublishDateDescending, Symbol.ArrowSortDownLines, EnumResources.WorkSortOptionPublishDateDescending);
-            t.Register(WorkSortOption.PublishDateAscending, Symbol.ArrowSortUpLines, EnumResources.WorkSortOptionPublishDateAscending);
-            t.Register(WorkSortOption.PopularityDescending, Symbol.ArrowTrendingSparkle, EnumResources.WorkSortOptionPopularityDescending);
+            t.Register(WorkSortOption.PublishDateDescending, Symbol.ArrowSortDownLines, EnumResources.WorkSortOption.PublishDateDescending);
+            t.Register(WorkSortOption.PublishDateAscending, Symbol.ArrowSortUpLines, EnumResources.WorkSortOption.PublishDateAscending);
+            t.Register(WorkSortOption.PopularityDescending, Symbol.ArrowTrendingSparkle, EnumResources.WorkSortOption.PopularityDescending);
         });
         RegisterAttach<PrivacyPolicy>(t =>
         {
-            t.Register(PrivacyPolicy.Public, Symbol.Person, EnumResources.PrivacyPolicyPublic);
-            t.Register(PrivacyPolicy.Private, Symbol.InPrivateAccount, EnumResources.PrivacyPolicyPrivate);
+            t.Register(PrivacyPolicy.Public, Symbol.Person, EnumResources.PrivacyPolicy.Public);
+            t.Register(PrivacyPolicy.Private, Symbol.InPrivateAccount, EnumResources.PrivacyPolicy.Private);
         });
         RegisterAttach<FontWeight>(t =>
         {
-            t.Register(FontWeight.Thin, Symbol.TextFont, EnumResources.FontWeightThin);
-            t.Register(FontWeight.ExtraLight, Symbol.TextFont, EnumResources.FontWeightExtraLight);
-            t.Register(FontWeight.Light, Symbol.TextFont, EnumResources.FontWeightLight);
-            t.Register(FontWeight.SemiLight, Symbol.TextFont, EnumResources.FontWeightSemiLight);
-            t.Register(FontWeight.Normal, Symbol.TextFont, EnumResources.FontWeightNormal);
-            t.Register(FontWeight.Medium, Symbol.TextFont, EnumResources.FontWeightMedium);
-            t.Register(FontWeight.SemiBold, Symbol.TextFont, EnumResources.FontWeightSemiBold);
-            t.Register(FontWeight.Bold, Symbol.TextFont, EnumResources.FontWeightBold);
-            t.Register(FontWeight.ExtraBold, Symbol.TextFont, EnumResources.FontWeightExtraBold);
-            t.Register(FontWeight.Black, Symbol.TextFont, EnumResources.FontWeightBlack);
-            t.Register(FontWeight.ExtraBlack, Symbol.TextFont, EnumResources.FontWeightExtraBlack);
+            t.Register(FontWeight.Thin, Symbol.TextFont, EnumResources.FontWeight.Thin);
+            t.Register(FontWeight.ExtraLight, Symbol.TextFont, EnumResources.FontWeight.ExtraLight);
+            t.Register(FontWeight.Light, Symbol.TextFont, EnumResources.FontWeight.Light);
+            t.Register(FontWeight.SemiLight, Symbol.TextFont, EnumResources.FontWeight.SemiLight);
+            t.Register(FontWeight.Normal, Symbol.TextFont, EnumResources.FontWeight.Normal);
+            t.Register(FontWeight.Medium, Symbol.TextFont, EnumResources.FontWeight.Medium);
+            t.Register(FontWeight.SemiBold, Symbol.TextFont, EnumResources.FontWeight.SemiBold);
+            t.Register(FontWeight.Bold, Symbol.TextFont, EnumResources.FontWeight.Bold);
+            t.Register(FontWeight.ExtraBold, Symbol.TextFont, EnumResources.FontWeight.ExtraBold);
+            t.Register(FontWeight.Black, Symbol.TextFont, EnumResources.FontWeight.Black);
+            t.Register(FontWeight.ExtraBlack, Symbol.TextFont, EnumResources.FontWeight.ExtraBlack);
         });
         RegisterAttach<WorkType>(t =>
         {
-            t.Register(WorkType.Illustration, Symbol.Image, EnumResources.WorkTypeIllustration);
-            t.Register(WorkType.Manga, Symbol.ImageStack, EnumResources.WorkTypeManga);
-            t.Register(WorkType.Novel, Symbol.Book, EnumResources.WorkTypeNovel);
+            t.Register(WorkType.Illustration, Symbol.Image, EnumResources.WorkType.Illustration);
+            t.Register(WorkType.Manga, Symbol.ImageStack, EnumResources.WorkType.Manga);
+            t.Register(WorkType.Novel, Symbol.Book, EnumResources.WorkType.Novel);
         });
         RegisterAttach<SimpleWorkType>(t =>
         {
-            t.Register(SimpleWorkType.Illustration, Symbol.Image, EnumResources.WorkTypeIllustration);
-            t.Register(SimpleWorkType.Novel, Symbol.Book, EnumResources.WorkTypeNovel);
+            t.Register(SimpleWorkType.Illustration, Symbol.Image, EnumResources.WorkType.Illustration);
+            t.Register(SimpleWorkType.Novel, Symbol.Book, EnumResources.WorkType.Novel);
         });
         RegisterAttach<Orientation>(t =>
         {
-            t.Register(Orientation.Horizontal, Symbol.ArrowBidirectionalLeftRight, EnumResources.OrientationHorizontal);
-            t.Register(Orientation.Vertical, Symbol.ArrowBidirectionalUpDown, EnumResources.OrientationVertical);
+            t.Register(Orientation.Horizontal, Symbol.ArrowBidirectionalLeftRight, EnumResources.Orientation.Horizontal);
+            t.Register(Orientation.Vertical, Symbol.ArrowBidirectionalUpDown, EnumResources.Orientation.Vertical);
         });
 
         RegisterAttach<RankOption>(SimpleWorkType.Illustration, t =>
         {
-            t.Register(RankOption.Day, EnumResources.RankOptionDay);
-            t.Register(RankOption.Week, EnumResources.RankOptionWeek);
-            t.Register(RankOption.Month, EnumResources.RankOptionMonth);
-            t.Register(RankOption.DayMale, EnumResources.RankOptionDayMale);
-            t.Register(RankOption.DayFemale, EnumResources.RankOptionDayFemale);
-            t.Register(RankOption.DayManga, EnumResources.RankOptionDayManga);
-            t.Register(RankOption.WeekManga, EnumResources.RankOptionWeekManga);
-            t.Register(RankOption.MonthManga, EnumResources.RankOptionMonthManga);
-            t.Register(RankOption.WeekOriginal, EnumResources.RankOptionWeekOriginal);
-            t.Register(RankOption.WeekRookie, EnumResources.RankOptionWeekRookie);
-            t.Register(RankOption.DayR18, EnumResources.RankOptionDayR18);
-            t.Register(RankOption.DayMaleR18, EnumResources.RankOptionDayMaleR18);
-            t.Register(RankOption.DayFemaleR18, EnumResources.RankOptionDayFemaleR18);
-            t.Register(RankOption.WeekR18, EnumResources.RankOptionWeekR18);
-            t.Register(RankOption.WeekR18G, EnumResources.RankOptionWeekR18G);
-            t.Register(RankOption.DayAi, EnumResources.RankOptionDayAi);
-            t.Register(RankOption.DayR18Ai, EnumResources.RankOptionDayR18Ai);
+            t.Register(RankOption.Day, EnumResources.RankOption.Day);
+            t.Register(RankOption.Week, EnumResources.RankOption.Week);
+            t.Register(RankOption.Month, EnumResources.RankOption.Month);
+            t.Register(RankOption.DayMale, EnumResources.RankOption.DayMale);
+            t.Register(RankOption.DayFemale, EnumResources.RankOption.DayFemale);
+            t.Register(RankOption.DayManga, EnumResources.RankOption.DayManga);
+            t.Register(RankOption.WeekManga, EnumResources.RankOption.WeekManga);
+            t.Register(RankOption.MonthManga, EnumResources.RankOption.MonthManga);
+            t.Register(RankOption.WeekOriginal, EnumResources.RankOption.WeekOriginal);
+            t.Register(RankOption.WeekRookie, EnumResources.RankOption.WeekRookie);
+            t.Register(RankOption.DayR18, EnumResources.RankOption.DayR18);
+            t.Register(RankOption.DayMaleR18, EnumResources.RankOption.DayMaleR18);
+            t.Register(RankOption.DayFemaleR18, EnumResources.RankOption.DayFemaleR18);
+            t.Register(RankOption.WeekR18, EnumResources.RankOption.WeekR18);
+            t.Register(RankOption.WeekR18G, EnumResources.RankOption.WeekR18G);
+            t.Register(RankOption.DayAi, EnumResources.RankOption.DayAi);
+            t.Register(RankOption.DayR18Ai, EnumResources.RankOption.DayR18Ai);
         });
         RegisterAttach<RankOption>(SimpleWorkType.Novel, t =>
         {
-            t.Register(RankOption.Day, EnumResources.RankOptionDay);
-            t.Register(RankOption.Week, EnumResources.RankOptionWeek);
-            t.Register(RankOption.DayMale, EnumResources.RankOptionDayMale);
-            t.Register(RankOption.DayFemale, EnumResources.RankOptionDayFemale);
-            t.Register(RankOption.WeekRookie, EnumResources.RankOptionWeekRookie);
-            t.Register(RankOption.DayR18, EnumResources.RankOptionDayR18);
-            t.Register(RankOption.DayMaleR18, EnumResources.RankOptionDayMaleR18);
-            t.Register(RankOption.DayFemaleR18, EnumResources.RankOptionDayFemaleR18);
-            t.Register(RankOption.WeekR18, EnumResources.RankOptionWeekR18);
-            t.Register(RankOption.WeekR18G, EnumResources.RankOptionWeekR18G);
-            t.Register(RankOption.WeekAi, EnumResources.RankOptionWeekAi);
-            t.Register(RankOption.WeekAiR18, EnumResources.RankOptionWeekAiR18);
+            t.Register(RankOption.Day, EnumResources.RankOption.Day);
+            t.Register(RankOption.Week, EnumResources.RankOption.Week);
+            t.Register(RankOption.DayMale, EnumResources.RankOption.DayMale);
+            t.Register(RankOption.DayFemale, EnumResources.RankOption.DayFemale);
+            t.Register(RankOption.WeekRookie, EnumResources.RankOption.WeekRookie);
+            t.Register(RankOption.DayR18, EnumResources.RankOption.DayR18);
+            t.Register(RankOption.DayMaleR18, EnumResources.RankOption.DayMaleR18);
+            t.Register(RankOption.DayFemaleR18, EnumResources.RankOption.DayFemaleR18);
+            t.Register(RankOption.WeekR18, EnumResources.RankOption.WeekR18);
+            t.Register(RankOption.WeekR18G, EnumResources.RankOption.WeekR18G);
+            t.Register(RankOption.WeekAi, EnumResources.RankOption.WeekAi);
+            t.Register(RankOption.WeekAiR18, EnumResources.RankOption.WeekAiR18);
         });
     }
 
@@ -280,10 +280,10 @@ public static class LocalSettingsEntryHelper
                 entry.Description = "";
                 (entry.Icon, var header) = workType switch
                 {
-                    WorkTypeEnum.Illustration => (Symbol.Image, EnumResources.WorkTypeEnumIllustration),
-                    WorkTypeEnum.Manga => (Symbol.ImageMultiple, EnumResources.WorkTypeEnumManga),
-                    WorkTypeEnum.Ugoira => (Symbol.Gif, EnumResources.WorkTypeEnumUgoira),
-                    WorkTypeEnum.Novel => (Symbol.BookOpen, EnumResources.WorkTypeEnumNovel),
+                    WorkTypeEnum.Illustration => (Symbol.Image, EnumResources.WorkTypeEnum.Illustration),
+                    WorkTypeEnum.Manga => (Symbol.ImageMultiple, EnumResources.WorkTypeEnum.Manga),
+                    WorkTypeEnum.Ugoira => (Symbol.Gif, EnumResources.WorkTypeEnum.Ugoira),
+                    WorkTypeEnum.Novel => (Symbol.BookOpen, EnumResources.WorkTypeEnum.Novel),
                     _ => throw new ArgumentOutOfRangeException(nameof(workType))
                 };
                 entry.Header = I18NManager.GetResource(header);

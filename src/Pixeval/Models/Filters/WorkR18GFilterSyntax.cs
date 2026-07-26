@@ -15,7 +15,7 @@ internal sealed class WorkR18GFilterSyntax : FilterFlagSyntax
 
     public override IReadOnlyList<FilterSyntaxPattern> Patterns { get; } =
     [
-        new("+", ["r18g"], Metadata: false, Description: I18NManager.GetResource(FilterResources.CompletionsIncludeR18G)),
-        new("-", ["r18g"], Metadata: true, Description: I18NManager.GetResource(FilterResources.CompletionsExcludeR18G))
+        new("+", ["r18g"], Metadata: false, Description: I18NManager.GetResource(FilterResources.Completions.Include.R18G)),
+        new("-", ["r18g"], Metadata: true, Description: I18NManager.GetResource(FilterResources.Completions.Exclude.R18G))
     ];
 }

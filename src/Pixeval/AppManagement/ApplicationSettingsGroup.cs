@@ -6,7 +6,6 @@ using System.Collections.ObjectModel;
 using AutoSettingsPage;
 using FluentIcons.Common;
 using Pixeval.Models.Options;
-using static Pixeval.AppSettingsResources;
 
 namespace Pixeval.AppManagement;
 
@@ -21,43 +20,43 @@ public record ApplicationSettingsGroup
     public bool IsMaximized { get; set; }
 
     // TODO: Not Used
-    [SettingsEntry(Symbol.Communication, DownloadUpdateAutomaticallyEntryHeader, DownloadUpdateAutomaticallyEntryDescription)]
+    [SettingsEntry(Symbol.Communication, AppSettingsResources.DownloadUpdateAutomaticallyEntry.Header, AppSettingsResources.DownloadUpdateAutomaticallyEntry.Description)]
     public bool DownloadUpdateAutomatically { get; set; }
 
     /// <summary>
     /// "" 表示使用系统默认语言
     /// </summary>
-    [SettingsEntry(Symbol.LocalLanguage, AppLanguageEntryHeader, AppLanguageEntryDescription, AppLanguageEntryPlaceholder, "ms-settings:regionlanguage")]
+    [SettingsEntry(Symbol.LocalLanguage, AppSettingsResources.AppLanguageEntry.Header, AppSettingsResources.AppLanguageEntry.Description, AppSettingsResources.AppLanguageEntry.Placeholder, "ms-settings:regionlanguage")]
     public string CultureName { get; set; } = "";
 
     /// <summary>
     /// The Application Theme
     /// </summary>
-    [SettingsEntry(Symbol.DarkTheme, ThemeEntryHeader, ThemeEntryDescription)]
+    [SettingsEntry(Symbol.DarkTheme, AppSettingsResources.ThemeEntry.Header, AppSettingsResources.ThemeEntry.Description)]
     public ApplicationTheme Theme { get; set; }
 
-    [SettingsEntry(Symbol.Database, UseFileCacheEntryHeader, UseFileCacheEntryDescription)]
+    [SettingsEntry(Symbol.Database, AppSettingsResources.UseFileCacheEntry.Header, AppSettingsResources.UseFileCacheEntry.Description)]
     public bool UseFileCache { get; set; } = true;
 
-    [SettingsEntry(Symbol.DatabaseLightning, LimitFileCacheSizeEntryHeader, LimitFileCacheSizeEntryDescription)]
+    [SettingsEntry(Symbol.DatabaseLightning, AppSettingsResources.LimitFileCacheSizeEntry.Header, AppSettingsResources.LimitFileCacheSizeEntry.Description)]
     public bool LimitFileCacheSize { get; set; }
 
-    [SettingsEntry(Symbol.HardDrive, FileCacheSizeLimitInMegabytesEntryHeader,
-        FileCacheSizeLimitInMegabytesEntryDescription)]
+    [SettingsEntry(Symbol.HardDrive, AppSettingsResources.FileCacheSizeLimitInMegabytesEntry.Header,
+        AppSettingsResources.FileCacheSizeLimitInMegabytesEntry.Description)]
     public int FileCacheSizeLimitInMegabytes { get; set; } = 2048;
 
-    [SettingsEntry(Symbol.TextFont, AppFontFamilyEntryHeader, AppFontFamilyEntryDescription, AppFontFamilyEntryPlaceholder)]
+    [SettingsEntry(Symbol.TextFont, AppSettingsResources.AppFontFamilyEntry.Header, AppSettingsResources.AppFontFamilyEntry.Description, AppSettingsResources.AppFontFamilyEntry.Placeholder)]
     public ObservableCollection<string> AppFontFamily { get; set; } = [];
 
-    [SettingsEntry(Symbol.Table, HomePageRowsEntryHeader, HomePageRowsEntryDescription)]
+    [SettingsEntry(Symbol.Table, AppSettingsResources.HomePageRowsEntry.Header, AppSettingsResources.HomePageRowsEntry.Description)]
     public int HomePageRows { get; set; } = 7;
 
-    [SettingsEntry(Symbol.Table, HomePageColumnsEntryHeader, HomePageColumnsEntryDescription)]
+    [SettingsEntry(Symbol.Table, AppSettingsResources.HomePageColumnsEntry.Header, AppSettingsResources.HomePageColumnsEntry.Description)]
     public int HomePageColumns { get; set; } = 1;
 
-    [SettingsEntry(Symbol.WindowHeaderHorizontal, HideHomePageToolbarEntryHeader, HideHomePageToolbarEntryDescription)]
+    [SettingsEntry(Symbol.WindowHeaderHorizontal, AppSettingsResources.HideHomePageToolbarEntry.Header, AppSettingsResources.HideHomePageToolbarEntry.Description)]
     public bool HideHomePageToolbar { get; set; }
 
-    [SettingsEntry(Symbol.AppTitle, HideHomePageCardTitleEntryHeader, HideHomePageCardTitleEntryDescription)]
+    [SettingsEntry(Symbol.AppTitle, AppSettingsResources.HideHomePageCardTitleEntry.Header, AppSettingsResources.HideHomePageCardTitleEntry.Description)]
     public bool HideHomePageCardTitle { get; set; }
 }

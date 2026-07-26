@@ -16,7 +16,7 @@ public class IsPostGroupMacro : IPredicate<WorkSubscriptionEntry?>
 
     public string Name => NameConst;
 
-    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionIsPostGroup);
+    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescription.IsPostGroup);
 
     public bool Match(WorkSubscriptionEntry? context) =>
         context is { SubscriptionType: WorkSubscriptionType.Posts };

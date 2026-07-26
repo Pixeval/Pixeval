@@ -9,60 +9,60 @@ namespace Pixeval.Models.Options;
 [LocalizationMetadata]
 public enum HomePageCardSourceKind
 {
-    [LocalizedResource(MainPageResources.TabWorkRecommended)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionWorkRecommended, Key = nameof(HomeCardDefinition.Description))]
+    [LocalizedResource(MainPageResources.Tab.WorkRecommended)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescription.WorkRecommended, Key = nameof(HomeCardDefinition.Description))]
     WorkRecommended,
 
-    [LocalizedResource(MainPageResources.TabWorkBookmarks)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionWorkBookmarks, Key = nameof(HomeCardDefinition.Description))]
+    [LocalizedResource(MainPageResources.Tab.WorkBookmarks)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescription.WorkBookmarks, Key = nameof(HomeCardDefinition.Description))]
     WorkBookmarks,
 
-    [LocalizedResource(MainPageResources.TabWorkRanking)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionWorkRanking, Key = nameof(HomeCardDefinition.Description))]
+    [LocalizedResource(MainPageResources.Tab.WorkRanking)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescription.WorkRanking, Key = nameof(HomeCardDefinition.Description))]
     WorkRanking,
 
-    [LocalizedResource(MainPageResources.TabWorkNew)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionWorkNew, Key = nameof(HomeCardDefinition.Description))]
+    [LocalizedResource(MainPageResources.Tab.WorkNew)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescription.WorkNew, Key = nameof(HomeCardDefinition.Description))]
     WorkNew,
 
-    [LocalizedResource(MainPageResources.TabWorkFollowing)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionWorkFollowing, Key = nameof(HomeCardDefinition.Description))]
+    [LocalizedResource(MainPageResources.Tab.WorkFollowing)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescription.WorkFollowing, Key = nameof(HomeCardDefinition.Description))]
     WorkFollowing,
 
-    [LocalizedResource(MainPageResources.TabWorkMyPixiv)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionWorkMyPixiv, Key = nameof(HomeCardDefinition.Description))]
+    [LocalizedResource(MainPageResources.Tab.WorkMyPixiv)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescription.WorkMyPixiv, Key = nameof(HomeCardDefinition.Description))]
     WorkMyPixiv,
 
-    [LocalizedResource(MainPageResources.TabWorkRelated)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionWorkRelated, Key = nameof(HomeCardDefinition.Description))]
+    [LocalizedResource(MainPageResources.Tab.WorkRelated)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescription.WorkRelated, Key = nameof(HomeCardDefinition.Description))]
     WorkRelated,
 
-    [LocalizedResource(MainPageResources.TabWorkPosts)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionWorkPosts, Key = nameof(HomeCardDefinition.Description))]
+    [LocalizedResource(MainPageResources.Tab.WorkPosts)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescription.WorkPosts, Key = nameof(HomeCardDefinition.Description))]
     WorkPosts,
 
-    [LocalizedResource(MainPageResources.TabWorkSearchResult)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionWorkSearch, Key = nameof(HomeCardDefinition.Description))]
+    [LocalizedResource(MainPageResources.Tab.WorkSearchResult)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescription.WorkSearch, Key = nameof(HomeCardDefinition.Description))]
     WorkSearch,
 
-    [LocalizedResource(MainPageResources.TabUserRecommended)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionUserRecommended, Key = nameof(HomeCardDefinition.Description))]
+    [LocalizedResource(MainPageResources.Tab.UserRecommended)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescription.UserRecommended, Key = nameof(HomeCardDefinition.Description))]
     UserRecommended,
 
-    [LocalizedResource(MainPageResources.TabUserSearchResult)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionUserSearch, Key = nameof(HomeCardDefinition.Description))]
+    [LocalizedResource(MainPageResources.Tab.UserSearchResult)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescription.UserSearch, Key = nameof(HomeCardDefinition.Description))]
     UserSearch,
 
-    [LocalizedResource(MainPageResources.TabUserFollowing)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionUserFollowing, Key = nameof(HomeCardDefinition.Description))]
+    [LocalizedResource(MainPageResources.Tab.UserFollowing)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescription.UserFollowing, Key = nameof(HomeCardDefinition.Description))]
     UserFollowing,
 
-    [LocalizedResource(MainPageResources.TabUserFollower)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionUserFollower, Key = nameof(HomeCardDefinition.Description))]
+    [LocalizedResource(MainPageResources.Tab.UserFollower)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescription.UserFollower, Key = nameof(HomeCardDefinition.Description))]
     UserFollower,
 
-    [LocalizedResource(MainPageResources.TabUserMyPixiv)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionUserMyPixiv, Key = nameof(HomeCardDefinition.Description))]
+    [LocalizedResource(MainPageResources.Tab.UserMyPixiv)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescription.UserMyPixiv, Key = nameof(HomeCardDefinition.Description))]
     UserMyPixiv,
 
-    [LocalizedResource(MainPageResources.TabSpotlight)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionSpotlight, Key = nameof(HomeCardDefinition.Description))]
+    [LocalizedResource(MainPageResources.Tab.Spotlight)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescription.Spotlight, Key = nameof(HomeCardDefinition.Description))]
     Spotlight,
 
-    [LocalizedResource(MainPageResources.TabSingleImage)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionSingleImage, Key = nameof(HomeCardDefinition.Description))]
+    [LocalizedResource(MainPageResources.Tab.SingleImage)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescription.SingleImage, Key = nameof(HomeCardDefinition.Description))]
     SingleImage,
 
-    [LocalizedResource(MainPageResources.TabSingleNovel)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionSingleNovel, Key = nameof(HomeCardDefinition.Description))]
+    [LocalizedResource(MainPageResources.Tab.SingleNovel)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescription.SingleNovel, Key = nameof(HomeCardDefinition.Description))]
     SingleNovel,
 
-    [LocalizedResource(MainPageResources.TabSingleUser)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionSingleUser, Key = nameof(HomeCardDefinition.Description))]
+    [LocalizedResource(MainPageResources.Tab.SingleUser)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescription.SingleUser, Key = nameof(HomeCardDefinition.Description))]
     SingleUser,
 
-    [LocalizedResource(MainPageResources.TabSingleSeries)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescriptionSingleSeries, Key = nameof(HomeCardDefinition.Description))]
+    [LocalizedResource(MainPageResources.Tab.SingleSeries)] [LocalizedResource(EnumResources.HomePageCardSourceKindDescription.SingleSeries, Key = nameof(HomeCardDefinition.Description))]
     SingleSeries
 }

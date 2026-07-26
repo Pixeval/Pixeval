@@ -34,12 +34,12 @@
   },
   "AutoPlay": "自动播放",
   "AutoPlayInterval": {
-    "1Second": "1 秒",
-    "3Seconds": "3 秒",
-    "5Seconds": "5 秒",
-    "10Seconds": "10 秒",
-    "15Seconds": "15 秒",
-    "30Seconds": "30 秒"
+    "Seconds1": "1 秒",
+    "Seconds3": "3 秒",
+    "Seconds5": "5 秒",
+    "Seconds10": "10 秒",
+    "Seconds15": "15 秒",
+    "Seconds30": "30 秒"
   },
   "ZoomIn": "放大",
   "ZoomOut": "缩小",

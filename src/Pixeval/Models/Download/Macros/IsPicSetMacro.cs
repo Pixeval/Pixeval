@@ -15,7 +15,7 @@ public class IsPicSetMacro : IPredicate<IArtworkInfo>
 
     public string Name => NameConst;
 
-    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionIsPicSet);
+    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescription.IsPicSet);
 
     public bool Match(IArtworkInfo context) => context.ImageType is ImageType.ImageSet;
 }

@@ -51,7 +51,7 @@
                         ItemTemplate="{StaticResource SearchCompletionTemplate}"
                         KeyDown="SearchAutoCompleteBox_OnKeyDown"
                         MinimumPrefixLength="1"
-                        PlaceholderText="{I18N {x:Static pixeval:SearchResources.SearchBoxPlaceholderText}}"
+                        PlaceholderText="{I18N {x:Static pixeval:SearchResources+SearchBox.PlaceholderText}}"
                         TemplateApplied="SearchAutoCompleteBox_OnTemplateApplied"
                         Text="{Binding SearchText, Mode=TwoWay}"
                         TextChanged="SearchAutoCompleteBox_OnTextChanged">
@@ -85,11 +85,11 @@
                                     <ContextMenu>
                                         <MenuItem
                                             Click="CopyButton_OnClick"
-                                            Header="{I18N {x:Static pixeval:SearchResources.SearchHistoryCopy}}"
+                                            Header="{I18N {x:Static pixeval:SearchResources+SearchHistory.Copy}}"
                                             Icon="{markup:SymbolIcon Copy}" />
                                         <MenuItem
                                             Click="DeleteButton_OnClick"
-                                            Header="{I18N {x:Static pixeval:SearchResources.SearchHistoryDelete}}"
+                                            Header="{I18N {x:Static pixeval:SearchResources+SearchHistory.Delete}}"
                                             Icon="{markup:SymbolIcon Delete}" />
                                     </ContextMenu>
                                 </Button.ContextMenu>
@@ -107,7 +107,7 @@
                 <DockPanel DockPanel.Dock="Top" HorizontalSpacing="10">
                     <TextBlock
                         VerticalAlignment="Center"
-                        Text="{I18N {x:Static pixeval:SearchResources.TrendingHeaderTextBlockText}}"
+                        Text="{I18N {x:Static pixeval:SearchResources+TrendingHeaderTextBlock.Text}}"
                         Theme="{StaticResource SubtitleTextBlockStyle}" />
                     <TabStrip
                         ItemsSource="{markup1:EnumResources x:TypeArguments=enum:SimpleWorkType}"

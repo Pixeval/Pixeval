@@ -30,7 +30,7 @@
         IsTextCompletionEnabled="False"
         ItemTemplate="{StaticResource FilterCompletionTemplate}"
         MinimumPrefixLength="0"
-        PlaceholderText="{I18N {x:Static local:WorkContainerResources.FilterAutoSuggestBoxPlaceholderText}}"
+        PlaceholderText="{I18N {x:Static local:WorkContainerResources+FilterAutoSuggestBox.PlaceholderText}}"
         TemplateApplied="FilterAutoSuggestBox_OnTemplateApplied"
         TextChanged="FilterAutoSuggestBox_OnTextChanged" />
 </UserControl>

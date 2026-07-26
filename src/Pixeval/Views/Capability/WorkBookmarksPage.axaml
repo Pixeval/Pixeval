@@ -39,7 +39,7 @@
                 VerticalAlignment="Stretch"
                 Click="AddSubscriptionButton_OnClicked"
                 Icon="{markup:SymbolIcon Alert}"
-                Label="{I18N {x:Static pixeval:WorkSubscriptionsSettingsExpanderResources.AddSubscriptionButtonLabel}}" />
+                Label="{I18N {x:Static pixeval:WorkSubscriptionsSettingsExpanderResources+AddSubscriptionButton.Label}}" />
         </work:WorkContainer.CommandBarSubElements>
     </work:WorkContainer>
 </views:IconContentPage>

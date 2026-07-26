@@ -29,7 +29,7 @@
         <Button
             Click="SyncAllButton_OnClicked"
             Content="{markup:SymbolIcon ArrowSync}"
-            ToolTip.Tip="{I18N {x:Static pixeval:WorkSubscriptionsSettingsExpanderResources.SyncAllSubscriptionsButtonLabel}}" />
+            ToolTip.Tip="{I18N {x:Static pixeval:WorkSubscriptionsSettingsExpanderResources+SyncAllSubscriptionsButton.Label}}" />
     </controls:SettingsExpander.Content>
     <controls:SettingsExpander.Items>
         <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
@@ -38,7 +38,7 @@
                 ColumnSpacing="8"
                 RowDefinitions="Auto,Auto"
                 RowSpacing="8">
-                <TextBox x:Name="TargetIdTextBox" PlaceholderText="{I18N {x:Static pixeval:WorkSubscriptionsSettingsExpanderResources.TargetIdTextBoxPlaceholderText}}" />
+                <TextBox x:Name="TargetIdTextBox" PlaceholderText="{I18N {x:Static pixeval:WorkSubscriptionsSettingsExpanderResources+TargetIdTextBox.PlaceholderText}}" />
                 <controls1:SymbolComboBox
                     x:Name="SubscriptionTypeComboBox"
                     Grid.Row="0"

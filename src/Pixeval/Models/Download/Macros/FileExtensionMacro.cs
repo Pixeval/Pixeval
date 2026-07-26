@@ -15,7 +15,7 @@ public class FileExtensionMacro : ITransducer<IArtworkInfo>, ILastSegment
 
     public string Name => NameConst;
 
-    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionExt);
+    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescription.Ext);
 
     public bool IsFormatterValid(string? formatter) => MacroHelper.IsStringFormatterValid(formatter);
 

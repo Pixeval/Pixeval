@@ -13,7 +13,7 @@ public class WorkPublishTimeMacro : ITransducer<IArtworkInfo>
 {
     public string Name => "publish_time";
 
-    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionPublishTime);
+    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescription.PublishTime);
 
     public bool IsFormatterValid(string? formatter) => MacroHelper.IsDateTimeOffsetFormatterValid(formatter);
 

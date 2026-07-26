@@ -19,9 +19,9 @@
             DockPanel.Dock="Top"
             Orientation="Horizontal"
             Spacing="20">
-            <TextBlock Text="{I18N {x:Static pixeval:ExtensionsPageResources.TitleTextBlockText}}" Theme="{StaticResource TitleTextBlockStyle}" />
+            <TextBlock Text="{I18N {x:Static pixeval:ExtensionsPageResources+TitleTextBlock.Text}}" Theme="{StaticResource TitleTextBlockStyle}" />
             <TextBlock VerticalAlignment="Bottom" Theme="{StaticResource SubtitleTextBlockStyle}">
-                <Run Text="{I18N {x:Static pixeval:ExtensionsPageResources.SubtitleTextBlockText}}" />
+                <Run Text="{I18N {x:Static pixeval:ExtensionsPageResources+SubtitleTextBlock.Text}}" />
                 <Run Text="{x:Static extensions:ExtensionService.CurrentVersion}" />
             </TextBlock>
         </StackPanel>
@@ -32,19 +32,19 @@
             <CommandBarButton
                 Click="AddExtensionsOnClick"
                 Icon="{markup:SymbolIcon PlugConnectedAdd}"
-                Label="{I18N {x:Static pixeval:ExtensionsPageResources.AddExtensionsButtonLabel}}" />
+                Label="{I18N {x:Static pixeval:ExtensionsPageResources+AddExtensionsButton.Label}}" />
             <CommandBarButton
                 Click="OpenExtensionsOnClick"
                 Icon="{markup:SymbolIcon FolderAdd}"
-                Label="{I18N {x:Static pixeval:ExtensionsPageResources.OpenExtensionsButtonLabel}}" />
+                Label="{I18N {x:Static pixeval:ExtensionsPageResources+OpenExtensionsButton.Label}}" />
             <CommandBarButton
                 Click="UninstallAllExtensionsOnClick"
                 Icon="{markup:SymbolIcon Delete}"
-                Label="{I18N {x:Static pixeval:ExtensionsPageResources.UninstallAllExtensionsButtonLabel}}" />
+                Label="{I18N {x:Static pixeval:ExtensionsPageResources+UninstallAllExtensionsButton.Label}}" />
             <CommandBarButton
                 Click="UninstallOutdatedExtensionsOnClick"
                 Icon="{markup:SymbolIcon Alert}"
-                Label="{I18N {x:Static pixeval:ExtensionsPageResources.UninstallOutdatedExtensionsButtonLabel}}" />
+                Label="{I18N {x:Static pixeval:ExtensionsPageResources+UninstallOutdatedExtensionsButton.Label}}" />
         </CommandBar>
         <ScrollViewer Margin="20,10,20,20">
             <ItemsControl ItemsSource="{Binding $parent[views:ExtensionsPage].Models}">
@@ -72,26 +72,26 @@
                                     <CommandBarButton
                                         Click="ExtensionsPriorityUpOnClick"
                                         Icon="{markup:SymbolIcon ChevronUp}"
-                                        ToolTip.Tip="{I18N {x:Static pixeval:ExtensionsPageResources.ExtensionsPriorityUpButtonLabel}}" />
+                                        ToolTip.Tip="{I18N {x:Static pixeval:ExtensionsPageResources+ExtensionsPriorityUpButton.Label}}" />
                                     <CommandBarButton
                                         Click="ExtensionsPriorityDownOnClick"
                                         Icon="{markup:SymbolIcon ChevronDown}"
-                                        ToolTip.Tip="{I18N {x:Static pixeval:ExtensionsPageResources.ExtensionsPriorityDownButtonLabel}}" />
+                                        ToolTip.Tip="{I18N {x:Static pixeval:ExtensionsPageResources+ExtensionsPriorityDownButton.Label}}" />
                                     <CommandBar.SecondaryCommands>
                                         <CommandBarButton
                                             Click="ExtensionsHelpOnClick"
                                             Icon="{markup:SymbolIcon BookQuestionMark}"
                                             IsVisible="{Binding HelpLink, Converter={x:Static ObjectConverters.IsNotNull}}"
-                                            Label="{I18N {x:Static pixeval:ExtensionsPageResources.ExtensionsHelpButtonLabel}}"
+                                            Label="{I18N {x:Static pixeval:ExtensionsPageResources+ExtensionsHelpButton.Label}}"
                                             Tag="{Binding HelpLink}" />
                                         <CommandBarButton
                                             Click="ExtensionsPriorityTopOnClick"
                                             Icon="{markup:SymbolIcon ChevronDoubleUp}"
-                                            Label="{I18N {x:Static pixeval:ExtensionsPageResources.ExtensionsPriorityTopButtonLabel}}" />
+                                            Label="{I18N {x:Static pixeval:ExtensionsPageResources+ExtensionsPriorityTopButton.Label}}" />
                                         <CommandBarButton
                                             Click="ExtensionsPriorityBottomOnClick"
                                             Icon="{markup:SymbolIcon ChevronDoubleDown}"
-                                            Label="{I18N {x:Static pixeval:ExtensionsPageResources.ExtensionsPriorityBottomButtonLabel}}" />
+                                            Label="{I18N {x:Static pixeval:ExtensionsPageResources+ExtensionsPriorityBottomButton.Label}}" />
                                         <CommandBarButton
                                             Click="UninstallHostOnClick"
                                             Icon="{Binding UninstallCommandIcon, Converter={x:Static converters:PixevalConverters.SymbolIconConverter}}"

@@ -15,7 +15,7 @@
     xmlns:settings="using:Pixeval.Views.Settings"
     xmlns:utilities="using:Pixeval.Utilities"
     x:DataType="{x:Type settings:NavigationSettingsPage}"
-    Header="{I18N {x:Static pixeval:MainPageResources.TabNavigationSettings}}"
+    Header="{I18N {x:Static pixeval:MainPageResources+Tab.NavigationSettings}}"
     mc:Ignorable="d"
     d:DesignHeight="720"
     d:DesignWidth="1100">
@@ -25,23 +25,23 @@
                 x:Name="CanApplyButton"
                 Click="ApplyButton_OnClicked"
                 Icon="{markup:SymbolIcon Checkmark}"
-                Label="{I18N {x:Static pixeval:NavigationSettingsPageResources.ApplyButtonContent}}"
-                ToolTip.Tip="{I18N {x:Static pixeval:NavigationSettingsPageResources.ApplyButtonToolTip}}" />
+                Label="{I18N {x:Static pixeval:NavigationSettingsPageResources+ApplyButton.Content}}"
+                ToolTip.Tip="{I18N {x:Static pixeval:NavigationSettingsPageResources+ApplyButton.ToolTip}}" />
             <CommandBarButton
                 Click="FormatButton_OnClicked"
                 Icon="{markup:SymbolIcon TextNumberFormat}"
-                Label="{I18N {x:Static pixeval:NavigationSettingsPageResources.FormatButtonContent}}"
-                ToolTip.Tip="{I18N {x:Static pixeval:NavigationSettingsPageResources.FormatButtonToolTip}}" />
+                Label="{I18N {x:Static pixeval:NavigationSettingsPageResources+FormatButton.Content}}"
+                ToolTip.Tip="{I18N {x:Static pixeval:NavigationSettingsPageResources+FormatButton.ToolTip}}" />
             <CommandBarButton
                 Click="ResetButton_OnClicked"
                 Icon="{markup:SymbolIcon ArrowReset}"
-                Label="{I18N {x:Static pixeval:NavigationSettingsPageResources.ResetButtonContent}}"
-                ToolTip.Tip="{I18N {x:Static pixeval:NavigationSettingsPageResources.ResetButtonToolTip}}" />
+                Label="{I18N {x:Static pixeval:NavigationSettingsPageResources+ResetButton.Content}}"
+                ToolTip.Tip="{I18N {x:Static pixeval:NavigationSettingsPageResources+ResetButton.ToolTip}}" />
             <CommandBarButton
                 Click="InsertFolderButton_OnClicked"
                 Icon="{markup:SymbolIcon DocumentFolder}"
-                Label="{I18N {x:Static pixeval:NavigationSettingsPageResources.InsertFolderButtonContent}}"
-                ToolTip.Tip="{I18N {x:Static pixeval:NavigationSettingsPageResources.InsertFolderButtonToolTip}}" />
+                Label="{I18N {x:Static pixeval:NavigationSettingsPageResources+InsertFolderButton.Content}}"
+                ToolTip.Tip="{I18N {x:Static pixeval:NavigationSettingsPageResources+InsertFolderButton.ToolTip}}" />
         </CommandBar>
     </NavigationPage.TopCommandBar>
     <Grid
@@ -73,7 +73,7 @@
             Grid.RowSpan="2"
             Grid.Column="1">
             <StackPanel Spacing="12">
-                <controls:SettingsExpander Header="{I18N {x:Static pixeval:NavigationSettingsPageResources.ReferencePagesHeader}}" HeaderIcon="{markup:SymbolIcon DocumentBulletList}">
+                <controls:SettingsExpander Header="{I18N {x:Static pixeval:NavigationSettingsPageResources+ReferencePages.Header}}" HeaderIcon="{markup:SymbolIcon DocumentBulletList}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Vertical">
                             <ItemsControl ItemsSource="{x:Static utilities:NavigationPageRegistry.Pages}">
@@ -102,7 +102,7 @@
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
-                <controls:SettingsExpander Header="{I18N {x:Static pixeval:NavigationSettingsPageResources.ReferenceIconsHeader}}" HeaderIcon="{markup:SymbolIcon Icons}">
+                <controls:SettingsExpander Header="{I18N {x:Static pixeval:NavigationSettingsPageResources+ReferenceIcons.Header}}" HeaderIcon="{markup:SymbolIcon Icons}">
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Vertical">
                             <ItemsControl ItemsSource="{x:Static utilities:NavigationPageRegistry.ColorSymbols}">

@@ -13,7 +13,7 @@ public class IsPicGifMacro : IPredicate<IArtworkInfo>
 {
     public string Name => "is_pic_gif";
 
-    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionIsPicGif);
+    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescription.IsPicGif);
 
     public bool Match(IArtworkInfo context) => context.ImageType is ImageType.SingleAnimatedImage;
 }

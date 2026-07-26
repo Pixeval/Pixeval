@@ -26,51 +26,51 @@ public partial class HomePageViewModel : ViewModelBase
 
     private readonly HomeCardChoiceParameterEditorViewModel _sourceWorkTypeEditor = new(
         HomeCardParameterKinds.WorkType,
-        GetResource(HomePageResources.SourceWorkTypeTextBlockText),
+        GetResource(HomePageResources.Source.WorkTypeTextBlock.Text),
         SymbolComboBoxItem.GetValues<WorkType>(),
         WorkType.Illustration);
 
     private readonly HomeCardChoiceParameterEditorViewModel _sourceSimpleWorkTypeEditor = new(
         HomeCardParameterKinds.SimpleWorkType,
-        GetResource(HomePageResources.SourceSimpleWorkTypeTextBlockText),
+        GetResource(HomePageResources.Source.SimpleWorkTypeTextBlock.Text),
         SymbolComboBoxItem.GetValues<SimpleWorkType>(),
         SimpleWorkType.Illustration);
 
     private readonly HomeCardChoiceParameterEditorViewModel _sourcePrivacyPolicyEditor = new(
         HomeCardParameterKinds.PrivacyPolicy,
-        GetResource(HomePageResources.SourcePrivacyPolicyTextBlockText),
+        GetResource(HomePageResources.Source.PrivacyPolicyTextBlock.Text),
         SymbolComboBoxItem.GetValues<PrivacyPolicy>(),
         PrivacyPolicy.Public);
 
     private readonly HomeCardChoiceParameterEditorViewModel _sourceRankOptionEditor = new(
         HomeCardParameterKinds.RankOption,
-        GetResource(HomePageResources.SourceRankOptionTextBlockText),
+        GetResource(HomePageResources.Source.RankOptionTextBlock.Text),
         SymbolComboBoxItem.GetValues<RankOption>(SimpleWorkType.Illustration),
         RankOption.Day);
 
     private readonly HomeCardRankingDateParameterEditorViewModel _sourceRankingDateEditor = new(
-        GetResource(HomePageResources.SourceRankingDateTextBlockText),
+        GetResource(HomePageResources.Source.RankingDateTextBlock.Text),
         MakoClient.RankingMaxDateTime.LocalDateTime);
 
     private readonly HomeCardTextParameterEditorViewModel _sourceUserIdEditor = new(
         HomeCardParameterKinds.UserId,
-        GetResource(HomePageResources.SourceUserIdTextBlockText));
+        GetResource(HomePageResources.Source.UserIdTextBlock.Text));
 
     private readonly HomeCardTextParameterEditorViewModel _sourceEntryIdEditor = new(
         HomeCardParameterKinds.EntryId,
-        GetResource(HomePageResources.SourceEntryIdTextBlockText));
+        GetResource(HomePageResources.Source.EntryIdTextBlock.Text));
 
     private readonly HomeCardTextParameterEditorViewModel _sourceSeriesIdEditor = new(
         HomeCardParameterKinds.SeriesId,
-        GetResource(HomePageResources.SourceSeriesIdTextBlockText));
+        GetResource(HomePageResources.Source.SeriesIdTextBlock.Text));
 
     private readonly HomeCardTextParameterEditorViewModel _sourceSearchTextEditor = new(
         HomeCardParameterKinds.SearchText,
-        GetResource(HomePageResources.SourceSearchTextTextBlockText));
+        GetResource(HomePageResources.Source.SearchTextTextBlock.Text));
 
     private readonly HomeCardTextParameterEditorViewModel _sourceTagEditor = new(
         HomeCardParameterKinds.Tag,
-        GetResource(HomePageResources.SourceTagTextBlockText));
+        GetResource(HomePageResources.Source.TagTextBlock.Text));
 
     private HomePageCardLayout? _selectedCard;
 
@@ -111,7 +111,7 @@ public partial class HomePageViewModel : ViewModelBase
 
     public string SelectedCardDescription => _selectedCard is { } card
         ? HomeCardDefinitions.BuildTitle(card)
-        : I18NManager.GetResource(HomePageResources.NoSelectedCardTextBlockText);
+        : I18NManager.GetResource(HomePageResources.NoSelectedCardTextBlock.Text);
 
     [ObservableProperty] public partial decimal SelectedColumnValue { get; set; } = 1;
 
@@ -128,10 +128,10 @@ public partial class HomePageViewModel : ViewModelBase
     public bool IsAddingConfiguredCard { get; private set; }
 
     public string SourceParameterTitle =>
-        PendingTemplate?.Title ?? I18NManager.GetResource(HomePageResources.SourceParametersTitleTextBlockText);
+        PendingTemplate?.Title ?? I18NManager.GetResource(HomePageResources.SourceParametersTitleTextBlock.Text);
 
     public string SourceParameterDescription =>
-        PendingTemplate?.Description ?? I18NManager.GetResource(HomePageResources.SelectCardSourcePromptTextBlockText);
+        PendingTemplate?.Description ?? I18NManager.GetResource(HomePageResources.SelectCardSourcePromptTextBlock.Text);
 
     public bool CanAddConfiguredCard => PendingTemplate is not null && !IsAddingConfiguredCard;
 

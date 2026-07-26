@@ -16,7 +16,7 @@ public class IsSeriesGroupMacro : IPredicate<WorkSubscriptionEntry?>
 
     public string Name => NameConst;
 
-    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionIsSeriesGroup);
+    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescription.IsSeriesGroup);
 
     public bool Match(WorkSubscriptionEntry? context) =>
         context is { SubscriptionType: WorkSubscriptionType.Series };

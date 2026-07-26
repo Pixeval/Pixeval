@@ -26,6 +26,11 @@ public sealed class UnusedI18NResourceAnalyzerTest
             public const string XamlUsed = "Test.XamlUsed";
             public const string Unused = "Test.Parent.Unused";
             public const string OtherLanguageUnused = "Test.Parent.Unused";
+
+            public static class Parent
+            {
+                public const string NestedXamlUsed = "Test.Parent.NestedXamlUsed";
+            }
         }
         """;
 
@@ -65,6 +70,29 @@ public sealed class UnusedI18NResourceAnalyzerTest
                 Xaml(
                     """
                     <TextBlock Text="{I18N {x:Static pixeval:TestResources.XamlUsed}}" />
+                    """)
+            ]);
+
+        Assert.IsEmpty(diagnostics);
+    }
+
+    [TestMethod]
+    public async Task NestedXamlStaticReferenceMarksResourceAsUsed()
+    {
+        var diagnostics = await GetAnalyzerDiagnosticsAsync(
+            "",
+            [
+                Json("zh-Hans",
+                    """
+                    {
+                      "Parent": {
+                        "NestedXamlUsed": "used"
+                      }
+                    }
+                    """),
+                Xaml(
+                    """
+                    <TextBlock Text="{I18N {x:Static pixeval:TestResources+Parent.NestedXamlUsed}}" />
                     """)
             ]);
 

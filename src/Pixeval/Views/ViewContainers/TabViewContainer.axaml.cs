@@ -244,9 +244,9 @@ public partial class TabViewContainer : ViewContainerBase
         {
             Header = I18NManager.GetResource(scope switch
             {
-                TabCloseScope.Others => MainPageResources.TabContextMenuCloseOtherTabs,
-                TabCloseScope.Left => MainPageResources.TabContextMenuCloseTabsToLeft,
-                TabCloseScope.Right => MainPageResources.TabContextMenuCloseTabsToRight,
+                TabCloseScope.Others => MainPageResources.TabContextMenu.CloseOtherTabs,
+                TabCloseScope.Left => MainPageResources.TabContextMenu.CloseTabsToLeft,
+                TabCloseScope.Right => MainPageResources.TabContextMenu.CloseTabsToRight,
                 _ => throw new ArgumentOutOfRangeException(nameof(scope), scope, null)
             }),
             IsEnabled = TabClosePlanner.GetTargets(pages, contextPage, scope).Count is not 0

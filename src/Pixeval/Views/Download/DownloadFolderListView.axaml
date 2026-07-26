@@ -11,7 +11,7 @@
     xmlns:viewModels="using:Pixeval.ViewModels"
     x:DataType="{x:Type viewModels:DownloadFolderPageViewModel}"
     x:Name="Root"
-    Header="{I18N {x:Static pixeval:DownloadPageResources.SubscriptionDownloadsButtonLabel}}"
+    Header="{I18N {x:Static pixeval:DownloadPageResources+SubscriptionDownloadsButton.Label}}"
     mc:Ignorable="d">
     <DockPanel>
         <entry:EntryView HasNoItem="{Binding #Root.HasNoFolder}">
@@ -27,28 +27,28 @@
                             <local:DownloadFolder.ContextMenu>
                                 <ContextMenu DataContext="{Binding}">
                                     <MenuItem
-                                        Header="{I18N {x:Static pixeval:DownloadPageResources.ResumeButtonLabel}}"
+                                        Header="{I18N {x:Static pixeval:DownloadPageResources+ResumeButton.Label}}"
                                         Icon="{markup:SymbolIcon Play}"
                                         Tag="{Binding}"
                                         Click="ResumeAll_OnClicked" />
                                     <MenuItem
-                                        Header="{I18N {x:Static pixeval:DownloadPageResources.PauseButtonLabel}}"
+                                        Header="{I18N {x:Static pixeval:DownloadPageResources+PauseButton.Label}}"
                                         Icon="{markup:SymbolIcon Pause}"
                                         Tag="{Binding}"
                                         Click="PauseAll_OnClicked" />
                                     <MenuItem
-                                        Header="{I18N {x:Static pixeval:DownloadPageResources.StopButtonLabel}}"
+                                        Header="{I18N {x:Static pixeval:DownloadPageResources+StopButton.Label}}"
                                         Icon="{markup:SymbolIcon Stop}"
                                         Tag="{Binding}"
                                         Click="CancelAll_OnClicked" />
                                     <MenuItem
-                                        Header="{I18N {x:Static pixeval:DownloadPageResources.ResetButtonLabel}}"
+                                        Header="{I18N {x:Static pixeval:DownloadPageResources+ResetButton.Label}}"
                                         Icon="{markup:SymbolIcon ArrowRepeatAll}"
                                         Tag="{Binding}"
                                         Click="ResetAll_OnClicked" />
                                     <Separator />
                                     <MenuItem
-                                        Header="{I18N {x:Static pixeval:DownloadPageResources.SyncSubscriptionButtonLabel}}"
+                                        Header="{I18N {x:Static pixeval:DownloadPageResources+SyncSubscriptionButton.Label}}"
                                         Icon="{markup:SymbolIcon ArrowSync}"
                                         Tag="{Binding}"
                                         Click="SyncSubscription_OnClicked" />

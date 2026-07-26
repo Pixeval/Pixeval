@@ -12,7 +12,7 @@ namespace Pixeval.ViewModels.Search;
 
 public abstract partial class SearchArgumentsFormViewModelBase : ViewModelBase
 {
-    protected static readonly string CommonUnspecified = I18NManager.GetResource(SearchResources.CommonUnspecified);
+    protected static readonly string CommonUnspecified = I18NManager.GetResource(SearchResources.Common.Unspecified);
 
     public OptionalDateSearchOptionViewModel StartDateOption { get; } = new();
 
@@ -41,16 +41,16 @@ public abstract partial class SearchArgumentsFormViewModelBase : ViewModelBase
 
         if (startDate > endDate || startDate > japanToday || endDate > japanToday)
         {
-            title = I18NManager.GetResource(SearchResources.ValidationInvalidDateRangeTitle);
-            content = I18NManager.GetResource(SearchResources.ValidationInvalidDateRangeContent);
+            title = I18NManager.GetResource(SearchResources.Validation.InvalidDateRange.Title);
+            content = I18NManager.GetResource(SearchResources.Validation.InvalidDateRange.Content);
             return false;
         }
 
         if (!(PixevalSettings.Me?.IsPremium ?? false)
             && SortOption is WorkSortOption.PopularityDescending)
         {
-            title = I18NManager.GetResource(SearchResources.ValidationPremiumSortTitle);
-            content = I18NManager.GetResource(SearchResources.ValidationPremiumSortContent);
+            title = I18NManager.GetResource(SearchResources.Validation.PremiumSort.Title);
+            content = I18NManager.GetResource(SearchResources.Validation.PremiumSort.Content);
             return false;
         }
 

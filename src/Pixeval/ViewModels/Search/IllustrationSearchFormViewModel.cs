@@ -42,8 +42,8 @@ public partial class IllustrationSearchFormViewModel : SearchArgumentsFormViewMo
         if (HasInvalidRange(WidthMinOption.NullableInt, WidthMaxOption.NullableInt)
             || HasInvalidRange(HeightMinOption.NullableInt, HeightMaxOption.NullableInt))
         {
-            title = I18NManager.GetResource(SearchResources.ValidationInvalidNumericRangeTitle);
-            content = I18NManager.GetResource(SearchResources.ValidationInvalidNumericRangeContent);
+            title = I18NManager.GetResource(SearchResources.Validation.InvalidNumericRange.Title);
+            content = I18NManager.GetResource(SearchResources.Validation.InvalidNumericRange.Content);
             return false;
         }
 

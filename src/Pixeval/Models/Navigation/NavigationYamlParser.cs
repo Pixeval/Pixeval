@@ -100,7 +100,7 @@ public static class NavigationYamlParser
                 sourceMap,
                 "newTab",
                 newTab,
-                Diagnostic(NavigationYamlParserResources.DiagnosticsUnknownPageFormatted, newTab)));
+                Diagnostic(NavigationYamlParserResources.Diagnostics.UnknownPageFormatted, newTab)));
         }
 
         var header = document.Header.BuildItems("header", 1, diagnostics, sourceMap);
@@ -109,7 +109,7 @@ public static class NavigationYamlParser
         if (header.Count is 0 && footer.Count is 0)
         {
             diagnostics.Add(new(
-                Diagnostic(NavigationYamlParserResources.DiagnosticsBothHeaderAndFooterEmpty),
+                Diagnostic(NavigationYamlParserResources.Diagnostics.BothHeaderAndFooterEmpty),
                 0,
                 int.Min(text.Length, 1),
                 1,
@@ -119,7 +119,7 @@ public static class NavigationYamlParser
         if (!header.ContainsPage(SettingsPageKey) && !footer.ContainsPage(SettingsPageKey))
         {
             diagnostics.Add(new(
-                Diagnostic(NavigationYamlParserResources.DiagnosticsMenuMustContainSettingsPage),
+                Diagnostic(NavigationYamlParserResources.Diagnostics.MenuMustContainSettingsPage),
                 0,
                 int.Min(text.Length, 1),
                 1,
@@ -140,7 +140,7 @@ public static class NavigationYamlParser
 
         var parseResult = Parse(NavigationMenuYaml.DefaultYaml);
         return parseResult.Configuration
-               ?? throw new InvalidOperationException(Diagnostic(NavigationYamlParserResources.DiagnosticsBuiltInNavigationYamlInvalid));
+               ?? throw new InvalidOperationException(Diagnostic(NavigationYamlParserResources.Diagnostics.BuiltInNavigationYamlInvalid));
     }
 
     extension(IReadOnlyList<NavigationMenuItem> items)
@@ -189,7 +189,7 @@ public static class NavigationYamlParser
                     sourceMap,
                     source,
                     path,
-                    Diagnostic(NavigationYamlParserResources.DiagnosticsMaxDepthExceededFormatted, path, MaxDepth)));
+                    Diagnostic(NavigationYamlParserResources.Diagnostics.MaxDepthExceededFormatted, path, MaxDepth)));
                 return null;
             }
 
@@ -205,7 +205,7 @@ public static class NavigationYamlParser
                     sourceMap,
                     source,
                     path,
-                    Diagnostic(NavigationYamlParserResources.DiagnosticsItemMustHaveEitherPageOrFolderFormatted, path)));
+                    Diagnostic(NavigationYamlParserResources.Diagnostics.ItemMustHaveEitherPageOrFolderFormatted, path)));
                 return null;
             }
 
@@ -221,7 +221,7 @@ public static class NavigationYamlParser
                     sourceMap,
                     source,
                     path,
-                    Diagnostic(NavigationYamlParserResources.DiagnosticsMaxDepthExceededFolderFormatted, path, MaxDepth)));
+                    Diagnostic(NavigationYamlParserResources.Diagnostics.MaxDepthExceededFolderFormatted, path, MaxDepth)));
                 return null;
             }
 
@@ -240,7 +240,7 @@ public static class NavigationYamlParser
                     sourceMap,
                     $"{path}.page",
                     page,
-                    Diagnostic(NavigationYamlParserResources.DiagnosticsUnknownPageFormatted, page)));
+                    Diagnostic(NavigationYamlParserResources.Diagnostics.UnknownPageFormatted, page)));
                 return null;
             }
 
@@ -269,7 +269,7 @@ public static class NavigationYamlParser
                     sourceMap,
                     $"{path}.folder",
                     folder,
-                    Diagnostic(NavigationYamlParserResources.DiagnosticsEmptyFolderFormatted, folder)));
+                    Diagnostic(NavigationYamlParserResources.Diagnostics.EmptyFolderFormatted, folder)));
             }
 
             var icon = ResolveIcon(source.Icon, Symbol.Folder, $"{path}.icon", sourceMap, diagnostics);
@@ -303,7 +303,7 @@ public static class NavigationYamlParser
             sourceMap,
             path,
             trimmed,
-            Diagnostic(NavigationYamlParserResources.DiagnosticsUnknownIconFormatted, trimmed)));
+            Diagnostic(NavigationYamlParserResources.Diagnostics.UnknownIconFormatted, trimmed)));
         return fallback;
     }
 
@@ -334,8 +334,8 @@ public static class NavigationYamlParser
             path,
             trimmed,
             resourceKey.Length is 0
-                ? Diagnostic(NavigationYamlParserResources.DiagnosticsI18NResourceKeyEmptyFormatted, fieldName)
-                : Diagnostic(NavigationYamlParserResources.DiagnosticsUnknownI18NResourceKeyFormatted, resourceKey)));
+                ? Diagnostic(NavigationYamlParserResources.Diagnostics.I18NResourceKeyEmptyFormatted, fieldName)
+                : Diagnostic(NavigationYamlParserResources.Diagnostics.UnknownI18NResourceKeyFormatted, resourceKey)));
         return (trimmed, trimmed);
     }
 
@@ -428,7 +428,7 @@ public static class NavigationYamlParser
 
                 var location = GetKeyLocation(fieldPath) ?? new(0, int.Max(key.Length, 1), 1, 1);
                 diagnostics.Add(new(
-                    Diagnostic(NavigationYamlParserResources.DiagnosticsUnknownFieldFormatted, key),
+                    Diagnostic(NavigationYamlParserResources.Diagnostics.UnknownFieldFormatted, key),
                     location.Start,
                     int.Max(location.Length, 1),
                     location.Line,
@@ -451,8 +451,8 @@ public static class NavigationYamlParser
 
                 var location = GetKeyLocation(fieldPath) ?? new(0, int.Max(key.Length, 1), 1, 1);
                 var message = schemaKeys.Contains(key)
-                    ? Diagnostic(NavigationYamlParserResources.DiagnosticsFieldNotAllowedFormatted, path, key)
-                    : Diagnostic(NavigationYamlParserResources.DiagnosticsUnknownFieldFormatted, key);
+                    ? Diagnostic(NavigationYamlParserResources.Diagnostics.FieldNotAllowedFormatted, path, key)
+                    : Diagnostic(NavigationYamlParserResources.Diagnostics.UnknownFieldFormatted, key);
                 diagnostics.Add(new(
                     message,
                     location.Start,

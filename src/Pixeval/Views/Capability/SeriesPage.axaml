@@ -23,7 +23,7 @@
                 <CommandBarButton
                     Click="RefreshButton_OnClick"
                     Icon="{markup:SymbolIcon ArrowClockwise}"
-                    ToolTip.Tip="{I18N {x:Static pixeval:WorkContainerResources.RefreshButtonLabel}}" />
+                    ToolTip.Tip="{I18N {x:Static pixeval:WorkContainerResources+RefreshButton.Label}}" />
             </CommandBar>
             <StackPanel
                 VerticalAlignment="Center"

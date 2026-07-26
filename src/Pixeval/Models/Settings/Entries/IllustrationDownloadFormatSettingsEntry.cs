@@ -22,7 +22,7 @@ public class IllustrationDownloadFormatSettingsEntry(DownloadSettingsGroup setti
     : SingleValueSettingsEntry<DownloadSettingsGroup, object>(
         settings,
         nameof(DownloadSettingsGroup.IllustrationDownloadFormat),
-        I18NManager.GetResource(EnumResources.WorkTypeEnumIllustration),
+        I18NManager.GetResource(EnumResources.WorkTypeEnum.Illustration),
         "",
         Symbol.Image,
         null,

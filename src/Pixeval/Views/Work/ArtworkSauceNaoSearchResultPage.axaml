@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
     xmlns:work="using:Pixeval.Views.Work"
-    Header="{I18N {x:Static pixeval:MainPageResources.TabSauceNaoResult}}"
+    Header="{I18N {x:Static pixeval:MainPageResources+Tab.SauceNaoResult}}"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">

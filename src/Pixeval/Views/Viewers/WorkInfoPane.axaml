@@ -190,19 +190,19 @@
                                                             <ContextMenu>
                                                                 <MenuItem
                                                                     Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
-                                                                    Header="{I18N {x:Static pixeval:WorkInfoPageResources.CopyOriginalTagMenuItemText}}"
+                                                                    Header="{I18N {x:Static pixeval:WorkInfoPageResources+CopyOriginalTagMenuItem.Text}}"
                                                                     Icon="{markup:SymbolIcon Copy}"
                                                                     Tag="{Binding Name}" />
                                                                 <MenuItem
                                                                     Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
-                                                                    Header="{I18N {x:Static pixeval:WorkInfoPageResources.CopyTranslatedTagMenuItemText}}"
+                                                                    Header="{I18N {x:Static pixeval:WorkInfoPageResources+CopyTranslatedTagMenuItem.Text}}"
                                                                     Icon="{markup:SymbolIcon CopyAdd}"
                                                                     IsVisible="{Binding TranslatedName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                                                                     Tag="{Binding TranslatedName}" />
                                                                 <MenuItem
                                                                     Command="{Binding $parent[viewers:WorkInfoPane].BlockTagCommand}"
                                                                     CommandParameter="{Binding}"
-                                                                    Header="{I18N {x:Static pixeval:WorkInfoPageResources.BlockTagMenuItemText}}"
+                                                                    Header="{I18N {x:Static pixeval:WorkInfoPageResources+BlockTagMenuItem.Text}}"
                                                                     Icon="{markup:SymbolIcon TagDismiss}" />
                                                             </ContextMenu>
                                                         </Button.ContextMenu>

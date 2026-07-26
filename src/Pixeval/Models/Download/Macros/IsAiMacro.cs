@@ -13,7 +13,7 @@ public class IsAiMacro : IPredicate<IArtworkInfo>
 {
     public string Name => "is_ai";
 
-    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionIsAi);
+    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescription.IsAi);
 
     public bool Match(IArtworkInfo context) => context.IsAiGenerated;
 }

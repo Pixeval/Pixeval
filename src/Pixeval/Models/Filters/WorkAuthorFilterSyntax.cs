@@ -17,8 +17,8 @@ internal sealed class WorkAuthorFilterSyntax : FilterTextSyntax
 
     public override IReadOnlyList<FilterSyntaxPattern> Patterns { get; } =
     [
-        FilterSyntaxPattern.PrefixOnly("@", "artist", I18NManager.GetResource(FilterResources.CompletionsAuthor)),
-        FilterSyntaxPattern.Keyword("a", exampleValue: "artist", description: I18NManager.GetResource(FilterResources.CompletionsAuthor)),
-        FilterSyntaxPattern.Keyword("artist", exampleValue: "artist", description: I18NManager.GetResource(FilterResources.CompletionsAuthor))
+        FilterSyntaxPattern.PrefixOnly("@", "artist", I18NManager.GetResource(FilterResources.Completions.Author)),
+        FilterSyntaxPattern.Keyword("a", exampleValue: "artist", description: I18NManager.GetResource(FilterResources.Completions.Author)),
+        FilterSyntaxPattern.Keyword("artist", exampleValue: "artist", description: I18NManager.GetResource(FilterResources.Completions.Author))
     ];
 }

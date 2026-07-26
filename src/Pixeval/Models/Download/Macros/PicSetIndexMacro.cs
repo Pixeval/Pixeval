@@ -18,7 +18,7 @@ public class PicSetIndexMacro : ITransducer<IArtworkInfo>, ILastSegment, IContex
     public MacroContextPredicate ContextPredicate => static context =>
         context.TryGetValue(IsPicSetMacro.NameConst, out var value) && value;
 
-    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionPicSetIndex);
+    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescription.PicSetIndex);
 
     public bool IsFormatterValid(string? formatter) => MacroHelper.IsIntegerFormatterValid(formatter);
 

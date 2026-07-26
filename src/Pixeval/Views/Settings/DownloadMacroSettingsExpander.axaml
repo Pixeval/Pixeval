@@ -47,7 +47,7 @@
             <StackPanel HorizontalAlignment="Stretch" Spacing="6">
                 <TextBlock
                     Opacity="0.7"
-                    Text="{I18N {x:Static pixeval:SettingsMainViewResources.DownloadPathMacroTextBoxPlaceholderText}}"
+                    Text="{I18N {x:Static pixeval:SettingsMainViewResources+DownloadPathMacroTextBox.PlaceholderText}}"
                     TextWrapping="Wrap" />
                 <edit:TextEditor
                     x:Name="DownloadPathMacroTextBox"
@@ -60,16 +60,16 @@
                     TextChanged="DownloadPathMacroTextBox_OnTextChanged"
                     VerticalScrollBarVisibility="Auto" />
                 <TextBlock>
-                    <Run Text="{I18N {x:Static pixeval:SettingsMainViewResources.SinglePathBlockText}}" />
+                    <Run Text="{I18N {x:Static pixeval:SettingsMainViewResources+SinglePathBlock.Text}}" />
                     <Run x:Name="SinglePathBlock" />
                     <LineBreak />
-                    <Run Text="{I18N {x:Static pixeval:SettingsMainViewResources.AnimatedPathBlockText}}" />
+                    <Run Text="{I18N {x:Static pixeval:SettingsMainViewResources+AnimatedPathBlock.Text}}" />
                     <Run x:Name="AnimatedPathBlock" />
                     <LineBreak />
-                    <Run Text="{I18N {x:Static pixeval:SettingsMainViewResources.SetPathBlockText}}" />
+                    <Run Text="{I18N {x:Static pixeval:SettingsMainViewResources+SetPathBlock.Text}}" />
                     <Run x:Name="SetPathBlock" />
                     <LineBreak />
-                    <Run Text="{I18N {x:Static pixeval:SettingsMainViewResources.NovelPathBlockText}}" />
+                    <Run Text="{I18N {x:Static pixeval:SettingsMainViewResources+NovelPathBlock.Text}}" />
                     <Run x:Name="NovelPathBlock" />
                     <LineBreak />
                 </TextBlock>

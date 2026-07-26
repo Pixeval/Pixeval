@@ -15,7 +15,7 @@ internal sealed class WorkAiFilterSyntax : FilterFlagSyntax
 
     public override IReadOnlyList<FilterSyntaxPattern> Patterns { get; } =
     [
-        new("+", ["ai"], Metadata: false, Description: I18NManager.GetResource(FilterResources.CompletionsIncludeAi)),
-        new("-", ["ai"], Metadata: true, Description: I18NManager.GetResource(FilterResources.CompletionsExcludeAi))
+        new("+", ["ai"], Metadata: false, Description: I18NManager.GetResource(FilterResources.Completions.Include.Ai)),
+        new("-", ["ai"], Metadata: true, Description: I18NManager.GetResource(FilterResources.Completions.Exclude.Ai))
     ];
 }

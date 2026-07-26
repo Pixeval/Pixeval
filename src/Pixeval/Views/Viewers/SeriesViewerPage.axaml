@@ -104,7 +104,7 @@
                 VerticalAlignment="Center"
                 Spacing="10">
                 <ProgressBar Width="160" IsIndeterminate="{Binding IsLoading}" />
-                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources.CardPreviewLoadingTextBlockText}}" />
+                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources+CardPreview+LoadingTextBlock.Text}}" />
             </StackPanel>
         </Border>
         <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" IsVisible="{Binding LoadErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">

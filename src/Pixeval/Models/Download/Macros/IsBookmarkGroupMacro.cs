@@ -16,7 +16,7 @@ public class IsBookmarkGroupMacro : IPredicate<WorkSubscriptionEntry?>
 
     public string Name => NameConst;
 
-    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionIsBookmarkGroup);
+    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescription.IsBookmarkGroup);
 
     public bool Match(WorkSubscriptionEntry? context) =>
         context is { SubscriptionType: WorkSubscriptionType.Bookmarks };

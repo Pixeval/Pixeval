@@ -7,42 +7,41 @@ using Avalonia.Layout;
 using FluentIcons.Common;
 using Mako.Global.Enum;
 using Pixeval.Models.Options;
-using static Pixeval.AppSettingsResources;
 
 namespace Pixeval.AppManagement;
 
 public record BrowsingExperienceSettingsGroup
 {
-    [SettingsEntry(Symbol.GlanceHorizontal, ThumbnailLayoutTypeEntryHeader, ThumbnailLayoutTypeEntryDescription)]
+    [SettingsEntry(Symbol.GlanceHorizontal, AppSettingsResources.ThumbnailLayoutTypeEntry.Header, AppSettingsResources.ThumbnailLayoutTypeEntry.Description)]
     public ThumbnailLayoutType ThumbnailLayoutType { get; set; } = ThumbnailLayoutType.LinedFlow;
 
-    [SettingsEntry(Symbol.CardUiPortraitFlip, BrowseModeHeader, BrowseModeDescription)]
+    [SettingsEntry(Symbol.CardUiPortraitFlip, AppSettingsResources.BrowseMode.Header, AppSettingsResources.BrowseMode.Description)]
     public BrowseMode BrowseMode { get; set; } = BrowseMode.Swipe;
 
-    [SettingsEntry(Symbol.ArrowBetweenDown, BrowseDirectionHeader, BrowseDirectionDescription)]
+    [SettingsEntry(Symbol.ArrowBetweenDown, AppSettingsResources.BrowseDirection.Header, AppSettingsResources.BrowseDirection.Description)]
     public Orientation BrowseDirection { get; set; } = Orientation.Horizontal;
 
-    [SettingsEntry(Symbol.SlideMultipleArrowRight, IllustrationViewerAutoPlayIntervalEntryHeader, IllustrationViewerAutoPlayIntervalEntryDescription)]
+    [SettingsEntry(Symbol.SlideMultipleArrowRight, AppSettingsResources.IllustrationViewerAutoPlayIntervalEntry.Header, AppSettingsResources.IllustrationViewerAutoPlayIntervalEntry.Description)]
     public int IllustrationViewerAutoPlayInterval { get; set; } = 5;
 
-    [SettingsEntry(Symbol.ArrowShuffle, IllustrationViewerAutoPlayModeEntryHeader, IllustrationViewerAutoPlayModeEntryDescription)]
+    [SettingsEntry(Symbol.ArrowShuffle, AppSettingsResources.IllustrationViewerAutoPlayModeEntry.Header, AppSettingsResources.IllustrationViewerAutoPlayModeEntry.Description)]
     public IllustrationViewerAutoPlayMode IllustrationViewerAutoPlayMode { get; set; }
 
-    [SettingsEntry(Symbol.ImageMultiple, IllustrationViewerAutoPlayScopeEntryHeader, IllustrationViewerAutoPlayScopeEntryDescription)]
+    [SettingsEntry(Symbol.ImageMultiple, AppSettingsResources.IllustrationViewerAutoPlayScopeEntry.Header, AppSettingsResources.IllustrationViewerAutoPlayScopeEntry.Description)]
     public IllustrationViewerAutoPlayScope IllustrationViewerAutoPlayScope { get; set; }
 
     /// <summary>
     /// The target filter that indicates the type of the client
     /// </summary>
-    [SettingsEntry(Symbol.CodeBlock, TargetAPIPlatformEntryHeader, TargetAPIPlatformEntryDescription)]
+    [SettingsEntry(Symbol.CodeBlock, AppSettingsResources.TargetAPIPlatformEntry.Header, AppSettingsResources.TargetAPIPlatformEntry.Description)]
     public TargetFilter TargetFilter { get; set; } = TargetFilter.ForAndroid;
 
-    [SettingsEntry(Symbol.TagDismiss, BlockedTagsEntryHeader, BlockedTagsEntryDescription, BlockedTagsEntryPlaceholder)]
+    [SettingsEntry(Symbol.TagDismiss, AppSettingsResources.BlockedTagsEntry.Header, AppSettingsResources.BlockedTagsEntry.Description, AppSettingsResources.BlockedTagsEntry.Placeholder)]
     public ObservableCollection<string> BlockedTags { get; set; } = [];
 
-    [SettingsEntry(Symbol.Info, OpenWorkInfoByDefaultEntryHeader, OpenWorkInfoByDefaultEntryDescription)]
+    [SettingsEntry(Symbol.Info, AppSettingsResources.OpenWorkInfoByDefaultEntry.Header, AppSettingsResources.OpenWorkInfoByDefaultEntry.Description)]
     public bool OpenWorkInfoByDefault { get; set; }
 
-    [SettingsEntry(Symbol.PersonInfo, OpenUserInfoByDefaultEntryHeader, OpenUserInfoByDefaultEntryDescription)]
+    [SettingsEntry(Symbol.PersonInfo, AppSettingsResources.OpenUserInfoByDefaultEntry.Header, AppSettingsResources.OpenUserInfoByDefaultEntry.Description)]
     public bool OpenUserInfoByDefault { get; set; } = true;
 }

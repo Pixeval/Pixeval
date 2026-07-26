@@ -14,7 +14,7 @@ public partial class McpHelpSection : UserControl
     {
 #if PIXEVAL_MCP
         InitializeComponent();
-        McpToolsStatus = I18NManager.GetResource(HelpPageResources.McpToolsStatusDisabled);
+        McpToolsStatus = I18NManager.GetResource(HelpPageResources.McpToolsStatus.Disabled);
 #endif
     }
 }

@@ -17,7 +17,7 @@ internal sealed class WorkEndDateFilterSyntax : FilterDateSyntax
 
     public override IReadOnlyList<FilterSyntaxPattern> Patterns { get; } =
     [
-        FilterSyntaxPattern.Keyword("e", exampleValue: "2024-1-1", description: I18NManager.GetResource(FilterResources.CompletionsEndDate)),
-        FilterSyntaxPattern.Keyword("end", exampleValue: "2024-1-1", description: I18NManager.GetResource(FilterResources.CompletionsEndDate)),
+        FilterSyntaxPattern.Keyword("e", exampleValue: "2024-1-1", description: I18NManager.GetResource(FilterResources.Completions.EndDate)),
+        FilterSyntaxPattern.Keyword("end", exampleValue: "2024-1-1", description: I18NManager.GetResource(FilterResources.Completions.EndDate)),
     ];
 }

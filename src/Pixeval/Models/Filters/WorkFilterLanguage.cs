@@ -16,15 +16,15 @@ public static class WorkFilterLanguage
 {
     private static readonly IReadOnlyList<FilterCompletionDefinition> _IntrinsicCompletions =
     [
-        new("builtin.and", "and", "and ", I18NManager.GetResource(FilterResources.CompletionsAnd)),
-        new("builtin.or", "or", "or ", I18NManager.GetResource(FilterResources.CompletionsOr)),
-        new("builtin.not", "!", "!", I18NManager.GetResource(FilterResources.CompletionsNot))
+        new("builtin.and", "and", "and ", I18NManager.GetResource(FilterResources.Completions.And)),
+        new("builtin.or", "or", "or ", I18NManager.GetResource(FilterResources.Completions.Or)),
+        new("builtin.not", "!", "!", I18NManager.GetResource(FilterResources.Completions.Not))
     ];
 
     private static readonly IReadOnlyList<FilterFullCompletionDefinition> _FullCompletions =
     [
-        new("work.constraint.include", "+ai", "+", I18NManager.GetResource(FilterResources.CompletionsIncludeConstraint), CoveredSyntaxPrefixes: ["+"]),
-        new("work.constraint.exclude", "-ai", "-", I18NManager.GetResource(FilterResources.CompletionsExcludeConstraint), CoveredSyntaxPrefixes: ["-"])
+        new("work.constraint.include", "+ai", "+", I18NManager.GetResource(FilterResources.Completions.Include.Constraint), CoveredSyntaxPrefixes: ["+"]),
+        new("work.constraint.exclude", "-ai", "-", I18NManager.GetResource(FilterResources.Completions.Exclude.Constraint), CoveredSyntaxPrefixes: ["-"])
     ];
 
     private static readonly IReadOnlyDictionary<FilterValueKind, IReadOnlyCollection<FilterCompletionDefinition>> _ValueHintCompletions =
@@ -32,41 +32,41 @@ public static class WorkFilterLanguage
         {
             [FilterValueKind.Text] =
             [
-                new("hint.text.plain", "abc", "", I18NManager.GetResource(FilterResources.CompletionsValueHintsTextPlain)),
-                new("hint.text.quoted", "\"ab# c\"", "", I18NManager.GetResource(FilterResources.CompletionsValueHintsTextQuoted)),
-                new("hint.text.exact", "abc$", "", I18NManager.GetResource(FilterResources.CompletionsValueHintsTextExact)),
-                new("hint.text.quoted-exact", "\"ab c$\"", "", I18NManager.GetResource(FilterResources.CompletionsValueHintsTextQuotedExact))
+                new("hint.text.plain", "abc", "", I18NManager.GetResource(FilterResources.Completions.ValueHints.Text.Plain)),
+                new("hint.text.quoted", "\"ab# c\"", "", I18NManager.GetResource(FilterResources.Completions.ValueHints.Text.Quoted)),
+                new("hint.text.exact", "abc$", "", I18NManager.GetResource(FilterResources.Completions.ValueHints.Text.Exact)),
+                new("hint.text.quoted-exact", "\"ab c$\"", "", I18NManager.GetResource(FilterResources.Completions.ValueHints.Text.QuotedExact))
             ],
             [FilterValueKind.Long] =
             [
-                new("hint.long.plain", "12345", "", I18NManager.GetResource(FilterResources.CompletionsValueHintsLongPlain))
+                new("hint.long.plain", "12345", "", I18NManager.GetResource(FilterResources.Completions.ValueHints.Long.Plain))
             ],
             [FilterValueKind.Double] =
             [
-                new("hint.double.integer", "2", "", I18NManager.GetResource(FilterResources.CompletionsValueHintsDoubleInteger)),
-                new("hint.double.decimal", "1.5", "", I18NManager.GetResource(FilterResources.CompletionsValueHintsDoubleDecimal)),
-                new("hint.double.fraction", "1/2", "", I18NManager.GetResource(FilterResources.CompletionsValueHintsDoubleFraction))
+                new("hint.double.integer", "2", "", I18NManager.GetResource(FilterResources.Completions.ValueHints.Double.Integer)),
+                new("hint.double.decimal", "1.5", "", I18NManager.GetResource(FilterResources.Completions.ValueHints.Double.Decimal)),
+                new("hint.double.fraction", "1/2", "", I18NManager.GetResource(FilterResources.Completions.ValueHints.Double.Fraction))
             ],
             [FilterValueKind.LongRange] =
             [
-                new("hint.long-range.lower", "2-", "", I18NManager.GetResource(FilterResources.CompletionsValueHintsLongRangeLower)),
-                new("hint.long-range.upper", "-3", "", I18NManager.GetResource(FilterResources.CompletionsValueHintsLongRangeUpper)),
-                new("hint.long-range.closed", "2-3", "", I18NManager.GetResource(FilterResources.CompletionsValueHintsLongRangeClosed))
+                new("hint.long-range.lower", "2-", "", I18NManager.GetResource(FilterResources.Completions.ValueHints.LongRange.Lower)),
+                new("hint.long-range.upper", "-3", "", I18NManager.GetResource(FilterResources.Completions.ValueHints.LongRange.Upper)),
+                new("hint.long-range.closed", "2-3", "", I18NManager.GetResource(FilterResources.Completions.ValueHints.LongRange.Closed))
             ],
             [FilterValueKind.DoubleRange] =
             [
-                new("hint.double-range.lower", "2-", "", I18NManager.GetResource(FilterResources.CompletionsValueHintsDoubleRangeLower)),
-                new("hint.double-range.upper-decimal", "-1.5", "", I18NManager.GetResource(FilterResources.CompletionsValueHintsDoubleRangeUpperDecimal)),
-                new("hint.double-range.upper-fraction", "-1/2", "", I18NManager.GetResource(FilterResources.CompletionsValueHintsDoubleRangeUpperFraction)),
-                new("hint.double-range.closed-fraction", "1/2-3", "", I18NManager.GetResource(FilterResources.CompletionsValueHintsDoubleRangeClosedFraction)),
-                new("hint.double-range.closed-decimal-fraction", "0.3-1/2", "", I18NManager.GetResource(FilterResources.CompletionsValueHintsDoubleRangeClosedDecimalFraction))
+                new("hint.double-range.lower", "2-", "", I18NManager.GetResource(FilterResources.Completions.ValueHints.DoubleRange.Lower)),
+                new("hint.double-range.upper-decimal", "-1.5", "", I18NManager.GetResource(FilterResources.Completions.ValueHints.DoubleRange.UpperDecimal)),
+                new("hint.double-range.upper-fraction", "-1/2", "", I18NManager.GetResource(FilterResources.Completions.ValueHints.DoubleRange.UpperFraction)),
+                new("hint.double-range.closed-fraction", "1/2-3", "", I18NManager.GetResource(FilterResources.Completions.ValueHints.DoubleRange.ClosedFraction)),
+                new("hint.double-range.closed-decimal-fraction", "0.3-1/2", "", I18NManager.GetResource(FilterResources.Completions.ValueHints.DoubleRange.ClosedDecimalFraction))
             ],
             [FilterValueKind.Date] =
             [
-                new("hint.date.month-day-dash", "MM-dd", "", I18NManager.GetResource(FilterResources.CompletionsValueHintsDateMonthDayDash)),
-                new("hint.date.month-day-dot", "MM.dd", "", I18NManager.GetResource(FilterResources.CompletionsValueHintsDateMonthDayDot)),
-                new("hint.date.full-dash", "yyyy-MM-dd", "", I18NManager.GetResource(FilterResources.CompletionsValueHintsDateFullDash)),
-                new("hint.date.full-dot", "yyyy.MM.dd", "", I18NManager.GetResource(FilterResources.CompletionsValueHintsDateFullDot))
+                new("hint.date.month-day-dash", "MM-dd", "", I18NManager.GetResource(FilterResources.Completions.ValueHints.Date.MonthDayDash)),
+                new("hint.date.month-day-dot", "MM.dd", "", I18NManager.GetResource(FilterResources.Completions.ValueHints.Date.MonthDayDot)),
+                new("hint.date.full-dash", "yyyy-MM-dd", "", I18NManager.GetResource(FilterResources.Completions.ValueHints.Date.FullDash)),
+                new("hint.date.full-dot", "yyyy.MM.dd", "", I18NManager.GetResource(FilterResources.Completions.ValueHints.Date.FullDot))
             ]
         };
 

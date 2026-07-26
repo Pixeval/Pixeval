@@ -14,7 +14,7 @@ public class SeriesTitleMacro : ITransducer<IArtworkInfo>, IContextRestrictedMac
 {
     public string Name => "series_title";
 
-    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionSeriesTitle);
+    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescription.SeriesTitle);
 
     public MacroContextPredicate ContextPredicate => static context =>
         context.TryGetValue(IsSeriesMacro.NameConst, out var value) && value;

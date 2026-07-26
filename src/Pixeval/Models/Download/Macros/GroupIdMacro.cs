@@ -21,7 +21,7 @@ public class GroupIdMacro : ITransducer<WorkSubscriptionEntry?>, IContextRestric
         || (context.TryGetValue(IsPostGroupMacro.NameConst, out var isPostGroup) && isPostGroup)
         || (context.TryGetValue(IsSeriesGroupMacro.NameConst, out var isSeriesGroup) && isSeriesGroup);
 
-    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionGroupId);
+    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescription.GroupId);
 
     public bool IsFormatterValid(string? formatter) => MacroHelper.IsIntegerFormatterValid(formatter);
 

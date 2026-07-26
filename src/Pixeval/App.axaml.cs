@@ -126,14 +126,14 @@ public class App : Application
                     return;
                 }
 
-                viewContainer.ShowError(I18NManager.GetResource(MainPageResources.LoggingInFailed));
+                viewContainer.ShowError(I18NManager.GetResource(MainPageResources.LoggingIn.Failed));
             }
         }
         catch (Exception e)
         {
             AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
                 .LogError(nameof(LoginAsync), e);
-            viewContainer.ShowError(I18NManager.GetResource(MainPageResources.LoggingInFailed));
+            viewContainer.ShowError(I18NManager.GetResource(MainPageResources.LoggingIn.Failed));
         }
 
         viewContainer.NavigateTo(new LoginPage());

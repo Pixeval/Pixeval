@@ -9,9 +9,9 @@ namespace Pixeval.Models.Options;
 [LocalizationMetadata]
 public enum IllustrationViewerAutoPlayMode
 {
-    [LocalizedResource(Symbol.ArrowRight, EnumResources.IllustrationViewerAutoPlayModeSequential)]
+    [LocalizedResource(Symbol.ArrowRight, EnumResources.IllustrationViewerAutoPlayMode.Sequential)]
     Sequential,
 
-    [LocalizedResource(Symbol.ArrowRepeatAll, EnumResources.IllustrationViewerAutoPlayModeLoop)]
+    [LocalizedResource(Symbol.ArrowRepeatAll, EnumResources.IllustrationViewerAutoPlayMode.Loop)]
     Loop
 }

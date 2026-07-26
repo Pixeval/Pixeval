@@ -8,38 +8,37 @@ using Mako;
 using Mako.Net;
 using Pixeval.Models.Options;
 using Pixeval.Utilities.GitHub;
-using static Pixeval.AppSettingsResources;
 
 namespace Pixeval.AppManagement;
 
 public record NetworkSettingsGroup
 {
-    [SettingsEntry(Symbol.ShieldTask, EnablePixivDomainFrontingEntryHeader, EnablePixivDomainFrontingEntryDescription)]
+    [SettingsEntry(Symbol.ShieldTask, AppSettingsResources.EnablePixivDomainFrontingEntry.Header, AppSettingsResources.EnablePixivDomainFrontingEntry.Description)]
     public bool EnablePixivDomainFronting { get; set; } = true;
 
-    [SettingsEntry(Symbol.ShieldSettings, PixivDomainFrontingTypeEntryHeader, PixivDomainFrontingTypeEntryDescription)]
+    [SettingsEntry(Symbol.ShieldSettings, AppSettingsResources.PixivDomainFrontingTypeEntry.Header, AppSettingsResources.PixivDomainFrontingTypeEntry.Description)]
     public DomainFrontingType PixivDomainFrontingType { get; set; } = DomainFrontingType.Fragmentation;
 
-    [SettingsEntry(Symbol.Router, ProxyTypeEntryHeader, ProxyTypeEntryDescription)]
+    [SettingsEntry(Symbol.Router, AppSettingsResources.ProxyTypeEntry.Header, AppSettingsResources.ProxyTypeEntry.Description)]
     public ProxyType ProxyType { get; set; }
 
-    [SettingsEntry(Symbol.Server, ProxyTextBoxEntryHeader, ProxyTextBoxEntryDescription)]
+    [SettingsEntry(Symbol.Server, AppSettingsResources.ProxyTextBoxEntry.Header, AppSettingsResources.ProxyTextBoxEntry.Description)]
     public string Proxy { get; set; } = "";
 
-    [SettingsEntry(Symbol.ShieldTask, EnableGitHubDomainFrontingEntryHeader, EnableGitHubDomainFrontingEntryDescription)]
+    [SettingsEntry(Symbol.ShieldTask, AppSettingsResources.EnableGitHubDomainFrontingEntry.Header, AppSettingsResources.EnableGitHubDomainFrontingEntry.Description)]
     public bool EnableGitHubDomainFronting { get; set; } = true;
 
     /// <summary>
     /// The mirror host for image server, Pixeval will do a simple substitution that
     /// changes the host of the original url(i.pximg.net) to this one.
     /// </summary>
-    [SettingsEntry(Symbol.HardDrive, ImageMirrorServerEntryHeader, ImageMirrorServerEntryDescription, ImageMirrorServerEntryPlaceholder)]
+    [SettingsEntry(Symbol.HardDrive, AppSettingsResources.ImageMirrorServerEntry.Header, AppSettingsResources.ImageMirrorServerEntry.Description, AppSettingsResources.ImageMirrorServerEntry.Placeholder)]
     public string MirrorHost { get; set; } = "";
 
-    [SettingsEntry(Symbol.Cookies, WebCookieEntryHeader, WebCookieEntryDescription, WebCookieEntryPlaceholder)]
+    [SettingsEntry(Symbol.Cookies, AppSettingsResources.WebCookieEntry.Header, AppSettingsResources.WebCookieEntry.Description, AppSettingsResources.WebCookieEntry.Placeholder)]
     public string WebCookie { get; set; } = "";
 
-    [SettingsEntry(Symbol.Box, PixivNameResolverEntryHeader, PixivNameResolverEntryDescription, Placeholder = MakoHttpOptions.AppApiHost)]
+    [SettingsEntry(Symbol.Box, AppSettingsResources.PixivNameResolverEntry.Header, AppSettingsResources.PixivNameResolverEntry.Description, Placeholder = MakoHttpOptions.AppApiHost)]
     public ObservableCollection<string> PixivAppApiNameResolver { get; set; } =
     [
         "104.18.42.239",
@@ -86,7 +85,7 @@ public record NetworkSettingsGroup
         "210.140.139.137"
     ];
 
-    [SettingsEntry(Symbol.Box, GitHubNameResolverEntryHeader, GitHubNameResolverEntryDescription, Placeholder = GitHubHttpOptions.Host)]
+    [SettingsEntry(Symbol.Box, AppSettingsResources.GitHubNameResolverEntry.Header, AppSettingsResources.GitHubNameResolverEntry.Description, Placeholder = GitHubHttpOptions.Host)]
     public ObservableCollection<string> GitHubNameResolver { get; set; } =
     [
         "20.205.243.166",

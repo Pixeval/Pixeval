@@ -33,8 +33,8 @@ public sealed partial class HomePage
                 && !TryFindBestFittingFreePosition(width, height, out width, out height, out column, out row))
             {
                 TopLevel.GetTopLevel(this)?.ViewContainer?.ShowWarning(
-                    I18NManager.GetResource(HomePageResources.NoSpaceWarningTitle),
-                    I18NManager.GetResource(HomePageResources.NoSpaceWarningContent));
+                    I18NManager.GetResource(HomePageResources.NoSpaceWarning.Title),
+                    I18NManager.GetResource(HomePageResources.NoSpaceWarning.Content));
                 return;
             }
 
@@ -73,8 +73,8 @@ public sealed partial class HomePage
         {
             UpdateGridSizeControls();
             TopLevel.GetTopLevel(this)?.ViewContainer?.ShowWarning(
-                I18NManager.GetResource(HomePageResources.GridShrinkBlockedWarningTitle),
-                I18NManager.GetResource(HomePageResources.GridShrinkBlockedWarningContent));
+                I18NManager.GetResource(HomePageResources.GridShrinkBlockedWarning.Title),
+                I18NManager.GetResource(HomePageResources.GridShrinkBlockedWarning.Content));
             return;
         }
 
@@ -107,8 +107,8 @@ public sealed partial class HomePage
         {
             UpdateSelectedCardControls();
             TopLevel.GetTopLevel(this)?.ViewContainer?.ShowWarning(
-                I18NManager.GetResource(HomePageResources.LayoutConflictWarningTitle),
-                I18NManager.GetResource(HomePageResources.LayoutConflictWarningContent));
+                I18NManager.GetResource(HomePageResources.LayoutConflictWarning.Title),
+                I18NManager.GetResource(HomePageResources.LayoutConflictWarning.Content));
             return;
         }
 
@@ -222,8 +222,8 @@ public sealed partial class HomePage
     private void ShowInvalidParameterWarning()
     {
         TopLevel.GetTopLevel(this)?.ViewContainer?.ShowWarning(
-            I18NManager.GetResource(HomePageResources.InvalidSourceParameterWarningTitle),
-            I18NManager.GetResource(HomePageResources.InvalidSourceParameterWarningContent));
+            I18NManager.GetResource(HomePageResources.InvalidSourceParameterWarning.Title),
+            I18NManager.GetResource(HomePageResources.InvalidSourceParameterWarning.Content));
     }
 
     private static int DecimalToZeroBasedInt(decimal? value) => int.Max(0, DecimalToPositiveInt(value) - 1);

@@ -16,7 +16,7 @@ public class IsR18Macro : IPredicate<IArtworkInfo>
 {
     public string Name => "is_r18";
 
-    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionIsR18);
+    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescription.IsR18);
 
     public bool Match(IArtworkInfo context) => context.SafeRating.IsR18 || context.SafeRating.IsR18G;
 }

@@ -194,15 +194,15 @@ public partial class SearchPage : IconContentPage
         {
             suggestions.Add(new(
                 SearchCompletionKind.OpenIllustration,
-                I18NManager.GetResource(SearchResources.OpenIdIllustration),
+                I18NManager.GetResource(SearchResources.OpenId.Illustration),
                 normalized));
             suggestions.Add(new(
                 SearchCompletionKind.OpenNovel,
-                I18NManager.GetResource(SearchResources.OpenIdNovel),
+                I18NManager.GetResource(SearchResources.OpenId.Novel),
                 normalized));
             suggestions.Add(new(
                 SearchCompletionKind.OpenUser,
-                I18NManager.GetResource(SearchResources.OpenIdUser),
+                I18NManager.GetResource(SearchResources.OpenId.User),
                 normalized));
         }
 
@@ -292,8 +292,8 @@ public partial class SearchPage : IconContentPage
         if (string.IsNullOrWhiteSpace(searchText))
         {
             viewContainer.ShowWarning(
-                I18NManager.GetResource(MainPageResources.SearchKeywordCannotBeBlankTitle),
-                I18NManager.GetResource(MainPageResources.SearchKeywordCannotBeBlankContent));
+                I18NManager.GetResource(MainPageResources.SearchKeywordCannotBeBlank.Title),
+                I18NManager.GetResource(MainPageResources.SearchKeywordCannotBeBlank.Content));
             return;
         }
 
@@ -332,7 +332,7 @@ public partial class SearchPage : IconContentPage
         }
         catch (Exception ex)
         {
-            viewContainer.ShowError(I18NManager.GetResource(SearchResources.ValidationSearchFailedTitle), ex.Message);
+            viewContainer.ShowError(I18NManager.GetResource(SearchResources.Validation.SearchFailed.Title), ex.Message);
         }
     }
 

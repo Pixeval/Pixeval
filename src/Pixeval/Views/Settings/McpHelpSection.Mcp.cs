@@ -51,21 +51,21 @@ public partial class McpHelpSection
         if (!settings.EnableServer)
         {
             McpTools.Clear();
-            McpToolsStatus = I18NManager.GetResource(HelpPageResources.McpToolsStatusDisabled);
+            McpToolsStatus = I18NManager.GetResource(HelpPageResources.McpToolsStatus.Disabled);
             return;
         }
 
         if (App.AppViewModel.AppServiceProvider.GetService<IPixevalMcpService>() is not { } service)
         {
             McpTools.Clear();
-            McpToolsStatus = I18NManager.GetResource(HelpPageResources.McpToolsStatusUnavailable);
+            McpToolsStatus = I18NManager.GetResource(HelpPageResources.McpToolsStatus.Unavailable);
             return;
         }
 
         var configuredEndpoint = new Uri($"http://127.0.0.1:{settings.Port}{PixevalMcpHttpServer.DefaultPath}");
         _isLoadingMcpTools = true;
         RefreshMcpToolsButton.IsEnabled = false;
-        McpToolsStatus = I18NManager.GetResource(HelpPageResources.McpToolsStatusLoading, configuredEndpoint);
+        McpToolsStatus = I18NManager.GetResource(HelpPageResources.McpToolsStatus.Loading, configuredEndpoint);
 
         try
         {
@@ -74,7 +74,7 @@ public partial class McpHelpSection
             if (service.Endpoint is not { } endpoint)
             {
                 McpTools.Clear();
-                McpToolsStatus = I18NManager.GetResource(HelpPageResources.McpToolsStatusNotRunning);
+                McpToolsStatus = I18NManager.GetResource(HelpPageResources.McpToolsStatus.NotRunning);
                 return;
             }
 
@@ -84,13 +84,13 @@ public partial class McpHelpSection
                 McpTools.Add(tool);
 
             McpToolsStatus = tools.Count is 0
-                ? I18NManager.GetResource(HelpPageResources.McpToolsStatusEmpty)
-                : I18NManager.GetResource(HelpPageResources.McpToolsStatusLoaded, endpoint, tools.Count);
+                ? I18NManager.GetResource(HelpPageResources.McpToolsStatus.Empty)
+                : I18NManager.GetResource(HelpPageResources.McpToolsStatus.Loaded, endpoint, tools.Count);
         }
         catch (Exception e) when (e is HttpRequestException or JsonException or InvalidOperationException or OperationCanceledException)
         {
             McpTools.Clear();
-            McpToolsStatus = I18NManager.GetResource(HelpPageResources.McpToolsStatusFailed, TrimErrorMessage(e.Message));
+            McpToolsStatus = I18NManager.GetResource(HelpPageResources.McpToolsStatus.Failed, TrimErrorMessage(e.Message));
         }
         finally
         {

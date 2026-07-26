@@ -14,7 +14,7 @@
     xmlns:viewModels="using:Pixeval.ViewModels"
     x:DataType="{x:Type viewModels:DownloadItemPageViewModel}"
     x:Name="Root"
-    Header="{I18N {x:Static pixeval:DownloadPageResources.OrdinaryDownloadsButtonLabel}}"
+    Header="{I18N {x:Static pixeval:DownloadPageResources+OrdinaryDownloadsButton.Label}}"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
@@ -33,11 +33,11 @@
                 <TextBox
                     Width="260"
                     KeyDown="FilterTextBox_OnKeyDown"
-                    PlaceholderText="{I18N {x:Static pixeval:DownloadPageResources.FilterAutoSuggestBoxPlaceholderText}}"
+                    PlaceholderText="{I18N {x:Static pixeval:DownloadPageResources+FilterAutoSuggestBox.PlaceholderText}}"
                     Text="{Binding FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
                     VerticalAlignment="Center"
-                    Content="{I18N {x:Static pixeval:DownloadPageResources.DeleteLocalFilesContent}}"
+                    Content="{I18N {x:Static pixeval:DownloadPageResources+DeleteLocalFiles.Content}}"
                     IsChecked="{Binding #Root.DeleteLocalFiles, Mode=TwoWay}" />
             </StackPanel>
 
@@ -50,32 +50,32 @@
                 <CommandBarButton
                     Click="SelectAllButton_OnClicked"
                     Icon="{icons:SymbolIcon SelectAllOn}"
-                    Label="{I18N {x:Static pixeval:DownloadPageResources.SelectAllButtonLabel}}" />
+                    Label="{I18N {x:Static pixeval:DownloadPageResources+SelectAllButton.Label}}" />
                 <CommandBarButton
                     Click="ResumeAllButton_OnClicked"
                     Icon="{icons:SymbolIcon Play}"
                     IsEnabled="{Binding !!#Root.SelectedCount}"
-                    Label="{I18N {x:Static pixeval:DownloadPageResources.ResumeButtonLabel}}" />
+                    Label="{I18N {x:Static pixeval:DownloadPageResources+ResumeButton.Label}}" />
                 <CommandBarButton
                     Click="PauseAllButton_OnClicked"
                     Icon="{icons:SymbolIcon Pause}"
                     IsEnabled="{Binding !!#Root.SelectedCount}"
-                    Label="{I18N {x:Static pixeval:DownloadPageResources.PauseButtonLabel}}" />
+                    Label="{I18N {x:Static pixeval:DownloadPageResources+PauseButton.Label}}" />
                 <CommandBarButton
                     Click="CancelAllButton_OnClicked"
                     Icon="{icons:SymbolIcon Stop}"
                     IsEnabled="{Binding !!#Root.SelectedCount}"
-                    Label="{I18N {x:Static pixeval:DownloadPageResources.StopButtonLabel}}" />
+                    Label="{I18N {x:Static pixeval:DownloadPageResources+StopButton.Label}}" />
                 <CommandBarButton
                     Click="ResetAllButton_OnClicked"
                     Icon="{icons:SymbolIcon ArrowRepeatAll}"
                     IsEnabled="{Binding !!#Root.SelectedCount}"
-                    Label="{I18N {x:Static pixeval:DownloadPageResources.ResetButtonLabel}}" />
+                    Label="{I18N {x:Static pixeval:DownloadPageResources+ResetButton.Label}}" />
                 <CommandBarButton
                     Click="DeleteAllButton_OnClicked"
                     Icon="{icons:SymbolIcon Delete}"
                     IsEnabled="{Binding !!#Root.SelectedCount}"
-                    Label="{I18N {x:Static pixeval:DownloadPageResources.DeleteButtonLabel}}" />
+                    Label="{I18N {x:Static pixeval:DownloadPageResources+DeleteButton.Label}}" />
             </CommandBar>
         </DockPanel>
 

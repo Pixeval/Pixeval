@@ -89,8 +89,8 @@ public partial class LoginPage : IconContentPage
             {
                 viewContainer.ShowError(exception.GetType().ToString(), exception.Message);
                 _ = await viewContainer.CreateAcknowledgementAsync(
-                    I18NManager.GetResource(LoginPageResources.FetchingSessionFailedTitle),
-                    I18NManager.GetResource(LoginPageResources.FetchingSessionFailedContent));
+                    I18NManager.GetResource(LoginPageResources.FetchingSessionFailed.Title),
+                    I18NManager.GetResource(LoginPageResources.FetchingSessionFailed.Content));
             }
         }
         finally

@@ -9,9 +9,9 @@ namespace Pixeval.Models.Options;
 [LocalizationMetadata]
 public enum IllustrationViewerAutoPlayScope
 {
-    [LocalizedResource(Symbol.Image, EnumResources.IllustrationViewerAutoPlayScopeCurrentWork)]
+    [LocalizedResource(Symbol.Image, EnumResources.IllustrationViewerAutoPlayScope.CurrentWork)]
     CurrentWork,
 
-    [LocalizedResource(Symbol.ImageMultiple, EnumResources.IllustrationViewerAutoPlayScopeAllWorks)]
+    [LocalizedResource(Symbol.ImageMultiple, EnumResources.IllustrationViewerAutoPlayScope.AllWorks)]
     AllWorks
 }

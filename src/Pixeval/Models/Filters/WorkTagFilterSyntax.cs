@@ -17,8 +17,8 @@ internal sealed class WorkTagFilterSyntax : FilterTextSyntax
 
     public override IReadOnlyList<FilterSyntaxPattern> Patterns { get; } =
     [
-        FilterSyntaxPattern.PrefixOnly("#", "tag", I18NManager.GetResource(FilterResources.CompletionsTag)),
-        FilterSyntaxPattern.Keyword("t", exampleValue: "tag", description: I18NManager.GetResource(FilterResources.CompletionsTag)),
-        FilterSyntaxPattern.Keyword("tag", exampleValue: "tag", description: I18NManager.GetResource(FilterResources.CompletionsTag))
+        FilterSyntaxPattern.PrefixOnly("#", "tag", I18NManager.GetResource(FilterResources.Completions.Tag)),
+        FilterSyntaxPattern.Keyword("t", exampleValue: "tag", description: I18NManager.GetResource(FilterResources.Completions.Tag)),
+        FilterSyntaxPattern.Keyword("tag", exampleValue: "tag", description: I18NManager.GetResource(FilterResources.Completions.Tag))
     ];
 }

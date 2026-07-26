@@ -56,8 +56,8 @@ public sealed partial class ExtensionsHostModel(
     public partial bool IsPendingUninstall { get; set; }
 
     public string UninstallCommandLabel => I18NManager.GetResource(IsPendingUninstall
-        ? ExtensionsPageResources.CancelPendingUninstallExtensionsButtonLabel
-        : ExtensionsPageResources.UninstallExtensionsButtonLabel);
+        ? ExtensionsPageResources.CancelPendingUninstallExtensionsButton.Label
+        : ExtensionsPageResources.UninstallExtensionsButton.Label);
 
     public Symbol UninstallCommandIcon => IsPendingUninstall ? Symbol.Dismiss : Symbol.Delete;
 

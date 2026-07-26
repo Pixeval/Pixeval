@@ -38,7 +38,7 @@ public sealed partial class PixevalMcpService
     private static PixevalHelpDocumentDto CreateMcpHelp() =>
         new(
             PixevalHelpTopic.Mcp,
-            I18NManager.GetResource(HelpPageResources.McpHelpExpanderHeader),
+            I18NManager.GetResource(HelpPageResources.McpHelpExpander.Header),
             MarkdownResources.McpHelp,
             I18NManager.GetResource(MarkdownResources.McpHelp),
             ["status", "capabilities", "settings_summary", "help"]);
@@ -46,7 +46,7 @@ public sealed partial class PixevalMcpService
     private static PixevalHelpDocumentDto CreateDownloadMacroHelp() =>
         new(
             PixevalHelpTopic.DownloadMacro,
-            I18NManager.GetResource(HelpPageResources.DownloadMacroHelpExpanderHeader),
+            I18NManager.GetResource(HelpPageResources.DownloadMacroHelpExpander.Header),
             MarkdownResources.DownloadMacroHelp,
             I18NManager.GetResource(MarkdownResources.DownloadMacroHelp),
             ["download_macro", "analyze_download_macro", "set_download_macro"]);
@@ -55,7 +55,7 @@ public sealed partial class PixevalMcpService
     [
         new(
             PixevalHelpTopic.WorkFilter,
-            I18NManager.GetResource(HelpPageResources.QueryFilterSimpleHelpHeaderText),
+            I18NManager.GetResource(HelpPageResources.QueryFilterSimpleHelpHeader.Text),
             MarkdownResources.QueryFilterSimpleHelp,
             I18NManager.GetResource(MarkdownResources.QueryFilterSimpleHelp),
             [
@@ -64,7 +64,7 @@ public sealed partial class PixevalMcpService
             ]),
         new(
             PixevalHelpTopic.WorkFilter,
-            I18NManager.GetResource(HelpPageResources.QueryFilterHelpHeaderText),
+            I18NManager.GetResource(HelpPageResources.QueryFilterHelpHeader.Text),
             MarkdownResources.QueryFilterHelp,
             I18NManager.GetResource(MarkdownResources.QueryFilterHelp),
             [
@@ -76,7 +76,7 @@ public sealed partial class PixevalMcpService
     private static PixevalHelpDocumentDto CreateWorkSubscriptionsHelp() =>
         new(
             PixevalHelpTopic.WorkSubscriptions,
-            I18NManager.GetResource(HelpPageResources.WorkSubscriptionsHelpExpanderHeader),
+            I18NManager.GetResource(HelpPageResources.WorkSubscriptionsHelpExpander.Header),
             MarkdownResources.WorkSubscriptionsHelp,
             I18NManager.GetResource(MarkdownResources.WorkSubscriptionsHelp),
             ["history", "add_subscription", "remove_subscription", "sync_subscriptions", "download_tasks"]);
@@ -84,7 +84,7 @@ public sealed partial class PixevalMcpService
     private static PixevalHelpDocumentDto CreateExtensionsHelp() =>
         new(
             PixevalHelpTopic.Extensions,
-            I18NManager.GetResource(HelpPageResources.ExtensionsHelpExpanderHeader),
+            I18NManager.GetResource(HelpPageResources.ExtensionsHelpExpander.Header),
             MarkdownResources.ExtensionsHelp,
             I18NManager.GetResource(MarkdownResources.ExtensionsHelp),
             ["extensions"]);

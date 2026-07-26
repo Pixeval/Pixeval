@@ -30,13 +30,13 @@
             Spacing="10">
             <TextBlock
                 HorizontalAlignment="Center"
-                Text="{I18N {x:Static pixeval:MainPageResources.LoggingInHeader}}"
+                Text="{I18N {x:Static pixeval:MainPageResources+LoggingIn.Header}}"
                 Theme="{StaticResource SubtitleTextBlockStyle}" />
             <TextBlock
                 x:Name="LoggingInDescriptionTextBlock"
                 MaxWidth="400"
                 IsVisible="False"
-                Text="{I18N {x:Static pixeval:MainPageResources.LoggingInDescription}}"
+                Text="{I18N {x:Static pixeval:MainPageResources+LoggingIn.Description}}"
                 TextWrapping="Wrap" />
         </StackPanel>
         <tabView:TabsView
@@ -79,12 +79,12 @@
                                 Tag="{Binding IdText}" />
                             <MenuItem
                                 Click="OpenMyPage_OnClick"
-                                Header="{I18N {x:Static pixeval:MainPageResources.OpenMyPageItemText}}"
+                                Header="{I18N {x:Static pixeval:MainPageResources+OpenMyPageItem.Text}}"
                                 Icon="{markup:SymbolIcon Open}"
                                 IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}" />
                             <MenuItem
                                 Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
-                                Header="{I18N {x:Static pixeval:MainPageResources.OpenMyPageInBrowserItemText}}"
+                                Header="{I18N {x:Static pixeval:MainPageResources+OpenMyPageInBrowserItem.Text}}"
                                 Icon="{markup:SymbolIcon GlobeArrowUp}"
                                 IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
                                 Tag="{Binding Url}" />
@@ -92,7 +92,7 @@
                             <!--  该项不显示  -->
                             <MenuItem
                                 Command="{Binding ToggleRestrictedModeCommand, Mode=OneTime}"
-                                Header="{I18N {x:Static pixeval:MainPageResources.RestrictedModeItemText}}"
+                                Header="{I18N {x:Static pixeval:MainPageResources+RestrictedModeItem.Text}}"
                                 Icon="{markup:SymbolIcon PersonProhibited}"
                                 IsChecked="{Binding RestrictedCache}"
                                 IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
@@ -100,21 +100,21 @@
                                 ToggleType="CheckBox" />
                             <MenuItem
                                 Command="{Binding ToggleAiShowCommand, Mode=OneTime}"
-                                Header="{I18N {x:Static pixeval:MainPageResources.AiShowItemText}}"
+                                Header="{I18N {x:Static pixeval:MainPageResources+AiShowItem.Text}}"
                                 Icon="{markup:SymbolIcon Bot}"
                                 IsChecked="{Binding AiShowCache}"
                                 IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
                                 ToggleType="CheckBox" />
                             <MenuItem
                                 Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
-                                Header="{I18N {x:Static pixeval:MainPageResources.MoreViewingSettingsItemText}}"
+                                Header="{I18N {x:Static pixeval:MainPageResources+MoreViewingSettingsItem.Text}}"
                                 Icon="{markup:SymbolIcon MoreHorizontal}"
                                 IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
                                 Tag="https://www.pixiv.net/settings/viewing" />
                             <Separator />
                             <MenuItem
                                 Click="SwitchAccount_OnClicked"
-                                Header="{I18N {x:Static pixeval:MainPageResources.SwitchAccountItemText}}"
+                                Header="{I18N {x:Static pixeval:MainPageResources+SwitchAccountItem.Text}}"
                                 Icon="{markup:SymbolIcon PersonSwap}" />
                         </MenuFlyout>
                     </Button.Flyout>

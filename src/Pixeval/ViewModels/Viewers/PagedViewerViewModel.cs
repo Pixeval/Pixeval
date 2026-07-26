@@ -55,17 +55,17 @@ public abstract partial class PagedViewerViewModel : ViewModelBase
 
     public string? PrevButtonText => PrevAction switch
     {
-        PagedBehavior.PageAndWork => I18NManager.GetResource(EntryViewerPageResources.PrevPageOrWork),
-        PagedBehavior.Work => I18NManager.GetResource(EntryViewerPageResources.PrevWork),
-        PagedBehavior.Page => I18NManager.GetResource(EntryViewerPageResources.PrevPage),
+        PagedBehavior.PageAndWork => I18NManager.GetResource(EntryViewerPageResources.Prev.PageOrWork),
+        PagedBehavior.Work => I18NManager.GetResource(EntryViewerPageResources.Prev.Work),
+        PagedBehavior.Page => I18NManager.GetResource(EntryViewerPageResources.Prev.Page),
         _ => null
     };
 
     public string? NextButtonText => NextAction switch
     {
-        PagedBehavior.PageAndWork => I18NManager.GetResource(EntryViewerPageResources.NextPageOrWork),
-        PagedBehavior.Work => I18NManager.GetResource(EntryViewerPageResources.NextWork),
-        PagedBehavior.Page => I18NManager.GetResource(EntryViewerPageResources.NextPage),
+        PagedBehavior.PageAndWork => I18NManager.GetResource(EntryViewerPageResources.Next.PageOrWork),
+        PagedBehavior.Work => I18NManager.GetResource(EntryViewerPageResources.Next.Work),
+        PagedBehavior.Page => I18NManager.GetResource(EntryViewerPageResources.Next.Page),
         _ => null
     };
 

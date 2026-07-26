@@ -32,7 +32,7 @@ public sealed partial class HomeCardPreviewViewModel(
     public IReadOnlyCollection<INotifyPropertyChanged> Items => ViewModel?.View ?? [];
 
     [ObservableProperty]
-    public partial string? PlaceholderText { get; private set; } = I18NManager.GetResource(HomePageResources.CardPreviewLoadingTextBlockText);
+    public partial string? PlaceholderText { get; private set; } = I18NManager.GetResource(HomePageResources.CardPreview.LoadingTextBlock.Text);
 
     public async Task LoadAsync()
     {
@@ -57,7 +57,7 @@ public sealed partial class HomeCardPreviewViewModel(
     {
         try
         {
-            PlaceholderText = I18NManager.GetResource(HomePageResources.CardPreviewLoadingTextBlockText);
+            PlaceholderText = I18NManager.GetResource(HomePageResources.CardPreview.LoadingTextBlock.Text);
             var oldSource = _source;
             var source = await previewSourceFactory(Card);
             if (_isDisposed)
@@ -86,7 +86,7 @@ public sealed partial class HomeCardPreviewViewModel(
         catch (Exception)
         {
             if (!_isDisposed)
-                PlaceholderText = I18NManager.GetResource(HomePageResources.CardPreviewFailedTextBlockText);
+                PlaceholderText = I18NManager.GetResource(HomePageResources.CardPreview.FailedTextBlock.Text);
         }
     }
 
@@ -120,7 +120,7 @@ public sealed partial class HomeCardPreviewViewModel(
     private void UpdatePlaceholder()
     {
         PlaceholderText = Items.Count is 0
-            ? I18NManager.GetResource(HomePageResources.CardPreviewEmptyTextBlockText)
+            ? I18NManager.GetResource(HomePageResources.CardPreview.EmptyTextBlock.Text)
             : null;
     }
 

@@ -16,7 +16,7 @@ public class IsSeriesMacro : IPredicate<IArtworkInfo>
 
     public string Name => NameConst;
 
-    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionIsSeries);
+    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescription.IsSeries);
 
     public bool Match(IArtworkInfo context) => context is WorkBase { Series: not null };
 }

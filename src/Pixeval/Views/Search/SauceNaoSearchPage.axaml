@@ -9,7 +9,7 @@
     xmlns:pixeval="using:Pixeval"
     xmlns:viewModels="using:Pixeval.ViewModels.Search"
     x:DataType="{x:Type viewModels:SauceNaoSearchPageViewModel}"
-    Header="{I18N {x:Static pixeval:SearchResources.AdvancedOptionsSauceNaoTab}}"
+    Header="{I18N {x:Static pixeval:SearchResources+AdvancedOptions.SauceNaoTab}}"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
@@ -24,12 +24,12 @@
             DockPanel.Dock="Top"
             IsVisible="{Binding !IsApiKeyExisted}"
             Mode="Warning"
-            Text="{I18N {x:Static pixeval:SearchResources.SauceNAOProvideApiKey}}" />
+            Text="{I18N {x:Static pixeval:SearchResources+SauceNAO.ProvideApiKey}}" />
         <Button
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Center"
             Click="SearchButton_OnClick"
-            Content="{I18N {x:Static pixeval:SearchResources.SauceNAOSearch}}"
+            Content="{I18N {x:Static pixeval:SearchResources+SauceNAO.Search}}"
             DockPanel.Dock="Top"
             IsEnabled="{Binding FileSelected}" />
         <Button
@@ -39,7 +39,7 @@
             CommandParameter="{Binding $self}"
             DockPanel.Dock="Bottom">
             <Button.Content>
-                <controls:IconText Symbol="ClipboardPaste" Text="{I18N {x:Static pixeval:SearchResources.SauceNAOPasteFromClipboard}}" />
+                <controls:IconText Symbol="ClipboardPaste" Text="{I18N {x:Static pixeval:SearchResources+SauceNAO.PasteFromClipboard}}" />
             </Button.Content>
         </Button>
         <Button
@@ -54,9 +54,9 @@
                         Height="100"
                         Data="{markup:SvgPath {x:Static pixeval:SvgResources.SauceNAO}}" />
                     <TextBlock FontSize="20" TextAlignment="Center">
-                        <Run Text="{I18N {x:Static pixeval:SearchResources.SauceNAOProvideImage}}" />
+                        <Run Text="{I18N {x:Static pixeval:SearchResources+SauceNAO.ProvideImage}}" />
                         <LineBreak />
-                        <Run Text="{I18N {x:Static pixeval:SearchResources.SauceNAOOr}}" />
+                        <Run Text="{I18N {x:Static pixeval:SearchResources+SauceNAO.Or}}" />
                     </TextBlock>
                 </StackPanel>
                 <Image Source="{Binding Image}" />

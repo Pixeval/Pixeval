@@ -37,25 +37,25 @@
                     Click="ResetItem_OnClicked"
                     Icon="{markup:SymbolIcon ArrowRepeatAll}"
                     IsEnabled="{Binding IsResetItemEnabled}"
-                    Label="{I18N {x:Static local:DownloadItemResources.ResetItemLabel}}" />
+                    Label="{I18N {x:Static local:DownloadItemResources+ResetItem.Label}}" />
                 <CommandBarButton
                     Click="CancelDownloadItem_OnClicked"
                     Icon="{markup:SymbolIcon Dismiss}"
                     IsEnabled="{Binding IsCancelItemEnabled}"
-                    Label="{I18N {x:Static local:DownloadItemResources.CancelDownloadItemLabel}}" />
+                    Label="{I18N {x:Static local:DownloadItemResources+CancelDownloadItem.Label}}" />
                 <CommandBarButton
                     Click="OpenDownloadLocationItem_OnClicked"
                     Icon="{markup:SymbolIcon FolderArrowRight}"
-                    Label="{I18N {x:Static local:DownloadItemResources.OpenDownloadLocationItemLabel}}" />
+                    Label="{I18N {x:Static local:DownloadItemResources+OpenDownloadLocationItem.Label}}" />
                 <CommandBarButton
                     Click="GoToPageItem_OnClicked"
                     Icon="{markup:SymbolIcon Open}"
-                    Label="{I18N {x:Static local:DownloadItemResources.GoToPageItemLabel}}" />
+                    Label="{I18N {x:Static local:DownloadItemResources+GoToPageItem.Label}}" />
                 <CommandBarButton
                     Click="CheckErrorMessageInDetail_OnClicked"
                     Icon="{markup:SymbolIcon ErrorCircle}"
                     IsEnabled="{Binding IsError}"
-                    Label="{I18N {x:Static local:DownloadItemResources.CheckErrorMessageInDetailItemLabel}}" />
+                    Label="{I18N {x:Static local:DownloadItemResources+CheckErrorMessageInDetailItem.Label}}" />
             </CommandBar.SecondaryCommands>
         </CommandBar>
 

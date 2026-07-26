@@ -8,21 +8,21 @@ namespace Pixeval.Models.Options;
 [LocalizationMetadata]
 public enum DownloadListOption
 {
-    [LocalizedResource(EnumResources.DownloadListOptionAllQueued)]
+    [LocalizedResource(EnumResources.DownloadListOption.AllQueued)]
     AllQueued,
 
-    [LocalizedResource(EnumResources.DownloadListOptionRunning)]
+    [LocalizedResource(EnumResources.DownloadListOption.Running)]
     Running,
 
-    [LocalizedResource(EnumResources.DownloadListOptionCompleted)]
+    [LocalizedResource(EnumResources.DownloadListOption.Completed)]
     Completed,
 
-    [LocalizedResource(EnumResources.DownloadListOptionCancelled)]
+    [LocalizedResource(EnumResources.DownloadListOption.Cancelled)]
     Cancelled,
 
-    [LocalizedResource(EnumResources.DownloadListOptionError)]
+    [LocalizedResource(EnumResources.DownloadListOption.Error)]
     Error,
 
-    [LocalizedResource(EnumResources.DownloadListOptionCustomSearch)]
+    [LocalizedResource(EnumResources.DownloadListOption.CustomSearch)]
     CustomSearch
 }

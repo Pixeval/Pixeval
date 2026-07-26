@@ -11,7 +11,6 @@ using FluentIcons.Common;
 using Mako;
 using Pixeval.Models.Options;
 using Pixeval.Utilities;
-using static Pixeval.AppSettingsResources;
 
 namespace Pixeval.AppManagement;
 
@@ -47,27 +46,27 @@ public record AppSettings
         }
     }
 
-    [SettingsEntry(Symbol.Apps, SettingsGroupApplicationHeader, null)]
+    [SettingsEntry(Symbol.Apps, AppSettingsResources.SettingsGroup.Application.Header, null)]
     public ApplicationSettingsGroup ApplicationSettings { get; set; } = new();
 
-    [SettingsEntry(Symbol.WiFi, SettingsGroupNetworkHeader, null)]
+    [SettingsEntry(Symbol.WiFi, AppSettingsResources.SettingsGroup.Network.Header, null)]
     public NetworkSettingsGroup NetworkSettings { get; set; } = new();
 
-    [SettingsEntry(Symbol.News, SettingsGroupBrowsingExperienceHeader, null)]
+    [SettingsEntry(Symbol.News, AppSettingsResources.SettingsGroup.BrowsingExperience.Header, null)]
     public BrowsingExperienceSettingsGroup BrowsingExperienceSettings { get; set; } = new();
 
-    [SettingsEntry(Symbol.SearchSparkle, SettingsGroupSearchHeader, null)]
+    [SettingsEntry(Symbol.SearchSparkle, AppSettingsResources.SettingsGroup.Search.Header, null)]
     public SearchSettingsGroup SearchSettings { get; set; } = new();
 
-    [SettingsEntry(Symbol.ArrowSquareDown, SettingsGroupDownloadHeader, null)]
+    [SettingsEntry(Symbol.ArrowSquareDown, AppSettingsResources.SettingsGroup.Download.Header, null)]
     public DownloadSettingsGroup DownloadSettings { get; set; } = new();
 
 #if PIXEVAL_MCP
-    [SettingsEntry(Symbol.Bot, SettingsGroupMcpHeader, null)]
+    [SettingsEntry(Symbol.Bot, AppSettingsResources.SettingsGroup.Mcp.Header, null)]
     public McpSettingsGroup McpSettings { get; set; } = new();
 #endif
 
-    [SettingsEntry(Symbol.Settings, SettingsGroupNovelHeader, null)]
+    [SettingsEntry(Symbol.Settings, AppSettingsResources.SettingsGroup.Novel.Header, null)]
     public NovelSettingsGroup NovelSettings { get; set; } = new();
 
     /// <summary>

@@ -130,7 +130,7 @@
                             Content="{markup:SymbolIcon Open}"
                             DockPanel.Dock="Right"
                             Theme="{StaticResource TransparentButtonStyle}"
-                            ToolTip.Tip="{I18N {x:Static pixeval:HomePageResources.OpenCardPageButtonToolTip}}" />
+                            ToolTip.Tip="{I18N {x:Static pixeval:HomePageResources+OpenCardPageButton.ToolTip}}" />
                         <TextBlock
                             VerticalAlignment="Center"
                             FontSize="12"
@@ -274,6 +274,6 @@
             Click="QuickDeleteButton_OnClick"
             Content="{markup:SymbolIcon Delete}"
             IsVisible="{Binding #Root.IsEditing}"
-            ToolTip.Tip="{I18N {x:Static pixeval:HomePageResources.DeleteSelectedCardButtonContent}}" />
+            ToolTip.Tip="{I18N {x:Static pixeval:HomePageResources+DeleteSelectedCardButton.Content}}" />
     </Panel>
 </UserControl>

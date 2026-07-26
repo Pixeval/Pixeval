@@ -69,14 +69,14 @@ namespace Pixeval
     }
 
     if (markdownFiles.Count > 0)
-        GenerateNode("Markdown", markdownFiles);
+        GenerateResourceClass("Markdown", markdownFiles);
 
     void GenerateClass(List<string> result)
     {
         if (result.Count is 0)
             return;
 
-        // 构建树形结构
+        // 按资源文件名生成顶层资源类
         var nodes = new Dictionary<string, List<string>>();
 
         foreach (var path in result)
@@ -97,25 +97,55 @@ namespace Pixeval
             node.Add(part);
         }
 
-        // 生成代码
-        foreach (var node in nodes)
-            GenerateNode(node.Key, node.Value);
+        foreach (var node in nodes.OrderBy(static node => node.Key, StringComparer.Ordinal))
+            GenerateResourceClass(node.Key, node.Value);
     }
 
-    void GenerateNode(string name, List<string> paths)
+    void GenerateResourceClass(string name, List<string> paths)
     {
-        var indentStr = new string(' ', 4);
-        
-        WriteLine($"{indentStr}public static class {name}Resources");
-        WriteLine($"{indentStr}{{");
-        paths.Sort();
-        foreach (var child in paths)
+        GenerateNode(name + "Resources", name, paths, 1);
+    }
+
+    void GenerateNode(string name, string resourcePath, List<string> paths, int indentLevel)
+    {
+        var indent = new string(' ', indentLevel * 4);
+        var memberIndent = new string(' ', (indentLevel + 1) * 4);
+
+        WriteLine($"{indent}public static class {SanitizeName(name)}");
+        WriteLine($"{indent}{{");
+
+        foreach (var field in paths
+                     .Where(static path => path.IndexOf('.') is -1)
+                     .OrderBy(static path => path, StringComparer.Ordinal))
         {
-            Write($"{indentStr}{indentStr}public ");
-            WriteLine($"const string {child.Replace(".", "")} = \"{name}.{child}\";"); // const字段写法
-            // WriteLine($"static string {child.Replace(".", "")} => \"{name}.{child}\";"); // 只读属性写法，无法通过编译，但可以查看引用数
+            var value = EscapeString(resourcePath + "." + field);
+            WriteLine($"{memberIndent}public const string {SanitizeName(field)} = \"{value}\";");
         }
-        WriteLine($"{indentStr}}}");
+
+        var childNodes = paths
+            .Where(static path => path.IndexOf('.') is not -1)
+            .Select(static path =>
+            {
+                var firstDot = path.IndexOf('.');
+                return new
+                {
+                    Name = path.Substring(0, firstDot),
+                    Path = path.Substring(firstDot + 1)
+                };
+            })
+            .GroupBy(static child => child.Name, StringComparer.Ordinal)
+            .OrderBy(static group => group.Key, StringComparer.Ordinal);
+
+        foreach (var childNode in childNodes)
+        {
+            GenerateNode(
+                childNode.Key,
+                resourcePath + "." + childNode.Key,
+                childNode.Select(static child => child.Path).ToList(),
+                indentLevel + 1);
+        }
+
+        WriteLine($"{indent}}}");
     }
 
     static string SanitizeName(string name)
@@ -130,6 +160,8 @@ namespace Pixeval
 
         return sanitized.Length == 0 ? "Unnamed" : sanitized;
     }
+
+    static string EscapeString(string value) => value.Replace("\\", "\\\\").Replace("\"", "\\\"");
 
     static void CollectJsonProperties(JsonElement element, string currentPath, List<string> result)
     {

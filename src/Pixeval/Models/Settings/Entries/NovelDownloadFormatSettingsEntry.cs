@@ -22,7 +22,7 @@ public class NovelDownloadFormatSettingsEntry(DownloadSettingsGroup settings)
     : SingleValueSettingsEntry<DownloadSettingsGroup, object>(
         settings,
         nameof(DownloadSettingsGroup.NovelDownloadFormat),
-        I18NManager.GetResource(EnumResources.WorkTypeEnumNovel),
+        I18NManager.GetResource(EnumResources.WorkTypeEnum.Novel),
         "",
         Symbol.BookOpen,
         null,

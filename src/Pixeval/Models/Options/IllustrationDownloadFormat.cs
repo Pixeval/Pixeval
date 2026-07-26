@@ -8,6 +8,6 @@ namespace Pixeval.Models.Options;
 [LocalizationMetadata]
 public enum IllustrationDownloadFormat
 {
-    [LocalizedResource(EnumResources.IllustrationDownloadFormatOriginal)]
+    [LocalizedResource(EnumResources.IllustrationDownloadFormat.Original)]
     Original
 }

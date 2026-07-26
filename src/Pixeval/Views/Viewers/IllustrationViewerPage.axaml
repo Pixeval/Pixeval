@@ -177,7 +177,7 @@
                             VerticalAlignment="Center"
                             Spacing="10">
                             <ProgressBar Width="160" IsIndeterminate="{Binding IsLoading}" />
-                            <TextBlock Foreground="White" Text="{I18N {x:Static pixeval:HomePageResources.CardPreviewLoadingTextBlockText}}" />
+                            <TextBlock Foreground="White" Text="{I18N {x:Static pixeval:HomePageResources+CardPreview+LoadingTextBlock.Text}}" />
                         </StackPanel>
                     </Grid>
 
@@ -354,42 +354,42 @@
                                                     x:Name="AutoPlayInterval1SecondMenuItem"
                                                     Click="AutoPlayIntervalMenuItem_OnClick"
                                                     GroupName="AutoPlayInterval"
-                                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources.AutoPlayInterval1Second}}"
+                                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources+AutoPlayInterval.Seconds1}}"
                                                     Tag="{markup1:Int32 1}"
                                                     ToggleType="Radio" />
                                                 <MenuItem
                                                     x:Name="AutoPlayInterval3SecondsMenuItem"
                                                     Click="AutoPlayIntervalMenuItem_OnClick"
                                                     GroupName="AutoPlayInterval"
-                                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources.AutoPlayInterval3Seconds}}"
+                                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources+AutoPlayInterval.Seconds3}}"
                                                     Tag="{markup1:Int32 3}"
                                                     ToggleType="Radio" />
                                                 <MenuItem
                                                     x:Name="AutoPlayInterval5SecondsMenuItem"
                                                     Click="AutoPlayIntervalMenuItem_OnClick"
                                                     GroupName="AutoPlayInterval"
-                                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources.AutoPlayInterval5Seconds}}"
+                                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources+AutoPlayInterval.Seconds5}}"
                                                     Tag="{markup1:Int32 5}"
                                                     ToggleType="Radio" />
                                                 <MenuItem
                                                     x:Name="AutoPlayInterval10SecondsMenuItem"
                                                     Click="AutoPlayIntervalMenuItem_OnClick"
                                                     GroupName="AutoPlayInterval"
-                                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources.AutoPlayInterval10Seconds}}"
+                                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources+AutoPlayInterval.Seconds10}}"
                                                     Tag="{markup1:Int32 10}"
                                                     ToggleType="Radio" />
                                                 <MenuItem
                                                     x:Name="AutoPlayInterval15SecondsMenuItem"
                                                     Click="AutoPlayIntervalMenuItem_OnClick"
                                                     GroupName="AutoPlayInterval"
-                                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources.AutoPlayInterval15Seconds}}"
+                                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources+AutoPlayInterval.Seconds15}}"
                                                     Tag="{markup1:Int32 15}"
                                                     ToggleType="Radio" />
                                                 <MenuItem
                                                     x:Name="AutoPlayInterval30SecondsMenuItem"
                                                     Click="AutoPlayIntervalMenuItem_OnClick"
                                                     GroupName="AutoPlayInterval"
-                                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources.AutoPlayInterval30Seconds}}"
+                                                    Header="{I18N {x:Static pixeval:EntryViewerPageResources+AutoPlayInterval.Seconds30}}"
                                                     Tag="{markup1:Int32 30}"
                                                     ToggleType="Radio" />
                                                 <Separator />
@@ -397,14 +397,14 @@
                                                     x:Name="AutoPlaySequentialModeMenuItem"
                                                     Click="AutoPlayModeMenuItem_OnClick"
                                                     GroupName="AutoPlayMode"
-                                                    Header="{I18N {x:Static pixeval:EnumResources.IllustrationViewerAutoPlayModeSequential}}"
+                                                    Header="{I18N {x:Static pixeval:EnumResources+IllustrationViewerAutoPlayMode.Sequential}}"
                                                     Tag="{x:Static options:IllustrationViewerAutoPlayMode.Sequential}"
                                                     ToggleType="Radio" />
                                                 <MenuItem
                                                     x:Name="AutoPlayLoopPlaybackModeMenuItem"
                                                     Click="AutoPlayModeMenuItem_OnClick"
                                                     GroupName="AutoPlayMode"
-                                                    Header="{I18N {x:Static pixeval:EnumResources.IllustrationViewerAutoPlayModeLoop}}"
+                                                    Header="{I18N {x:Static pixeval:EnumResources+IllustrationViewerAutoPlayMode.Loop}}"
                                                     Tag="{x:Static options:IllustrationViewerAutoPlayMode.Loop}"
                                                     ToggleType="Radio" />
                                                 <Separator />
@@ -412,14 +412,14 @@
                                                     x:Name="AutoPlayCurrentWorkScopeMenuItem"
                                                     Click="AutoPlayScopeMenuItem_OnClick"
                                                     GroupName="AutoPlayScope"
-                                                    Header="{I18N {x:Static pixeval:EnumResources.IllustrationViewerAutoPlayScopeCurrentWork}}"
+                                                    Header="{I18N {x:Static pixeval:EnumResources+IllustrationViewerAutoPlayScope.CurrentWork}}"
                                                     Tag="{x:Static options:IllustrationViewerAutoPlayScope.CurrentWork}"
                                                     ToggleType="Radio" />
                                                 <MenuItem
                                                     x:Name="AutoPlayAllWorksScopeMenuItem"
                                                     Click="AutoPlayScopeMenuItem_OnClick"
                                                     GroupName="AutoPlayScope"
-                                                    Header="{I18N {x:Static pixeval:EnumResources.IllustrationViewerAutoPlayScopeAllWorks}}"
+                                                    Header="{I18N {x:Static pixeval:EnumResources+IllustrationViewerAutoPlayScope.AllWorks}}"
                                                     Tag="{x:Static options:IllustrationViewerAutoPlayScope.AllWorks}"
                                                     ToggleType="Radio" />
                                             </ContextMenu>

@@ -8,9 +8,9 @@ namespace Pixeval.Models.Options;
 [LocalizationMetadata]
 public enum BrowseMode
 {
-    [LocalizedResource(EnumResources.BrowseModeSwipe)]
+    [LocalizedResource(EnumResources.BrowseMode.Swipe)]
     Swipe,
 
-    [LocalizedResource(EnumResources.BrowseModeContinuous)]
+    [LocalizedResource(EnumResources.BrowseMode.Continuous)]
     Continuous
 }

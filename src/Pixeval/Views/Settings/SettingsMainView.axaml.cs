@@ -70,7 +70,7 @@ public partial class SettingsMainView : ContentPage
     {
         if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer)
             _ = await viewContainer.CreateAcknowledgementTaskAsync(
-                I18NManager.GetResource(SettingsMainViewResources.ReleaseNoteDialogTitle),
+                I18NManager.GetResource(SettingsMainViewResources.ReleaseNoteDialog.Title),
                 async contentDialog =>
                 {
                     var control = await SettingsPage.GetReleaseNotesAsync();
@@ -116,11 +116,11 @@ public partial class SettingsMainView : ContentPage
         var (mode, resource) = updateState switch
         {
             UpdateState.UpToDate => (InfoBarMode.Success, SettingsMainViewResources.IsUpToDate),
-            UpdateState.MajorUpdate => (InfoBarMode.Warning, SettingsMainViewResources.UpdateAvailableMajor),
-            UpdateState.MinorUpdate => (InfoBarMode.Warning, SettingsMainViewResources.UpdateAvailableMinor),
-            UpdateState.BuildUpdate => (InfoBarMode.Warning, SettingsMainViewResources.UpdateAvailableBuild),
+            UpdateState.MajorUpdate => (InfoBarMode.Warning, SettingsMainViewResources.UpdateAvailable.Major),
+            UpdateState.MinorUpdate => (InfoBarMode.Warning, SettingsMainViewResources.UpdateAvailable.Minor),
+            UpdateState.BuildUpdate => (InfoBarMode.Warning, SettingsMainViewResources.UpdateAvailable.Build),
             UpdateState.Insider => (InfoBarMode.Info, SettingsMainViewResources.IsInsider),
-            UpdateState.Unknown => (InfoBarMode.Info, SettingsMainViewResources.UpdateAvailableUnknown),
+            UpdateState.Unknown => (InfoBarMode.Info, SettingsMainViewResources.UpdateAvailable.Unknown),
             _ => throw new ArgumentOutOfRangeException(nameof(updateState), updateState, null)
         };
         UpdateStatusInfoBar.Mode = mode;
@@ -219,10 +219,10 @@ public partial class SettingsMainView : ContentPage
             return;
         viewContainer.ShowSuccess(I18NManager.GetResource(kind switch
         {
-            ClearDataKind.FileCache => EnumResources.ClearDataKindFileCache,
-            ClearDataKind.BrowseHistory => EnumResources.ClearDataKindBrowseHistory,
-            ClearDataKind.SearchHistory => EnumResources.ClearDataKindSearchHistory,
-            ClearDataKind.DownloadHistory => EnumResources.ClearDataKindDownloadHistory,
+            ClearDataKind.FileCache => EnumResources.ClearDataKind.FileCache,
+            ClearDataKind.BrowseHistory => EnumResources.ClearDataKind.BrowseHistory,
+            ClearDataKind.SearchHistory => EnumResources.ClearDataKind.SearchHistory,
+            ClearDataKind.DownloadHistory => EnumResources.ClearDataKind.DownloadHistory,
             _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null)
         }));
     }

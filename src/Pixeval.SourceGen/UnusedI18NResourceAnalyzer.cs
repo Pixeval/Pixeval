@@ -35,7 +35,7 @@ public class UnusedI18NResourceAnalyzer : DiagnosticAnalyzer
         customTags: [WellKnownDiagnosticTags.CompilationEnd]);
 
     private static readonly Regex _XamlStaticResourceRegex = new(
-        @"\{x:Static\s+(?:(?:[\w.]+):)?(?<type>[A-Za-z_][A-Za-z0-9_]*Resources)\.(?<member>[A-Za-z_][A-Za-z0-9_]*)",
+        @"\{x:Static\s+(?:(?:[\w.]+):)?(?<type>[A-Za-z_][A-Za-z0-9_]*Resources(?:\+[A-Za-z_][A-Za-z0-9_]*)*)\.(?<member>[A-Za-z_][A-Za-z0-9_]*)",
         RegexOptions.Compiled);
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [_Rule];
@@ -144,7 +144,7 @@ public class UnusedI18NResourceAnalyzer : DiagnosticAnalyzer
 
             foreach (var typeSymbol in GetPixevalTypes(compilation.GlobalNamespace))
             {
-                if (!typeSymbol.IsStatic || !typeSymbol.Name.EndsWith(ResourcesSuffix, StringComparison.Ordinal))
+                if (!typeSymbol.IsStatic)
                     continue;
 
                 foreach (var fieldSymbol in typeSymbol.GetMembers().OfType<IFieldSymbol>())
@@ -153,7 +153,7 @@ public class UnusedI18NResourceAnalyzer : DiagnosticAnalyzer
                         continue;
 
                     keys.Add(resourceKey);
-                    keysByMember[typeSymbol.Name + "." + fieldSymbol.Name] = resourceKey;
+                    keysByMember[GetXamlTypeName(typeSymbol) + "." + fieldSymbol.Name] = resourceKey;
                 }
             }
 
@@ -176,14 +176,37 @@ public class UnusedI18NResourceAnalyzer : DiagnosticAnalyzer
             if (!fieldSymbol.IsConst
                 || fieldSymbol.ConstantValue is not string key
                 || fieldSymbol.ContainingType is not { IsStatic: true } typeSymbol
-                || !typeSymbol.Name.EndsWith(ResourcesSuffix, StringComparison.Ordinal)
-                || !IsPixevalNamespace(typeSymbol.ContainingNamespace))
+                || !IsResourceType(typeSymbol))
             {
                 return false;
             }
 
             resourceKey = key;
             return true;
+        }
+
+        private static bool IsResourceType(INamedTypeSymbol typeSymbol)
+        {
+            var resourceType = typeSymbol;
+            while (resourceType.ContainingType is { } containingType)
+            {
+                resourceType = containingType;
+            }
+
+            return resourceType.IsStatic
+                   && resourceType.Name.EndsWith(ResourcesSuffix, StringComparison.Ordinal)
+                   && IsPixevalNamespace(resourceType.ContainingNamespace);
+        }
+
+        private static string GetXamlTypeName(INamedTypeSymbol typeSymbol)
+        {
+            var typeNames = new Stack<string>();
+            for (var current = typeSymbol; current is not null; current = current.ContainingType)
+            {
+                typeNames.Push(current.Name);
+            }
+
+            return string.Join("+", typeNames);
         }
 
         private static IEnumerable<INamedTypeSymbol> GetPixevalTypes(INamespaceSymbol globalNamespace)

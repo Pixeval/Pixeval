@@ -28,7 +28,7 @@
                     x:Name="SelectionToggleButton"
                     Icon="{markup:SymbolIcon Symbol=Multiselect}"
                     IsChecked="{Binding IsSelecting, Mode=OneWayToSource}"
-                    ToolTip.Tip="{I18N {x:Static local:WorkContainerResources.SelectionButtonLabel}}" />
+                    ToolTip.Tip="{I18N {x:Static local:WorkContainerResources+SelectionButton.Label}}" />
                 <CommandBar.SecondaryCommands>
                     <CommandBarButton
                         x:Name="RefreshButton"
@@ -36,7 +36,7 @@
                         Icon="{markup:SymbolIcon Symbol=ArrowClockwise}"
                         IsEnabled="{Binding $parent[work:WorkContainer].IsRefreshEnabled}"
                         IsVisible="{Binding $parent[work:WorkContainer].IsRefreshEnabled}"
-                        Label="{I18N {x:Static local:WorkContainerResources.RefreshButtonLabel}}" />
+                        Label="{I18N {x:Static local:WorkContainerResources+RefreshButton.Label}}" />
                 </CommandBar.SecondaryCommands>
             </CommandBar>
 
@@ -71,7 +71,7 @@
                 <CommandBarButton
                     Click="SelectAllToggleButton_OnClicked"
                     Icon="{markup:SymbolIcon SelectAllOn}"
-                    Label="{I18N {x:Static local:WorkContainerResources.SelectAllButtonLabel}}" />
+                    Label="{I18N {x:Static local:WorkContainerResources+SelectAllButton.Label}}" />
                 <CommandBarButton
                     x:Name="AddAllToBookmarkButton"
                     Click="AddAllToBookmarkButton_OnClicked"

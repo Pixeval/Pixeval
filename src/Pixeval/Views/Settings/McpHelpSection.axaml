@@ -10,14 +10,14 @@
     xmlns:pixeval="using:Pixeval"
     xmlns:settings="using:Pixeval.Views.Settings">
     <StackPanel Spacing="10">
-        <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources.McpHelpExpanderHeader}}" HeaderIcon="{markup:SymbolIcon Bot}">
+        <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources+McpHelpExpander.Header}}" HeaderIcon="{markup:SymbolIcon Bot}">
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
                     <local:MarkdownBox Markdown="{I18N {x:Static pixeval:MarkdownResources.McpHelp}}" />
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
-        <controls:SettingsExpander Description="{I18N {x:Static pixeval:HelpPageResources.McpToolsExpanderDescription}}" Header="{I18N {x:Static pixeval:HelpPageResources.McpToolsExpanderHeader}}">
+        <controls:SettingsExpander Description="{I18N {x:Static pixeval:HelpPageResources+McpToolsExpander.Description}}" Header="{I18N {x:Static pixeval:HelpPageResources+McpToolsExpander.Header}}">
             <controls:SettingsExpander.HeaderIcon>
                 <PathIcon Data="{markup1:SvgPath {x:Static pixeval:SvgResources.MCP}}" />
             </controls:SettingsExpander.HeaderIcon>
@@ -32,7 +32,7 @@
                 Click="RefreshMcpToolsButton_OnClicked"
                 Content="{markup:SymbolIcon ArrowSync,
                                             FontSize=14}"
-                ToolTip.Tip="{I18N {x:Static pixeval:HelpPageResources.McpToolsRefreshButtonToolTip}}" />
+                ToolTip.Tip="{I18N {x:Static pixeval:HelpPageResources+McpToolsRefreshButton.ToolTip}}" />
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Vertical">
                     <StackPanel Spacing="10">
@@ -97,7 +97,7 @@
                                                 <TextBlock
                                                     Foreground="{DynamicResource TextFillColorTertiaryBrush}"
                                                     IsVisible="{Binding HasNoParameters}"
-                                                    Text="{I18N {x:Static pixeval:HelpPageResources.McpToolsParametersEmpty}}"
+                                                    Text="{I18N {x:Static pixeval:HelpPageResources+McpToolsParameters.Empty}}"
                                                     TextWrapping="Wrap" />
                                             </StackPanel>
                                         </Grid>

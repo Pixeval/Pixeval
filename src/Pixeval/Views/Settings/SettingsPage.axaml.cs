@@ -48,9 +48,9 @@ public partial class SettingsPage : NavigationPage
     public static string ReleaseTitle => GetReleaseTitle(AppInfo.AppVersion.CurrentVersion);
 
     public static string GetReleaseTitle(Version version) =>
-        I18NManager.GetResource(SettingsMainViewResources.ReleaseNoteDialogTitleFormatted, version.ToString());
+        I18NManager.GetResource(SettingsMainViewResources.ReleaseNoteDialog.TitleFormatted, version.ToString());
 
-    public static Control CreateReleaseNotes(AppReleaseModel? release) => new MarkdownBox { Markdown = release?.ReleaseNote ?? I18NManager.GetResource(SettingsMainViewResources.ReleaseNoteDialogEmpty) };
+    public static Control CreateReleaseNotes(AppReleaseModel? release) => new MarkdownBox { Markdown = release?.ReleaseNote ?? I18NManager.GetResource(SettingsMainViewResources.ReleaseNoteDialog.Empty) };
 
     public static async Task<Control> GetReleaseNotesAsync()
     {

@@ -17,7 +17,7 @@ internal sealed class WorkRatioFilterSyntax : FilterDoubleRangeSyntax
 
     public override IReadOnlyList<FilterSyntaxPattern> Patterns { get; } =
     [
-        FilterSyntaxPattern.Keyword("r", exampleValue: "1-2", description: I18NManager.GetResource(FilterResources.CompletionsRatio)),
-        FilterSyntaxPattern.Keyword("ratio", exampleValue: "1-2", description: I18NManager.GetResource(FilterResources.CompletionsRatio))
+        FilterSyntaxPattern.Keyword("r", exampleValue: "1-2", description: I18NManager.GetResource(FilterResources.Completions.Ratio)),
+        FilterSyntaxPattern.Keyword("ratio", exampleValue: "1-2", description: I18NManager.GetResource(FilterResources.Completions.Ratio))
     ];
 }

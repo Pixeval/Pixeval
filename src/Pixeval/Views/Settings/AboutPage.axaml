@@ -25,11 +25,11 @@
 
                 <TextBlock
                     DockPanel.Dock="Top"
-                    Text="{I18N {x:Static pixeval:AboutPageResources.AppDescriptionTextBlockText}}"
+                    Text="{I18N {x:Static pixeval:AboutPageResources+AppDescriptionTextBlock.Text}}"
                     TextWrapping="Wrap" />
 
                 <!--  Special Thanks  -->
-                <TextBlock Text="{I18N {x:Static pixeval:AboutPageResources.SpecialThanksSubtitleTextBlockText}}" Theme="{StaticResource SubtitleTextBlockStyle}" />
+                <TextBlock Text="{I18N {x:Static pixeval:AboutPageResources+SpecialThanksSubtitleTextBlock.Text}}" Theme="{StaticResource SubtitleTextBlockStyle}" />
                 <ItemsControl ItemsSource="{Binding $parent[settings:AboutPage].Supporters}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -70,7 +70,7 @@
                 </ItemsControl>
 
                 <!--  Dependencies  -->
-                <TextBlock Text="{I18N {x:Static pixeval:AboutPageResources.DependenciesSubtitleTextBlockText}}" Theme="{StaticResource SubtitleTextBlockStyle}" />
+                <TextBlock Text="{I18N {x:Static pixeval:AboutPageResources+DependenciesSubtitleTextBlock.Text}}" Theme="{StaticResource SubtitleTextBlockStyle}" />
                 <ItemsControl ItemsSource="{x:Static settings:DependencyViewModel.DependencyViewModels}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="{x:Type settings:DependencyViewModel}">
@@ -100,7 +100,7 @@
                 </ItemsControl>
 
                 <!--  Open Source License  -->
-                <TextBlock Text="{I18N {x:Static pixeval:AboutPageResources.OpenSourceLicenseSubtitleTextBlockText}}" Theme="{StaticResource SubtitleTextBlockStyle}" />
+                <TextBlock Text="{I18N {x:Static pixeval:AboutPageResources+OpenSourceLicenseSubtitleTextBlock.Text}}" Theme="{StaticResource SubtitleTextBlockStyle}" />
                 <local:MarkdownBox x:Name="LicenseTextBlock" />
             </StackPanel>
         </StackPanel>

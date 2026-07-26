@@ -8,6 +8,6 @@ namespace Pixeval.Models.Options;
 [LocalizationMetadata]
 public enum UgoiraDownloadFormat
 {
-    [LocalizedResource(EnumResources.UgoiraDownloadFormatOriginal)]
+    [LocalizedResource(EnumResources.UgoiraDownloadFormat.Original)]
     Original
 }

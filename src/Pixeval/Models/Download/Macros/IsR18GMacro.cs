@@ -13,7 +13,7 @@ public class IsR18GMacro : IPredicate<IArtworkInfo>
 {
     public string Name => "is_r18g";
 
-    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionIsR18G);
+    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescription.IsR18G);
 
     public bool Match(IArtworkInfo context) => context.SafeRating.IsR18G;
 }

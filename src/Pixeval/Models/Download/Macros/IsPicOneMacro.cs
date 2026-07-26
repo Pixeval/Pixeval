@@ -15,7 +15,7 @@ public class IsPicOneMacro : IPredicate<IArtworkInfo>
 
     public string Name => NameConst;
 
-    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionIsPicOne);
+    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescription.IsPicOne);
 
     public bool Match(IArtworkInfo context) => context.ImageType is ImageType.SingleImage;
 }

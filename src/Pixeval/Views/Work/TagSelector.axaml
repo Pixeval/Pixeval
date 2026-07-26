@@ -60,7 +60,7 @@
             Grid.Row="0"
             Grid.Column="0"
             HorizontalAlignment="Left"
-            Content="{I18N {x:Static pixeval:EnumResources.PrivacyPolicyPrivate}}"
+            Content="{I18N {x:Static pixeval:EnumResources+PrivacyPolicy.Private}}"
             IsChecked="{Binding #Root.IsPrivate, Mode=TwoWay}" />
         <ProgressBar
             Grid.Row="1"

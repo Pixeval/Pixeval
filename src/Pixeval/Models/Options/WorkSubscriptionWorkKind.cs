@@ -8,12 +8,12 @@ namespace Pixeval.Models.Options;
 [LocalizationMetadata]
 public enum WorkSubscriptionWorkKind
 {
-    [LocalizedResource(EnumResources.WorkSubscriptionWorkKindIllustration)]
+    [LocalizedResource(EnumResources.WorkSubscriptionWorkKind.Illustration)]
     Illustration,
 
-    [LocalizedResource(EnumResources.WorkSubscriptionWorkKindManga)]
+    [LocalizedResource(EnumResources.WorkSubscriptionWorkKind.Manga)]
     Manga,
 
-    [LocalizedResource(EnumResources.WorkSubscriptionWorkKindNovel)]
+    [LocalizedResource(EnumResources.WorkSubscriptionWorkKind.Novel)]
     Novel
 }

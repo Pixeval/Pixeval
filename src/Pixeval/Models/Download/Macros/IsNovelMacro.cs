@@ -13,7 +13,7 @@ public class IsNovelMacro : IPredicate<IArtworkInfo>
 {
     public string Name => "is_novel";
 
-    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionIsNovel);
+    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescription.IsNovel);
 
     public bool Match(IArtworkInfo context) => context.ImageType is ImageType.Other;
 }

@@ -10,7 +10,6 @@ using Avalonia.Media;
 using FluentIcons.Common;
 using Pixeval.Models.Options;
 using SharpYaml.Serialization;
-using static Pixeval.AppSettingsResources;
 
 namespace Pixeval.AppManagement;
 
@@ -31,23 +30,23 @@ public record NovelSettingsGroup
     [YamlConverter(typeof(YamlColorConverter))]
     public uint NovelBackgroundInLightMode { get; set; }
 
-    [SettingsEntry(Symbol.LineThickness, NovelSettingsFontWeightEntryHeader, NovelSettingsFontWeightEntryDescription, NovelSettingsFontWeightEntryPlaceholder)]
+    [SettingsEntry(Symbol.LineThickness, AppSettingsResources.NovelSettingsFontWeightEntry.Header, AppSettingsResources.NovelSettingsFontWeightEntry.Description, AppSettingsResources.NovelSettingsFontWeightEntry.Placeholder)]
     public FontWeight NovelFontWeight { get; set; } = FontWeight.Normal;
 
-    [SettingsEntry(Symbol.TextFont, NovelSettingsFontFamilyEntryHeader, AppFontFamilyEntryDescription, AppFontFamilyEntryPlaceholder)]
+    [SettingsEntry(Symbol.TextFont, AppSettingsResources.NovelSettingsFontFamilyEntry.Header, AppSettingsResources.AppFontFamilyEntry.Description, AppSettingsResources.AppFontFamilyEntry.Placeholder)]
     public ObservableCollection<string> NovelFontFamily { get; set; } = [];
 
-    [SettingsEntry(Symbol.TextFontSize, NovelSettingsFontSizeEntryHeader, NovelSettingsFontSizeEntryDescription)]
+    [SettingsEntry(Symbol.TextFontSize, AppSettingsResources.NovelSettingsFontSizeEntry.Header, AppSettingsResources.NovelSettingsFontSizeEntry.Description)]
     public int NovelFontSize { get; set; } = 14;
 
-    [SettingsEntry(Symbol.TextLineSpacing, NovelSettingsLineHeightEntryHeader, NovelSettingsLineHeightEntryDescription)]
+    [SettingsEntry(Symbol.TextLineSpacing, AppSettingsResources.NovelSettingsLineHeightEntry.Header, AppSettingsResources.NovelSettingsLineHeightEntry.Description)]
     public int NovelLineHeight { get; set; } = 28;
 
-    [SettingsEntry(Symbol.AutoFitWidth, NovelSettingsMaxWidthEntryHeader, NovelSettingsMaxWidthEntryDescription)]
+    [SettingsEntry(Symbol.AutoFitWidth, AppSettingsResources.NovelSettingsMaxWidthEntry.Header, AppSettingsResources.NovelSettingsMaxWidthEntry.Description)]
     public int NovelMaxWidth { get; set; } = 1000;
 
     [JsonIgnore]
-    [SettingsEntry(Symbol.ColorBackground, NovelSettingsBackgroundEntryHeader, NovelSettingsBackgroundEntryDescription)]
+    [SettingsEntry(Symbol.ColorBackground, AppSettingsResources.NovelSettingsBackgroundEntry.Header, AppSettingsResources.NovelSettingsBackgroundEntry.Description)]
     public uint NovelBackground
     {
         get => ActualTheme is ApplicationTheme.Light ? NovelBackgroundInLightMode : NovelBackgroundInDarkMode;
@@ -61,7 +60,7 @@ public record NovelSettingsGroup
     }
 
     [JsonIgnore]
-    [SettingsEntry(Symbol.TextColor, NovelSettingsFontColorEntryHeader, NovelSettingsFontColorEntryDescription)]
+    [SettingsEntry(Symbol.TextColor, AppSettingsResources.NovelSettingsFontColorEntry.Header, AppSettingsResources.NovelSettingsFontColorEntry.Description)]
     public uint NovelFontColor
     {
         get => ActualTheme is ApplicationTheme.Light ? NovelFontColorInLightMode : NovelFontColorInDarkMode;

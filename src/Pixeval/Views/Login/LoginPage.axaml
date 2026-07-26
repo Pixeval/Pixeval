@@ -54,19 +54,19 @@
             ItemTemplate="{StaticResource LoginUserTemplate}"
             ItemsSource="{Binding Users}"
             MinimumPrefixLength="0"
-            PlaceholderText="{I18N {x:Static pixeval:LoginPageResources.RefreshTokenBoxPlaceholderText}}"
+            PlaceholderText="{I18N {x:Static pixeval:LoginPageResources+RefreshTokenBox.PlaceholderText}}"
             SelectedItem="{Binding SelectedUser, Mode=TwoWay}"
             Tapped="RefreshTokenBox_OnTapped"
             Text="{Binding RefreshToken, Mode=TwoWay}" />
         <Button
             HorizontalAlignment="Stretch"
             Click="LoginButton_OnClick"
-            Content="{I18N {x:Static pixeval:LoginPageResources.RefreshTokenButtonContent}}"
+            Content="{I18N {x:Static pixeval:LoginPageResources+RefreshTokenButton.Content}}"
             IsEnabled="{Binding !IsLoginInProgress}" />
         <Button
             HorizontalAlignment="Stretch"
             Click="OpenWebView_OnClick"
-            Content="{I18N {x:Static pixeval:LoginPageResources.WebViewButtonContent}}"
+            Content="{I18N {x:Static pixeval:LoginPageResources+WebViewButton.Content}}"
             IsEnabled="{Binding !IsLoginInProgress}" />
     </StackPanel>
 </views:IconContentPage>

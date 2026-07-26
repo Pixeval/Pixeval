@@ -14,7 +14,7 @@ internal sealed class WorkBookmarkFilterSyntax : FilterLongRangeSyntax
 
     public override IReadOnlyList<FilterSyntaxPattern> Patterns { get; } =
     [
-        FilterSyntaxPattern.Keyword("l", exampleValue: "100-200", description: I18NManager.GetResource(FilterResources.CompletionsBookmark)),
-        FilterSyntaxPattern.Keyword("like", exampleValue: "100-200", description: I18NManager.GetResource(FilterResources.CompletionsBookmark))
+        FilterSyntaxPattern.Keyword("l", exampleValue: "100-200", description: I18NManager.GetResource(FilterResources.Completions.Bookmark)),
+        FilterSyntaxPattern.Keyword("like", exampleValue: "100-200", description: I18NManager.GetResource(FilterResources.Completions.Bookmark))
     ];
 }

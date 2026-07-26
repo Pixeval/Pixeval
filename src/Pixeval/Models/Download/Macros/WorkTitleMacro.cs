@@ -13,7 +13,7 @@ public class WorkTitleMacro : ITransducer<IArtworkInfo>
 {
     public string Name => "title";
 
-    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescriptionTitle);
+    public string Description => I18NManager.GetResource(MacroParserResources.MacroDescription.Title);
 
     public bool IsFormatterValid(string? formatter) => MacroHelper.IsStringFormatterValid(formatter);
 
