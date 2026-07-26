@@ -34,12 +34,12 @@
   },
   "AutoPlay": "Автовоспроизведение",
   "AutoPlayInterval": {
-    "1Second": "1 сек.",
-    "3Seconds": "3 сек.",
-    "5Seconds": "5 сек.",
-    "10Seconds": "10 сек.",
-    "15Seconds": "15 сек.",
-    "30Seconds": "30 сек."
+    "Seconds1": "1 сек.",
+    "Seconds3": "3 сек.",
+    "Seconds5": "5 сек.",
+    "Seconds10": "10 сек.",
+    "Seconds15": "15 сек.",
+    "Seconds30": "30 сек."
   },
   "ZoomIn": "Увеличить",
   "ZoomOut": "Уменьшить",
