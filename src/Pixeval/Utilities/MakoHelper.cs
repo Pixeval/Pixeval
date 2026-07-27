@@ -22,6 +22,7 @@ public static class MakoHelper
     {
         var tags = await App.AppViewModel.MakoClient.WorkBookmarkTags(type, uid, policy).ToListAsync(token);
         tags.Insert(0, AllBookmarkTag.Instance);
+        tags.Insert(1, UncategorizedBookmarkTag.Instance);
         return tags;
     }
 
@@ -135,8 +136,22 @@ public class AllBookmarkTag : BookmarkTag
         Count = 0
     };
 
-    private static readonly string _AllCountedTagName = I18NManager.GetResource(MiscResources.AllCountedTagName);
+    private static readonly string _TagNameAll = I18NManager.GetResource(MiscResources.TagName.All);
 
     /// <inheritdoc />
-    public override string ToString() => _AllCountedTagName;
+    public override string ToString() => _TagNameAll;
+}
+
+public class UncategorizedBookmarkTag : BookmarkTag
+{
+    public static UncategorizedBookmarkTag Instance { get; } = new()
+    {
+        Name = "未分類",
+        Count = 0
+    };
+
+    private static readonly string _TagNameUncategorized = I18NManager.GetResource(MiscResources.TagName.Uncategorized);
+
+    /// <inheritdoc />
+    public override string ToString() => _TagNameUncategorized;
 }

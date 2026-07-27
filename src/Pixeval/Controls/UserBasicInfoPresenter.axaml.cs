@@ -45,7 +45,7 @@ public class UserBasicInfoPresenter : TemplatedControl
     {
         get;
         private set => SetAndRaise(AvatarUrlProperty, ref field, value);
-    } = AppInfo.PixivNoProfilePath;
+    } = AppInfo.ImageNotAvailablePath;
 
     public string UserDisplayName
     {
@@ -62,7 +62,7 @@ public class UserBasicInfoPresenter : TemplatedControl
     private void UpdateFromUser(UserBasicInfo? user)
     {
         AvatarUrl = string.IsNullOrWhiteSpace(user?.AvatarUrl)
-            ? AppInfo.PixivNoProfilePath
+            ? AppInfo.ImageNotAvailablePath
             : user.AvatarUrl;
         UserDisplayName = user is null
             ? ""

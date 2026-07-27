@@ -7,7 +7,6 @@
   "OpenBottomList": "Открыть нижний список изображений",
   "CloseBottomList": "Закрыть нижний список изображений",
   "ExceptionEncountered": "Произошла ошибка",
-  "AllCountedTagName": "Все теги",
   "DownloadItemOpenFailed": "Не удалось открыть файл (папку)",
   "DownloadItemMaybeDeleted": "Возможно, вы удалили эту работу",
   "UnexpectedBehavior": "Произошло неопределённое поведение. Если вы видите это сообщение, обратитесь к разработчику",

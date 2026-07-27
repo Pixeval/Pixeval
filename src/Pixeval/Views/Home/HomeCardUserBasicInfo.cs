@@ -2,8 +2,8 @@
 // Licensed under the GPL-3.0 License.
 
 using System.Diagnostics.CodeAnalysis;
-using Mako;
 using Mako.Model;
+using Pixeval.AppManagement;
 
 namespace Pixeval.Views.Home;
 
@@ -17,7 +17,5 @@ public sealed record HomeCardUserBasicInfo : UserBasicInfo
         Account = "";
     }
 
-    public override string AvatarUrl => DefaultImageUrls.NoProfile;
-
-    public override string Description { get; set; } = "";
+    public override string AvatarUrl => AppInfo.ImageNotAvailablePath;
 }

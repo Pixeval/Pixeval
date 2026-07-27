@@ -15,6 +15,7 @@ using FluentIcons.Common;
 using Mako.Model;
 using Misaki;
 using Pixeval.Controls;
+using Pixeval.Utilities;
 
 namespace Pixeval.Views.Converters;
 
@@ -84,7 +85,7 @@ public static partial class PixevalConverters
             IconVariant = IconVariant.Color
         });
 
-    public static readonly FuncValueConverter<string, FontFamily?> FontFamilyConverter = new(font => font is null ? null : new FontFamily(font));
+    public static readonly FuncValueConverter<string, FontFamily?> FontFamilyConverter = new(static font => FontFamilyHelper.Create(font));
 
     [GeneratedRegex("<br\\s*/?>", RegexOptions.IgnoreCase)]
     private static partial Regex LineBreakRegex { get; }

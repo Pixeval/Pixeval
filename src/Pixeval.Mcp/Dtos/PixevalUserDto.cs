@@ -11,7 +11,7 @@ public sealed record PixevalUserDto(
     string Name,
     string Account,
     string AvatarUrl,
-    string Description,
+    string? Description,
     bool? IsFollowed,
     string WebsiteUrl,
     string PixevalUri,
@@ -23,7 +23,7 @@ public sealed record PixevalUserDto(
             user.Name,
             user.Account,
             user.AvatarUrl,
-            user.Description,
+            (user as SingleUserInfo)?.Description,
             (user as UserInfo)?.IsFollowed,
             user.WebsiteUri.ToString(),
             user.AppUri.ToString());

@@ -29,14 +29,14 @@ public class LoginUserEntry : HistoryEntry
 
     public bool RequirePolicyAgreement { get; set; }
 
-    public string Avatar16Url { get; set; } = AppInfo.PixivNoProfilePath;
+    public string Avatar16Url { get; set; } = AppInfo.ImageNotAvailablePath;
 
-    public string Avatar50Url { get; set; } = AppInfo.PixivNoProfilePath;
+    public string Avatar50Url { get; set; } = AppInfo.ImageNotAvailablePath;
 
-    public string Avatar170Url { get; set; } = AppInfo.PixivNoProfilePath;
+    public string Avatar170Url { get; set; } = AppInfo.ImageNotAvailablePath;
 
     [Ignore]
-    public string AvatarUrl => string.IsNullOrWhiteSpace(Avatar50Url) ? AppInfo.PixivNoProfilePath : Avatar50Url;
+    public string AvatarUrl => string.IsNullOrWhiteSpace(Avatar50Url) ? AppInfo.ImageNotAvailablePath : Avatar50Url;
 
     [Ignore]
     public string AccountDisplay => string.IsNullOrWhiteSpace(Account) ? "" : $"@{Account}";

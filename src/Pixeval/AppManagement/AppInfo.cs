@@ -64,13 +64,11 @@ public static class AppInfo
         _ = FileHelper.TryCreateDirectory(ExtensionsFolder);
     }
 
-    public const string ImageNotAvailablePath = $"avares://{AppIdentifier}/Assets/image-not-available.png";
+    public const string AssetsPathPrefix = $"avares://{AppIdentifier}/Assets/";
 
-    public const string PixivNoProfilePath = $"avares://{AppIdentifier}/Assets/pixiv_no_profile.png";
+    public const string ImageNotAvailablePath = $"{AssetsPathPrefix}image-not-available.png";
 
     public static Stream GetImageNotAvailableStream() => AssetLoader.Open(new Uri(ImageNotAvailablePath));
-
-    public static Stream GetPixivNoProfileStream() => AssetLoader.Open(new Uri(PixivNoProfilePath));
 
     public static async Task<byte[]> GetAssetBytesAsync(string relativeToAssetsFolder)
     {
@@ -82,7 +80,7 @@ public static class AppInfo
 
     public static Stream GetAssetStream(string relativeToAssetsFolder)
     {
-        var uri = new Uri($"avares://{AppIdentifier}/Assets/{relativeToAssetsFolder}");
+        var uri = new Uri(AssetsPathPrefix + relativeToAssetsFolder);
         return AssetLoader.Open(uri);
     }
 

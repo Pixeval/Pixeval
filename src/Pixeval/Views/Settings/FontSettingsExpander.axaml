@@ -5,11 +5,11 @@
     xmlns:avalonia="using:AutoSettingsPage.Avalonia"
     xmlns:controls="using:CommunityToolkit.Avalonia.Controls"
     xmlns:controls1="using:Pixeval.Controls"
-    xmlns:ctkConverters="using:CommunityToolkit.Avalonia.Controls.Converters"
     xmlns:converters="using:Pixeval.Views.Converters"
+    xmlns:ctkConverters="using:CommunityToolkit.Avalonia.Controls.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.Avalonia"
-    xmlns:local="using:AutoSettingsPage.Avalonia"
+    xmlns:local="using:Pixeval.Views.Settings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:AutoSettingsPage.Models"
     xmlns:sco="using:System.Collections.ObjectModel"
@@ -40,14 +40,10 @@
         <fluent:SymbolIcon Symbol="{Binding Icon}" />
     </controls:SettingsExpander.HeaderIcon>
     <controls:SettingsExpander.Items>
-        <controls:SettingsCard
-            ContentAlignment="Left"
-            HorizontalContentAlignment="Stretch">
+        <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
             <Grid
                 x:Name="FontPanel"
-                Classes.narrow="{Binding Bounds.Width,
-                                         RelativeSource={RelativeSource Self},
-                                         Converter={StaticResource NarrowLayoutConverter}}"
+                Classes.narrow="{Binding Bounds.Width, RelativeSource={RelativeSource Self}, Converter={StaticResource NarrowLayoutConverter}}"
                 ColumnDefinitions="*,Auto"
                 RowDefinitions="Auto,Auto">
                 <controls1:TokenizingBox
@@ -58,15 +54,15 @@
                     TokenSeparator=",">
                     <controls1:TokenizingBox.ItemTemplate>
                         <DataTemplate x:DataType="{x:Type x:String}">
-                            <TextBlock
-                                FontFamily="{Binding Converter={x:Static converters:PixevalConverters.FontFamilyConverter}}"
-                                Text="{Binding}" />
+                            <TextBlock FontFamily="{Binding Converter={x:Static converters:PixevalConverters.FontFamilyConverter}}" Text="{Binding}" />
                         </DataTemplate>
                     </controls1:TokenizingBox.ItemTemplate>
                 </controls1:TokenizingBox>
                 <ComboBox
                     x:Name="FontComboBox"
-                    ItemsSource="{x:Static local:SettingsEntryHelper.AvailableFonts}"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    ItemsSource="{x:Static local:FontSettingsExpander.AvailableFonts}"
                     SelectionChanged="SelectingItemsControl_OnSelectionChanged">
                     <ComboBox.ItemTemplate>
                         <DataTemplate x:DataType="{x:Type FontFamily}">

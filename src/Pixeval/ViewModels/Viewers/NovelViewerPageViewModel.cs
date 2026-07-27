@@ -18,6 +18,7 @@ using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.AppManagement;
 using Pixeval.Models.Settings;
+using Pixeval.Utilities;
 using Pixeval.Views.Capability;
 using Pixeval.Views.Settings;
 using Pixeval.Views.Viewers;
@@ -179,9 +180,7 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
 
     public IBrush NovelForegroundBrush => new SolidColorBrush(Color.FromUInt32(Settings.NovelSettings.NovelFontColor));
 
-    public FontFamily? NovelFontFamilyObject => Settings.NovelSettings.NovelFontFamily.Count is 0
-        ? null
-        : new(string.Join(',', Settings.NovelSettings.NovelFontFamily));
+    public FontFamily? NovelFontFamilyObject => FontFamilyHelper.Create(Settings.NovelSettings.NovelFontFamily);
 
     public FontWeight NovelFontWeight => Settings.NovelSettings.NovelFontWeight;
 

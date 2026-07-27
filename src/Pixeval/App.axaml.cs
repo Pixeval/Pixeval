@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Avalonia;
@@ -63,10 +62,7 @@ public class App : Application
     public static void ApplyAppFontFamily(IEnumerable<string> fontFamilies)
     {
         var resources = Current!.Resources;
-        var fontFamily = string.Join(',', fontFamilies.Where(static fontFamily => !string.IsNullOrWhiteSpace(fontFamily)));
-        resources["ContentControlThemeFontFamily"] = string.IsNullOrWhiteSpace(fontFamily)
-            ? FontFamily.Default
-            : new FontFamily(fontFamily);
+        resources["ContentControlThemeFontFamily"] = FontFamilyHelper.Create(fontFamilies) ?? FontFamily.Default;
     }
 
     public override void OnFrameworkInitializationCompleted()

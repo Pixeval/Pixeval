@@ -28,12 +28,10 @@ public class WorkSubscriptionItemViewModel(WorkSubscriptionEntry entry) : ViewMo
             Name = entry.DisplayName;
             Account = entry.Account;
             AvatarUrl = string.IsNullOrWhiteSpace(entry.AvatarUrl)
-                ? AppInfo.PixivNoProfilePath
+                ? AppInfo.ImageNotAvailablePath
                 : entry.AvatarUrl;
         }
 
         public override string AvatarUrl { get; }
-
-        public override string Description { get; set; } = "";
     }
 }

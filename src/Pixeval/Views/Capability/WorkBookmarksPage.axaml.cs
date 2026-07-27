@@ -23,7 +23,7 @@ public partial class WorkBookmarksPage : IconContentPage
     private readonly string? _initialTag;
     private bool _suppressChangeSource;
 
-    public static IReadOnlyList<BookmarkTag> DefaultTags { get; } = [AllBookmarkTag.Instance];
+    public static IReadOnlyList<BookmarkTag> DefaultTags { get; } = [AllBookmarkTag.Instance, UncategorizedBookmarkTag.Instance];
 
     public WorkBookmarksPage() : this(PixevalSettings.Me)
     {

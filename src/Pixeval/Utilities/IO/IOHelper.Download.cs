@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Platform;
 using Avalonia.Threading;
+using Pixeval.AppManagement;
 
 namespace Pixeval.Utilities.IO;
 
@@ -65,6 +66,11 @@ public static partial class IoHelper
                 {
                     progress?.Report(100);
                     return Result<Stream>.AsSuccess(File.OpenAsyncRead(uri.LocalPath));
+                }
+
+                if (uri.Scheme is "pixivassets")
+                {
+                    uri = new Uri(uri.OriginalString.Replace("pixivassets://", AppInfo.AssetsPathPrefix));
                 }
 
                 if (uri.Scheme is "avares")

@@ -188,7 +188,7 @@ public static class DesignHelper
         LastPublishedContentDatetime = DateTimeOffset.UtcNow
     };
 
-    public static UserInfo DesignUserInfo => field ??= new()
+    public static SingleUserInfo DesignUserInfo => field ??= new()
     {
         Id = 123456,
         Name = "Username",
@@ -196,9 +196,11 @@ public static class DesignHelper
         IsFollowed = true,
         ProfileImageUrls = new()
         {
-            Medium = AppInfo.PixivNoProfilePath
+            Medium = AppInfo.ImageNotAvailablePath
         },
-        IsAcceptRequest = false
+        IsAcceptRequest = false,
+        Description = "Description",
+        IsAccessBlockingUser = false
     };
 
     public static ISingleImage DownloadParserSampleWork(ImageType imageType) => new DownloadParserSampleWork(imageType);
@@ -252,7 +254,8 @@ file record DownloadParserSampleWork(ImageType ImageType) : ISingleImage, IImage
             Name = nameof(UserInfo.Name),
             Account = "",
             ProfileImageUrls = null!,
-            IsAcceptRequest = false
+            IsAcceptRequest = false,
+            IsFollowed = true
         }
     ];
 
