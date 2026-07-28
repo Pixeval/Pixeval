@@ -138,9 +138,13 @@
             Height="90"
             Margin="5,0"
             Padding="0,0,0,5"
+            controls:IncrementalLoadingBehavior.IsEnabled="True"
+            controls:IncrementalLoadingBehavior.Threshold="100"
             HorizontalAlignment="Stretch"
             IsVisible="{Binding IsBottomListOpen}"
             ItemsSource="{Binding Novels}"
+            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+            ScrollViewer.VerticalScrollBarVisibility="Disabled"
             SelectedIndex="{Binding CurrentWorkIndex}"
             SelectionMode="Single">
             <ListBox.ItemsPanel>
