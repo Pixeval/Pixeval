@@ -44,6 +44,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(TransformExtensionCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ViewOriginalCommand))]
     [NotifyCanExecuteChangedFor(nameof(PlayPauseCommand))]
     [NotifyCanExecuteChangedFor(nameof(MirrorCommand))]
     [NotifyCanExecuteChangedFor(nameof(RotateClockwiseCommand))]
@@ -55,7 +56,8 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(TransformExtensionCommand))]
-    public partial bool IsTransforming { get; private set; }
+    [NotifyCanExecuteChangedFor(nameof(ViewOriginalCommand))]
+    public partial bool IsProcessingImage { get; private set; }
 
     /// <summary>
     /// 显示用图源
@@ -80,7 +82,9 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
 
     private bool IsGifLoadSuccessfully => LoadSuccessfully && IsPicGif;
 
-    public bool CanTransformExtension => !IsPicGif && !IsTransforming && LoadSuccessfully && OriginalSource is not null;
+    public bool CanViewOriginal => !IsProcessingImage && LoadSuccessfully;
+
+    public bool CanTransformExtension => !IsPicGif && CanViewOriginal && OriginalSource is not null;
 
     public IReadOnlyList<ImageTransformerExtensionCommandItem> TransformerExtensionItems { get; }
 
@@ -188,7 +192,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
         IAnimatedBitmap? source;
         try
         {
-            source = await LoadOriginalImageOverrideAsync(_lifetimeCancellationTokenSource.Token);
+            source = await LoadImageAsync(false, _lifetimeCancellationTokenSource.Token);
         }
         catch (OperationCanceledException) when (_lifetimeCancellationTokenSource.IsCancellationRequested)
         {
@@ -259,9 +263,8 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
             token);
     }
 
-    private async Task<IAnimatedBitmap?> LoadOriginalImageOverrideAsync(CancellationToken token)
+    private async Task<IAnimatedBitmap?> LoadImageAsync(bool isOriginal, CancellationToken token)
     {
-        var isOriginal = false; // TODO: 设置项
         switch (_entry)
         {
             // 当下载图集的其中一张图片时，ImageType会为ImageSet
@@ -280,7 +283,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
                 var f = isOriginal
                     ? singleAnimatedImage
                     : (await singleAnimatedImage.AnimatedThumbnails.ApplyAsync(t => t
-                        .TryPreloadListAsync(singleAnimatedImage))).PickMax();
+                        .TryPreloadListAsync(singleAnimatedImage, token: token))).PickMax();
                 token.ThrowIfCancellationRequested();
                 if (f is null)
                     return null;
@@ -315,6 +318,44 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
             TransformedSource?.Dispose();
     }
 
+    [RelayCommand(CanExecute = nameof(CanViewOriginal))]
+    private async Task ViewOriginalAsync(Control? control)
+    {
+        var viewContainer = control is null ? null : TopLevel.GetTopLevel(control)?.ViewContainer;
+        IsProcessingImage = true;
+        try
+        {
+            viewContainer?.ShowInformation(I18NManager.GetResource(ImageViewerPageResources.LoadingOriginalImage));
+            AdvancePhase(LoadingPhase.LoadingImage);
+            var source = await LoadImageAsync(true, _lifetimeCancellationTokenSource.Token);
+            if (source is null)
+            {
+                viewContainer?.ShowError(I18NManager.GetResource(ImageViewerPageResources.OriginalImageLoadFailed));
+                return;
+            }
+
+            if (_disposed)
+            {
+                source.Dispose();
+                return;
+            }
+
+            TransformedSource = source;
+            viewContainer?.ShowSuccess(I18NManager.GetResource(ImageViewerPageResources.OriginalImageLoadedSuccessfully));
+        }
+        catch (OperationCanceledException) when (_lifetimeCancellationTokenSource.IsCancellationRequested)
+        {
+        }
+        catch
+        {
+            viewContainer?.ShowError(I18NManager.GetResource(ImageViewerPageResources.OriginalImageLoadFailed));
+        }
+        finally
+        {
+            IsProcessingImage = false;
+        }
+    }
+
     internal async Task ExecuteTransformerExtensionAsync(IImageTransformerCommandExtension extension, Control? control)
     {
         var viewContainer = control is null ? null : TopLevel.GetTopLevel(control)?.ViewContainer;
@@ -336,7 +377,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
         if (extension is null || OriginalSource is not { } originalSource)
             return;
 
-        IsTransforming = true;
+        IsProcessingImage = true;
         try
         {
             originalSource.Init();
@@ -366,7 +407,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
         }
         finally
         {
-            IsTransforming = false;
+            IsProcessingImage = false;
         }
     }
 
