@@ -155,3 +155,18 @@ public class UncategorizedBookmarkTag : BookmarkTag
     /// <inheritdoc />
     public override string ToString() => _TagNameUncategorized;
 }
+
+public class BookmarkDetailBookmarkTag : BookmarkTag
+{
+    public bool IsRegistered { get; private init; }
+
+    public static BookmarkDetailBookmarkTag Create(BookmarkDetailTag tag) => new()
+    {
+        Name = tag.Name,
+        Count = 0,
+        IsRegistered = tag.IsRegistered
+    };
+
+    /// <inheritdoc />
+    public override string ToString() => Name;
+}

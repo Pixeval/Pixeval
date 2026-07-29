@@ -163,9 +163,15 @@ public partial class WorkContainer : UserControl
         if (target is null && DataContext is not IOperableViewViewModel { SelectedEntries.Count: > 0 })
             return;
 
+        var id = target is { Entry.Id: { } idStr } && long.TryParse(idStr, out var idLong) ? idLong : 0;
+        var type = target is NovelItemViewModel || DataContext is NovelViewViewModel or SimpleOperableViewViewModel<NovelItemViewModel>
+            ? SimpleWorkType.Novel
+            : SimpleWorkType.Illustration;
+
         await BookmarkTagSelectorFlyoutHelper.ShowAsync(
             placementTarget,
-            GetTagSelectorWorkType(target),
+            type,
+            id,
             async e => await AddToBookmarkAsync(target, e),
             PlacementMode.Bottom);
     }
@@ -194,11 +200,6 @@ public partial class WorkContainer : UserControl
         if (viewModel.SelectedEntries.Count is var c and > 0)
             TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(I18NManager.GetResource(WorkContainerResources.AddedAllToBookmarkContentFormatted, c));
     }
-
-    private SimpleWorkType GetTagSelectorWorkType(IWorkViewModel? target)
-        => target is NovelItemViewModel || DataContext is NovelViewViewModel or SimpleOperableViewViewModel<NovelItemViewModel>
-            ? SimpleWorkType.Novel
-            : SimpleWorkType.Illustration;
 
     private async void SaveAllButton_OnClicked(object? sender, RoutedEventArgs e)
     {
@@ -246,8 +247,6 @@ public partial class WorkContainer : UserControl
 
     private void WorkFilterAutoSuggestBox_OnSearchRequested(object? sender, WorkFilterSearchRequestedEventArgs e)
         => PerformSearch(e.Text, e.CaretIndex);
-
-    public void PerformSearch(string? text) => PerformSearch(text, WorkFilterAutoSuggestBox.CaretIndex);
 
     private void PerformSearch(string? text, int caret)
     {

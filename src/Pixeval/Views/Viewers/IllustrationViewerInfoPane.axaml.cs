@@ -56,10 +56,11 @@ public partial class IllustrationViewerInfoPane : UserControl
 
     private async void AddToBookmarkButton_OnRightClick(object? sender, ContextRequestedEventArgs e)
     {
-        if (sender is Control c)
+        if (sender is Control c && ViewModel.CurrentIllustration is { Id: { } idStr } && long.TryParse(idStr, out var id))
             await BookmarkTagSelectorFlyoutHelper.ShowAsync(
                 c,
                 SimpleWorkType.Illustration,
+                id,
                 AddToBookmarkAsync,
                 PlacementMode.TopEdgeAlignedRight);
     }

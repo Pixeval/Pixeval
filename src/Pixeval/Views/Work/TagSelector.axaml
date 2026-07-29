@@ -25,10 +25,11 @@
         <ListBox
             Grid.Row="1"
             Grid.ColumnSpan="2"
+            MaxHeight="420"
             Classes="bookmark-tag-list"
             IsVisible="{Binding #Root.IsLoading, Converter={x:Static BoolConverters.Not}}"
-            ItemsSource="{Binding #Root.CurrentTagsSource}"
-            SelectedItems="{Binding #Root.CurrentSelectedTags}"
+            ItemsSource="{Binding #Root.TagsSource}"
+            SelectedItems="{Binding #Root.SelectedTags}"
             SelectionChanged="OnListBoxSelectionChanged"
             SelectionMode="Multiple,Toggle">
             <ListBox.ItemContainerTheme>

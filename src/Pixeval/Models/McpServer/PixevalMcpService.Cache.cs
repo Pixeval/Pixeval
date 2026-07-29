@@ -74,7 +74,7 @@ public sealed partial class PixevalMcpService
         if (TryGetCachedWork(SimpleWorkType.Illustration, id) is Illustration cached)
             return cached;
 
-        var illustration = await MakoClient.GetIllustrationFromIdAsync(id).WaitAsync(cancellationToken)
+        var illustration = await MakoClient.GetIllustrationFromIdAsync(id, cancellationToken)
             .ConfigureAwait(false);
         CacheWorks([illustration]);
         return illustration;
@@ -85,7 +85,7 @@ public sealed partial class PixevalMcpService
         if (TryGetCachedWork(SimpleWorkType.Novel, id) is Novel cached)
             return cached;
 
-        var novel = await MakoClient.GetNovelFromIdAsync(id).WaitAsync(cancellationToken).ConfigureAwait(false);
+        var novel = await MakoClient.GetNovelFromIdAsync(id, cancellationToken).ConfigureAwait(false);
         CacheWorks([novel]);
         return novel;
     }
@@ -95,7 +95,7 @@ public sealed partial class PixevalMcpService
         if (TryGetCachedSingleUser(id) is { } cached)
             return cached;
 
-        var user = await MakoClient.GetUserFromIdAsync(id).WaitAsync(cancellationToken).ConfigureAwait(false);
+        var user = await MakoClient.GetUserFromIdAsync(id, cancellationToken).ConfigureAwait(false);
         CacheSingleUser(user);
         return user;
     }

@@ -152,11 +152,14 @@ public partial class GitHubReleaseSerializeContext : JsonSerializerContext;
 
 public class GitHubRelease
 {
-    [JsonPropertyName("tag_name")] public required string TagName { get; init; }
+    [JsonPropertyName("tag_name")]
+    public required string TagName { get; init; }
 
-    [JsonPropertyName("assets")] public required Assets[] Assets { get; init; }
+    [JsonPropertyName("assets")]
+    public required Assets[] Assets { get; init; }
 
-    [JsonPropertyName("body")] public required string Notes { get; init; }
+    [JsonPropertyName("body")]
+    public required string Notes { get; init; }
 }
 
 public class Assets

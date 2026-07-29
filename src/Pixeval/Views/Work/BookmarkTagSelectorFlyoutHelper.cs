@@ -15,6 +15,7 @@ public static class BookmarkTagSelectorFlyoutHelper
     public static async Task ShowAsync(
         Control placementTarget,
         SimpleWorkType workType,
+        long workId,
         Func<(bool IsPrivate, IReadOnlyList<string>? Tags), Task> onTagsSelected,
         PlacementMode placement = PlacementMode.Bottom)
     {
@@ -24,14 +25,14 @@ public static class BookmarkTagSelectorFlyoutHelper
         };
         var tagSelector = new TagSelector
         {
-            WorkType = workType
+            WorkType = workType,
+            WorkId = workId
         };
         flyout.Content = new Border
         {
             Width = 340,
-            MaxHeight = 420,
             CornerRadius = new CornerRadius(8),
-            Padding = new Thickness(12),
+            Padding = new Thickness(6),
             Child = tagSelector
         };
         tagSelector.TagsSelected += OnTagsSelected;

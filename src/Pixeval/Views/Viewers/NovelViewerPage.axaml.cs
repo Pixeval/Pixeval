@@ -57,10 +57,11 @@ public partial class NovelViewerPage : IconContentPage
 
     private async void AddToBookmarkButton_OnClick(object? sender, ContextRequestedEventArgs e)
     {
-        if (sender is Control c)
+        if (sender is Control c && ViewModel.CurrentNovel is { Entry.Id: var id })
             await BookmarkTagSelectorFlyoutHelper.ShowAsync(
                 c,
                 SimpleWorkType.Novel,
+                id,
                 AddToBookmarkAsync,
                 PlacementMode.Bottom);
     }
