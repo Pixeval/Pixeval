@@ -37,6 +37,32 @@
 * iOS 13 及更高
 <!-- * 浏览器 -->
 
+### 通过 Homebrew 安装Pixeval for Mac
+[![brew test-bot](https://github.com/Pixeval/homebrew-tap/actions/workflows/tests.yml/badge.svg)](https://github.com/Pixeval/homebrew-tap/actions/workflows/tests.yml)
+
+Pixeval提供自托管的[Homebrew Tap](https://github.com/Pixeval/homebrew-tap)在Mac上安装Pixeval
+
+```bash
+# 添加此 tap
+brew tap Pixeval/tap
+
+# 安装 Pixeval
+brew install --cask pixeval
+```
+**卸载**
+
+```bash
+brew uninstall --cask --zap pixeval
+
+# 仅卸载应用，保留用户数据
+brew uninstall --cask pixeval
+
+# 移除 tap 本身
+brew untap Pixeval/tap
+```
+
+更多信息请查看[Tap仓库](https://github.com/Pixeval/homebrew-tap)
+
 ## 反馈问题（按照推荐程度优先级排序）
 
 1. 在 [github](https://github.com/Pixeval/Pixeval/issues/new/choose) 提交新的Issue
