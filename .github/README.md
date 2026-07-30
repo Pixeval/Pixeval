@@ -64,12 +64,14 @@ brew uninstall --cask --zap pixeval
 # 仅卸载应用，保留用户数据
 brew uninstall --cask pixeval
 
-# 下载p Pixeval (Formula)
+# 下载 Pixeval (Formula)
 brew uninstall pixeval
 
 # 移除 tap 本身
 brew untap Pixeval/tap
 ```
+> [!NOTE]
+> 如果默认的 Tap 速度较慢，可以手动下载[Cask源文件](https://raw.githubusercontent.com/Pixeval/homebrew-tap/refs/heads/main/Casks/pixeval.rb)或[Formula源文件](https://raw.githubusercontent.com/Pixeval/homebrew-tap/refs/heads/main/Formula/pixeval.rb)，更换到镜像域名后，`brew install --cask /path/to/pixeval.rb` 或 `brew install --formula /path/to/pixeval.rb`。
 
 更多信息请查看[Tap仓库](https://github.com/Pixeval/homebrew-tap)
 
