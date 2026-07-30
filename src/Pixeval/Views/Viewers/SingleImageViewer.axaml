@@ -9,60 +9,50 @@
     xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:pixeval="using:Pixeval"
     xmlns:scroll="using:SmoothScroll.Avalonia.Controls"
-    xmlns:viewers="using:Pixeval.Views.Viewers"
     xmlns:vm="using:Pixeval.ViewModels.Viewers"
     x:DataType="{x:Type vm:SingleViewerViewModel}"
     x:Name="Root">
-    <UserControl.Styles>
-        <Style Selector="viewers|SingleImageViewer:scrollable ContentPresenter#ImagePresenter">
-            <Setter Property="ContentTemplate">
-                <DataTemplate DataType="{x:Type vm:SingleViewerViewModel}">
-                    <!--  图片查看器（缩放/平移）  -->
-                    <scroll:ScrollView
-                        x:Name="ViewerScrollView"
-                        IsHorizontalMeasureInfinite="True"
-                        IsVerticalMeasureInfinite="True"
-                        Theme="{StaticResource ViewerScrollViewTheme}"
-                        ZoomFactor="{Binding ZoomFactor, Mode=OneWayToSource}">
-                        <ai:AnimatedImage
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            IsPlaying="{Binding IsPlaying}"
-                            RenderTransformOrigin="50%,50%"
-                            Source="{Binding DisplaySource}">
-                            <ai:AnimatedImage.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform ScaleX="{Binding MirrorScaleX}" />
-                                    <RotateTransform Angle="{Binding RotationDegree}" />
-                                </TransformGroup>
-                            </ai:AnimatedImage.RenderTransform>
-                        </ai:AnimatedImage>
-                    </scroll:ScrollView>
-                </DataTemplate>
-            </Setter>
-        </Style>
+    <UserControl.Resources>
+        <DataTemplate x:Key="ScrollableImageTemplate" DataType="{x:Type vm:SingleViewerViewModel}">
+            <!--  图片查看器（缩放/平移）  -->
+            <scroll:ScrollView
+                x:Name="ViewerScrollView"
+                IsHorizontalMeasureInfinite="True"
+                IsVerticalMeasureInfinite="True"
+                Theme="{StaticResource ViewerScrollViewTheme}">
+                <ai:AnimatedImage
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    IsPlaying="{Binding IsPlaying}"
+                    RenderTransformOrigin="50%,50%"
+                    Source="{Binding DisplaySource}">
+                    <ai:AnimatedImage.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="{Binding MirrorScaleX}" />
+                            <RotateTransform Angle="{Binding RotationDegree}" />
+                        </TransformGroup>
+                    </ai:AnimatedImage.RenderTransform>
+                </ai:AnimatedImage>
+            </scroll:ScrollView>
+        </DataTemplate>
 
-        <Style Selector="viewers|SingleImageViewer:plain ContentPresenter#ImagePresenter">
-            <Setter Property="ContentTemplate">
-                <DataTemplate DataType="{x:Type vm:SingleViewerViewModel}">
-                    <ai:AnimatedImage
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch"
-                        IsPlaying="{Binding IsPlaying}"
-                        RenderTransformOrigin="50%,50%"
-                        Source="{Binding DisplaySource}"
-                        Stretch="Uniform">
-                        <ai:AnimatedImage.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform ScaleX="{Binding MirrorScaleX}" />
-                                <RotateTransform Angle="{Binding RotationDegree}" />
-                            </TransformGroup>
-                        </ai:AnimatedImage.RenderTransform>
-                    </ai:AnimatedImage>
-                </DataTemplate>
-            </Setter>
-        </Style>
-    </UserControl.Styles>
+        <DataTemplate x:Key="PlainImageTemplate" DataType="{x:Type vm:SingleViewerViewModel}">
+            <ai:AnimatedImage
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                IsPlaying="{Binding IsPlaying}"
+                RenderTransformOrigin="50%,50%"
+                Source="{Binding DisplaySource}"
+                Stretch="Uniform">
+                <ai:AnimatedImage.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="{Binding MirrorScaleX}" />
+                        <RotateTransform Angle="{Binding RotationDegree}" />
+                    </TransformGroup>
+                </ai:AnimatedImage.RenderTransform>
+            </ai:AnimatedImage>
+        </DataTemplate>
+    </UserControl.Resources>
 
     <UserControl.ContextMenu>
         <ContextMenu>
@@ -144,7 +134,6 @@
     <Panel>
         <ContentPresenter
             x:Name="ImagePresenter"
-            Content="{Binding}"
             IsVisible="{Binding LoadSuccessfully}"
             PropertyChanged="ImagePresenter_OnPropertyChanged" />
 

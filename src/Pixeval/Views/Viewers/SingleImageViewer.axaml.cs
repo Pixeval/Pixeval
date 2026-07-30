@@ -6,8 +6,8 @@ using System.ComponentModel;
 using AnimatedControls.Avalonia;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Presenters;
+using Avalonia.Controls.Templates;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Pixeval.ViewModels.Viewers;
@@ -18,11 +18,10 @@ namespace Pixeval.Views.Viewers;
 /// <summary>
 /// <see cref="SwipeImageViewer"/> 内部使用
 /// </summary>
-[PseudoClasses(PcScrollable, PcPlain)]
 public partial class SingleImageViewer : UserControl
 {
-    private const string PcScrollable = ":scrollable";
-    private const string PcPlain = ":plain";
+    private const string ScrollableImageTemplateKey = "ScrollableImageTemplate";
+    private const string PlainImageTemplateKey = "PlainImageTemplate";
 
     public static readonly StyledProperty<bool> UseScrollViewProperty =
         AvaloniaProperty.Register<SingleImageViewer, bool>(
@@ -31,6 +30,7 @@ public partial class SingleImageViewer : UserControl
 
     private SingleViewerViewModel? _subscribedViewModel;
     private SingleViewerViewModel? _fitViewModel;
+    private IAnimatedBitmap? _fitSource;
     private bool _initialFitApplied;
     private bool _initialFitQueued;
     internal AnimatedImage? ImageViewer;
@@ -74,6 +74,8 @@ public partial class SingleImageViewer : UserControl
     private void UpdateViewModelSubscription()
     {
         var viewModel = DataContext as SingleViewerViewModel;
+        UpdateFitTarget(viewModel);
+
         if (ReferenceEquals(_subscribedViewModel, viewModel))
             return;
 
@@ -82,9 +84,6 @@ public partial class SingleImageViewer : UserControl
             return;
 
         _subscribedViewModel = viewModel;
-        _fitViewModel = viewModel;
-        _initialFitApplied = false;
-        _initialFitQueued = false;
         _subscribedViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         QueueInitialZoomToFit();
     }
@@ -94,9 +93,6 @@ public partial class SingleImageViewer : UserControl
         _subscribedViewModel?.PropertyChanged -= ViewModelOnPropertyChanged;
 
         _subscribedViewModel = null;
-        _fitViewModel = null;
-        _initialFitApplied = false;
-        _initialFitQueued = false;
     }
 
     private void ViewModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -112,7 +108,7 @@ public partial class SingleImageViewer : UserControl
                 QueueInitialZoomToFit();
                 break;
             case nameof(SingleViewerViewModel.DisplaySource):
-                _initialFitApplied = false;
+                UpdateFitTarget(_subscribedViewModel);
                 QueueInitialZoomToFit();
                 break;
         }
@@ -153,8 +149,26 @@ public partial class SingleImageViewer : UserControl
 
     private void UpdateViewMode()
     {
-        PseudoClasses.Set(PcScrollable, UseScrollView);
-        PseudoClasses.Set(PcPlain, !UseScrollView);
+        var templateKey = UseScrollView ? ScrollableImageTemplateKey : PlainImageTemplateKey;
+        if (!this.TryFindResource(templateKey, out var resource) || resource is not IDataTemplate template)
+            throw new InvalidOperationException($"Resource '{templateKey}' must be an {nameof(IDataTemplate)}.");
+
+        // Hold the stateful viewer as direct content so a logical-tree reattach cannot rebuild its data template.
+        ImagePresenter.Content = template.Build(DataContext);
+        _initialFitApplied = false;
+        QueueInitialZoomToFit();
+    }
+
+    private void UpdateFitTarget(SingleViewerViewModel? viewModel)
+    {
+        var source = viewModel?.DisplaySource;
+        if (ReferenceEquals(_fitViewModel, viewModel) && ReferenceEquals(_fitSource, source))
+            return;
+
+        _fitViewModel = viewModel;
+        _fitSource = source;
+        _initialFitApplied = false;
+        _initialFitQueued = false;
     }
 
     private void SetViewerControls(AnimatedImage? imageViewer, ScrollView? scrollView)
@@ -163,16 +177,32 @@ public partial class SingleImageViewer : UserControl
             return;
 
         ImageViewer?.SizeChanged -= ImageViewerOnSizeChanged;
+        if (ViewerScrollView is not null)
+            ViewerScrollView.PropertyChanged -= ViewerScrollViewOnPropertyChanged;
 
         ImageViewer = imageViewer;
         ViewerScrollView = scrollView;
 
         ImageViewer?.SizeChanged += ImageViewerOnSizeChanged;
 
-        scrollView?.GestureBindings = ImageViewerScrollGestureProfiles.Paging;
+        if (scrollView is not null)
+        {
+            scrollView.PropertyChanged += ViewerScrollViewOnPropertyChanged;
+            scrollView.GestureBindings = ImageViewerScrollGestureProfiles.Paging;
+        }
 
         ApplyViewModelZoomFactor();
         QueueInitialZoomToFit();
+    }
+
+    private void ViewerScrollViewOnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property != ScrollView.ZoomFactorProperty)
+            return;
+
+        var zoomFactor = e.GetNewValue<double>();
+        if (DataContext is SingleViewerViewModel viewModel && viewModel.ZoomFactor != zoomFactor)
+            viewModel.ZoomFactor = zoomFactor;
     }
 
     private bool TryZoomToFit(bool animation)
@@ -203,11 +233,16 @@ public partial class SingleImageViewer : UserControl
             || _fitViewModel is not { LoadSuccessfully: true } viewModel)
             return;
 
+        var source = _fitSource;
         _initialFitQueued = true;
         Dispatcher.UIThread.Post(() =>
         {
-            _initialFitQueued = false;
             if (!ReferenceEquals(_fitViewModel, viewModel)
+                || !ReferenceEquals(_fitSource, source))
+                return;
+
+            _initialFitQueued = false;
+            if (VisualRoot is null
                 || !ReferenceEquals(DataContext, viewModel)
                 || _initialFitApplied)
                 return;
