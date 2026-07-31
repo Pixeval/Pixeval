@@ -40,6 +40,7 @@ public partial class WorkContainer : UserControl
     private IReadOnlyList<FilterCompletionDefinition> _authorValueCompletions = [];
     private FilterQuery? _filterQuery;
 
+    // 方向下拉项共用本地化资源，确保显示文本随当前语言切换。
     public static IReadOnlyList<SymbolComboBoxItem> OrientationFilterItems { get; } =
     [
         new(SearchIllustrationRatioPattern.All, I18NManager.GetResource(WorkContainerResources.OrientationFilter.All), default),
@@ -305,6 +306,7 @@ public partial class WorkContainer : UserControl
             : SearchIllustrationRatioPattern.All;
         var query = _filterQuery;
 
+        // 文本筛选和方向筛选合并为同一个条件，切换任一筛选项都不会覆盖另一项。
         viewModel.UserFilter = query is null && orientation is SearchIllustrationRatioPattern.All
             ? null
             : IFilter<IWorkViewModel>.Create(work =>

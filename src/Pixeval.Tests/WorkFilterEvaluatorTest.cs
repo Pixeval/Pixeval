@@ -111,6 +111,7 @@ public sealed class WorkFilterEvaluatorTest
         var portrait = landscape with { Width = 600, Height = 1200 };
         var square = landscape with { Width = 800, Height = 800 };
 
+        // 覆盖三种方向以及缺少尺寸时的筛选结果。
         Assert.IsTrue(WorkOrientationFilterEvaluator.Matches(landscape, SearchIllustrationRatioPattern.Landscape));
         Assert.IsFalse(WorkOrientationFilterEvaluator.Matches(landscape, SearchIllustrationRatioPattern.Portrait));
         Assert.IsTrue(WorkOrientationFilterEvaluator.Matches(portrait, SearchIllustrationRatioPattern.Portrait));
