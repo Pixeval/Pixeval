@@ -18,6 +18,7 @@ using Misaki;
 using Pixeval.Collections;
 using Pixeval.Controls;
 using Pixeval.Filters.Analysis;
+using Pixeval.Filters.Nodes;
 using Pixeval.I18N;
 using Pixeval.Models.Filters;
 using Pixeval.Models.Options;
@@ -37,6 +38,14 @@ public partial class WorkContainer : UserControl
     private int _filterCompletionSourceCount = -1;
     private IReadOnlyList<FilterCompletionDefinition> _tagValueCompletions = [];
     private IReadOnlyList<FilterCompletionDefinition> _authorValueCompletions = [];
+    private FilterQuery? _filterQuery;
+
+    public static IReadOnlyList<SymbolComboBoxItem> OrientationFilterItems { get; } =
+    [
+        new(SearchIllustrationRatioPattern.All, I18NManager.GetResource(WorkContainerResources.OrientationFilter.All), default),
+        new(SearchIllustrationRatioPattern.Landscape, I18NManager.GetResource(WorkContainerResources.OrientationFilter.Landscape), default),
+        new(SearchIllustrationRatioPattern.Portrait, I18NManager.GetResource(WorkContainerResources.OrientationFilter.Portrait), default)
+    ];
 
     public static readonly DirectProperty<WorkContainer, bool> IsRefreshEnabledProperty = AvaloniaProperty.RegisterDirect<WorkContainer, bool>(
         nameof(IsRefreshEnabled),
@@ -120,11 +129,15 @@ public partial class WorkContainer : UserControl
 
     private void SortOptionComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e) => SetSortOption();
 
+    private void OrientationFilterComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e) => ApplyFilter();
+
     private void WorkView_OnDataContextChanged(object? sender, EventArgs args)
     {
         DataContext = (sender as Control)?.DataContext;
+        _filterQuery = null;
         ResetFilterValueCompletions();
         SetSortOption();
+        ApplyFilter();
     }
 
     public void SetSortOption()
@@ -255,7 +268,8 @@ public partial class WorkContainer : UserControl
 
         if (string.IsNullOrWhiteSpace(text))
         {
-            viewModel.UserFilter = null;
+            _filterQuery = null;
+            ApplyFilter();
             WorkFilterAutoSuggestBox.ClearSelection();
             WorkFilterAutoSuggestBox.RefreshCompletions();
             return;
@@ -276,10 +290,27 @@ public partial class WorkContainer : UserControl
             return;
         }
 
-        viewModel.UserFilter = query.HasPredicates
-            ? IFilter<IWorkViewModel>.Create(o => o.Filter(query.Root), false)
-            : null;
+        _filterQuery = query.HasPredicates ? query : null;
+        ApplyFilter();
         WorkFilterAutoSuggestBox.ClearSelection();
+    }
+
+    private void ApplyFilter()
+    {
+        if (DataContext is not IOperableViewViewModel viewModel)
+            return;
+
+        var orientation = OrientationFilterComboBox.SelectedValue is SearchIllustrationRatioPattern value
+            ? value
+            : SearchIllustrationRatioPattern.All;
+        var query = _filterQuery;
+
+        viewModel.UserFilter = query is null && orientation is SearchIllustrationRatioPattern.All
+            ? null
+            : IFilter<IWorkViewModel>.Create(work =>
+                (query is null || work.Filter(query.Root))
+                && WorkOrientationFilterEvaluator.Matches(work.Entry, orientation),
+                false);
     }
 
     private FilterAnalysisResult AnalyzeFilter(string? text, int caret)

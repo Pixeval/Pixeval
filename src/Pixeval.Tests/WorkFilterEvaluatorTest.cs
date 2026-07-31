@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Mako.Global.Enum;
 using Mako.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pixeval.Filters;
@@ -91,6 +92,39 @@ public sealed class WorkFilterEvaluatorTest
         AssertDoesNotMatch(work, "+r18");
         AssertDoesNotMatch(work, "+ai");
         AssertDoesNotMatch(work, "+gif");
+    }
+
+    [TestMethod]
+    public void OrientationFilterShouldMatchImageShape()
+    {
+        var landscape = CreateIllustration(
+            title: "Landscape",
+            author: "Alice",
+            tags: [],
+            totalBookmarks: 0,
+            createDate: DateTimeOffset.UtcNow,
+            width: 1200,
+            height: 600,
+            xRestrict: XRestrict.Ordinary,
+            aiType: AiType.NotAiGenerated,
+            illustrationType: IllustrationType.Illustration);
+        var portrait = landscape with { Width = 600, Height = 1200 };
+        var square = landscape with { Width = 800, Height = 800 };
+
+        Assert.IsTrue(WorkOrientationFilterEvaluator.Matches(landscape, SearchIllustrationRatioPattern.Landscape));
+        Assert.IsFalse(WorkOrientationFilterEvaluator.Matches(landscape, SearchIllustrationRatioPattern.Portrait));
+        Assert.IsTrue(WorkOrientationFilterEvaluator.Matches(portrait, SearchIllustrationRatioPattern.Portrait));
+        Assert.IsFalse(WorkOrientationFilterEvaluator.Matches(portrait, SearchIllustrationRatioPattern.Landscape));
+        Assert.IsTrue(WorkOrientationFilterEvaluator.Matches(square, SearchIllustrationRatioPattern.All));
+        Assert.IsFalse(WorkOrientationFilterEvaluator.Matches(square, SearchIllustrationRatioPattern.Landscape));
+        Assert.IsFalse(WorkOrientationFilterEvaluator.Matches(square, SearchIllustrationRatioPattern.Portrait));
+        Assert.IsTrue(WorkOrientationFilterEvaluator.Matches(square, SearchIllustrationRatioPattern.Square));
+
+        var missingSize = landscape with { Width = 0, Height = 0 };
+        Assert.IsTrue(WorkOrientationFilterEvaluator.Matches(missingSize, SearchIllustrationRatioPattern.All));
+        Assert.IsFalse(WorkOrientationFilterEvaluator.Matches(missingSize, SearchIllustrationRatioPattern.Landscape));
+        Assert.IsFalse(WorkOrientationFilterEvaluator.Matches(missingSize, SearchIllustrationRatioPattern.Portrait));
+        Assert.IsFalse(WorkOrientationFilterEvaluator.Matches(missingSize, SearchIllustrationRatioPattern.Square));
     }
 
     private static void AssertMatches(Illustration work, string text) =>

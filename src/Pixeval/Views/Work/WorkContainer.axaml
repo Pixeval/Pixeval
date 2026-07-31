@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:enum="using:Mako.Global.Enum"
     xmlns:local="using:Pixeval"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:markup1="using:Pixeval.Views.Markup"
@@ -50,6 +51,12 @@
                     x:Name="SortOptionComboBox"
                     ItemsSource="{markup1:EnumResources x:TypeArguments=options:LocalSortOption}"
                     SelectionChanged="SortOptionComboBox_OnSelectionChanged" />
+                <controls:SymbolComboBox
+                    x:Name="OrientationFilterComboBox"
+                    IconMode="False"
+                    ItemsSource="{x:Static work:WorkContainer.OrientationFilterItems}"
+                    SelectedValue="{x:Static enum:SearchIllustrationRatioPattern.All}"
+                    SelectionChanged="OrientationFilterComboBox_OnSelectionChanged" />
                 <work:WorkFilterAutoSuggestBox
                     x:Name="WorkFilterAutoSuggestBox"
                     Width="250"

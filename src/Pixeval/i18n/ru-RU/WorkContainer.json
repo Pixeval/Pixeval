@@ -23,5 +23,10 @@
   "DownloadItemsQueuedFormatted": "Добавлено работ в очередь скачивания: {0}",
   "FilterAutoSuggestBox": {
     "PlaceholderText": "Фильтр работ (см. справку)"
+  },
+  "OrientationFilter": {
+    "All": "Все",
+    "Landscape": "Альбомная",
+    "Portrait": "Портретная"
   }
 }

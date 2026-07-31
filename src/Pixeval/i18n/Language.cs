@@ -1683,6 +1683,12 @@ namespace Pixeval
         {
             public const string PlaceholderText = "WorkContainer.FilterAutoSuggestBox.PlaceholderText";
         }
+        public static class OrientationFilter
+        {
+            public const string All = "WorkContainer.OrientationFilter.All";
+            public const string Landscape = "WorkContainer.OrientationFilter.Landscape";
+            public const string Portrait = "WorkContainer.OrientationFilter.Portrait";
+        }
         public static class RefreshButton
         {
             public const string Label = "WorkContainer.RefreshButton.Label";
