@@ -276,7 +276,7 @@ public sealed partial class PixevalMcpService
         if (!analysis.IsSuccess || analysis.Query is not { } query)
             return static _ => false;
 
-        return artwork => WorkFilterEvaluator.Filter(artwork, query.Root);
+        return query.Root.Match;
     }
 
     private (IReadOnlyList<PixevalHistoryItemDto> Items, IReadOnlyList<WorkBase> Works) CreateArtworkHistoryItems<TEntry>(

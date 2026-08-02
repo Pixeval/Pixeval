@@ -9,18 +9,18 @@ namespace Pixeval.Filters.Syntax;
 /// <summary>
 /// 表示读取整数范围值的语法。
 /// </summary>
-public abstract class FilterLongRangeSyntax : FilterSyntax
+public abstract class FilterLongRangeSyntax<TContext> : FilterSyntax<TContext, FilterLongRange>
 {
     public sealed override FilterValueKind ValueKind => FilterValueKind.LongRange;
 
     /// <summary>
     /// 将原始整数范围转换为闭区间语义对象。
     /// </summary>
-    protected sealed override bool TryBindCore(FilterSyntaxMatch match, FilterValue rawValue, out object? value, out FilterDiagnostic? diagnostic)
+    protected sealed override bool TryBindCore(FilterSyntaxMatch match, FilterValue rawValue, out FilterLongRange value, out FilterDiagnostic? diagnostic)
     {
         if (rawValue is not FilterRawLongRangeValue range)
         {
-            value = null;
+            value = default;
             diagnostic = new(FilterDiagnosticKind.InternalExpectedLongRangeValue, rawValue.Span, match.DiagnosticText);
             return false;
         }
@@ -31,7 +31,7 @@ public abstract class FilterLongRangeSyntax : FilterSyntax
             return true;
         }
 
-        value = null;
+        value = default;
         return false;
     }
 }

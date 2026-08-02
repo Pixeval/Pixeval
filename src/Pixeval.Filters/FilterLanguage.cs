@@ -567,13 +567,13 @@ public sealed class FilterLanguage
                     return false;
 
                 var termSpan = FilterTextSpan.FromBounds(termStart, _position);
-                if (!defaultText.Syntax.TryBind(defaultText, rawValue, termSpan, out var boundValue, out var diagnostic))
+                if (!defaultText.Syntax.TryCreatePredicate(defaultText, rawValue, termSpan, isNegated, out var predicate, out var diagnostic))
                 {
                     _diagnostics.Add(diagnostic!);
                     return false;
                 }
 
-                node = new FilterPredicateNode(defaultText.Syntax, boundValue, termSpan, isNegated);
+                node = predicate;
                 return true;
             }
 
@@ -659,13 +659,13 @@ public sealed class FilterLanguage
                 return false;
 
             var termSpan = FilterTextSpan.FromBounds(termStart, _position);
-            if (!match.Syntax.TryBind(match, rawValue, termSpan, out var boundValue, out var diagnostic))
+            if (!match.Syntax.TryCreatePredicate(match, rawValue, termSpan, isNegated, out var predicate, out var diagnostic))
             {
                 _diagnostics.Add(diagnostic!);
                 return false;
             }
 
-            node = new FilterPredicateNode(match.Syntax, boundValue, termSpan, isNegated);
+            node = predicate;
             return true;
         }
 

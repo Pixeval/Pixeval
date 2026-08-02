@@ -17,6 +17,13 @@ public sealed record FilterTextValue(string Source, FilterTextSpan ContentSpan, 
     public ReadOnlySpan<char> AsSpan() => ContentSpan.Slice(Source);
 
     /// <summary>
+    /// 按当前精确匹配标记判断目标字符串是否匹配。
+    /// </summary>
+    public bool Matches(string target) => IsExact
+        ? AsSpan().Equals(target, StringComparison.Ordinal)
+        : target.Contains(AsSpan(), StringComparison.Ordinal);
+
+    /// <summary>
     /// 返回当前字符串值的文本内容。
     /// </summary>
     public override string ToString() => ContentSpan.GetText(Source);

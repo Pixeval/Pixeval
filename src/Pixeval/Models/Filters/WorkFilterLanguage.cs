@@ -74,7 +74,7 @@ public static class WorkFilterLanguage
     /// 汇总所有作品筛选语法后的语言实例。
     /// </summary>
     public static FilterLanguage Instance { get; } = new(
-        FilterSyntaxAttributeHelper.GetIWorkViewModelInstances(),
+        FilterSyntaxAttributeHelper.GetIArtworkInfoInstances(),
         _IntrinsicCompletions,
         _FullCompletions,
         _ValueHintCompletions);
