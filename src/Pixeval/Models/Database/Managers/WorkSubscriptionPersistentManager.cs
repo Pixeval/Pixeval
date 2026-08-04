@@ -1,6 +1,8 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
+using System.Collections.Generic;
+using System.Linq;
 using Pixeval.Models.Options;
 using SQLite;
 
@@ -29,6 +31,11 @@ public class WorkSubscriptionPersistentManager(SQLiteConnection db)
 
     public WorkSubscriptionEntry? GetByKey(int key) =>
         key <= 0 ? null : AccessDatabase(connection => connection.Find<WorkSubscriptionEntry>(key));
+
+    internal IReadOnlySet<int> GetHistoryEntryIds() =>
+        AccessDatabase(connection => connection.Table<WorkSubscriptionEntry>()
+            .Select(static entry => entry.HistoryEntryId)
+            .ToHashSet());
 
     private static WorkSubscriptionEntry AddOrUpdateCore(SQLiteConnection connection, WorkSubscriptionEntry entry)
     {

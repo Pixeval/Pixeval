@@ -1,6 +1,9 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Pixeval.Utilities;
 using SQLite;
 
@@ -14,6 +17,14 @@ public sealed class SubscriptionDownloadHistoryPersistentManager(
         InsertReplacing(
             entry,
             query => query.FirstOrDefault(item =>
+                item.WorkSubscriptionId == entry.WorkSubscriptionId
+                && item.ArtworkId == entry.ArtworkId
+                && item.Destination == entry.Destination));
+
+    public void AddOrReplaceRange(IReadOnlyCollection<SubscriptionDownloadHistoryEntry> entries) =>
+        InsertReplacingRange(
+            entries,
+            static (query, entry) => query.FirstOrDefault(item =>
                 item.WorkSubscriptionId == entry.WorkSubscriptionId
                 && item.ArtworkId == entry.ArtworkId
                 && item.Destination == entry.Destination));
@@ -42,4 +53,21 @@ public sealed class SubscriptionDownloadHistoryPersistentManager(
             entry.WorkSubscriptionId == workSubscriptionId
             && entry.ArtworkId == artworkId
             && entry.Destination == destination));
+
+    internal int DeleteByWorkSubscriptionId(int workSubscriptionId)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(workSubscriptionId);
+        return DeleteMatching(connection => connection.Table<SubscriptionDownloadHistoryEntry>()
+            .Where(entry => entry.WorkSubscriptionId == workSubscriptionId)
+            .ToArray());
+    }
+
+    internal int DeleteOrphans(IReadOnlySet<int> workSubscriptionIds)
+    {
+        ArgumentNullException.ThrowIfNull(workSubscriptionIds);
+        return DeleteMatching(connection => connection.Table<SubscriptionDownloadHistoryEntry>()
+            .ToArray()
+            .Where(entry => !workSubscriptionIds.Contains(entry.WorkSubscriptionId))
+            .ToArray());
+    }
 }

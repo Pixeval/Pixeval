@@ -39,7 +39,7 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
         int? stampId = null,
         [Description("Optional top-level parent comment id when replying.")]
         long? parentCommentId = null,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(AddCommentAsync), async () =>
         {
             runtime.EnsureLoggedIn();
@@ -52,7 +52,7 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
             if (content is { Length: > 140 })
                 throw new PixevalMcpException("Pixiv comments must be 140 characters or less.");
 
-            var comment = await AddCommentCoreAsync().WaitAsync(cancellationToken).ConfigureAwait(false);
+            var comment = await AddCommentCoreAsync().WaitAsync(token).ConfigureAwait(false);
             return PixevalMcpResult.Success(PixevalCommentDto.FromComment(comment, runtime.CurrentUser?.Id));
 
             Task<Comment> AddCommentCoreAsync() =>
@@ -62,14 +62,23 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
                         workType,
                         workId,
                         parent,
-                        content!),
+                        content!,
+                        token),
                     { } parent => runtime.MakoClient.AddWorkCommentAsync(
                         workType,
                         workId,
                         parent,
-                        stampId!.Value),
-                    _ when hasContent => runtime.MakoClient.AddWorkCommentAsync(workType, workId, content!),
-                    _ => runtime.MakoClient.AddWorkCommentAsync(workType, workId, stampId!.Value)
+                        stampId!.Value,
+                        token),
+                    _ when hasContent => runtime.MakoClient.AddWorkCommentAsync(workType,
+                        workId,
+                        content!,
+                        token),
+                    _ => runtime.MakoClient.AddWorkCommentAsync(
+                        workType,
+                        workId,
+                        stampId!.Value,
+                        token)
                 };
         });
 
@@ -80,14 +89,13 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
     public Task<CallToolResult> DeleteCommentAsync(
         [Description("Work type.")] SimpleWorkType workType,
         [Description("Pixiv comment id.")] long commentId,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(DeleteCommentAsync), async () =>
         {
             runtime.EnsureLoggedIn();
             runtime.EnsureWriteToolsEnabled();
 
-            var success = await runtime.MakoClient.DeleteWorkCommentAsync(workType, commentId)
-                .WaitAsync(cancellationToken)
+            var success = await runtime.MakoClient.DeleteWorkCommentAsync(workType, commentId, token)
                 .ConfigureAwait(false);
             return PixevalMcpResult.Success(new PixevalOperationResultDto(
                 success,
@@ -107,7 +115,7 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
         PrivacyPolicy privacy = PrivacyPolicy.Public,
         [Description("Optional bookmark tags when adding.")]
         IReadOnlyList<string>? tags = null,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(SetBookmarkAsync), async () =>
         {
             runtime.EnsureLoggedIn();
@@ -118,7 +126,7 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
                     bookmarked,
                     privacy,
                     tags,
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false));
         });
 
@@ -131,7 +139,7 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
         [Description("Pixiv work id.")] long id,
         [Description("True to add to watch later, false to remove.")]
         bool watchLater,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(SetWatchLaterAsync), async () =>
         {
             runtime.EnsureLoggedIn();
@@ -140,7 +148,7 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
                     workType,
                     id,
                     watchLater,
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false));
         });
 
@@ -153,7 +161,7 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
         bool followed,
         [Description("Follow privacy when following.")]
         PrivacyPolicy privacy = PrivacyPolicy.Public,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(FollowUserAsync), async () =>
         {
             runtime.EnsureLoggedIn();
@@ -162,7 +170,7 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
                     userId,
                     followed,
                     privacy,
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false));
         });
 
@@ -173,7 +181,7 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
     public Task<CallToolResult> QueueDownloadAsync(
         [Description("Work type.")] SimpleWorkType workType,
         [Description("Pixiv work id.")] long id,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(QueueDownloadAsync), async () =>
         {
             runtime.EnsureLoggedIn();
@@ -181,7 +189,7 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
             var task = await runtime.QueueDownloadAsync(
                     workType,
                     id,
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false);
             return PixevalMcpResult.Success(task);
         });
@@ -218,7 +226,7 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
         [Description("Subscription type.")] PixevalWorkSubscriptionType subscriptionType,
         [Description("Work kind for the subscription type.")]
         PixevalWorkSubscriptionWorkKind workKind,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(AddSubscriptionAsync), async () =>
         {
             runtime.EnsureLoggedIn();
@@ -227,7 +235,7 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
                     targetId,
                     subscriptionType,
                     workKind,
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false));
         });
 
@@ -235,7 +243,7 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
         UseStructuredContent = true, OutputSchemaType = typeof(PixevalWorkSubscriptionOperationResultDto))]
     [Description(
         "Removes a Pixeval work subscription by historyEntryId, or by targetId + subscriptionType + workKind. Requires write tools.")]
-    public CallToolResult RemoveSubscription(
+    public Task<CallToolResult> RemoveSubscriptionAsync(
         [Description("History entry id from work subscription history.")]
         int? historyEntryId = null,
         [Description("Pixiv user or series id. Required when historyEntryId is empty.")]
@@ -243,15 +251,18 @@ internal sealed class PixevalMcpWriteTools(IPixevalMcpRuntime runtime)
         [Description("Subscription type. Required when historyEntryId is empty.")]
         PixevalWorkSubscriptionType? subscriptionType = null,
         [Description("Work kind. Required when historyEntryId is empty.")]
-        PixevalWorkSubscriptionWorkKind? workKind = null) =>
-        Execute(nameof(RemoveSubscription), () =>
+        PixevalWorkSubscriptionWorkKind? workKind = null,
+        CancellationToken token = default) =>
+        ExecuteAsync(nameof(RemoveSubscriptionAsync), async () =>
         {
             runtime.EnsureWriteToolsEnabled();
-            return PixevalMcpResult.Success(runtime.RemoveSubscription(
-                historyEntryId,
-                targetId,
-                subscriptionType,
-                workKind));
+            return PixevalMcpResult.Success(await runtime.RemoveSubscriptionAsync(
+                    historyEntryId,
+                    targetId,
+                    subscriptionType,
+                    workKind,
+                    token)
+                .ConfigureAwait(false));
         });
 
     [McpServerTool(Name = "sync_subscriptions", Title = "Sync Pixeval work subscriptions",

@@ -104,7 +104,7 @@ public partial class WorkBookmarksPage : IconContentPage
             ? WorkSubscriptionWorkKind.Novel
             : WorkSubscriptionWorkKind.Illustration;
 
-        if (WorkSubscriptionHelper.TryAddOrUpdate(_user, WorkSubscriptionType.Bookmarks, workKind))
+        if (WorkSubscriptionHelper.TryAddOrUpdateUser(_user, WorkSubscriptionType.Bookmarks, workKind))
             TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(
                 I18NManager.GetResource(WorkSubscriptionsSettingsExpanderResources.SubscriptionAdded));
     }

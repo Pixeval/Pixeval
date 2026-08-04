@@ -37,7 +37,7 @@ public sealed class IoHelperDownloadTest
             using var memory = new MemoryStream();
             await stream.CopyToAsync(memory);
 
-            CollectionAssert.AreEqual(expected, memory.ToArray());
+            Assert.AreSequenceEqual(expected, memory.ToArray());
         }
         finally
         {

@@ -195,7 +195,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
         SeriesInfo = null;
         CurrentImage = null;
 
-        if (await GetCurrentIllustrationAsync(index, token) is { } currentIllustration
+        if (await GetCurrentIllustrationAsync(index) is { } currentIllustration
             && !token.IsCancellationRequested
             && !_disposed
             && index == CurrentWorkIndex)
@@ -206,7 +206,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
 
         return;
 
-        async ValueTask<IllustrationItemViewModel?> GetCurrentIllustrationAsync(int workIndex, CancellationToken cancellationToken)
+        async ValueTask<IllustrationItemViewModel?> GetCurrentIllustrationAsync(int workIndex)
         {
             if (!_needRefresh)
             {

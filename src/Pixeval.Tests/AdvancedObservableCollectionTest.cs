@@ -86,6 +86,8 @@ public sealed class AdvancedObservableCollectionTest
 
         public bool IsDisposed { get; private set; }
 
+        public bool HasMoreItems { get; set; } = true;
+
         public async Task<IReadOnlyCollection<int>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken token = default)
         {
             ObjectDisposedException.ThrowIf(IsDisposed, this);
@@ -311,13 +313,13 @@ public sealed class AdvancedObservableCollectionTest
         };
 
         var adaptor = new AdvancedObservableAdaptor<SampleClass, SampleViewModel>(col, item => new(item));
-        CollectionAssert.AreEqual((int[]) [1, 2, 3], adaptor.Select(item => item.Val).ToArray());
+        Assert.AreSequenceEqual((int[]) [1, 2, 3], adaptor.Select(item => item.Val).ToArray());
 
         adaptor.IsReversed = true;
-        CollectionAssert.AreEqual((int[]) [3, 2, 1], adaptor.Select(item => item.Val).ToArray());
+        Assert.AreSequenceEqual((int[]) [3, 2, 1], adaptor.Select(item => item.Val).ToArray());
 
         col.Insert(0, new(0));
-        CollectionAssert.AreEqual((int[]) [3, 2, 1, 0], adaptor.Select(item => item.Val).ToArray());
+        Assert.AreSequenceEqual((int[]) [3, 2, 1, 0], adaptor.Select(item => item.Val).ToArray());
     }
 
     [TestMethod]
@@ -331,13 +333,13 @@ public sealed class AdvancedObservableCollectionTest
         };
 
         var aoc = new AdvancedObservableCollection<SampleClass>(col);
-        CollectionAssert.AreEqual((int[]) [1, 2, 3], aoc.Select(item => item.Val).ToArray());
+        Assert.AreSequenceEqual((int[]) [1, 2, 3], aoc.Select(item => item.Val).ToArray());
 
         aoc.IsReversed = true;
-        CollectionAssert.AreEqual((int[]) [3, 2, 1], aoc.Select(item => item.Val).ToArray());
+        Assert.AreSequenceEqual((int[]) [3, 2, 1], aoc.Select(item => item.Val).ToArray());
 
         col.Insert(0, new(0));
-        CollectionAssert.AreEqual((int[]) [3, 2, 1, 0], aoc.Select(item => item.Val).ToArray());
+        Assert.AreSequenceEqual((int[]) [3, 2, 1, 0], aoc.Select(item => item.Val).ToArray());
     }
 
     [TestMethod]
@@ -363,7 +365,7 @@ public sealed class AdvancedObservableCollectionTest
         col.Insert(3, new(30));
         col.RemoveAt(2);
 
-        CollectionAssert.AreEqual((int[]) [1, 30, 3], aoc.Select(item => item.Val).ToArray());
+        Assert.AreSequenceEqual((int[]) [1, 30, 3], aoc.Select(item => item.Val).ToArray());
         Assert.HasCount(3, changes);
         Assert.IsTrue(changes.All(change => change.Action is NotifyCollectionChangedAction.Reset));
     }
@@ -387,7 +389,7 @@ public sealed class AdvancedObservableCollectionTest
         aoc.Filters.Add(IFilter<SampleClass>.Create(item => item.Val is not 2, false));
         aoc.SortDescriptions.Add(ISortDescription<SampleClass>.Create(item => item.Val, true));
 
-        CollectionAssert.AreEqual((int[]) [3, 1], aoc.Select(item => item.Val).ToArray());
+        Assert.AreSequenceEqual((int[]) [3, 1], aoc.Select(item => item.Val).ToArray());
     }
 
     [TestMethod]
@@ -409,7 +411,7 @@ public sealed class AdvancedObservableCollectionTest
         adaptor.Filters.Add(IFilter<SampleViewModel>.Create(item => item.Val is not 2, false));
         adaptor.SortDescriptions.Add(ISortDescription<SampleViewModel>.Create(item => item.Val, true));
 
-        CollectionAssert.AreEqual((int[]) [3, 1], adaptor.Select(item => item.Val).ToArray());
+        Assert.AreSequenceEqual((int[]) [3, 1], adaptor.Select(item => item.Val).ToArray());
     }
 
     [TestMethod]
@@ -431,8 +433,8 @@ public sealed class AdvancedObservableCollectionTest
         adaptor.Insert(1, new(10));
         adaptor.RemoveAt(0);
 
-        CollectionAssert.AreEqual((int[]) [0, 10, 2, 3], col.Select(item => item.Val).ToArray());
-        CollectionAssert.AreEqual((int[]) [10, 2], adaptor.Select(item => item.Val).ToArray());
+        Assert.AreSequenceEqual((int[]) [0, 10, 2, 3], col.Select(item => item.Val).ToArray());
+        Assert.AreSequenceEqual((int[]) [10, 2], adaptor.Select(item => item.Val).ToArray());
     }
 
     [TestMethod]
@@ -509,8 +511,8 @@ public sealed class AdvancedObservableCollectionTest
         Assert.AreEqual(1, source.CallCount);
 
         call.Completion.SetResult([1, 2, 3]);
-        CollectionAssert.AreEqual((int[]) [3, 3, 3], await Task.WhenAll(first, second, third));
-        CollectionAssert.AreEqual((int[]) [1, 2, 3], collection.ToArray());
+        Assert.AreSequenceEqual((int[]) [3, 3, 3], await Task.WhenAll(first, second, third));
+        Assert.AreSequenceEqual((int[]) [1, 2, 3], collection.ToArray());
         Assert.IsTrue(collection.HasMoreItems);
     }
 
@@ -532,7 +534,7 @@ public sealed class AdvancedObservableCollectionTest
 
         call.Completion.SetResult([1, 2, 3]);
         Assert.AreEqual(3, await first);
-        CollectionAssert.AreEqual((int[]) [1, 2, 3], collection.ToArray());
+        Assert.AreSequenceEqual((int[]) [1, 2, 3], collection.ToArray());
         Assert.IsTrue(collection.HasMoreItems);
     }
 
@@ -558,7 +560,29 @@ public sealed class AdvancedObservableCollectionTest
 
         Assert.AreEqual(3, await sharedLoad);
         Assert.AreEqual(0, canceledCall.PageIndex);
-        CollectionAssert.AreEqual((int[]) [1, 2, 3], collection.ToArray());
+        Assert.AreSequenceEqual((int[]) [1, 2, 3], collection.ToArray());
+    }
+
+    [TestMethod]
+    public async Task Test_IncrementalLoadingCollection_UsesSourceHasMoreItemsForEmptyPage()
+    {
+        var source = new ControlledIncrementalSource();
+        var collection = new IncrementalLoadingCollection<int>(source, 3);
+
+        var first = collection.LoadMoreItemsAsync(0);
+        var firstCall = await source.WaitForCallAsync(0);
+        firstCall.Completion.SetResult([]);
+
+        Assert.AreEqual(0, await first);
+        Assert.IsTrue(collection.HasMoreItems);
+
+        source.HasMoreItems = false;
+        var second = collection.LoadMoreItemsAsync(0);
+        var secondCall = await source.WaitForCallAsync(1);
+        secondCall.Completion.SetResult([]);
+
+        Assert.AreEqual(0, await second);
+        Assert.IsFalse(collection.HasMoreItems);
     }
 
     [TestMethod]

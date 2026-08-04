@@ -25,12 +25,12 @@
             HorizontalAlignment="Stretch"
             ColumnDefinitions="Auto,*,Auto"
             ColumnSpacing="12">
-            <fluent:SymbolIcon
+            <controls:AvatarImage
                 Grid.Column="0"
-                Width="32"
-                Height="32"
+                Width="48"
+                Height="48"
                 VerticalAlignment="Center"
-                Symbol="FolderSync" />
+                controls:Source.Cache="{Binding Subscription.AvatarUrl}"/>
             <fluent:SymbolIcon
                 Grid.Column="2"
                 VerticalAlignment="Center"
@@ -40,7 +40,10 @@
                     Text="{Binding Title}"
                     TextTrimming="CharacterEllipsis"
                     Theme="{StaticResource BodyLargeStrongTextBlockStyle}" />
-                <ProgressBar Maximum="100" Value="{Binding ProgressPercentage}" />
+                <ProgressBar
+                    IsIndeterminate="{Binding IsFetching}"
+                    Maximum="100"
+                    Value="{Binding ProgressPercentage}" />
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                     <TextBlock
                         Grid.Column="0"

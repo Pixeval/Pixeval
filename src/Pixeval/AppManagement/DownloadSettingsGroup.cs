@@ -14,6 +14,7 @@ public record DownloadSettingsGroup
     [SettingsEntry(Symbol.Rename, AppSettingsResources.DownloadPathMacroEntry.Header, AppSettingsResources.DownloadPathMacroEntry.Description)]
     public string DownloadPathMacro { get; set; } = Path.Join(
         GetSpecialFolder(),
+        "@{is_group?@{group_id}:}",
         "@{is_pic_set?[@{artist_name}] @{title}:}",
         "[@{artist_name}] @{id}@{is_pic_set?p@{pic_set_index}:}.@{ext}"
     );

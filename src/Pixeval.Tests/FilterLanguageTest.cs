@@ -93,8 +93,7 @@ public sealed class FilterLanguageTest
         Assert.IsFalse(result.IsSuccess);
         Assert.AreEqual(FilterDiagnosticKind.MissingTextValue, result.Diagnostics[0].Kind);
         Assert.AreEqual("#", result.Diagnostics[0].Arguments[0]);
-        CollectionAssert.AreEquivalent((string[]) ["abc", "\"ab# c\""],
-            result.Completions.Select(t => t.DisplayText).ToArray());
+        Assert.AreSequenceEqual((string[]) ["abc", "\"ab# c\""], result.Completions.Select(t => t.DisplayText).ToArray(), Microsoft.VisualStudio.TestTools.UnitTesting.SequenceOrder.InAnyOrder);
         Assert.IsTrue(result.Completions.All(t => t.IsHintOnly));
     }
 
@@ -138,8 +137,7 @@ public sealed class FilterLanguageTest
         var result = _Language.Analyze("+", 1);
 
         Assert.IsFalse(result.IsSuccess);
-        CollectionAssert.AreEquivalent((string[]) ["+ai", "+r18", "+r18g", "+gif"],
-            result.Completions.Select(t => t.DisplayText).ToArray());
+        Assert.AreSequenceEqual((string[]) ["+ai", "+r18", "+r18g", "+gif"], result.Completions.Select(t => t.DisplayText).ToArray(), Microsoft.VisualStudio.TestTools.UnitTesting.SequenceOrder.InAnyOrder);
     }
 
     [TestMethod]
@@ -209,8 +207,7 @@ public sealed class FilterLanguageTest
     {
         var result = _Language.Analyze("s:202", 5);
 
-        CollectionAssert.AreEquivalent((string[]) ["MM-dd", "yyyy-MM-dd"],
-            result.Completions.Select(t => t.DisplayText).ToArray());
+        Assert.AreSequenceEqual((string[]) ["MM-dd", "yyyy-MM-dd"], result.Completions.Select(t => t.DisplayText).ToArray(), Microsoft.VisualStudio.TestTools.UnitTesting.SequenceOrder.InAnyOrder);
         Assert.IsTrue(result.Completions.All(t => t.InsertText == "s:202"));
         Assert.IsTrue(result.Completions.All(t => t.IsHintOnly));
     }
@@ -230,8 +227,7 @@ public sealed class FilterLanguageTest
             });
         var result = language.Analyze("r:", 2);
 
-        CollectionAssert.AreEquivalent((string[]) ["2-", "-1/2"],
-            result.Completions.Select(t => t.DisplayText).ToArray());
+        Assert.AreSequenceEqual((string[]) ["2-", "-1/2"], result.Completions.Select(t => t.DisplayText).ToArray(), Microsoft.VisualStudio.TestTools.UnitTesting.SequenceOrder.InAnyOrder);
         Assert.IsTrue(result.Completions.All(t => t.InsertText == "r:"));
         Assert.IsTrue(result.Completions.All(t => t.IsHintOnly));
     }
@@ -284,11 +280,9 @@ public sealed class FilterLanguageTest
         var excludeResult = _Language.Analyze("-", 1);
 
         Assert.IsFalse(includeResult.IsSuccess);
-        CollectionAssert.AreEquivalent((string[]) ["+ai", "+r18", "+r18g", "+gif"],
-            includeResult.Completions.Select(t => t.DisplayText).ToArray());
+        Assert.AreSequenceEqual((string[]) ["+ai", "+r18", "+r18g", "+gif"], includeResult.Completions.Select(t => t.DisplayText).ToArray(), Microsoft.VisualStudio.TestTools.UnitTesting.SequenceOrder.InAnyOrder);
         Assert.IsFalse(excludeResult.IsSuccess);
-        CollectionAssert.AreEquivalent((string[]) ["-ai", "-r18", "-r18g", "-gif"],
-            excludeResult.Completions.Select(t => t.DisplayText).ToArray());
+        Assert.AreSequenceEqual((string[]) ["-ai", "-r18", "-r18g", "-gif"], excludeResult.Completions.Select(t => t.DisplayText).ToArray(), Microsoft.VisualStudio.TestTools.UnitTesting.SequenceOrder.InAnyOrder);
     }
 
     [TestMethod]
@@ -324,8 +318,7 @@ public sealed class FilterLanguageTest
         var result = _Language.Analyze("(xxx", 4);
 
         Assert.IsFalse(result.IsSuccess);
-        CollectionAssert.AreEquivalent((string[]) ["and", "or"],
-            result.Completions.Select(t => t.DisplayText).ToArray());
+        Assert.AreSequenceEqual((string[]) ["and", "or"], result.Completions.Select(t => t.DisplayText).ToArray(), Microsoft.VisualStudio.TestTools.UnitTesting.SequenceOrder.InAnyOrder);
         Assert.AreEqual("and", result.Completions.Single(t => t.DisplayText == "and").InsertText);
         Assert.AreEqual("or", result.Completions.Single(t => t.DisplayText == "or").InsertText);
     }
@@ -341,8 +334,7 @@ public sealed class FilterLanguageTest
                 : []);
 
         Assert.IsFalse(result.IsSuccess);
-        CollectionAssert.AreEquivalent((string[]) ["and", "or"],
-            result.Completions.Select(t => t.DisplayText).ToArray());
+        Assert.AreSequenceEqual((string[]) ["and", "or"], result.Completions.Select(t => t.DisplayText).ToArray(), Microsoft.VisualStudio.TestTools.UnitTesting.SequenceOrder.InAnyOrder);
     }
 
     [TestMethod]
@@ -548,7 +540,7 @@ public sealed class FilterLanguageTest
     {
         var result = _Language.Analyze(text, text.Length);
 
-        CollectionAssert.AreEquivalent(displayTexts.ToArray(), result.Completions.Select(t => t.DisplayText).ToArray());
+        Assert.AreSequenceEqual(displayTexts.ToArray(), result.Completions.Select(t => t.DisplayText).ToArray(), Microsoft.VisualStudio.TestTools.UnitTesting.SequenceOrder.InAnyOrder);
         Assert.IsTrue(result.Completions.All(t => t.InsertText == text));
         Assert.IsTrue(result.Completions.All(t => t.IsHintOnly));
     }

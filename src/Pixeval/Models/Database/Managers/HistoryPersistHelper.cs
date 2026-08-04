@@ -26,11 +26,14 @@ public sealed class HistoryPersistHelper : IDisposable
     private readonly WatchLaterPersistentManager _watchLaterPersistentManager;
     private readonly CancellationTokenSource _downloadRestoreCancellationTokenSource = new();
     private readonly HashSet<DownloadTaskKey> _removedDownloadHistoryKeys = [];
+    private readonly HashSet<int> _removedWorkSubscriptionIds = [];
     private readonly HashSet<string> _removedSearchHistoryValues = new(StringComparer.Ordinal);
     private readonly CancellationTokenSource _searchRestoreCancellationTokenSource = new();
     private readonly FileLogger _logger;
     private bool _isDownloadHistoryRestoreCompleted;
     private bool _isDisposed;
+    private bool _isCommittingDownloadBatch;
+    private bool _isRemovingSubscriptionDownloads;
     private bool _isRestoringDownloadHistory;
     private bool _isRestoringSearchHistory;
     private bool _isSearchHistoryRestoreCompleted;
@@ -41,6 +44,7 @@ public sealed class HistoryPersistHelper : IDisposable
         IDownloadHttpClientService service,
         DownloadHistoryPersistentManager downloadHistoryPersistentManager,
         SubscriptionDownloadHistoryPersistentManager subscriptionDownloadHistoryPersistentManager,
+        WorkSubscriptionPersistentManager workSubscriptionPersistentManager,
         SearchHistoryPersistentManager searchHistoryPersistentManager,
         BrowseHistoryPersistentManager browseHistoryPersistentManager,
         WatchLaterPersistentManager watchLaterPersistentManager,
@@ -52,6 +56,8 @@ public sealed class HistoryPersistHelper : IDisposable
         _logger = logger;
         _searchHistoryPersistentManager = searchHistoryPersistentManager;
         _watchLaterPersistentManager = watchLaterPersistentManager;
+        _ = subscriptionDownloadHistoryPersistentManager.DeleteOrphans(
+            workSubscriptionPersistentManager.GetHistoryEntryIds());
         BrowseHistorySource = browseHistoryPersistentManager;
         WatchLaterSource = watchLaterPersistentManager;
 
@@ -147,6 +153,102 @@ public sealed class HistoryPersistHelper : IDisposable
         }
     }
 
+    public async Task QueueSubscriptionDownloadBatchAsync(IReadOnlyList<IDownloadTaskGroup> taskGroups)
+    {
+        ArgumentNullException.ThrowIfNull(taskGroups);
+        if (taskGroups.Count is 0)
+            return;
+
+        // This method owns every task in the batch. Tasks not accepted by the download manager are disposed here.
+        var ownedTaskGroups = taskGroups.ToArray();
+        var queuedTaskGroups = new HashSet<IDownloadTaskGroup>(ReferenceEqualityComparer.Instance);
+        try
+        {
+            var entries = ownedTaskGroups
+                .Select(static task => task.DatabaseEntry)
+                .OfType<SubscriptionDownloadHistoryEntry>()
+                .ToArray();
+            if (entries.Length != ownedTaskGroups.Length)
+                throw new ArgumentException("A subscription download batch must only contain subscription history entries.", nameof(taskGroups));
+
+            await Task.Run(() => _subscriptionDownloadHistoryPersistentManager.AddOrReplaceRange(entries)).ConfigureAwait(false);
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                List<Exception>? exceptions = null;
+                _isCommittingDownloadBatch = true;
+                try
+                {
+                    foreach (var taskGroup in ownedTaskGroups)
+                    {
+                        try
+                        {
+                            DownloadManager.QueueTask(taskGroup);
+                        }
+                        catch (Exception exception)
+                        {
+                            (exceptions ??= []).Add(exception);
+                        }
+                        finally
+                        {
+                            if (DownloadManager.QueuedTasks.Any(queuedTask => ReferenceEquals(queuedTask, taskGroup)))
+                                _ = queuedTaskGroups.Add(taskGroup);
+                        }
+                    }
+                }
+                finally
+                {
+                    _isCommittingDownloadBatch = false;
+                }
+
+                if (exceptions is not null)
+                    throw new AggregateException("One or more committed subscription downloads could not be queued.", exceptions);
+            });
+        }
+        finally
+        {
+            foreach (var taskGroup in ownedTaskGroups)
+                if (!queuedTaskGroups.Contains(taskGroup))
+                    taskGroup.Dispose();
+        }
+    }
+
+    internal async Task RemoveWorkSubscriptionDownloadsAsync(int workSubscriptionId)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(workSubscriptionId);
+
+        void RemoveQueuedTasks()
+        {
+            _ = _removedWorkSubscriptionIds.Add(workSubscriptionId);
+            _isRemovingSubscriptionDownloads = true;
+            try
+            {
+                foreach (var task in DownloadManager.QueuedTasks
+                             .Where(task => task is IDownloadTaskGroup
+                             {
+                                 DatabaseEntry: SubscriptionDownloadHistoryEntry
+                                 {
+                                     WorkSubscriptionId: var id
+                                 }
+                             } && id == workSubscriptionId)
+                             .ToArray())
+                    _ = DownloadManager.TryRemoveTask(task);
+            }
+            finally
+            {
+                _isRemovingSubscriptionDownloads = false;
+            }
+        }
+
+        if (Dispatcher.UIThread.CheckAccess())
+            RemoveQueuedTasks();
+        else
+            await Dispatcher.UIThread.InvokeAsync(RemoveQueuedTasks);
+
+        await Task.Run(() =>
+                _subscriptionDownloadHistoryPersistentManager.DeleteByWorkSubscriptionId(workSubscriptionId))
+            .ConfigureAwait(false);
+    }
+
     private void OnSearchHistoryCollectionChanged(
         object? sender,
         NotifyCollectionChangedEventArgs args)
@@ -209,7 +311,10 @@ public sealed class HistoryPersistHelper : IDisposable
         object? sender,
         NotifyCollectionChangedEventArgs args)
     {
-        if (_isDisposed || _isRestoringDownloadHistory)
+        if (_isDisposed
+            || _isRestoringDownloadHistory
+            || _isCommittingDownloadBatch
+            || _isRemovingSubscriptionDownloads)
             return;
 
         switch (args.Action)
@@ -367,6 +472,11 @@ public sealed class HistoryPersistHelper : IDisposable
                         await Dispatcher.UIThread.InvokeAsync(() =>
                         {
                             token.ThrowIfCancellationRequested();
+                            if (taskGroup.DatabaseEntry is SubscriptionDownloadHistoryEntry
+                                {
+                                    WorkSubscriptionId: var workSubscriptionId
+                                } && _removedWorkSubscriptionIds.Contains(workSubscriptionId))
+                                return;
                             if (_removedDownloadHistoryKeys.Contains(taskGroup.Key))
                                 return;
 

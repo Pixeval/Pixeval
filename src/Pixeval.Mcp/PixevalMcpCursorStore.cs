@@ -26,12 +26,12 @@ internal sealed class PixevalMcpCursorStore : IAsyncDisposable
         int count,
         string? workFilter,
         PixevalWorkFilterAnalysisDto? filter,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
         var entry = new WorkCursorEntry(engine, runtime.CurrentUser?.Id, workFilter, filter);
         try
         {
-            var page = await entry.ReadPageAsync(runtime, count, cancellationToken).ConfigureAwait(false);
+            var page = await entry.ReadPageAsync(runtime, count, token).ConfigureAwait(false);
             if (page.HasMore)
                 await AddAsync(entry).ConfigureAwait(false);
             else
@@ -55,12 +55,12 @@ internal sealed class PixevalMcpCursorStore : IAsyncDisposable
         IFetchEngine<User> engine,
         IPixevalMcpRuntime runtime,
         int count,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
         var entry = new UserCursorEntry(engine, runtime.CurrentUser?.Id);
         try
         {
-            var page = await entry.ReadPageAsync(runtime, count, cancellationToken).ConfigureAwait(false);
+            var page = await entry.ReadPageAsync(runtime, count, token).ConfigureAwait(false);
             if (page.HasMore)
                 await AddAsync(entry).ConfigureAwait(false);
             else
@@ -83,12 +83,12 @@ internal sealed class PixevalMcpCursorStore : IAsyncDisposable
         IFetchEngine<Series> engine,
         IPixevalMcpRuntime runtime,
         int count,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
         var entry = new SeriesCursorEntry(engine, runtime.CurrentUser?.Id);
         try
         {
-            var page = await entry.ReadPageAsync(runtime, count, cancellationToken).ConfigureAwait(false);
+            var page = await entry.ReadPageAsync(runtime, count, token).ConfigureAwait(false);
             if (page.HasMore)
                 await AddAsync(entry).ConfigureAwait(false);
             else
@@ -111,12 +111,12 @@ internal sealed class PixevalMcpCursorStore : IAsyncDisposable
         IFetchEngine<Spotlight> engine,
         IPixevalMcpRuntime runtime,
         int count,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
         var entry = new SpotlightCursorEntry(engine, runtime.CurrentUser?.Id);
         try
         {
-            var page = await entry.ReadPageAsync(runtime, count, cancellationToken).ConfigureAwait(false);
+            var page = await entry.ReadPageAsync(runtime, count, token).ConfigureAwait(false);
             if (page.HasMore)
                 await AddAsync(entry).ConfigureAwait(false);
             else
@@ -139,12 +139,12 @@ internal sealed class PixevalMcpCursorStore : IAsyncDisposable
         IFetchEngine<Comment> engine,
         IPixevalMcpRuntime runtime,
         int count,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
         var entry = new CommentCursorEntry(engine, runtime.CurrentUser?.Id);
         try
         {
-            var page = await entry.ReadPageAsync(runtime, count, cancellationToken).ConfigureAwait(false);
+            var page = await entry.ReadPageAsync(runtime, count, token).ConfigureAwait(false);
             if (page.HasMore)
                 await AddAsync(entry).ConfigureAwait(false);
             else
@@ -170,12 +170,12 @@ internal sealed class PixevalMcpCursorStore : IAsyncDisposable
         SimpleWorkType workType,
         PrivacyPolicy privacy,
         int count,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
         var entry = new BookmarkTagCursorEntry(engine, runtime.CurrentUser?.Id, userId, workType, privacy);
         try
         {
-            var page = await entry.ReadPageAsync(runtime, count, cancellationToken).ConfigureAwait(false);
+            var page = await entry.ReadPageAsync(runtime, count, token).ConfigureAwait(false);
             if (page.HasMore)
                 await AddAsync(entry).ConfigureAwait(false);
             else
@@ -201,7 +201,7 @@ internal sealed class PixevalMcpCursorStore : IAsyncDisposable
         IPixevalMcpRuntime runtime,
         string cursor,
         int count,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
         if (!TryParseCursor(cursor, out var kind, out var id))
             throw new PixevalMcpException("The MCP cursor is invalid.");
@@ -237,7 +237,7 @@ internal sealed class PixevalMcpCursorStore : IAsyncDisposable
         try
         {
             entry.LastAccessUtc = DateTimeOffset.UtcNow;
-            var page = await entry.ReadPageAsync(runtime, count, cancellationToken).ConfigureAwait(false);
+            var page = await entry.ReadPageAsync(runtime, count, token).ConfigureAwait(false);
             if (!page.HasMore)
                 shouldDispose = Remove(entry);
 
@@ -367,7 +367,7 @@ internal sealed class PixevalMcpCursorStore : IAsyncDisposable
         public abstract Task<PixevalCursorPageDto> ReadPageAsync(
             IPixevalMcpRuntime runtime,
             int count,
-            CancellationToken cancellationToken);
+            CancellationToken token);
 
         public abstract ValueTask DisposeAsync();
 
@@ -375,7 +375,7 @@ internal sealed class PixevalMcpCursorStore : IAsyncDisposable
             IAsyncEnumerator<T> enumerator,
             int count,
             Ref<T?> buffer,
-            CancellationToken cancellationToken)
+            CancellationToken token)
         {
             var normalizedCount = PixevalMcpHelpers.ClampCount(count);
             var items = new List<T>(normalizedCount);
@@ -387,14 +387,14 @@ internal sealed class PixevalMcpCursorStore : IAsyncDisposable
 
             while (items.Count < normalizedCount)
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                token.ThrowIfCancellationRequested();
                 if (!await enumerator.MoveNextAsync().ConfigureAwait(false))
                     return (items, false);
 
                 items.Add(enumerator.Current);
             }
 
-            cancellationToken.ThrowIfCancellationRequested();
+            token.ThrowIfCancellationRequested();
             if (!await enumerator.MoveNextAsync().ConfigureAwait(false))
                 return (items, false);
 
@@ -424,15 +424,15 @@ internal sealed class PixevalMcpCursorStore : IAsyncDisposable
         public override async Task<PixevalCursorPageDto> ReadPageAsync(
             IPixevalMcpRuntime runtime,
             int count,
-            CancellationToken cancellationToken)
+            CancellationToken token)
         {
-            var (items, hasMore) = await ReadItemsAsync(_enumerator, count, _buffer, cancellationToken)
+            var (items, hasMore) = await ReadItemsAsync(_enumerator, count, _buffer, token)
                 .ConfigureAwait(false);
             var works = items.Select(ToWorkBase).ToArray();
             runtime.CacheWorks(works);
             var filtered = string.IsNullOrWhiteSpace(workFilter)
                 ? works
-                : runtime.FilterWorks(works, workFilter).ToArray();
+                : [.. runtime.FilterWorks(works, workFilter)];
             var dtos = filtered.Select(PixevalWorkDto.FromWork).ToArray();
             return new(
                 Kind,
@@ -460,9 +460,9 @@ internal sealed class PixevalMcpCursorStore : IAsyncDisposable
         public override async Task<PixevalCursorPageDto> ReadPageAsync(
             IPixevalMcpRuntime runtime,
             int count,
-            CancellationToken cancellationToken)
+            CancellationToken token)
         {
-            var (items, hasMore) = await ReadItemsAsync(_enumerator, count, _buffer, cancellationToken)
+            var (items, hasMore) = await ReadItemsAsync(_enumerator, count, _buffer, token)
                 .ConfigureAwait(false);
             runtime.CacheUsers(items);
             var users = items.Select(PixevalUserDto.FromUser).ToArray();
@@ -487,9 +487,9 @@ internal sealed class PixevalMcpCursorStore : IAsyncDisposable
         public override async Task<PixevalCursorPageDto> ReadPageAsync(
             IPixevalMcpRuntime runtime,
             int count,
-            CancellationToken cancellationToken)
+            CancellationToken token)
         {
-            var (items, hasMore) = await ReadItemsAsync(_enumerator, count, _buffer, cancellationToken)
+            var (items, hasMore) = await ReadItemsAsync(_enumerator, count, _buffer, token)
                 .ConfigureAwait(false);
             runtime.CacheUserInfos(items.Select(static series => series.User));
             var series = items.Select(PixevalSeriesDto.FromSeries).ToArray();
@@ -514,9 +514,9 @@ internal sealed class PixevalMcpCursorStore : IAsyncDisposable
         public override async Task<PixevalCursorPageDto> ReadPageAsync(
             IPixevalMcpRuntime runtime,
             int count,
-            CancellationToken cancellationToken)
+            CancellationToken token)
         {
-            var (items, hasMore) = await ReadItemsAsync(_enumerator, count, _buffer, cancellationToken)
+            var (items, hasMore) = await ReadItemsAsync(_enumerator, count, _buffer, token)
                 .ConfigureAwait(false);
             var spotlights = items.Select(PixevalSpotlightDto.FromSpotlight).ToArray();
             return new(
@@ -540,9 +540,9 @@ internal sealed class PixevalMcpCursorStore : IAsyncDisposable
         public override async Task<PixevalCursorPageDto> ReadPageAsync(
             IPixevalMcpRuntime runtime,
             int count,
-            CancellationToken cancellationToken)
+            CancellationToken token)
         {
-            var (items, hasMore) = await ReadItemsAsync(_enumerator, count, _buffer, cancellationToken)
+            var (items, hasMore) = await ReadItemsAsync(_enumerator, count, _buffer, token)
                 .ConfigureAwait(false);
             runtime.CacheUserInfos(items.Select(static comment => comment.User));
             var comments = items.Select(comment => PixevalCommentDto.FromComment(comment, runtime.CurrentUser?.Id))
@@ -573,9 +573,9 @@ internal sealed class PixevalMcpCursorStore : IAsyncDisposable
         public override async Task<PixevalCursorPageDto> ReadPageAsync(
             IPixevalMcpRuntime runtime,
             int count,
-            CancellationToken cancellationToken)
+            CancellationToken token)
         {
-            var (items, hasMore) = await ReadItemsAsync(_enumerator, count, _buffer, cancellationToken)
+            var (items, hasMore) = await ReadItemsAsync(_enumerator, count, _buffer, token)
                 .ConfigureAwait(false);
             var tags = items.Select(static tag => PixevalBookmarkTagDto.FromBookmarkTag(tag)).ToArray();
             return new(

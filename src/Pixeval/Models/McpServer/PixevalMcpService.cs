@@ -57,18 +57,18 @@ public sealed partial class PixevalMcpService(AppViewModel appViewModel, FileLog
 
     public Uri? Endpoint => _server?.Endpoint;
 
-    public Task StartAsync(CancellationToken cancellationToken = default) =>
-        ApplySettingsAsync(cancellationToken);
+    public Task StartAsync(CancellationToken token = default) =>
+        ApplySettingsAsync(token);
 
-    public async Task ApplySettingsAsync(CancellationToken cancellationToken = default)
+    public async Task ApplySettingsAsync(CancellationToken token = default)
     {
-        await _lifetimeLock.WaitAsync(cancellationToken).ConfigureAwait(false);
+        await _lifetimeLock.WaitAsync(token).ConfigureAwait(false);
         try
         {
             if (_disposed)
                 return;
 
-            await ApplySettingsCoreAsync(cancellationToken).ConfigureAwait(false);
+            await ApplySettingsCoreAsync(token).ConfigureAwait(false);
         }
         finally
         {
@@ -76,7 +76,7 @@ public sealed partial class PixevalMcpService(AppViewModel appViewModel, FileLog
         }
     }
 
-    private async Task ApplySettingsCoreAsync(CancellationToken cancellationToken)
+    private async Task ApplySettingsCoreAsync(CancellationToken token)
     {
         var port = Port;
         if (!Settings.EnableServer)
@@ -91,15 +91,15 @@ public sealed partial class PixevalMcpService(AppViewModel appViewModel, FileLog
         if (_server is not null)
             await StopCoreAsync().ConfigureAwait(false);
 
-        await StartCoreAsync(port, cancellationToken).ConfigureAwait(false);
+        await StartCoreAsync(port, token).ConfigureAwait(false);
     }
 
-    private async Task StartCoreAsync(ushort port, CancellationToken cancellationToken)
+    private async Task StartCoreAsync(ushort port, CancellationToken token)
     {
         var server = new PixevalMcpHttpServer(this, port);
         try
         {
-            await server.StartAsync(cancellationToken).ConfigureAwait(false);
+            await server.StartAsync(token).ConfigureAwait(false);
             _server = server;
             _serverPort = port;
             logger.LogInformation($"Pixeval MCP server started at {server.Endpoint}", null);
@@ -172,15 +172,15 @@ public sealed partial class PixevalMcpService(AppViewModel appViewModel, FileLog
     public async Task<PixevalMcpDownloadTaskDto> QueueDownloadAsync(
         SimpleWorkType workType,
         long id,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
         EnsureWriteToolsEnabled();
         EnsureLoggedIn();
 
         var destination = appViewModel.AppSettings.DownloadSettings.DownloadPathMacro;
         var task = workType is SimpleWorkType.Novel
-            ? await CreateNovelDownloadTaskAsync(id, destination, cancellationToken).ConfigureAwait(false)
-            : await CreateIllustrationDownloadTaskAsync(id, destination, cancellationToken).ConfigureAwait(false);
+            ? await CreateNovelDownloadTaskAsync(id, destination, token).ConfigureAwait(false)
+            : await CreateIllustrationDownloadTaskAsync(id, destination, token).ConfigureAwait(false);
 
         var manager = appViewModel.HistoryPersistHelper.DownloadManager;
         return RunOnUiThread(() =>
@@ -219,11 +219,11 @@ public sealed partial class PixevalMcpService(AppViewModel appViewModel, FileLog
     private async Task<IDownloadTaskGroup> CreateIllustrationDownloadTaskAsync(
         long id,
         string destination,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
-        var illustration = await GetIllustrationAsync(id, cancellationToken).ConfigureAwait(false);
+        var illustration = await GetIllustrationAsync(id, token).ConfigureAwait(false);
         if (illustration.IsPicGif && illustration is ISingleAnimatedImage { MultiImageUris: not null } animatedImage)
-            await animatedImage.MultiImageUris.TryPreloadListAsync(animatedImage).ConfigureAwait(false);
+            await animatedImage.MultiImageUris.TryPreloadListAsync(animatedImage, token: token).ConfigureAwait(false);
 
         var factory = appViewModel.AppServiceProvider.GetRequiredService<IllustrationDownloadTaskFactory>();
         return factory.Create(illustration, destination);
@@ -232,10 +232,10 @@ public sealed partial class PixevalMcpService(AppViewModel appViewModel, FileLog
     private async Task<IDownloadTaskGroup> CreateNovelDownloadTaskAsync(
         long id,
         string destination,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
-        var novel = await GetNovelAsync(id, cancellationToken).ConfigureAwait(false);
-        var content = await MakoClient.GetNovelContentAsync(id).WaitAsync(cancellationToken).ConfigureAwait(false);
+        var novel = await GetNovelAsync(id, token).ConfigureAwait(false);
+        var content = await MakoClient.GetNovelContentAsync(id, token).ConfigureAwait(false);
         var factory = appViewModel.AppServiceProvider.GetRequiredService<NovelDownloadTaskFactory>();
         return factory.Create(novel, destination, content);
     }

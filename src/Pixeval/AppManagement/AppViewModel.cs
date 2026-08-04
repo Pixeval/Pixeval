@@ -85,6 +85,8 @@ public sealed class AppViewModel(App app, FileLogger logger) : IAsyncDisposable
                 GitHubHttpClientProvider.PlatformKey,
                 (_, _) => new GitHubHttpClientProvider(AppSettings.NetworkSettings))
             .AddSingleton<WorkSubscriptionDownloadService>()
+            .AddSingleton<IWorkSubscriptionService>(provider =>
+                provider.GetRequiredService<WorkSubscriptionDownloadService>())
             .AddSingleton<IllustrationDownloadTaskFactory>()
             .AddSingleton<NovelDownloadTaskFactory>()
             .AddSingleton(provider => new ExtensionService(provider.GetRequiredService<FileLogger>(), AppSettings))
@@ -136,6 +138,14 @@ public sealed class AppViewModel(App app, FileLogger logger) : IAsyncDisposable
     {
         AppServiceProvider.GetRequiredService<WorkSubscriptionDownloadService>()
             .QueueSyncSubscription(subscription);
+    }
+
+    public void QueueWorkSubscriptionInitialSync(
+        WorkSubscriptionEntry subscription,
+        IFetchEngine<IWorkEntry>? sourceEngine = null)
+    {
+        AppServiceProvider.GetRequiredService<WorkSubscriptionDownloadService>()
+            .QueueInitialSync(subscription, sourceEngine);
     }
 
     public void QueueWorkSubscriptionSyncCurrentSource(long uid, WorkSubscriptionType subscriptionType,
@@ -205,6 +215,8 @@ public sealed class AppViewModel(App app, FileLogger logger) : IAsyncDisposable
         _disposed = true;
         try
         {
+            if (AppServiceProvider.GetService<WorkSubscriptionDownloadService>() is { } subscriptionService)
+                await subscriptionService.CancelAndWaitAsync();
             // 有些服务只能 DisposeAsync
             await AppServiceProvider.DisposeAsync();
         }

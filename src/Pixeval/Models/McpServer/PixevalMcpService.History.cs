@@ -27,9 +27,9 @@ public sealed partial class PixevalMcpService
         int count,
         string? keyword,
         string? workFilter,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
-        cancellationToken.ThrowIfCancellationRequested();
+        token.ThrowIfCancellationRequested();
         var normalizedSkip = int.Max(0, skip);
         var normalizedCount = int.Clamp(count, 1, MaxHistoryLimit);
         return type switch
@@ -39,34 +39,34 @@ public sealed partial class PixevalMcpService
                 normalizedSkip,
                 normalizedCount,
                 keyword,
-                cancellationToken).ConfigureAwait(false),
+                token).ConfigureAwait(false),
             PixevalHistoryType.Browse => await GetArtworkHistoryAsync<BrowseHistoryPersistentManager, BrowseHistoryEntry>(
                 type,
                 normalizedSkip,
                 normalizedCount,
                 keyword,
                 workFilter,
-                cancellationToken).ConfigureAwait(false),
+                token).ConfigureAwait(false),
             PixevalHistoryType.WatchLater => await GetArtworkHistoryAsync<WatchLaterPersistentManager, WatchLaterEntry>(
                 type,
                 normalizedSkip,
                 normalizedCount,
                 keyword,
                 workFilter,
-                cancellationToken).ConfigureAwait(false),
+                token).ConfigureAwait(false),
             PixevalHistoryType.Download => await GetDownloadHistoryAsync(
                 type,
                 normalizedSkip,
                 normalizedCount,
                 keyword,
                 workFilter,
-                cancellationToken).ConfigureAwait(false),
+                token).ConfigureAwait(false),
             PixevalHistoryType.WorkSubscription => await GetWorkSubscriptionHistoryAsync(
                 type,
                 normalizedSkip,
                 normalizedCount,
                 keyword,
-                cancellationToken).ConfigureAwait(false),
+                token).ConfigureAwait(false),
             _ => throw new ArgumentOutOfRangeException(nameof(type))
         };
     }
@@ -76,20 +76,20 @@ public sealed partial class PixevalMcpService
         int skip,
         int count,
         string? keyword,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
         var manager = ViewModel.AppServiceProvider.GetRequiredService<SearchHistoryPersistentManager>();
         var hasFilter = !string.IsNullOrWhiteSpace(keyword);
         var sourceSkip = hasFilter ? 0 : skip;
         var (entries, total) = await ReadHistoryPageAsync(
-                manager.StreamEntriesAsync(sourceSkip, cancellationToken),
+                manager.StreamEntriesAsync(sourceSkip, token),
                 hasFilter ? 0 : manager.Count,
                 skip - sourceSkip,
                 count,
                 hasFilter,
                 entry => ContainsKeyword(entry.Value, keyword)
                          || ContainsKeyword(entry.TranslatedName, keyword),
-                cancellationToken)
+                token)
             .ConfigureAwait(false);
         var items = entries
             .Select(entry => new PixevalHistoryItemDto(
@@ -110,7 +110,7 @@ public sealed partial class PixevalMcpService
         int count,
         string? keyword,
         string? workFilter,
-        CancellationToken cancellationToken)
+        CancellationToken token)
         where TManager : ArtworkHistoryPersistentManager<TEntry>
         where TEntry : ArtworkHistoryEntry, new()
     {
@@ -122,27 +122,27 @@ public sealed partial class PixevalMcpService
         var hasFilter = !string.IsNullOrWhiteSpace(keyword) || filterDto is not null;
         var sourceSkip = hasFilter ? 0 : skip;
         var (entries, total) = await ReadHistoryPageAsync(
-                manager.StreamEntriesAsync(sourceSkip, cancellationToken),
+                manager.StreamEntriesAsync(sourceSkip, token),
                 hasFilter ? 0 : manager.Count,
                 skip - sourceSkip,
                 count,
                 hasFilter,
                 entry =>
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
+                    token.ThrowIfCancellationRequested();
                     return
                         TryGetArtwork(entry, out var artwork)
                         && MatchesArtworkKeyword(artwork, keyword)
                         && filter(artwork);
                 },
-                cancellationToken)
+                token)
             .ConfigureAwait(false);
         var (items, works) = CreateArtworkHistoryItems(
             entries,
             type,
             static _ => null);
         CacheWorks(works);
-        cancellationToken.ThrowIfCancellationRequested();
+        token.ThrowIfCancellationRequested();
         return new(type, skip, count, total, items.Count, items, filterDto);
     }
 
@@ -152,7 +152,7 @@ public sealed partial class PixevalMcpService
         int count,
         string? keyword,
         string? workFilter,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
         var filter = CreateHistoryWorkFilter(workFilter, out var filterDto);
         if (filterDto is { IsSuccess: false })
@@ -162,21 +162,21 @@ public sealed partial class PixevalMcpService
         var hasFilter = !string.IsNullOrWhiteSpace(keyword) || filterDto is not null;
         var sourceSkip = hasFilter ? 0 : skip;
         var (entries, total) = await ReadHistoryPageAsync(
-                manager.StreamEntriesAsync(sourceSkip, cancellationToken),
+                manager.StreamEntriesAsync(sourceSkip, token),
                 hasFilter ? 0 : manager.Count,
                 skip - sourceSkip,
                 count,
                 hasFilter,
                 entry =>
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
+                    token.ThrowIfCancellationRequested();
                     return TryGetArtwork(entry, out var artwork)
                            && (ContainsKeyword(entry.Destination, keyword)
                                || ContainsKeyword(entry.ErrorMessage, keyword)
                                || MatchesArtworkKeyword(artwork, keyword))
                            && filter(artwork);
                 },
-                cancellationToken)
+                token)
             .ConfigureAwait(false);
         var (items, works) = CreateArtworkHistoryItems(
             entries,
@@ -187,7 +187,7 @@ public sealed partial class PixevalMcpService
                 entry.FormatToken,
                 entry.ErrorMessage));
         CacheWorks(works);
-        cancellationToken.ThrowIfCancellationRequested();
+        token.ThrowIfCancellationRequested();
         return new(type, skip, count, total, items.Count, items, filterDto);
     }
 
@@ -198,13 +198,13 @@ public sealed partial class PixevalMcpService
         int count,
         bool hasFilter,
         Func<TEntry, bool> predicate,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
         var entries = new List<TEntry>(count);
         if (!hasFilter)
         {
             var index = 0;
-            await foreach (var entry in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+            await foreach (var entry in source.WithCancellation(token).ConfigureAwait(false))
             {
                 if (index++ < skip)
                     continue;
@@ -217,7 +217,7 @@ public sealed partial class PixevalMcpService
         }
 
         var total = 0;
-        await foreach (var entry in source.WithCancellation(cancellationToken).ConfigureAwait(false))
+        await foreach (var entry in source.WithCancellation(token).ConfigureAwait(false))
         {
             if (!predicate(entry))
                 continue;
@@ -234,13 +234,13 @@ public sealed partial class PixevalMcpService
         int skip,
         int count,
         string? keyword,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
         var manager = ViewModel.AppServiceProvider.GetRequiredService<WorkSubscriptionPersistentManager>();
         var hasFilter = !string.IsNullOrWhiteSpace(keyword);
         var sourceSkip = hasFilter ? 0 : skip;
         var (entries, total) = await ReadHistoryPageAsync(
-                manager.StreamEntriesAsync(sourceSkip, cancellationToken),
+                manager.StreamEntriesAsync(sourceSkip, token),
                 hasFilter ? 0 : manager.Count,
                 skip - sourceSkip,
                 count,
@@ -248,7 +248,7 @@ public sealed partial class PixevalMcpService
                 entry => ContainsKeyword(entry.Name, keyword)
                          || ContainsKeyword(entry.Account, keyword)
                          || ContainsKeyword(entry.Id.ToString(), keyword),
-                cancellationToken)
+                token)
             .ConfigureAwait(false);
         var items = entries
             .Select(entry => new PixevalHistoryItemDto(

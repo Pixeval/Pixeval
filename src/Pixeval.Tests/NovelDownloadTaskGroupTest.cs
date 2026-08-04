@@ -52,7 +52,7 @@ public sealed class NovelDownloadTaskGroupTest
         context.SetStream(0, new MemoryStream());
         context.SetStream(1, new MemoryStream());
 
-        CollectionAssert.AreEqual((string[]) ["101.png", "202-2.webp"], context.AllFileNames);
+        Assert.AreSequenceEqual((string[]) ["101.png", "202-2.webp"], context.AllFileNames);
 
         var html = context.LoadHtmlContent().ToString();
         StringAssert.Contains(html, "src=\"101.png\"");

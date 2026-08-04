@@ -4,6 +4,7 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Models.Database.Managers;
+using Pixeval.Models.Subscriptions;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
 
@@ -24,7 +25,8 @@ public partial class DownloadPage : IconTabbedPage, IDisposable
         InitializeComponent();
         _viewModel = new DownloadPageViewModel(
             App.AppViewModel.HistoryPersistHelper.DownloadManager.QueuedTasks,
-            App.AppViewModel.AppServiceProvider.GetRequiredService<WorkSubscriptionPersistentManager>());
+            App.AppViewModel.AppServiceProvider.GetRequiredService<WorkSubscriptionPersistentManager>(),
+            App.AppViewModel.AppServiceProvider.GetRequiredService<IWorkSubscriptionService>());
         DataContext = _viewModel;
 
         _ordinaryView = new(new DownloadItemPageViewModel(_viewModel));

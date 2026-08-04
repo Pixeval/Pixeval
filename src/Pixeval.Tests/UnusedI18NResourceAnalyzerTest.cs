@@ -164,9 +164,8 @@ public sealed class UnusedI18NResourceAnalyzerTest
             ]);
 
         Assert.HasCount(2, diagnostics);
-        CollectionAssert.AreEquivalent(
-            (string[]) [@"C:\Project\i18n\zh-Hans\Test.json", @"C:\Project\i18n\en-US\Test.json"],
-            diagnostics.Select(diagnostic => diagnostic.Location.GetLineSpan().Path).ToArray());
+        Assert.AreSequenceEqual(
+            (string[]) [@"C:\Project\i18n\zh-Hans\Test.json", @"C:\Project\i18n\en-US\Test.json"], diagnostics.Select(diagnostic => diagnostic.Location.GetLineSpan().Path).ToArray(), Microsoft.VisualStudio.TestTools.UnitTesting.SequenceOrder.InAnyOrder);
     }
 
     private static TestAdditionalText Json(string culture, string text) => new($@"C:\Project\i18n\{culture}\Test.json", text);

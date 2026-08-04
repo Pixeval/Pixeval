@@ -12,6 +12,7 @@ using Pixeval.Download;
 using Pixeval.I18N;
 using Pixeval.Models.Database;
 using Pixeval.Models.Options;
+using Pixeval.Models.Subscriptions;
 
 namespace Pixeval.ViewModels;
 
@@ -26,8 +27,9 @@ public sealed partial class DownloadFolderViewModel(WorkSubscriptionEntry subscr
 
     public IReadOnlyList<DownloadItemViewModel> DownloadItems => Items;
 
-    [ObservableProperty]
-    public partial bool DeleteLocalFiles { get; set; }
+    [ObservableProperty] public partial bool IsFetching { get; private set; }
+
+    [ObservableProperty] public partial int FetchedCount { get; private set; }
 
     public string Title => GetDisplayName(Subscription);
 
@@ -36,7 +38,9 @@ public sealed partial class DownloadFolderViewModel(WorkSubscriptionEntry subscr
         $"{SymbolComboBoxItem.GetResource(subscription.SubscriptionType)} · " +
         $"{SymbolComboBoxItem.GetResource(subscription.WorkKind)}";
 
-    public string Subtitle => I18NManager.GetResource(DownloadPageResources.FolderSubtitleFormatted, Items.Count);
+    public string Subtitle => IsFetching
+        ? I18NManager.GetResource(DownloadPageResources.FetchingFolderSubtitleFormatted, FetchedCount)
+        : I18NManager.GetResource(DownloadPageResources.FolderSubtitleFormatted, Items.Count);
 
     public bool HasItems => Items.Count is not 0;
 
@@ -86,6 +90,34 @@ public sealed partial class DownloadFolderViewModel(WorkSubscriptionEntry subscr
         DownloadListOption.CustomSearch => customSearchResult?.Contains(this) ?? true,
         _ => Items.Any(t => t.MatchesOption(option, null))
     };
+
+    partial void OnIsFetchingChanged(bool value) => OnPropertyChanged(nameof(Subtitle));
+
+    partial void OnFetchedCountChanged(int value) => OnPropertyChanged(nameof(Subtitle));
+
+    internal void UpdateFetchState(WorkSubscriptionFetchState? state)
+    {
+        if (state is not
+            {
+                IsFetching: true,
+                WorkSubscriptionId: var workSubscriptionId
+            } || workSubscriptionId != Subscription.HistoryEntryId)
+        {
+            IsFetching = false;
+            FetchedCount = 0;
+            return;
+        }
+
+        FetchedCount = state.FetchedCount;
+        IsFetching = true;
+    }
+
+    internal void UpdateSubscription(WorkSubscriptionEntry subscription)
+    {
+        Subscription.UpdateFrom(subscription);
+        OnPropertyChanged(nameof(Subscription));
+        OnPropertyChanged(nameof(Title));
+    }
 
     public void Add(DownloadItemViewModel item, bool insertAtFront)
     {

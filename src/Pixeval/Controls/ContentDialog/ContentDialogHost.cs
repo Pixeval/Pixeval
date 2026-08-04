@@ -104,9 +104,9 @@ public class ContentDialogHost : TemplatedControl
     /// Shows a dialog on this host and completes when that dialog is closed.
     /// </summary>
     /// <param name="dialog">The dialog to show.</param>
-    /// <param name="cancellationToken">A token that closes the dialog with <see cref="ContentDialogResult.None"/> when canceled.</param>
+    /// <param name="token">A token that closes the dialog with <see cref="ContentDialogResult.None"/> when canceled.</param>
     /// <returns>The result selected by the user.</returns>
-    public async Task<ContentDialogResult> ShowAsync(ContentDialog dialog, CancellationToken cancellationToken = default)
+    public async Task<ContentDialogResult> ShowAsync(ContentDialog dialog, CancellationToken token = default)
     {
         Dispatcher.UIThread.VerifyAccess();
 
@@ -123,7 +123,7 @@ public class ContentDialogHost : TemplatedControl
         var result = ContentDialogResult.None;
         try
         {
-            await using var registration = cancellationToken.Register(() =>
+            await using var registration = token.Register(() =>
                 Dispatcher.UIThread.Post(() => _ = dialog.HideAsync()));
 
             await Dispatcher.UIThread.InvokeAsync(dialog.FocusInitialElement, DispatcherPriority.Loaded);

@@ -280,9 +280,90 @@ public sealed class ArtworkHistoryPersistentManagerTest
         var identities = new List<(int SubscriptionId, string ArtworkId, string Destination)>();
         await foreach (var entry in manager.StreamEntriesAsync())
             identities.Add((entry.WorkSubscriptionId, entry.ArtworkId, entry.Destination));
-        CollectionAssert.AreEquivalent(
-            new[] { (1, "artwork", "same"), (2, "artwork", "same"), (1, "other", "same") },
-            identities);
+        Assert.AreSequenceEqual(
+            [(1, "artwork", "same"), (2, "artwork", "same"), (1, "other", "same")], identities, Microsoft.VisualStudio.TestTools.UnitTesting.SequenceOrder.InAnyOrder);
+    }
+
+    [TestMethod]
+    public async Task SubscriptionHistory_AddOrReplaceRangeCommitsAsSingleBatch()
+    {
+        using var db = new SQLiteConnection(":memory:");
+        var manager = new SubscriptionDownloadHistoryPersistentManager(db, CreateLogger());
+        manager.AddOrReplace(new("same", CreatePost("old"), 1));
+        var changedCount = 0;
+        manager.Changed += (_, _) => changedCount++;
+
+        manager.AddOrReplaceRange(
+        [
+            new("same", CreatePost("old"), 1),
+            new("second", CreatePost("second"), 1),
+            new("third", CreatePost("third"), 2)
+        ]);
+
+        Assert.AreEqual(1, changedCount);
+        Assert.AreEqual(3, manager.Count);
+        Assert.AreEqual(3, db.Table<ArtworkPayloadEntry>().Count());
+        var identities = new List<(int SubscriptionId, string ArtworkId, string Destination)>();
+        await foreach (var entry in manager.StreamEntriesAsync())
+            identities.Add((entry.WorkSubscriptionId, entry.ArtworkId, entry.Destination));
+        Assert.AreSequenceEqual(
+            [(1, "old", "same"), (1, "second", "second"), (2, "third", "third")], identities, Microsoft.VisualStudio.TestTools.UnitTesting.SequenceOrder.InAnyOrder);
+    }
+
+    [TestMethod]
+    public void SubscriptionHistory_AddOrReplaceRangeRollsBackWholeBatch()
+    {
+        using var db = new SQLiteConnection(":memory:");
+        var manager = new SubscriptionDownloadHistoryPersistentManager(db, CreateLogger());
+        var invalidEntry = new SubscriptionDownloadHistoryEntry
+        {
+            WorkSubscriptionId = 1,
+            ArtworkId = "invalid",
+            Destination = "invalid"
+        };
+
+        _ = Assert.Throws<InvalidOperationException>(() => manager.AddOrReplaceRange(
+        [
+            new("valid", CreatePost("valid"), 1),
+            invalidEntry
+        ]));
+
+        Assert.AreEqual(0, manager.Count);
+        Assert.AreEqual(0, db.Table<ArtworkPayloadEntry>().Count());
+    }
+
+    [TestMethod]
+    public void SubscriptionHistory_DeleteBySubscriptionRemovesOwnedPayloads()
+    {
+        using var db = new SQLiteConnection(":memory:");
+        var manager = new SubscriptionDownloadHistoryPersistentManager(db, CreateLogger());
+        manager.AddOrReplace(new("first", CreatePost("first"), 1));
+        manager.AddOrReplace(new("second", CreatePost("second"), 1));
+        manager.AddOrReplace(new("other", CreatePost("other"), 2));
+
+        var deletedCount = manager.DeleteByWorkSubscriptionId(1);
+
+        Assert.AreEqual(2, deletedCount);
+        Assert.AreEqual(1, manager.Count);
+        Assert.AreEqual(1, db.Table<ArtworkPayloadEntry>().Count());
+        Assert.IsTrue(manager.ContainsIdentity(2, "other", "other"));
+    }
+
+    [TestMethod]
+    public void SubscriptionHistory_DeleteOrphansPreservesKnownSubscriptions()
+    {
+        using var db = new SQLiteConnection(":memory:");
+        var manager = new SubscriptionDownloadHistoryPersistentManager(db, CreateLogger());
+        manager.AddOrReplace(new("first", CreatePost("first"), 1));
+        manager.AddOrReplace(new("second", CreatePost("second"), 2));
+        manager.AddOrReplace(new("third", CreatePost("third"), 3));
+
+        var deletedCount = manager.DeleteOrphans(new HashSet<int> { 2 });
+
+        Assert.AreEqual(2, deletedCount);
+        Assert.AreEqual(1, manager.Count);
+        Assert.AreEqual(1, db.Table<ArtworkPayloadEntry>().Count());
+        Assert.IsTrue(manager.ContainsIdentity(2, "second", "second"));
     }
 
     [TestMethod]

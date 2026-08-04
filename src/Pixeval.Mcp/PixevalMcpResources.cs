@@ -19,10 +19,10 @@ internal sealed class PixevalMcpResources(IPixevalMcpRuntime runtime)
 
     [McpServerResource(UriTemplate = "pixeval://illust/{id}", Name = "illustration",
         Title = "Pixiv illustration", MimeType = "application/json")]
-    public async Task<string> IllustrationAsync(long id, CancellationToken cancellationToken = default)
+    public async Task<string> IllustrationAsync(long id, CancellationToken token = default)
     {
         runtime.EnsureLoggedIn();
-        var illustration = await runtime.GetIllustrationAsync(id, cancellationToken).ConfigureAwait(false);
+        var illustration = await runtime.GetIllustrationAsync(id, token).ConfigureAwait(false);
         return PixevalMcpResult.Json(PixevalWorkDto.FromIllustration(illustration));
     }
 
@@ -32,16 +32,16 @@ internal sealed class PixevalMcpResources(IPixevalMcpRuntime runtime)
     public async Task<BlobResourceContents> IllustrationThumbnailAsync(
         long id,
         string size,
-        CancellationToken cancellationToken = default)
+        CancellationToken token = default)
     {
         try
         {
             runtime.EnsureLoggedIn();
-            var illustration = await runtime.GetIllustrationAsync(id, cancellationToken).ConfigureAwait(false);
+            var illustration = await runtime.GetIllustrationAsync(id, token).ConfigureAwait(false);
             return await ImageResourceAsync(
                     PixevalThumbnailInfoDto.GetThumbnailUrl(illustration, size),
                     PixevalThumbnailInfoDto.GetThumbnailResourceUri("illust", id, size),
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false);
         }
         catch (Exception e) when (e is not PixevalMcpException and not OperationCanceledException)
@@ -56,16 +56,16 @@ internal sealed class PixevalMcpResources(IPixevalMcpRuntime runtime)
     public async Task<BlobResourceContents> NovelThumbnailAsync(
         long id,
         string size,
-        CancellationToken cancellationToken = default)
+        CancellationToken token = default)
     {
         try
         {
             runtime.EnsureLoggedIn();
-            var novel = await runtime.GetNovelAsync(id, cancellationToken).ConfigureAwait(false);
+            var novel = await runtime.GetNovelAsync(id, token).ConfigureAwait(false);
             return await ImageResourceAsync(
                     PixevalThumbnailInfoDto.GetThumbnailUrl(novel, size),
                     PixevalThumbnailInfoDto.GetThumbnailResourceUri("novel", id, size),
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false);
         }
         catch (Exception e) when (e is not PixevalMcpException and not OperationCanceledException)
@@ -78,7 +78,7 @@ internal sealed class PixevalMcpResources(IPixevalMcpRuntime runtime)
     private async Task<BlobResourceContents> ImageResourceAsync(
         string url,
         string resourceUri,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
         if (string.IsNullOrWhiteSpace(url))
             throw new PixevalMcpException("Pixiv did not return an image URL for this thumbnail.");
@@ -88,14 +88,14 @@ internal sealed class PixevalMcpResources(IPixevalMcpRuntime runtime)
         using var response = await runtime.ImageHttpClient.GetAsync(
                 url,
                 HttpCompletionOption.ResponseHeadersRead,
-                cancellationToken)
+                token)
             .ConfigureAwait(false);
         _ = response.EnsureSuccessStatusCode();
 
         if (response.Content.Headers.ContentLength is { } length && length > maxBinaryResourceBytes)
             throw new PixevalMcpException(CreateResourceLimitMessage(length, maxBinaryResourceMegabytes));
 
-        var bytes = await response.Content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
+        var bytes = await response.Content.ReadAsByteArrayAsync(token).ConfigureAwait(false);
         if (bytes.Length > maxBinaryResourceBytes)
             throw new PixevalMcpException(CreateResourceLimitMessage(bytes.Length, maxBinaryResourceMegabytes));
 
@@ -109,19 +109,19 @@ internal sealed class PixevalMcpResources(IPixevalMcpRuntime runtime)
 
     [McpServerResource(UriTemplate = "pixeval://novel/{id}", Name = "novel", Title = "Pixiv novel",
         MimeType = "application/json")]
-    public async Task<string> NovelAsync(long id, CancellationToken cancellationToken = default)
+    public async Task<string> NovelAsync(long id, CancellationToken token = default)
     {
         runtime.EnsureLoggedIn();
-        var novel = await runtime.GetNovelAsync(id, cancellationToken).ConfigureAwait(false);
+        var novel = await runtime.GetNovelAsync(id, token).ConfigureAwait(false);
         return PixevalMcpResult.Json(PixevalWorkDto.FromNovel(novel));
     }
 
     [McpServerResource(UriTemplate = "pixeval://user/{id}", Name = "user", Title = "Pixiv user",
         MimeType = "application/json")]
-    public async Task<string> UserAsync(long id, CancellationToken cancellationToken = default)
+    public async Task<string> UserAsync(long id, CancellationToken token = default)
     {
         runtime.EnsureLoggedIn();
-        var user = await runtime.GetUserAsync(id, cancellationToken).ConfigureAwait(false);
+        var user = await runtime.GetUserAsync(id, token).ConfigureAwait(false);
         return PixevalMcpResult.Json(PixevalUserDto.FromSingleUserResponse(user));
     }
 }

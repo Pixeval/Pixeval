@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Mako.Engine;
 using Misaki;
 using Pixeval.Collections;
+using Pixeval.Utilities;
 
 namespace Pixeval.ViewModels;
 
@@ -36,6 +37,8 @@ public class IncrementalSource<T, TViewModel> : IIncrementalSource<TViewModel>, 
 
     private bool _resourcesDisposed;
 
+    public bool HasMoreItems { get; private set; } = true;
+
     public IncrementalSource(IAsyncEnumerable<T?> asyncEnumerable, Func<T, int, TViewModel> factory, int limit = -1)
     {
         ArgumentNullException.ThrowIfNull(asyncEnumerable);
@@ -43,10 +46,13 @@ public class IncrementalSource<T, TViewModel> : IIncrementalSource<TViewModel>, 
         _asyncEnumerable = asyncEnumerable;
         _factory = factory;
         _limit = limit;
-        _asyncEnumerator = _asyncEnumerable.GetAsyncEnumerator(_lifetimeCts.Token);
+        _asyncEnumerator = asyncEnumerable is IFetchEngine<T> engine
+            ? FetchEngineRetryHelper.StreamAsync(engine, token: _lifetimeCts.Token)
+                .GetAsyncEnumerator(_lifetimeCts.Token)
+            : _asyncEnumerable.GetAsyncEnumerator(_lifetimeCts.Token);
     }
 
-    public virtual async Task<IReadOnlyCollection<TViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default)
+    public virtual async Task<IReadOnlyCollection<TViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken token = default)
     {
         BeginRequest();
         try
@@ -55,30 +61,42 @@ public class IncrementalSource<T, TViewModel> : IIncrementalSource<TViewModel>, 
             var i = 0;
             while (i < pageSize)
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                token.ThrowIfCancellationRequested();
                 if (_limit is not -1 && _yieldedCounter >= _limit)
                 {
+                    HasMoreItems = false;
                     return result;
                 }
 
                 if (await _asyncEnumerator.MoveNextAsync().ConfigureAwait(false))
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
+                    token.ThrowIfCancellationRequested();
                     if (_asyncEnumerator.Current is { } obj && !_yieldedItems.Contains(Identifier(obj)))
                     {
                         result.Add(_factory(obj, _yieldedCounter));
                         _ = _yieldedItems.Add(Identifier(obj));
                         ++i;
                         _yieldedCounter++;
+                        if (_limit is not -1 && _yieldedCounter >= _limit)
+                        {
+                            HasMoreItems = false;
+                            return result;
+                        }
                     }
                 }
                 else
                 {
+                    HasMoreItems = false;
                     return result;
                 }
             }
 
             return result;
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            HasMoreItems = false;
+            throw;
         }
         finally
         {

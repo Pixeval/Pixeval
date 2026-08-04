@@ -148,7 +148,7 @@ public class WorkPostsPage : WorkTypeWorksPage
             _ => throw new ArgumentOutOfRangeException(nameof(workType))
         };
 
-        if (WorkSubscriptionHelper.TryAddOrUpdate(_user, WorkSubscriptionType.Posts, workKind))
+        if (WorkSubscriptionHelper.TryAddOrUpdateUser(_user, WorkSubscriptionType.Posts, workKind))
             TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(
                 I18NManager.GetResource(WorkSubscriptionsSettingsExpanderResources.SubscriptionAdded));
     }

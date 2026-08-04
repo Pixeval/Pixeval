@@ -11,7 +11,7 @@ public interface IPixevalMcpService : IAsyncDisposable
 {
     Uri? Endpoint { get; }
 
-    Task StartAsync(CancellationToken cancellationToken = default);
+    Task StartAsync(CancellationToken token = default);
 
-    Task ApplySettingsAsync(CancellationToken cancellationToken = default);
+    Task ApplySettingsAsync(CancellationToken token = default);
 }

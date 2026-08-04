@@ -92,6 +92,7 @@ public partial class TabViewContainer : ViewContainerBase
             MaxItems = 3,
             Position = NotificationPosition.BottomRight
         };
+        FlushPendingNotifications();
         RegisterContentDialogHost(TopLevel.GetTopLevel(this));
 
         await AppInfo.AppVersion.GitHubCheckForUpdateAsync();

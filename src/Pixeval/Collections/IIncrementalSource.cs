@@ -18,6 +18,11 @@ namespace Pixeval.Collections;
 public interface IIncrementalSource<TSource>
 {
     /// <summary>
+    /// Gets a value indicating whether the source may provide more items.
+    /// </summary>
+    bool HasMoreItems { get; }
+
+    /// <summary>
     /// This method is invoked every time the view need to show more items. Retrieves items based on <paramref name="pageIndex"/> and <paramref name="pageSize"/> arguments.
     /// </summary>
     /// <param name="pageIndex">

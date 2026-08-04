@@ -44,11 +44,11 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         string cursor,
         [Description("Maximum number of items to return in this call. Clamped to 1..100.")]
         int count = DefaultCount,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(MoreAsync), async () =>
         {
             runtime.EnsureLoggedIn();
-            return PixevalMcpResult.Success(await cursorStore.MoreAsync(runtime, cursor, count, cancellationToken)
+            return PixevalMcpResult.Success(await cursorStore.MoreAsync(runtime, cursor, count, token)
                 .ConfigureAwait(false));
         });
 
@@ -100,7 +100,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         [Description(
             "Optional Pixeval work filter for work-like history entries. Use help for syntax.")]
         string? workFilter = null,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(HistoryAsync), async () =>
             PixevalMcpResult.Success(await runtime.HistoryAsync(
                     type,
@@ -108,7 +108,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
                     count,
                     keyword,
                     workFilter,
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false)));
 
     [McpServerTool(Name = "extensions", Title = "Get Pixeval extensions",
@@ -132,14 +132,14 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         [Description("Pixiv novel id.")] long id,
         [Description("Whether to include Pixeval-parsed Markdown in addition to Pixiv's raw novel text.")]
         bool includeMarkdown = true,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(NovelContentAsync), async () =>
         {
             runtime.EnsureLoggedIn();
             return PixevalMcpResult.Success(await runtime.NovelContentAsync(
                     id,
                     includeMarkdown,
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false));
         });
 
@@ -164,7 +164,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         double minSimilarity = 0,
         [Description("Whether Pixeval should try to load Pixiv work metadata for Pixiv hits.")]
         bool loadPixivWorks = false,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(SauceNaoSearchAsync), async () =>
             PixevalMcpResult.Success(await runtime.SauceNaoSearchAsync(
                     imageBase64,
@@ -175,7 +175,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
                     index,
                     minSimilarity,
                     loadPixivWorks,
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false)));
 
     [McpServerTool(Name = "search_illustrations", Title = "Search Pixiv illustrations", ReadOnly = true,
@@ -216,7 +216,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         [Description(
             "Optional Pixeval work filter expression applied to the fetched result set. Use help for syntax.")]
         string? workFilter = null,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(SearchIllustrationsAsync), async () =>
         {
             runtime.EnsureLoggedIn();
@@ -247,7 +247,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
                     count,
                     workFilter,
                     filter,
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false));
         });
 
@@ -293,7 +293,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         [Description(
             "Optional Pixeval work filter expression applied to the fetched result set. Use help for syntax.")]
         string? workFilter = null,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(SearchNovelsAsync), async () =>
         {
             runtime.EnsureLoggedIn();
@@ -324,7 +324,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
                     count,
                     workFilter,
                     filter,
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false));
         });
 
@@ -343,7 +343,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         [Description(
             "Optional Pixeval work filter expression applied to the fetched result set. Use help for syntax.")]
         string? workFilter = null,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteWorkCursorAsync(
             nameof(RecommendedWorksAsync),
             () => runtime.MakoClient.WorkRecommended(
@@ -352,7 +352,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
                 includePrivacyPolicy),
             count,
             workFilter,
-            cancellationToken);
+            token);
 
     [McpServerTool(Name = "new_works", Title = "Get newest Pixiv works", ReadOnly = true,
         OpenWorld = true, UseStructuredContent = true, OutputSchemaType = typeof(PixevalWorkListDto))]
@@ -367,13 +367,13 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         [Description(
             "Optional Pixeval work filter expression applied to the fetched result set. Use help for syntax.")]
         string? workFilter = null,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteWorkCursorAsync(
             nameof(NewWorksAsync),
             () => runtime.MakoClient.WorkNew(workType, maxWorkId),
             count,
             workFilter,
-            cancellationToken);
+            token);
 
     [McpServerTool(Name = "following_works", Title = "Get following Pixiv works", ReadOnly = true,
         OpenWorld = true, UseStructuredContent = true, OutputSchemaType = typeof(PixevalWorkListDto))]
@@ -388,13 +388,13 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         [Description(
             "Optional Pixeval work filter expression applied to the fetched result set. Use help for syntax.")]
         string? workFilter = null,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteWorkCursorAsync(
             nameof(FollowingWorksAsync),
             () => runtime.MakoClient.WorkFollowing(workType, privacy),
             count,
             workFilter,
-            cancellationToken);
+            token);
 
     [McpServerTool(Name = "posts", Title = "Get Pixiv user posts", ReadOnly = true,
         OpenWorld = true, UseStructuredContent = true, OutputSchemaType = typeof(PixevalWorkListDto))]
@@ -408,13 +408,13 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         [Description(
             "Optional Pixeval work filter expression applied to the fetched result set. Use help for syntax.")]
         string? workFilter = null,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteWorkCursorAsync(
             nameof(PostsAsync),
             () => runtime.MakoClient.WorkPosted(workType, userId),
             count,
             workFilter,
-            cancellationToken);
+            token);
 
     [McpServerTool(Name = "my_pixiv_works", Title = "Get Pixiv MyPixiv works", ReadOnly = true,
         OpenWorld = true, UseStructuredContent = true, OutputSchemaType = typeof(PixevalWorkListDto))]
@@ -427,13 +427,13 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         [Description(
             "Optional Pixeval work filter expression applied to the fetched result set. Use help for syntax.")]
         string? workFilter = null,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteWorkCursorAsync(
             nameof(MyPixivWorksAsync),
             () => runtime.MakoClient.WorkMyPixiv(workType),
             count,
             workFilter,
-            cancellationToken);
+            token);
 
     [McpServerTool(Name = "related_works", Title = "Get Pixiv related works", ReadOnly = true,
         OpenWorld = true, UseStructuredContent = true, OutputSchemaType = typeof(PixevalWorkListDto))]
@@ -448,13 +448,13 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         [Description(
             "Optional Pixeval work filter expression applied to the fetched result set. Use help for syntax.")]
         string? workFilter = null,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteWorkCursorAsync(
             nameof(RelatedWorksAsync),
             () => runtime.MakoClient.WorkRelated(id, workType),
             count,
             workFilter,
-            cancellationToken);
+            token);
 
     [McpServerTool(Name = "series_watchlist", Title = "Get Pixiv series watchlist", ReadOnly = true,
         OpenWorld = true, UseStructuredContent = true, OutputSchemaType = typeof(PixevalSeriesListDto))]
@@ -464,7 +464,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         [Description("Series work type.")] SimpleWorkType workType,
         [Description("Maximum number of series to return in this call. Clamped to 1..100.")]
         int count = DefaultCount,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(SeriesWatchlistAsync), async () =>
         {
             runtime.EnsureLoggedIn();
@@ -473,7 +473,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
                     runtime.MakoClient.WorkSeriesWatchlist(workType),
                     runtime,
                     count,
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false));
         });
 
@@ -488,14 +488,14 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         [Description(
             "Optional Pixeval work filter expression applied to the loaded works. Use help for syntax.")]
         string? workFilter = null,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(WorksAsync), async () =>
         {
             runtime.EnsureLoggedIn();
             if (ids.Count is 0)
                 throw new PixevalMcpException("At least one work id is required.");
 
-            var works = await LoadWorksAsync(workType, ids, cancellationToken).ConfigureAwait(false);
+            var works = await LoadWorksAsync(workType, ids, token).ConfigureAwait(false);
             return PixevalMcpResult.Success(CreateWorkListDto(runtime, works, workFilter));
         });
 
@@ -505,7 +505,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
     public Task<CallToolResult> UsersAsync(
         [Description("Pixiv user ids. At most 100 ids are loaded.")]
         IReadOnlyList<long> ids,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(UsersAsync), async () =>
         {
             runtime.EnsureLoggedIn();
@@ -515,8 +515,8 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
             var users = new List<PixevalUserDto>(int.Min(ids.Count, MaxCount));
             foreach (var id in ids.Distinct().Take(MaxCount))
             {
-                cancellationToken.ThrowIfCancellationRequested();
-                var user = await runtime.GetUserAsync(id, cancellationToken).ConfigureAwait(false);
+                token.ThrowIfCancellationRequested();
+                var user = await runtime.GetUserAsync(id, token).ConfigureAwait(false);
                 users.Add(PixevalUserDto.FromSingleUserResponse(user));
             }
 
@@ -528,12 +528,12 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
     [Description("Gets Pixiv users related to a seed user. Pixiv returns a fixed-size result set, so this tool does not use a cursor.")]
     public Task<CallToolResult> RelatedUsersAsync(
         [Description("Seed Pixiv user id.")] long userId,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(RelatedUsersAsync), async () =>
         {
             runtime.EnsureLoggedIn();
             var users = await runtime.MakoClient.RelatedUserAsync(userId)
-                .WaitAsync(cancellationToken)
+                .WaitAsync(token)
                 .ConfigureAwait(false);
             runtime.CacheUsers(users);
             var result = users.Select(PixevalUserDto.FromUser).ToArray();
@@ -547,11 +547,11 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
     public Task<CallToolResult> ThumbnailsAsync(
         [Description("Work type.")] SimpleWorkType workType,
         [Description("Pixiv work id.")] long id,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(ThumbnailsAsync), async () =>
         {
             runtime.EnsureLoggedIn();
-            var work = await runtime.GetWorkAsync(workType, id, cancellationToken).ConfigureAwait(false);
+            var work = await runtime.GetWorkAsync(workType, id, token).ConfigureAwait(false);
             return PixevalMcpResult.Success(PixevalThumbnailInfoDto.FromWork(work));
         });
 
@@ -569,7 +569,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         [Description(
             "Optional Pixeval work filter expression applied to the fetched result set. Use help for syntax.")]
         string? workFilter = null,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(RankingAsync), async () =>
         {
             runtime.EnsureLoggedIn();
@@ -589,7 +589,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
                     count,
                     workFilter,
                     filter,
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false));
         });
 
@@ -610,7 +610,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         [Description(
             "Optional Pixeval work filter expression applied to the fetched result set. Use help for syntax.")]
         string? workFilter = null,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(BookmarksAsync), async () =>
         {
             runtime.EnsureLoggedIn();
@@ -630,7 +630,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
                     count,
                     workFilter,
                     filter,
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false));
         });
 
@@ -646,7 +646,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         PrivacyPolicy privacy = PrivacyPolicy.Public,
         [Description("Maximum number of tags to return in this call. Clamped to 1..100.")]
         int count = DefaultCount,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(BookmarkTagsAsync), async () =>
         {
             runtime.EnsureLoggedIn();
@@ -659,7 +659,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
                     workType,
                     privacy,
                     count,
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false));
         });
 
@@ -670,11 +670,11 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         [Description("Work type.")] SimpleWorkType workType,
         [Description("Maximum number of tags to return. Clamped to 1..100.")]
         int count = DefaultCount,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(TrendingTagsAsync), async () =>
         {
             runtime.EnsureLoggedIn();
-            var tags = await runtime.MakoClient.GetWorkTrendingTagsAsync(workType).WaitAsync(cancellationToken)
+            var tags = await runtime.MakoClient.GetWorkTrendingTagsAsync(workType).WaitAsync(token)
                 .ConfigureAwait(false);
             var selected = tags.Take(ClampCount(count)).ToArray();
             runtime.CacheWorks(selected.Select(static tag => tag.Illustration));
@@ -689,7 +689,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         [Description("User search keyword.")] string query,
         [Description("Maximum number of users to return in this call. Clamped to 1..100.")]
         int count = DefaultCount,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(SearchUsersAsync), async () =>
         {
             runtime.EnsureLoggedIn();
@@ -697,7 +697,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
                     runtime.MakoClient.UserSearch(query),
                     runtime,
                     count,
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false));
         });
 
@@ -707,7 +707,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
     public Task<CallToolResult> RecommendedUsersAsync(
         [Description("Maximum number of users to return in this call. Clamped to 1..100.")]
         int count = DefaultCount,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(RecommendedUsersAsync), async () =>
         {
             runtime.EnsureLoggedIn();
@@ -715,7 +715,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
                     runtime.MakoClient.UserRecommended(),
                     runtime,
                     count,
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false));
         });
 
@@ -729,7 +729,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         PrivacyPolicy privacy = PrivacyPolicy.Public,
         [Description("Maximum number of users to return in this call. Clamped to 1..100.")]
         int count = DefaultCount,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(FollowingUsersAsync), async () =>
         {
             runtime.EnsureLoggedIn();
@@ -739,7 +739,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
                     runtime.MakoClient.UserFollowing(uid, privacy),
                     runtime,
                     count,
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false));
         });
 
@@ -749,7 +749,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
     public Task<CallToolResult> FollowersAsync(
         [Description("Maximum number of users to return in this call. Clamped to 1..100.")]
         int count = DefaultCount,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(FollowersAsync), async () =>
         {
             runtime.EnsureLoggedIn();
@@ -757,7 +757,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
                     runtime.MakoClient.UserFollower(),
                     runtime,
                     count,
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false));
         });
 
@@ -768,7 +768,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         [Description("Pixiv user id.")] long userId,
         [Description("Maximum number of users to return in this call. Clamped to 1..100.")]
         int count = DefaultCount,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(MyPixivUsersAsync), async () =>
         {
             runtime.EnsureLoggedIn();
@@ -776,7 +776,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
                     runtime.MakoClient.UserMyPixiv(userId),
                     runtime,
                     count,
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false));
         });
 
@@ -786,7 +786,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
     public Task<CallToolResult> SpotlightAsync(
         [Description("Maximum number of articles to return in this call. Clamped to 1..100.")]
         int count = DefaultCount,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(SpotlightAsync), async () =>
         {
             runtime.EnsureLoggedIn();
@@ -794,7 +794,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
                     runtime.MakoClient.Spotlight(),
                     runtime,
                     count,
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false));
         });
 
@@ -807,7 +807,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         [Description("Pixiv work id.")] long workId,
         [Description("Maximum number of comments to return in this call. Clamped to 1..100.")]
         int count = DefaultCount,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(CommentsAsync), async () =>
         {
             runtime.EnsureLoggedIn();
@@ -815,7 +815,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
                     runtime.MakoClient.WorkComments(workType, workId),
                     runtime,
                     count,
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false));
         });
 
@@ -829,7 +829,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         long commentId,
         [Description("Maximum number of replies to return in this call. Clamped to 1..100.")]
         int count = DefaultCount,
-        CancellationToken cancellationToken = default) =>
+        CancellationToken token = default) =>
         ExecuteAsync(nameof(CommentRepliesAsync), async () =>
         {
             runtime.EnsureLoggedIn();
@@ -837,7 +837,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
                     runtime.MakoClient.WorkCommentReplies(workType, commentId),
                     runtime,
                     count,
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false));
         });
 
@@ -861,7 +861,7 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
         Func<IFetchEngine<IWorkEntry>> engineFactory,
         int count,
         string? workFilter,
-        CancellationToken cancellationToken) =>
+        CancellationToken token) =>
         ExecuteAsync(toolName, async () =>
         {
             runtime.EnsureLoggedIn();
@@ -875,20 +875,20 @@ internal sealed class PixevalMcpReadTools(IPixevalMcpRuntime runtime, PixevalMcp
                     count,
                     workFilter,
                     filter,
-                    cancellationToken)
+                    token)
                 .ConfigureAwait(false));
         });
 
     private async Task<IReadOnlyList<WorkBase>> LoadWorksAsync(
         SimpleWorkType workType,
         IReadOnlyList<long> ids,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
         var works = new List<WorkBase>(int.Min(ids.Count, MaxCount));
         foreach (var id in ids.Distinct().Take(MaxCount))
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            works.Add(await runtime.GetWorkAsync(workType, id, cancellationToken).ConfigureAwait(false));
+            token.ThrowIfCancellationRequested();
+            works.Add(await runtime.GetWorkAsync(workType, id, token).ConfigureAwait(false));
         }
 
         return works;

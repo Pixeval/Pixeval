@@ -22,15 +22,15 @@ public partial class McpHelpSection
 
     private static async Task<IReadOnlyList<McpToolItemViewModel>> RequestMcpToolsAsync(
         Uri endpoint,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
-        var response = await SendToolsListRequestAsync(endpoint, cancellationToken);
+        var response = await SendToolsListRequestAsync(endpoint, token);
         return response.ToViewModels();
     }
 
     private static async Task<McpToolsListResponse> SendToolsListRequestAsync(
         Uri endpoint,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
         using var request = new HttpRequestMessage(HttpMethod.Post, endpoint);
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -38,11 +38,11 @@ public partial class McpHelpSection
         request.Headers.TryAddWithoutValidation("Mcp-Method", ToolsListMethod);
 
         request.Content = new StringContent(ToolsListRequestBody, Encoding.UTF8, "application/json");
-        using var response = await _McpHttpClient.SendAsync(request, cancellationToken);
+        using var response = await _McpHttpClient.SendAsync(request, token);
         if (response.IsSuccessStatusCode)
-            return await McpToolsListResponse.ReadFromContentAsync(response.Content, cancellationToken);
+            return await McpToolsListResponse.ReadFromContentAsync(response.Content, token);
 
-        var responseText = await response.Content.ReadAsStringAsync(cancellationToken);
+        var responseText = await response.Content.ReadAsStringAsync(token);
         throw new InvalidOperationException(
             $"{(int) response.StatusCode} {response.ReasonPhrase}: {TrimErrorMessage(responseText)}");
     }

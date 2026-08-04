@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia.Threading;
 using Mako.Engine;
 using Mako.Global.Enum;
 using Mako.Model;
@@ -22,21 +21,62 @@ using Pixeval.Views;
 
 namespace Pixeval.Models.Subscriptions;
 
-public class WorkSubscriptionDownloadService(
+public sealed class WorkSubscriptionDownloadService(
     WorkSubscriptionPersistentManager subscriptionManager,
     SubscriptionDownloadHistoryPersistentManager subscriptionDownloadHistoryManager,
     HistoryPersistHelper historyPersistHelper,
     IllustrationDownloadTaskFactory illustrationDownloadTaskFactory,
     NovelDownloadTaskFactory novelDownloadTaskFactory,
-    FileLogger logger)
+    FileLogger logger) : IWorkSubscriptionService, IAsyncDisposable
 {
     private const int DuplicateStopThreshold = 5;
 
-    private readonly SemaphoreSlim _syncLock = new(1, 1);
+    private readonly Lock _syncGate = new();
+    private readonly SemaphoreSlim _subscriptionMutationGate = new(1, 1);
+    private readonly WorkSubscriptionSyncRequestQueue _pendingSyncRequests = new();
+    private readonly HashSet<int> _removedSubscriptionIds = [];
+    private CancellationTokenSource? _activeSubscriptionCancellationTokenSource;
+    private CancellationTokenSource? _syncCancellationTokenSource;
+    private WorkSubscriptionFetchState? _currentFetchState;
+    private int? _activeSubscriptionId;
+    private WorkSubscriptionSyncRequest? _activeSyncRequest;
+    private Task _syncTask = Task.CompletedTask;
+    private bool _acceptsSyncRequests = true;
+    private bool _isDisposed;
 
-    public void QueueSyncAll() => _ = SyncAllAsync();
+    public WorkSubscriptionFetchState? CurrentFetchState
+    {
+        get
+        {
+            lock (_syncGate)
+                return _currentFetchState;
+        }
+    }
 
-    public void QueueSyncSubscription(WorkSubscriptionEntry subscription) => _ = SyncSubscriptionAsync(subscription);
+    public event EventHandler<WorkSubscriptionFetchState>? FetchStateChanged;
+
+    public event EventHandler<WorkSubscriptionEntry>? SubscriptionUpdated;
+
+    public event EventHandler<int>? SubscriptionRemoved;
+
+    public bool IsSyncInProgress
+    {
+        get
+        {
+            lock (_syncGate)
+                return !_syncTask.IsCompleted;
+        }
+    }
+
+    public void QueueSyncAll() => QueueSyncRequest(WorkSubscriptionSyncRequest.All.Instance);
+
+    public void QueueSyncSubscription(WorkSubscriptionEntry subscription) =>
+        QueueSyncRequest(new WorkSubscriptionSyncRequest.Subscription(subscription, RefreshMetadata: true));
+
+    public void QueueInitialSync(
+        WorkSubscriptionEntry subscription,
+        IFetchEngine<IWorkEntry>? sourceEngine = null) =>
+        QueueSyncRequest(new WorkSubscriptionSyncRequest.Subscription(subscription, sourceEngine));
 
     public void QueueSyncCurrentSource(
         long targetId,
@@ -48,7 +88,10 @@ public class WorkSubscriptionDownloadService(
             || TryGetSubscription(targetId, subscriptionType, workKind) is not { } subscription)
             return;
 
-        _ = SyncSubscriptionAsync(subscription, engine);
+        QueueSyncRequest(new WorkSubscriptionSyncRequest.Subscription(
+            subscription,
+            engine,
+            UsesSharedSourceEngine: true));
     }
 
     public WorkSubscriptionEntry? TryGetSubscription(
@@ -57,98 +100,336 @@ public class WorkSubscriptionDownloadService(
         WorkSubscriptionWorkKind workKind) =>
         subscriptionManager.GetBySubscriptionKey(targetId, subscriptionType, workKind);
 
-    private async Task SyncAllAsync()
+    public async Task<WorkSubscriptionEntry?> TryRemoveAsync(int historyEntryId)
     {
-        if (!await _syncLock.WaitAsync(0))
-            return;
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(historyEntryId);
+        WorkSubscriptionEntry? subscription;
+        lock (_syncGate)
+        {
+            ObjectDisposedException.ThrowIf(_isDisposed, this);
+            subscription = subscriptionManager.GetByKey(historyEntryId);
+            if (subscription is null || !_removedSubscriptionIds.Add(historyEntryId))
+                return null;
 
+            _pendingSyncRequests.RemoveSubscription(historyEntryId);
+            if (_activeSubscriptionId == historyEntryId)
+                _activeSubscriptionCancellationTokenSource?.Cancel();
+        }
+
+        var wasDeleted = false;
+        await _subscriptionMutationGate.WaitAsync().ConfigureAwait(false);
         try
         {
-            await foreach (var subscription in subscriptionManager.StreamEntriesAsync().ConfigureAwait(false))
-            {
-                var knownKeys = new HashSet<SubscriptionDownloadKey>();
-                foreach (var engine in CreateEngines(subscription))
-                    await SyncSubscriptionCoreAsync(subscription, engine, knownKeys).ConfigureAwait(false);
-            }
-        }
-        catch (Exception e)
-        {
-            logger.LogError(nameof(WorkSubscriptionDownloadService), e);
+            if (subscriptionManager.GetByKey(historyEntryId) is not { } persistedSubscription
+                || !subscriptionManager.TryDelete(persistedSubscription))
+                return null;
+
+            subscription = persistedSubscription;
+            wasDeleted = true;
+            await historyPersistHelper.RemoveWorkSubscriptionDownloadsAsync(historyEntryId)
+                .ConfigureAwait(false);
+            return subscription;
         }
         finally
         {
-            _ = _syncLock.Release();
+            _ = _subscriptionMutationGate.Release();
+            if (wasDeleted)
+                NotifySubscriptionRemoved(historyEntryId);
+            else
+                lock (_syncGate)
+                    _ = _removedSubscriptionIds.Remove(historyEntryId);
+        }
+    }
+
+    public async Task CancelAndWaitAsync()
+    {
+        CancellationTokenSource? cancellationTokenSource;
+        Task syncTask;
+        lock (_syncGate)
+        {
+            _acceptsSyncRequests = false;
+            _pendingSyncRequests.Clear();
+            cancellationTokenSource = _syncCancellationTokenSource;
+            syncTask = _syncTask;
+        }
+
+        cancellationTokenSource?.Cancel();
+        await syncTask.ConfigureAwait(false);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        lock (_syncGate)
+        {
+            if (_isDisposed)
+                return;
+            _isDisposed = true;
+        }
+
+        await CancelAndWaitAsync().ConfigureAwait(false);
+        GC.SuppressFinalize(this);
+    }
+
+    private void QueueSyncRequest(WorkSubscriptionSyncRequest request)
+    {
+        SyncWorker? worker = null;
+        lock (_syncGate)
+        {
+            if (_isDisposed
+                || !_acceptsSyncRequests
+                || (request is WorkSubscriptionSyncRequest.Subscription
+                {
+                    Entry.HistoryEntryId: var subscriptionId
+                } && _removedSubscriptionIds.Contains(subscriptionId))
+                || !_pendingSyncRequests.TryEnqueue(request, _activeSyncRequest))
+                return;
+
+            if (_syncTask.IsCompleted)
+            {
+                var cancellationTokenSource = new CancellationTokenSource();
+                var completionSource = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+                _syncCancellationTokenSource = cancellationTokenSource;
+                _syncTask = completionSource.Task;
+                worker = new(cancellationTokenSource, completionSource);
+            }
+        }
+
+        if (worker is { } syncWorker)
+            _ = RunSyncQueueAsync(syncWorker);
+    }
+
+    private async Task RunSyncQueueAsync(SyncWorker worker)
+    {
+        try
+        {
+            while (TryTakeNextRequest(worker, out var request))
+            {
+                try
+                {
+                    await ExecuteSyncRequestAsync(request, worker.CancellationTokenSource.Token)
+                        .ConfigureAwait(false);
+                }
+                catch (OperationCanceledException)
+                {
+                }
+                catch (Exception exception)
+                {
+                    logger.LogError(nameof(WorkSubscriptionDownloadService), exception);
+                }
+                finally
+                {
+                    lock (_syncGate)
+                        if (ReferenceEquals(_activeSyncRequest, request))
+                            _activeSyncRequest = null;
+                }
+            }
+        }
+        finally
+        {
+            lock (_syncGate)
+                CompleteWorker(worker);
+            worker.CancellationTokenSource.Dispose();
+        }
+    }
+
+    private bool TryTakeNextRequest(
+        SyncWorker worker,
+        out WorkSubscriptionSyncRequest request)
+    {
+        lock (_syncGate)
+        {
+            if (worker.CancellationTokenSource.IsCancellationRequested
+                || !_pendingSyncRequests.TryDequeue(out var nextRequest))
+            {
+                CompleteWorker(worker);
+                request = null!;
+                return false;
+            }
+
+            request = _activeSyncRequest = nextRequest;
+            return true;
+        }
+    }
+
+    private void CompleteWorker(SyncWorker worker)
+    {
+        if (!ReferenceEquals(_syncCancellationTokenSource, worker.CancellationTokenSource))
+        {
+            _ = worker.CompletionSource.TrySetResult();
+            return;
+        }
+
+        _activeSyncRequest = null;
+        _syncCancellationTokenSource = null;
+        _ = worker.CompletionSource.TrySetResult();
+    }
+
+    private Task ExecuteSyncRequestAsync(WorkSubscriptionSyncRequest request, CancellationToken token) =>
+        request switch
+        {
+            WorkSubscriptionSyncRequest.All => SyncAllAsync(token),
+            WorkSubscriptionSyncRequest.Subscription subscriptionRequest =>
+                SyncQueuedSubscriptionAsync(subscriptionRequest, token),
+            _ => throw new ArgumentOutOfRangeException(nameof(request))
+        };
+
+    private Task SyncQueuedSubscriptionAsync(
+        WorkSubscriptionSyncRequest.Subscription request,
+        CancellationToken token)
+    {
+        if (subscriptionManager.GetByKey(request.Entry.HistoryEntryId) is not { } subscription)
+            return Task.CompletedTask;
+
+        return request.SourceEngine is { } engine && IsEngineUsable(engine)
+            ? SyncSubscriptionAsync(
+                subscription,
+                [engine],
+                request.UsesSharedSourceEngine,
+                request.RefreshMetadata,
+                token)
+            : SyncSubscriptionAsync(
+                subscription,
+                CreateEngines(subscription),
+                false,
+                request.RefreshMetadata,
+                token);
+    }
+
+    private async Task SyncAllAsync(CancellationToken token)
+    {
+        await foreach (var subscription in subscriptionManager
+                           .StreamEntriesAsync(token: token)
+                           .ConfigureAwait(false))
+        {
+            try
+            {
+                await SyncSubscriptionAsync(subscription, CreateEngines(subscription), false, false, token)
+                    .ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) when 
+                (!token.IsCancellationRequested
+                 && IsSubscriptionRemoved(subscription.HistoryEntryId))
+            {
+            }
         }
     }
 
     private async Task SyncSubscriptionAsync(
         WorkSubscriptionEntry subscription,
-        IFetchEngine<IWorkEntry> engine)
+        IEnumerable<IFetchEngine<IWorkEntry>> engines,
+        bool restoreEngineCompletion,
+        bool refreshMetadata,
+        CancellationToken token)
     {
-        if (!await _syncLock.WaitAsync(0))
+        using var subscriptionCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(token);
+        if (!TryBeginSubscriptionSync(subscription.HistoryEntryId, subscriptionCancellationTokenSource))
             return;
 
-        var wasCompleted = engine.EngineHandle.IsCompleted;
+        token = subscriptionCancellationTokenSource.Token;
+        var stagedTasks = new List<IDownloadTaskGroup>();
+        var knownKeys = new HashSet<SubscriptionDownloadKey>();
+        var fetchedCount = 0;
+        IWorkEntry? subscriptionMetadataSource = null;
+        SetFetchState(subscription.HistoryEntryId, true, fetchedCount);
         try
         {
-            var knownKeys = new HashSet<SubscriptionDownloadKey>();
-            await SyncSubscriptionCoreAsync(subscription, engine, knownKeys);
-        }
-        catch (Exception e)
-        {
-            logger.LogError(nameof(WorkSubscriptionDownloadService), e);
+            if (refreshMetadata
+                && await RefreshSubscriptionMetadataAsync(subscription, token).ConfigureAwait(false) is { } metadataEngine)
+            {
+                engines = [metadataEngine];
+                restoreEngineCompletion = false;
+            }
+
+            foreach (var engine in engines)
+            {
+                token.ThrowIfCancellationRequested();
+                if (!IsEngineUsable(engine))
+                    continue;
+
+                var wasCompleted = engine.EngineHandle.IsCompleted;
+                try
+                {
+                    var engineMetadataSource = await StageSubscriptionDownloadsAsync(
+                            subscription,
+                            engine,
+                            knownKeys,
+                            stagedTasks,
+                            () => SetFetchState(subscription.HistoryEntryId, true, ++fetchedCount),
+                            !restoreEngineCompletion,
+                            token)
+                        .ConfigureAwait(false);
+                    subscriptionMetadataSource ??= engineMetadataSource;
+                }
+                finally
+                {
+                    if (restoreEngineCompletion
+                        && !wasCompleted
+                        && !engine.EngineHandle.IsCancelled)
+                        engine.EngineHandle.IsCompleted = false;
+                }
+            }
+
+            await _subscriptionMutationGate.WaitAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                if (IsSubscriptionRemoved(subscription.HistoryEntryId)
+                    || subscriptionManager.GetByKey(subscription.HistoryEntryId) is null)
+                    return;
+
+                if (stagedTasks.Count is not 0)
+                {
+                    var committedTasks = stagedTasks.ToArray();
+                    stagedTasks.Clear();
+                    await historyPersistHelper.QueueSubscriptionDownloadBatchAsync(committedTasks).ConfigureAwait(false);
+                }
+
+                if (subscriptionMetadataSource is not null)
+                    TryUpdateSubscriptionName(subscription, subscriptionMetadataSource);
+            }
+            finally
+            {
+                _ = _subscriptionMutationGate.Release();
+            }
         }
         finally
         {
-            if (!wasCompleted && !engine.EngineHandle.IsCancelled)
-                engine.EngineHandle.IsCompleted = false;
-            _ = _syncLock.Release();
+            SetFetchState(subscription.HistoryEntryId, false, fetchedCount);
+            foreach (var stagedTask in stagedTasks)
+                stagedTask.Dispose();
+            EndSubscriptionSync(subscription.HistoryEntryId, subscriptionCancellationTokenSource);
         }
     }
 
-    private async Task SyncSubscriptionAsync(WorkSubscriptionEntry subscription)
-    {
-        if (!await _syncLock.WaitAsync(0))
-            return;
-
-        try
-        {
-            var knownKeys = new HashSet<SubscriptionDownloadKey>();
-            foreach (var engine in CreateEngines(subscription))
-                await SyncSubscriptionCoreAsync(subscription, engine, knownKeys).ConfigureAwait(false);
-        }
-        catch (Exception e)
-        {
-            logger.LogError(nameof(WorkSubscriptionDownloadService), e);
-        }
-        finally
-        {
-            _ = _syncLock.Release();
-        }
-    }
-
-    private async Task SyncSubscriptionCoreAsync(
+    private async Task<IWorkEntry?> StageSubscriptionDownloadsAsync(
         WorkSubscriptionEntry subscription,
         IFetchEngine<IWorkEntry> engine,
-        HashSet<SubscriptionDownloadKey> knownKeys)
+        HashSet<SubscriptionDownloadKey> knownKeys,
+        List<IDownloadTaskGroup> stagedTasks,
+        Action reportEntryFetched,
+        bool cancelEngineOnCancellation,
+        CancellationToken token)
     {
-        if (!IsEngineUsable(engine))
-            return;
-
         var duplicateCount = 0;
+        IWorkEntry? firstEntry = null;
 
-        await foreach (var entry in engine)
+        await foreach (var entry in FetchEngineRetryHelper
+                           .StreamAsync(
+                               engine,
+                               cancelEngineOnCancellation: cancelEngineOnCancellation,
+                               token: token)
+                           .ConfigureAwait(false))
         {
-            if (!IsEngineUsable(engine))
-                return;
+            token.ThrowIfCancellationRequested();
+            reportEntryFetched();
+            firstEntry ??= entry;
 
-            TryUpdateSubscriptionName(subscription, entry);
-
-            var task = await CreateDownloadTaskAsync(entry, subscription);
-            if (!IsEngineUsable(engine))
+            var task = await CreateDownloadTaskAsync(entry, subscription).ConfigureAwait(false);
+            if (token.IsCancellationRequested || engine.EngineHandle.IsCancelled)
             {
                 task.Dispose();
-                return;
+                token.ThrowIfCancellationRequested();
+                throw new OperationCanceledException("The fetch engine was cancelled.");
             }
 
             if (task.DatabaseEntry is not SubscriptionDownloadHistoryEntry historyEntry)
@@ -158,48 +439,150 @@ public class WorkSubscriptionDownloadService(
             }
 
             var key = new SubscriptionDownloadKey(historyEntry.ArtworkId, historyEntry.Destination);
-            if (!knownKeys.Add(key)
-                || subscriptionDownloadHistoryManager.ContainsIdentity(
+            if (!knownKeys.Add(key))
+            {
+                task.Dispose();
+                continue;
+            }
+
+            if (subscriptionDownloadHistoryManager.ContainsIdentity(
                     historyEntry.WorkSubscriptionId,
                     historyEntry.ArtworkId,
-                    historyEntry.Destination))
+                    historyEntry.Destination)
+                || await HasLocalFilesAsync(task).ConfigureAwait(false))
             {
                 task.Dispose();
                 if (++duplicateCount >= DuplicateStopThreshold)
-                    return;
+                    return firstEntry;
                 continue;
             }
 
-            if (await HasLocalFilesAsync(task))
+            if (token.IsCancellationRequested || engine.EngineHandle.IsCancelled)
             {
                 task.Dispose();
-                if (++duplicateCount >= DuplicateStopThreshold)
-                    return;
-                continue;
+                token.ThrowIfCancellationRequested();
+                throw new OperationCanceledException("The fetch engine was cancelled.");
             }
 
-            if (!IsEngineUsable(engine))
-            {
-                task.Dispose();
-                return;
-            }
-
-            var isQueued = await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                if (!IsEngineUsable(engine))
-                    return false;
-
-                historyPersistHelper.DownloadManager.QueueTask(task);
-                return true;
-            });
-            if (!isQueued)
-            {
-                task.Dispose();
-                return;
-            }
-
+            stagedTasks.Add(task);
             duplicateCount = 0;
         }
+
+        return firstEntry;
+    }
+
+    private void SetFetchState(int workSubscriptionId, bool isFetching, int fetchedCount)
+    {
+        var state = new WorkSubscriptionFetchState(workSubscriptionId, isFetching, fetchedCount);
+        lock (_syncGate)
+            _currentFetchState = isFetching ? state : null;
+        try
+        {
+            FetchStateChanged?.Invoke(this, state);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(nameof(SetFetchState), exception);
+        }
+    }
+
+    private bool TryBeginSubscriptionSync(
+        int workSubscriptionId,
+        CancellationTokenSource cancellationTokenSource)
+    {
+        lock (_syncGate)
+        {
+            if (_removedSubscriptionIds.Contains(workSubscriptionId))
+                return false;
+
+            _activeSubscriptionId = workSubscriptionId;
+            _activeSubscriptionCancellationTokenSource = cancellationTokenSource;
+            return true;
+        }
+    }
+
+    private void EndSubscriptionSync(
+        int workSubscriptionId,
+        CancellationTokenSource cancellationTokenSource)
+    {
+        lock (_syncGate)
+        {
+            if (_activeSubscriptionId == workSubscriptionId
+                && ReferenceEquals(_activeSubscriptionCancellationTokenSource, cancellationTokenSource))
+            {
+                _activeSubscriptionId = null;
+                _activeSubscriptionCancellationTokenSource = null;
+            }
+        }
+    }
+
+    private bool IsSubscriptionRemoved(int workSubscriptionId)
+    {
+        lock (_syncGate)
+            return _removedSubscriptionIds.Contains(workSubscriptionId);
+    }
+
+    private void NotifySubscriptionRemoved(int workSubscriptionId)
+    {
+        try
+        {
+            SubscriptionRemoved?.Invoke(this, workSubscriptionId);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(nameof(NotifySubscriptionRemoved), exception);
+        }
+    }
+
+    private void NotifySubscriptionUpdated(WorkSubscriptionEntry subscription)
+    {
+        try
+        {
+            SubscriptionUpdated?.Invoke(this, subscription);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(nameof(NotifySubscriptionUpdated), exception);
+        }
+    }
+
+    private async Task<IFetchEngine<IWorkEntry>?> RefreshSubscriptionMetadataAsync(
+        WorkSubscriptionEntry subscription,
+        CancellationToken token)
+    {
+        var makoClient = App.AppViewModel.MakoClient;
+        IFetchEngine<IWorkEntry>? seriesEngine = null;
+        switch (subscription.SubscriptionType)
+        {
+            case WorkSubscriptionType.Bookmarks:
+            case WorkSubscriptionType.Posts:
+                var userResponse = await FetchEngineRetryHelper.ExecuteAsync(
+                        t => makoClient.GetUserFromIdAsync(subscription.Id, t),
+                        token: token)
+                    .ConfigureAwait(false);
+                subscription.UpdateUserMetadata(userResponse.UserEntity);
+                break;
+            case WorkSubscriptionType.Series:
+                var simpleWorkType = subscription.WorkKind is WorkSubscriptionWorkKind.Novel
+                    ? SimpleWorkType.Novel
+                    : SimpleWorkType.Illustration;
+                var series = await FetchEngineRetryHelper.ExecuteAsync(
+                        t => makoClient.GetWorkSeriesAsync(
+                            simpleWorkType,
+                            subscription.Id,
+                            t),
+                        token: token)
+                    .ConfigureAwait(false);
+                subscription.UpdateSeriesMetadata(series.Detail, series.First);
+                seriesEngine = series.Engine;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(subscription.SubscriptionType));
+        }
+
+        subscriptionManager.Update(subscription);
+        NotifySubscriptionUpdated(subscription);
+        return seriesEngine;
     }
 
     private static IEnumerable<IFetchEngine<IWorkEntry>> CreateEngines(WorkSubscriptionEntry subscription)
@@ -292,6 +675,7 @@ public class WorkSubscriptionDownloadService(
 
         subscription.Name = entry.User.Name;
         subscriptionManager.Update(subscription);
+        NotifySubscriptionUpdated(subscription);
     }
 
     private static bool IsEngineUsable(IFetchEngine<IWorkEntry> engine) =>
@@ -308,6 +692,10 @@ public class WorkSubscriptionDownloadService(
 
         return task.Count is not 0 && task.All(t => File.Exists(t.Destination));
     }
+
+    private sealed record SyncWorker(
+        CancellationTokenSource CancellationTokenSource,
+        TaskCompletionSource CompletionSource);
 
     private readonly record struct SubscriptionDownloadKey(string ArtworkId, string Destination);
 }

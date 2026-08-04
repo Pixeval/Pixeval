@@ -6,6 +6,14 @@
     "Label": "立即同步所有订阅"
   },
   "SubscriptionAdded": "已添加订阅",
+  "RateLimitNotification": {
+    "Title": "Pixiv API 请求已暂停",
+    "Content": "检测到请求频率限制，订阅获取将在冷却后自动重试。请暂时减少浏览等 API 操作，图片下载不受影响。"
+  },
+  "ExitConfirmation": {
+    "Title": "订阅内容仍在获取",
+    "Content": "现在退出会丢弃本次尚未提交的订阅获取结果。确定要停止获取并退出吗？"
+  },
   "TargetIdTextBox": {
     "PlaceholderText": "用户或系列 ID"
   },

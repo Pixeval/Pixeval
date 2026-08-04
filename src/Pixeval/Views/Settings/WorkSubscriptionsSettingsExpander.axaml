@@ -73,7 +73,7 @@
                     <DataTemplate x:DataType="{x:Type settings:WorkSubscriptionItemViewModel}">
                         <Grid
                             Margin="10"
-                            ColumnDefinitions="Auto,Auto,*,Auto"
+                            ColumnDefinitions="Auto,Auto,*,Auto,Auto"
                             ColumnSpacing="8">
                             <controls1:UserBasicInfoPresenter Grid.Column="0" User="{Binding User}" />
                             <TextBlock
@@ -85,6 +85,13 @@
                             </TextBlock>
                             <Button
                                 Grid.Column="3"
+                                VerticalAlignment="Center"
+                                Click="SyncSubscriptionButton_OnClicked"
+                                Content="{markup:SymbolIcon ArrowSync}"
+                                Tag="{Binding}"
+                                ToolTip.Tip="{I18N {x:Static pixeval:DownloadPageResources+SyncSubscriptionButton.Label}}" />
+                            <Button
+                                Grid.Column="4"
                                 VerticalAlignment="Center"
                                 Click="DeleteButton_OnClicked"
                                 Content="{markup:SymbolIcon Delete}"

@@ -29,7 +29,7 @@ public sealed partial class PixevalMcpService
         bool bookmarked,
         PrivacyPolicy privacy,
         IReadOnlyList<string>? tags,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
         var normalizedTags = tags?
             .Where(static tag => !string.IsNullOrWhiteSpace(tag))
@@ -38,9 +38,8 @@ public sealed partial class PixevalMcpService
             .ToArray();
 
         var success = await (bookmarked
-                ? MakoClient.PostWorkBookmarkAsync(workType, id, privacy, normalizedTags)
-                : MakoClient.RemoveWorkBookmarkAsync(workType, id))
-            .WaitAsync(cancellationToken)
+                ? MakoClient.PostWorkBookmarkAsync(workType, id, privacy, normalizedTags, token)
+                : MakoClient.RemoveWorkBookmarkAsync(workType, id, token))
             .ConfigureAwait(false);
         if (success)
             UpdateCachedWork(workType, id, work => work.IsFavorite = bookmarked);
@@ -56,9 +55,9 @@ public sealed partial class PixevalMcpService
         SimpleWorkType workType,
         long id,
         bool watchLater,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
-        var work = await GetWorkAsync(workType, id, cancellationToken).ConfigureAwait(false);
+        var work = await GetWorkAsync(workType, id, token).ConfigureAwait(false);
         if (work is not IArtworkInfo artwork)
             throw new PixevalMcpException("Pixiv returned a work shape that Pixeval cannot add to watch later.");
 
@@ -81,13 +80,12 @@ public sealed partial class PixevalMcpService
         long userId,
         bool followed,
         PrivacyPolicy privacy,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
-        var user = await GetUserBasicInfoAsync(userId, cancellationToken).ConfigureAwait(false);
+        var user = await GetUserBasicInfoAsync(userId, token).ConfigureAwait(false);
         var success = await (followed
-                ? MakoClient.PostFollowUserAsync(userId, privacy)
-                : MakoClient.RemoveFollowUserAsync(userId))
-            .WaitAsync(cancellationToken)
+                ? MakoClient.PostFollowUserAsync(userId, privacy, token)
+                : MakoClient.RemoveFollowUserAsync(userId, token))
             .ConfigureAwait(false);
         if (success && user is UserInfo userInfo)
             userInfo.IsFollowed = followed;
@@ -149,7 +147,7 @@ public sealed partial class PixevalMcpService
         long targetId,
         PixevalWorkSubscriptionType subscriptionType,
         PixevalWorkSubscriptionWorkKind workKind,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
         var type = ToWorkSubscriptionType(subscriptionType);
         var kind = ToWorkSubscriptionWorkKind(workKind);
@@ -161,15 +159,14 @@ public sealed partial class PixevalMcpService
             var simpleWorkType = kind is WorkSubscriptionWorkKind.Novel
                 ? SimpleWorkType.Novel
                 : SimpleWorkType.Illustration;
-            var (detail, first, _) = await MakoClient.GetWorkSeriesAsync(simpleWorkType, targetId)
-                .WaitAsync(cancellationToken)
+            var (detail, first, engine) = await MakoClient.GetWorkSeriesAsync(simpleWorkType, targetId, token)
                 .ConfigureAwait(false);
-            wasAdded = WorkSubscriptionHelper.TryAddOrUpdateSeries(targetId, kind, detail, first);
+            wasAdded = WorkSubscriptionHelper.TryAddOrUpdateSeries(targetId, kind, detail, first, engine);
         }
         else
         {
-            var user = await GetUserBasicInfoAsync(targetId, cancellationToken).ConfigureAwait(false);
-            wasAdded = WorkSubscriptionHelper.TryAddOrUpdate(user, type, kind);
+            var user = await GetUserBasicInfoAsync(targetId, token).ConfigureAwait(false);
+            wasAdded = WorkSubscriptionHelper.TryAddOrUpdateUser(user, type, kind);
         }
 
         if (!wasAdded)
@@ -181,11 +178,12 @@ public sealed partial class PixevalMcpService
             entry is not null ? ToWorkSubscriptionDto(entry) : null);
     }
 
-    public PixevalWorkSubscriptionOperationResultDto RemoveSubscription(
+    public async Task<PixevalWorkSubscriptionOperationResultDto> RemoveSubscriptionAsync(
         int? historyEntryId,
         long? targetId,
         PixevalWorkSubscriptionType? subscriptionType,
-        PixevalWorkSubscriptionWorkKind? workKind)
+        PixevalWorkSubscriptionWorkKind? workKind,
+        CancellationToken token)
     {
         var manager = ViewModel.AppServiceProvider.GetRequiredService<WorkSubscriptionPersistentManager>();
         var entry = historyEntryId is { } id
@@ -195,7 +193,12 @@ public sealed partial class PixevalMcpService
             return new(false, "Work subscription was not found.", null);
 
         var dto = ToWorkSubscriptionDto(entry);
-        return manager.TryDelete(entry)
+        token.ThrowIfCancellationRequested();
+        var removed = await ViewModel.AppServiceProvider
+            .GetRequiredService<IWorkSubscriptionService>()
+            .TryRemoveAsync(entry.HistoryEntryId)
+            .ConfigureAwait(false);
+        return removed is not null
             ? new(true, "Work subscription removed.", dto)
             : new(false, "Work subscription was not removed.", dto);
 

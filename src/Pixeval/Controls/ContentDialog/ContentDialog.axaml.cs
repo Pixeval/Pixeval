@@ -221,10 +221,10 @@ public class ContentDialog : ContentControl
     /// Shows this dialog on the specified host.
     /// </summary>
     /// <param name="host">The host that will display the dialog.</param>
-    /// <param name="cancellationToken">A token that closes the dialog with <see cref="ContentDialogResult.None"/> when canceled.</param>
+    /// <param name="token">A token that closes the dialog with <see cref="ContentDialogResult.None"/> when canceled.</param>
     /// <returns>The result selected by the user.</returns>
-    public Task<ContentDialogResult> ShowAsync(ContentDialogHost host, CancellationToken cancellationToken = default) =>
-        host.ShowAsync(this, cancellationToken);
+    public Task<ContentDialogResult> ShowAsync(ContentDialogHost host, CancellationToken token = default) =>
+        host.ShowAsync(this, token);
 
     /// <summary>
     /// Requests that this dialog close with the specified result.

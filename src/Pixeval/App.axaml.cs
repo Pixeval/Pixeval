@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Avalonia;
@@ -13,10 +14,12 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
+using Mako;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
 using Pixeval.I18N;
 using Pixeval.Models.Options;
+using Pixeval.Models.Subscriptions;
 using Pixeval.Utilities;
 using Pixeval.Views.Home;
 using Pixeval.Views.Login;
@@ -33,6 +36,10 @@ public class App : Application
     /// </summary>
     private FileLogger Logger { get; } = new(AppInfo.LogsFolder);
 
+    private bool _allowExitWithActiveSubscriptionSync;
+    private bool _isExitConfirmationOpen;
+    private DateTimeOffset _rateLimitNotificationUntil = DateTimeOffset.MinValue;
+
     public override void Initialize()
     {
         RegisterUnhandledExceptionHandler();
@@ -42,6 +49,7 @@ public class App : Application
         CultureInfo.CurrentUICulture = CultureInfo.CurrentCulture = LanguageHelper.FindClosest(AppViewModel.AppSettings.ApplicationSettings.CultureName);
         I18NManager.Initialize();
         AppViewModel.InitializeProvider();
+        AppViewModel.MakoClient.RateLimitEncountered += MakoClient_OnRateLimitEncountered;
 
         AvaloniaXamlLoader.Load(this);
         ApplyAppFontFamily(AppViewModel.AppSettings.ApplicationSettings.AppFontFamily);
@@ -63,6 +71,46 @@ public class App : Application
     {
         var resources = Current!.Resources;
         resources["ContentControlThemeFontFamily"] = FontFamilyHelper.Create(fontFamilies) ?? FontFamily.Default;
+    }
+
+    internal void RegisterWindow(Window window)
+    {
+        window.Closing += async (_, args) =>
+        {
+            if (_allowExitWithActiveSubscriptionSync
+                || !IsLastVisibleWindow(window)
+                || AppViewModel.AppServiceProvider.GetService<WorkSubscriptionDownloadService>() is not { IsSyncInProgress: true } service)
+                return;
+
+            args.Cancel = true;
+            if (_isExitConfirmationOpen || window.Content is not ViewContainerBase viewContainer)
+                return;
+
+            _isExitConfirmationOpen = true;
+            try
+            {
+                var result = await viewContainer.CreateOkCancelAsync(
+                    I18NManager.GetResource(WorkSubscriptionsSettingsExpanderResources.ExitConfirmation.Title),
+                    I18NManager.GetResource(WorkSubscriptionsSettingsExpanderResources.ExitConfirmation.Content));
+                if (result is not Controls.ContentDialogResult.Primary)
+                    return;
+
+                await service.CancelAndWaitAsync();
+                _allowExitWithActiveSubscriptionSync = true;
+                try
+                {
+                    window.Close();
+                }
+                finally
+                {
+                    _allowExitWithActiveSubscriptionSync = false;
+                }
+            }
+            finally
+            {
+                _isExitConfirmationOpen = false;
+            }
+        };
     }
 
     public override void OnFrameworkInitializationCompleted()
@@ -134,6 +182,35 @@ public class App : Application
 
         viewContainer.NavigateTo(new LoginPage());
     }
+
+    private bool IsLastVisibleWindow(Window window) =>
+        ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
+        && desktop.Windows.Where(static candidate => candidate.IsVisible).All(candidate => ReferenceEquals(candidate, window));
+
+    private void MakoClient_OnRateLimitEncountered(MakoClient sender, RateLimitEventArgs args) =>
+        Dispatcher.UIThread.Post(() =>
+        {
+            var now = DateTimeOffset.UtcNow;
+            if (now < _rateLimitNotificationUntil)
+                return;
+
+            _rateLimitNotificationUntil = args.RetryAt > now
+                ? args.RetryAt
+                : now.AddSeconds(30);
+            var viewContainer = ApplicationLifetime switch
+            {
+                IClassicDesktopStyleApplicationLifetime desktop => desktop.Windows
+                    .OrderByDescending(static window => window.IsActive)
+                    .Select(static window => window.Content)
+                    .OfType<ViewContainerBase>()
+                    .FirstOrDefault(),
+                ISingleViewApplicationLifetime singleView => singleView.MainView as ViewContainerBase,
+                _ => null
+            };
+            viewContainer?.ShowWarning(
+                I18NManager.GetResource(WorkSubscriptionsSettingsExpanderResources.RateLimitNotification.Title),
+                I18NManager.GetResource(WorkSubscriptionsSettingsExpanderResources.RateLimitNotification.Content));
+        });
 
     private void RegisterUnhandledExceptionHandler()
     {

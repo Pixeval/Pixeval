@@ -224,13 +224,13 @@ public class IncrementalLoadingCollection<IType> : ObservableCollection<IType>, 
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
                 OnError?.Invoke(ex);
-                HasMoreItems = false;
+                HasMoreItems = Source.HasMoreItems;
                 return 0;
             }
 
             if (data is not { Count: not 0 })
             {
-                HasMoreItems = false;
+                HasMoreItems = Source.HasMoreItems;
                 return 0;
             }
 
@@ -239,6 +239,7 @@ public class IncrementalLoadingCollection<IType> : ObservableCollection<IType>, 
                 Add(item);
             }
 
+            HasMoreItems = Source.HasMoreItems;
             return data.Count;
         }
         finally

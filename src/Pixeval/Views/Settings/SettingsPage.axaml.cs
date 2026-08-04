@@ -37,8 +37,8 @@ public partial class SettingsPage : NavigationPage
             return;
 
         foreach (var extensionGroup in vm.ExtensionGroups)
-        foreach (var settingsEntry in extensionGroup)
-            settingsEntry.ValueSaving(extensionGroup.Model.Values);
+            foreach (var settingsEntry in extensionGroup)
+                settingsEntry.ValueSaving(extensionGroup.Model.Values);
 
         AppInfo.SaveSettings();
         // Parent is TabsView

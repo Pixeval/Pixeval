@@ -14,6 +14,7 @@ using Pixeval.Download;
 using Pixeval.Models.Database;
 using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Download.Tasks;
+using Pixeval.Models.Subscriptions;
 
 namespace Pixeval.ViewModels;
 
@@ -26,6 +27,8 @@ public sealed class DownloadPageViewModel : ViewModelBase, IDisposable
     private readonly Dictionary<int, DownloadFolderViewModel> _subscriptionFolderLookup = [];
 
     private readonly WorkSubscriptionPersistentManager _workSubscriptionPersistentManager;
+
+    private readonly IWorkSubscriptionService _workSubscriptionService;
 
     private readonly CancellationTokenSource _subscriptionFolderLoadCancellationTokenSource = new();
 
@@ -41,11 +44,16 @@ public sealed class DownloadPageViewModel : ViewModelBase, IDisposable
 
     public DownloadPageViewModel(
         ObservableCollection<IDownloadTaskGroupBase> source,
-        WorkSubscriptionPersistentManager workSubscriptionPersistentManager)
+        WorkSubscriptionPersistentManager workSubscriptionPersistentManager,
+        IWorkSubscriptionService workSubscriptionService)
     {
         _source = source;
         _workSubscriptionPersistentManager = workSubscriptionPersistentManager;
+        _workSubscriptionService = workSubscriptionService;
         _createdOnUiThread = Dispatcher.UIThread.CheckAccess() && Application.Current is not null;
+        _workSubscriptionService.FetchStateChanged += WorkSubscriptionServiceOnFetchStateChanged;
+        _workSubscriptionService.SubscriptionUpdated += WorkSubscriptionServiceOnSubscriptionUpdated;
+        _workSubscriptionService.SubscriptionRemoved += WorkSubscriptionServiceOnSubscriptionRemoved;
         foreach (var task in _source)
             AddTask(task, false);
 
@@ -62,6 +70,9 @@ public sealed class DownloadPageViewModel : ViewModelBase, IDisposable
 
         _isDisposed = true;
         _source.CollectionChanged -= SourceOnCollectionChanged;
+        _workSubscriptionService.FetchStateChanged -= WorkSubscriptionServiceOnFetchStateChanged;
+        _workSubscriptionService.SubscriptionUpdated -= WorkSubscriptionServiceOnSubscriptionUpdated;
+        _workSubscriptionService.SubscriptionRemoved -= WorkSubscriptionServiceOnSubscriptionRemoved;
         _subscriptionFolderLoadCancellationTokenSource.Cancel();
         _subscriptionFolderLoadCancellationTokenSource.Dispose();
         DisposeEntries();
@@ -128,6 +139,7 @@ public sealed class DownloadPageViewModel : ViewModelBase, IDisposable
             return existing;
 
         var folder = new DownloadFolderViewModel(subscription);
+        folder.UpdateFetchState(_workSubscriptionService.CurrentFetchState);
         _subscriptionFolderLookup[subscription.HistoryEntryId] = folder;
         var index = 0;
         while (index < SubscriptionFolders.Count
@@ -181,6 +193,79 @@ public sealed class DownloadPageViewModel : ViewModelBase, IDisposable
     private DownloadFolderViewModel? GetFolder(int subscriptionEntryId) =>
         _subscriptionFolderLookup.GetValueOrDefault(subscriptionEntryId);
 
+    private void WorkSubscriptionServiceOnFetchStateChanged(
+        object? sender,
+        WorkSubscriptionFetchState state)
+    {
+        if (_isDisposed)
+            return;
+
+        if (!_createdOnUiThread || Dispatcher.UIThread.CheckAccess())
+        {
+            ApplyFetchState(state);
+            return;
+        }
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (!_isDisposed)
+                ApplyFetchState(state);
+        });
+    }
+
+    private void ApplyFetchState(WorkSubscriptionFetchState state) =>
+        (state.IsFetching
+            ? GetOrCreateFolder(state.WorkSubscriptionId)
+            : GetFolder(state.WorkSubscriptionId))
+        ?.UpdateFetchState(state);
+
+    private void WorkSubscriptionServiceOnSubscriptionRemoved(object? sender, int workSubscriptionId)
+    {
+        if (_isDisposed)
+            return;
+
+        if (!_createdOnUiThread || Dispatcher.UIThread.CheckAccess())
+        {
+            RemoveSubscriptionFolder(workSubscriptionId);
+            return;
+        }
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (!_isDisposed)
+                RemoveSubscriptionFolder(workSubscriptionId);
+        });
+    }
+
+    private void WorkSubscriptionServiceOnSubscriptionUpdated(
+        object? sender,
+        WorkSubscriptionEntry subscription)
+    {
+        if (_isDisposed)
+            return;
+
+        if (!_createdOnUiThread || Dispatcher.UIThread.CheckAccess())
+        {
+            GetFolder(subscription.HistoryEntryId)?.UpdateSubscription(subscription);
+            return;
+        }
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (!_isDisposed)
+                GetFolder(subscription.HistoryEntryId)?.UpdateSubscription(subscription);
+        });
+    }
+
+    private void RemoveSubscriptionFolder(int workSubscriptionId)
+    {
+        if (!_subscriptionFolderLookup.Remove(workSubscriptionId, out var folder))
+            return;
+
+        _ = SubscriptionFolders.Remove(folder);
+        folder.Dispose();
+    }
+
     private void SourceOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (_isDisposed)
@@ -233,8 +318,11 @@ public sealed class DownloadPageViewModel : ViewModelBase, IDisposable
 
         OrdinaryItems.Clear();
         foreach (var folder in SubscriptionFolders)
+        {
             foreach (var item in folder.Items.ToArray())
                 _ = folder.Remove(item);
+        }
+
         _lookup.Clear();
     }
 
@@ -268,14 +356,16 @@ public sealed class DownloadPageViewModel : ViewModelBase, IDisposable
     {
         if (!_createdOnUiThread || Dispatcher.UIThread.CheckAccess())
         {
-            _ = AddSubscriptionFolder(subscription);
+            if (_workSubscriptionPersistentManager.GetByKey(subscription.HistoryEntryId) is not null)
+                _ = AddSubscriptionFolder(subscription);
             return;
         }
 
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
             token.ThrowIfCancellationRequested();
-            if (!_isDisposed)
+            if (!_isDisposed
+                && _workSubscriptionPersistentManager.GetByKey(subscription.HistoryEntryId) is not null)
                 _ = AddSubscriptionFolder(subscription);
         });
     }

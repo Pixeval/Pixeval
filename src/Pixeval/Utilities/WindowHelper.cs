@@ -2,6 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform;
 using Pixeval.AppManagement;
@@ -35,6 +36,8 @@ public static class WindowHelper
                 if (o is Window w)
                     AppInfo.SaveWindowContext(w);
             };
+            if (Application.Current is App app)
+                app.RegisterWindow(window);
             return window;
         }
 

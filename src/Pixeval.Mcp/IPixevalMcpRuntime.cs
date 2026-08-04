@@ -49,7 +49,7 @@ public interface IPixevalMcpRuntime
         int count,
         string? keyword,
         string? workFilter,
-        CancellationToken cancellationToken);
+        CancellationToken token);
 
     PixevalExtensionListDto Extensions();
 
@@ -64,28 +64,28 @@ public interface IPixevalMcpRuntime
     Task<WorkBase> GetWorkAsync(
         SimpleWorkType workType,
         long id,
-        CancellationToken cancellationToken);
+        CancellationToken token);
 
     Task<Illustration> GetIllustrationAsync(
         long id,
-        CancellationToken cancellationToken);
+        CancellationToken token);
 
     Task<Novel> GetNovelAsync(
         long id,
-        CancellationToken cancellationToken);
+        CancellationToken token);
 
     Task<SingleUserResponse> GetUserAsync(
         long id,
-        CancellationToken cancellationToken);
+        CancellationToken token);
 
     Task<UserBasicInfo> GetUserBasicInfoAsync(
         long id,
-        CancellationToken cancellationToken);
+        CancellationToken token);
 
     Task<PixevalNovelContentDto> NovelContentAsync(
         long id,
         bool includeMarkdown,
-        CancellationToken cancellationToken);
+        CancellationToken token);
 
     Task<PixevalSauceNaoSearchDto> SauceNaoSearchAsync(
         string? imageBase64,
@@ -96,12 +96,12 @@ public interface IPixevalMcpRuntime
         string? index,
         double minSimilarity,
         bool loadPixivWorks,
-        CancellationToken cancellationToken);
+        CancellationToken token);
 
     Task<PixevalMcpDownloadTaskDto> QueueDownloadAsync(
         SimpleWorkType workType,
         long id,
-        CancellationToken cancellationToken);
+        CancellationToken token);
 
     IReadOnlyList<PixevalMcpDownloadTaskDto> DownloadTasks();
 
@@ -111,19 +111,19 @@ public interface IPixevalMcpRuntime
         bool bookmarked,
         PrivacyPolicy privacy,
         IReadOnlyList<string>? tags,
-        CancellationToken cancellationToken);
+        CancellationToken token);
 
     Task<PixevalWatchLaterResultDto> SetWatchLaterAsync(
         SimpleWorkType workType,
         long id,
         bool watchLater,
-        CancellationToken cancellationToken);
+        CancellationToken token);
 
     Task<PixevalFollowUserResultDto> FollowUserAsync(
         long userId,
         bool followed,
         PrivacyPolicy privacy,
-        CancellationToken cancellationToken);
+        CancellationToken token);
 
     PixevalDownloadTaskControlResultDto ControlDownload(
         int? queueIndex,
@@ -135,13 +135,14 @@ public interface IPixevalMcpRuntime
         long targetId,
         PixevalWorkSubscriptionType subscriptionType,
         PixevalWorkSubscriptionWorkKind workKind,
-        CancellationToken cancellationToken);
+        CancellationToken token);
 
-    PixevalWorkSubscriptionOperationResultDto RemoveSubscription(
+    Task<PixevalWorkSubscriptionOperationResultDto> RemoveSubscriptionAsync(
         int? historyEntryId,
         long? targetId,
         PixevalWorkSubscriptionType? subscriptionType,
-        PixevalWorkSubscriptionWorkKind? workKind);
+        PixevalWorkSubscriptionWorkKind? workKind,
+        CancellationToken token);
 
     PixevalOperationResultDto SyncSubscriptions();
 

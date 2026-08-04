@@ -19,16 +19,16 @@ internal sealed record McpToolsListResponse
 
     public static async Task<McpToolsListResponse> ReadFromContentAsync(
         HttpContent content,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
-        await using var stream = await content.ReadAsStreamAsync(cancellationToken);
+        await using var stream = await content.ReadAsStreamAsync(token);
         if (content.Headers.ContentType?.MediaType is MediaTypeNames.Text.EventStream)
-            return await ReadFromServerSentEventsAsync(stream, cancellationToken);
+            return await ReadFromServerSentEventsAsync(stream, token);
 
         return await JsonSerializer.DeserializeAsync(
                    stream,
                    HelpPageJsonContext.Default.McpToolsListResponse,
-                   cancellationToken)
+                   token)
                ?? throw new InvalidOperationException("The MCP server response is empty.");
     }
 
@@ -50,9 +50,9 @@ internal sealed record McpToolsListResponse
 
     private static async Task<McpToolsListResponse> ReadFromServerSentEventsAsync(
         Stream stream,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
-        await foreach (var item in SseParser.Create(stream).EnumerateAsync(cancellationToken))
+        await foreach (var item in SseParser.Create(stream).EnumerateAsync(token))
         {
             var response = JsonSerializer.Deserialize(item.Data, HelpPageJsonContext.Default.McpToolsListResponse);
             if (response is not null)

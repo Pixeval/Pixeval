@@ -1,8 +1,10 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
+using Mako.Engine;
 using Mako.Model;
 using Microsoft.Extensions.DependencyInjection;
+using Pixeval.Models.Database;
 using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Options;
 using Pixeval.Utilities;
@@ -11,56 +13,70 @@ namespace Pixeval.Models.Subscriptions;
 
 public static class WorkSubscriptionHelper
 {
-    public static bool TryAddOrUpdate(
+    public static bool TryAddOrUpdateUser(
         UserBasicInfo user,
         WorkSubscriptionType subscriptionType,
-        WorkSubscriptionWorkKind workKind) =>
-        TryAddOrUpdate(
-            user.Id,
-            subscriptionType,
-            workKind,
-            user.Name,
-            user.AvatarUrl,
-            user.Account);
+        WorkSubscriptionWorkKind workKind)
+    {
+        var subscription = new WorkSubscriptionEntry
+        {
+            Id = user.Id,
+            SubscriptionType = subscriptionType,
+            WorkKind = workKind
+        };
+        subscription.UpdateUserMetadata(user);
+        return TryAddOrUpdate(subscription);
+    }
 
     public static bool TryAddOrUpdateSeries(
         long seriesId,
         WorkSubscriptionWorkKind workKind,
         SeriesDetailBase? seriesDetail = null,
-        IWorkEntry? firstWork = null) =>
-        TryAddOrUpdate(
-            seriesId,
-            WorkSubscriptionType.Series,
-            workKind,
-            seriesDetail?.Title ?? "",
-            seriesDetail is MangaSeriesDetail manga
-                ? manga.CoverImageUrls.Medium
-                : firstWork?.GetThumbnailUrl() ?? "",
-            seriesDetail?.User.Name ?? "");
+        IWorkEntry? firstWork = null,
+        IFetchEngine<IWorkEntry>? sourceEngine = null)
+    {
+        var subscription = new WorkSubscriptionEntry
+        {
+            Id = seriesId,
+            SubscriptionType = WorkSubscriptionType.Series,
+            WorkKind = workKind
+        };
+        subscription.UpdateSeriesMetadata(seriesDetail, firstWork);
+        return TryAddOrUpdate(subscription, sourceEngine);
+    }
 
     private static bool TryAddOrUpdate(
-        long targetId,
-        WorkSubscriptionType subscriptionType,
-        WorkSubscriptionWorkKind workKind,
-        string name,
-        string imageUrl,
-        string description)
+        WorkSubscriptionEntry subscription,
+        IFetchEngine<IWorkEntry>? sourceEngine = null)
     {
-        if (targetId is 0)
+        if (subscription.Id is 0)
             return false;
+
         var serviceProvider = App.AppViewModel.AppServiceProvider;
         var subscriptionManager = serviceProvider.GetRequiredService<WorkSubscriptionPersistentManager>();
-        _ = subscriptionManager.Upsert(new()
-        {
-            Id = targetId,
-            SubscriptionType = subscriptionType,
-            WorkKind = workKind,
-            Name = name,
-            AvatarUrl = imageUrl,
-            Account = description
-        });
+        subscription = subscriptionManager.Upsert(subscription);
 
-        App.AppViewModel.QueueWorkSubscriptionSyncAll();
+        App.AppViewModel.QueueWorkSubscriptionInitialSync(subscription, sourceEngine);
         return true;
+    }
+
+    extension(WorkSubscriptionEntry subscription)
+    {
+        internal void UpdateUserMetadata(UserBasicInfo user)
+        {
+            subscription.Name = user.Name;
+            subscription.AvatarUrl = user.AvatarUrl;
+            subscription.Account = user.Account;
+        }
+
+        internal void UpdateSeriesMetadata(SeriesDetailBase? seriesDetail,
+            IWorkEntry? firstWork)
+        {
+            subscription.Name = seriesDetail?.Title ?? "";
+            subscription.AvatarUrl = seriesDetail is MangaSeriesDetail manga
+                ? manga.CoverImageUrls.Medium
+                : firstWork?.GetThumbnailUrl() ?? "";
+            subscription.Account = seriesDetail?.User.Name ?? "";
+        }
     }
 }

@@ -237,13 +237,13 @@ public static class CacheHelper
         string platform,
         string key,
         IProgress<double>? progress = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken token = default)
     {
         try
         {
-            return await GetStreamAsync(platform, key, progress, cancellationToken);
+            return await GetStreamAsync(platform, key, progress, token);
         }
-        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        catch (OperationCanceledException) when (token.IsCancellationRequested)
         {
             throw;
         }

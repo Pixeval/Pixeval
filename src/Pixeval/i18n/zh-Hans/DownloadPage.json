@@ -2,6 +2,7 @@
   "CancelSelectionButtonDefaultLabel": "取消选择",
   "CancelSelectionButtonFormatted": "取消选择（{0}）",
   "DeleteDownloadHistoryRecordsFormatted": "删除 {0} 条历史记录",
+  "FetchingFolderSubtitleFormatted": "正在获取中，已获取 {0} 个作品",
   "FolderSubtitleFormatted": "{0} 个下载任务",
   "OrdinaryDownloadsButton": {
     "Label": "普通下载"

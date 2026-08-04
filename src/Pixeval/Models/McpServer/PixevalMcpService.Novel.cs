@@ -15,10 +15,10 @@ public sealed partial class PixevalMcpService
     public async Task<PixevalNovelContentDto> NovelContentAsync(
         long id,
         bool includeMarkdown,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
-        var novelTask = GetNovelAsync(id, cancellationToken);
-        var contentTask = MakoClient.GetNovelContentAsync(id).WaitAsync(cancellationToken);
+        var novelTask = GetNovelAsync(id, token);
+        var contentTask = MakoClient.GetNovelContentAsync(id, token);
         await Task.WhenAll(novelTask, contentTask).ConfigureAwait(false);
 
         var novel = await novelTask.ConfigureAwait(false);

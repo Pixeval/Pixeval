@@ -2,6 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
@@ -12,7 +13,8 @@ namespace Pixeval.Views.ViewContainers;
 
 public abstract class ViewContainerBase : ContentControl
 {
-    protected WindowNotificationManager Manager = null!;
+    private readonly Queue<INotification> _pendingNotifications = [];
+    protected WindowNotificationManager? Manager;
     protected ContentDialogHost DialogHost = null!;
 
     public abstract void NavigateTo(Page page, bool removeCurrentPage = false);
@@ -63,7 +65,21 @@ public abstract class ViewContainerBase : ContentControl
 
     public void ShowNotification(INotification notification)
     {
+        if (Manager is null)
+        {
+            _pendingNotifications.Enqueue(notification);
+            return;
+        }
+
         Manager.Show(notification);
+    }
+
+    protected void FlushPendingNotifications()
+    {
+        if (Manager is null)
+            return;
+        while (_pendingNotifications.TryDequeue(out var notification))
+            Manager.Show(notification);
     }
 
     public void ShowNotification(NotificationType type, string title, string? content = null)

@@ -24,7 +24,7 @@ public sealed class PixevalMcpHttpServer(IPixevalMcpRuntime runtime, int port) :
 
     public Uri Endpoint { get; } = new($"http://127.0.0.1:{port}{DefaultPath}");
 
-    public async Task StartAsync(CancellationToken cancellationToken = default)
+    public async Task StartAsync(CancellationToken token = default)
     {
         if (_application is not null)
             return;
@@ -59,7 +59,7 @@ public sealed class PixevalMcpHttpServer(IPixevalMcpRuntime runtime, int port) :
 
         _application = builder.Build();
         _ = _application.MapMcp(DefaultPath);
-        await _application.StartAsync(cancellationToken).ConfigureAwait(false);
+        await _application.StartAsync(token).ConfigureAwait(false);
     }
 
     public async Task StopAsync(TimeSpan timeout)

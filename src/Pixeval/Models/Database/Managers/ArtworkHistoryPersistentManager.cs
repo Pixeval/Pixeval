@@ -108,6 +108,39 @@ public abstract class ArtworkHistoryPersistentManager<[DynamicallyAccessedMember
         OnChanged();
     }
 
+    protected void InsertReplacingRange(
+        IReadOnlyCollection<TEntry> entries,
+        Func<TableQuery<TEntry>, TEntry, TEntry?> findExisting)
+    {
+        ArgumentNullException.ThrowIfNull(entries);
+        ArgumentNullException.ThrowIfNull(findExisting);
+        if (entries.Count is 0)
+            return;
+
+        var deletedEntries = new List<TEntry>();
+        AccessDatabase(connection =>
+        {
+            connection.RunInTransaction(() =>
+            {
+                foreach (var entry in entries)
+                {
+                    if (findExisting(connection.Table<TEntry>(), entry) is { } existing)
+                    {
+                        DeleteCore(connection, existing);
+                        deletedEntries.Add(existing);
+                    }
+
+                    InsertCore(connection, entry);
+                }
+            });
+            if (deletedEntries.Count is not 0)
+                OnEntriesDeleted(deletedEntries);
+            foreach (var entry in entries)
+                OnEntryInserted(entry);
+        });
+        OnChanged();
+    }
+
     public virtual void Update(TEntry entry)
     {
         AccessDatabase(connection => _ = connection.Update(entry, typeof(TEntry)));
@@ -133,6 +166,32 @@ public abstract class ArtworkHistoryPersistentManager<[DynamicallyAccessedMember
         if (deletedEntry is not null)
             OnChanged();
         return deletedEntry is not null;
+    }
+
+    protected int DeleteMatching(Func<SQLiteConnection, IReadOnlyCollection<TEntry>> findEntries)
+    {
+        ArgumentNullException.ThrowIfNull(findEntries);
+        var deletedEntries = AccessDatabase(connection =>
+        {
+            var entries = findEntries(connection);
+            if (entries.Count is 0)
+                return entries;
+
+            connection.RunInTransaction(() =>
+            {
+                DeleteEntries(
+                    connection,
+                    entries.Select(static entry => entry.HistoryEntryId));
+                DeletePayloads(
+                    connection,
+                    entries.Select(static entry => entry.ArtworkPayloadEntryId));
+            });
+            OnEntriesDeleted(entries);
+            return entries;
+        });
+        if (deletedEntries.Count is not 0)
+            OnChanged();
+        return deletedEntries.Count;
     }
 
     public virtual void Clear()

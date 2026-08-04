@@ -61,51 +61,51 @@ public sealed partial class PixevalMcpService
     public async Task<WorkBase> GetWorkAsync(
         SimpleWorkType workType,
         long id,
-        CancellationToken cancellationToken) =>
+        CancellationToken token) =>
         workType switch
         {
-            SimpleWorkType.Illustration => await GetIllustrationAsync(id, cancellationToken).ConfigureAwait(false),
-            SimpleWorkType.Novel => await GetNovelAsync(id, cancellationToken).ConfigureAwait(false),
+            SimpleWorkType.Illustration => await GetIllustrationAsync(id, token).ConfigureAwait(false),
+            SimpleWorkType.Novel => await GetNovelAsync(id, token).ConfigureAwait(false),
             _ => throw new ArgumentOutOfRangeException(nameof(workType))
         };
 
-    public async Task<Illustration> GetIllustrationAsync(long id, CancellationToken cancellationToken)
+    public async Task<Illustration> GetIllustrationAsync(long id, CancellationToken token)
     {
         if (TryGetCachedWork(SimpleWorkType.Illustration, id) is Illustration cached)
             return cached;
 
-        var illustration = await MakoClient.GetIllustrationFromIdAsync(id, cancellationToken)
+        var illustration = await MakoClient.GetIllustrationFromIdAsync(id, token)
             .ConfigureAwait(false);
         CacheWorks([illustration]);
         return illustration;
     }
 
-    public async Task<Novel> GetNovelAsync(long id, CancellationToken cancellationToken)
+    public async Task<Novel> GetNovelAsync(long id, CancellationToken token)
     {
         if (TryGetCachedWork(SimpleWorkType.Novel, id) is Novel cached)
             return cached;
 
-        var novel = await MakoClient.GetNovelFromIdAsync(id, cancellationToken).ConfigureAwait(false);
+        var novel = await MakoClient.GetNovelFromIdAsync(id, token).ConfigureAwait(false);
         CacheWorks([novel]);
         return novel;
     }
 
-    public async Task<SingleUserResponse> GetUserAsync(long id, CancellationToken cancellationToken)
+    public async Task<SingleUserResponse> GetUserAsync(long id, CancellationToken token)
     {
         if (TryGetCachedSingleUser(id) is { } cached)
             return cached;
 
-        var user = await MakoClient.GetUserFromIdAsync(id, cancellationToken).ConfigureAwait(false);
+        var user = await MakoClient.GetUserFromIdAsync(id, token).ConfigureAwait(false);
         CacheSingleUser(user);
         return user;
     }
 
-    public async Task<UserBasicInfo> GetUserBasicInfoAsync(long id, CancellationToken cancellationToken)
+    public async Task<UserBasicInfo> GetUserBasicInfoAsync(long id, CancellationToken token)
     {
         if (TryGetCachedUserInfo(id) is { } cached)
             return cached;
 
-        return (await GetUserAsync(id, cancellationToken).ConfigureAwait(false)).UserEntity;
+        return (await GetUserAsync(id, token).ConfigureAwait(false)).UserEntity;
     }
 
     private WorkBase? TryGetCachedWork(SimpleWorkType type, long id)

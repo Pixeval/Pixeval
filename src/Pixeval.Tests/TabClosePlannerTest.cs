@@ -11,21 +11,18 @@ public sealed class TabClosePlannerTest
 
     [TestMethod]
     public void OthersShouldReturnEveryTabExceptContextTab() =>
-        CollectionAssert.AreEqual(
-            new[] { "A", "C", "D" },
-            TabClosePlanner.GetTargets(Tabs, "B", TabCloseScope.Others).ToArray());
+        Assert.AreSequenceEqual(
+            ["A", "C", "D"], TabClosePlanner.GetTargets(Tabs, "B", TabCloseScope.Others).ToArray());
 
     [TestMethod]
     public void LeftShouldOnlyReturnTabsBeforeContextTab() =>
-        CollectionAssert.AreEqual(
-            new[] { "A" },
-            TabClosePlanner.GetTargets(Tabs, "B", TabCloseScope.Left).ToArray());
+        Assert.AreSequenceEqual(
+            ["A"], TabClosePlanner.GetTargets(Tabs, "B", TabCloseScope.Left).ToArray());
 
     [TestMethod]
     public void RightShouldOnlyReturnTabsAfterContextTab() =>
-        CollectionAssert.AreEqual(
-            new[] { "C", "D" },
-            TabClosePlanner.GetTargets(Tabs, "B", TabCloseScope.Right).ToArray());
+        Assert.AreSequenceEqual(
+            ["C", "D"], TabClosePlanner.GetTargets(Tabs, "B", TabCloseScope.Right).ToArray());
 
     [TestMethod]
     public void EmptySideShouldReturnNoTargets()

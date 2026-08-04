@@ -369,6 +369,7 @@ namespace Pixeval
         public const string CancelSelectionButtonDefaultLabel = "DownloadPage.CancelSelectionButtonDefaultLabel";
         public const string CancelSelectionButtonFormatted = "DownloadPage.CancelSelectionButtonFormatted";
         public const string DeleteDownloadHistoryRecordsFormatted = "DownloadPage.DeleteDownloadHistoryRecordsFormatted";
+        public const string FetchingFolderSubtitleFormatted = "DownloadPage.FetchingFolderSubtitleFormatted";
         public const string FolderSubtitleFormatted = "DownloadPage.FolderSubtitleFormatted";
         public static class DeleteButton
         {
@@ -1729,6 +1730,16 @@ namespace Pixeval
         public static class AddSubscriptionButton
         {
             public const string Label = "WorkSubscriptionsSettingsExpander.AddSubscriptionButton.Label";
+        }
+        public static class ExitConfirmation
+        {
+            public const string Content = "WorkSubscriptionsSettingsExpander.ExitConfirmation.Content";
+            public const string Title = "WorkSubscriptionsSettingsExpander.ExitConfirmation.Title";
+        }
+        public static class RateLimitNotification
+        {
+            public const string Content = "WorkSubscriptionsSettingsExpander.RateLimitNotification.Content";
+            public const string Title = "WorkSubscriptionsSettingsExpander.RateLimitNotification.Title";
         }
         public static class SyncAllSubscriptionsButton
         {

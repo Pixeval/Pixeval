@@ -27,7 +27,7 @@ public sealed partial class PixevalMcpService
         string? index,
         double minSimilarity,
         bool loadPixivWorks,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
         var apiKey = ViewModel.AppSettings.SearchSettings.SauceNaoApiKey;
         if (string.IsNullOrWhiteSpace(apiKey))
@@ -38,7 +38,7 @@ public sealed partial class PixevalMcpService
                 imageUrl,
                 illustrationId,
                 page,
-                cancellationToken)
+                token)
             .ConfigureAwait(false);
 
         using var form = new MultipartFormDataContent();
@@ -52,20 +52,20 @@ public sealed partial class PixevalMcpService
             NumberResult = int.Clamp(count, 1, 100)
         };
         var response = await ViewModel.GetRequiredHttpClient()
-            .PostAsync(request.ToQueryString(), form, cancellationToken)
+            .PostAsync(request.ToQueryString(), form, token)
             .ConfigureAwait(false);
         _ = response.EnsureSuccessStatusCode();
 
         var result = await response.Content
                          .ReadFromJsonAsync(SauceNaoResponseSerializerContext.Default.SauceNaoResponse,
-                             cancellationToken)
+                             token)
                          .ConfigureAwait(false)
                      ?? throw new PixevalMcpException("SauceNAO returned an empty response.");
 
         var filtered = result.Results
             .Where(item => item.Header.Similarity >= minSimilarity)
             .Take(int.Clamp(count, 1, 100))
-            .Select(item => ToSauceNaoResultDtoAsync(item, loadPixivWorks, cancellationToken))
+            .Select(item => ToSauceNaoResultDtoAsync(item, loadPixivWorks, token))
             .ToArray();
         var results = await Task.WhenAll(filtered).ConfigureAwait(false);
         return new(result.Header.Status, result.Header.Message, source, results.Length, results);
@@ -76,7 +76,7 @@ public sealed partial class PixevalMcpService
         string? imageUrl,
         long? illustrationId,
         int page,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
         var providedCount =
             (!string.IsNullOrWhiteSpace(imageBase64) ? 1 : 0)
@@ -101,18 +101,18 @@ public sealed partial class PixevalMcpService
                 || uri.Scheme is not ("http" or "https"))
                 throw new PixevalMcpException("imageUrl must be an absolute http or https URL.");
 
-            return (await ViewModel.GetRequiredHttpClient().GetByteArrayAsync(uri, cancellationToken)
+            return (await ViewModel.GetRequiredHttpClient().GetByteArrayAsync(uri, token)
                     .ConfigureAwait(false),
                 uri.ToString());
         }
 
         EnsureLoggedIn();
-        var illustration = await GetIllustrationAsync(illustrationId!.Value, cancellationToken).ConfigureAwait(false);
+        var illustration = await GetIllustrationAsync(illustrationId!.Value, token).ConfigureAwait(false);
         var pages = GetOriginalImagePages(illustration);
         if (page < 0 || page >= pages.Count)
             throw new PixevalMcpException($"page must be between 0 and {pages.Count - 1}.");
 
-        return (await ImageHttpClient.GetByteArrayAsync(pages[page], cancellationToken)
+        return (await ImageHttpClient.GetByteArrayAsync(pages[page], token)
                 .ConfigureAwait(false),
             $"pixiv_illustration:{illustrationId}:{page}");
     }
@@ -125,7 +125,7 @@ public sealed partial class PixevalMcpService
     private async Task<PixevalSauceNaoResultDto> ToSauceNaoResultDtoAsync(
         SauceNaoResult result,
         bool loadPixivWork,
-        CancellationToken cancellationToken)
+        CancellationToken token)
     {
         PixevalWorkDto? work = null;
         if (loadPixivWork && result.Data.PixivId is { } pixivId)
@@ -133,7 +133,7 @@ public sealed partial class PixevalMcpService
             EnsureLoggedIn();
             try
             {
-                var illustration = await GetIllustrationAsync(pixivId, cancellationToken).ConfigureAwait(false);
+                var illustration = await GetIllustrationAsync(pixivId, token).ConfigureAwait(false);
                 work = PixevalWorkDto.FromIllustration(illustration);
             }
             catch (Exception e)
