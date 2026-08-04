@@ -1,0 +1,56 @@
+{
+  "FollowingUserItem": {
+    "Title": "Following"
+  },
+  "MyPixivUserItem": {
+    "Title": "Pixiv Friends"
+  },
+  "IllustrationCountItem": {
+    "Title": "Illustration Count"
+  },
+  "MangaCountItem": {
+    "Title": "Manga Count"
+  },
+  "NovelCountItem": {
+    "Title": "Novel Count"
+  },
+  "Pin": "Pin Panel",
+  "InfoAndComments": "Info",
+  "Series": "Series",
+  "PreviousSeriesWork": "Previous Episode",
+  "NextSeriesWork": "Next Episode",
+  "RotateClockwise": "Rotate Clockwise",
+  "RotateCounterclockwise": "Rotate Counterclockwise",
+  "Mirror": "Mirror Flip",
+  "Next": {
+    "Page": "L/R: Next Page",
+    "PageOrWork": "L: Next Page\nR: Next Work",
+    "Work": "L/R: Next Work"
+  },
+  "Prev": {
+    "Page": "L/R: Previous Page",
+    "PageOrWork": "L: Previous Page\nR: Previous Work",
+    "Work": "L/R: Previous Work"
+  },
+  "AutoPlay": "Auto Play",
+  "AutoPlayInterval": {
+    "Seconds1": "1 second",
+    "Seconds3": "3 seconds",
+    "Seconds5": "5 seconds",
+    "Seconds10": "10 seconds",
+    "Seconds15": "15 seconds",
+    "Seconds30": "30 seconds"
+  },
+  "ZoomIn": "Zoom In",
+  "ZoomOut": "Zoom Out",
+  "ZoomToOriginal": "Zoom to Original Size",
+  "ZoomToFit": "Zoom to Fit Screen",
+  "LoadFailed": "Load Failed",
+  "LoadingNovelTextBlock": {
+    "Text": "Loading novel…"
+  },
+  "Copy": "Copy Displayed Image",
+  "SaveAs": "Save Displayed Image",
+  "ViewOriginal": "View Original",
+  "OtherImageTransformerExtensions": "Other Image Transformer Extensions"
+}
