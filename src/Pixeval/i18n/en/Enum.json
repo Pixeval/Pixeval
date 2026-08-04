@@ -1,0 +1,183 @@
+{
+  "ApplicationTheme": {
+    "Default": "Default",
+    "Light": "Light",
+    "Dark": "Dark"
+  },
+  "WorkType": {
+    "Illustration": "Illustration",
+    "Manga": "Manga",
+    "Novel": "Novel"
+  },
+  "LocalSortOption": {
+    "DoNotSort": "Do Not Sort",
+    "PopularityDescending": "Popularity Descending",
+    "PublishDateAscending": "Publish Date Ascending",
+    "PublishDateDescending": "Publish Date Descending"
+  },
+  "DomainFrontingType": {
+    "Fragmentation": "TLS Fragmentation",
+    "Desync": "Desync"
+  },
+  "PrivacyPolicy": {
+    "Public": "Public",
+    "Private": "Private"
+  },
+  "SearchNovelTagMatchOption": {
+    "PartialMatchForTags": "Tag (Partial Match)",
+    "ExactMatchForTags": "Tag (Exact Match)",
+    "Text": "Text",
+    "Keyword": "Tag, Title, Description"
+  },
+  "SearchNovelContentLengthOption": {
+    "None": "Not Specified",
+    "TextLength": "Text Length",
+    "WordCount": "Word Count",
+    "ReadingTime": "Estimated Reading Time"
+  },
+  "SearchIllustrationTagMatchOption": {
+    "PartialMatchForTags": "Tag (Partial Match)",
+    "ExactMatchForTags": "Tag (Exact Match)",
+    "TitleAndCaption": "Match Title and Caption"
+  },
+  "SearchIllustrationContentType": {
+    "IllustrationAndMangaAndUgoira": "Illustration, Manga, Ugoira",
+    "IllustrationAndUgoira": "Illustration, Ugoira",
+    "Illustration": "Illustration",
+    "Manga": "Manga",
+    "Ugoira": "Ugoira"
+  },
+  "SearchIllustrationRatioPattern": {
+    "All": "All",
+    "Landscape": "Landscape",
+    "Portrait": "Portrait",
+    "Square": "Square"
+  },
+  "WorkSortOption": {
+    "PublishDateDescending": "Publish Date Descending",
+    "PublishDateAscending": "Publish Date Ascending",
+    "PopularityDescending": "Popularity Descending"
+  },
+  "FontWeight": {
+    "Thin": "Thin",
+    "ExtraLight": "Extra Light",
+    "Light": "Light",
+    "SemiLight": "Semi Light",
+    "Normal": "Normal",
+    "Medium": "Medium",
+    "SemiBold": "Semi Bold",
+    "Bold": "Bold",
+    "ExtraBold": "Extra Bold",
+    "Black": "Black",
+    "ExtraBlack": "Extra Black"
+  },
+  "IllustrationDownloadFormat": {
+    "Original": "Original Image Format"
+  },
+  "UgoiraDownloadFormat": {
+    "Original": "Original Ugoira Format"
+  },
+  "NovelDownloadFormat": {
+    "OriginalTxt": "TXT with Embedded Images (Pixiv native tags)",
+    "Html": "HTML with Embedded Images",
+    "Md": "Markdown with Embedded Images"
+  },
+  "RankOption": {
+    "Day": "Daily Ranking",
+    "Week": "Weekly Ranking",
+    "Month": "Monthly Ranking",
+    "DayMale": "Daily Male Ranking",
+    "DayFemale": "Daily Female Ranking",
+    "WeekOriginal": "Weekly Original Ranking",
+    "WeekRookie": "Weekly Rookie Ranking",
+    "DayManga": "Daily Manga Ranking",
+    "WeekManga": "Weekly Manga Ranking",
+    "MonthManga": "Monthly Manga Ranking",
+    "DayR18": "R-18 Daily Ranking",
+    "DayMaleR18": "R-18 Daily Male Ranking",
+    "DayFemaleR18": "R-18 Daily Female Ranking",
+    "WeekR18": "R-18 Weekly Ranking",
+    "WeekR18G": "R-18G Weekly Ranking",
+    "DayAi": "AI Daily Ranking",
+    "DayR18Ai": "AI R-18 Daily Ranking",
+    "WeekAi": "AI Weekly Ranking",
+    "WeekAiR18": "AI R-18 Weekly Ranking"
+  },
+  "ProxyOption": {
+    "Custom": "Custom Proxy",
+    "None": "No Proxy",
+    "System": "System Proxy"
+  },
+  "WorkTypeEnum": {
+    "Illustration": "Illustration",
+    "Manga": "Manga",
+    "Ugoira": "Ugoira",
+    "Novel": "Novel"
+  },
+  "ClearDataKind": {
+    "FileCache": "All file cache deleted",
+    "DownloadHistory": "All download history deleted",
+    "SearchHistory": "All search history deleted",
+    "BrowseHistory": "All browsing history deleted"
+  },
+  "ThumbnailLayoutType": {
+    "LinedFlow": "Lined Flow Layout",
+    "Grid": "Grid Layout",
+    "Masonry": "Masonry Layout"
+  },
+  "BrowseMode": {
+    "Swipe": "Swipe",
+    "Continuous": "Continuous"
+  },
+  "Orientation": {
+    "Horizontal": "Horizontal Scrolling",
+    "Vertical": "Vertical Scrolling"
+  },
+  "IllustrationViewerAutoPlayMode": {
+    "Sequential": "Sequential",
+    "Loop": "Loop"
+  },
+  "IllustrationViewerAutoPlayScope": {
+    "CurrentWork": "Current Work",
+    "AllWorks": "All Works"
+  },
+  "WorkSubscriptionType": {
+    "Bookmarks": "Bookmarks",
+    "Posts": "Posted Works",
+    "Series": "Series"
+  },
+  "WorkSubscriptionWorkKind": {
+    "Illustration": "Illustration",
+    "Manga": "Manga",
+    "Novel": "Novel"
+  },
+  "HomePageCardSourceKindDescription": {
+    "WorkRecommended": "Works from the Pixiv recommendation engine, filterable by illustration, manga, or novel.",
+    "WorkBookmarks": "Bookmarked works of a specified user, visibility scope, and tags.",
+    "WorkRanking": "Ranking list with a specified work type, ranking type, and date.",
+    "WorkNew": "Latest works on Pixiv by work type.",
+    "WorkFollowing": "New works from followed users.",
+    "WorkMyPixiv": "New works from your Pixiv friends.",
+    "WorkRelated": "Related works for a specified work ID and work type.",
+    "WorkPosts": "An illustration, manga, or novel posted by a specified user.",
+    "WorkSearch": "Search for illustrations, manga, or novels by keyword.",
+    "UserRecommended": "Users recommended by Pixiv.",
+    "UserSearch": "Search for users by keyword.",
+    "UserFollowing": "Users followed by a specified user.",
+    "UserFollower": "Users who follow you.",
+    "UserMyPixiv": "Your Pixiv friends.",
+    "Spotlight": "Pixivision feature list.",
+    "SingleImage": "Show a single illustration by ID.",
+    "SingleNovel": "Show a single novel by ID.",
+    "SingleSeries": "Works in a series specified by series ID and work type.",
+    "SingleUser": "Show a single user by user ID."
+  },
+  "DownloadListOption": {
+    "AllQueued": "All Queued",
+    "Cancelled": "Cancelled",
+    "Completed": "Completed",
+    "CustomSearch": "Custom Search",
+    "Error": "Error",
+    "Running": "Running"
+  }
+}
