@@ -1,0 +1,16 @@
+{
+  "GenerateLink": "Copy App Link",
+  "GenerateWebLink": "Copy Web Link",
+  "OpenInWebBrowser": "Open in Web Browser",
+  "AddToBookmark": "Add to Bookmark",
+  "AddToWatchLater": "Add to Watch Later",
+  "RemoveFromWatchLater": "Remove from Watch Later",
+  "Save": "Save",
+  "OpenUserInfoPage": "Author Information",
+  "OpenSeries": "Open Series",
+  "Copy": "Copy Image to Clipboard",
+  "SaveAsCancelled": "Save As Cancelled",
+  "DownloadTaskCreated": "Download Task Created",
+  "TheIllustrationIsAMangaFormatted": "This is a manga, containing {0} images",
+  "TheIllustrationIsAnUgoira": "This is an ugoira"
+}
