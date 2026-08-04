@@ -1,21 +1,26 @@
 using System.Collections.Generic;
+using Misaki;
 using Pixeval.Filters.Syntax;
 using Pixeval.I18N;
-using Pixeval.ViewModels;
 
 namespace Pixeval.Models.Filters;
 
-[FilterSyntax<IWorkViewModel>]
-internal sealed class WorkGifFilterSyntax : FilterFlagSyntax
+[FilterSyntax<IArtworkInfo>]
+internal sealed class WorkGifFilterSyntax : FilterFlagSyntax<IArtworkInfo>
 {
+    public const string KeyConst = "Gif";
+
     /// <summary>
     /// 动图布尔筛选语法。
     /// </summary>
-    public override string Key => WorkFilterSyntaxKeys.Gif;
+    public override string Key => KeyConst;
 
     public override IReadOnlyList<FilterSyntaxPattern> Patterns { get; } =
     [
         new("+", ["gif"], Metadata: false, Description: I18NManager.GetResource(FilterResources.Completions.Include.Gif)),
         new("-", ["gif"], Metadata: true, Description: I18NManager.GetResource(FilterResources.Completions.Exclude.Gif))
     ];
+
+    public override bool Match(IArtworkInfo context, bool value) =>
+        value ^ (context.ImageType is ImageType.SingleAnimatedImage);
 }

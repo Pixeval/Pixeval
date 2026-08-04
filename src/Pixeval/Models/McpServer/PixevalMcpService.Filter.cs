@@ -38,7 +38,7 @@ public sealed partial class PixevalMcpService
         return
         [
             .. works.Where(work => work is Misaki.IArtworkInfo artwork
-                                   && WorkFilterEvaluator.Filter(artwork, query.Root))
+                                   && query.Root.Match(artwork))
         ];
     }
 

@@ -10,7 +10,7 @@ namespace Pixeval.Filters.Syntax;
 /// <summary>
 /// 表示读取日期值的语法。
 /// </summary>
-public abstract class FilterDateSyntax : FilterSyntax
+public abstract class FilterDateSyntax<TContext> : FilterSyntax<TContext, DateTimeOffset>
 {
     protected virtual int FallbackYear => DateTime.UtcNow.Year;
 
@@ -19,11 +19,11 @@ public abstract class FilterDateSyntax : FilterSyntax
     /// <summary>
     /// 将原始日期值绑定为具体时间点。
     /// </summary>
-    protected sealed override bool TryBindCore(FilterSyntaxMatch match, FilterValue rawValue, out object? value, out FilterDiagnostic? diagnostic)
+    protected sealed override bool TryBindCore(FilterSyntaxMatch match, FilterValue rawValue, out DateTimeOffset value, out FilterDiagnostic? diagnostic)
     {
         if (rawValue is not FilterRawDateValue date)
         {
-            value = null;
+            value = default;
             diagnostic = new(FilterDiagnosticKind.InternalExpectedDateValue, rawValue.Span, match.DiagnosticText);
             return false;
         }
@@ -36,7 +36,7 @@ public abstract class FilterDateSyntax : FilterSyntax
         }
         catch (ArgumentOutOfRangeException)
         {
-            value = null;
+            value = default;
             diagnostic = new(FilterDiagnosticKind.InvalidDate, rawValue.Span, match.DiagnosticText, date.Value);
             return false;
         }

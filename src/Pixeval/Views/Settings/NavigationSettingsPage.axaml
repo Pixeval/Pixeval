@@ -63,7 +63,10 @@
                 TextChanged="YamlEditor_OnTextChanged"
                 VerticalScrollBarVisibility="Auto">
                 <edit:TextEditor.Options>
-                    <edit:TextEditorOptions ConvertTabsToSpaces="True" IndentationSize="2" />
+                    <edit:TextEditorOptions
+                        AllowScrollBelowDocument="False"
+                        ConvertTabsToSpaces="True"
+                        IndentationSize="2" />
                 </edit:TextEditor.Options>
             </edit:TextEditor>
         </Border>

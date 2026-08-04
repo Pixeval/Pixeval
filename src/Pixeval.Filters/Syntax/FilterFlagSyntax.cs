@@ -9,16 +9,16 @@ namespace Pixeval.Filters.Syntax;
 /// <summary>
 /// 表示不需要附加值的布尔语法。
 /// </summary>
-public abstract class FilterFlagSyntax : FilterSyntax
+public abstract class FilterFlagSyntax<TContext> : FilterSyntax<TContext, bool>
 {
     public sealed override FilterValueKind ValueKind => FilterValueKind.None;
 
     /// <summary>
     /// 直接返回当前模式携带的布尔元数据。
     /// </summary>
-    protected sealed override bool TryBindCore(FilterSyntaxMatch match, FilterValue rawValue, out object? value, out FilterDiagnostic? diagnostic)
+    protected sealed override bool TryBindCore(FilterSyntaxMatch match, FilterValue rawValue, out bool value, out FilterDiagnostic? diagnostic)
     {
-        value = match.Metadata ?? true;
+        value = match.Metadata is not bool metadata || metadata;
         diagnostic = null;
         return true;
     }

@@ -7,7 +7,6 @@ using Avalonia.Controls;
 using CommunityToolkit.Mvvm.Input;
 using Misaki;
 using Pixeval.Filters.Nodes;
-using Pixeval.Models.Filters;
 
 namespace Pixeval.ViewModels;
 
@@ -26,5 +25,5 @@ public interface IWorkViewModel : INotifyPropertyChanged
     /// <inheritdoc cref="WorkEntryViewModel{T}.SaveCommand"/>
     IAsyncRelayCommand<Control?> SaveCommand { get; }
 
-    bool Filter(FilterNode node) => WorkFilterEvaluator.Filter(Entry, node);
+    bool Filter(FilterNode node) => node.Match(Entry);
 }

@@ -293,8 +293,8 @@ public partial class WorkContainer : UserControl
         EnsureFilterValueCompletions(viewModel.Source);
         return context.Match.Syntax.Key switch
         {
-            WorkFilterSyntaxKeys.Tag => _tagValueCompletions,
-            WorkFilterSyntaxKeys.Author => _authorValueCompletions,
+            WorkTagFilterSyntax.KeyConst => _tagValueCompletions,
+            WorkAuthorFilterSyntax.KeyConst => _authorValueCompletions,
             _ => []
         };
     }

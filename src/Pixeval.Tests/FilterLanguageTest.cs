@@ -79,8 +79,8 @@ public sealed class FilterLanguageTest
         Assert.IsTrue(result.IsSuccess);
         Assert.IsNotNull(result.Query);
         Assert.HasCount(1, result.Query.Root.Children);
-        var predicate = (FilterPredicateNode) result.Query.Root.Children.Single();
-        var text = (FilterTextValue) predicate.Value!;
+        var predicate = (FilterPredicateNode<object, FilterTextValue>) result.Query.Root.Children.Single();
+        var text = predicate.Value;
         Assert.AreEqual("Tag", predicate.Syntax.Key);
         Assert.AreEqual("123", text.ToString());
     }
@@ -148,7 +148,7 @@ public sealed class FilterLanguageTest
         var result = _Language.Analyze("+r18g");
 
         Assert.IsTrue(result.IsSuccess);
-        var predicate = (FilterPredicateNode) result.Query!.Root.Children.Single();
+        var predicate = (FilterPredicateNode<object, bool>) result.Query!.Root.Children.Single();
         Assert.AreEqual("R18G", predicate.Syntax.Key);
     }
 
@@ -242,7 +242,7 @@ public sealed class FilterLanguageTest
         var result = _Language.Analyze("score:12345");
 
         Assert.IsTrue(result.IsSuccess);
-        var predicate = (FilterPredicateNode) result.Query!.Root.Children.Single();
+        var predicate = (FilterPredicateNode<object, long>) result.Query!.Root.Children.Single();
         Assert.AreEqual("Score", predicate.Syntax.Key);
         Assert.AreEqual(12345L, predicate.Value);
     }
@@ -253,9 +253,9 @@ public sealed class FilterLanguageTest
         var result = _Language.Analyze("weight:1/2");
 
         Assert.IsTrue(result.IsSuccess);
-        var predicate = (FilterPredicateNode) result.Query!.Root.Children.Single();
+        var predicate = (FilterPredicateNode<object, double>) result.Query!.Root.Children.Single();
         Assert.AreEqual("Weight", predicate.Syntax.Key);
-        Assert.AreEqual(0.5d, (double) predicate.Value!, 0.000001d);
+        Assert.AreEqual(0.5d, predicate.Value, 0.000001d);
     }
 
     [TestMethod]
@@ -352,8 +352,8 @@ public sealed class FilterLanguageTest
 
         Assert.IsTrue(result.IsSuccess);
         Assert.IsNotNull(result.Query);
-        var predicate = (FilterPredicateNode) result.Query.Root.Children.Single();
-        var range = (FilterLongRange) predicate.Value!;
+        var predicate = (FilterPredicateNode<object, FilterLongRange>) result.Query.Root.Children.Single();
+        var range = predicate.Value;
         Assert.AreEqual(100L, range.Start);
         Assert.AreEqual(200L, range.End);
         Assert.IsTrue(range.Contains(200));
@@ -394,16 +394,18 @@ public sealed class FilterLanguageTest
         Assert.AreEqual("2024-2-31", result.Diagnostics[0].Arguments[1]?.ToString());
     }
 
-    private sealed class TitleSyntax : FilterTextSyntax
+    private sealed class TitleSyntax : FilterTextSyntax<object>
     {
         public override string Key => "Title";
 
         public override string? ExampleValue => "keyword";
 
         public override IReadOnlyList<FilterSyntaxPattern> Patterns { get; } = [FilterSyntaxPattern.Default("keyword")];
+
+        public override bool Match(object context, FilterTextValue value) => true;
     }
 
-    private sealed class TagSyntax : FilterTextSyntax
+    private sealed class TagSyntax : FilterTextSyntax<object>
     {
         public override string Key => "Tag";
 
@@ -411,9 +413,11 @@ public sealed class FilterLanguageTest
 
         public override IReadOnlyList<FilterSyntaxPattern> Patterns { get; } =
             [FilterSyntaxPattern.PrefixOnly("#", "tag")];
+
+        public override bool Match(object context, FilterTextValue value) => true;
     }
 
-    private sealed class AuthorSyntax : FilterTextSyntax
+    private sealed class AuthorSyntax : FilterTextSyntax<object>
     {
         public override string Key => "Author";
 
@@ -424,9 +428,11 @@ public sealed class FilterLanguageTest
             FilterSyntaxPattern.Keyword("a", exampleValue: "artist"),
             FilterSyntaxPattern.Keyword("artist", exampleValue: "artist")
         ];
+
+        public override bool Match(object context, FilterTextValue value) => true;
     }
 
-    private sealed class BookmarkSyntax : FilterLongRangeSyntax
+    private sealed class BookmarkSyntax : FilterLongRangeSyntax<object>
     {
         public override string Key => "Bookmark";
 
@@ -434,9 +440,11 @@ public sealed class FilterLanguageTest
 
         public override IReadOnlyList<FilterSyntaxPattern> Patterns { get; } =
             [FilterSyntaxPattern.Keyword("l", exampleValue: "100-200")];
+
+        public override bool Match(object context, FilterLongRange value) => true;
     }
 
-    private sealed class ScoreSyntax : FilterLongSyntax
+    private sealed class ScoreSyntax : FilterLongSyntax<object>
     {
         public override string Key => "Score";
 
@@ -444,9 +452,11 @@ public sealed class FilterLanguageTest
 
         public override IReadOnlyList<FilterSyntaxPattern> Patterns { get; } =
             [FilterSyntaxPattern.Keyword("score", exampleValue: "12345")];
+
+        public override bool Match(object context, long value) => true;
     }
 
-    private sealed class WeightSyntax : FilterDoubleSyntax
+    private sealed class WeightSyntax : FilterDoubleSyntax<object>
     {
         public override string Key => "Weight";
 
@@ -454,9 +464,11 @@ public sealed class FilterLanguageTest
 
         public override IReadOnlyList<FilterSyntaxPattern> Patterns { get; } =
             [FilterSyntaxPattern.Keyword("weight", exampleValue: "1/2")];
+
+        public override bool Match(object context, double value) => true;
     }
 
-    private sealed class RatioSyntax : FilterDoubleRangeSyntax
+    private sealed class RatioSyntax : FilterDoubleRangeSyntax<object>
     {
         public override string Key => "Ratio";
 
@@ -464,9 +476,11 @@ public sealed class FilterLanguageTest
 
         public override IReadOnlyList<FilterSyntaxPattern> Patterns { get; } =
             [FilterSyntaxPattern.Keyword("r", exampleValue: "1-2")];
+
+        public override bool Match(object context, FilterDoubleRange value) => true;
     }
 
-    private sealed class StartDateSyntax : FilterDateSyntax
+    private sealed class StartDateSyntax : FilterDateSyntax<object>
     {
         public override string Key => "StartDate";
 
@@ -474,9 +488,11 @@ public sealed class FilterLanguageTest
 
         public override IReadOnlyList<FilterSyntaxPattern> Patterns { get; } =
             [FilterSyntaxPattern.Keyword("s", exampleValue: "2024-1-1")];
+
+        public override bool Match(object context, DateTimeOffset value) => true;
     }
 
-    private sealed class AiSyntax : FilterFlagSyntax
+    private sealed class AiSyntax : FilterFlagSyntax<object>
     {
         public override string Key => "Ai";
 
@@ -485,9 +501,11 @@ public sealed class FilterLanguageTest
             new("+", ["ai"], Metadata: false, Description: "仅显示 AI"),
             new("-", ["ai"], Metadata: true, Description: "排除 AI")
         ];
+
+        public override bool Match(object context, bool value) => true;
     }
 
-    private sealed class R18Syntax : FilterFlagSyntax
+    private sealed class R18Syntax : FilterFlagSyntax<object>
     {
         public override string Key => "R18";
 
@@ -496,9 +514,11 @@ public sealed class FilterLanguageTest
             new("+", ["r18"], Metadata: false, Description: "仅显示 R18"),
             new("-", ["r18"], Metadata: true, Description: "排除 R18")
         ];
+
+        public override bool Match(object context, bool value) => true;
     }
 
-    private sealed class R18GSyntax : FilterFlagSyntax
+    private sealed class R18GSyntax : FilterFlagSyntax<object>
     {
         public override string Key => "R18G";
 
@@ -507,9 +527,11 @@ public sealed class FilterLanguageTest
             new("+", ["r18g"], Metadata: false, Description: "仅显示 R18G"),
             new("-", ["r18g"], Metadata: true, Description: "排除 R18G")
         ];
+
+        public override bool Match(object context, bool value) => true;
     }
 
-    private sealed class GifSyntax : FilterFlagSyntax
+    private sealed class GifSyntax : FilterFlagSyntax<object>
     {
         public override string Key => "Gif";
 
@@ -518,6 +540,8 @@ public sealed class FilterLanguageTest
             new("+", ["gif"], Metadata: false, Description: "仅显示动图"),
             new("-", ["gif"], Metadata: true, Description: "排除动图")
         ];
+
+        public override bool Match(object context, bool value) => true;
     }
 
     private static void AssertValueHintsOnly(string text, IReadOnlyCollection<string> displayTexts)

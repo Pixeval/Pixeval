@@ -1,14 +1,17 @@
 using System.Collections.Generic;
+using Misaki;
 using Pixeval.Filters.Syntax;
+using Pixeval.Filters.Values;
 using Pixeval.I18N;
-using Pixeval.ViewModels;
 
 namespace Pixeval.Models.Filters;
 
-[FilterSyntax<IWorkViewModel>]
-internal sealed class WorkBookmarkFilterSyntax : FilterLongRangeSyntax
+[FilterSyntax<IArtworkInfo>]
+internal sealed class WorkBookmarkFilterSyntax : FilterLongRangeSyntax<IArtworkInfo>
 {
-    public override string Key => WorkFilterSyntaxKeys.Bookmark;
+    public const string KeyConst = "Bookmark";
+
+    public override string Key => KeyConst;
 
     public override string? ExampleValue => "100-200";
 
@@ -17,4 +20,6 @@ internal sealed class WorkBookmarkFilterSyntax : FilterLongRangeSyntax
         FilterSyntaxPattern.Keyword("l", exampleValue: "100-200", description: I18NManager.GetResource(FilterResources.Completions.Bookmark)),
         FilterSyntaxPattern.Keyword("like", exampleValue: "100-200", description: I18NManager.GetResource(FilterResources.Completions.Bookmark))
     ];
+
+    public override bool Match(IArtworkInfo context, FilterLongRange value) => value.Contains(context.TotalFavorite);
 }
