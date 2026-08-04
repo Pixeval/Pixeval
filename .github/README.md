@@ -38,9 +38,11 @@
 <!-- * 浏览器 -->
 
 ### 通过 Homebrew 安装 Pixeval
+
 [![brew test-bot](https://github.com/Pixeval/homebrew-tap/actions/workflows/tests.yml/badge.svg)](https://github.com/Pixeval/homebrew-tap/actions/workflows/tests.yml)
 
-Pixeval提供自托管的[Homebrew Tap](https://github.com/Pixeval/homebrew-tap)在 Mac 和 Linux 上安装Pixeval
+Pixeval 提供自托管的 [Homebrew Tap](https://github.com/Pixeval/homebrew-tap) 在 Mac 和 Linux 上安装 Pixeval
+
 **安装**
 
 ```bash
@@ -71,7 +73,7 @@ brew uninstall pixeval
 brew untap Pixeval/tap
 ```
 > [!NOTE]
-> 如果默认的 Tap 速度较慢，可以手动下载[Cask源文件](https://raw.githubusercontent.com/Pixeval/homebrew-tap/refs/heads/main/Casks/pixeval.rb)或[Formula源文件](https://raw.githubusercontent.com/Pixeval/homebrew-tap/refs/heads/main/Formula/pixeval.rb)，更换到镜像域名后，`brew install --cask /path/to/pixeval.rb` 或 `brew install --formula /path/to/pixeval.rb`。
+> 如果默认的 Tap 速度较慢，可以手动下载 [Cask源文件](https://raw.githubusercontent.com/Pixeval/homebrew-tap/refs/heads/main/Casks/pixeval.rb) 或 [Formula源文件](https://raw.githubusercontent.com/Pixeval/homebrew-tap/refs/heads/main/Formula/pixeval.rb)，更换到镜像域名后，`brew install --cask /path/to/pixeval.rb` 或 `brew install --formula /path/to/pixeval.rb`。
 
 更多信息请查看[Tap仓库](https://github.com/Pixeval/homebrew-tap)
 
