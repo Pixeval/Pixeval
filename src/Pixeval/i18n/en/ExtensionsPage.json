@@ -1,0 +1,54 @@
+{
+  "AddExtensionsButton": {
+    "Label": "Add Extension"
+  },
+  "ExtensionFileExistedError": "The file is already in the extensions folder and will be skipped",
+  "ExtensionLoadedSuccessfully": "Extension loaded successfully",
+  "ExtensionLoadFailed": "Failed to load extension",
+  "PlatformNotSupportExtensions": "The current platform does not support extensions",
+  "OpenExtensionsButton": {
+    "Label": "Open Extensions Folder"
+  },
+  "TitleTextBlock": {
+    "Text": "Pixeval Extension Manager"
+  },
+  "SubtitleTextBlock": {
+    "Text": "Extension Version"
+  },
+  "UninstallExtensionsButton": {
+    "Label": "Uninstall Extension"
+  },
+  "CancelPendingUninstallExtensionsButton": {
+    "Label": "Cancel Uninstall"
+  },
+  "UninstallAllExtensionsButton": {
+    "Label": "Uninstall All Extensions"
+  },
+  "UninstallOutdatedExtensionsButton": {
+    "Label": "Uninstall Outdated Extensions"
+  },
+  "ExtensionWillUninstallOnNextStartup": "The extension will be uninstalled on next startup",
+  "ExtensionPendingUninstallCancelled": "Cancelled the uninstall scheduled for next startup",
+  "MarkedExtensionsPendingUninstallFormatted": "Marked {0} extensions for uninstall on next startup",
+  "MarkedOutdatedExtensionsPendingUninstallFormatted": "Marked {0} outdated extensions for uninstall on next startup",
+  "NoExtensionsToUninstall": "No extensions to uninstall",
+  "NoOutdatedExtensionsToUninstall": "No outdated extensions to uninstall",
+  "ExtensionsPriorityUpButton": {
+    "Label": "Increase Priority"
+  },
+  "ExtensionsPriorityDownButton": {
+    "Label": "Decrease Priority"
+  },
+  "ExtensionsPriorityTopButton": {
+    "Label": "Set Highest Priority"
+  },
+  "ExtensionsPriorityBottomButton": {
+    "Label": "Set Lowest Priority"
+  },
+  "ZipContainsNoExtension": "The archive does not contain a usable extension library",
+  "ExtensionsHelpButton": {
+    "Label": "Help"
+  },
+  "ExtensionOutdatedFormatted": "The extension loaded, but its version ({0}) is outdated. Please download the latest version.",
+  "SomeExtensionsOutdatedFormatted": "{0} extensions are outdated. Please download the latest versions."
+}
