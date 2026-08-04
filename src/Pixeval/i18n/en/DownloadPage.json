@@ -1,0 +1,39 @@
+{
+  "CancelSelectionButtonDefaultLabel": "Cancel Selection",
+  "CancelSelectionButtonFormatted": "Cancel Selection ({0})",
+  "DeleteDownloadHistoryRecordsFormatted": "Delete {0} history records",
+  "FolderSubtitleFormatted": "{0} download tasks",
+  "OrdinaryDownloadsButton": {
+    "Label": "Ordinary Downloads"
+  },
+  "SubscriptionDownloadsButton": {
+    "Label": "Subscription Download"
+  },
+  "SyncSubscriptionButton": {
+    "Label": "Sync Subscriptions Now"
+  },
+  "FilterAutoSuggestBox": {
+    "PlaceholderText": "Work name / Work ID"
+  },
+  "PauseButton": {
+    "Label": "Pause"
+  },
+  "ResumeButton": {
+    "Label": "Resume"
+  },
+  "SelectAllButton": {
+    "Label": "Select All"
+  },
+  "ResetButton": {
+    "Label": "Re-download"
+  },
+  "StopButton": {
+    "Label": "Cancel"
+  },
+  "DeleteButton": {
+    "Label": "Delete"
+  },
+  "DeleteLocalFiles": {
+    "Content": "Also Delete Local Files"
+  }
+}
