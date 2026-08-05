@@ -1,0 +1,40 @@
+{
+  "CancelSelectionButtonDefaultLabel": "Cancel selection",
+  "CancelSelectionButtonFormatted": "Cancel selection ({0})",
+  "DeleteDownloadHistoryRecordsFormatted": "Delete {0} history records",
+  "FetchingFolderSubtitleFormatted": "Fetching illustrations, {0} done",
+  "FolderSubtitleFormatted": "{0} Download tasks",
+  "OrdinaryDownloadsButton": {
+    "Label": "Ordinary Downloads"
+  },
+  "SubscriptionDownloadsButton": {
+    "Label": "Subscription Download"
+  },
+  "SyncSubscriptionButton": {
+    "Label": "Sync Subscriptions Now"
+  },
+  "FilterAutoSuggestBox": {
+    "PlaceholderText": "Illustration Title/ID"
+  },
+  "PauseButton": {
+    "Label": "Pause"
+  },
+  "ResumeButton": {
+    "Label": "Resume"
+  },
+  "SelectAllButton": {
+    "Label": "Select all"
+  },
+  "ResetButton": {
+    "Label": "Redownload"
+  },
+  "StopButton": {
+    "Label": "Cancel"
+  },
+  "DeleteButton": {
+    "Label": "Delete"
+  },
+  "DeleteLocalFiles": {
+    "Content": "Also delete local files"
+  }
+}
