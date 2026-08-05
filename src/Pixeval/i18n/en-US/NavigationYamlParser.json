@@ -1,0 +1,17 @@
+{
+  "Diagnostics": {
+    "BuiltInNavigationYamlInvalid": "The built-in navigation YAML configuration is invalid.",
+    "BothHeaderAndFooterEmpty": "Header and footer cannot both be empty.",
+    "EmptyFolderFormatted": "Folder {0} cannot be empty.",
+    "FieldNotAllowedFormatted": "{0} cannot contain the {1} field.",
+    "I18NResourceKeyEmptyFormatted": "The i18n resource key for {0} cannot be empty.",
+    "ItemMustHaveEitherPageOrFolderFormatted": "{0} must specify exactly one of page or folder.",
+    "MenuMustContainSettingsPage": "The navigation menu must include the Settings page, otherwise the user cannot return to Settings to modify the navigation bar.",
+    "MaxDepthExceededFormatted": "{0} exceeds the maximum depth of {1}.",
+    "MaxDepthExceededFolderFormatted": "{0} exceeds the maximum depth of {1}; only pages are allowed at level {1}.",
+    "UnknownFieldFormatted": "Unknown field: {0}",
+    "UnknownI18NResourceKeyFormatted": "Unknown i18n resource key: {0}",
+    "UnknownIconFormatted": "Unknown icon name: {0}",
+    "UnknownPageFormatted": "Unknown page: {0}"
+  }
+}
