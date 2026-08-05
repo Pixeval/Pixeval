@@ -1,0 +1,130 @@
+{
+  "EditButton": {
+    "Label": "Edit"
+  },
+  "HideCardTitleButton": {
+    "Label": "Hide Card Titles"
+  },
+  "HideToolbarButton": {
+    "Label": "Hide Toolbar"
+  },
+  "EditPaneTitleTextBlock": {
+    "Text": "Edit Home Page Layout"
+  },
+  "EditPaneDescriptionTextBlock": {
+    "Text": "Select cards to add to the home page, then adjust their position and size in the grid."
+  },
+  "SelectedCardTitleTextBlock": {
+    "Text": "Selected Card"
+  },
+  "GridSizeTitleTextBlock": {
+    "Text": "Home Page Grid"
+  },
+  "GridRowsTextBlock": {
+    "Text": "Rows"
+  },
+  "GridColumnsTextBlock": {
+    "Text": "Columns"
+  },
+  "NoSelectedCardTextBlock": {
+    "Text": "Click a card on the home page to edit its position and size."
+  },
+  "PositionXTextBlock": {
+    "Text": "Column"
+  },
+  "PositionYTextBlock": {
+    "Text": "Row"
+  },
+  "WidthTextBlock": {
+    "Text": "Width"
+  },
+  "HeightTextBlock": {
+    "Text": "Height"
+  },
+  "CardBackgroundTextBlock": {
+    "Text": "Background color"
+  },
+  "DeleteSelectedCardButton": {
+    "Content": "Delete Card"
+  },
+  "OpenCardPageButton": {
+    "ToolTip": "View"
+  },
+  "CardTitle": {
+    "ParameterSeparator": ""
+  },
+  "CardLibraryTitleTextBlock": {
+    "Text": "Available Cards"
+  },
+  "SourceParametersTitleTextBlock": {
+    "Text": "Card Parameters"
+  },
+  "SelectCardSourcePromptTextBlock": {
+    "Text": "First select a card source, then fill in its parameters to add it to the home page."
+  },
+  "Source": {
+    "WorkTypeTextBlock": {
+      "Text": "Work type"
+    },
+    "SimpleWorkTypeTextBlock": {
+      "Text": "Work Scope"
+    },
+    "PrivacyPolicyTextBlock": {
+      "Text": "Visibility"
+    },
+    "RankOptionTextBlock": {
+      "Text": "Ranking Type"
+    },
+    "RankingDateTextBlock": {
+      "Text": "Ranking Date"
+    },
+    "UseSpecifiedRankingDateCheckBox": {
+      "Content": "Use Specified Date"
+    },
+    "UserIdTextBlock": {
+      "Text": "User ID"
+    },
+    "EntryIdTextBlock": {
+      "Text": "Work ID"
+    },
+    "SeriesIdTextBlock": {
+      "Text": "Series ID"
+    },
+    "SearchTextTextBlock": {
+      "Text": "Search Keyword"
+    },
+    "TagTextBlock": {
+      "Text": "Bookmarked tags"
+    }
+  },
+  "AddConfiguredCardButton": {
+    "Content": "Add Card"
+  },
+  "CardPreview": {
+    "LoadingTextBlock": {
+      "Text": "Loading"
+    },
+    "EmptyTextBlock": {
+      "Text": "No Content"
+    },
+    "FailedTextBlock": {
+      "Text": "Load Failed"
+    }
+  },
+  "NoSpaceWarning": {
+    "Title": "No Available Space",
+    "Content": "There is no space in the current home page grid that can fit this card."
+  },
+  "LayoutConflictWarning": {
+    "Title": "Layout Conflict",
+    "Content": "This position or size would extend beyond the home page grid, or overlap with other cards."
+  },
+  "GridShrinkBlockedWarning": {
+    "Title": "Cannot Shrink Grid",
+    "Content": "Cards exist in the rows or columns to be removed. Please move or delete them first."
+  },
+  "InvalidSourceParameterWarning": {
+    "Title": "Incomplete Parameters",
+    "Content": "Please fill in the User ID, Work ID, Series ID, or search keyword required by the current card source."
+  }
+}
