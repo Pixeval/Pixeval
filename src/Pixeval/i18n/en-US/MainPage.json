@@ -1,0 +1,73 @@
+{
+  "Tab": {
+    "Home": "Home",
+    "Search": "Search",
+    "Login": "Pixiv Login",
+    "WorkRecommended": "Recommended Works",
+    "WorkBookmarks": "Bookmarks",
+    "Series": "Series Tracker",
+    "WorkFollowing": "Updates",
+    "WorkMyPixiv": "Pixiv Friends' Works",
+    "WorkNew": "All New Works",
+    "WorkRanking": "Ranking",
+    "WorkRelated": "Related Works",
+    "SingleSeries": "Series",
+    "WorkPosts": "User Posts",
+    "UserRecommended": "Recommend Users",
+    "UserFollowing": "Following",
+    "UserMyPixiv": "My Pixiv users",
+    "UserFollower": "My Followers",
+    "BrowsingHistory": "History",
+    "Spotlight": "Spotlight",
+    "Feed": "Feed",
+    "WatchLater": "Watch Later",
+    "Download": "Download Manager",
+    "Help": "Help",
+    "About": "About",
+    "Settings": "Settings",
+    "Extensions": "Extensions",
+    "RelatedUser": "Related users",
+    "UserSearchResult": "User Search",
+    "WorkSearchResult": "Work Search",
+    "SingleImage": "Single Image",
+    "SingleNovel": "Single Novel",
+    "SingleUser": "Single User",
+    "SauceNaoResult": "SauceNAO Results",
+    "NavigationSettings": "Navigation",
+    "WorkInfo": "Work info",
+    "Comments": "Comments"
+  },
+  "SearchResultFormatted": "{0} - Search",
+  "SearchKeywordCannotBeBlank": {
+    "Title": "The keyword is illegal",
+    "Content": "The keyword must not be empty"
+  },
+  "LoggingIn": {
+    "Header": "Logging In",
+    "Description": "If there is no response for a long time, there may be a network issue. Please go to Settings to check whether Domain Fronting is enabled or whether the proxy is working correctly.",
+    "Failed": "Login failed. Please check your network connection, or try logging in again."
+  },
+  "OpenMyPageItem": {
+    "Text": "Open My Page"
+  },
+  "OpenMyPageInBrowserItem": {
+    "Text": "Open in web"
+  },
+  "RestrictedModeItem": {
+    "Text": "Restricted Mode"
+  },
+  "AiShowItem": {
+    "Text": "Show AI Works"
+  },
+  "MoreViewingSettingsItem": {
+    "Text": "More Viewing Settings"
+  },
+  "SwitchAccountItem": {
+    "Text": "Switch Account"
+  },
+  "TabContextMenu": {
+    "CloseOtherTabs": "Close Other Tabs",
+    "CloseTabsToLeft": "Close Tabs to Left",
+    "CloseTabsToRight": "Close Tabs to Right"
+  }
+}
