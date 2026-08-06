@@ -1,5 +1,6 @@
 Pixeval provides macros for more precise control over download paths.  
 To see what each macro does, hover your mouse over the corresponding macro's button.  
+You can move your cursor on a button to see how the corresponding macro works.  
 You can move your cursor on a button to see how the corresponding macro works.
 
 ## Regular Macros
@@ -62,6 +63,7 @@ and [Standard date and time format strings](https://learn.microsoft.com/dotnet/s
 ## Conditional Macros
 
 If a macro has conditional branches, it is a conditional macro. Conditional macros use a ternary-operator-like form: `@{is_xxx?<true branch>:<false branch>}`.
+:<false branch>}`.
 :<false branch>}\`.
 When the condition is met, the part after the question mark "?" is output; otherwise, the part after the colon ":" is output.
 
