@@ -18,15 +18,15 @@ Powerful, fast and beautiful Pixiv third-party desktop program based on .NET 10 
 
 </div>
 
-[**Chinese Simplified**](README.md)
+🌏: [简体中文](README.md), [**English**](README.en.md), [Русский](README.ru.md)
 
 ---
 
-**Pixeval, based on Avalonia, is already under development, and the old WPF/WinUI3 version is no longer heavily maintained. Please switch to the newer Pixeval anytime.**\*\*
+**Pixeval, based on Avalonia, is already under development, and the old WPF/WinUI3 version is no longer heavily maintained. Please switch to the newer Pixeval anytime.**
 
 For more information, go to the [Project Homepage](https://pixeval.github.io/)
 
-**Avalonia provides a better UI, a better project structure and development experience. If you want to know the current development progress, you can reference the [Contributing Guide](CONTRIBUTING.md) to download and compile the project.**\*\*
+**Avalonia provides a better UI, a better project structure and development experience. If you want to know the current development progress, you can reference the [Contributing Guide](CONTRIBUTING.md) to download and compile the project.**
 
 ## Supported Platforms
 
