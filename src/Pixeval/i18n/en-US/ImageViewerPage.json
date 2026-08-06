@@ -1,0 +1,13 @@
+{
+  "ApplyingTransformerExtensions": "Applying image transformer extensions…",
+  "TransformerExtensionFinishedSuccessfully": "Image transformer extension applied successfully",
+  "LoadingOriginalImage": "Loading original image…",
+  "OriginalImageLoadedSuccessfully": "Original image loaded successfully",
+  "OriginalImageLoadFailed": "Original image load failed",
+  "CheckingCache": "Checking cache...",
+  "DownloadingImageFormatted": "Downloading image: {0}%",
+  "LoadingFromCache": "Loading from cache...",
+  "LoadingImage": "Loading image…",
+  "MergingUgoiraFrames": "Composing ugoira...",
+  "TransformerExtensionFailed": "Image transformer extension failed"
+}

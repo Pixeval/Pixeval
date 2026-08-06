@@ -1,0 +1,21 @@
+{
+  "AddSubscriptionButton": {
+    "Label": "Add Subscription"
+  },
+  "SyncAllSubscriptionsButton": {
+    "Label": "Sync All Subscriptions Now"
+  },
+  "SubscriptionAdded": "Subscription added",
+  "RateLimitNotification": {
+    "Title": "Pixiv API request paused",
+    "Content": "Frequency limit detected. Subscription fetches will be automatically retried after cooldown. Please temporarily reduce browsing and other API actions, image downloads are not affected."
+  },
+  "ExitConfirmation": {
+    "Title": "Subscription content is still being fetched",
+    "Content": "Exiting now will discard results of this unsubmitted subscription. Are you sure you want to stop fetching and quit?"
+  },
+  "TargetIdTextBox": {
+    "PlaceholderText": "User or Series ID"
+  },
+  "InvalidTargetId": "Please enter a valid user or series ID"
+}

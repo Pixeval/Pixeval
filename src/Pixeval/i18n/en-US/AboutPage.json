@@ -1,0 +1,14 @@
+{
+  "DependenciesSubtitleTextBlock": {
+    "Text": "Dependencies"
+  },
+  "OpenSourceLicenseSubtitleTextBlock": {
+    "Text": "Open-source license"
+  },
+  "SpecialThanksSubtitleTextBlock": {
+    "Text": "Acknowledgments (in no particular order)"
+  },
+  "AppDescriptionTextBlock": {
+    "Text": "Pixeval is a third party Pixiv client based on Avalonia. While ensuring support for the most of Pixiv's functions, it provides numerous additional features that help improve the user experience, including local favorites and a proxyless browsing experience in Chinese mainland, etc."
+  }
+}

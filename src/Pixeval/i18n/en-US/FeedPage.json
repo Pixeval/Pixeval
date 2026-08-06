@@ -1,0 +1,11 @@
+{
+  "SparseBookmarkFormatted": "Added {0} to bookmarks",
+  "SparseFollowUserFormatted": "Followed {0}",
+  "CondensedBookmarkFormatted": "Added {0} and {1} works in total to bookmarks",
+  "CondensedFollowUserFormatted": "Followed {0} and {1} users in total",
+  "CondensedPostIllustFormatted": "Posted {0} and {1} works in total",
+  "FeedListTextBlock": {
+    "Text": "User Feed"
+  },
+  "SparsePostIllustFormatted": "Posted {0}"
+}

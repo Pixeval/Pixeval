@@ -1,0 +1,11 @@
+{
+  "BlockTagMenuItem": {
+    "Text": "Block a tag"
+  },
+  "CopyOriginalTagMenuItem": {
+    "Text": "Copy Original Text"
+  },
+  "CopyTranslatedTagMenuItem": {
+    "Text": "Copy Translation"
+  }
+}

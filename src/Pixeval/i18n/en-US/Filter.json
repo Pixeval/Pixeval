@@ -1,0 +1,98 @@
+{
+  "FilterQueryError": "Filter Query Error",
+  "Diagnostics": {
+    "CompletionSuffixFormatted": " Completions: {0}",
+    "MessageWithPositionFormatted": "{0} (position {1}){2}",
+    "UnexpectedToken": "Encountered unrecognized content: {0}",
+    "MissingPredicateAfterNegation": "Missing a filter condition after the negation {0}",
+    "MissingTextValue": "Missing a value after filter condition {0}",
+    "MissingLongValue": "Missing an integer value after filter condition {0}",
+    "MissingDoubleValue": "Missing a decimal value after filter condition {0}",
+    "MissingRangeValue": "Missing a range value after filter condition {0}",
+    "MissingDateValue": "Missing a date value after filter condition {0}",
+    "MissingGroupOperator": "Expected 'and' or 'or' after '(', got: {0}",
+    "MissingRightParenthesis": "Missing the closing parenthesis ')' matching {0}",
+    "InvalidValue": "The value of filter condition {0} is invalid",
+    "MissingStringQuote": "String {0} is missing the closing quote",
+    "InvalidLongRangeFormat": "The integer range {1} of filter condition {0} is invalid; use a-b, -b, or a-",
+    "InvalidDoubleRangeFormat": "The decimal range {1} of filter condition {0} is invalid; use a-b, -b, or a-",
+    "DateRequiresMonthAndDay": "The date {1} of filter condition {0} must contain at least the month and day",
+    "ExpectedInteger": "Expected an integer, got {0}",
+    "IntegerOutOfRange": "The integer value {0} is out of the supported range",
+    "DenominatorCannotBeZero": "The denominator of the fraction {0} cannot be 0",
+    "MissingFractionalPart": "The decimal {0} is missing its fractional part",
+    "InvalidDoubleValue": "Invalid decimal value: {0}",
+    "DateValueTooLarge": "The date value {0} is too large",
+    "NegativeRangeUnsupported": "The range start for filter condition {0} cannot be less than 0, got {1}",
+    "RangeMinimumGreaterThanMaximum": "The range minimum ({1}) of filter condition {0} must be less than or equal to the maximum ({2})",
+    "DoubleRangeOpenIntervalUnsupported": "Open-interval notation is not yet supported for the decimal range of filter condition {0}",
+    "InvalidDate": "Invalid date for filter condition {0}: {1}",
+    "UnsupportedValueKind": "Filter condition {0} uses an unsupported filter value type: {1}",
+    "InternalExpectedTextValue": "Internal filter error: filter condition {0} expected a string value",
+    "InternalExpectedLongValue": "Internal filter error: filter condition {0} expected an integer value",
+    "InternalExpectedDoubleValue": "Internal filter error: filter condition {0} expected a decimal value",
+    "InternalExpectedLongRangeValue": "Internal filter error: filter condition {0} expected an integer range value",
+    "InternalExpectedDoubleRangeValue": "Internal filter error: filter condition {0} expected a decimal range value",
+    "InternalExpectedDateValue": "Internal filter error: filter condition {0} expected a date value"
+  },
+  "Completions": {
+    "And": "Logical AND group, syntax: (and condition1 condition2)",
+    "Or": "Logical OR group, syntax: (or condition1 condition2)",
+    "Not": "Logical NOT; applies to the next condition or the whole group",
+    "Title": "Filter by title",
+    "Tag": "Filter by tag",
+    "Author": "Filter by author",
+    "Bookmark": "Filter by bookmark count",
+    "Ratio": "Filter by image aspect ratio",
+    "StartDate": "Filter by start publish date",
+    "EndDate": "Filter by end publish date",
+    "Include": {
+      "Constraint": "Positive constraint",
+      "R18": "Only R18 (including R18G)",
+      "R18G": "Only R18G",
+      "Gif": "Only animated images",
+      "Ai": "Only AI works"
+    },
+    "Exclude": {
+      "Constraint": "Negative constraint",
+      "R18": "Exclude R18 (including R18G)",
+      "R18G": "Exclude R18G",
+      "Gif": "Exclude animated images",
+      "Ai": "Exclude AI works"
+    },
+    "ValueHints": {
+      "Text": {
+        "Plain": "普通的字符串",
+        "Quoted": "A string with spaces/special characters",
+        "Exact": "A string that exactly matches",
+        "QuotedExact": "A string that exactly matches with spaces/special characters"
+      },
+      "Long": {
+        "Plain": "Ordinary integer"
+      },
+      "Double": {
+        "Integer": "Decimal value in integer form",
+        "Decimal": "Decimal value in decimal form",
+        "Fraction": "Decimal value in fraction form"
+      },
+      "LongRange": {
+        "Lower": "Greater than or equal to 2",
+        "Upper": "Less than or equal to 3",
+        "Closed": "Between 2 and 3 inclusive"
+      },
+      "DoubleRange": {
+        "Lower": "Greater than or equal to 2",
+        "UpperDecimal": "Less than or equal to 1.5",
+        "UpperFraction": "Less than or equal to 1/2",
+        "ClosedFraction": "Between 1/2 and 3 inclusive",
+        "ClosedDecimalFraction": "Between 0.3 and 1/2 inclusive"
+      },
+      "Date": {
+        "MonthDayDash": "Month and day of this year, separated by '-'",
+        "MonthDayDot": "Month and day of this year, separated by '.'",
+        "FullDash": "Full date, separated by '-'",
+        "FullDot": "Full date, separated by '.'"
+      }
+    }
+  }
+}

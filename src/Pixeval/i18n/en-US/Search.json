@@ -1,0 +1,82 @@
+{
+  "SearchBox": {
+    "PlaceholderText": "Enter keywords and press Enter to search"
+  },
+  "AdvancedOptions": {
+    "IllustrationTab": "Pixiv Illustrations",
+    "NovelTab": "Pixiv Novels",
+    "SauceNaoTab": "SauceNAO Image Search"
+  },
+  "Sections": {
+    "Common": "General",
+    "Illustration": "Illustration",
+    "Novel": "Novel"
+  },
+  "Common": {
+    "Unspecified": "Unspecified",
+    "SortOption": "Sort Order",
+    "StartDate": "Start Date",
+    "EndDate": "End Date",
+    "ShowAiWorks": "Show AI Works",
+    "MergePlainKeywordResults": "Merge plain keyword results",
+    "IncludeTranslatedTagResults": "Include translated tag results",
+    "IncludePotentialViolationWorks": "Include potentially violating works"
+  },
+  "Illustration": {
+    "MatchOption": "Match Scope",
+    "ContentType": "Content Type",
+    "RatioPattern": "Aspect Ratio",
+    "WidthMin": "Min Width",
+    "WidthMax": "Max Width",
+    "HeightMin": "Min Height",
+    "HeightMax": "Max Height",
+    "Tool": "Creation Tool"
+  },
+  "Novel": {
+    "MatchOption": "Match Scope",
+    "Language": "Language",
+    "ContentLengthOption": "Length Dimension",
+    "ContentLengthMin": "Min Length",
+    "ContentLengthMax": "Max Length",
+    "IsOriginalOnly": "Original novels only",
+    "Genre": "Genre",
+    "IsReplaceableOnly": "Replaceable terms only"
+  },
+  "Validation": {
+    "InvalidDateRange": {
+      "Title": "Invalid Date Range",
+      "Content": "The start date cannot be later than the end date, and future dates cannot be selected."
+    },
+    "InvalidNumericRange": {
+      "Title": "Invalid Numeric Range",
+      "Content": "The minimum value cannot be greater than the maximum value."
+    },
+    "PremiumSort": {
+      "Title": "Sort Option Unavailable",
+      "Content": "Sorting by bookmark count descending requires a Pixiv Premium membership."
+    },
+    "SearchFailed": {
+      "Title": "Search Failed"
+    }
+  },
+  "TrendingHeaderTextBlock": {
+    "Text": "Trending Tags"
+  },
+  "OpenId": {
+    "User": "Open user homepage",
+    "Illustration": "Open image page",
+    "Novel": "Open the novel page"
+  },
+  "SearchUser": "Search Users",
+  "SearchHistory": {
+    "Copy": "Copy",
+    "Delete": "Delete"
+  },
+  "SauceNAO": {
+    "Search": "SauceNAO Search",
+    "ProvideImage": "Click to select an image",
+    "Or": "or",
+    "PasteFromClipboard": "Paste image from clipboard",
+    "ProvideApiKey": "Please provide a SauceNAO API Key in Settings before using this feature."
+  }
+}

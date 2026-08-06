@@ -1,0 +1,30 @@
+{
+  "ActionButtonContentOpen": "Open",
+  "ActionButtonContentPause": "Pause",
+  "ActionButtonContentResume": "Resume",
+  "ActionButtonContentRetry": "Retry",
+  "CancelDownloadItem": {
+    "Label": "Cancel download"
+  },
+  "CheckErrorMessageInDetailItem": {
+    "Label": "Error detail"
+  },
+  "DownloadCancelled": "Download cancelled",
+  "ActionDownloadCancelled": "Cancel",
+  "DownloadCompleted": "Download competed",
+  "DownloadErrorMessageFormatted": "Download failed: {0}",
+  "DownloadPaused": "Download paused",
+  "DownloadPending": "Waiting for file processing to complete",
+  "DownloadQueued": "Download queued",
+  "DownloadRunningFormatted": "Progress: {0}%",
+  "ErrorMessageDialogTitle": "Error message",
+  "GoToPageItem": {
+    "Label": "View"
+  },
+  "OpenDownloadLocationItem": {
+    "Label": "Open download location"
+  },
+  "ResetItem": {
+    "Label": "Redownload"
+  }
+}

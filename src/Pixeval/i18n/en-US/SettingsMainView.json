@@ -1,0 +1,131 @@
+{
+  "CheckingForUpdate": "Checking update...",
+  "IsUpToDate": "Your app is already at newest version",
+  "IsInsider": "You're using the insider version",
+  "UpdateAvailable": {
+    "Major": "Major update available",
+    "Minor": "Minor update available",
+    "Build": "Build update available",
+    "Unknown": "Unknown update state"
+  },
+  "LanguageSystemDefault": "System default",
+  "DownloadPathMacroTextBox": {
+    "PlaceholderText": "Download path"
+  },
+  "DeleteHistoriesEntry": {
+    "Header": "Delete histories"
+  },
+  "DeleteDownloadHistoriesEntry": {
+    "Description": "By clicking on this button you will delete all the download histories",
+    "Header": "Clear download histories"
+  },
+  "DeleteBrowseHistoriesEntry": {
+    "Description": "By clicking on this button you will delete all browsing histories",
+    "Header": "Clear browsing histories"
+  },
+  "DeleteFileCacheEntry": {
+    "Description": "Delete all file caches",
+    "Header": "Delete caches"
+  },
+  "DeleteSearchHistoriesEntry": {
+    "Description": "By clicking on this button you will delete all search histories",
+    "Header": "Clear search histories"
+  },
+  "DownloadMacroInvalidInfoBarInputCannotBeBlank": "Input cannot be blank",
+  "DownloadMacroInvalidInfoBarMacroInvalidFormatted": "{0}, please re-enter the macro after correction",
+  "LastCheckedPrefix": "Last checked: ",
+  "CheckForUpdatesButton": {
+    "Content": "Check update"
+  },
+  "GitHubCheckForUpdatesEntry": {
+    "Header": "Get update from GitHub"
+  },
+  "MsStoreCheckForUpdatesEntry": {
+    "Header": "Search for updates from Microsoft Store"
+  },
+  "RateEntry": {
+    "Description": "Like Pixeval? Give a 5-⭐️ in Microsoft Store~",
+    "Header": "Rate Pixeval"
+  },
+  "BugReportEntry": {
+    "Header": "Feedback",
+    "Description": "Report bugs/feature requests (Please include logs in bug reports)"
+  },
+  "BugReportChannelsEntry": {
+    "Header": "Bug report channel",
+    "Description": "You can report bugs through following channels"
+  },
+  "GitHubBugReportEntry": {
+    "ToolTip": "Report bugs on GitHub"
+  },
+  "EMailBugReportEntry": {
+    "ToolTip": "Report bugs by sending Email"
+  },
+  "QQBugReportEntry": {
+    "ToolTip": "Report bugs in QQ group"
+  },
+  "OpenLogEntry": {
+    "Header": "Open log folder",
+    "Description": "Please include newest file in this folder while reporting bugs"
+  },
+  "OpenTempEntry": {
+    "Header": "Open temporary folder",
+    "Description": "Temporary files are stored here and will be delected each time the app starts"
+  },
+  "OpenLocalEntry": {
+    "Header": "Open local folder",
+    "Description": "Files under this folder are important and not meant to be modified"
+  },
+  "ResetDefaultSettingsEntry": {
+    "Description": "By clicking on this button you will reset all settings, this operation is irreversible",
+    "Header": "Reset default setting"
+  },
+  "ResetSettingConfirmationDialogContent": "This operation is irreversible",
+  "ResetSettingConfirmationDialogTitle": "Are you sure you want to reset all settings?",
+  "SwitchAccountEntry": {
+    "Description": "After logging in to a new account, the current account will be automatically logged out. Already opened pages will need to be manually refreshed or reopened to display the new account's content.",
+    "Header": "Switch Account"
+  },
+  "ProxyTextBoxErrorUri": "The URI of the proxy server is incorrect, please correct it",
+  "PredicateMacroHeader": "For the conditional macros below, the format is @{is_xxx?<true branch>:<false branch>}. If the condition is true, <true branch> is substituted; otherwise, <false branch> is substituted.",
+  "OpenExtensionsEntry": {
+    "Header": "Open Extensions Folder",
+    "Description": "Extension DLL files loaded by the application are stored here."
+  },
+  "BackupSettingsEntry": {
+    "Header": "Backup Settings",
+    "Description": "Export or import settings"
+  },
+  "OpenSettingsEntry": {
+    "Header": "Open Settings Folder",
+    "Description": "Application settings files are stored here (including sensitive account information)."
+  },
+  "ExportSettingsSuccess": "Settings exported successfully",
+  "ImportSettingsSuccess": "Settings imported successfully",
+  "ExportSettingsPlaintextEntry": {
+    "Header": "Export Settings as Plain Text",
+    "Description": "Export settings in YAML format"
+  },
+  "ImportSettingsPlaintextEntry": {
+    "Description": "Import settings from a YAML plain text file",
+    "Header": "Import Settings from Plain Text"
+  },
+  "AnimatedPathBlock": {
+    "Text": "Ugoira:"
+  },
+  "SinglePathBlock": {
+    "Text": "Single Image:"
+  },
+  "SetPathBlock": {
+    "Text": "Image Set:"
+  },
+  "NovelPathBlock": {
+    "Text": "Novel:"
+  },
+  "ReleaseNoteDialog": {
+    "Title": "Update log",
+    "TitleFormatted": "Release Notes {0}",
+    "Empty": "No release notes available"
+  },
+  "SettingsSaved": "Settings saved"
+}
