@@ -72,6 +72,11 @@
                 <!--  Dependencies  -->
                 <TextBlock Text="{I18N {x:Static pixeval:AboutPageResources+DependenciesSubtitleTextBlock.Text}}" Theme="{StaticResource SubtitleTextBlockStyle}" />
                 <ItemsControl ItemsSource="{x:Static settings:DependencyViewModel.DependencyViewModels}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="{StaticResource SettingSpacing}"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="{x:Type settings:DependencyViewModel}">
                             <controls:SettingsExpander

@@ -1,7 +1,8 @@
 <ResourceDictionary
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:SmoothScroll.Avalonia.Controls">
+    xmlns:controls="using:SmoothScroll.Avalonia.Controls"
+    xmlns:avalonia="clr-namespace:FluentIcons.Avalonia;assembly=FluentIcons.Avalonia">
 
     <ResourceDictionary.MergedDictionaries>
         <MergeResourceInclude Source="/Controls/AvatarImage.axaml" />
@@ -24,10 +25,154 @@
         <MergeResourceInclude Source="/Views/Viewers/WorkInfoPane.axaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <CornerRadius x:Key="ControlTopCornerRadius">4,4,0,0</CornerRadius>
-    <CornerRadius x:Key="ControlBottomCornerRadius">0,0,4,4</CornerRadius>
-    <CornerRadius x:Key="ControlLeftCornerRadius">4,0,0,4</CornerRadius>
-    <CornerRadius x:Key="ControlRightCornerRadius">0,4,4,0</CornerRadius>
+    <CornerRadius x:Key="ControlCornerRadius">4</CornerRadius>
+    <CornerRadius x:Key="ControlTopCornerRadius">8,8,0,0</CornerRadius>
+    <CornerRadius x:Key="ControlBottomCornerRadius">0,0,8,8</CornerRadius>
+    <CornerRadius x:Key="ControlLeftCornerRadius">8,0,0,8</CornerRadius>
+    <CornerRadius x:Key="ControlRightCornerRadius">0,8,8,0</CornerRadius>
+    
+    <x:Double x:Key="SettingSpacing">8</x:Double>
+    
+    <ControlTheme
+        x:Key="{x:Type CommandBar}"
+        BasedOn="{StaticResource {x:Type CommandBar}}"
+        TargetType="{x:Type CommandBar}">
+        <Setter Property="Background" Value="Transparent" />
+    </ControlTheme>
+    
+    <ControlTheme
+        x:Key="{x:Type CommandBarToggleButton}"
+        BasedOn="{StaticResource {x:Type CommandBarToggleButton}}"
+        TargetType="{x:Type CommandBarToggleButton}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Margin" Value="0 4"/>
+    </ControlTheme>
+    
+    <ControlTheme
+        x:Key="{x:Type CommandBarButton}"
+        BasedOn="{StaticResource {x:Type CommandBarButton}}"
+        TargetType="{x:Type CommandBarButton}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Margin" Value="0 4"/>
+    </ControlTheme>
+    
+    <ControlTheme
+        x:Key="{x:Type NavigationPage}"
+        BasedOn="{StaticResource {x:Type NavigationPage}}"
+        TargetType="NavigationPage">
+            <!-- 设置一些基础属性 -->
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BarHeight" Value="56"/>
+            <Setter Property="HasShadow" Value="False"/>
+            
+            <Setter Property="PageTransition">
+                <PageSlide Duration="0:0:0.3" Orientation="Horizontal" FillMode="Forward">
+                    <PageSlide.SlideInEasing>
+                        <SplineEasing X1="0.16" Y1="1" X2="0.3" Y2="1" />
+                    </PageSlide.SlideInEasing>
+                    <PageSlide.SlideOutEasing>
+                        <SplineEasing X1="0.2" Y1="0.85" X2="0.3" Y2="1" />
+                    </PageSlide.SlideOutEasing>
+                </PageSlide>
+            </Setter>
+            <Setter Property="ModalTransition">
+                <PageSlide Duration="0:0:0.25" Orientation="Vertical" FillMode="Forward">
+                    <PageSlide.SlideInEasing>
+                        <SplineEasing X1="0.16" Y1="1" X2="0.3" Y2="1" />
+                    </PageSlide.SlideInEasing>
+                    <PageSlide.SlideOutEasing>
+                        <SplineEasing X1="0.2" Y1="0.85" X2="0.3" Y2="1" />
+                    </PageSlide.SlideOutEasing>
+                </PageSlide>
+            </Setter>
+
+            <!-- 2. 重写控件的模板 -->
+            <Setter Property="Template">
+                <ControlTemplate TargetType="NavigationPage">
+                    <!-- 使用 DockPanel 来布局：导航栏在上，内容在下 -->
+                    <DockPanel>
+                        <!-- 导航栏区域 (DockPanel.Dock="Top") -->
+                        <Border x:Name="PART_NavigationBar"
+                                DockPanel.Dock="Top"
+                                Height="{TemplateBinding BarHeight}"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{DynamicResource ControlStrokeColorDefault}"
+                                BorderThickness="0,0,0,1">
+                            
+                            <!-- 导航栏内部布局 -->
+                            <Grid ColumnDefinitions="Auto,*,Auto"
+                                  Margin="12,0">
+                                
+                                <!-- 左侧：返回按钮 -->
+                                <Button
+                                    Name="PART_BackButton"
+                                    Grid.Column="0"
+                                    Margin="4"
+                                    Padding="8"
+                                    IsVisible="{TemplateBinding IsBackButtonEffectivelyVisible}"
+                                    BorderThickness="0"
+                                    Background="Transparent">
+                                    <Panel Background="Transparent">
+                                        <avalonia:FluentIcon Icon="ArrowLeft" IconVariant="Regular" IconSize="Size32" />
+                                        <ContentPresenter
+                                            Name="PART_BackButtonContentPresenter"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center" />
+                                    </Panel>
+                                </Button>
+
+                                <!-- 中间：页面标题 -->
+                                <ContentPresenter
+                                    Name="PART_Header"
+                                    Grid.Column="1"
+                                    FontWeight="SemiBold"
+                                    Content="{Binding CurrentPage?.Header, RelativeSource={RelativeSource TemplatedParent}, FallbackValue={x:Null}}"
+                                    ContentTemplate="{Binding CurrentPage?.HeaderTemplate, RelativeSource={RelativeSource TemplatedParent}, FallbackValue={x:Null}}"
+                                    VerticalAlignment="Center"
+                                    Margin="12,0" />
+
+                                <!-- 右侧：自定义命令栏 -->
+                                <ContentPresenter
+                                    Name="PART_TopCommandBar"
+                                    Grid.Column="2"
+                                    HorizontalAlignment="Right"
+                                    Content="{Binding CurrentPage?.(NavigationPage.TopCommandBar), RelativeSource={RelativeSource TemplatedParent}, FallbackValue={x:Null}}" />
+                            </Grid>
+                        </Border>
+                        <Border
+                            Name="PART_NavBarShadow"
+                            ZIndex="1"
+                            VerticalAlignment="Top"
+                            IsVisible="False"
+                            Height="4"
+                            IsHitTestVisible="False">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                                    <GradientStop Color="#0C000000" Offset="0" />
+                                    <GradientStop Color="#00000000" Offset="1" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                        <ContentPresenter
+                            Name="PART_ModalBackPresenter"
+                            ZIndex="99"
+                            IsVisible="False"
+                            Background="{TemplateBinding Background}" />
+                        <ContentPresenter
+                            Name="PART_ModalPresenter"
+                            ZIndex="100"
+                            IsVisible="False"
+                            Background="{TemplateBinding Background}" />
+
+                        <!-- 页面内容区域：用于显示当前页面 -->
+                        <ContentPresenter x:Name="PART_Content"
+                                          Content="{TemplateBinding Content}" />
+                    </DockPanel>
+                </ControlTemplate>
+            </Setter>
+        </ControlTheme>
 
     <ControlTheme
         x:Key="CaptionStrongTextBlockStyle"

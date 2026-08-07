@@ -112,14 +112,14 @@
         PointerReleased="Card_OnPointerReleased">
         <Border
             x:Name="CardBorder"
-            Padding="8"
+            Padding="16"
             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
             BorderThickness="2"
             ClipToBounds="True"
-            CornerRadius="8">
-            <DockPanel VerticalSpacing="8">
+            CornerRadius="16">
+            <DockPanel VerticalSpacing="16">
                 <Border DockPanel.Dock="Bottom" IsVisible="{Binding !HideHomePageCardTitle, Source={x:Static views:PixevalSettings.Instance}}">
-                    <DockPanel VerticalSpacing="5">
+                    <DockPanel>
                         <Button
                             Width="28"
                             Height="28"
@@ -133,7 +133,7 @@
                             ToolTip.Tip="{I18N {x:Static pixeval:HomePageResources+OpenCardPageButton.ToolTip}}" />
                         <TextBlock
                             VerticalAlignment="Center"
-                            FontSize="12"
+                            FontSize="16"
                             FontWeight="SemiBold"
                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                             MaxLines="1"
