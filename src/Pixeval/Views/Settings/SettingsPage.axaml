@@ -8,19 +8,14 @@
     xmlns:pixeval="using:Pixeval"
     xmlns:viewModels="using:Pixeval.ViewModels"
     x:DataType="{x:Type viewModels:SettingsPageViewModel}"
+    HasShadow="True"
     Header="{I18N {x:Static pixeval:MainPageResources+Tab.Settings}}"
     Icon="{markup:SymbolIcon Settings,
                              FontSize=16,
                              IconVariant=Color}"
     mc:Ignorable="d"
     d:DesignHeight="450"
-    d:DesignWidth="800"
-    HasShadow="True">
-    <NavigationPage.Styles>
-        <Style Selector="StackPanel">
-            <Setter Property="Spacing" Value="{StaticResource SettingSpacing}" />
-        </Style>
-    </NavigationPage.Styles>
+    d:DesignWidth="800">
     <NavigationPage.DataContext>
         <viewModels:SettingsPageViewModel />
     </NavigationPage.DataContext>

@@ -1,4 +1,4 @@
-﻿<ContentPage
+<ContentPage
     x:Class="Pixeval.Views.Settings.SettingsSubView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -13,7 +13,7 @@
         <ItemsControl x:Name="ItemsControl" Margin="20">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel />
+                    <StackPanel Spacing="{StaticResource SettingStackPanelSpacing}" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>

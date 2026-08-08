@@ -14,7 +14,7 @@
     d:DesignHeight="800"
     d:DesignWidth="600">
     <ScrollViewer>
-        <StackPanel Margin="20">
+        <StackPanel Margin="20" Spacing="{StaticResource SettingStackPanelSpacing}">
             <controls:SettingsExpander Header="{I18N {x:Static pixeval:HelpPageResources+DownloadMacroHelpExpander.Header}}" HeaderIcon="{markup:SymbolIcon Rename}">
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">

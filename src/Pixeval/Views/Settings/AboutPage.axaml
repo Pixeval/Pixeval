@@ -74,7 +74,7 @@
                 <ItemsControl ItemsSource="{x:Static settings:DependencyViewModel.DependencyViewModels}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel />
+                            <StackPanel Spacing="{StaticResource SettingStackPanelSpacing}" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
