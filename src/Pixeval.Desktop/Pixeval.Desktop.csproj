@@ -16,8 +16,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
-        <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="$(AvaloniaVersion)" PrivateAssets="All" Publish="True" />
-<!--        <PackageReference Include="HotAvalonia" Version="3.*" PrivateAssets="All" Publish="True" />-->
 	</ItemGroup>
 
 	<ItemGroup>

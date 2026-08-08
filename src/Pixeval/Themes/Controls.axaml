@@ -2,7 +2,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:SmoothScroll.Avalonia.Controls"
-    xmlns:avalonia="clr-namespace:FluentIcons.Avalonia;assembly=FluentIcons.Avalonia">
+    xmlns:icon="using:FluentIcons.Avalonia">
 
     <ResourceDictionary.MergedDictionaries>
         <MergeResourceInclude Source="/Controls/AvatarImage.axaml" />
@@ -26,10 +26,10 @@
     </ResourceDictionary.MergedDictionaries>
 
     <CornerRadius x:Key="ControlCornerRadius">4</CornerRadius>
-    <CornerRadius x:Key="ControlTopCornerRadius">8,8,0,0</CornerRadius>
-    <CornerRadius x:Key="ControlBottomCornerRadius">0,0,8,8</CornerRadius>
-    <CornerRadius x:Key="ControlLeftCornerRadius">8,0,0,8</CornerRadius>
-    <CornerRadius x:Key="ControlRightCornerRadius">0,8,8,0</CornerRadius>
+    <CornerRadius x:Key="ControlTopCornerRadius">4,4,0,0</CornerRadius>
+    <CornerRadius x:Key="ControlBottomCornerRadius">0,0,4,4</CornerRadius>
+    <CornerRadius x:Key="ControlLeftCornerRadius">4,0,0,4</CornerRadius>
+    <CornerRadius x:Key="ControlRightCornerRadius">0,4,4,0</CornerRadius>
     
     <x:Double x:Key="SettingSpacing">8</x:Double>
     
@@ -60,8 +60,7 @@
     
     <ControlTheme
         x:Key="{x:Type NavigationPage}"
-        BasedOn="{StaticResource {x:Type NavigationPage}}"
-        TargetType="NavigationPage">
+        TargetType="{x:Type NavigationPage}">
             <!-- 设置一些基础属性 -->
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BarHeight" Value="56"/>
@@ -88,14 +87,33 @@
                 </PageSlide>
             </Setter>
 
-            <!-- 2. 重写控件的模板 -->
             <Setter Property="Template">
-                <ControlTemplate TargetType="NavigationPage">
-                    <!-- 使用 DockPanel 来布局：导航栏在上，内容在下 -->
-                    <DockPanel>
-                        <!-- 导航栏区域 (DockPanel.Dock="Top") -->
+                <ControlTemplate TargetType="{x:Type NavigationPage}">
+                    <Panel ClipToBounds="True">
+                        <DockPanel VerticalAlignment="Top">
+                            <Border
+                                Name="PART_NavBarSpacer"
+                                Height="{TemplateBinding BarHeight}"
+                                IsVisible="True"
+                                DockPanel.Dock="Top" />
+                            <ContentPresenter
+                                Name="PART_BottomCommandBar"
+                                DockPanel.Dock="Bottom"
+                                Background="{TemplateBinding Background}"
+                                Content="{Binding CurrentPage.(NavigationPage.BottomCommandBar), RelativeSource={RelativeSource TemplatedParent}, FallbackValue={x:Null}}" />
+                            <Panel
+                                Name="PART_ContentHost"
+                                Background="{TemplateBinding Background}"
+                                ClipToBounds="True">
+                                <ContentPresenter Name="PART_PageBackPresenter" />
+                                <ContentPresenter Name="PART_PagePresenter" />
+                            </Panel>
+                        </DockPanel>
+                        
+                        
                         <Border x:Name="PART_NavigationBar"
-                                DockPanel.Dock="Top"
+                                VerticalAlignment="Top"
+                                MinHeight="{TemplateBinding EffectiveBarHeight}"
                                 Height="{TemplateBinding BarHeight}"
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{DynamicResource ControlStrokeColorDefault}"
@@ -115,7 +133,7 @@
                                     BorderThickness="0"
                                     Background="Transparent">
                                     <Panel Background="Transparent">
-                                        <avalonia:FluentIcon Icon="ArrowLeft" IconVariant="Regular" IconSize="Size32" />
+                                        <icon:SymbolIcon Symbol="ArrowLeft" IconVariant="Regular" FontSize="16" />
                                         <ContentPresenter
                                             Name="PART_BackButtonContentPresenter"
                                             VerticalAlignment="Center"
@@ -125,6 +143,7 @@
 
                                 <!-- 中间：页面标题 -->
                                 <ContentPresenter
+                                    FontSize="25"
                                     Name="PART_Header"
                                     Grid.Column="1"
                                     FontWeight="SemiBold"
@@ -165,11 +184,7 @@
                             ZIndex="100"
                             IsVisible="False"
                             Background="{TemplateBinding Background}" />
-
-                        <!-- 页面内容区域：用于显示当前页面 -->
-                        <ContentPresenter x:Name="PART_Content"
-                                          Content="{TemplateBinding Content}" />
-                    </DockPanel>
+                    </Panel>
                 </ControlTemplate>
             </Setter>
         </ControlTheme>

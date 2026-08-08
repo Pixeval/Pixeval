@@ -14,7 +14,13 @@
                              IconVariant=Color}"
     mc:Ignorable="d"
     d:DesignHeight="450"
-    d:DesignWidth="800">
+    d:DesignWidth="800"
+    HasShadow="True">
+    <NavigationPage.Styles>
+        <Style Selector="StackPanel">
+            <Setter Property="Spacing" Value="{StaticResource SettingSpacing}" />
+        </Style>
+    </NavigationPage.Styles>
     <NavigationPage.DataContext>
         <viewModels:SettingsPageViewModel />
     </NavigationPage.DataContext>
