@@ -223,7 +223,7 @@ public partial class TabViewContainer : ViewContainerBase
         var snapshot = pages.ToArray();
         var menu = new ContextMenu
         {
-            ItemsSource = new MenuItem[]
+            ItemsSource = new[]
             {
                 CreateTabCloseMenuItem(container, contextPage, snapshot, TabCloseScope.Others),
                 CreateTabCloseMenuItem(container, contextPage, snapshot, TabCloseScope.Left),

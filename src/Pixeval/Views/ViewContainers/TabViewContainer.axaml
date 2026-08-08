@@ -27,6 +27,7 @@
         <StackPanel
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
+            IsVisible="{Binding #TabsControl.CurrentPage, Converter={x:Static ObjectConverters.IsNull}}"
             Spacing="10">
             <TextBlock
                 HorizontalAlignment="Center"

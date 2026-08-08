@@ -143,7 +143,7 @@
                         BorderThickness="0,0,0,1">
 
                         <!--  导航栏内部布局  -->
-                        <Grid Margin="12,0" ColumnDefinitions="Auto,*,Auto">
+                        <Grid ColumnDefinitions="Auto,*,Auto">
 
                             <!--  左侧：返回按钮  -->
                             <Button
