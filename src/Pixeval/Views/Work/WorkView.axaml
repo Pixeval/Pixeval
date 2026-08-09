@@ -7,6 +7,7 @@
     xmlns:entry="using:Pixeval.Views.Entry"
     xmlns:local="using:Pixeval.Views.Work"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="using:Pixeval.Views"
     xmlns:vm="using:Pixeval.ViewModels"
     x:DataType="{x:Type vm:IOperableViewViewModel}"
     DataContextChanged="StyledElement_OnDataContextChanged"
@@ -46,7 +47,7 @@
                 <Setter.Value>
                     <ItemsPanelTemplate>
                         <controls:VirtualizingWrapPanel
-                            ItemHeight="200"
+                            ItemHeight="{x:Static views:PixevalSettings.IllustrationLinedFlowItemHeight}"
                             ItemSpacing="5"
                             ItemsAlignment="Stretch"
                             LineSpacing="5" />
@@ -68,6 +69,20 @@
                 <Setter.Value>
                     <ItemsPanelTemplate>
                         <controls:VirtualizingAdaptiveGrid
+                            ItemSize="{x:Static views:PixevalSettings.IllustrationGridItemSize}"
+                            ItemSpacing="5"
+                            ItemsAlignment="Stretch"
+                            LineSize="{x:Static views:PixevalSettings.IllustrationGridLineSize}"
+                            LineSpacing="5" />
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style Selector="local|WorkView:novel ListBox">
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <controls:VirtualizingAdaptiveGrid
                             ItemSize="350"
                             ItemSpacing="5"
                             ItemsAlignment="Stretch"
@@ -83,7 +98,7 @@
                     <ItemsPanelTemplate>
                         <controls:VirtualizingMasonryPanel
                             ColumnSpacing="5"
-                            ColumnWidth="250"
+                            ColumnWidth="{x:Static views:PixevalSettings.IllustrationMasonryColumnWidth}"
                             RowSpacing="5" />
                     </ItemsPanelTemplate>
                 </Setter.Value>

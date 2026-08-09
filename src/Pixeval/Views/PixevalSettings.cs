@@ -19,6 +19,14 @@ public class PixevalSettings : ViewModelBase
 
     public static ThumbnailLayoutType LayoutType => Settings.BrowsingExperienceSettings.ThumbnailLayoutType;
 
+    public static double IllustrationLinedFlowItemHeight => Settings.BrowsingExperienceSettings.IllustrationLinedFlowItemHeight;
+
+    public static double IllustrationGridItemSize => Settings.BrowsingExperienceSettings.IllustrationGridItemSize;
+
+    public static double IllustrationGridLineSize => Settings.BrowsingExperienceSettings.IllustrationGridLineSize;
+
+    public static double IllustrationMasonryColumnWidth => Settings.BrowsingExperienceSettings.IllustrationMasonryColumnWidth;
+
     public static TokenUser Me => App.AppViewModel.MakoClient.Me!;
 
     public static long MyId => Me.Id;

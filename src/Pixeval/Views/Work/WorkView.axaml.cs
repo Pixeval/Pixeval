@@ -44,11 +44,12 @@ public sealed partial class WorkView : UserControl, IDisposable
 
     private void UpdateLayoutPseudoClasses()
     {
-        var actualLayoutType = DataContext is IOperableViewViewModel { RequireAdaptiveGrid: true } ? ThumbnailLayoutType.Grid : LayoutType;
-        PseudoClasses.Set(":linedFlow", actualLayoutType is ThumbnailLayoutType.LinedFlow);
-        PseudoClasses.Set(":verticalStack", actualLayoutType is ThumbnailLayoutType.VerticalStack);
-        PseudoClasses.Set(":grid", actualLayoutType is ThumbnailLayoutType.Grid);
-        PseudoClasses.Set(":masonry", actualLayoutType is ThumbnailLayoutType.Masonry);
+        var isNovel = DataContext is IOperableViewViewModel { RequireAdaptiveGrid: true };
+        PseudoClasses.Set(":novel", isNovel);
+        PseudoClasses.Set(":linedFlow", !isNovel && LayoutType is ThumbnailLayoutType.LinedFlow);
+        PseudoClasses.Set(":verticalStack", !isNovel && LayoutType is ThumbnailLayoutType.VerticalStack);
+        PseudoClasses.Set(":grid", !isNovel && LayoutType is ThumbnailLayoutType.Grid);
+        PseudoClasses.Set(":masonry", !isNovel && LayoutType is ThumbnailLayoutType.Masonry);
     }
 
     private async void WorkItem_OnTapped(object? sender, TappedEventArgs tappedEventArgs)

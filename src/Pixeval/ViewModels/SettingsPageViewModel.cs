@@ -94,7 +94,11 @@ public class SettingsPageViewModel : ViewModelBase
                 .String(t => t.WebCookie,
                     entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.Cookie = t))
             .NewGroup(t => t.BrowsingExperienceSettings, group => group
-                .Enum(t => t.ThumbnailLayoutType)
+                .MultiValuesWithMainValue(t => t.ThumbnailLayoutType, entries => entries
+                    .Int(t => t.IllustrationLinedFlowItemHeight, 50, 1000, 10)
+                    .Int(t => t.IllustrationGridItemSize, 50, 1000, 10)
+                    .Int(t => t.IllustrationGridLineSize, 50, 1000, 10)
+                    .Int(t => t.IllustrationMasonryColumnWidth, 50, 1000, 10))
                 .Enum(t => t.BrowseMode)
                 .Enum(t => t.BrowseDirection)
                 .Int(t => t.IllustrationViewerAutoPlayInterval, 1, 60, 1)

@@ -15,6 +15,18 @@ public record BrowsingExperienceSettingsGroup
     [SettingsEntry(Symbol.GlanceHorizontal, AppSettingsResources.ThumbnailLayoutTypeEntry.Header, AppSettingsResources.ThumbnailLayoutTypeEntry.Description)]
     public ThumbnailLayoutType ThumbnailLayoutType { get; set; } = ThumbnailLayoutType.LinedFlow;
 
+    [SettingsEntry(Symbol.AutoFitHeight, AppSettingsResources.IllustrationLinedFlowItemHeightEntry.Header, AppSettingsResources.IllustrationLinedFlowItemHeightEntry.Description)]
+    public int IllustrationLinedFlowItemHeight { get; set; } = 200;
+
+    [SettingsEntry(Symbol.AutoFitWidth, AppSettingsResources.IllustrationGridItemSizeEntry.Header, AppSettingsResources.IllustrationGridItemSizeEntry.Description)]
+    public int IllustrationGridItemSize { get; set; } = 150;
+
+    [SettingsEntry(Symbol.AutoFitHeight, AppSettingsResources.IllustrationGridLineSizeEntry.Header, AppSettingsResources.IllustrationGridLineSizeEntry.Description)]
+    public int IllustrationGridLineSize { get; set; } = 200;
+
+    [SettingsEntry(Symbol.AutoFitWidth, AppSettingsResources.IllustrationMasonryColumnWidthEntry.Header, AppSettingsResources.IllustrationMasonryColumnWidthEntry.Description)]
+    public int IllustrationMasonryColumnWidth { get; set; } = 250;
+
     [SettingsEntry(Symbol.CardUiPortraitFlip, AppSettingsResources.BrowseMode.Header, AppSettingsResources.BrowseMode.Description)]
     public BrowseMode BrowseMode { get; set; } = BrowseMode.Swipe;
 

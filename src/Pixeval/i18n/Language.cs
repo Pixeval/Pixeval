@@ -117,6 +117,26 @@ namespace Pixeval
             public const string Description = "AppSettings.HomePageRowsEntry.Description";
             public const string Header = "AppSettings.HomePageRowsEntry.Header";
         }
+        public static class IllustrationGridItemSizeEntry
+        {
+            public const string Description = "AppSettings.IllustrationGridItemSizeEntry.Description";
+            public const string Header = "AppSettings.IllustrationGridItemSizeEntry.Header";
+        }
+        public static class IllustrationGridLineSizeEntry
+        {
+            public const string Description = "AppSettings.IllustrationGridLineSizeEntry.Description";
+            public const string Header = "AppSettings.IllustrationGridLineSizeEntry.Header";
+        }
+        public static class IllustrationLinedFlowItemHeightEntry
+        {
+            public const string Description = "AppSettings.IllustrationLinedFlowItemHeightEntry.Description";
+            public const string Header = "AppSettings.IllustrationLinedFlowItemHeightEntry.Header";
+        }
+        public static class IllustrationMasonryColumnWidthEntry
+        {
+            public const string Description = "AppSettings.IllustrationMasonryColumnWidthEntry.Description";
+            public const string Header = "AppSettings.IllustrationMasonryColumnWidthEntry.Header";
+        }
         public static class IllustrationViewerAutoPlayIntervalEntry
         {
             public const string Description = "AppSettings.IllustrationViewerAutoPlayIntervalEntry.Description";
