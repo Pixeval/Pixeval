@@ -8,6 +8,8 @@ using System.Linq.Expressions;
 using AutoSettingsPage;
 using AutoSettingsPage.Avalonia;
 using AutoSettingsPage.Models;
+using Avalonia.Controls.Templates;
+using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
 using FluentIcons.Common;
@@ -26,6 +28,26 @@ namespace Pixeval.Models.Settings;
 
 public static class LocalSettingsEntryHelper
 {
+    private static IDataTemplate LanguageValueTemplate { get; } =
+        new FuncDataTemplate<ISingleValueSettingsEntry<string>>(static (entry, _) => new LanguageSettingsValue { Entry = entry });
+
+    private static IDataTemplate IPSetValueTemplate { get; } =
+        new FuncDataTemplate<ISingleValueSettingsEntry<ObservableCollection<string>>>(static (entry, _) => new IPListInput { Entry = entry });
+
+    private static IDataTemplate FontValueTemplate { get; } =
+        new FuncDataTemplate<ISingleValueSettingsEntry<ObservableCollection<string>>>(static (entry, _) => new FontSettingsValue { Entry = entry });
+
+    private static IDataTemplate StringCollectionValueTemplate { get; } =
+        new FuncDataTemplate<ISingleValueSettingsEntry<ObservableCollection<string>>>(static (entry, _) => new TokenizingBox
+        {
+            AllowDuplicateTokens = false,
+            PlaceholderText = entry.Placeholder,
+            TokenSeparator = ",",
+            [!TokenizingBox.ItemsSourceProperty] = CompiledBinding.Create<ISingleValueSettingsEntry<ObservableCollection<string>>, ObservableCollection<string>>(
+                value => value.Value,
+                entry)
+        });
+
     public static void Initialize()
     {
     }
@@ -36,26 +58,28 @@ public static class LocalSettingsEntryHelper
 
         _ = SettingsEntryHelper.FactoryDictionary
             .AddPredefined()
-            .AddOpenGeneric<ISingleValueSettingsEntry<string>, LanguageSettingsCard>(typeof(LanguageSettingsEntry<>))
-            .AddOpenGeneric<ISingleValueSettingsEntry<ObservableCollection<string>>, IPListInput>(typeof(IPSetSettingsEntry<>))
-            .AddOpenGeneric<IMultiValuesWithSwitchSettingsEntry, DomainFrontingSettingsExpander>(typeof(DomainFrontingSettingsEntry<>))
             .AddOpenGeneric<ISingleValueSettingsEntry<ObservableCollection<string>>, StringCollectionSettingsExpander>(typeof(CollectionSettingsEntry<,>))
-            .AddOpenGeneric<ISingleValueSettingsEntry<ObservableCollection<string>>, FontSettingsExpander>(typeof(FontSettingsEntry<>))
+            .AddOpenGeneric<ISingleValueSettingsEntry<ObservableCollection<string>>, StringCollectionSettingsExpander>(typeof(FontSettingsEntry<>))
+            .AddOpenGeneric<IMultiValuesWithMainValueSettingsEntry<ISingleValueSettingsEntry<bool>>, DomainFrontingSettingsExpander>(typeof(DomainFrontingSettingsEntry<>))
             .Add<DownloadMacroSettingsEntry, DownloadMacroSettingsExpander>()
-            .Add<ProxySettingsEntry, ProxySettingsExpander>()
-            .Add<IllustrationDownloadFormatSettingsEntry, EnumSettingsCard>()
-            .Add<NovelDownloadFormatSettingsEntry, EnumSettingsCard>()
-            .Add<UgoiraDownloadFormatSettingsEntry, EnumSettingsCard>()
             .Add<WorkSubscriptionsSettingsEntry, WorkSubscriptionsSettingsExpander>()
+            .Add<ExtensionSettingsEntry<IStringsArraySettingsExtension, ObservableCollection<string>>, StringCollectionSettingsExpander>();
 
-            .Add<ExtensionSettingsEntry<IStringSettingsExtension, string>, StringSettingsCard>()
-            .Add<ExtensionDoubleSettingsEntry, DoubleSettingsCard>()
-            .Add<ExtensionIntSettingsEntry, DoubleSettingsCard>()
-            .Add<ExtensionSettingsEntry<IBoolSettingsExtension, bool>, BoolSettingsCard>()
-            .Add<ExtensionEnumSettingsEntry, EnumSettingsCard>()
-            .Add<ExtensionSettingsEntry<IDateTimeOffsetSettingsExtension, DateTime>, DateSettingsCard>()
-            .Add<ExtensionSettingsEntry<IStringsArraySettingsExtension, ObservableCollection<string>>, StringCollectionSettingsExpander>()
-            .Add<ExtensionSettingsEntry<IColorSettingsExtension, uint>, ColorSettingsCard>();
+        _ = SettingsEntryHelper.ValueFactoryDictionary
+            .AddOpenGenericValue<ISingleValueSettingsEntry<string>>(
+                typeof(LanguageSettingsEntry<>),
+                LanguageValueTemplate)
+            .AddOpenGenericValue<ISingleValueSettingsEntry<ObservableCollection<string>>>(
+                typeof(IPSetSettingsEntry<>),
+                IPSetValueTemplate)
+            .AddOpenGenericValue<ISingleValueSettingsEntry<ObservableCollection<string>>>(
+                typeof(FontSettingsEntry<>),
+                FontValueTemplate)
+            .AddOpenGenericValue<ISingleValueSettingsEntry<ObservableCollection<string>>>(
+                typeof(CollectionSettingsEntry<,>),
+                StringCollectionValueTemplate)
+            .AddValue<ExtensionSettingsEntry<IStringsArraySettingsExtension, ObservableCollection<string>>>(
+                StringCollectionValueTemplate);
 
         RegisterAttach<TargetFilter>(t =>
         {
@@ -225,6 +249,9 @@ public static class LocalSettingsEntryHelper
             if (entry is ISettingsValueReset<NovelSettingsGroup> novel)
                 novel.ValueReset(resetAppSettings.NovelSettings);
 
+            if (entry is IMultiValuesWithMainValueSettingsEntry multiValuesWithMainValue)
+                multiValuesWithMainValue.MainValue.LocalValueReset(resetAppSettings);
+
             if (entry is IMultiValuesSettingsEntry m)
             {
                 foreach (var e in m.Entries)
@@ -291,6 +318,19 @@ public static class LocalSettingsEntryHelper
             });
         }
 
+        public ISettingsGroupBuilder<TSettings> MultiValuesWithMainValue<TEnum>(
+            Expression<Func<TSettings, TEnum>> property,
+            Action<ISettingsGroupBuilder<TSettings>>? configValues = null,
+            Action<MultiValuesWithMainValueEntry<TSettings, EnumSettingsEntry<TSettings, object>>>? config = null)
+            where TEnum : struct, Enum
+        {
+            var mainValue = new EnumSettingsEntry<TSettings, object>(
+                builder.Settings,
+                Transform(property),
+                SymbolComboBoxItem.GetValues<TEnum>());
+            return builder.MultiValuesWithMainValue(mainValue, configValues, config);
+        }
+
         public ISettingsGroupBuilder<TSettings> Language(
             Expression<Func<TSettings, string>> property,
             Action<LanguageSettingsEntry<TSettings>>? config = null) =>
@@ -305,16 +345,6 @@ public static class LocalSettingsEntryHelper
             Expression<Func<TSettings, bool>> property,
             Action<ISettingsGroupBuilder<TSettings>>? configValues,
             Action<DomainFrontingSettingsEntry<TSettings>>? config = null)
-        {
-            var simpleAddSettingsEntry = SettingsBuilder.CreateGroup(builder.Settings);
-            configValues?.Invoke(simpleAddSettingsEntry);
-            return builder.Add(new(builder.Settings, property, simpleAddSettingsEntry.Build()), config);
-        }
-
-        public ISettingsGroupBuilder<TSettings> DateWithSwitch(
-            Expression<Func<TSettings, bool>> property,
-            Action<ISettingsGroupBuilder<TSettings>>? configValues,
-            Action<DateWithSwitchSettingsEntry<TSettings>>? config = null)
         {
             var simpleAddSettingsEntry = SettingsBuilder.CreateGroup(builder.Settings);
             configValues?.Invoke(simpleAddSettingsEntry);

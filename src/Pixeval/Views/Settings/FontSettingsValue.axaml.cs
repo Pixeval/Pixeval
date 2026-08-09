@@ -8,13 +8,15 @@ using AutoSettingsPage.Avalonia;
 using AutoSettingsPage.Models;
 using Avalonia.Controls;
 using Avalonia.Media;
-using CommunityToolkit.Avalonia.Controls;
+using CommunityToolkit.Avalonia.Controls.Converters;
 using Pixeval.Utilities;
 
 namespace Pixeval.Views.Settings;
 
-public partial class FontSettingsExpander : SettingsExpander, IEntryControl<ISingleValueSettingsEntry<ObservableCollection<string>>>
+public partial class FontSettingsValue : UserControl, IEntryControl<ISingleValueSettingsEntry<ObservableCollection<string>>>
 {
+    public static DoubleLessThanOrEqualConverter NarrowLayoutConverter { get; } = new() { Threshold = 476 };
+
     public static IReadOnlyList<FontFamily> AvailableFonts { get; } =
         [.. FontManager.Current.SystemFonts.Where(FontFamilyHelper.IsUsable)];
 
@@ -29,7 +31,7 @@ public partial class FontSettingsExpander : SettingsExpander, IEntryControl<ISin
         }
     }
 
-    public FontSettingsExpander() => InitializeComponent();
+    public FontSettingsValue() => InitializeComponent();
 
     private void SelectingItemsControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {

@@ -3,13 +3,13 @@
 
 using AutoSettingsPage.Avalonia;
 using AutoSettingsPage.Models;
-using CommunityToolkit.Avalonia.Controls;
+using Avalonia.Controls;
 
 namespace Pixeval.Views.Settings;
 
-public partial class LanguageSettingsCard : SettingsCard, IEntryControl<ISingleValueSettingsEntry<string>>
+public partial class LanguageSettingsValue : ComboBox, IEntryControl<ISingleValueSettingsEntry<string>>
 {
     public ISingleValueSettingsEntry<string> Entry { set => DataContext = value; }
 
-    public LanguageSettingsCard() => InitializeComponent();
+    public LanguageSettingsValue() => InitializeComponent();
 }

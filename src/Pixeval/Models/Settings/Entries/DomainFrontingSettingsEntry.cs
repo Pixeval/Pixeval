@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using AutoSettingsPage.Models;
 
@@ -13,7 +12,7 @@ public class DomainFrontingSettingsEntry<TSettings>(
     TSettings settings,
     Expression<Func<TSettings, bool>> property,
     IReadOnlyList<ISettingsEntry> entries)
-    : MultiValuesWithSwitchEntry<TSettings>(settings, property, entries)
-{
-    public IReadOnlyList<IPSetSettingsEntry<TSettings>> IPSetSettingsEntries => [.. Entries.OfType<IPSetSettingsEntry<TSettings>>()];
-}
+    : MultiValuesWithMainValueEntry<TSettings, BoolSettingsEntry<TSettings>>(
+        settings,
+        new BoolSettingsEntry<TSettings>(settings, property),
+        entries);

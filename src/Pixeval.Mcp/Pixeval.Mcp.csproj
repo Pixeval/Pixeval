@@ -7,8 +7,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ModelContextProtocol" Version="2.0.0-preview.1" />
-		<PackageReference Include="ModelContextProtocol.AspNetCore" Version="2.0.0-preview.1" />
+		<PackageReference Include="ModelContextProtocol" Version="2.1.0" />
+		<PackageReference Include="ModelContextProtocol.AspNetCore" Version="2.1.0" />
 	</ItemGroup>
 
 	<ItemGroup>

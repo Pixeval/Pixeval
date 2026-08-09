@@ -1,0 +1,57 @@
+<UserControl
+    x:Class="Pixeval.Views.Settings.FontSettingsValue"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:converters="using:Pixeval.Views.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Pixeval.Views.Settings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:AutoSettingsPage.Models"
+    xmlns:sco="using:System.Collections.ObjectModel"
+    x:DataType="{x:Type models:ISingleValueSettingsEntry,
+                        x:TypeArguments=sco:ObservableCollection(x:String)}"
+    mc:Ignorable="d"
+    d:DesignHeight="100"
+    d:DesignWidth="500">
+    <UserControl.Styles>
+        <Style Selector="DockPanel#FontPanel &gt; ComboBox#FontComboBox">
+            <Setter Property="DockPanel.Dock" Value="Right" />
+            <Setter Property="MinWidth" Value="200" />
+        </Style>
+        <Style Selector="DockPanel#FontPanel.narrow &gt; ComboBox#FontComboBox">
+            <Setter Property="DockPanel.Dock" Value="Bottom" />
+            <Setter Property="Grid.Row" Value="0" />
+        </Style>
+    </UserControl.Styles>
+    <DockPanel
+        x:Name="FontPanel"
+        Classes.narrow="{Binding $self.Bounds.Width, Converter={x:Static local:FontSettingsValue.NarrowLayoutConverter}}"
+        HorizontalSpacing="5"
+        LastChildFill="True"
+        VerticalSpacing="5">
+        <ComboBox
+            x:Name="FontComboBox"
+            HorizontalAlignment="Stretch"
+            ItemsSource="{x:Static local:FontSettingsValue.AvailableFonts}"
+            SelectionChanged="SelectingItemsControl_OnSelectionChanged">
+            <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type FontFamily}">
+                    <TextBlock FontFamily="{Binding}" Text="{Binding Name}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <controls:TokenizingBox
+            x:Name="FontTokenizingBox"
+            AllowDuplicateTokens="False"
+            ItemsSource="{Binding Value}"
+            PlaceholderText="{Binding Placeholder}"
+            TokenSeparator=",">
+            <controls:TokenizingBox.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type x:String}">
+                    <TextBlock FontFamily="{Binding Converter={x:Static converters:PixevalConverters.FontFamilyConverter}}" Text="{Binding}" />
+                </DataTemplate>
+            </controls:TokenizingBox.ItemTemplate>
+        </controls:TokenizingBox>
+    </DockPanel>
+</UserControl>

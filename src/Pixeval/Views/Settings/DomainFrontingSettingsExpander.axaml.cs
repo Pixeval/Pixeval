@@ -10,7 +10,7 @@ using Pixeval.Models.Settings.Entries;
 
 namespace Pixeval.Views.Settings;
 
-public partial class DomainFrontingSettingsExpander : SettingsExpander, IEntryControl<IMultiValuesWithSwitchSettingsEntry>
+public partial class DomainFrontingSettingsExpander : SettingsExpander, IEntryControl<IMultiValuesWithMainValueSettingsEntry<ISingleValueSettingsEntry<bool>>>
 {
     public ISettingsEntry? FirstIPSetSettingsEntry
     {
@@ -18,30 +18,26 @@ public partial class DomainFrontingSettingsExpander : SettingsExpander, IEntryCo
         private set => SetAndRaise(FirstIPSetSettingsEntryProperty, ref field, value);
     }
 
-    public IMultiValuesWithSwitchSettingsEntry Entry
+    public IMultiValuesWithMainValueSettingsEntry<ISingleValueSettingsEntry<bool>> Entry
     {
         set
         {
             DataContext = value;
-            FirstIPSetSettingsEntry = value.Entries.FirstOrDefault(static entry => IsIPSetSettingsEntry(entry));
+            FirstIPSetSettingsEntry = value.Entries.FirstOrDefault(static entry => entry is IIPSetSettingsEntry);
             while (Items.Count > 1)
                 Items.RemoveAt(0);
             WrapPanel.Children.Clear();
             foreach (var entry in value.Entries)
-                if (IsIPSetSettingsEntry(entry))
-                    WrapPanel.Children.Add(SettingsEntryHelper.GetControl(entry));
+            {
+                if (entry is IIPSetSettingsEntry valueEntry)
+                    WrapPanel.Children.Add(SettingsEntryHelper.GetValueControl(valueEntry, value));
                 else
                     Items.Insert(Items.Count - 1, SettingsEntryHelper.GetControl(entry));
+            }
         }
     }
 
-    public DomainFrontingSettingsExpander()
-    {
-        InitializeComponent();
-    }
-
-    private static bool IsIPSetSettingsEntry(ISettingsEntry entry) =>
-        entry.GetType().IsGenericType && entry.GetType().GetGenericTypeDefinition() == typeof(IPSetSettingsEntry<>);
+    public DomainFrontingSettingsExpander() => InitializeComponent();
 
     public static readonly DirectProperty<DomainFrontingSettingsExpander, ISettingsEntry?> FirstIPSetSettingsEntryProperty =
         AvaloniaProperty.RegisterDirect<DomainFrontingSettingsExpander, ISettingsEntry?>(

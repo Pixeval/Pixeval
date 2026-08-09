@@ -9,16 +9,18 @@
     xmlns:local="using:Pixeval.Views.Settings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:AutoSettingsPage.Models"
-    x:DataType="{x:Type models:IMultiValuesWithSwitchSettingsEntry}"
+    x:DataType="{x:Type models:IMultiValuesWithMainValueSettingsEntry}"
+    Content="{Binding MainValue}"
+    ContentTemplate="{Binding MainValue, Converter={x:Static avalonia:SettingsEntryHelper.ValueTemplateConverter}}"
     Description="{Binding Converter={x:Static avalonia:SettingsEntryHelper.DescriptionConverter}}"
     Header="{Binding Header}"
+    Tag="{Binding Token}"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
     <controls:SettingsExpander.HeaderIcon>
         <fluent:SymbolIcon Symbol="{Binding Icon}" />
     </controls:SettingsExpander.HeaderIcon>
-    <ToggleSwitch IsChecked="{Binding Value, Mode=TwoWay}" />
     <controls:SettingsExpander.Items>
         <controls:SettingsCard
             HorizontalContentAlignment="Left"

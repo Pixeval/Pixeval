@@ -61,7 +61,7 @@ public class SettingsPageViewModel : ViewModelBase
                 .MultiValuesWithSwitch(t => t.LimitFileCacheSize,
                     entry => entry.Int(t => t.FileCacheSizeLimitInMegabytes, 1, 0x100000, 0x80,
                         t => t.ValueChanged += _ => CacheHelper.EnforceCacheSizeLimit()),
-                    t => t.ValueChanged += enabled =>
+                    t => t.MainValue.ValueChanged += enabled =>
                     {
                         if (enabled)
                             CacheHelper.EnforceCacheSizeLimit();
@@ -80,7 +80,7 @@ public class SettingsPageViewModel : ViewModelBase
                             .IPSet(t => t.PixivOAuthNameResolver)
                             .IPSet(t => t.PixivAccountNameResolver)
                             .IPSet(t => t.PixivWebApiNameResolver),
-                    entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.DomainFronting = t)
+                    entry => entry.MainValue.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.DomainFronting = t)
                 .DomainFronting(t => t.EnableGitHubDomainFronting, entry => entry
                     .IPSet(t => t.GitHubNameResolver)
                     .IPSet(t => t.GitHubApiNameResolver)

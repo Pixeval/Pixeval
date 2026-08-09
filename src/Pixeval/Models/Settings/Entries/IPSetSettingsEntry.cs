@@ -8,7 +8,9 @@ using AutoSettingsPage.Models;
 
 namespace Pixeval.Models.Settings.Entries;
 
+public interface IIPSetSettingsEntry : IReadOnlySingleValueSettingsEntry;
+
 public class IPSetSettingsEntry<TSettings>(
     TSettings settings,
     Expression<Func<TSettings, ObservableCollection<string>>> property)
-    : CollectionSettingsEntry<TSettings, string>(settings, property);
+    : CollectionSettingsEntry<TSettings, string>(settings, property), IIPSetSettingsEntry;
