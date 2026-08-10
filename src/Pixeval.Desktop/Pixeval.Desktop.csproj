@@ -5,9 +5,12 @@
 			One for Windows with net8.0-windows TFM, one for MacOS with net8.0-macos and one with net8.0 TFM for Linux.-->
 		<TargetFramework>net10.0</TargetFramework>
 		<Nullable>enable</Nullable>
-		<PublishAot>true</PublishAot>
 		<EnableMcp>true</EnableMcp>
 	</PropertyGroup>
+    
+    <PropertyGroup  Condition="'$(Configuration)' != 'Debug'">
+        <PublishAot>true</PublishAot>
+    </PropertyGroup>
 
 	<PropertyGroup>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
