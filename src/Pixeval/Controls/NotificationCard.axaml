@@ -1,0 +1,249 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:fluent="using:FluentIcons.Avalonia"
+    xmlns:notifications="using:Avalonia.Controls.Notifications">
+
+    <Design.PreviewWith>
+        <StackPanel Orientation="Horizontal">
+            <ThemeVariantScope RequestedThemeVariant="Light">
+                <StackPanel Background="{DynamicResource SolidBackgroundFillColorBaseBrush}">
+                    <NotificationCard NotificationType="Success">
+                        <notifications:Notification Title="设置已保存" />
+                    </NotificationCard>
+                    <NotificationCard NotificationType="Information">
+                        <notifications:Notification Message="Fusce non quam egestas leo finibus interdum eu ac massa." Title="Notification" />
+                    </NotificationCard>
+                    <NotificationCard NotificationType="Warning">
+                        <notifications:Notification Message="Warning message" Title="Warning" />
+                    </NotificationCard>
+                    <NotificationCard NotificationType="Error">
+                        <notifications:Notification Message="Error message" Title="Error" />
+                    </NotificationCard>
+                </StackPanel>
+            </ThemeVariantScope>
+            <ThemeVariantScope RequestedThemeVariant="Dark">
+                <StackPanel Background="{DynamicResource SolidBackgroundFillColorBaseBrush}">
+                    <NotificationCard NotificationType="Success">
+                        <notifications:Notification Title="设置已保存" />
+                    </NotificationCard>
+                    <NotificationCard NotificationType="Information">
+                        <notifications:Notification Message="Fusce non quam egestas leo finibus interdum eu ac massa." Title="Notification" />
+                    </NotificationCard>
+                    <NotificationCard NotificationType="Warning">
+                        <notifications:Notification Message="Warning message" Title="Warning" />
+                    </NotificationCard>
+                    <NotificationCard NotificationType="Error">
+                        <notifications:Notification Message="Error message" Title="Error" />
+                    </NotificationCard>
+                </StackPanel>
+            </ThemeVariantScope>
+        </StackPanel>
+    </Design.PreviewWith>
+
+    <!--
+        InfoBar.xaml / InfoBar_themeresources.xaml
+    -->
+    
+    <ControlTheme x:Key="NotificationCardCloseButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Width" Value="38" />
+        <Setter Property="Height" Value="38" />
+        <Setter Property="Margin" Value="5" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="{x:Type Button}">
+                <Border
+                    x:Name="PART_Root"
+                    Background="{TemplateBinding Background}"
+                    CornerRadius="{TemplateBinding CornerRadius}">
+                    <fluent:SymbolIcon
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="16"
+                        Foreground="{TemplateBinding Foreground}"
+                        Symbol="Dismiss" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:pointerover /template/ Border#PART_Root">
+            <Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
+        </Style>
+
+        <Style Selector="^:pressed /template/ Border#PART_Root">
+            <Setter Property="Background" Value="{DynamicResource SubtleFillColorTertiaryBrush}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type NotificationCard}" TargetType="{x:Type NotificationCard}">
+        <Setter Property="Width" Value="380" />
+        <Setter Property="Background" Value="{DynamicResource SystemFillColorAttentionBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        <Setter Property="RenderTransformOrigin" Value="50%,100%" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="{x:Type NotificationCard}">
+                <LayoutTransformControl x:Name="PART_LayoutTransformControl" UseRenderTransform="True">
+                    <Border
+                        Margin="12,6,12,10"
+                        BoxShadow="0 4 12 0 #33000000"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                        <Border
+                            Background="{DynamicResource SolidBackgroundFillColorBaseBrush}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            ClipToBounds="True"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                            <Border Padding="16,0,0,0" Background="{TemplateBinding Background}">
+                                <Grid MinHeight="48" ColumnDefinitions="Auto,*,Auto">
+                                    <fluent:SymbolIcon
+                                        x:Name="PART_Icon"
+                                        Margin="0,16,14,16"
+                                        VerticalAlignment="Top"
+                                        FontSize="16"
+                                        Foreground="{DynamicResource SystemFillColorAttentionBrush}"
+                                        IconVariant="Filled"
+                                        Symbol="Info" />
+                                    <ContentPresenter
+                                        x:Name="PART_ContentPresenter"
+                                        Grid.Column="1"
+                                        Margin="0,14,16,18"
+                                        VerticalAlignment="Center"
+                                        Content="{TemplateBinding Content}"
+                                        ContentTemplate="{TemplateBinding ContentTemplate}">
+                                        <ContentPresenter.DataTemplates>
+                                            <DataTemplate x:DataType="{x:Type notifications:INotification}" DataType="{x:Type notifications:INotification}">
+                                                <StackPanel Spacing="4">
+                                                    <TextBlock
+                                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                        Text="{Binding Title}"
+                                                        TextWrapping="Wrap"
+                                                        Theme="{StaticResource BodyStrongTextBlockStyle}" />
+                                                    <TextBlock
+                                                        MaxHeight="80"
+                                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                        IsVisible="{Binding Message,
+                                                                            Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                        Text="{Binding Message}"
+                                                        TextTrimming="CharacterEllipsis"
+                                                        TextWrapping="Wrap" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                            <DataTemplate x:DataType="{x:Type x:String}" DataType="{x:Type x:String}">
+                                                <TextBlock
+                                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                    Text="{Binding}"
+                                                    TextWrapping="Wrap"
+                                                    Theme="{StaticResource BodyStrongTextBlockStyle}" />
+                                            </DataTemplate>
+                                        </ContentPresenter.DataTemplates>
+                                    </ContentPresenter>
+                                    <Button
+                                        x:Name="PART_CloseButton"
+                                        Grid.Column="2"
+                                        NotificationCard.CloseOnClick="True"
+                                        Theme="{StaticResource NotificationCardCloseButtonStyle}" />
+                                </Grid>
+                            </Border>
+                        </Border>
+                    </Border>
+                </LayoutTransformControl>
+            </ControlTemplate>
+        </Setter>
+
+        <ControlTheme.Animations>
+            <Animation
+                Easing="0.1,0.9,0.2,1.0"
+                Duration="0:0:0.35"
+                FillMode="Forward">
+                <KeyFrame Cue="0%">
+                    <Setter Property="Opacity" Value="0" />
+                    <Setter Property="TranslateTransform.Y" Value="24" />
+                    <Setter Property="ScaleTransform.ScaleX" Value="0.96" />
+                    <Setter Property="ScaleTransform.ScaleY" Value="0.96" />
+                </KeyFrame>
+                <KeyFrame Cue="100%">
+                    <Setter Property="Opacity" Value="1" />
+                    <Setter Property="TranslateTransform.Y" Value="0" />
+                    <Setter Property="ScaleTransform.ScaleX" Value="1" />
+                    <Setter Property="ScaleTransform.ScaleY" Value="1" />
+                </KeyFrame>
+            </Animation>
+        </ControlTheme.Animations>
+
+        <Style Selector="^[IsClosing=true] /template/ LayoutTransformControl#PART_LayoutTransformControl">
+            <Setter Property="RenderTransformOrigin" Value="50%,0%" />
+            <Style.Animations>
+                <Animation
+                    Easing="0.7,0.0,1.0,0.5"
+                    Duration="0:0:0.3"
+                    FillMode="Forward">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="Opacity" Value="1" />
+                        <Setter Property="TranslateTransform.X" Value="0" />
+                        <Setter Property="ScaleTransform.ScaleY" Value="1" />
+                    </KeyFrame>
+                    <KeyFrame Cue="60%">
+                        <Setter Property="Opacity" Value="0" />
+                        <Setter Property="TranslateTransform.X" Value="48" />
+                        <Setter Property="ScaleTransform.ScaleY" Value="1" />
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="Opacity" Value="0" />
+                        <Setter Property="TranslateTransform.X" Value="48" />
+                        <Setter Property="ScaleTransform.ScaleY" Value="0" />
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+
+        <Style Selector="^[IsClosing=true]">
+            <Style.Animations>
+                <Animation Duration="0:0:0.35" FillMode="Forward">
+                    <KeyFrame Cue="100%">
+                        <Setter Property="IsClosed" Value="True" />
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+
+        <Style Selector="^:information">
+            <Setter Property="Background" Value="{DynamicResource SystemFillColorAttentionBackgroundBrush}" />
+            <Style Selector="^ /template/ fluent|SymbolIcon#PART_Icon">
+                <Setter Property="Foreground" Value="{DynamicResource SystemFillColorAttentionBrush}" />
+                <Setter Property="Symbol" Value="Info" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:success">
+            <Setter Property="Background" Value="{DynamicResource SystemFillColorSuccessBackgroundBrush}" />
+            <Style Selector="^ /template/ fluent|SymbolIcon#PART_Icon">
+                <Setter Property="Foreground" Value="{DynamicResource SystemFillColorSuccessBrush}" />
+                <Setter Property="Symbol" Value="CheckmarkCircle" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:warning">
+            <Setter Property="Background" Value="{DynamicResource SystemFillColorCautionBackgroundBrush}" />
+            <Style Selector="^ /template/ fluent|SymbolIcon#PART_Icon">
+                <Setter Property="Foreground" Value="{DynamicResource SystemFillColorCautionBrush}" />
+                <Setter Property="Symbol" Value="Warning" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:error">
+            <Setter Property="Background" Value="{DynamicResource SystemFillColorCriticalBackgroundBrush}" />
+            <Style Selector="^ /template/ fluent|SymbolIcon#PART_Icon">
+                <Setter Property="Foreground" Value="{DynamicResource SystemFillColorCriticalBrush}" />
+                <Setter Property="Symbol" Value="DismissCircle" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
