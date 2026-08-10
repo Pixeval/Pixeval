@@ -68,6 +68,8 @@ public static class AppInfo
 
     public const string ImageNotAvailablePath = $"{AssetsPathPrefix}image-not-available.png";
 
+    public const string BlockedContentPath = $"{AssetsPathPrefix}blocked-content.png";
+
     public static Stream GetImageNotAvailableStream() => AssetLoader.Open(new Uri(ImageNotAvailablePath));
 
     public static async Task<byte[]> GetAssetBytesAsync(string relativeToAssetsFolder)

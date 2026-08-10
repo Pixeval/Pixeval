@@ -103,6 +103,11 @@
                         Header="{I18N {x:Static pixeval:EntryItemResources.GenerateLink}}"
                         Icon="{markup:SymbolIcon Link}"
                         Tag="{Binding AppUri}" />
+                    <Separator />
+                    <MenuItem
+                        Command="{Binding BlockUserCommand}"
+                        Header="{I18N {x:Static pixeval:BlockedContentResources.BlockUser}}"
+                        Icon="{markup:SymbolIcon PersonProhibited}" />
                 </MenuFlyout>
             </Button.Flyout>
         </Button>

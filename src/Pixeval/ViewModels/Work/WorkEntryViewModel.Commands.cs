@@ -17,7 +17,7 @@ public partial class WorkEntryViewModel<T>
     [RelayCommand(CanExecute = nameof(IsBookmarkSupported))]
     private async Task BookmarkAsync(Control? parameter)
     {
-        if ((IsBookmarkedDisplay & HeartButtonState.Pending) is not 0)
+        if (IsBlocked || (IsBookmarkedDisplay & HeartButtonState.Pending) is not 0)
             return;
         IsBookmarkedDisplay |= HeartButtonState.Pending; // pre-update
         var result = await SetBookmarkAsync(!IsFavorite);
@@ -27,7 +27,7 @@ public partial class WorkEntryViewModel<T>
     [RelayCommand(CanExecute = nameof(IsBookmarkSupported))]
     private async Task AddToBookmarkAsync((IReadOnlyList<string>? Tags, bool IsPrivate, Control? Control) parameter)
     {
-        if ((IsBookmarkedDisplay & HeartButtonState.Pending) is not 0)
+        if (IsBlocked || (IsBookmarkedDisplay & HeartButtonState.Pending) is not 0)
             return;
         IsBookmarkedDisplay |= HeartButtonState.Pending; // pre-update
         var result = await SetBookmarkAsync(true, parameter.IsPrivate, parameter.Tags);
@@ -37,7 +37,7 @@ public partial class WorkEntryViewModel<T>
     [RelayCommand(CanExecute = nameof(CanManageWatchLater))]
     private void AddToWatchLater(Control? parameter)
     {
-        if (GetHistoryPersistHelper() is not { } helper)
+        if (IsBlocked || GetHistoryPersistHelper() is not { } helper)
             return;
 
         var target = !IsInWatchLater;

@@ -12,6 +12,7 @@ using Mako.Global.Enum;
 using Mako.Model;
 using Misaki;
 using Pixeval.AppManagement;
+using Pixeval.Models.Blocking;
 using Pixeval.Utilities;
 using Pixeval.Views.Search;
 
@@ -52,11 +53,14 @@ public class WorkInfoPane : TemplatedControl
 
     public IRelayCommand<ITag?> BlockTagCommand { get; }
 
+    public IRelayCommand<IUser?> BlockUserCommand { get; }
+
     public WorkInfoPane()
     {
         OpenAuthorCommand = new AsyncRelayCommand<IUser?>(OpenAuthorAsync);
         OpenTagCommand = new RelayCommand<ITag?>(OpenTag);
         BlockTagCommand = new RelayCommand<ITag?>(BlockTag);
+        BlockUserCommand = new RelayCommand<IUser?>(BlockUser);
     }
 
     private async Task OpenAuthorAsync(IUser? user)
@@ -94,6 +98,12 @@ public class WorkInfoPane : TemplatedControl
             blockedTags.Add(tag.Name);
             AppInfo.SaveAppSettings(App.AppViewModel.AppSettings);
         }
+    }
+
+    private static void BlockUser(IUser? user)
+    {
+        if (user is not null)
+            _ = BlockedContentHelper.TryAddOrUpdateBlockedUser(user);
     }
 
     public static IValueConverter HalfVerticalSpaceConverter { get; } = new FuncValueConverter<Rect, double>(x => x.Height / 2);

@@ -2,6 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System.Collections.ObjectModel;
+using System.Text.Json.Serialization;
 using AutoSettingsPage;
 using Avalonia.Layout;
 using FluentIcons.Common;
@@ -50,6 +51,10 @@ public record BrowsingExperienceSettingsGroup
 
     [SettingsEntry(Symbol.TagDismiss, AppSettingsResources.BlockedTagsEntry.Header, AppSettingsResources.BlockedTagsEntry.Description, AppSettingsResources.BlockedTagsEntry.Placeholder)]
     public ObservableCollection<string> BlockedTags { get; set; } = [];
+
+    [JsonIgnore]
+    [SettingsEntry(Symbol.PersonProhibited, AppSettingsResources.BlockedUsersEntry.Header, AppSettingsResources.BlockedUsersEntry.Description)]
+    public byte BlockedUsers => 0;
 
     [SettingsEntry(Symbol.Info, AppSettingsResources.OpenWorkInfoByDefaultEntry.Header, AppSettingsResources.OpenWorkInfoByDefaultEntry.Description)]
     public bool OpenWorkInfoByDefault { get; set; }

@@ -63,6 +63,7 @@ public static class LocalSettingsEntryHelper
             .AddOpenGeneric<IMultiValuesWithMainValueSettingsEntry<ISingleValueSettingsEntry<bool>>, DomainFrontingSettingsExpander>(typeof(DomainFrontingSettingsEntry<>))
             .Add<DownloadMacroSettingsEntry, DownloadMacroSettingsExpander>()
             .Add<WorkSubscriptionsSettingsEntry, WorkSubscriptionsSettingsExpander>()
+            .Add<BlockedUsersSettingsEntry, BlockedUsersSettingsExpander>()
             .Add<ExtensionSettingsEntry<IStringsArraySettingsExtension, ObservableCollection<string>>, StringCollectionSettingsExpander>();
 
         _ = SettingsEntryHelper.ValueFactoryDictionary
@@ -386,6 +387,14 @@ public static class LocalSettingsEntryHelper
         public ISettingsGroupBuilder<DownloadSettingsGroup> WorkSubscriptions(
             Expression<Func<DownloadSettingsGroup, byte>> expression,
             Action<WorkSubscriptionsSettingsEntry>? config = null) =>
+            builder.Add(new(expression), config);
+    }
+
+    extension(ISettingsGroupBuilder<BrowsingExperienceSettingsGroup> builder)
+    {
+        public ISettingsGroupBuilder<BrowsingExperienceSettingsGroup> BlockedUsers(
+            Expression<Func<BrowsingExperienceSettingsGroup, byte>> expression,
+            Action<BlockedUsersSettingsEntry>? config = null) =>
             builder.Add(new(expression), config);
     }
 

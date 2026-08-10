@@ -7,9 +7,8 @@ using SQLite;
 
 namespace Pixeval.Models.Database.Managers;
 
-public abstract class WorkHistoryPersistentManager<
-    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
-TEntry>(SQLiteConnection db, FileLogger logger) : ArtworkHistoryPersistentManager<TEntry>(db, logger)
+public abstract class WorkHistoryPersistentManager<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEntry>(SQLiteConnection db, FileLogger logger)
+    : ArtworkHistoryPersistentManager<TEntry>(db, logger)
     where TEntry : BrowseHistoryEntry, new()
 {
     public TEntry? GetByWorkKey(string workKey) =>

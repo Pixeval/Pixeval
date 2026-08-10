@@ -5,6 +5,7 @@ using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Mako.Model;
 using Pixeval.Controls;
+using Pixeval.Models.Blocking;
 using Pixeval.Utilities;
 
 namespace Pixeval.ViewModels;
@@ -13,7 +14,7 @@ public partial class UserItemViewModel : EntryViewModel<User>, IFactory<User, Us
 {
     public static UserItemViewModel CreateInstance(User entry) => new(entry);
 
-    public UserItemViewModel(User user) : base(user)
+    public UserItemViewModel(User user) : base(BlockedContentHelper.Replace(user))
     {
         IsFollowedDisplay = IsFollowed ? HeartButtonState.Checked : HeartButtonState.Unchecked;
 

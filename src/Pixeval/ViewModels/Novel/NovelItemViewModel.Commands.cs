@@ -8,6 +8,7 @@ using Avalonia.Controls;
 using Mako.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.I18N;
+using Pixeval.Models.Blocking;
 using Pixeval.Models.Download;
 using Pixeval.Utilities;
 using Pixeval.Views.ViewContainers;
@@ -22,6 +23,9 @@ public partial class NovelItemViewModel
     /// <inheritdoc />
     protected override async Task SaveAsync(Control? parameter)
     {
+        if (BlockedContentHelper.IsBlockedPlaceholder(Entry))
+            return;
+
         SaveInternalAsync(TopLevel.GetTopLevel(parameter)?.ViewContainer, await ContentAsync, App.AppViewModel.AppSettings.DownloadSettings.DownloadPathMacro);
     }
 

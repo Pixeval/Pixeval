@@ -23,8 +23,6 @@ public interface IOperableViewViewModel : ISimpleViewViewModel
 
     void SetSortDescriptions(params IEnumerable<ISortDescription<IWorkViewModel>> descriptions);
 
-    IFilter<IWorkViewModel> BlockedTagsFilter { get; }
-
     IFilter<IWorkViewModel>? UserFilter { get; set; }
 
     bool RequireAdaptiveGrid { get; }

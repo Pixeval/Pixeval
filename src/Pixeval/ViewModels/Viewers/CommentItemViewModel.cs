@@ -6,22 +6,29 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Mako.Global.Enum;
 using Mako.Model;
+using Pixeval.Models.Blocking;
 using Pixeval.Utilities;
 using Pixeval.Views;
 
 namespace Pixeval.ViewModels.Viewers;
 
-public sealed class CommentItemViewModel(Comment comment, SimpleWorkType parentType, long parentId, bool isTopComment)
-    : CommentsViewViewModel(parentType, parentId)
+public sealed class CommentItemViewModel : CommentsViewViewModel
 {
+    public CommentItemViewModel(Comment comment, SimpleWorkType parentType, long parentId, bool isTopComment)
+        : base(parentType, parentId)
+    {
+        Comment = BlockedContentHelper.Replace(comment);
+        IsTopComment = isTopComment;
+    }
+
     /// <summary>
     /// 若为<see langword="true"/>，表示这个评论是作品下面的评论；
     /// 否则表示这个评论是另一个评论下面的回复。
     /// Pixiv目前只支持两层评论
     /// </summary>
-    public bool IsTopComment { get; } = isTopComment;
+    public bool IsTopComment { get; }
 
-    public Comment Comment { get; } = comment;
+    public Comment Comment { get; }
 
     public bool HasReplies => Comment.HasReplies;
 

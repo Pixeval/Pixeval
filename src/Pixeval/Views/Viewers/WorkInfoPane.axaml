@@ -49,6 +49,15 @@
                     </StackPanel>
                 </StackPanel>
             </DockPanel>
+            <Button.ContextMenu>
+                <ContextMenu>
+                    <MenuItem
+                        Command="{Binding $parent[viewers:WorkInfoPane].BlockUserCommand}"
+                        CommandParameter="{Binding}"
+                        Header="{I18N {x:Static pixeval:BlockedContentResources.BlockUser}}"
+                        Icon="{markup:SymbolIcon PersonProhibited}" />
+                </ContextMenu>
+            </Button.ContextMenu>
         </Button>
     </DataTemplate>
 
@@ -73,6 +82,15 @@
                         Theme="{StaticResource SubtitleTextBlockStyle}" />
                 </StackPanel>
             </StackPanel>
+            <Button.ContextMenu>
+                <ContextMenu>
+                    <MenuItem
+                        Command="{Binding $parent[viewers:WorkInfoPane].BlockUserCommand}"
+                        CommandParameter="{Binding}"
+                        Header="{I18N {x:Static pixeval:BlockedContentResources.BlockUser}}"
+                        Icon="{markup:SymbolIcon PersonProhibited}" />
+                </ContextMenu>
+            </Button.ContextMenu>
         </Button>
     </DataTemplate>
 
@@ -202,7 +220,7 @@
                                                                 <MenuItem
                                                                     Command="{Binding $parent[viewers:WorkInfoPane].BlockTagCommand}"
                                                                     CommandParameter="{Binding}"
-                                                                    Header="{I18N {x:Static pixeval:WorkInfoPageResources+BlockTagMenuItem.Text}}"
+                                                                    Header="{I18N {x:Static pixeval:BlockedContentResources.BlockTag}}"
                                                                     Icon="{markup:SymbolIcon TagDismiss}" />
                                                             </ContextMenu>
                                                         </Button.ContextMenu>

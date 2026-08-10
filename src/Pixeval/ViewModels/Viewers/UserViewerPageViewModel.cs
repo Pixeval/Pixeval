@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mako.Global.Enum;
 using Mako.Net.Responses;
+using Pixeval.Models.Blocking;
 using Pixeval.Views;
 using Pixeval.Views.Capability;
 
@@ -19,14 +20,11 @@ public sealed partial class UserViewerPageViewModel : ViewModelBase, IDisposable
 {
     private readonly CancellationTokenSource _loadingCts = new();
 
-    [ObservableProperty]
-    public partial bool IsFollowed { get; set; }
+    [ObservableProperty] public partial bool IsFollowed { get; set; }
 
-    [ObservableProperty]
-    public partial bool IsLoading { get; private set; }
+    [ObservableProperty] public partial bool IsLoading { get; private set; }
 
-    [ObservableProperty]
-    public partial string? LoadErrorMessage { get; private set; }
+    [ObservableProperty] public partial string? LoadErrorMessage { get; private set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Id))]
@@ -58,7 +56,7 @@ public sealed partial class UserViewerPageViewModel : ViewModelBase, IDisposable
     public UserViewerPageViewModel(SingleUserResponse userDetail)
     {
         Id = userDetail.UserEntity.Id;
-        UserDetail = userDetail;
+        UserDetail = BlockedContentHelper.Replace(userDetail);
     }
 
     public UserViewerPageViewModel(long userId)
@@ -75,6 +73,7 @@ public sealed partial class UserViewerPageViewModel : ViewModelBase, IDisposable
         FollowCommand.NotifyCanExecuteChanged();
         FollowPrivatelyCommand.NotifyCanExecuteChanged();
         UnfollowCommand.NotifyCanExecuteChanged();
+        BlockUserCommand.NotifyCanExecuteChanged();
     }
 
     private async Task LoadUserAsync(long userId)
@@ -85,8 +84,8 @@ public sealed partial class UserViewerPageViewModel : ViewModelBase, IDisposable
         LoadErrorMessage = null;
         try
         {
-            var userDetail = await App.AppViewModel.MakoClient.GetUserFromIdAsync(userId);
-            token.ThrowIfCancellationRequested();
+            var userDetail = BlockedContentHelper.Replace(
+                await App.AppViewModel.MakoClient.GetUserFromIdAsync(userId, token));
             if (_disposed)
                 return;
 
@@ -108,6 +107,19 @@ public sealed partial class UserViewerPageViewModel : ViewModelBase, IDisposable
     }
 
     private bool CanFollow => Id != PixevalSettings.MyId;
+
+    private bool CanBlockUser => UserDetail is { UserEntity: var user }
+                                 && !BlockedContentHelper.IsBlocked(user);
+
+    [RelayCommand(CanExecute = nameof(CanBlockUser))]
+    private void BlockUser()
+    {
+        if (UserDetail is not { UserEntity: var user }
+            || !BlockedContentHelper.TryAddOrUpdateBlockedUser(user))
+            return;
+
+        UserDetail = BlockedContentHelper.Replace(UserDetail);
+    }
 
     [RelayCommand(CanExecute = nameof(CanFollow))]
     private async Task FollowAsync()

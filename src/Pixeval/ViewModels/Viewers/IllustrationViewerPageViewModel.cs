@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Misaki;
 using Pixeval.AppManagement;
 using Pixeval.I18N;
+using Pixeval.Models.Blocking;
 using Pixeval.Models.Options;
 using Pixeval.Utilities;
 using Pixeval.Views.Capability;
@@ -91,25 +92,36 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
         CurrentWorkIndex = currentIllustrationIndex;
     }
 
-    public IReadOnlyList<Page> PanePages =>
-        CurrentIllustration?.Entry is Illustration { Id: var id } illustration
-            ?
-            [
-                new WorkInfoPage(illustration)
+    public IReadOnlyList<Page> PanePages => CreatePanePages(CurrentIllustration?.Entry);
+
+    private static IReadOnlyList<Page> CreatePanePages(IArtworkInfo? entry)
+    {
+        if (entry is not Illustration { Id: var id } illustration)
+            return [];
+
+        var pages = new List<Page>
+        {
+            new WorkInfoPage(illustration)
+            {
+                ActionZone = new Border
                 {
-                    ActionZone = new Border
-                    {
-                        Width = 32,
-                        Height = 32,
-                        HorizontalAlignment = HorizontalAlignment.Right,
-                        VerticalAlignment = VerticalAlignment.Top,
-                        IsHitTestVisible = false
-                    }
-                },
-                new CommentsPage(new CommentsViewViewModel(SimpleWorkType.Illustration, id)),
-                new WorkRelatedPage(illustration.Id, SimpleWorkType.Illustration) { IsCommandBarCollapsed = true }
-            ]
-            : [];
+                    Width = 32,
+                    Height = 32,
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    IsHitTestVisible = false
+                }
+            }
+        };
+
+        if (!BlockedContentHelper.IsBlockedPlaceholder(illustration))
+        {
+            pages.Add(new CommentsPage(new CommentsViewViewModel(SimpleWorkType.Illustration, id)));
+            pages.Add(new WorkRelatedPage(illustration.Id, SimpleWorkType.Illustration) { IsCommandBarCollapsed = true });
+        }
+
+        return pages;
+    }
 
     #region Current相关
 
@@ -287,7 +299,7 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
                 return null;
             }
 
-            var item = IllustrationItemViewModel.CreateInstance(entry);
+            var item = IllustrationItemViewModel.CreateInstance(BlockedContentHelper.Replace(entry));
             onLoaded(item);
             return item;
         }

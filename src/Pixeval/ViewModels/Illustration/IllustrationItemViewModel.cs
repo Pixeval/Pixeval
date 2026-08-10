@@ -10,6 +10,7 @@ using Mako.Model;
 using Misaki;
 using Pixeval.Controls;
 using Pixeval.I18N;
+using Pixeval.Models.Blocking;
 using Pixeval.Utilities;
 using Pixeval.Views.Work;
 
@@ -20,7 +21,7 @@ namespace Pixeval.ViewModels;
 /// It is responsible for being the elements of the <see cref="ListBox" /> to present the thumbnail of an illustration
 /// </summary>
 public partial class IllustrationItemViewModel(IArtworkInfo entry)
-    : WorkEntryViewModel<IArtworkInfo>(entry), IFactory<IArtworkInfo, IllustrationItemViewModel>
+    : WorkEntryViewModel<IArtworkInfo>(BlockedContentHelper.Replace(entry)), IFactory<IArtworkInfo, IllustrationItemViewModel>
 {
     /// <summary>
     /// 在<see cref="IImageSet.Pages"/>中，此属性会被赋值为当前<see cref="IllustrationItemViewModel"/>在Manga中的索引

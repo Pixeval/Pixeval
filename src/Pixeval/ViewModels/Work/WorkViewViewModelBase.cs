@@ -3,7 +3,6 @@
 
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Linq;
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Misaki;
@@ -18,17 +17,6 @@ public abstract partial class WorkViewViewModelBase<T, TViewModel>(FrozenSet<str
     where TViewModel : EntryViewModel<T>, IFactory<T, TViewModel>, IWorkViewModel
 {
     public FrozenSet<string> CachedBlockedTags { get; private set; } = blockedTags ?? App.AppViewModel.AppSettings.BrowsingExperienceSettings.BlockedTags.ToFrozenSet();
-
-    public IFilter<IWorkViewModel> BlockedTagsFilter
-    {
-        get
-        {
-            var cachedBlockedTags = CachedBlockedTags;
-            return IFilter<IWorkViewModel>.Create(
-                entry => !entry.Entry.Tags.Any(t => t.Any(tag => cachedBlockedTags.Contains(tag.Name))),
-                false);
-        }
-    }
 
     [ObservableProperty]
     public partial bool IsSelecting { get; set; }
@@ -49,7 +37,6 @@ public abstract partial class WorkViewViewModelBase<T, TViewModel>(FrozenSet<str
         using (View.DeferFiltersChange())
         {
             View.Filters.Clear();
-            View.Filters.Add(BlockedTagsFilter);
             if (UserFilter is not null)
                 View.Filters.Add(UserFilter);
         }

@@ -3,15 +3,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using CommunityToolkit.HighPerformance;
 using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.Utilities;

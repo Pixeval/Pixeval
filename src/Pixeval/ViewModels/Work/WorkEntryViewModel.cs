@@ -7,6 +7,7 @@ using Mako.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
 using Pixeval.Controls;
+using Pixeval.Models.Blocking;
 using Pixeval.Models.Database;
 using Pixeval.Models.Database.Managers;
 
@@ -20,7 +21,9 @@ public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>
         IsInWatchLater = GetHistoryPersistHelper()?.ContainsWatchLater(entry) is true;
     }
 
-    public bool IsBookmarkSupported => Entry.Platform is IPlatformInfo.Pixiv;
+    public bool IsBlocked => BlockedContentHelper.IsBlockedPlaceholder(Entry);
+
+    public bool IsBookmarkSupported => !IsBlocked && Entry.Platform is IPlatformInfo.Pixiv;
 
     public SimpleSeries? Series => Entry is WorkBase work ? work.Series : null;
 
@@ -38,7 +41,9 @@ public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>
 
     public override string? ThumbnailUrl => Entry.Thumbnails.PickClosestHeight(300)?.ImageUri.OriginalString;
 
-    protected bool CanManageWatchLater => GetHistoryPersistHelper() is not null && WatchLaterEntry.TryCreateWorkKey(Entry, out _);
+    protected bool CanManageWatchLater => !IsBlocked
+                                          && GetHistoryPersistHelper() is not null
+                                          && WatchLaterEntry.TryCreateWorkKey(Entry, out _);
 
     private static HistoryPersistHelper? GetHistoryPersistHelper() => App.AppViewModel?.AppServiceProvider?.GetService<HistoryPersistHelper>();
 }

@@ -1,0 +1,89 @@
+<controls:SettingsExpander
+    x:Class="Pixeval.Views.Settings.BlockedUsersSettingsExpander"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avalonia="using:AutoSettingsPage.Avalonia"
+    xmlns:controls="using:CommunityToolkit.Avalonia.Controls"
+    xmlns:controls1="using:Pixeval.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:entries="using:Pixeval.Models.Settings.Entries"
+    xmlns:fluent="using:FluentIcons.Avalonia"
+    xmlns:local="using:Pixeval.Views.Settings"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
+    xmlns:markup1="using:Pixeval.Views.Markup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
+    xmlns:settings="using:Pixeval.ViewModels.Settings"
+    x:DataType="{x:Type entries:BlockedUsersSettingsEntry}"
+    Description="{Binding Converter={x:Static avalonia:SettingsEntryHelper.DescriptionConverter}}"
+    Header="{Binding Header}"
+    Tag="{Binding Token}"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
+    <controls:SettingsExpander.HeaderIcon>
+        <fluent:SymbolIcon Symbol="{Binding Icon}" />
+    </controls:SettingsExpander.HeaderIcon>
+    <controls:SettingsExpander.Content>
+        <Button
+            Click="RefreshAllButton_OnClicked"
+            Content="{markup:SymbolIcon ArrowSync}"
+            ToolTip.Tip="{I18N {x:Static pixeval:BlockedUsersSettingsExpanderResources+RefreshAllButton.Label}}" />
+    </controls:SettingsExpander.Content>
+    <controls:SettingsExpander.Items>
+        <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
+            <Grid
+                ColumnDefinitions="180,Auto"
+                ColumnSpacing="8"
+                RowDefinitions="Auto,Auto"
+                RowSpacing="8">
+                <TextBox x:Name="TargetIdTextBox" PlaceholderText="{I18N {x:Static pixeval:BlockedUsersSettingsExpanderResources+TargetIdTextBox.PlaceholderText}}" />
+                <Button
+                    Grid.Column="1"
+                    Click="AddButton_OnClicked"
+                    Content="{markup:SymbolIcon Add}"
+                    ToolTip.Tip="{I18N {x:Static pixeval:BlockedUsersSettingsExpanderResources+AddUserButton.Label}}" />
+                <controls1:InfoBar
+                    x:Name="ErrorTextBlock"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    IsVisible="False"
+                    Mode="Error" />
+            </Grid>
+        </controls:SettingsCard>
+        <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
+            <ItemsControl ItemsSource="{Binding $parent[local:BlockedUsersSettingsExpander].Users}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type settings:BlockedUserItemViewModel}">
+                        <Grid
+                            Margin="10"
+                            ColumnDefinitions="Auto,*,Auto,Auto"
+                            ColumnSpacing="8">
+                            <controls1:UserBasicInfoPresenter Grid.Column="0" User="{Binding User}" />
+                            <TextBlock
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Text="{Binding Entry.Id}" />
+                            <Button
+                                Grid.Column="2"
+                                VerticalAlignment="Center"
+                                Click="RefreshButton_OnClicked"
+                                Content="{markup:SymbolIcon ArrowSync}"
+                                Tag="{Binding}"
+                                ToolTip.Tip="{I18N {x:Static pixeval:BlockedUsersSettingsExpanderResources+RefreshUserButton.Label}}" />
+                            <Button
+                                Grid.Column="3"
+                                VerticalAlignment="Center"
+                                Click="DeleteButton_OnClicked"
+                                Content="{markup:SymbolIcon Delete}"
+                                Tag="{Binding}"
+                                ToolTip.Tip="{I18N {x:Static pixeval:BlockedUsersSettingsExpanderResources+DeleteUserButton.Label}}" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </controls:SettingsCard>
+    </controls:SettingsExpander.Items>
+</controls:SettingsExpander>

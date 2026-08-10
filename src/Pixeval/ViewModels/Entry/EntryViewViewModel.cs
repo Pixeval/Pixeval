@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Misaki;
 using Pixeval.Collections;
+using Pixeval.Models.Blocking;
 
 namespace Pixeval.ViewModels;
 
@@ -33,7 +34,15 @@ public abstract class EntryViewViewModel<T, TViewModel>
         DataProvider.Dispose();
     }
 
-    public void ResetEngine(IAsyncEnumerable<T>? newEngine, Func<T, int, TViewModel> factory, int itemsPerPage = 20, int itemLimit = -1) => DataProvider.ResetEngine(newEngine, factory, itemsPerPage, itemLimit);
+    public void ResetEngine(IAsyncEnumerable<T>? newEngine, Func<T, int, TViewModel> factory, int itemsPerPage = 20, int itemLimit = -1)
+    {
+        var snapshot = BlockedContentHelper.CaptureSnapshot();
+        DataProvider.ResetEngine(
+            newEngine,
+            (entry, index) => factory(BlockedContentHelper.ReplaceEntry(entry, snapshot), index),
+            itemsPerPage,
+            itemLimit);
+    }
 
     /// <inheritdoc />
     IReadOnlyCollection<INotifyPropertyChanged> ISimpleViewViewModel.View => View;

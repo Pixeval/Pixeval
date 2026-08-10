@@ -47,6 +47,11 @@ namespace Pixeval
             public const string Header = "AppSettings.BlockedTagsEntry.Header";
             public const string Placeholder = "AppSettings.BlockedTagsEntry.Placeholder";
         }
+        public static class BlockedUsersEntry
+        {
+            public const string Description = "AppSettings.BlockedUsersEntry.Description";
+            public const string Header = "AppSettings.BlockedUsersEntry.Header";
+        }
         public static class BrowseDirection
         {
             public const string Description = "AppSettings.BrowseDirection.Description";
@@ -330,6 +335,38 @@ namespace Pixeval
         {
             public const string Description = "AppSettings.WorkSubscriptionsSettingsEntry.Description";
             public const string Header = "AppSettings.WorkSubscriptionsSettingsEntry.Header";
+        }
+    }
+    public static class BlockedContentResources
+    {
+        public const string BlockTag = "BlockedContent.BlockTag";
+        public const string BlockUser = "BlockedContent.BlockUser";
+        public const string Comment = "BlockedContent.Comment";
+        public const string User = "BlockedContent.User";
+        public const string Work = "BlockedContent.Work";
+    }
+    public static class BlockedUsersSettingsExpanderResources
+    {
+        public const string InvalidUserId = "BlockedUsersSettingsExpander.InvalidUserId";
+        public static class AddUserButton
+        {
+            public const string Label = "BlockedUsersSettingsExpander.AddUserButton.Label";
+        }
+        public static class DeleteUserButton
+        {
+            public const string Label = "BlockedUsersSettingsExpander.DeleteUserButton.Label";
+        }
+        public static class RefreshAllButton
+        {
+            public const string Label = "BlockedUsersSettingsExpander.RefreshAllButton.Label";
+        }
+        public static class RefreshUserButton
+        {
+            public const string Label = "BlockedUsersSettingsExpander.RefreshUserButton.Label";
+        }
+        public static class TargetIdTextBox
+        {
+            public const string PlaceholderText = "BlockedUsersSettingsExpander.TargetIdTextBox.PlaceholderText";
         }
     }
     public static class CommentRepliesBlockResources
@@ -1730,10 +1767,6 @@ namespace Pixeval
     }
     public static class WorkInfoPageResources
     {
-        public static class BlockTagMenuItem
-        {
-            public const string Text = "WorkInfoPage.BlockTagMenuItem.Text";
-        }
         public static class CopyOriginalTagMenuItem
         {
             public const string Text = "WorkInfoPage.CopyOriginalTagMenuItem.Text";

@@ -17,6 +17,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.AppManagement;
+using Pixeval.I18N;
+using Pixeval.Models.Blocking;
 using Pixeval.Models.Settings;
 using Pixeval.Utilities;
 using Pixeval.Views.Capability;
@@ -39,15 +41,17 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
 
     [ObservableProperty] public partial WorkSeriesInfoViewModel? SeriesInfo { get; private set; }
 
-    public IReadOnlyList<Page> PanePages => CurrentNovel is { } currentNovel
-        ?
-        [
-            new WorkInfoPage(currentNovel.Entry),
-            new CommentsPage(new CommentsViewViewModel(SimpleWorkType.Novel, currentNovel.Entry.Id)),
-            new WorkRelatedPage(currentNovel.Entry.Id, SimpleWorkType.Novel) { IsCommandBarCollapsed = true },
-            SettingsPage
-        ]
-        : [];
+    public IReadOnlyList<Page> PanePages => CurrentNovel is not { } currentNovel
+        ? []
+        : BlockedContentHelper.IsBlockedPlaceholder(currentNovel.Entry)
+            ? [new WorkInfoPage(currentNovel.Entry)]
+            :
+            [
+                new WorkInfoPage(currentNovel.Entry),
+                new CommentsPage(new CommentsViewViewModel(SimpleWorkType.Novel, currentNovel.Entry.Id)),
+                new WorkRelatedPage(currentNovel.Entry.Id, SimpleWorkType.Novel) { IsCommandBarCollapsed = true },
+                SettingsPage
+            ];
 
     public NovelViewerPageViewModel(NovelItemViewModel novelViewModel, bool needRefresh)
     {
@@ -233,20 +237,26 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
             if (currentNovel is null || index != CurrentWorkIndex || _disposed)
                 return;
 
-            SeriesInfo = WorkSeriesInfoViewModel.Create(currentNovel.Entry, SimpleWorkType.Novel);
-            var content = await currentNovel.ContentAsync;
-            token.ThrowIfCancellationRequested();
-            if (index != CurrentWorkIndex || _disposed)
-                return;
+            if (BlockedContentHelper.IsBlockedPlaceholder(currentNovel.Entry))
+                _pageMarkdowns = [I18NManager.GetResource(BlockedContentResources.Work)];
+            else
+            {
+                SeriesInfo = WorkSeriesInfoViewModel.Create(currentNovel.Entry, SimpleWorkType.Novel);
+                var content = await currentNovel.ContentAsync;
+                token.ThrowIfCancellationRequested();
+                if (index != CurrentWorkIndex || _disposed)
+                    return;
 
-            SeriesInfo = WorkSeriesInfoViewModel.Create(content, currentNovel.Entry.Series);
-            App.AppViewModel.HistoryPersistHelper.AddBrowseHistory(currentNovel.Entry);
-            var markdowns = await Task.Run(() => BuildPageMarkdowns(content), token);
-            token.ThrowIfCancellationRequested();
-            if (index != CurrentWorkIndex || _disposed)
-                return;
+                SeriesInfo = WorkSeriesInfoViewModel.Create(content, currentNovel.Entry.Series);
+                App.AppViewModel.HistoryPersistHelper.AddBrowseHistory(currentNovel.Entry);
+                var markdowns = await Task.Run(() => BuildPageMarkdowns(content), token);
+                token.ThrowIfCancellationRequested();
+                if (index != CurrentWorkIndex || _disposed)
+                    return;
 
-            _pageMarkdowns = markdowns;
+                _pageMarkdowns = markdowns;
+            }
+
             CurrentPageIndex = 0;
             OnPropertyChanged(nameof(PageCount));
             OnPropertyChanged(nameof(IsMultiPage));
@@ -333,7 +343,8 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
         LoadErrorMessage = null;
         try
         {
-            var novel = await App.AppViewModel.MakoClient.GetNovelFromIdAsync(id);
+            var novel = BlockedContentHelper.Replace(
+                await App.AppViewModel.MakoClient.GetNovelFromIdAsync(id));
             token.ThrowIfCancellationRequested();
             var viewModel = NovelItemViewModel.CreateInstance(novel);
             onLoaded(viewModel);

@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
 using Pixeval.I18N;
+using Pixeval.Models.Blocking;
 using Pixeval.Models.Download;
 using Pixeval.Utilities;
 using Pixeval.Views.ViewContainers;
@@ -33,6 +34,9 @@ public partial class IllustrationItemViewModel
     /// <inheritdoc />
     protected override async Task SaveAsync(Control? parameter)
     {
+        if (BlockedContentHelper.IsBlockedPlaceholder(Entry))
+            return;
+
         await SaveInternalAsync(TopLevel.GetTopLevel(parameter)?.ViewContainer, App.AppViewModel.AppSettings.DownloadSettings.DownloadPathMacro);
     }
 

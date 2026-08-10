@@ -70,6 +70,12 @@
                                 Icon="{markup:SymbolIcon GlobeArrowUp}"
                                 Label="{I18N {x:Static pixeval:EntryItemResources.OpenInWebBrowser}}"
                                 Tag="{Binding UserDetail.UserEntity.WebsiteUri, FallbackValue={x:Null}}" />
+                            <CommandBar.SecondaryCommands>
+                                <CommandBarButton
+                                    Command="{Binding BlockUserCommand}"
+                                    Icon="{markup:SymbolIcon PersonProhibited}"
+                                    Label="{I18N {x:Static pixeval:BlockedContentResources.BlockUser}}" />
+                            </CommandBar.SecondaryCommands>
                         </CommandBar>
 
                         <StackPanel

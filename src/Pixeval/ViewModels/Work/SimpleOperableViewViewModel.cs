@@ -2,9 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
-using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Linq;
 using Avalonia.Collections;
 using Misaki;
 using Pixeval.Collections;
@@ -27,12 +25,6 @@ public sealed class SimpleOperableViewViewModel<TViewModel> : ViewModelBase, IOp
     public SimpleOperableSourceView<TViewModel> SourceView { get; }
 
     public bool NeedRefreshOnOpen { get; }
-
-    public FrozenSet<string> CachedBlockedTags { get; } = [.. App.AppViewModel.AppSettings.BrowsingExperienceSettings.BlockedTags];
-
-    public IFilter<IWorkViewModel> BlockedTagsFilter => IFilter<IWorkViewModel>.Create(
-        entry => !entry.Entry.Tags.Any(t => t.Any(tag => CachedBlockedTags.Contains(tag.Name))),
-        false);
 
     private static IFilter<IWorkViewModel> TypeFilter { get; } = IFilter<IWorkViewModel>.Create(entry => entry is TViewModel, false);
 
@@ -57,7 +49,6 @@ public sealed class SimpleOperableViewViewModel<TViewModel> : ViewModelBase, IOp
         {
             SourceView.View.Filters.Clear();
             SourceView.View.Filters.Add(TypeFilter);
-            SourceView.View.Filters.Add(BlockedTagsFilter);
             if (UserFilter is not null)
                 SourceView.View.Filters.Add(UserFilter);
         }

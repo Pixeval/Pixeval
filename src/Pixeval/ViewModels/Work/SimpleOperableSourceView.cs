@@ -8,6 +8,7 @@ using System.Linq;
 using Mako.Model;
 using Misaki;
 using Pixeval.Collections;
+using Pixeval.Models.Blocking;
 
 namespace Pixeval.ViewModels;
 
@@ -17,7 +18,7 @@ public sealed class SimpleOperableSourceView<TViewModel>(IReadOnlyCollection<IAr
 {
     private bool _isDisposed;
 
-    public AdvancedObservableAdaptor<IArtworkInfo, IWorkViewModel> View { get; } = new(source as ObservableCollection<IArtworkInfo> ?? [.. source], CreateWorkViewModel);
+    public AdvancedObservableAdaptor<IArtworkInfo, IWorkViewModel> View { get; } = new(CreateSource(source), CreateWorkViewModel);
 
     IAdvancedObservableView<IWorkViewModel> ISourceView<IWorkViewModel>.View => View;
 
@@ -36,6 +37,9 @@ public sealed class SimpleOperableSourceView<TViewModel>(IReadOnlyCollection<IAr
     }
 
     private static IWorkViewModel CreateWorkViewModel(IArtworkInfo info) => info is Novel novel ? new NovelItemViewModel(novel) : new IllustrationItemViewModel(info);
+
+    private static ObservableCollection<IArtworkInfo> CreateSource(IReadOnlyCollection<IArtworkInfo> source) =>
+        [.. source.Select(static entry => BlockedContentHelper.Replace(entry))];
 
     private static TViewModel CloneItem(TViewModel viewModel)
         => viewModel switch

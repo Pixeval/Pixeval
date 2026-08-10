@@ -95,6 +95,7 @@ public sealed class AppViewModel(App app, FileLogger logger) : IAsyncDisposable
             .AddSingleton<DownloadHistoryPersistentManager>()
             .AddSingleton<SubscriptionDownloadHistoryPersistentManager>()
             .AddSingleton<WorkSubscriptionPersistentManager>()
+            .AddSingleton<BlockedUserPersistentManager>()
             .AddSingleton<SearchHistoryPersistentManager>()
             .AddSingleton<BrowseHistoryPersistentManager>()
             .AddSingleton<WatchLaterPersistentManager>()

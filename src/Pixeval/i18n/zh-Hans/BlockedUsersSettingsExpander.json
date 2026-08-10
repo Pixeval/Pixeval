@@ -1,0 +1,18 @@
+{
+  "AddUserButton": {
+    "Label": "添加屏蔽用户"
+  },
+  "RefreshAllButton": {
+    "Label": "刷新所有用户信息"
+  },
+  "RefreshUserButton": {
+    "Label": "刷新用户信息"
+  },
+  "DeleteUserButton": {
+    "Label": "取消屏蔽用户"
+  },
+  "TargetIdTextBox": {
+    "PlaceholderText": "用户 ID"
+  },
+  "InvalidUserId": "请输入有效的用户 ID"
+}
