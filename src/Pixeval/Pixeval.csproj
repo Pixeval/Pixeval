@@ -8,6 +8,7 @@
 		<AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
 		<EnableMcp Condition="'$(EnableMcp)' == ''">true</EnableMcp>
 		<DefineConstants Condition="'$(EnableMcp)' == 'true'">$(DefineConstants);PIXEVAL_MCP</DefineConstants>
+		<NoWarn Condition="'$(Configuration)' != 'Release'">$(NoWarn);PE1002</NoWarn>
 		
 		<Version>5.0.9.0</Version>
 		<AssemblyVersion>$(Version)</AssemblyVersion>
