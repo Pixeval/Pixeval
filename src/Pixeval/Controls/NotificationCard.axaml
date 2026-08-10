@@ -96,62 +96,62 @@
                         BoxShadow="0 4 12 0 #33000000"
                         CornerRadius="{TemplateBinding CornerRadius}">
                         <Border
-                            Background="{DynamicResource SolidBackgroundFillColorBaseBrush}"
+                            Padding="16,0,0,0"
+                            Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             ClipToBounds="True"
                             CornerRadius="{TemplateBinding CornerRadius}">
-                            <Border Padding="16,0,0,0" Background="{TemplateBinding Background}">
-                                <Grid MinHeight="48" ColumnDefinitions="Auto,*,Auto">
-                                    <fluent:SymbolIcon
-                                        x:Name="PART_Icon"
-                                        Margin="0,16,14,16"
-                                        VerticalAlignment="Top"
-                                        FontSize="16"
-                                        Foreground="{DynamicResource SystemFillColorAttentionBrush}"
-                                        IconVariant="Filled"
-                                        Symbol="Info" />
-                                    <ContentPresenter
-                                        x:Name="PART_ContentPresenter"
-                                        Grid.Column="1"
-                                        Margin="0,14,16,18"
-                                        VerticalAlignment="Center"
-                                        Content="{TemplateBinding Content}"
-                                        ContentTemplate="{TemplateBinding ContentTemplate}">
-                                        <ContentPresenter.DataTemplates>
-                                            <DataTemplate x:DataType="{x:Type notifications:INotification}" DataType="{x:Type notifications:INotification}">
-                                                <StackPanel Spacing="4">
-                                                    <TextBlock
-                                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                                        Text="{Binding Title}"
-                                                        TextWrapping="Wrap"
-                                                        Theme="{StaticResource BodyStrongTextBlockStyle}" />
-                                                    <TextBlock
-                                                        MaxHeight="80"
-                                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                                        IsVisible="{Binding Message,
-                                                                            Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                                                        Text="{Binding Message}"
-                                                        TextTrimming="CharacterEllipsis"
-                                                        TextWrapping="Wrap" />
-                                                </StackPanel>
-                                            </DataTemplate>
-                                            <DataTemplate x:DataType="{x:Type x:String}" DataType="{x:Type x:String}">
+                            <Grid MinHeight="48" ColumnDefinitions="Auto,*,Auto">
+                                <fluent:SymbolIcon
+                                    x:Name="PART_Icon"
+                                    Margin="0,16,14,16"
+                                    VerticalAlignment="Top"
+                                    FontSize="16"
+                                    Foreground="{DynamicResource SystemFillColorAttentionBrush}"
+                                    IconVariant="Filled"
+                                    Symbol="Info" />
+                                <ContentPresenter
+                                    x:Name="PART_ContentPresenter"
+                                    Grid.Column="1"
+                                    Margin="0,14,16,18"
+                                    VerticalAlignment="Center"
+                                    Content="{TemplateBinding Content}"
+                                    ContentTemplate="{TemplateBinding ContentTemplate}">
+                                    <ContentPresenter.DataTemplates>
+                                        <DataTemplate x:DataType="{x:Type notifications:INotification}"
+                                                      DataType="{x:Type notifications:INotification}">
+                                            <StackPanel Spacing="4">
                                                 <TextBlock
                                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                                    Text="{Binding}"
+                                                    Text="{Binding Title}"
                                                     TextWrapping="Wrap"
                                                     Theme="{StaticResource BodyStrongTextBlockStyle}" />
-                                            </DataTemplate>
-                                        </ContentPresenter.DataTemplates>
-                                    </ContentPresenter>
-                                    <Button
-                                        x:Name="PART_CloseButton"
-                                        Grid.Column="2"
-                                        NotificationCard.CloseOnClick="True"
-                                        Theme="{StaticResource NotificationCardCloseButtonStyle}" />
-                                </Grid>
-                            </Border>
+                                                <TextBlock
+                                                    MaxHeight="80"
+                                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                    IsVisible="{Binding Message,
+                                                                        Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                    Text="{Binding Message}"
+                                                    TextTrimming="CharacterEllipsis"
+                                                    TextWrapping="Wrap" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                        <DataTemplate x:DataType="{x:Type x:String}" DataType="{x:Type x:String}">
+                                            <TextBlock
+                                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                Text="{Binding}"
+                                                TextWrapping="Wrap"
+                                                Theme="{StaticResource BodyStrongTextBlockStyle}" />
+                                        </DataTemplate>
+                                    </ContentPresenter.DataTemplates>
+                                </ContentPresenter>
+                                <Button
+                                    x:Name="PART_CloseButton"
+                                    Grid.Column="2"
+                                    NotificationCard.CloseOnClick="True"
+                                    Theme="{StaticResource NotificationCardCloseButtonStyle}" />
+                            </Grid>
                         </Border>
                     </Border>
                 </LayoutTransformControl>
