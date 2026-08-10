@@ -344,7 +344,7 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
         try
         {
             var novel = BlockedContentHelper.Replace(
-                await App.AppViewModel.MakoClient.GetNovelFromIdAsync(id));
+                await App.AppViewModel.MakoClient.GetNovelFromIdAsync(id, token));
             token.ThrowIfCancellationRequested();
             var viewModel = NovelItemViewModel.CreateInstance(novel);
             onLoaded(viewModel);

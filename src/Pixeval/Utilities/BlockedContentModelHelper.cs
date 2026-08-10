@@ -43,40 +43,49 @@ public static class BlockedContentModelHelper
     internal static bool IsBlockedPlaceholder(IArtworkInfo entry) =>
         _BlockedArtworkMarkers.TryGetValue(entry, out _);
 
-    internal static IArtworkInfo Replace(IArtworkInfo entry, BlockedContentSnapshot snapshot) =>
-        BlockedContentHelper.IsBlocked(entry, snapshot)
+    internal static T Replace<T>(T entry, BlockedContentSnapshot snapshot) where T : IArtworkInfo
+    {
+        return BlockedContentHelper.IsBlocked(entry, snapshot)
             ? entry switch
             {
-                Illustration illustration => Replace(illustration, snapshot),
-                Novel novel => Replace(novel, snapshot),
+                Illustration illustration => (T) (object) ReplaceIllustration(illustration, snapshot),
+                Novel novel => (T) (object) ReplaceNovel(novel, snapshot),
                 _ => entry
             }
             : entry;
 
-    internal static Illustration Replace(Illustration entry, BlockedContentSnapshot snapshot) =>
-        MarkBlocked(Illustration.CreateDefault() with
-        {
-            Id = entry.Id,
-            Title = I18NManager.GetResource(BlockedContentResources.Work),
-            User = Replace(entry.User, snapshot),
-            CreateDate = entry.CreateDate,
-            ThumbnailUrls = CreatePlaceholderImageUrls(),
-            MetaSinglePage = new() { OriginalImageUrl = AppInfo.BlockedContentPath },
-            PageCount = 1,
-            Width = 1,
-            Height = 1
-        });
+        static Illustration ReplaceIllustration(Illustration entry, BlockedContentSnapshot snapshot) =>
+            MarkBlocked(Illustration.CreateDefault() with
+            {
+                Id = entry.Id,
+                Title = I18NManager.GetResource(BlockedContentResources.Work),
+                User = Replace(entry.User, snapshot),
+                CreateDate = entry.CreateDate,
+                ThumbnailUrls = CreatePlaceholderImageUrls(),
+                MetaSinglePage = new() { OriginalImageUrl = AppInfo.BlockedContentPath },
+                PageCount = 1,
+                Width = 1,
+                Height = 1
+            });
 
-    internal static Novel Replace(Novel entry, BlockedContentSnapshot snapshot) =>
-        MarkBlocked(Novel.CreateDefault() with
+        static Novel ReplaceNovel(Novel entry, BlockedContentSnapshot snapshot) =>
+            MarkBlocked(Novel.CreateDefault() with
+            {
+                Id = entry.Id,
+                Title = I18NManager.GetResource(BlockedContentResources.Work),
+                User = Replace(entry.User, snapshot),
+                CreateDate = entry.CreateDate,
+                ThumbnailUrls = CreatePlaceholderImageUrls(),
+                PageCount = 1
+            });
+
+        static ImageUrls CreatePlaceholderImageUrls() => new()
         {
-            Id = entry.Id,
-            Title = I18NManager.GetResource(BlockedContentResources.Work),
-            User = Replace(entry.User, snapshot),
-            CreateDate = entry.CreateDate,
-            ThumbnailUrls = CreatePlaceholderImageUrls(),
-            PageCount = 1
-        });
+            SquareMedium = AppInfo.BlockedContentPath,
+            Medium = AppInfo.BlockedContentPath,
+            Large = AppInfo.BlockedContentPath
+        };
+    }
 
     internal static User Replace(User entry, BlockedContentSnapshot snapshot) =>
         BlockedContentHelper.IsBlocked(entry.UserInfo, snapshot)
@@ -140,13 +149,6 @@ public static class BlockedContentModelHelper
                 ProfileImageUrls = CreatePlaceholderAvatarUrl()
             }
             : user;
-
-    private static ImageUrls CreatePlaceholderImageUrls() => new()
-    {
-        SquareMedium = AppInfo.BlockedContentPath,
-        Medium = AppInfo.BlockedContentPath,
-        Large = AppInfo.BlockedContentPath
-    };
 
     private static MediumOnlyImageUrl CreatePlaceholderAvatarUrl() => new() { Medium = AppInfo.BlockedContentPath };
 

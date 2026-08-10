@@ -54,13 +54,7 @@ public static class BlockedContentHelper
     public static bool IsBlockedPlaceholder(IArtworkInfo entry) =>
         BlockedContentModelHelper.IsBlockedPlaceholder(entry);
 
-    public static IArtworkInfo Replace(IArtworkInfo entry) =>
-        BlockedContentModelHelper.Replace(entry, CaptureSnapshot());
-
-    public static Illustration Replace(Illustration entry) =>
-        BlockedContentModelHelper.Replace(entry, CaptureSnapshot());
-
-    public static Novel Replace(Novel entry) =>
+    public static T Replace<T>(T entry) where T : IArtworkInfo =>
         BlockedContentModelHelper.Replace(entry, CaptureSnapshot());
 
     public static User Replace(User entry) =>
@@ -78,7 +72,7 @@ public static class BlockedContentHelper
     public static T ReplaceEntry<T>(T entry, BlockedContentSnapshot snapshot)
         where T : class, IIdentityInfo => entry switch
     {
-        IArtworkInfo artwork => (T) (object) BlockedContentModelHelper.Replace(artwork, snapshot),
+        IArtworkInfo artwork => (T) BlockedContentModelHelper.Replace(artwork, snapshot),
         User user => (T) (object) BlockedContentModelHelper.Replace(user, snapshot),
         Comment comment => (T) (object) BlockedContentModelHelper.Replace(comment, snapshot),
         _ => entry
