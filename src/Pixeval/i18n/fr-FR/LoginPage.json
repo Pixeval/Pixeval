@@ -5,9 +5,6 @@
   "RefreshTokenButton": {
     "Content": "Authentification avec token unique"
   },
-  "WebViewButton": {
-    "Content": "Authentification avec WebView"
-  },
   "FetchingSessionFailed": {
     "Content": "Veuillez redémarrer l'application\n Veuillez contacter les développeurs en cas de problème récurrent",
     "Title": "Récupération de session échouée"
