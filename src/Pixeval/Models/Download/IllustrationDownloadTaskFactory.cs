@@ -8,13 +8,14 @@ using Pixeval.Utilities.IO;
 
 namespace Pixeval.Models.Download;
 
-public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IArtworkInfo, IDownloadTaskGroup, object>
+public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IArtworkInfo, IDownloadTaskGroup, int>
 {
-    public IDownloadTaskGroup Create(IArtworkInfo context, string rawPath, object? parameter = null) =>
-        Create(new ParserContext(context), rawPath, parameter);
+    public IDownloadTaskGroup Create(IArtworkInfo context, string rawPath, int setIndex = -1) =>
+        Create(new ParserContext(context), rawPath, setIndex);
 
-    public IDownloadTaskGroup Create(ParserContext parserContext, string rawPath, object? parameter = null)
+    public IDownloadTaskGroup Create(ParserContext parserContext, string rawPath, int setIndex = -1)
     {
+        parserContext = SelectPage(parserContext, setIndex);
         var context = parserContext.ArtworkInfo;
         var path = IoHelper.NormalizePath(DownloadPathMacroParser.Reduce(rawPath, parserContext));
         var workSubscriptionId = parserContext.WorkSubscription?.HistoryEntryId;
@@ -42,4 +43,9 @@ public class IllustrationDownloadTaskFactory : IDownloadTaskFactory<IArtworkInfo
 
         return task;
     }
+
+    private static ParserContext SelectPage(ParserContext parserContext, int setIndex) =>
+        setIndex >= 0 && parserContext.ArtworkInfo is IImageSet imageSet
+            ? parserContext with { ArtworkInfo = imageSet.Pages[setIndex] }
+            : parserContext;
 }

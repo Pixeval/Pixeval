@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Pixeval.Views.Viewers.SingleImageViewer"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -79,9 +79,14 @@
                 Command="{Binding SaveAsCommand}"
                 CommandParameter="{Binding $self}"
                 Header="{I18N {x:Static pixeval:EntryViewerPageResources.SaveAs}}"
-                Icon="{markup:SymbolIcon Save}"
+                Icon="{markup:SymbolIcon SaveEdit}"
                 InputGesture="{markup1:PlatformCommandGesture S,
                                                               AdditionalModifiers=Shift}" />
+            <MenuItem
+                Command="{Binding SaveImageCommand}"
+                CommandParameter="{Binding $self}"
+                Header="{I18N {x:Static pixeval:EntryViewerPageResources.SaveImage}}"
+                Icon="{markup:SymbolIcon Save}" />
             <MenuItem
                 Command="{Binding ViewOriginalCommand}"
                 CommandParameter="{Binding $self}"

@@ -96,6 +96,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
     private bool _thumbnailLoaded;
     private readonly string _platform;
     private readonly IArtworkInfo _entry;
+    private readonly Func<Control?, int, Task> _saveImageAsync;
 
     public int Index { get; }
 
@@ -118,10 +119,15 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
     public double MirrorScaleX => IsMirrored ? -1 : 1;
 
     /// <inheritdoc/>
-    public SingleViewerViewModel(string platform, IArtworkInfo entry, int index)
+    public SingleViewerViewModel(
+        string platform,
+        IArtworkInfo entry,
+        int index,
+        Func<Control?, int, Task> saveImageAsync)
     {
         _platform = platform;
         _entry = entry;
+        _saveImageAsync = saveImageAsync;
         Index = index;
         TransformerExtensionItems = [.. TransformerExtensions.Select(extension => new ImageTransformerExtensionCommandItem(this, extension))];
         _ = LoadThumbnailImageAsync();
@@ -450,6 +456,9 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
         await clipboard.FlushAsync();
         viewContainer?.ShowSuccess(I18NManager.GetResource(MiscResources.Copied));
     }
+
+    [RelayCommand]
+    private Task SaveImageAsync(Control? control) => _saveImageAsync(control, Index);
 
     [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
     private async Task SaveAsAsync(Control control)

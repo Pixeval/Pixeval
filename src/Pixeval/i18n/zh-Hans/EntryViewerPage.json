@@ -51,6 +51,7 @@
   },
   "Copy": "复制显示的图片",
   "SaveAs": "保存显示的图片",
+  "SaveImage": "保存图片",
   "ViewOriginal": "查看原图",
   "OtherImageTransformerExtensions": "其他图片转换扩展"
 }

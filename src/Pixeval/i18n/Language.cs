@@ -508,6 +508,7 @@ namespace Pixeval
         public const string RotateClockwise = "EntryViewerPage.RotateClockwise";
         public const string RotateCounterclockwise = "EntryViewerPage.RotateCounterclockwise";
         public const string SaveAs = "EntryViewerPage.SaveAs";
+        public const string SaveImage = "EntryViewerPage.SaveImage";
         public const string Series = "EntryViewerPage.Series";
         public const string ViewOriginal = "EntryViewerPage.ViewOriginal";
         public const string ZoomIn = "EntryViewerPage.ZoomIn";

@@ -126,20 +126,20 @@ public sealed class DownloadManager : IDisposable
         try
         {
             while (await _downloadTaskChannel.Reader.WaitToReadAsync())
-            while (await _throttle && _downloadTaskChannel.Reader.TryRead(out var taskToken) && taskToken is { Token.IsCancellationRequested: false, Task: var taskGroup })
-            {
-                await taskGroup.InitializeTaskGroupAsync();
-
-                foreach (var subTask in taskGroup)
+                while (await _throttle && _downloadTaskChannel.Reader.TryRead(out var taskToken) && taskToken is { Token.IsCancellationRequested: false, Task: var taskGroup })
                 {
-                    // 需要判断是否处于Queued状态才能运行
-                    if (subTask.CurrentState is DownloadState.Queued)
+                    await taskGroup.InitializeTaskGroupAsync();
+
+                    foreach (var subTask in taskGroup)
                     {
-                        await DownloadAsync(subTask);
-                        _ = await _throttle;
+                        // 需要判断是否处于Queued状态才能运行
+                        if (subTask.CurrentState is DownloadState.Queued)
+                        {
+                            await DownloadAsync(subTask);
+                            _ = await _throttle;
+                        }
                     }
                 }
-            }
         }
         catch (ObjectDisposedException) when (_disposed)
         {
@@ -152,9 +152,7 @@ public sealed class DownloadManager : IDisposable
     /// <param name="taskGroup"></param>
     public bool TryRemoveTask(IDownloadTaskGroupBase taskGroup)
     {
-        var taskToRemove = _taskQuerySet.TryGetValue(taskGroup.Key, out var current)
-            ? current
-            : taskGroup;
+        var taskToRemove = _taskQuerySet.GetValueOrDefault(taskGroup.Key, taskGroup);
         taskToRemove.Cancel();
         if (!QueuedTasks.Remove(taskToRemove))
             return false;
