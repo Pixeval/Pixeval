@@ -46,7 +46,7 @@
         BasedOn="{StaticResource {x:Type CommandBarToggleButton}}"
         TargetType="{x:Type CommandBarToggleButton}">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="CornerRadius" Value="{StaticResource ControlCornerRadius}" />
         <Setter Property="Margin" Value="0,4" />
     </ControlTheme>
 
@@ -55,7 +55,7 @@
         BasedOn="{StaticResource {x:Type CommandBarButton}}"
         TargetType="{x:Type CommandBarButton}">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="CornerRadius" Value="{StaticResource ControlCornerRadius}" />
         <Setter Property="Margin" Value="0,4" />
     </ControlTheme>
 
