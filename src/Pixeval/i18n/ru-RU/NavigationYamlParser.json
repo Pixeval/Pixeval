@@ -1,6 +1,5 @@
 {
   "Diagnostics": {
-    "BuiltInNavigationYamlInvalid": "Конфигурация YAML встроенной панели навигации недопустима.",
     "BothHeaderAndFooterEmpty": "Поля header и footer не могут быть одновременно пустыми.",
     "EmptyFolderFormatted": "Папка {0} не может быть пустой.",
     "FieldNotAllowedFormatted": "{0} не может содержать поле {1}.",
