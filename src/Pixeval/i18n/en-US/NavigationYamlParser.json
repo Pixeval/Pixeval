@@ -1,6 +1,5 @@
 {
   "Diagnostics": {
-    "BuiltInNavigationYamlInvalid": "The built-in navigation YAML configuration is invalid.",
     "BothHeaderAndFooterEmpty": "Header and footer cannot both be empty.",
     "EmptyFolderFormatted": "Folder {0} cannot be empty.",
     "FieldNotAllowedFormatted": "{0} cannot contain the {1} field.",
