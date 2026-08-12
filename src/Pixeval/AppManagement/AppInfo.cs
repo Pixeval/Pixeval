@@ -24,6 +24,8 @@ public static class AppInfo
 
     public const string AppProtocol = "pixeval";
 
+    private const string MsixPackageFamilyName = "PokerKo.4454907E5DDB5_0wpjzgvbyjvyr";
+
     public static string ApplicationFolderPath { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppIdentifier);
 
     public static string SettingsFolder { get; } = Path.Combine(ApplicationFolderPath, "Settings");
@@ -54,6 +56,8 @@ public static class AppInfo
 
     static AppInfo()
     {
+        // Temporary migration for the release that disables MSIX file-system virtualization.
+        MigrateApplicationFolder();
         _ = FileHelper.TryDeleteDirectory(TempFolder);
         // Ensure directories exist
         _ = FileHelper.TryCreateDirectory(ApplicationFolderPath);
@@ -62,6 +66,32 @@ public static class AppInfo
         _ = FileHelper.TryCreateDirectory(LogsFolder);
         _ = FileHelper.TryCreateDirectory(TempFolder);
         _ = FileHelper.TryCreateDirectory(ExtensionsFolder);
+    }
+
+    private static void MigrateApplicationFolder()
+    {
+        if (Directory.Exists(ApplicationFolderPath))
+            return;
+
+        var packagesPath = Path.Combine(
+            Path.GetDirectoryName(ApplicationFolderPath)!,
+            "Packages",
+            MsixPackageFamilyName,
+            "LocalCache",
+            "Local");
+        var applicationFolderName = Path.GetFileName(ApplicationFolderPath);
+        var redirectedApplicationFolderPath = Path.Combine(packagesPath, applicationFolderName);
+        if (!Directory.Exists(redirectedApplicationFolderPath))
+            return;
+
+        try
+        {
+            Directory.Move(redirectedApplicationFolderPath, ApplicationFolderPath);
+        }
+        catch
+        {
+            // A failed migration must not prevent the app from starting.
+        }
     }
 
     public const string AssetsPathPrefix = $"avares://{AppIdentifier}/Assets/";
