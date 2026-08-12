@@ -8,39 +8,49 @@
         <StackPanel Orientation="Horizontal">
             <ThemeVariantScope RequestedThemeVariant="Light">
                 <StackPanel Background="{DynamicResource SolidBackgroundFillColorBaseBrush}">
-                    <NotificationCard NotificationType="Success">
-                        <notifications:Notification Title="Success message" />
+                    <NotificationCard>
+                        <notifications:Notification Type="Success" Title="Success message" />
                     </NotificationCard>
-                    <NotificationCard NotificationType="Information">
-                        <notifications:Notification Title="Information" Message="Information message" />
+                    <NotificationCard >
+                        <notifications:Notification Type="Information" Title="Information" Message="Information message" />
                     </NotificationCard>
-                    <NotificationCard NotificationType="Warning">
-                        <notifications:Notification Title="Warning" Message="Warning message" />
+                    <NotificationCard>
+                        <notifications:Notification Type="Warning" Title="Warning" Message="Warning message" />
                     </NotificationCard>
-                    <NotificationCard NotificationType="Error">
-                        <notifications:Notification Title="Error" Message="Error message" />
+                    <NotificationCard>
+                        <notifications:Notification Type="Error" Title="Error" Message="Error message" />
                     </NotificationCard>
                 </StackPanel>
             </ThemeVariantScope>
             <ThemeVariantScope RequestedThemeVariant="Dark">
                 <StackPanel Background="{DynamicResource SolidBackgroundFillColorBaseBrush}">
-                    <NotificationCard NotificationType="Success">
-                        <notifications:Notification Title="Success message" />
+                    <NotificationCard>
+                        <notifications:Notification Type="Success" Title="Success message" />
                     </NotificationCard>
-                    <NotificationCard NotificationType="Information">
-                        <notifications:Notification Title="Information" Message="Information message" />
+                    <NotificationCard>
+                        <notifications:Notification Type="Information" Title="Information" Message="Information message" />
                     </NotificationCard>
-                    <NotificationCard NotificationType="Warning">
-                        <notifications:Notification Title="Warning" Message="Warning message" />
+                    <NotificationCard>
+                        <notifications:Notification Type="Warning" Title="Warning" Message="Warning message"  />
                     </NotificationCard>
-                    <NotificationCard NotificationType="Error">
-                        <notifications:Notification Title="Error" Message="Error message" />
+                    <NotificationCard>
+                        <notifications:Notification Type="Error" Title="Error" Message="Error message"  />
                     </NotificationCard>
                 </StackPanel>
             </ThemeVariantScope>
         </StackPanel>
     </Design.PreviewWith>
 
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+            <SolidColorBrush Color="#ebf3fc" x:Key="ColorBrandBackground2"></SolidColorBrush>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+            
+            <SolidColorBrush Color="#082338" x:Key="ColorBrandBackground2"></SolidColorBrush>
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+    
     <!--
         InfoBar.xaml / InfoBar_themeresources.xaml
     -->
@@ -211,7 +221,7 @@
         </Style>
 
         <Style Selector="^:information">
-            <Setter Property="Background" Value="{DynamicResource SystemFillColorAttentionBackgroundBrush}" />
+            <Setter Property="Background" Value="{DynamicResource ColorBrandBackground2}" />
             <Style Selector="^ /template/ fluent|SymbolIcon#PART_Icon">
                 <Setter Property="Symbol" Value="QuestionCircle" />
             </Style>
