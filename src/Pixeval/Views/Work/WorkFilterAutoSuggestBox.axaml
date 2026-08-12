@@ -26,11 +26,11 @@
         x:Name="FilterAutoSuggestBox"
         VerticalAlignment="Stretch"
         FilterMode="None"
-        GotFocus="FilterAutoSuggestBox_OnGotFocus"
         IsTextCompletionEnabled="False"
         ItemTemplate="{StaticResource FilterCompletionTemplate}"
         MinimumPrefixLength="0"
         PlaceholderText="{I18N {x:Static local:WorkContainerResources+FilterAutoSuggestBox.PlaceholderText}}"
+        Tapped="FilterAutoSuggestBox_OnTapped"
         TemplateApplied="FilterAutoSuggestBox_OnTemplateApplied"
         TextChanged="FilterAutoSuggestBox_OnTextChanged" />
 </UserControl>

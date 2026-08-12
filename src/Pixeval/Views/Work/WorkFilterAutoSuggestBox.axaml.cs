@@ -31,7 +31,6 @@ public partial class WorkFilterAutoSuggestBox : UserControl
     private SelectingItemsControl? _filterSuggestionItemsControl;
     private IReadOnlyList<FilterCompletionItem> _filterCompletionItems = [];
     private FilterCompletionItem? _selectedFilterCompletion;
-    private int _filterCompletionUpdateVersion;
     private bool _isCommittingFilterCompletion;
 
     public WorkFilterAutoSuggestBox()
@@ -89,20 +88,20 @@ public partial class WorkFilterAutoSuggestBox : UserControl
         _filterTextBox = e.NameScope.Find<TextBox>(FilterTextBoxPart)
                          ?? FilterAutoSuggestBox.GetVisualDescendants().OfType<TextBox>().FirstOrDefault();
         _filterSuggestionItemsControl = e.NameScope.Find<SelectingItemsControl>(FilterSelectingItemsControlPart);
-        if (_filterSuggestionItemsControl is not null)
-        {
-            _filterSuggestionItemsControl.SelectionChanged += FilterSuggestionItemsControl_OnSelectionChanged;
-            _filterSuggestionItemsControl.PointerReleased += FilterSuggestionItemsControl_OnPointerReleased;
-        }
+        _filterSuggestionItemsControl?.SelectionChanged += FilterSuggestionItemsControl_OnSelectionChanged;
+        _filterSuggestionItemsControl?.AddHandler(
+            PointerPressedEvent,
+            FilterSuggestionItemsControl_OnPointerPressed,
+            RoutingStrategies.Bubble,
+            handledEventsToo: true);
     }
 
     private void DetachFilterSuggestionItemsControl()
     {
-        if (_filterSuggestionItemsControl is not null)
-        {
-            _filterSuggestionItemsControl.SelectionChanged -= FilterSuggestionItemsControl_OnSelectionChanged;
-            _filterSuggestionItemsControl.PointerReleased -= FilterSuggestionItemsControl_OnPointerReleased;
-        }
+        _filterSuggestionItemsControl?.SelectionChanged -= FilterSuggestionItemsControl_OnSelectionChanged;
+        _filterSuggestionItemsControl?.RemoveHandler(
+            PointerPressedEvent,
+            FilterSuggestionItemsControl_OnPointerPressed);
         _filterSuggestionItemsControl = null;
     }
 
@@ -112,16 +111,18 @@ public partial class WorkFilterAutoSuggestBox : UserControl
             _selectedFilterCompletion = completion;
     }
 
-    private void FilterSuggestionItemsControl_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
+    private void FilterSuggestionItemsControl_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (e.InitialPressMouseButton is not MouseButton.Left)
+        if (!e.Properties.IsLeftButtonPressed || e.Source is not Control source)
             return;
 
-        var selectedItem = GetSelectedFilterCompletion();
-        Dispatcher.UIThread.Post(() =>
-        {
-            _ = CommitFilterCompletion(selectedItem ?? GetSelectedFilterCompletion());
-        });
+        var completion = source.GetSelfAndVisualAncestors()
+            .OfType<Control>()
+            .Select(control => control.DataContext)
+            .OfType<FilterCompletionItem>()
+            .FirstOrDefault();
+        if (completion is not null)
+            Dispatcher.UIThread.Post(() => _ = CommitFilterCompletion(completion));
     }
 
     private void FilterAutoSuggestBox_OnKeyDown(object? sender, KeyEventArgs e)
@@ -171,13 +172,13 @@ public partial class WorkFilterAutoSuggestBox : UserControl
             return false;
 
         var insertText = completion.InsertText;
-        ++_filterCompletionUpdateVersion;
         _isCommittingFilterCompletion = true;
         try
         {
             _filterCompletionItems = [];
             _selectedFilterCompletion = null;
             FilterAutoSuggestBox.SelectedItem = null;
+            FilterAutoSuggestBox.ItemsSource = Array.Empty<FilterCompletionItem>();
             FilterAutoSuggestBox.IsDropDownOpen = false;
             if (!completion.IsHintOnly)
                 Text = insertText;
@@ -209,22 +210,13 @@ public partial class WorkFilterAutoSuggestBox : UserControl
     private void FilterAutoSuggestBox_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         if (!_isCommittingFilterCompletion)
-            QueueUpdateFilterCompletions();
+            UpdateFilterCompletions(Text);
     }
 
-    private void QueueUpdateFilterCompletions()
+    private void FilterAutoSuggestBox_OnTapped(object? sender, TappedEventArgs e)
     {
-        var version = ++_filterCompletionUpdateVersion;
-        Dispatcher.UIThread.Post(() =>
-        {
-            if (version == _filterCompletionUpdateVersion && !_isCommittingFilterCompletion)
-                UpdateFilterCompletions(Text);
-        });
-    }
-
-    private void FilterAutoSuggestBox_OnGotFocus(object? sender, RoutedEventArgs e)
-    {
-        QueueUpdateFilterCompletions();
+        if (sender is AutoCompleteBox box)
+            box.IsDropDownOpen = true;
     }
 
     private void UpdateFilterCompletions(string? text, FilterAnalysisResult? analysis = null)
@@ -256,7 +248,6 @@ public partial class WorkFilterAutoSuggestBox : UserControl
         {
             FilterAutoSuggestBox.ItemsSource = suggestions;
         }
-        FilterAutoSuggestBox.IsDropDownOpen = !_isCommittingFilterCompletion && suggestions.Length > 0 && HasFilterAutoSuggestBoxFocus();
     }
 
     private int GetCaretIndex(string text)
@@ -267,13 +258,9 @@ public partial class WorkFilterAutoSuggestBox : UserControl
         _filterCompletionItems = [];
         _selectedFilterCompletion = null;
         FilterAutoSuggestBox.SelectedItem = null;
-        FilterAutoSuggestBox.ItemsSource = null;
+        FilterAutoSuggestBox.ItemsSource = Array.Empty<FilterCompletionItem>();
+        FilterAutoSuggestBox.IsDropDownOpen = false;
     }
-
-    private bool HasFilterAutoSuggestBoxFocus()
-        => FilterAutoSuggestBox.IsKeyboardFocusWithin
-           || FilterAutoSuggestBox.IsFocused
-           || GetFilterTextBox()?.IsFocused is true;
 
     private FilterCompletionItem? GetActiveFilterCompletion()
         => FilterAutoSuggestBox.SelectedItem as FilterCompletionItem

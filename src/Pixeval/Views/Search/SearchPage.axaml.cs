@@ -30,12 +30,16 @@ public partial class SearchPage : IconContentPage
 {
     private const string SearchTextBoxPart = "PART_TextBox";
     private const string SearchSelectingItemsControlPart = "PART_SelectingItemsControl";
+    private static readonly TimeSpan _SearchTagCompletionDelay = TimeSpan.FromSeconds(1);
 
     private TextBox? _searchTextBox;
     private SelectingItemsControl? _searchSuggestionItemsControl;
+    private IReadOnlyList<SearchCompletionItem> _searchCompletionItems = [];
     private SearchCompletionItem? _selectedSearchCompletion;
     private CancellationTokenSource? _searchCompletionCancellationTokenSource;
     private int _searchCompletionUpdateVersion;
+    private bool _isUpdatingSearchCompletions;
+    private string? _searchCompletionSource;
 
     public SearchPage()
     {
@@ -117,7 +121,11 @@ public partial class SearchPage : IconContentPage
         if (_searchSuggestionItemsControl is not null)
         {
             _searchSuggestionItemsControl.SelectionChanged += SearchSuggestionItemsControl_OnSelectionChanged;
-            _searchSuggestionItemsControl.PointerReleased += SearchSuggestionItemsControl_OnPointerReleased;
+            _searchSuggestionItemsControl.AddHandler(
+                InputElement.PointerPressedEvent,
+                SearchSuggestionItemsControl_OnPointerPressed,
+                RoutingStrategies.Bubble,
+                handledEventsToo: true);
         }
     }
 
@@ -126,7 +134,9 @@ public partial class SearchPage : IconContentPage
         if (_searchSuggestionItemsControl is not null)
         {
             _searchSuggestionItemsControl.SelectionChanged -= SearchSuggestionItemsControl_OnSelectionChanged;
-            _searchSuggestionItemsControl.PointerReleased -= SearchSuggestionItemsControl_OnPointerReleased;
+            _searchSuggestionItemsControl.RemoveHandler(
+                InputElement.PointerPressedEvent,
+                SearchSuggestionItemsControl_OnPointerPressed);
         }
 
         _searchSuggestionItemsControl = null;
@@ -138,53 +148,63 @@ public partial class SearchPage : IconContentPage
             _selectedSearchCompletion = completion;
     }
 
-    private void SearchSuggestionItemsControl_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
+    private void SearchSuggestionItemsControl_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (e.InitialPressMouseButton is not MouseButton.Left)
+        if (!e.Properties.IsLeftButtonPressed || e.Source is not Control source)
             return;
 
-        var selectedItem = GetSelectedSearchCompletion();
-        Dispatcher.UIThread.Post(() => CommitSearchCompletion(selectedItem ?? GetSelectedSearchCompletion()));
+        var completion = source.GetSelfAndVisualAncestors()
+            .OfType<Control>()
+            .Select(control => control.DataContext)
+            .OfType<SearchCompletionItem>()
+            .FirstOrDefault();
+        if (completion is not null)
+            Dispatcher.UIThread.Post(() => CommitSearchCompletion(completion));
     }
 
     private void SearchAutoCompleteBox_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
-        QueueUpdateSearchCompletions();
+        if (!_isUpdatingSearchCompletions)
+            UpdateSearchCompletions(SearchAutoCompleteBox.Text);
     }
 
-    private void SearchAutoCompleteBox_OnGotFocus(object? sender, RoutedEventArgs e)
+    private void SearchAutoCompleteBox_OnTapped(object? sender, TappedEventArgs e)
     {
-        QueueUpdateSearchCompletions();
-    }
-
-    private void QueueUpdateSearchCompletions()
-    {
-        var version = ++_searchCompletionUpdateVersion;
-        Dispatcher.UIThread.Post(() =>
-        {
-            if (version == _searchCompletionUpdateVersion)
-                UpdateSearchCompletions(SearchAutoCompleteBox.Text);
-        });
+        if (sender is AutoCompleteBox box)
+            box.IsDropDownOpen = true;
     }
 
     private void UpdateSearchCompletions(string? text)
     {
         var source = text ?? "";
-        var normalized = source.Trim();
-        if (normalized.Length is 0)
-        {
-            ClearSearchCompletionItems();
+        if (string.Equals(source, _searchCompletionSource, StringComparison.Ordinal))
             return;
+
+        _searchCompletionSource = source;
+        ++_searchCompletionUpdateVersion;
+        _isUpdatingSearchCompletions = true;
+        try
+        {
+            var normalized = source.Trim();
+            if (normalized.Length is 0)
+            {
+                ClearSearchCompletionItems();
+                return;
+            }
+
+            _searchCompletionCancellationTokenSource?.Cancel();
+            _searchCompletionCancellationTokenSource?.Dispose();
+            _searchCompletionCancellationTokenSource = new();
+
+            var version = _searchCompletionUpdateVersion;
+            var immediateSuggestions = CreateImmediateSearchCompletions(normalized);
+            SetSearchCompletionItems(immediateSuggestions);
+            _ = LoadTagCompletionsAsync(source, immediateSuggestions, version, _searchCompletionCancellationTokenSource.Token);
         }
-
-        _searchCompletionCancellationTokenSource?.Cancel();
-        _searchCompletionCancellationTokenSource?.Dispose();
-        _searchCompletionCancellationTokenSource = new();
-
-        var version = _searchCompletionUpdateVersion;
-        var immediateSuggestions = CreateImmediateSearchCompletions(normalized);
-        SetSearchCompletionItems(immediateSuggestions);
-        _ = LoadTagCompletionsAsync(source, immediateSuggestions, version, _searchCompletionCancellationTokenSource.Token);
+        finally
+        {
+            _isUpdatingSearchCompletions = false;
+        }
     }
 
     private IReadOnlyList<SearchCompletionItem> CreateImmediateSearchCompletions(string normalized)
@@ -226,9 +246,12 @@ public partial class SearchPage : IconContentPage
             if (keyword.Length is 0)
                 return;
 
-            var tags = await App.AppViewModel.MakoClient.GetAutoCompletionForKeyword(keyword, true, token);
+            await Task.Delay(_SearchTagCompletionDelay, token).ConfigureAwait(false);
+            var tags = await App.AppViewModel.MakoClient
+                .GetAutoCompletionForKeyword(keyword, true, token)
+                .ConfigureAwait(false);
             token.ThrowIfCancellationRequested();
-            if (version != _searchCompletionUpdateVersion || !string.Equals(source, SearchAutoCompleteBox.Text ?? "", StringComparison.Ordinal))
+            if (version != _searchCompletionUpdateVersion)
                 return;
 
             var suggestions = immediateSuggestions
@@ -251,25 +274,33 @@ public partial class SearchPage : IconContentPage
     private void SetSearchCompletionItems(IReadOnlyList<SearchCompletionItem> suggestions)
     {
         if (suggestions.Count is 0)
+        {
             ClearSearchCompletionItems();
-        else
+            return;
+        }
+
+        if (!_searchCompletionItems.SequenceEqual(suggestions))
+        {
+            _searchCompletionItems = suggestions;
+            _selectedSearchCompletion = null;
+            SearchAutoCompleteBox.SelectedItem = null;
             SearchAutoCompleteBox.ItemsSource = suggestions;
-        SearchAutoCompleteBox.IsDropDownOpen = suggestions.Count > 0 && HasSearchAutoCompleteBoxFocus();
+        }
     }
 
     private void ClearSearchCompletionItems()
     {
         _searchCompletionCancellationTokenSource?.Cancel();
+        _searchCompletionCancellationTokenSource = null;
+        _searchCompletionItems = [];
         _selectedSearchCompletion = null;
         SearchAutoCompleteBox.SelectedItem = null;
-        SearchAutoCompleteBox.ItemsSource = null;
+        SearchAutoCompleteBox.ItemsSource = Array.Empty<SearchCompletionItem>();
         SearchAutoCompleteBox.IsDropDownOpen = false;
     }
 
     private string SearchAutoCompleteBox_OnSelectItem(string? text, object item)
-        => item is SearchCompletionItem { Kind: SearchCompletionKind.Tag } completion
-            ? ApplyKeywordCompletion(text ?? "", completion.Text)
-            : text ?? "";
+        => SearchAutoCompleteBox.Text ?? "";
 
     private void SearchHistoryButton_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -342,8 +373,8 @@ public partial class SearchPage : IconContentPage
             return false;
 
         ++_searchCompletionUpdateVersion;
-        SearchAutoCompleteBox.SelectedItem = null;
-        SearchAutoCompleteBox.IsDropDownOpen = false;
+        ClearSearchCompletionItems();
+        _searchCompletionSource = null;
 
         switch (completion.Kind)
         {
@@ -427,11 +458,6 @@ public partial class SearchPage : IconContentPage
 
     private TextBox? GetSearchTextBox()
         => _searchTextBox ??= SearchAutoCompleteBox.GetVisualDescendants().OfType<TextBox>().FirstOrDefault();
-
-    private bool HasSearchAutoCompleteBoxFocus()
-        => SearchAutoCompleteBox.IsKeyboardFocusWithin
-           || SearchAutoCompleteBox.IsFocused
-           || GetSearchTextBox()?.IsFocused is true;
 
     private static string GetLastKeyword(string text)
     {
