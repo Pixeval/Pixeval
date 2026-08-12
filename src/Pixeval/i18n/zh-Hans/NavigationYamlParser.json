@@ -1,6 +1,5 @@
 {
   "Diagnostics": {
-    "BuiltInNavigationYamlInvalid": "内置导航栏 YAML 配置无效。",
     "BothHeaderAndFooterEmpty": "header 和 footer 不能同时为空。",
     "EmptyFolderFormatted": "文件夹 {0} 不能为空。",
     "FieldNotAllowedFormatted": "{0} 不能包含 {1} 字段。",

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Avalonia.Controls;
 using FluentIcons.Common;
 using Pixeval.I18N;
 using Pixeval.Utilities;
@@ -138,9 +139,12 @@ public static class NavigationYamlParser
         if (result.Configuration is { } configuration)
             return configuration;
 
-        var parseResult = Parse(NavigationMenuYaml.DefaultYaml);
-        return parseResult.Configuration
-               ?? throw new InvalidOperationException(Diagnostic(NavigationYamlParserResources.Diagnostics.BuiltInNavigationYamlInvalid));
+        // 傻逼 VS Designer 没有字符串资源，用默认的 YAML 会返回 null，从而导致所有 Designer 页面罢工
+        var parseResult = Parse(
+            Design.IsDesignMode
+                ? NavigationMenuYaml.DefaultYamlForDesigner
+                : NavigationMenuYaml.DefaultYaml);
+        return parseResult.Configuration!;
     }
 
     extension(IReadOnlyList<NavigationMenuItem> items)

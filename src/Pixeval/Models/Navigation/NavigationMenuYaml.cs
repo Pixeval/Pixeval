@@ -38,4 +38,38 @@ public static class NavigationMenuYaml
            - page: Settings
            
          """;
+
+    public const string DefaultYamlForDesigner =
+        """
+        newTab: Home
+
+        header:
+          - page: Search
+          - page: WorkRecommended
+          - page: WorkRanking
+          - page: WorkBookmarks
+          - page: Series
+          - page: UserRecommended
+          - folder: WorkFolder
+            icon: DesignIdeas
+            children:
+              - page: WorkFollowing
+              - page: WorkMyPixiv
+              - page: WorkNew
+              - page: Spotlight
+          - folder: UserFolder
+            icon: PeopleTeam
+            children:
+              - page: UserFollowing
+              - page: UserFollower
+              - page: UserMyPixiv
+
+        footer:
+          - page: BrowsingHistory
+          - page: WatchLater
+          - page: Download
+          - page: Extensions
+          - page: Settings
+          
+        """;
 }

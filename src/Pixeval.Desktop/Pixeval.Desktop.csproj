@@ -6,11 +6,8 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<EnableMcp>true</EnableMcp>
+        <PublishAot Condition="'$(Configuration)' != 'Debug'">true</PublishAot>
 	</PropertyGroup>
-    
-    <PropertyGroup  Condition="'$(Configuration)' != 'Debug'">
-        <PublishAot>true</PublishAot>
-    </PropertyGroup>
 
 	<PropertyGroup>
 		<ApplicationManifest>app.manifest</ApplicationManifest>

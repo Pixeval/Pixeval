@@ -41,41 +41,7 @@
 
 [![brew test-bot](https://github.com/Pixeval/homebrew-tap/actions/workflows/tests.yml/badge.svg)](https://github.com/Pixeval/homebrew-tap/actions/workflows/tests.yml)
 
-Pixeval 提供自托管的 [Homebrew Tap](https://github.com/Pixeval/homebrew-tap) 在 Mac 和 Linux 上安装 Pixeval
-
-**安装**
-
-```bash
-# 添加此 tap
-brew tap Pixeval/tap
-
-# 信任此 tap
-brew trust Pixeval/tap
-
-# 安装 Pixeval (仅Mac)
-brew install --cask pixeval
-
-# 通过 Formula 安装 Pixeval (Mac & Linux)
-brew install --formula pixeval
-```
-**卸载**
-
-```bash
-brew uninstall --cask --zap pixeval
-
-# 仅卸载应用，保留用户数据
-brew uninstall --cask pixeval
-
-# 下载 Pixeval (Formula)
-brew uninstall pixeval
-
-# 移除 tap 本身
-brew untap Pixeval/tap
-```
-> [!NOTE]
-> 如果默认的 Tap 速度较慢，可以手动下载 [Cask源文件](https://raw.githubusercontent.com/Pixeval/homebrew-tap/refs/heads/main/Casks/pixeval.rb) 或 [Formula源文件](https://raw.githubusercontent.com/Pixeval/homebrew-tap/refs/heads/main/Formula/pixeval.rb)，更换到镜像域名后，`brew install --cask /path/to/pixeval.rb` 或 `brew install --formula /path/to/pixeval.rb`。
-
-更多信息请查看[Tap仓库](https://github.com/Pixeval/homebrew-tap)
+Pixeval 提供自托管的 [Homebrew Tap](https://github.com/Pixeval/homebrew-tap) 在 Mac 和 Linux 上安装 Pixeval，安装和卸载方法参见 [homebrew](https://github.com/Pixeval/homebrew-tap#install)。
 
 ## 反馈问题（按照推荐程度优先级排序）
 
