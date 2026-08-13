@@ -32,15 +32,15 @@ public static class CacheHelper
     public static readonly Lazy<IAnimatedBitmap> AnimatedImageNotAvailable =
         new(() => IAnimatedBitmap.Load([WrappedImageNotAvailable.Value], [100]));
 
-    public static void PurgeCache() => _FileCache.Purge();
+    public static Task PurgeCacheAsync(CancellationToken token = default) => _FileCache.PurgeAsync(token);
 
-    public static void EnforceCacheSizeLimit()
+    public static Task EnforceCacheSizeLimitAsync(CancellationToken token = default)
     {
         var settings = App.AppViewModel.AppSettings.ApplicationSettings;
         if (!settings.LimitFileCacheSize)
-            return;
+            return Task.CompletedTask;
 
-        _FileCache.EnforceSizeLimit(GetCacheSizeLimitInBytes());
+        return _FileCache.EnforceSizeLimitAsync(GetCacheSizeLimitInBytes(), token);
     }
 
     private static long GetCacheSizeLimitInBytes()

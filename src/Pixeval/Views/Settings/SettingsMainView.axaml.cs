@@ -189,9 +189,9 @@ public partial class SettingsMainView : ContentPage
         }
     }
 
-    private void DeleteFileCacheEntryButton_OnClicked(object sender, RoutedEventArgs e)
+    private async void DeleteFileCacheEntryButton_OnClicked(object sender, RoutedEventArgs e)
     {
-        CacheHelper.PurgeCache();
+        await CacheHelper.PurgeCacheAsync();
         ShowClearData(ClearDataKind.FileCache);
     }
 
