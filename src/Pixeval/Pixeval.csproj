@@ -10,7 +10,7 @@
 		<DefineConstants Condition="'$(EnableMcp)' == 'true'">$(DefineConstants);PIXEVAL_MCP</DefineConstants>
 		<NoWarn Condition="'$(Configuration)' != 'Release'">$(NoWarn);PE1002</NoWarn>
 		
-		<Version>5.0.9.0</Version>
+		<Version>5.0.10.0</Version>
 		<AssemblyVersion>$(Version)</AssemblyVersion>
 		<FileVersion>$(Version)</FileVersion>
 		<InformationalVersion>$(Version)</InformationalVersion>
