@@ -55,6 +55,9 @@ internal sealed class FileCache(string cacheDirectory)
         if (!TryEnsureCacheDirectory())
             return FileCacheWriteResult.Failed;
 
+        // 确保计数器初始化完成，避免重复计数（问题3）
+        EnsureSizeInitialized();
+
         try
         {
             var path = GetCacheFilePath(key);
@@ -116,22 +119,29 @@ internal sealed class FileCache(string cacheDirectory)
     {
         try
         {
-            if (!Directory.Exists(CacheDirectory))
+            lock (_sizeInitLock)
             {
+                // 重置计数器并标记未初始化，保证后续重新扫描
+                _sizeInitialized = false;
+                _totalCacheSize = 0;
+
+                if (!Directory.Exists(CacheDirectory))
+                {
+                    _ = FileHelper.TryCreateDirectory(CacheDirectory);
+                    return;
+                }
+
+                var files = FileHelper.EnumerateFiles(CacheDirectory);
+                var directories = FileHelper.EnumerateDirectories(CacheDirectory);
+
+                foreach (var file in files)
+                    _ = FileHelper.TryDeleteFile(file);
+
+                foreach (var directory in directories)
+                    _ = FileHelper.TryDeleteDirectory(directory);
+
                 _ = FileHelper.TryCreateDirectory(CacheDirectory);
-                return;
             }
-
-            var files = FileHelper.EnumerateFiles(CacheDirectory);
-            var directories = FileHelper.EnumerateDirectories(CacheDirectory);
-
-            foreach (var file in files)
-                _ = FileHelper.TryDeleteFile(file);
-
-            foreach (var directory in directories)
-                _ = FileHelper.TryDeleteDirectory(directory);
-
-            _ = FileHelper.TryCreateDirectory(CacheDirectory);
         }
         catch
         {
@@ -148,27 +158,47 @@ internal sealed class FileCache(string cacheDirectory)
         if (Interlocked.Read(ref _totalCacheSize) <= maxBytes)
             return;
 
-        try
+        // 使用锁防止并发淘汰，保证计数器更新原子性
+        lock (_sizeInitLock)
         {
-            var files = EnumerateCacheFiles().ToArray();
-            var totalBytes = files.Sum(static file => file.Length);
-            if (totalBytes <= maxBytes)
+            // 双重检查，避免其他线程已执行淘汰
+            if (Interlocked.Read(ref _totalCacheSize) <= maxBytes)
                 return;
 
-            foreach (var file in files.OrderBy(static file => file.LastAccessTimeUtc)
-                         .ThenBy(static file => file.LastWriteTimeUtc))
+            // 收集缓存文件信息快照，避免后续访问 FileInfo 时文件被删除导致异常
+            var fileInfos = new List<(string path, long length, DateTime lastAccess, DateTime lastWrite)>();
+            foreach (var filePath in FileHelper.EnumerateFiles(CacheDirectory, $"*{CacheFileExtension}"))
             {
-                if (totalBytes <= maxBytes)
-                    return;
-
-                var length = file.Length;
-                if (FileHelper.TryDeleteFile(file.FullName))
-                    totalBytes -= length;
+                try
+                {
+                    var fi = new FileInfo(filePath);
+                    if (fi.Exists)
+                    {
+                        fileInfos.Add((fi.FullName, fi.Length, fi.LastAccessTimeUtc, fi.LastWriteTimeUtc));
+                    }
+                }
+                catch
+                {
+                    // 忽略已删除或无法访问的文件
+                }
             }
-        }
-        catch
-        {
-            // Cache eviction must not affect image loading or app startup.
+
+            var currentTotal = Interlocked.Read(ref _totalCacheSize);
+            if (currentTotal <= maxBytes)
+                return;
+
+            // 按最后访问时间升序淘汰（最早访问的最先被删除）
+            foreach (var item in fileInfos.OrderBy(i => i.lastAccess).ThenBy(i => i.lastWrite))
+            {
+                if (currentTotal <= maxBytes)
+                    break;
+
+                if (FileHelper.TryDeleteFile(item.path))
+                {
+                    currentTotal -= item.length;
+                    Interlocked.Add(ref _totalCacheSize, -item.length);  // 同步扣减全局计数器
+                }
+            }
         }
     }
     
@@ -178,7 +208,23 @@ internal sealed class FileCache(string cacheDirectory)
         lock (_sizeInitLock)
         {
             if (_sizeInitialized) return;
-            _totalCacheSize = EnumerateCacheFiles().Sum(f => f.Length);
+
+            long total = 0;
+            foreach (var filePath in FileHelper.EnumerateFiles(CacheDirectory, $"*{CacheFileExtension}"))
+            {
+                try
+                {
+                    var fi = new FileInfo(filePath);
+                    if (fi.Exists)
+                        total += fi.Length;
+                }
+                catch
+                {
+                    // 文件可能在枚举过程中被删除，忽略该文件
+                }
+            }
+
+            _totalCacheSize = total;
             _sizeInitialized = true;
         }
     }
