@@ -1,6 +1,7 @@
 Pixeval provides macros for more precise control over download paths.  
 To see what each macro does, hover your mouse over the corresponding macro's button.  
 You can move your cursor on a button to see how the corresponding macro works.  
+You can move your cursor on a button to see how the corresponding macro works.  
 You can move your cursor on a button to see how the corresponding macro works.
 
 ## Regular Macros
