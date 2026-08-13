@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pixeval.Utilities.IO.Caching;
 
@@ -8,7 +9,7 @@ namespace Pixeval.Tests;
 public sealed class FileCacheTest
 {
     [TestMethod]
-    public void UnavailableCacheDirectoryShouldDegradeToFailure()
+    public async Task UnavailableCacheDirectoryShouldDegradeToFailure()
     {
         var cachePath = Path.GetTempFileName();
         try
@@ -19,8 +20,8 @@ public sealed class FileCacheTest
             Assert.IsNull(cache.TryOpen("key"));
             Assert.AreEqual(FileCacheWriteResult.Failed, cache.TryCache("key", source, null));
 
-            cache.EnforceSizeLimit(1);
-            cache.Purge();
+            await cache.EnforceSizeLimitAsync(1);
+            await cache.PurgeAsync();
         }
         finally
         {
