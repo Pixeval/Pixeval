@@ -17,6 +17,10 @@ internal sealed class FileCache(string cacheDirectory)
     private const string TempFileExtension = ".tmp";
     private const int CacheCopyBufferSize = 81920;
     private const int CacheFileLockCount = 64;
+    
+    private long _totalCacheSize;
+    private bool _sizeInitialized;
+    private readonly object _sizeInitLock = new();
 
     private readonly Lock[] _cacheFileLocks =
         [.. Enumerable.Repeat(0, CacheFileLockCount).Select(static _ => new Lock())];
@@ -79,7 +83,10 @@ internal sealed class FileCache(string cacheDirectory)
                     }
 
                     _ = FileHelper.TryTouchFile(tempPath, DateTime.UtcNow);
+                    var fileInfo = new FileInfo(tempPath);
+                    var fileSize = fileInfo.Length;
                     FileHelper.Move(tempPath, path);
+                    Interlocked.Add(ref _totalCacheSize, fileSize);
 
                     if (sizeLimitBytes is { } maxBytes)
                         EnforceSizeLimit(maxBytes);
@@ -136,6 +143,10 @@ internal sealed class FileCache(string cacheDirectory)
     {
         if (!TryEnsureCacheDirectory())
             return;
+        
+        EnsureSizeInitialized();
+        if (Interlocked.Read(ref _totalCacheSize) <= maxBytes)
+            return;
 
         try
         {
@@ -158,6 +169,17 @@ internal sealed class FileCache(string cacheDirectory)
         catch
         {
             // Cache eviction must not affect image loading or app startup.
+        }
+    }
+    
+    private void EnsureSizeInitialized()
+    {
+        if (_sizeInitialized) return;
+        lock (_sizeInitLock)
+        {
+            if (_sizeInitialized) return;
+            _totalCacheSize = EnumerateCacheFiles().Sum(f => f.Length);
+            _sizeInitialized = true;
         }
     }
 
