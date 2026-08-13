@@ -60,11 +60,11 @@ public class SettingsPageViewModel : ViewModelBase
                 .Bool(t => t.UseFileCache)
                 .MultiValuesWithSwitch(t => t.LimitFileCacheSize,
                     entry => entry.Int(t => t.FileCacheSizeLimitInMegabytes, 1, 0x100000, 0x80,
-                        t => t.ValueChanged += _ => CacheHelper.EnforceCacheSizeLimit()),
+                        t => t.ValueChanged += _value => _ = CacheHelper.EnforceCacheSizeLimitAsync()),
                     t => t.MainValue.ValueChanged += enabled =>
                     {
                         if (enabled)
-                            CacheHelper.EnforceCacheSizeLimit();
+                            _ = CacheHelper.EnforceCacheSizeLimitAsync();
                     })
                 .Int(t => t.HomePageRows, 1, 12, 1)
                 .Int(t => t.HomePageColumns, 1, 12, 1)

@@ -67,7 +67,7 @@ public sealed class AppViewModel(App app, FileLogger logger) : IAsyncDisposable
         SetNameResolvers();
         // 触发卸载插件
         _ = AppServiceProvider.GetRequiredService<ExtensionService>();
-        CacheHelper.EnforceCacheSizeLimit();
+        _ = CacheHelper.EnforceCacheSizeLimitAsync();
     }
 
     private ServiceProvider CreateServiceProvider()

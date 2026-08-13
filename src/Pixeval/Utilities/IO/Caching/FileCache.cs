@@ -8,6 +8,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Pixeval.Utilities.IO.Caching;
 
@@ -17,6 +18,12 @@ internal sealed class FileCache(string cacheDirectory)
     private const string TempFileExtension = ".tmp";
     private const int CacheCopyBufferSize = 81920;
     private const int CacheFileLockCount = 64;
+
+    private long _totalCacheSize;
+    private bool _sizeInitialized;
+    private bool _cacheMaintenanceInProgress;
+    private readonly Lock _cacheStateLock = new();
+    private readonly SemaphoreSlim _cacheMaintenanceSemaphore = new(1, 1);
 
     private readonly Lock[] _cacheFileLocks =
         [.. Enumerable.Repeat(0, CacheFileLockCount).Select(static _ => new Lock())];
@@ -51,6 +58,12 @@ internal sealed class FileCache(string cacheDirectory)
         if (!TryEnsureCacheDirectory())
             return FileCacheWriteResult.Failed;
 
+        lock (_cacheStateLock)
+        {
+            if (_cacheMaintenanceInProgress)
+                return FileCacheWriteResult.Failed;
+        }
+
         try
         {
             var path = GetCacheFilePath(key);
@@ -79,10 +92,31 @@ internal sealed class FileCache(string cacheDirectory)
                     }
 
                     _ = FileHelper.TryTouchFile(tempPath, DateTime.UtcNow);
-                    FileHelper.Move(tempPath, path);
+                    var fileInfo = new FileInfo(tempPath);
+                    var fileSize = fileInfo.Length;
+
+                    lock (_cacheStateLock)
+                    {
+                        if (_cacheMaintenanceInProgress)
+                        {
+                            _ = FileHelper.TryDeleteFile(tempPath);
+                            return FileCacheWriteResult.Failed;
+                        }
+
+                        if (File.Exists(path))
+                        {
+                            _ = FileHelper.TryDeleteFile(tempPath);
+                            _ = FileHelper.TryTouchFile(path);
+                            return FileCacheWriteResult.Success;
+                        }
+
+                        FileHelper.Move(tempPath, path);
+                        if (_sizeInitialized)
+                            _totalCacheSize += fileSize;
+                    }
 
                     if (sizeLimitBytes is { } maxBytes)
-                        EnforceSizeLimit(maxBytes);
+                        _ = EnforceSizeLimitAsync(maxBytes);
 
                     return FileCacheWriteResult.Success;
                 }
@@ -90,6 +124,8 @@ internal sealed class FileCache(string cacheDirectory)
                 {
                     _ = FileHelper.TryDeleteFile(tempPath);
                     _ = FileHelper.TryTouchFile(path);
+                    lock (_cacheStateLock)
+                        _sizeInitialized = false;
                     return FileCacheWriteResult.Success;
                 }
                 catch
@@ -105,7 +141,10 @@ internal sealed class FileCache(string cacheDirectory)
         }
     }
 
-    public void Purge()
+    public Task PurgeAsync(CancellationToken token = default) =>
+        RunCacheMaintenanceAsync(Purge, token);
+
+    private void Purge()
     {
         try
         {
@@ -115,8 +154,8 @@ internal sealed class FileCache(string cacheDirectory)
                 return;
             }
 
-            var files = FileHelper.EnumerateFiles(CacheDirectory);
-            var directories = FileHelper.EnumerateDirectories(CacheDirectory);
+            var files = FileHelper.EnumerateFiles(CacheDirectory).ToArray();
+            var directories = FileHelper.EnumerateDirectories(CacheDirectory).ToArray();
 
             foreach (var file in files)
                 _ = FileHelper.TryDeleteFile(file);
@@ -130,34 +169,82 @@ internal sealed class FileCache(string cacheDirectory)
         {
             // Cache cleanup is best effort.
         }
+        finally
+        {
+            lock (_cacheStateLock)
+            {
+                _sizeInitialized = false;
+                _totalCacheSize = 0;
+            }
+        }
     }
 
-    public void EnforceSizeLimit(long maxBytes)
+    public Task EnforceSizeLimitAsync(long maxBytes, CancellationToken token = default) =>
+        RunCacheMaintenanceAsync(() => EnforceSizeLimit(maxBytes), token);
+
+    private void EnforceSizeLimit(long maxBytes)
     {
         if (!TryEnsureCacheDirectory())
             return;
 
         try
         {
-            var files = EnumerateCacheFiles().ToArray();
-            var totalBytes = files.Sum(static file => file.Length);
-            if (totalBytes <= maxBytes)
+            var fileInfos = new List<(string Path, long Length, DateTime LastAccess, DateTime LastWrite)>();
+            if (!TryEnumerateCacheFiles(out var filePaths))
                 return;
 
-            foreach (var file in files.OrderBy(static file => file.LastAccessTimeUtc)
-                         .ThenBy(static file => file.LastWriteTimeUtc))
+            foreach (var filePath in filePaths)
             {
-                if (totalBytes <= maxBytes)
-                    return;
+                try
+                {
+                    var fileInfo = new FileInfo(filePath);
+                    if (fileInfo.Exists)
+                        fileInfos.Add((fileInfo.FullName, fileInfo.Length, fileInfo.LastAccessTimeUtc,
+                            fileInfo.LastWriteTimeUtc));
+                }
+                catch
+                {
+                    // The cache is best effort; ignore files that disappear during inspection.
+                }
+            }
 
-                var length = file.Length;
-                if (FileHelper.TryDeleteFile(file.FullName))
-                    totalBytes -= length;
+            var currentTotal = fileInfos.Sum(static file => file.Length);
+            if (currentTotal > maxBytes)
+            {
+                foreach (var file in fileInfos.OrderBy(static file => file.LastAccess)
+                             .ThenBy(static file => file.LastWrite))
+                {
+                    if (currentTotal <= maxBytes)
+                        break;
+
+                    if (FileHelper.TryDeleteFile(file.Path))
+                        currentTotal -= file.Length;
+                }
+            }
+
+            lock (_cacheStateLock)
+            {
+                _totalCacheSize = currentTotal;
+                _sizeInitialized = true;
             }
         }
         catch
         {
             // Cache eviction must not affect image loading or app startup.
+        }
+    }
+
+    private bool TryEnumerateCacheFiles(out IReadOnlyList<string> filePaths)
+    {
+        try
+        {
+            filePaths = Directory.GetFiles(CacheDirectory, $"*{CacheFileExtension}", SearchOption.TopDirectoryOnly);
+            return true;
+        }
+        catch
+        {
+            filePaths = [];
+            return false;
         }
     }
 
@@ -180,10 +267,26 @@ internal sealed class FileCache(string cacheDirectory)
         return true;
     }
 
-    private IEnumerable<FileInfo> EnumerateCacheFiles() =>
-        FileHelper.EnumerateFiles(CacheDirectory, $"*{CacheFileExtension}")
-            .Select(static file => new FileInfo(file))
-            .Where(static file => file.Exists);
+    private async Task RunCacheMaintenanceAsync(Action action, CancellationToken token)
+    {
+        await _cacheMaintenanceSemaphore.WaitAsync(token).ConfigureAwait(false);
+        try
+        {
+            lock (_cacheStateLock)
+            {
+                _cacheMaintenanceInProgress = true;
+                _sizeInitialized = false;
+            }
+
+            await Task.Run(action, token).ConfigureAwait(false);
+        }
+        finally
+        {
+            lock (_cacheStateLock)
+                _cacheMaintenanceInProgress = false;
+            _cacheMaintenanceSemaphore.Release();
+        }
+    }
 
     private string GetCacheFilePath(string key)
     {
