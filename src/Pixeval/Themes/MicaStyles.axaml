@@ -1,0 +1,45 @@
+<ResourceDictionary
+    x:Class="Pixeval.Themes.MicaStyles"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:ClassModifier="internal">
+    <!--
+        Windows 11 Mica 覆写。仅当 Mica 实际可用（Win11 + 系统「透明效果」开启 + 用户启动Mica选项）时
+        才由 App.Initialize() 并入 Application.Resources —— 见 App.axaml.cs。
+        在 Win10 / Linux / 关闭透明效果时永不合并，应用保持 Brushes.axaml 定义的纯色表面。
+        
+        键名映射到 Pixeval 实际使用的表面键（而非 UniGetUI 的键名），让 Mica 背板
+        从页面/卡片后面透出并继承其（壁纸衍生的）色调。
+    -->
+    <ResourceDictionary.ThemeDictionaries>
+
+        <ResourceDictionary x:Key="Light">
+            <!--  页面根背景 → 透明，让 Mica 显示  -->
+            <SolidColorBrush x:Key="SolidBackgroundFillColorBaseBrush" Color="Transparent" />
+            <!--  ContentPage/TabbedPage 主题用的页面背景键（Fluent 浅色下是纯白） → 透明  -->
+            <SolidColorBrush x:Key="SystemControlPageBackgroundAltHighBrush" Color="Transparent" />
+            <!--  卡片 / 面板：半透明白层（WinUI 卡片在浅色 Mica 上的经典值）  -->
+            <SolidColorBrush x:Key="CardBackgroundFillColorDefaultBrush" Color="#B3FFFFFF" />
+            <SolidColorBrush x:Key="CardBackgroundFillColorSecondaryBrush" Color="#80FFFFFF" />
+            <SolidColorBrush x:Key="SystemRegionBrush" Color="#B3FFFFFF" />
+            <!--  弹出层表面：MicaWindowHelper 给弹出窗口挂 DWM 亚克力，这里是内容面板色调  -->
+            <SolidColorBrush x:Key="FlyoutPresenterBackground" Color="#80FFFFFF" />
+            <SolidColorBrush x:Key="MenuFlyoutPresenterBackground" Color="#FFFFFFFF" />
+            <SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="#80FFFFFF" />
+            <SolidColorBrush x:Key="ToolTipBackground" Color="#80FFFFFF" />
+        </ResourceDictionary>
+
+        <ResourceDictionary x:Key="Dark">
+            <SolidColorBrush x:Key="SolidBackgroundFillColorBaseBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="SystemControlPageBackgroundAltHighBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="CardBackgroundFillColorDefaultBrush" Color="#0DFFFFFF" />
+            <SolidColorBrush x:Key="CardBackgroundFillColorSecondaryBrush" Color="#14FFFFFF" />
+            <SolidColorBrush x:Key="SystemRegionBrush" Color="#0DFFFFFF" />
+            <SolidColorBrush x:Key="FlyoutPresenterBackground" Color="#BF2D2D2D" />
+            <SolidColorBrush x:Key="MenuFlyoutPresenterBackground" Color="#FF2C2C2C" />
+            <SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="#BF2D2D2D" />
+            <SolidColorBrush x:Key="ToolTipBackground" Color="#BF2D2D2D" />
+        </ResourceDictionary>
+
+    </ResourceDictionary.ThemeDictionaries>
+</ResourceDictionary>

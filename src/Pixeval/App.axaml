@@ -6,13 +6,13 @@
     xmlns:edit="using:AvaloniaEdit"
     xmlns:smoothScroll="using:SmoothScroll.Avalonia.Controls"
     xmlns:tabView="using:TabView.Avalonia"
-    xmlns:ui="using:FluentAvalonia.UI.Themes">
+    xmlns:themes="clr-namespace:Pixeval.Themes">
 
     <Application.Styles>
         <FluentTheme />
         <tabView:TabsViewTheme />
-        <ui:FluentAvaloniaTheme />
         <autoSettingsPage:AutoSettingsPageTheme />
+        <themes:TextBlockStyles />
         <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />
         <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
         <Style Selector="Control">
@@ -20,6 +20,46 @@
         </Style>
         <Style Selector="edit|TextEditor">
             <Setter Property="FontFamily" Value="{DynamicResource PixevalMonospaceFontFamily}" />
+        </Style>
+        <Style Selector="MenuFlyoutPresenter">
+            <Setter Property="Background" Value="{DynamicResource MenuSurfaceBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource MenuSurfaceBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="0,4" />
+        </Style>
+        <Style Selector="MenuFlyoutPresenter MenuItem">
+            <Setter Property="Margin" Value="4,0" />
+            <Setter Property="Padding" Value="8,4,8,5" />
+            <Setter Property="MinHeight" Value="32" />
+            <Setter Property="CornerRadius" Value="4" />
+        </Style>
+        <Style Selector="MenuFlyoutPresenter Separator">
+            <Setter Property="Margin" Value="0,4" />
+            <Setter Property="Background" Value="{DynamicResource MenuDividerBrush}" />
+        </Style>
+
+        <Style Selector="ContextMenu">
+            <Setter Property="Background" Value="{DynamicResource MenuSurfaceBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource MenuSurfaceBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="0,4" />
+        </Style>
+        <Style Selector="ContextMenu MenuItem">
+            <Setter Property="Margin" Value="4,0" />
+            <Setter Property="Padding" Value="8,4,8,5" />
+            <Setter Property="MinHeight" Value="32" />
+            <Setter Property="CornerRadius" Value="4" />
+        </Style>
+        <Style Selector="ContextMenu Separator">
+            <Setter Property="Margin" Value="0,4" />
+            <Setter Property="Background" Value="{DynamicResource MenuDividerBrush}" />
+        </Style>
+
+        <!--  超链接（Markdown / 富文本可复用 class="hyperlink"）  -->
+        <Style Selector="TextBlock.hyperlink">
+            <Setter Property="Foreground" Value="{DynamicResource HyperlinkForeground}" />
+            <Setter Property="TextDecorations" Value="Underline" />
+            <Setter Property="Cursor" Value="Hand" />
         </Style>
         <StyleInclude Source="/Controls/FloatingCommandBarStyles.axaml" />
         <StyleInclude Source="/Controls/CommandBarStyles.axaml" />

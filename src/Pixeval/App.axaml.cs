@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using AvaDevTools;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -18,8 +19,10 @@ using Mako;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
 using Pixeval.I18N;
+using Pixeval.Infrastructure;
 using Pixeval.Models.Options;
 using Pixeval.Models.Subscriptions;
+using Pixeval.Themes;
 using Pixeval.Utilities;
 using Pixeval.Views.Home;
 using Pixeval.Views.Login;
@@ -52,6 +55,16 @@ public class App : Application
         AppViewModel.MakoClient.RateLimitEncountered += MakoClient_OnRateLimitEncountered;
 
         AvaloniaXamlLoader.Load(this);
+
+        // Windows 11 Mica 观感按环境选用：仅当 Mica 实际可用（Win11 + 系统「透明效果」开启）
+        // 才合并半透明表面覆写。Win10 / Linux / 关闭透明效果时保持 Brushes.axaml 的纯色观感。
+        if (MicaWindowHelper.IsMicaEnabled())
+        {
+            Resources.MergedDictionaries.Add(new MicaStyles());
+            // 给菜单/Flyout/ToolTip/下拉框弹出层挂 DWM 亚克力，随主题模糊+染色。
+            MicaWindowHelper.EnableAcrylicPopups();
+        }
+
         ApplyAppFontFamily(AppViewModel.AppSettings.ApplicationSettings.AppFontFamily);
         RequestedThemeVariant = AppViewModel.AppSettings.ApplicationSettings.Theme switch
         {
@@ -61,7 +74,7 @@ public class App : Application
         };
 
 #if DEBUG
-        this.AttachDeveloperTools();
+        this.AttachAvaDevTools();
 #endif
     }
 

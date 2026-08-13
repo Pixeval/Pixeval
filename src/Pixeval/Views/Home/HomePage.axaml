@@ -97,7 +97,7 @@
         </DockPanel>
 
         <Border
-            Background="{DynamicResource SolidBackgroundFillColorBaseBrush}"
+            Background="Transparent"
             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
             BorderThickness="1"
             ClipToBounds="True"

@@ -59,4 +59,7 @@ public record ApplicationSettingsGroup
 
     [SettingsEntry(Symbol.AppTitle, AppSettingsResources.HideHomePageCardTitleEntry.Header, AppSettingsResources.HideHomePageCardTitleEntry.Description)]
     public bool HideHomePageCardTitle { get; set; }
+
+    [SettingsEntry(Symbol.Blur, AppSettingsResources.UseMicaEntry.Header, AppSettingsResources.UseMicaEntry.Description)]
+    public bool UseMica { get; set; } = true;
 }

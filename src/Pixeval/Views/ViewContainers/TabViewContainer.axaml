@@ -17,6 +17,7 @@
     xmlns:views="using:Pixeval.Views"
     x:DataType="{x:Type viewModels:TabViewContainerViewModel}"
     x:Name="Root"
+    Background="Transparent"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">

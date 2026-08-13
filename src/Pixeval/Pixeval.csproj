@@ -28,9 +28,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="AvaDevTools" Version="$(AvaloniaVersion)" />
 		<PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
 		<PackageReference Include="Avalonia.AvaloniaEdit" Version="12.0.0" />
 		<PackageReference Include="Avalonia.Controls.WebView" Version="12.0.1" />
+		<PackageReference Include="Avalonia.Skia" Version="$(AvaloniaVersion)" />
 		<PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
 		<PackageReference Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />
 		<PackageReference Include="Avalonia.Controls.ColorPicker" Version="$(AvaloniaVersion)" />
@@ -57,7 +59,6 @@
 		<ProjectReference Include="..\lib\AutoSettingsPage\AutoSettingsPage.Avalonia\AutoSettingsPage.Avalonia.csproj" />
 		<ProjectReference Include="..\lib\AutoSettingsPage\AutoSettingsPage\AutoSettingsPage.csproj" />
 		<ProjectReference Include="..\lib\AnimatedControls.Avalonia\AnimatedControls.Avalonia\AnimatedControls.Avalonia.csproj" />
-		<ProjectReference Include="..\lib\FluentAvalonia\FluentAvalonia.csproj" />
 		<ProjectReference Include="..\lib\Imouto\Imouto.BooruParser\Imouto.BooruParser.csproj" />
 		<ProjectReference Include="..\lib\Mako\Mako\Mako.csproj" />
 		<ProjectReference Include="..\lib\SmoothScroll.Avalonia\src\SmoothScroll.Avalonia.Controls\SmoothScroll.Avalonia.Controls.csproj" />

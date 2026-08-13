@@ -195,6 +195,40 @@
 
             <SolidColorBrush x:Key="PixevalTranslucentBackground" Color="#8FFFFFFF" />
             <SolidColorBrush x:Key="PixivLogo" Color="#0096FA" />
+            <SolidColorBrush x:Key="MarkdownCodeBackgroundBrush" Color="#1AF6F8FA" />
+
+            <!--  半透明，让 Mica 从 tab 透出（非 Mica 下窗口纯色底兜底）  -->
+            <SolidColorBrush x:Key="TabControlWindowActiveBackgroundBrush" Color="#59FFFFFF" />
+            <SolidColorBrush x:Key="TabControlWindowInactiveBackgroundBrush" Color="#4DFFFFFF" />
+
+            <SolidColorBrush x:Key="TabItemBackgroundBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="TabItemBackgroundBrushWindowInactive" Color="Transparent" />
+
+            <SolidColorBrush x:Key="SelectedTabItemBackgroundBrush" Color="#80FFFFFF" />
+
+            <SolidColorBrush x:Key="TabItemHeaderBackgroundUnselectedPointerOver" Color="#0F000000" />
+            <SolidColorBrush x:Key="TabItemHeaderBackgroundUnselectedPointerOverWindowInactive" Color="#0A000000" />
+            <SolidColorBrush x:Key="TabItemRightSeparatorBackgroundBrush" Color="#999999" />
+
+            <SolidColorBrush x:Key="AddItemCommandButtonPointerOverBrush" Color="#EAE8E7" />
+
+            <SolidColorBrush x:Key="AddItemCommandButtonForegroundPointerOverBrush" Color="#EAE8E7" />
+            <SolidColorBrush x:Key="AddItemCommandButtonBackgroundPointerOverBrush" Color="#B9BABA" />
+            <SolidColorBrush x:Key="InactiveWindowAddCommandButtonForegroundBrush" Color="#404040" />
+            <SolidColorBrush x:Key="InactiveWindowAddCommandButtonPointerOverForegroundBrush" Color="#363636" />
+            <SolidColorBrush x:Key="AddItemCommandButtonBackgroundPressedBrush" Color="#CCCCCC" />
+            <SolidColorBrush x:Key="CloseItemButtonPointerOverBrush" Color="#666666" />
+            <SolidColorBrush x:Key="CloseItemButtonInactiveWindowBrush" Color="#999999" />
+            <SolidColorBrush x:Key="CloseItemButtonInactiveWindowPointerOverBrush" Color="#1A1A1A" />
+            <SolidColorBrush x:Key="CloseItemButtonPressedBrush" Color="#333333" />
+            <SolidColorBrush x:Key="CloseItemButtonForeground" Color="#000000" />
+
+            <!--  菜单表面（Mica 下由 MicaWindowHelper 将菜单弹出窗口设为不透明表面）  -->
+            <SolidColorBrush x:Key="MenuSurfaceBrush" Color="#FFFFFFFF" />
+            <SolidColorBrush x:Key="MenuSurfaceBorderBrush" Color="#0F000000" />
+            <SolidColorBrush x:Key="MenuDividerBrush" Color="#0F000000" />
+            <!--  超链接固定蓝，与主题 accent 解耦  -->
+            <SolidColorBrush x:Key="HyperlinkForeground" Color="#1C5FB8" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
             <!--  Brushes  -->
@@ -388,8 +422,49 @@
 
             <SolidColorBrush x:Key="PixevalTranslucentBackground" Color="#8F000000" />
             <SolidColorBrush x:Key="PixivLogo" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="MarkdownCodeBackgroundBrush" Color="#14FFFFFF" />
+
+            <!--  半透明，让 Mica 从 tab 透出（非 Mica 下窗口纯色底兜底）  -->
+            <SolidColorBrush x:Key="TabControlWindowActiveBackgroundBrush" Color="#26FFFFFF" />
+            <SolidColorBrush x:Key="TabControlWindowInactiveBackgroundBrush" Color="#1FFFFFFF" />
+
+            <SolidColorBrush x:Key="TabItemBackgroundBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="TabItemBackgroundBrushWindowInactive" Color="Transparent" />
+
+            <SolidColorBrush x:Key="SelectedTabItemBackgroundBrush" Color="#662C2C2C" />
+
+            <SolidColorBrush x:Key="TabItemHeaderBackgroundUnselectedPointerOver" Color="#1AFFFFFF" />
+            <SolidColorBrush x:Key="TabItemHeaderBackgroundUnselectedPointerOverWindowInactive" Color="#14FFFFFF" />
+            <SolidColorBrush x:Key="TabItemRightSeparatorBackgroundBrush" Color="#777777" />
+
+            <SolidColorBrush x:Key="AddItemCommandButtonForegroundPointerOverBrush" Color="#151719" />
+            <SolidColorBrush x:Key="AddItemCommandButtonBackgroundPointerOverBrush" Color="#464546" />
+            <SolidColorBrush x:Key="InactiveWindowAddCommandButtonForegroundBrush" Color="#BFBFBF" />
+            <SolidColorBrush x:Key="InactiveWindowAddCommandButtonPointerOverForegroundBrush" Color="#C9C9C9" />
+            <SolidColorBrush x:Key="AddItemCommandButtonBackgroundPressedBrush" Color="#333333" />
+            <SolidColorBrush x:Key="CloseItemButtonPointerOverBrush" Color="#1A1A1A" />
+            <SolidColorBrush x:Key="CloseItemButtonInactiveWindowBrush" Color="#666666" />
+            <SolidColorBrush x:Key="CloseItemButtonInactiveWindowPointerOverBrush" Color="#b8b8b8" />
+            <SolidColorBrush x:Key="CloseItemButtonForeground" Color="#FFFFFF" />
+
+            <SolidColorBrush x:Key="MenuSurfaceBrush" Color="#FF2C2C2C" />
+            <SolidColorBrush x:Key="MenuSurfaceBorderBrush" Color="#26FFFFFF" />
+            <SolidColorBrush x:Key="MenuDividerBrush" Color="#15FFFFFF" />
+
+            <SolidColorBrush x:Key="HyperlinkForeground" Color="#A6D4FF" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
+
+    <Color x:Key="PixevalNavBarShadowColor">#0C000000</Color>
+    <SolidColorBrush x:Key="PixevalCaptionCloseBackground" Color="#FFE81123" />
+    <SolidColorBrush x:Key="PixevalCaptionCloseBorder" Color="#FFF1707A" />
+    <SolidColorBrush x:Key="PixevalViewerOverlayBrush" Color="#7F000000" />
+    <BoxShadows x:Key="PixevalWindowShadow">0 2 10 2 #80000000</BoxShadows>
+    <BoxShadows x:Key="PixevalDialogShadow">0 18 44 0 #40000000</BoxShadows>
+    <BoxShadows x:Key="PixevalNotificationShadow">0 4 12 0 #33000000</BoxShadows>
+    <BoxShadows x:Key="PixevalCardHandleShadow">0 2 8 0 #40000000</BoxShadows>
+    <BoxShadows x:Key="PixevalCardHandleShadowHover">0 3 12 0 #66000000</BoxShadows>
+    <BoxShadows x:Key="PixevalCardHandleShadowPressed">0 1 5 0 #73000000</BoxShadows>
 
 
     <!--

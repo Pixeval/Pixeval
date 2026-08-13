@@ -43,7 +43,7 @@
                     Background="{DynamicResource SolidBackgroundFillColorQuarternaryBrush}"
                     BorderBrush="{DynamicResource SurfaceStrokeColorFlyoutBrush}"
                     BorderThickness="1"
-                    BoxShadow="0 18 44 0 #40000000"
+                    BoxShadow="{DynamicResource PixevalDialogShadow}"
                     ClipToBounds="True"
                     CornerRadius="8">
                     <Grid

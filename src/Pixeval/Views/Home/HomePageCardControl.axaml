@@ -36,7 +36,7 @@
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Background" Value="{DynamicResource ControlOnImageFillColorDefaultBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
-            <Setter Property="BoxShadow" Value="0 2 8 0 #40000000" />
+            <Setter Property="BoxShadow" Value="{DynamicResource PixevalCardHandleShadow}" />
             <Setter Property="Opacity" Value="0.86" />
             <Setter Property="RenderTransformOrigin" Value="50%,50%" />
             <Setter Property="Transitions">
@@ -85,7 +85,7 @@
 
         <Style Selector="Panel#ResizeHandlesLayer &gt; Border:pointerover">
             <Setter Property="Background" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
-            <Setter Property="BoxShadow" Value="0 3 12 0 #66000000" />
+            <Setter Property="BoxShadow" Value="{DynamicResource PixevalCardHandleShadowHover}" />
             <Setter Property="Opacity" Value="1" />
             <Setter Property="RenderTransform" Value="scale(1.05)" />
         </Style>
@@ -93,7 +93,7 @@
         <Style Selector="Panel#ResizeHandlesLayer &gt; Border.pressed">
             <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
-            <Setter Property="BoxShadow" Value="0 1 5 0 #73000000" />
+            <Setter Property="BoxShadow" Value="{DynamicResource PixevalCardHandleShadowPressed}" />
             <Setter Property="Opacity" Value="1" />
             <Setter Property="RenderTransform" Value="scale(0.95)" />
         </Style>

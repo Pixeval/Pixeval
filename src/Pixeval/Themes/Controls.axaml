@@ -197,7 +197,7 @@
                         ZIndex="1">
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
-                                <GradientStop Offset="0" Color="#0C000000" />
+                                <GradientStop Offset="0" Color="{DynamicResource PixevalNavBarShadowColor}" />
                                 <GradientStop Offset="1" Color="#00000000" />
                             </LinearGradientBrush>
                         </Border.Background>

@@ -320,6 +320,11 @@ namespace Pixeval
             public const string Description = "AppSettings.UseFileCacheEntry.Description";
             public const string Header = "AppSettings.UseFileCacheEntry.Header";
         }
+        public static class UseMicaEntry
+        {
+            public const string Description = "AppSettings.UseMicaEntry.Description";
+            public const string Header = "AppSettings.UseMicaEntry.Header";
+        }
         public static class WebCookieEntry
         {
             public const string Description = "AppSettings.WebCookieEntry.Description";

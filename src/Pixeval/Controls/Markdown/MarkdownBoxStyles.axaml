@@ -80,7 +80,7 @@
 
     <Style Selector=".Markdown_Avalonia_MarkdownViewer ctxt|CCode">
         <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-        <Setter Property="Background" Value="#1AF6F8FA" />
+        <Setter Property="Background" Value="{DynamicResource MarkdownCodeBackgroundBrush}" />
         <Setter Property="Padding" Value="3,1" />
         <Setter Property="CornerRadius" Value="4" />
     </Style>

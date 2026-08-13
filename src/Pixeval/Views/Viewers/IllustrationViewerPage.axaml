@@ -171,7 +171,7 @@
                         DataContext="{Binding CurrentImage}"
                         SelectionChanged="ImageViewerPage_OnSelectionChanged" />
 
-                    <Grid Background="#7F000000" IsVisible="{Binding IsLoading}">
+                    <Grid Background="{DynamicResource PixevalViewerOverlayBrush}" IsVisible="{Binding IsLoading}">
                         <StackPanel
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
@@ -181,7 +181,7 @@
                         </StackPanel>
                     </Grid>
 
-                    <Grid Background="#7F000000" IsVisible="{Binding LoadErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                    <Grid Background="{DynamicResource PixevalViewerOverlayBrush}" IsVisible="{Binding LoadErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
                         <TextBlock
                             MaxWidth="480"
                             HorizontalAlignment="Center"

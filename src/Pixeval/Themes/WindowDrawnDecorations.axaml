@@ -44,7 +44,7 @@
                         <Panel x:Name="PART_UnderlayWrapper">
                             <Border
                                 x:Name="PART_WindowBorder"
-                                Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
+                                Background="Transparent"
                                 BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
                                 BorderThickness="{TemplateBinding FrameThickness}"
                                 IsHitTestVisible="False" />
@@ -53,7 +53,7 @@
                                 x:Name="PART_TitleBar"
                                 Height="{TemplateBinding TitleBarHeight}"
                                 VerticalAlignment="Top"
-                                Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
+                                Background="Transparent"
                                 IsVisible="False"
                                 WindowDecorationProperties.ElementRole="TitleBar" />
 
@@ -102,8 +102,8 @@
                                 </Button>
                                 <Button
                                     x:Name="PART_CloseButton"
-                                    Background="#ffe81123"
-                                    BorderBrush="#fff1707a"
+                                    Background="{DynamicResource PixevalCaptionCloseBackground}"
+                                    BorderBrush="{DynamicResource PixevalCaptionCloseBorder}"
                                     Theme="{StaticResource FluentDrawnCaptionButton}"
                                     WindowDecorationProperties.ElementRole="CloseButton">
                                     <Viewbox Width="11" Margin="2">
@@ -146,8 +146,8 @@
                                 </Button>
                                 <Button
                                     x:Name="PART_PopoverCloseButton"
-                                    Background="#ffe81123"
-                                    BorderBrush="#fff1707a"
+                                    Background="{DynamicResource PixevalCaptionCloseBackground}"
+                                    BorderBrush="{DynamicResource PixevalCaptionCloseBorder}"
                                     Theme="{StaticResource FluentDrawnCaptionButton}"
                                     WindowDecorationProperties.ElementRole="CloseButton">
                                     <Viewbox Width="11" Margin="2">
@@ -170,7 +170,7 @@
             <Setter Property="Margin" Value="{TemplateBinding ShadowThickness}" />
         </Style>
         <Style Selector="^:has-shadow /template/ Border#PART_WindowBorder">
-            <Setter Property="BoxShadow" Value="0 2 10 2 #80000000" />
+            <Setter Property="BoxShadow" Value="{DynamicResource PixevalWindowShadow}" />
         </Style>
         <Style Selector="^:has-shadow /template/ Panel#PART_OverlayWrapper">
             <Setter Property="Margin" Value="{TemplateBinding ShadowThickness}" />

@@ -6,6 +6,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform;
 using Pixeval.AppManagement;
+using Pixeval.Infrastructure;
 
 namespace Pixeval.Utilities;
 
@@ -38,6 +39,8 @@ public static class WindowHelper
             };
             if (Application.Current is App app)
                 app.RegisterWindow(window);
+            // Win11 + 透明效果下给窗口挂 Mica 背板与圆角；否则 no-op。
+            MicaWindowHelper.Apply(window);
             return window;
         }
 

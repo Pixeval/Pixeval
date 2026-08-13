@@ -69,7 +69,8 @@ public class SettingsPageViewModel : ViewModelBase
                 .Int(t => t.HomePageRows, 1, 12, 1)
                 .Int(t => t.HomePageColumns, 1, 12, 1)
                 .Bool(t => t.HideHomePageToolbar)
-                .Bool(t => t.HideHomePageCardTitle))
+                .Bool(t => t.HideHomePageCardTitle)
+                .Bool(t => t.UseMica))
             .NewGroup(t => t.NetworkSettings, group => group
                 .DomainFronting(t => t.EnablePixivDomainFronting, entry =>
                         entry.Enum(t => t.PixivDomainFrontingType,
