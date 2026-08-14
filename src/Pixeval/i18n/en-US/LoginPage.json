@@ -5,6 +5,9 @@
   "RefreshTokenButton": {
     "Content": "Login with refresh token"
   },
+  "WebViewButton": {
+    "Content": "Login via Webview (requires proxy)"
+  },
   "FetchingSessionFailed": {
     "Content": "Please restart the app\nIf this problem persists, contact the developer for further help.",
     "Title": "Failed to fetch session"

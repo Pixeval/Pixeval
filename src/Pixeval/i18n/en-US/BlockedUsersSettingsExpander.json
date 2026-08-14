@@ -1,0 +1,18 @@
+{
+  "AddUserButton": {
+    "Label": "Add blocked user"
+  },
+  "RefreshAllButton": {
+    "Label": "Refresh all user information"
+  },
+  "RefreshUserButton": {
+    "Label": "Refresh user information"
+  },
+  "DeleteUserButton": {
+    "Label": "Unblock user"
+  },
+  "TargetIdTextBox": {
+    "PlaceholderText": "User ID"
+  },
+  "InvalidUserId": "Please enter a valid user ID"
+}

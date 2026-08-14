@@ -29,7 +29,7 @@ Go to "Settings" in Pixeval and find the "MCP Settings" group:
 - "Enable MCP Server": when enabled, Pixeval starts the local MCP service in the desktop app.
 - "MCP Port": default is `52163`."MCP Port": default is `52163`. Changing the port restarts the MCP service, and connected clients must reconnect using the new address.
 - "Enable MCP write tool": Disabled by default.Once enabled, connected AI tools can request comments, collections, downloads, follows and tool calls that need write access.
-- "MCP Binary Resource Size Limit (MB)": limits the size of binary resources, such as thumbnails, that the Pixeval MCP server returns to clients. When the limit is exceeded, MCP returns a clear error instead of continuing to transfer the large file.When the limit is exceeded, MCP returns a clear error instead of continuing to transfer the large file.When the limit is exceeded, MCP returns a clear error instead of continuing to transfer the large file.When the limit is exceeded, MCP returns a clear error instead of continuing to transfer the large file.
+- "MCP Binary Resource Size Limit (MB)": limits the size of binary resources, such as thumbnails, that the Pixeval MCP server returns to clients. When the limit is exceeded, MCP returns a clear error instead of continuing to transfer the large file.When the limit is exceeded, MCP returns a clear error instead of continuing to transfer the large file.When the limit is exceeded, MCP returns a clear error instead of continuing to transfer the large file.When the limit is exceeded, MCP returns a clear error instead of continuing to transfer the large file.When the limit is exceeded, MCP returns a clear error instead of continuing to transfer the large file.
 
 MCP only runs on the desktop.MCP only runs on the desktop.MCP only runs on the desktop. Android, iOS, and browser versions do not start the MCP service.
 
@@ -64,7 +64,7 @@ http://127.0.0.1:52163/mcp
 
 If the tool has a GUI, generally choose "Add MCP server", set the type to `HTTP`, `Streamable HTTP`, or `Remote`, name it `Pixeval`, and fill in the URL above.
 
-Different tools use different config file formats; you can mainly reference other MCP services you have configured successfully. Below are several common examples.Below are several common examples.Below are several common examples.Below are several common examples.
+Different tools use different config file formats; you can mainly reference other MCP services you have configured successfully. Below are several common examples.Below are several common examples.Below are several common examples.Below are several common examples.Below are several common examples.
 
 If the tool uses a config file similar to `mcp.json` and supports HTTP MCP, you can reference the following:
 
@@ -100,13 +100,13 @@ type = "http"
 url = "http://127.0.0.1:52163/mcp"
 ```
 
-If an AI tool only supports `stdio` MCP, meaning it can only launch a command-line program as the MCP server, it cannot directly connect to Pixeval's built-in HTTP MCP. Pixeval does not provide a separate stdio exe; in this case, you need to wait for the tool to support HTTP MCP, or use a trusted HTTP-to-stdio bridge tool.Pixeval does not provide a separate stdio exe; in this case, you need to wait for the tool to support HTTP MCP, or use a trusted HTTP-to-stdio bridge tool.Pixeval does not provide a separate stdio exe; in this case, you need to wait for the tool to support HTTP MCP, or use a trusted HTTP-to-stdio bridge tool.Pixeval does not provide a separate stdio exe; in this case, you need to wait for the tool to support HTTP MCP, or use a trusted HTTP-to-stdio bridge tool.
+If an AI tool only supports `stdio` MCP, meaning it can only launch a command-line program as the MCP server, it cannot directly connect to Pixeval's built-in HTTP MCP. Pixeval does not provide a separate stdio exe; in this case, you need to wait for the tool to support HTTP MCP, or use a trusted HTTP-to-stdio bridge tool.Pixeval does not provide a separate stdio exe; in this case, you need to wait for the tool to support HTTP MCP, or use a trusted HTTP-to-stdio bridge tool.Pixeval does not provide a separate stdio exe; in this case, you need to wait for the tool to support HTTP MCP, or use a trusted HTTP-to-stdio bridge tool.Pixeval does not provide a separate stdio exe; in this case, you need to wait for the tool to support HTTP MCP, or use a trusted HTTP-to-stdio bridge tool.Pixeval does not provide a separate stdio exe; in this case, you need to wait for the tool to support HTTP MCP, or use a trusted HTTP-to-stdio bridge tool.
 
 ## Client Tips
 
 ### Editors such as VS Code and Cursor
 
-These tools usually support adding MCP servers in user settings, workspace settings, or project configuration. Choose the HTTP type and fill in the URL:Choose the HTTP type and fill in the URL:Choose the HTTP type and fill in the URL:Choose the HTTP type and fill in the URL:
+These tools usually support adding MCP servers in user settings, workspace settings, or project configuration. Choose the HTTP type and fill in the URL:Choose the HTTP type and fill in the URL:Choose the HTTP type and fill in the URL:Choose the HTTP type and fill in the URL:Choose the HTTP type and fill in the URL:
 
 ```text
 http://127.0.0.1:52163/mcp
@@ -124,7 +124,7 @@ If the tool runs in the cloud, such as the cloud connector of a web product, it 
 
 ### Local scripts or debugging tools
 
-You can directly send MCP JSON-RPC requests to `http://127.0.0.1:52163/mcp` when debugging.You can directly send MCP JSON-RPC requests to `http://127.0.0.1:52163/mcp` when debugging.After connecting successfully, first call `tools/list` to view avaliable tools, then call `help`, `status` or `capabilities` to learn about Pixeval's current abilities.You can directly send MCP JSON-RPC requests to `http://127.0.0.1:52163/mcp` when debugging.After connecting successfully, first call `tools/list` to view avaliable tools, then call `help`, `status` or `capabilities` to learn about Pixeval's current abilities.
+You can directly send MCP JSON-RPC requests to `http://127.0.0.1:52163/mcp` when debugging.You can directly send MCP JSON-RPC requests to `http://127.0.0.1:52163/mcp` when debugging.After connecting successfully, first call `tools/list` to view avaliable tools, then call `help`, `status` or `capabilities` to learn about Pixeval's current abilities.You can directly send MCP JSON-RPC requests to `http://127.0.0.1:52163/mcp` when debugging.After connecting successfully, first call `tools/list` to view avaliable tools, then call `help`, `status` or `capabilities` to learn about Pixeval's current abilities.You can directly send MCP JSON-RPC requests to `http://127.0.0.1:52163/mcp` when debugging.After connecting successfully, first call `tools/list` to view avaliable tools, then call `help`, `status` or `capabilities` to learn about Pixeval's current abilities.
 
 ## Permissions and Security
 
@@ -132,7 +132,7 @@ Pixeval MCP's permissions follow the currently running Pixeval:
 
 - MCP uses the account currently logged in to Pixeval and its current network settings.
 - MCP does not return sensitive information to clients, such as refresh tokens, cookies, proxy addresses, or extension setting values.
-- Write tools are disabled by default.Write tools are disabled by default.Write tools are disabled by default.Write tools are disabled by default. When enabled, AI tools can perform write operations on Pixiv or Pixeval's local data on your behalf; only connect clients you trust.
+- Write tools are disabled by default.Write tools are disabled by default.Write tools are disabled by default.Write tools are disabled by default.Write tools are disabled by default. When enabled, AI tools can perform write operations on Pixiv or Pixeval's local data on your behalf; only connect clients you trust.
 - Pixeval only listens on the local address and does not expose itself to the LAN or public internet.
 - Binary resources such as thumbnails are returned by the Pixeval server to clients, limited by the "Binary Resource Size Limit (MB)".
 
@@ -168,6 +168,7 @@ help(topic: "extensions")
 ### The AI tool cannot connect to Pixeval
 
 Check whether Pixeval is running, MCP is enabled, the port is correct, and the AI tool actually supports HTTP MCP. Tools that only support stdio cannot directly connect to Pixeval.
+You can also try starting Pixeval before launching the AI tool.Tools that only support stdio cannot directly connect to Pixeval.
 You can also try starting Pixeval before launching the AI tool.Tools that only support stdio cannot directly connect to Pixeval.
 You can also try starting Pixeval before launching the AI tool.Tools that only support stdio cannot directly connect to Pixeval.
 You can also try starting Pixeval before launching the AI tool.Tools that only support stdio cannot directly connect to Pixeval.
