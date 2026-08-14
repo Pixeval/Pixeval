@@ -24,7 +24,20 @@ public static class AppInfo
 
     public const string AppProtocol = "pixeval";
 
-    public static string ApplicationFolderPath { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppIdentifier);
+    private static string ClassicApplicationFolderPath { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppIdentifier);
+
+    public static string ApplicationFolderPath { get; } = AppContext.BaseDirectory.Contains(
+            Path.Combine("WindowsApps", "PokerKo.4454907E5DDB5_"),
+            StringComparison.OrdinalIgnoreCase)
+        && !Directory.Exists(ClassicApplicationFolderPath)
+        ? Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Packages",
+            "PokerKo.4454907E5DDB5_0wpjzgvbyjvyr",
+            "LocalCache",
+            "Local",
+            AppIdentifier)
+        : ClassicApplicationFolderPath;
 
     public static string SettingsFolder { get; } = Path.Combine(ApplicationFolderPath, "Settings");
 

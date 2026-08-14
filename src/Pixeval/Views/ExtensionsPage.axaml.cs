@@ -208,11 +208,6 @@ public partial class ExtensionsPage : IconContentPage
             _ = TopLevel.GetTopLevel(this)?.Launcher.LaunchUriAsync(uri);
     }
 
-    private void ExtensionCard_OnClick(object? sender, RoutedEventArgs e)
-    {
-        _ = TopLevel.GetTopLevel(this)?.Launcher.LaunchUriAsync(new Uri("https://github.com/Pixeval/Pixeval/releases"));
-    }
-
     private void ExtensionsPriorityUpOnClick(object? sender, RoutedEventArgs e)
     {
         if (sender is not Control { DataContext: ExtensionsHostModel model })
