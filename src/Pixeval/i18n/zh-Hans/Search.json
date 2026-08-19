@@ -69,8 +69,10 @@
   },
   "SearchUser": "搜索用户",
   "SearchHistory": {
+    "AddPinnedTag": "添加固定标签",
     "Copy": "复制",
-    "Delete": "删除"
+    "Delete": "删除",
+    "Unpin": "取消固定"
   },
   "SauceNAO": {
     "Search": "SauceNAO 搜索",

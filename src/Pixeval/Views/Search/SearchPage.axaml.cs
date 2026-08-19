@@ -48,12 +48,38 @@ public partial class SearchPage : IconContentPage
 
     private async void CopyButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (sender is not Control { DataContext: SearchHistoryEntry entry }
+        var value = sender switch
+        {
+            Control { DataContext: SearchHistoryEntry entry } => entry.Value,
+            Control { DataContext: string tag } => tag,
+            _ => null
+        };
+        if (value is null
             || TopLevel.GetTopLevel(this) is not { ViewContainer: { } viewContainer, Clipboard: { } clipboard })
             return;
 
-        await clipboard.SetTextAsync(entry.Value);
-        viewContainer?.ShowSuccess(I18NManager.GetResource(MiscResources.Copied));
+        await clipboard.SetTextAsync(value);
+        viewContainer.ShowSuccess(I18NManager.GetResource(MiscResources.Copied));
+    }
+
+    private static void AddPinnedTagButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Control { DataContext: SearchHistoryEntry entry })
+            return;
+
+        var pinnedTags = App.AppViewModel.AppSettings.BrowsingExperienceSettings.PinnedTags;
+        if (!pinnedTags.Contains(entry.Value))
+            pinnedTags.Add(entry.Value);
+        _ = App.AppViewModel.HistoryPersistHelper.SearchHistoryEntries.Remove(entry);
+    }
+
+    private static void UnpinButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Control { DataContext: string tag })
+            return;
+
+        if (App.AppViewModel.AppSettings.BrowsingExperienceSettings.PinnedTags.Remove(tag))
+            App.AppViewModel.HistoryPersistHelper.AddSearchHistory(tag);
     }
 
     private void DeleteButton_OnClick(object? sender, RoutedEventArgs e)
@@ -311,6 +337,17 @@ public partial class SearchPage : IconContentPage
             viewModel.SearchText = entry.Value;
 
         ExecuteSearch(entry.Value, false);
+    }
+
+    private void PinnedTagButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Control { DataContext: string tag })
+            return;
+
+        if (DataContext is SearchPageViewModel viewModel)
+            viewModel.SearchText = tag;
+
+        ExecuteSearch(tag, false);
     }
 
     private void ExecuteSearch(string? searchText, bool advanced)

@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:database="using:Pixeval.Models.Database"
     xmlns:enum="using:Mako.Global.Enum"
+    xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -70,15 +71,19 @@
                 </TabbedPage>
             </Expander>
             <ScrollViewer MaxHeight="200" DockPanel.Dock="Top">
-                <ItemsControl ItemsSource="{Binding SearchHistories}">
+                <ItemsControl ItemsSource="{Binding SearchTags}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel ItemSpacing="5" LineSpacing="5" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="{x:Type database:SearchHistoryEntry}">
-                            <Button Click="SearchHistoryButton_OnClick">
+                        <DataTemplate DataType="{x:Type x:String}">
+                            <Button Click="PinnedTagButton_OnClick">
                                 <Button.Content>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
-                                        <TextBlock Text="{Binding Value}" />
-                                        <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                   Text="{Binding TranslatedName}" />
+                                        <TextBlock Text="{Binding}" />
+                                        <fluent:SymbolIcon Symbol="Pin" />
                                     </StackPanel>
                                 </Button.Content>
                                 <Button.ContextMenu>
@@ -88,6 +93,37 @@
                                             Header="{I18N {x:Static pixeval:SearchResources+SearchHistory.Copy}}"
                                             Icon="{markup:SymbolIcon Copy}" />
                                         <MenuItem
+                                            Click="UnpinButton_OnClick"
+                                            Header="{I18N {x:Static pixeval:SearchResources+SearchHistory.Unpin}}"
+                                            Icon="{markup:SymbolIcon PinOff}" />
+                                    </ContextMenu>
+                                </Button.ContextMenu>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.DataTemplates>
+                        <DataTemplate DataType="{x:Type database:SearchHistoryEntry}">
+                            <Button Click="SearchHistoryButton_OnClick">
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <TextBlock Text="{Binding Value}" />
+                                        <TextBlock
+                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                            IsVisible="{Binding TranslatedName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                            Text="{Binding TranslatedName}" />
+                                    </StackPanel>
+                                </Button.Content>
+                                <Button.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem
+                                            Click="CopyButton_OnClick"
+                                            Header="{I18N {x:Static pixeval:SearchResources+SearchHistory.Copy}}"
+                                            Icon="{markup:SymbolIcon Copy}" />
+                                        <MenuItem
+                                            Click="AddPinnedTagButton_OnClick"
+                                            Header="{I18N {x:Static pixeval:SearchResources+SearchHistory.AddPinnedTag}}"
+                                            Icon="{markup:SymbolIcon Pin}" />
+                                        <MenuItem
                                             Click="DeleteButton_OnClick"
                                             Header="{I18N {x:Static pixeval:SearchResources+SearchHistory.Delete}}"
                                             Icon="{markup:SymbolIcon Delete}" />
@@ -95,12 +131,7 @@
                                 </Button.ContextMenu>
                             </Button>
                         </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel ItemSpacing="5" LineSpacing="5" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
+                    </ItemsControl.DataTemplates>
                 </ItemsControl>
             </ScrollViewer>
             <DockPanel VerticalSpacing="5">
@@ -152,8 +183,7 @@
                                             Text="{Binding TranslatedName}"
                                             TextWrapping="WrapWithOverflow" />
                                         <Border ClipToBounds="True" CornerRadius="{StaticResource ControlCornerRadius}">
-                                            <Image controls:Source.Cache="{Binding Illustration.ThumbnailUrls.Medium}"
-                                                   Stretch="UniformToFill" />
+                                            <Image controls:Source.Cache="{Binding Illustration.ThumbnailUrls.Medium}" Stretch="UniformToFill" />
                                         </Border>
                                     </DockPanel>
                                 </Button.Content>

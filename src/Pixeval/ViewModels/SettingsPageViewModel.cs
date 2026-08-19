@@ -106,6 +106,7 @@ public class SettingsPageViewModel : ViewModelBase
                 .Enum(t => t.IllustrationViewerAutoPlayScope)
                 .Enum(t => t.TargetFilter)
                 .Collection(t => t.BlockedTags)
+                .Collection(t => t.PinnedTags)
                 .BlockedUsers(t => t.BlockedUsers)
                 .Bool(t => t.OpenWorkInfoByDefault)
                 .Bool(t => t.OpenUserInfoByDefault))

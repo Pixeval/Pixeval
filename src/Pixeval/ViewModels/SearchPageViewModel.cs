@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Mako;
 using Mako.Global.Enum;
 using Mako.Model;
+using Pixeval.Collections;
 using Pixeval.Models.Database;
 using Pixeval.ViewModels.Search;
 
@@ -21,8 +22,6 @@ public partial class SearchPageViewModel : ViewModelBase
 
     private SearchPageViewModel()
     {
-        IllustrationForm = new IllustrationSearchFormViewModel();
-        NovelForm = new NovelSearchFormViewModel();
         _ = LoadResourcesAsync();
     }
 
@@ -61,11 +60,15 @@ public partial class SearchPageViewModel : ViewModelBase
     [NotifyPropertyChangedFor(nameof(TrendingTags))]
     public partial IReadOnlyList<TrendingTag> NovelTrendingTags { get; private set; } = [];
 
-    public IllustrationSearchFormViewModel IllustrationForm { get; }
+    public IllustrationSearchFormViewModel IllustrationForm { get; } = new IllustrationSearchFormViewModel();
 
-    public NovelSearchFormViewModel NovelForm { get; }
+    public NovelSearchFormViewModel NovelForm { get; } = new NovelSearchFormViewModel();
 
-    public ObservableCollection<SearchHistoryEntry> SearchHistories => App.AppViewModel.HistoryPersistHelper.SearchHistoryEntries;
+    private static ObservableCollection<SearchHistoryEntry> SearchHistories => App.AppViewModel.HistoryPersistHelper.SearchHistoryEntries;
+
+    private static ObservableCollection<string> PinnedTags => App.AppViewModel.AppSettings.BrowsingExperienceSettings.PinnedTags;
+
+    public CompositeObservableCollection<object> SearchTags { get; } = new(PinnedTags, SearchHistories);
 
     private async Task RefreshSearchOptionsAsync()
     {

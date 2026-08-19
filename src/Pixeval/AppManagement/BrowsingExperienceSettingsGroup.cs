@@ -52,6 +52,9 @@ public record BrowsingExperienceSettingsGroup
     [SettingsEntry(Symbol.TagDismiss, AppSettingsResources.BlockedTagsEntry.Header, AppSettingsResources.BlockedTagsEntry.Description, AppSettingsResources.BlockedTagsEntry.Placeholder)]
     public ObservableCollection<string> BlockedTags { get; set; } = [];
 
+    [SettingsEntry(Symbol.Pin, AppSettingsResources.PinnedTagsEntry.Header, AppSettingsResources.PinnedTagsEntry.Description, AppSettingsResources.PinnedTagsEntry.Placeholder)]
+    public ObservableCollection<string> PinnedTags { get; set; } = [];
+
     [JsonIgnore]
     [SettingsEntry(Symbol.PersonProhibited, AppSettingsResources.BlockedUsersEntry.Header, AppSettingsResources.BlockedUsersEntry.Description)]
     public byte BlockedUsers => 0;
