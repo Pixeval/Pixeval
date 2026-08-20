@@ -148,7 +148,11 @@
                         Background="Transparent"
                         IsVisible="{Binding #InfoPaneRoot.IsDocked}"
                         Pages="{Binding PanePages}"
-                        TabPlacement="Bottom" />
+                        TabPlacement="Top">
+                        <TabbedPage.Resources>
+                            <Thickness x:Key="TabbedPageTabStripPadding">0,0,60,0</Thickness>
+                        </TabbedPage.Resources>
+                    </TabbedPage>
                 </Panel>
             </DockPanel>
         </DockPanel>

@@ -1,7 +1,6 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
-using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
@@ -30,15 +29,20 @@ public class FloatingPaneView : ContentControl
     public static readonly StyledProperty<bool> IsDockedProperty =
         AvaloniaProperty.Register<FloatingPaneView, bool>(nameof(IsDocked));
 
+    public static readonly StyledProperty<Dock> DockPositionProperty =
+        AvaloniaProperty.Register<FloatingPaneView, Dock>(
+            nameof(DockPosition),
+            defaultValue: Dock.Left);
+
     public static readonly StyledProperty<bool> IsLockedProperty =
         AvaloniaProperty.Register<FloatingPaneView, bool>(nameof(IsLocked));
 
     public static readonly StyledProperty<double> DockProgressProperty =
         AvaloniaProperty.Register<FloatingPaneView, double>(nameof(DockProgress));
 
-    public static readonly StyledProperty<double> DockedPaneWidthProperty =
+    public static readonly StyledProperty<double> DockedPaneSizeProperty =
         AvaloniaProperty.Register<FloatingPaneView, double>(
-            nameof(DockedPaneWidth),
+            nameof(DockedPaneSize),
             defaultValue: 340);
 
     public static readonly StyledProperty<double> FloatingPaneWidthProperty =
@@ -51,10 +55,20 @@ public class FloatingPaneView : ContentControl
             nameof(FloatingPaneMargin),
             defaultValue: 20);
 
+    public static readonly StyledProperty<HorizontalAlignment> PaneHorizontalAlignmentProperty =
+        AvaloniaProperty.Register<FloatingPaneView, HorizontalAlignment>(
+            nameof(PaneHorizontalAlignment),
+            defaultValue: HorizontalAlignment.Left);
+
     public static readonly StyledProperty<VerticalAlignment> PaneVerticalAlignmentProperty =
         AvaloniaProperty.Register<FloatingPaneView, VerticalAlignment>(
             nameof(PaneVerticalAlignment),
             defaultValue: VerticalAlignment.Bottom);
+
+    public FloatingPaneView()
+    {
+        SizeChanged += OnSizeChanged;
+    }
 
     public object? Pane
     {
@@ -74,6 +88,12 @@ public class FloatingPaneView : ContentControl
         set => SetValue(IsDockedProperty, value);
     }
 
+    public Dock DockPosition
+    {
+        get => GetValue(DockPositionProperty);
+        set => SetValue(DockPositionProperty, value);
+    }
+
     public bool IsLocked
     {
         get => GetValue(IsLockedProperty);
@@ -86,10 +106,10 @@ public class FloatingPaneView : ContentControl
         set => SetValue(DockProgressProperty, value);
     }
 
-    public double DockedPaneWidth
+    public double DockedPaneSize
     {
-        get => GetValue(DockedPaneWidthProperty);
-        set => SetValue(DockedPaneWidthProperty, value);
+        get => GetValue(DockedPaneSizeProperty);
+        set => SetValue(DockedPaneSizeProperty, value);
     }
 
     public double FloatingPaneWidth
@@ -104,26 +124,16 @@ public class FloatingPaneView : ContentControl
         set => SetValue(FloatingPaneMarginProperty, value);
     }
 
+    public HorizontalAlignment PaneHorizontalAlignment
+    {
+        get => GetValue(PaneHorizontalAlignmentProperty);
+        set => SetValue(PaneHorizontalAlignmentProperty, value);
+    }
+
     public VerticalAlignment PaneVerticalAlignment
     {
         get => GetValue(PaneVerticalAlignmentProperty);
         set => SetValue(PaneVerticalAlignmentProperty, value);
-    }
-    
-    public void ShowPaneTemporarily(TimeSpan? duration = null)
-    {
-        if (IsDocked || _floatingPaneBorder is null)
-            return;
-
-        FloatingPane.ShowTemporarily(_floatingPaneBorder, duration);
-    }
-
-    public void ClearTemporaryPaneVisibility()
-    {
-        if (_floatingPaneBorder is null)
-            return;
-
-        FloatingPane.ClearTemporaryVisible(_floatingPaneBorder);
     }
 
     static FloatingPaneView()
@@ -161,11 +171,18 @@ public class FloatingPaneView : ContentControl
     {
         if (!isDocked)
         {
-            FloatingPane.ShowTemporarily(border);
+            FloatingPane.ClearTemporaryVisible(border);
+            FloatingPane.SetPointerAway(border);
             return;
         }
 
         FloatingPane.ResetState(border);
         FloatingPane.ClearTemporaryVisible(border);
+    }
+
+    private void OnSizeChanged(object? sender, SizeChangedEventArgs e)
+    {
+        // Keep the info pane usable on portrait-sized viewer regions.
+        DockPosition = e.NewSize.Height > e.NewSize.Width ? Dock.Bottom : Dock.Left;
     }
 }

@@ -45,7 +45,7 @@
 
     <ContentPage.Styles>
         <Style Selector="controls|FloatingPaneView#EntryViewerFloatingPaneView">
-            <Setter Property="DockedPaneWidth" Value="360" />
+            <Setter Property="DockedPaneSize" Value="360" />
             <Setter Property="FloatingPaneMargin" Value="16" />
             <Setter Property="FloatingPaneWidth" Value="360" />
             <Setter Property="PaneVerticalAlignment" Value="Top" />
@@ -167,9 +167,8 @@
                         x:Name="I"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
-                        CurrentWorkIndex="{Binding #Root.((viewers:IllustrationViewerPageViewModel)DataContext).CurrentWorkIndex}"
-                        DataContext="{Binding CurrentImage}"
-                        SelectionChanged="ImageViewerPage_OnSelectionChanged" />
+                        CurrentWorkIndex="{Binding #Root.((viewers:IllustrationViewerPageViewModel)DataContext)?.CurrentWorkIndex}"
+                        DataContext="{Binding CurrentImage}" />
 
                     <Grid Background="#7F000000" IsVisible="{Binding IsLoading}">
                         <StackPanel

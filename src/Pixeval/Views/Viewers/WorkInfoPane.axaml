@@ -107,7 +107,6 @@
                     VerticalScrollBarVisibility="Auto">
                     <StackPanel
                         x:DataType="{x:Type misaki:IArtworkInfo}"
-                        MinHeight="400"
                         Margin="16,12"
                         DataContext="{TemplateBinding ArtworkInfo}"
                         Spacing="5">

@@ -4,7 +4,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Pixeval.Controls;
 using Pixeval.Models.Options;
 using Pixeval.Utilities;
 using Pixeval.ViewModels.Viewers;
@@ -73,12 +72,6 @@ public partial class IllustrationViewerPage : ContentPage
     {
         if (sender is MenuItem { Tag: IllustrationViewerAutoPlayScope scope })
             ViewModel.AutoPlayScope = scope;
-    }
-
-    private void ImageViewerPage_OnSelectionChanged(Control sender, ImageViewerSelectionChangedEventArgs e)
-    {
-        if (ViewModel.CurrentImage is not null)
-            EntryViewerFloatingPaneView.ShowPaneTemporarily();
     }
 
     #region Disposal
