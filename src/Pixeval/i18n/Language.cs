@@ -1586,6 +1586,9 @@ namespace Pixeval
         public const string ResetSettingConfirmationDialogContent = "SettingsMainView.ResetSettingConfirmationDialogContent";
         public const string ResetSettingConfirmationDialogTitle = "SettingsMainView.ResetSettingConfirmationDialogTitle";
         public const string SettingsSaved = "SettingsMainView.SettingsSaved";
+        public const string UpdateDownloadFailed = "SettingsMainView.UpdateDownloadFailed";
+        public const string UpdateDownloadProgressFormatted = "SettingsMainView.UpdateDownloadProgressFormatted";
+        public const string UpdateDownloadReadyFormatted = "SettingsMainView.UpdateDownloadReadyFormatted";
         public static class AnimatedPathBlock
         {
             public const string Text = "SettingsMainView.AnimatedPathBlock.Text";

@@ -3,4 +3,11 @@
 		<AvaloniaVersion>12.1.1</AvaloniaVersion>
 		<FluentIconsVersion>2.1.335</FluentIconsVersion>
 	</PropertyGroup>
+
+	<!-- NativeAOT is an executable publish setting and must not reach library or analyzer projects. -->
+	<ItemDefinitionGroup>
+		<ProjectReference>
+			<GlobalPropertiesToRemove>PublishAot</GlobalPropertiesToRemove>
+		</ProjectReference>
+	</ItemDefinitionGroup>
 </Project>

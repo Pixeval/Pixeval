@@ -5,6 +5,7 @@ using System;
 using AutoSettingsPage.Models;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.I18N;
@@ -90,21 +91,63 @@ public partial class SettingsMainView : ContentPage
         UpdateStatusInfoBar.Text = I18NManager.GetResource(SettingsMainViewResources.CheckingForUpdate);
         try
         {
-            await AppInfo.AppVersion.GitHubCheckForUpdateAsync();
+            await AppInfo.AppVersion.CheckForUpdateAsync();
             RefreshUpdateStatus();
+
+            if (AppInfo.AppVersion is not
+                {
+                    UpdateAvailable: true,
+                    NewestAppReleaseModel: { } release
+                }
+                || TopLevel.GetTopLevel(this)?.ViewContainer is not { } viewContainer)
+                return;
+
+            if (!AppInfo.AppVersion.UsesVelopack)
+            {
+                _ = await viewContainer.CreateAcknowledgementAsync(
+                    SettingsPage.GetReleaseTitle(release.Version),
+                    SettingsPage.CreateReleaseNotes(release));
+                return;
+            }
+
+            UpdateStatusInfoBar.Mode = InfoBarMode.Info;
+            UpdateStatusInfoBar.Text = I18NManager.GetResource(
+                SettingsMainViewResources.UpdateDownloadProgressFormatted,
+                0);
+            try
+            {
+                IProgress<int> progress = new Progress<int>(value => Dispatcher.UIThread.Post(() =>
+                {
+                    UpdateStatusInfoBar.Mode = InfoBarMode.Info;
+                    UpdateStatusInfoBar.Text = I18NManager.GetResource(
+                        SettingsMainViewResources.UpdateDownloadProgressFormatted,
+                        value);
+                }));
+                if (!await AppInfo.AppVersion.DownloadUpdateAsync(progress.Report))
+                    return;
+            }
+            catch (Exception exception)
+            {
+                UpdateStatusInfoBar.Mode = InfoBarMode.Error;
+                UpdateStatusInfoBar.Text = I18NManager.GetResource(SettingsMainViewResources.UpdateDownloadFailed);
+                viewContainer.ShowError(
+                    I18NManager.GetResource(SettingsMainViewResources.UpdateDownloadFailed),
+                    exception.Message);
+                return;
+            }
+
+            UpdateStatusInfoBar.Mode = InfoBarMode.Success;
+            var readyVersion = AppInfo.AppVersion.PendingUpdateVersion ?? release.Version;
+            var readyMessage = I18NManager.GetResource(
+                SettingsMainViewResources.UpdateDownloadReadyFormatted,
+                readyVersion);
+            UpdateStatusInfoBar.Text = readyMessage;
+            viewContainer.ShowSuccess(readyMessage);
         }
         finally
         {
             button.IsEnabled = true;
         }
-
-        if (AppInfo.AppVersion is not { UpdateAvailable: true, NewestAppReleaseModel: { } release }
-            || TopLevel.GetTopLevel(this)?.ViewContainer is not { } viewContainer)
-            return;
-
-        _ = await viewContainer.CreateAcknowledgementAsync(
-            SettingsPage.GetReleaseTitle(release.Version),
-            SettingsPage.CreateReleaseNotes(release));
     }
 
     private void RefreshUpdateStatus()

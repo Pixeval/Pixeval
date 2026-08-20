@@ -1,4 +1,4 @@
-name: Draft Release
+name: Velopack Release
 
 on:
   push:
@@ -9,41 +9,45 @@ permissions:
   contents: read
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: velopack-release-${{ github.ref }}
   cancel-in-progress: false
 
 env:
   CONFIGURATION: Release
 
 jobs:
-  metadata:
-    name: Validate release metadata
+  release-notes:
+    name: Generate release notes
     runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.version.outputs.version }}
-      package_version: ${{ steps.version.outputs.package_version }}
+    permissions:
+      contents: write
     steps:
-      - name: Validate tag version
-        id: version
-        shell: pwsh
+      - name: Generate GitHub release notes
+        shell: bash
         env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
           RELEASE_VERSION: ${{ github.ref_name }}
         run: |
-          if ($env:RELEASE_VERSION -notmatch '^\d+\.\d+\.\d+$') {
-            throw "Release tags must use the numeric format 5.0.0."
-          }
+          notes_path="$RUNNER_TEMP/release-notes.md"
+          gh api \
+            --method POST \
+            "repos/$GH_REPO/releases/generate-notes" \
+            -f tag_name="$RELEASE_VERSION" \
+            -f target_commitish="$GITHUB_SHA" \
+            --jq '.body // ""' > "$notes_path"
+          test -f "$notes_path"
 
-          $segments = $env:RELEASE_VERSION.Split('.') | ForEach-Object { [uint32] $_ }
-          if ($segments.Where({ $_ -gt [uint16]::MaxValue }).Count -ne 0) {
-            throw "Every version segment must be between 0 and 65535 for MSIX."
-          }
-
-          "version=$env:RELEASE_VERSION" >> $env:GITHUB_OUTPUT
-          "package_version=$($env:RELEASE_VERSION).0" >> $env:GITHUB_OUTPUT
+      - name: Upload release notes
+        uses: actions/upload-artifact@v7
+        with:
+          name: generated-release-notes
+          path: ${{ runner.temp }}/release-notes.md
+          if-no-files-found: error
+          retention-days: 14
 
   macos:
     name: macOS ${{ matrix.architecture }}
-    needs: metadata
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -92,7 +96,7 @@ jobs:
         shell: bash
         env:
           PUBLISH_AOT: ${{ matrix.publish_aot }}
-          RELEASE_VERSION: ${{ needs.metadata.outputs.version }}
+          RELEASE_VERSION: ${{ github.ref_name }}
           RUNTIME: ${{ matrix.runtime }}
         run: |
           aot_arguments=()
@@ -120,7 +124,7 @@ jobs:
         shell: bash
         env:
           ARCHITECTURE: ${{ matrix.architecture }}
-          RELEASE_VERSION: ${{ needs.metadata.outputs.version }}
+          RELEASE_VERSION: ${{ github.ref_name }}
         run: |
           app_directory="$RUNNER_TEMP/Pixeval.app"
           contents_directory="$app_directory/Contents"
@@ -160,7 +164,6 @@ jobs:
 
   linux:
     name: Linux ${{ matrix.architecture }}
-    needs: metadata
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -203,7 +206,7 @@ jobs:
       - name: Publish
         shell: bash
         env:
-          RELEASE_VERSION: ${{ needs.metadata.outputs.version }}
+          RELEASE_VERSION: ${{ github.ref_name }}
           RUNTIME: ${{ matrix.runtime }}
         run: |
           publish_directory="$RUNNER_TEMP/pixeval-$RUNTIME"
@@ -225,7 +228,7 @@ jobs:
         shell: bash
         env:
           ARCHITECTURE: ${{ matrix.architecture }}
-          RELEASE_VERSION: ${{ needs.metadata.outputs.version }}
+          RELEASE_VERSION: ${{ github.ref_name }}
         run: |
           release_directory="$GITHUB_WORKSPACE/artifacts/release"
           mkdir -p "$release_directory"
@@ -251,7 +254,6 @@ jobs:
 
   android:
     name: Android ${{ matrix.architecture }}
-    needs: metadata
     runs-on: windows-latest
     strategy:
       fail-fast: false
@@ -312,7 +314,7 @@ jobs:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ARCHITECTURE: ${{ matrix.architecture }}
           KEYSTORE_PATH: ${{ steps.keystore.outputs.path }}
-          RELEASE_VERSION: ${{ needs.metadata.outputs.version }}
+          RELEASE_VERSION: ${{ github.ref_name }}
           RUNTIME: ${{ matrix.runtime }}
         run: |
           if ([string]::IsNullOrWhiteSpace($env:ANDROID_KEYSTORE_PASSWORD) `
@@ -388,7 +390,8 @@ jobs:
 
   windows:
     name: Windows ${{ matrix.architecture }}
-    needs: metadata
+    needs:
+      - release-notes
     runs-on: windows-latest
     strategy:
       fail-fast: false
@@ -410,6 +413,12 @@ jobs:
           fetch-depth: 0
           submodules: recursive
           filter: tree:0
+
+      - name: Download generated release notes
+        uses: actions/download-artifact@v8
+        with:
+          name: generated-release-notes
+          path: artifacts/release-notes
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
@@ -434,9 +443,8 @@ jobs:
       - name: Publish
         id: publish
         env:
-          PACKAGE_VERSION: ${{ needs.metadata.outputs.package_version }}
           PUBLISH_AOT: ${{ matrix.publish_aot }}
-          RELEASE_VERSION: ${{ needs.metadata.outputs.version }}
+          RELEASE_VERSION: ${{ github.ref_name }}
           RUNTIME: ${{ matrix.runtime }}
         run: |
           [string[]] $aotArguments = @()
@@ -454,19 +462,18 @@ jobs:
             -p:DebugSymbols=false `
             -p:DebugType=None `
             -p:Version=$env:RELEASE_VERSION `
-            -p:AssemblyVersion=$env:PACKAGE_VERSION `
-            -p:FileVersion=$env:PACKAGE_VERSION `
+            -p:AssemblyVersion=$env:RELEASE_VERSION `
+            -p:FileVersion=$env:RELEASE_VERSION `
             -p:InformationalVersion=$env:RELEASE_VERSION `
             @aotArguments
 
           "directory=$publishDirectory" >> $env:GITHUB_OUTPUT
 
-      - name: Package ZIP and unsigned MSIX
+      - name: Package Windows ZIP
         env:
           ARCHITECTURE: ${{ matrix.architecture }}
-          PACKAGE_VERSION: ${{ needs.metadata.outputs.package_version }}
           PUBLISH_DIRECTORY: ${{ steps.publish.outputs.directory }}
-          RELEASE_VERSION: ${{ needs.metadata.outputs.version }}
+          RELEASE_VERSION: ${{ github.ref_name }}
         run: |
           $releaseDirectory = Join-Path $PWD "artifacts\release"
           $null = New-Item -ItemType Directory -Force -Path $releaseDirectory
@@ -480,12 +487,36 @@ jobs:
             throw "ZIP packaging failed with exit code $LASTEXITCODE."
           }
 
-          & scripts/package-msix.ps1 `
-            -PublishDirectory $env:PUBLISH_DIRECTORY `
-            -Architecture $env:ARCHITECTURE `
-            -ReleaseVersion $env:RELEASE_VERSION `
-            -PackageVersion $env:PACKAGE_VERSION `
-            -OutputDirectory $releaseDirectory
+      - name: Package Velopack release
+        env:
+          PUBLISH_DIRECTORY: ${{ steps.publish.outputs.directory }}
+          RELEASE_VERSION: ${{ github.ref_name }}
+          RELEASE_NOTES_PATH: ${{ github.workspace }}\artifacts\release-notes\release-notes.md
+          RUNTIME: ${{ matrix.runtime }}
+        run: |
+          $vpkDirectory = Join-Path $env:RUNNER_TEMP "vpk"
+          dotnet tool install --tool-path $vpkDirectory vpk --version 1.2.0
+          if ($LASTEXITCODE -ne 0) {
+            throw "Velopack CLI installation failed with exit code $LASTEXITCODE."
+          }
+
+          $releaseDirectory = Join-Path $PWD "artifacts\release"
+          $vpkPath = Join-Path $vpkDirectory "vpk.exe"
+          & $vpkPath pack `
+            --packId Pixeval `
+            --packVersion $env:RELEASE_VERSION `
+            --packDir $env:PUBLISH_DIRECTORY `
+            --mainExe Pixeval.Desktop.exe `
+            --packAuthors Pixeval `
+            --packTitle Pixeval `
+            --icon (Join-Path $PWD "src\Pixeval\Assets\logo.ico") `
+            --runtime $env:RUNTIME `
+            --channel $env:RUNTIME `
+            --releaseNotes $env:RELEASE_NOTES_PATH `
+            --outputDir $releaseDirectory
+          if ($LASTEXITCODE -ne 0) {
+            throw "Velopack packaging failed with exit code $LASTEXITCODE."
+          }
 
       - name: Upload Windows release assets
         uses: actions/upload-artifact@v7
@@ -495,136 +526,11 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-  windows-bundle:
-    name: Build Windows MSIXBundle
-    needs:
-      - metadata
-      - windows
-    runs-on: windows-latest
-    steps:
-      - name: Download Windows packages
-        uses: actions/download-artifact@v8
-        with:
-          pattern: release-windows-*
-          path: artifacts/windows
-          merge-multiple: true
-
-      - name: Build MSIXBundle
-        id: bundle
-        shell: pwsh
-        env:
-          PACKAGE_VERSION: ${{ needs.metadata.outputs.package_version }}
-          RELEASE_VERSION: ${{ needs.metadata.outputs.version }}
-        run: |
-          $msixFiles = @(Get-ChildItem -LiteralPath (Join-Path $PWD "artifacts\windows") `
-            -Filter "*-unsigned.msix" -File)
-          if ($msixFiles.Count -ne 3) {
-            throw "Expected exactly three unsigned Windows MSIX packages, found $($msixFiles.Count)."
-          }
-
-          $bundleInput = Join-Path $env:RUNNER_TEMP "pixeval-msixbundle-input"
-          $null = New-Item -ItemType Directory -Force -Path $bundleInput
-          foreach ($msix in $msixFiles) {
-            Copy-Item -LiteralPath $msix.FullName -Destination $bundleInput
-          }
-
-          $makeAppx = Get-Command MakeAppx.exe -ErrorAction SilentlyContinue
-          if ($null -eq $makeAppx) {
-            $windowsKitRoot = Join-Path ${env:ProgramFiles(x86)} "Windows Kits\10\bin"
-            $makeAppx = Get-ChildItem -LiteralPath $windowsKitRoot -Filter MakeAppx.exe -Recurse `
-              | Where-Object FullName -Match "\\x64\\MakeAppx\.exe$" `
-              | Sort-Object FullName -Descending `
-              | Select-Object -First 1
-          }
-          if ($null -eq $makeAppx) {
-            throw "MakeAppx.exe was not found on the runner."
-          }
-
-          $makeAppxPath = if ($makeAppx -is [System.Management.Automation.CommandInfo]) {
-            $makeAppx.Source
-          } else {
-            $makeAppx.FullName
-          }
-
-          $bundlePath = Join-Path $env:RUNNER_TEMP `
-            "Pixeval-$env:RELEASE_VERSION-windows.msixbundle"
-          & $makeAppxPath bundle `
-            /d $bundleInput `
-            /p $bundlePath `
-            /bv $env:PACKAGE_VERSION `
-            /o
-          if ($LASTEXITCODE -ne 0) {
-            throw "MakeAppx bundle failed with exit code $LASTEXITCODE."
-          }
-
-          "path=$bundlePath" >> $env:GITHUB_OUTPUT
-      - name: Upload MSIXBundle
-        uses: actions/upload-artifact@v7
-        with:
-          name: windows-msixbundle
-          path: ${{ steps.bundle.outputs.path }}
-          if-no-files-found: error
-          retention-days: 14
-
-  microsoft-store:
-    name: Submit Windows packages to Microsoft Store
-    needs:
-      - metadata
-      - release
-    runs-on: windows-latest
-    steps:
-      - name: Download MSIXBundle
-        id: bundle
-        uses: actions/download-artifact@v8
-        with:
-          name: windows-msixbundle
-          path: artifacts/windows-bundle
-
-      - name: Install Microsoft Store CLI
-        uses: microsoft/microsoft-store-apppublisher@v1.3
-
-      - name: Configure Microsoft Store credentials
-        shell: pwsh
-        env:
-          AZURE_AD_APPLICATION_CLIENT_ID: ${{ secrets.AZURE_AD_APPLICATION_CLIENT_ID }}
-          AZURE_AD_APPLICATION_SECRET: ${{ secrets.AZURE_AD_APPLICATION_SECRET }}
-          AZURE_AD_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
-          SELLER_ID: ${{ secrets.SELLER_ID }}
-          MSSTORE_PRODUCT_ID: ${{ vars.MSSTORE_PRODUCT_ID }}
-        run: |
-          $required = @{
-            AZURE_AD_APPLICATION_CLIENT_ID = $env:AZURE_AD_APPLICATION_CLIENT_ID
-            AZURE_AD_APPLICATION_SECRET = $env:AZURE_AD_APPLICATION_SECRET
-            AZURE_AD_TENANT_ID = $env:AZURE_AD_TENANT_ID
-            SELLER_ID = $env:SELLER_ID
-            MSSTORE_PRODUCT_ID = $env:MSSTORE_PRODUCT_ID
-          }
-          foreach ($entry in $required.GetEnumerator()) {
-            if ([string]::IsNullOrWhiteSpace($entry.Value)) {
-              throw "$($entry.Key) is not configured."
-            }
-          }
-
-          msstore reconfigure `
-            --tenantId $env:AZURE_AD_TENANT_ID `
-            --sellerId $env:SELLER_ID `
-            --clientId $env:AZURE_AD_APPLICATION_CLIENT_ID `
-            --clientSecret $env:AZURE_AD_APPLICATION_SECRET
-
-      - name: Submit MSIXBundle for certification
-        shell: pwsh
-        env:
-          BUNDLE_PATH: ${{ steps.bundle.outputs.download-path }}\Pixeval-${{ needs.metadata.outputs.version }}-windows.msixbundle
-          MSSTORE_PRODUCT_ID: ${{ vars.MSSTORE_PRODUCT_ID }}
-        run: |
-          # --noCommit is intentionally omitted: publish commits the submission.
-          msstore publish $env:BUNDLE_PATH --appId $env:MSSTORE_PRODUCT_ID
-
   release:
     name: Create draft release
     needs:
-      - metadata
-      - windows-bundle
+      - release-notes
+      - windows
       - macos
       - linux
       - android
@@ -639,12 +545,11 @@ jobs:
           path: artifacts/release
           merge-multiple: true
 
-      - name: Exclude unsigned Windows Store packages
-        shell: bash
-        run: |
-          find artifacts/release -maxdepth 1 -type f \
-            \( -name '*-unsigned.msix' -o -name '*-unsigned.msixbundle' \) \
-            -delete
+      - name: Download generated release notes
+        uses: actions/download-artifact@v8
+        with:
+          name: generated-release-notes
+          path: artifacts/release-notes
 
       - name: Generate SHA256 checksums
         shell: bash
@@ -661,7 +566,7 @@ jobs:
         env:
           GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ github.token }}
-          RELEASE_VERSION: ${{ needs.metadata.outputs.version }}
+          RELEASE_VERSION: ${{ github.ref_name }}
         run: |
           mapfile -d '' assets < <(find artifacts/release -maxdepth 1 -type f -print0 | sort -z)
           if [[ ${#assets[@]} -eq 0 ]]; then
@@ -677,10 +582,12 @@ jobs:
             fi
 
             gh release upload "$RELEASE_VERSION" "${assets[@]}" --clobber
+            gh release edit "$RELEASE_VERSION" \
+              --notes-file artifacts/release-notes/release-notes.md
           else
             gh release create "$RELEASE_VERSION" "${assets[@]}" \
               --draft \
               --verify-tag \
               --title "Pixeval $RELEASE_VERSION" \
-              --generate-notes
+              --notes-file artifacts/release-notes/release-notes.md
           fi

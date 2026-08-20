@@ -124,6 +124,7 @@ public class App : Application
                 desktop.Exit += async static (o, e) =>
                 {
                     AppInfo.SaveContext();
+                    AppInfo.AppVersion.ApplyPendingUpdateOnExit();
                     await AppViewModel.DisposeAsync();
                 };
 

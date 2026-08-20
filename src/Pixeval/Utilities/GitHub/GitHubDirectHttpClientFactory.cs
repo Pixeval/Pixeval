@@ -19,7 +19,7 @@ public static class GitHubDirectHttpClientFactory
 {
     private static readonly TimeSpan _ConnectAttemptTimeout = TimeSpan.FromSeconds(5);
 
-    public static HttpClient Create(NetworkSettingsGroup networkSettings)
+    public static HttpClient Create(NetworkSettingsGroup networkSettings, TimeSpan? timeout = null)
     {
         var handler = new SocketsHttpHandler
         {
@@ -33,7 +33,7 @@ public static class GitHubDirectHttpClientFactory
 
         var client = new HttpClient(handler, disposeHandler: true)
         {
-            Timeout = TimeSpan.FromSeconds(60),
+            Timeout = timeout ?? TimeSpan.FromSeconds(60),
             DefaultRequestVersion = HttpVersion.Version11,
             DefaultVersionPolicy = HttpVersionPolicy.RequestVersionExact
         };

@@ -1,5 +1,8 @@
 {
   "CheckingForUpdate": "正在检查更新",
+  "UpdateDownloadProgressFormatted": "正在下载更新：{0}%",
+  "UpdateDownloadReadyFormatted": "已更新完毕 {0}，请重启软件",
+  "UpdateDownloadFailed": "下载更新失败",
   "IsUpToDate": "当前已经是最新版本",
   "IsInsider": "正在使用内部版本",
   "UpdateAvailable": {

@@ -19,7 +19,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Pixeval\Pixeval.csproj" AdditionalProperties="EnableMcp=$(EnableMcp)" />
+		<ProjectReference Include="..\Pixeval\Pixeval.csproj"
+		                  AdditionalProperties="EnableMcp=$(EnableMcp)"
+		                  GlobalPropertiesToRemove="PublishAot" />
 	</ItemGroup>
 
 	<ItemGroup>

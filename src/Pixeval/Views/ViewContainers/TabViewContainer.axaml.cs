@@ -14,6 +14,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
 using Pixeval.Controls;
 using Pixeval.I18N;
@@ -34,6 +35,7 @@ public partial class TabViewContainer : ViewContainerBase
             static container => container.CanCreateNewTab);
 
     private NavigationConfiguration _navigationConfiguration = null!;
+    private bool _automaticUpdateStarted;
 
     public ObservableCollection<NavigationMenuItem> HeaderNavigationItems { get; } = [];
 
@@ -95,7 +97,21 @@ public partial class TabViewContainer : ViewContainerBase
         FlushPendingNotifications();
         RegisterContentDialogHost(TopLevel.GetTopLevel(this));
 
-        await AppInfo.AppVersion.GitHubCheckForUpdateAsync();
+        if (AppInfo.AppVersion.UsesVelopack)
+        {
+            StartAutomaticUpdate();
+            if (App.AppViewModel.AppSettings.IsNewVersion
+                && await AppInfo.AppVersion.GetCurrentAppReleaseModelAsync() is { } currentRelease)
+            {
+                await CreateAcknowledgementAsync(
+                    SettingsPage.ReleaseTitle,
+                    SettingsPage.CreateReleaseNotes(currentRelease));
+            }
+
+            return;
+        }
+
+        await AppInfo.AppVersion.CheckForUpdateAsync();
         var dialogTasks = new List<Task<ContentDialogResult>>();
         if (App.AppViewModel.AppSettings.IsNewVersion)
             dialogTasks.Add(CreateAcknowledgementAsync(
@@ -107,6 +123,43 @@ public partial class TabViewContainer : ViewContainerBase
                 SettingsPage.CreateReleaseNotes(release)));
 
         await Task.WhenAll(dialogTasks);
+    }
+
+    private void StartAutomaticUpdate()
+    {
+        if (_automaticUpdateStarted)
+            return;
+
+        _automaticUpdateStarted = true;
+        _ = DownloadVelopackUpdateAutomaticallyAsync();
+    }
+
+    private async Task DownloadVelopackUpdateAutomaticallyAsync()
+    {
+        try
+        {
+            await AppInfo.AppVersion.CheckForUpdateAsync();
+            if (AppInfo.AppVersion is not
+                {
+                    UpdateAvailable: true,
+                    NewestVersion: { } version
+                })
+                return;
+
+            if (!await AppInfo.AppVersion.DownloadUpdateAsync())
+                return;
+
+            var readyVersion = AppInfo.AppVersion.PendingUpdateVersion ?? version;
+            ShowSuccess(I18NManager.GetResource(
+                SettingsMainViewResources.UpdateDownloadReadyFormatted,
+                readyVersion));
+        }
+        catch (Exception exception)
+        {
+            App.AppViewModel.AppServiceProvider.GetService<FileLogger>()?.LogError(
+                nameof(DownloadVelopackUpdateAutomaticallyAsync),
+                exception);
+        }
     }
 
     /// <inheritdoc />

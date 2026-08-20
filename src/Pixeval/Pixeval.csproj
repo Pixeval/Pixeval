@@ -16,10 +16,10 @@
 		<InformationalVersion>$(Version)</InformationalVersion>
 	</PropertyGroup>
 
-	<!-- EnableMcp controls this GUI project only; dependencies must not be rebuilt with a second global-property set. -->
+	<!-- GUI-only global properties must not be propagated to library and source-generator projects. -->
 	<ItemDefinitionGroup>
 		<ProjectReference>
-			<GlobalPropertiesToRemove>EnableMcp</GlobalPropertiesToRemove>
+			<GlobalPropertiesToRemove>EnableMcp;PublishAot</GlobalPropertiesToRemove>
 		</ProjectReference>
 	</ItemDefinitionGroup>
 
@@ -47,6 +47,7 @@
 		<PackageReference Include="sqlite-net-pcl" Version="1.11.285" />
 		<PackageReference Include="Svg.Controls.Skia.Avalonia" Version="12.0.0.14" />
 		<PackageReference Include="TabView.Avalonia" Version="1.0.0" />
+		<PackageReference Include="Velopack" Version="1.2.0" />
         
         <PackageReference Include="SkiaSharp" Version="4.151.1" />
 		<PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="4.151.1" />

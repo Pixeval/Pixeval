@@ -54,7 +54,6 @@ public partial class SettingsPage : NavigationPage
 
     public static async Task<Control> GetReleaseNotesAsync()
     {
-        await AppInfo.AppVersion.GitHubCheckForUpdateAsync();
-        return CreateReleaseNotes(AppInfo.AppVersion.CurrentAppReleaseModel);
+        return CreateReleaseNotes(await AppInfo.AppVersion.GetCurrentAppReleaseModelAsync());
     }
 }

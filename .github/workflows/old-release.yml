@@ -1,0 +1,240 @@
+name: Microsoft Store
+
+on:
+  push:
+    tags:
+      - '*.*.*'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: microsoft-store-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  CONFIGURATION: Release
+
+jobs:
+  windows:
+    name: Windows MSIX ${{ matrix.architecture }}
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - architecture: x64
+            runtime: win-x64
+            publish_aot: true
+          - architecture: x86
+            runtime: win-x86
+            publish_aot: false
+          - architecture: arm64
+            runtime: win-arm64
+            publish_aot: true
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          filter: tree:0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+
+      - name: Restore
+        env:
+          PUBLISH_AOT: ${{ matrix.publish_aot }}
+          RUNTIME: ${{ matrix.runtime }}
+        run: |
+          [string[]] $aotArguments = @()
+          if ($env:PUBLISH_AOT -eq 'false') {
+            $aotArguments += '-p:PublishAot=false'
+          }
+
+          dotnet restore src/Pixeval.Desktop/Pixeval.Desktop.csproj `
+            -r $env:RUNTIME `
+            -p:Configuration=$env:CONFIGURATION `
+            @aotArguments
+
+      - name: Publish
+        id: publish
+        env:
+          PACKAGE_VERSION: ${{ github.ref_name }}.0
+          PUBLISH_AOT: ${{ matrix.publish_aot }}
+          RELEASE_VERSION: ${{ github.ref_name }}
+          RUNTIME: ${{ matrix.runtime }}
+        run: |
+          [string[]] $aotArguments = @()
+          if ($env:PUBLISH_AOT -eq 'false') {
+            $aotArguments += '-p:PublishAot=false'
+          }
+
+          $publishDirectory = Join-Path $env:RUNNER_TEMP "pixeval-$env:RUNTIME"
+          dotnet publish src/Pixeval.Desktop/Pixeval.Desktop.csproj `
+            -c $env:CONFIGURATION `
+            -r $env:RUNTIME `
+            --no-restore `
+            --self-contained true `
+            -o $publishDirectory `
+            -p:DebugSymbols=false `
+            -p:DebugType=None `
+            -p:Version=$env:RELEASE_VERSION `
+            -p:AssemblyVersion=$env:PACKAGE_VERSION `
+            -p:FileVersion=$env:PACKAGE_VERSION `
+            -p:InformationalVersion=$env:RELEASE_VERSION `
+            @aotArguments
+
+          "directory=$publishDirectory" >> $env:GITHUB_OUTPUT
+
+      - name: Package unsigned MSIX
+        env:
+          ARCHITECTURE: ${{ matrix.architecture }}
+          PACKAGE_VERSION: ${{ github.ref_name }}.0
+          PUBLISH_DIRECTORY: ${{ steps.publish.outputs.directory }}
+          RELEASE_VERSION: ${{ github.ref_name }}
+        run: |
+          $releaseDirectory = Join-Path $PWD "artifacts\release"
+          $null = New-Item -ItemType Directory -Force -Path $releaseDirectory
+
+          & scripts/package-msix.ps1 `
+            -PublishDirectory $env:PUBLISH_DIRECTORY `
+            -Architecture $env:ARCHITECTURE `
+            -ReleaseVersion $env:RELEASE_VERSION `
+            -PackageVersion $env:PACKAGE_VERSION `
+            -OutputDirectory $releaseDirectory
+
+      - name: Upload Windows MSIX packages
+        uses: actions/upload-artifact@v7
+        with:
+          name: store-windows-${{ matrix.architecture }}
+          path: artifacts/release/*-unsigned.msix
+          if-no-files-found: error
+          retention-days: 14
+
+  windows-bundle:
+    name: Build Windows MSIXBundle
+    needs:
+      - windows
+    runs-on: windows-latest
+    steps:
+      - name: Download Windows MSIX packages
+        uses: actions/download-artifact@v8
+        with:
+          pattern: store-windows-*
+          path: artifacts/windows
+          merge-multiple: true
+
+      - name: Build MSIXBundle
+        id: bundle
+        shell: pwsh
+        env:
+          PACKAGE_VERSION: ${{ github.ref_name }}.0
+          RELEASE_VERSION: ${{ github.ref_name }}
+        run: |
+          $msixFiles = @(Get-ChildItem -LiteralPath (Join-Path $PWD "artifacts\windows") `
+            -Filter "*-unsigned.msix" -File)
+          if ($msixFiles.Count -ne 3) {
+            throw "Expected exactly three unsigned Windows MSIX packages, found $($msixFiles.Count)."
+          }
+
+          $bundleInput = Join-Path $env:RUNNER_TEMP "pixeval-msixbundle-input"
+          $null = New-Item -ItemType Directory -Force -Path $bundleInput
+          foreach ($msix in $msixFiles) {
+            Copy-Item -LiteralPath $msix.FullName -Destination $bundleInput
+          }
+
+          $makeAppx = Get-Command MakeAppx.exe -ErrorAction SilentlyContinue
+          if ($null -eq $makeAppx) {
+            $windowsKitRoot = Join-Path ${env:ProgramFiles(x86)} "Windows Kits\10\bin"
+            $makeAppx = Get-ChildItem -LiteralPath $windowsKitRoot -Filter MakeAppx.exe -Recurse `
+              | Where-Object FullName -Match "\\x64\\MakeAppx\.exe$" `
+              | Sort-Object FullName -Descending `
+              | Select-Object -First 1
+          }
+          if ($null -eq $makeAppx) {
+            throw "MakeAppx.exe was not found on the runner."
+          }
+
+          $makeAppxPath = if ($makeAppx -is [System.Management.Automation.CommandInfo]) {
+            $makeAppx.Source
+          } else {
+            $makeAppx.FullName
+          }
+
+          $bundlePath = Join-Path $env:RUNNER_TEMP `
+            "Pixeval-$env:RELEASE_VERSION-windows.msixbundle"
+          & $makeAppxPath bundle `
+            /d $bundleInput `
+            /p $bundlePath `
+            /bv $env:PACKAGE_VERSION `
+            /o
+          if ($LASTEXITCODE -ne 0) {
+            throw "MakeAppx bundle failed with exit code $LASTEXITCODE."
+          }
+
+          "path=$bundlePath" >> $env:GITHUB_OUTPUT
+
+      - name: Upload MSIXBundle
+        uses: actions/upload-artifact@v7
+        with:
+          name: windows-msixbundle
+          path: ${{ steps.bundle.outputs.path }}
+          if-no-files-found: error
+          retention-days: 14
+
+  microsoft-store:
+    name: Submit Windows packages to Microsoft Store
+    needs:
+      - windows-bundle
+    runs-on: windows-latest
+    steps:
+      - name: Download MSIXBundle
+        id: bundle
+        uses: actions/download-artifact@v8
+        with:
+          name: windows-msixbundle
+          path: artifacts/windows-bundle
+
+      - name: Install Microsoft Store CLI
+        uses: microsoft/microsoft-store-apppublisher@v1.3
+
+      - name: Configure Microsoft Store credentials
+        shell: pwsh
+        env:
+          AZURE_AD_APPLICATION_CLIENT_ID: ${{ secrets.AZURE_AD_APPLICATION_CLIENT_ID }}
+          AZURE_AD_APPLICATION_SECRET: ${{ secrets.AZURE_AD_APPLICATION_SECRET }}
+          AZURE_AD_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+          SELLER_ID: ${{ secrets.SELLER_ID }}
+          MSSTORE_PRODUCT_ID: ${{ vars.MSSTORE_PRODUCT_ID }}
+        run: |
+          $required = @{
+            AZURE_AD_APPLICATION_CLIENT_ID = $env:AZURE_AD_APPLICATION_CLIENT_ID
+            AZURE_AD_APPLICATION_SECRET = $env:AZURE_AD_APPLICATION_SECRET
+            AZURE_AD_TENANT_ID = $env:AZURE_AD_TENANT_ID
+            SELLER_ID = $env:SELLER_ID
+            MSSTORE_PRODUCT_ID = $env:MSSTORE_PRODUCT_ID
+          }
+          foreach ($entry in $required.GetEnumerator()) {
+            if ([string]::IsNullOrWhiteSpace($entry.Value)) {
+              throw "$($entry.Key) is not configured."
+            }
+          }
+
+          msstore reconfigure `
+            --tenantId $env:AZURE_AD_TENANT_ID `
+            --sellerId $env:SELLER_ID `
+            --clientId $env:AZURE_AD_APPLICATION_CLIENT_ID `
+            --clientSecret $env:AZURE_AD_APPLICATION_SECRET
+
+      - name: Submit MSIXBundle for certification
+        shell: pwsh
+        env:
+          BUNDLE_PATH: ${{ steps.bundle.outputs.download-path }}\Pixeval-${{ github.ref_name }}-windows.msixbundle
+          MSSTORE_PRODUCT_ID: ${{ vars.MSSTORE_PRODUCT_ID }}
+        run: |
+          # --noCommit is intentionally omitted: publish commits the submission.
+          msstore publish $env:BUNDLE_PATH --appId $env:MSSTORE_PRODUCT_ID

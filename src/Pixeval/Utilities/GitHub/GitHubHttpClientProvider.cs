@@ -29,13 +29,15 @@ public sealed class GitHubHttpClientProvider(NetworkSettingsGroup networkSetting
 
     public string Platform => PlatformKey;
 
-    public HttpClient GetApiClient() => GetClient();
+    public HttpClient GetApiClient() => GetClient(TimeSpan.FromSeconds(60));
 
-    public HttpClient GetImageDownloadClient() => GetClient();
+    public HttpClient GetImageDownloadClient() => GetClient(TimeSpan.FromSeconds(60));
 
-    private HttpClient GetClient()
+    public HttpClient GetUpdateDownloadClient() => GetClient(Timeout.InfiniteTimeSpan);
+
+    private HttpClient GetClient(TimeSpan timeout)
     {
-        var cacheKey = GetCacheKey();
+        var cacheKey = $"{GetCacheKey()};timeout:{timeout.Ticks}";
         lock (_gate)
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
@@ -43,7 +45,7 @@ public sealed class GitHubHttpClientProvider(NetworkSettingsGroup networkSetting
             if (_clients.TryGetValue(cacheKey, out var client))
                 return client;
 
-            client = GitHubDirectHttpClientFactory.Create(networkSettings);
+            client = GitHubDirectHttpClientFactory.Create(networkSettings, timeout);
             _clients.Add(cacheKey, client);
             return client;
         }

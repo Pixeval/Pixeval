@@ -81,9 +81,12 @@ public sealed class AppViewModel(App app, FileLogger logger) : IAsyncDisposable
             .AddKeyedSingleton<IGetArtworkService, MakoClient>(IPlatformInfo.Pixiv, (provider, key) => makoClient)
             .AddKeyedSingleton<IDownloadHttpClientService, MakoClient>(IPlatformInfo.Pixiv,
                 (provider, key) => makoClient)
-            .AddKeyedSingleton<IDownloadHttpClientService>(
+            .AddKeyedSingleton<GitHubHttpClientProvider>(
                 GitHubHttpClientProvider.PlatformKey,
                 (_, _) => new GitHubHttpClientProvider(AppSettings.NetworkSettings))
+            .AddKeyedSingleton<IDownloadHttpClientService>(
+                GitHubHttpClientProvider.PlatformKey,
+                (provider, key) => provider.GetRequiredKeyedService<GitHubHttpClientProvider>(key))
             .AddSingleton<WorkSubscriptionDownloadService>()
             .AddSingleton<IWorkSubscriptionService>(provider =>
                 provider.GetRequiredService<WorkSubscriptionDownloadService>())
@@ -208,6 +211,10 @@ public sealed class AppViewModel(App app, FileLogger logger) : IAsyncDisposable
     public HttpClient GetRequiredGitHubHttpClient() =>
         AppServiceProvider.GetRequiredKeyedService<IDownloadHttpClientService>(GitHubHttpClientProvider.PlatformKey)
             .GetApiClient();
+
+    public HttpClient GetRequiredGitHubUpdateHttpClient() =>
+        AppServiceProvider.GetRequiredKeyedService<GitHubHttpClientProvider>(GitHubHttpClientProvider.PlatformKey)
+            .GetUpdateDownloadClient();
 
     public async ValueTask DisposeAsync()
     {
