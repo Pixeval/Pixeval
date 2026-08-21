@@ -126,10 +126,10 @@ public record NetworkSettingsGroup
     [SettingsEntry(Placeholder = GitHubHttpOptions.AssetsHost)]
     public ObservableCollection<string> GitHubAssetsNameResolver { get; set; } =
     [
-        "185.199.108.154",
-        "185.199.109.154",
-        "185.199.110.154",
-        "185.199.111.154"
+        "185.199.108.215",
+        "185.199.109.215",
+        "185.199.110.215",
+        "185.199.111.215"
     ];
 
     [SettingsEntry(Placeholder = GitHubHttpOptions.CodeloadHost)]

@@ -2,6 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,6 +22,7 @@ public static class GitHubDirectHttpClientFactory
 
     public static HttpClient Create(NetworkSettingsGroup networkSettings, TimeSpan? timeout = null)
     {
+        var addressCursors = new ConcurrentDictionary<string, AddressCursor>(StringComparer.OrdinalIgnoreCase);
         var handler = new SocketsHttpHandler
         {
             UseProxy = true,
@@ -28,7 +30,7 @@ public static class GitHubDirectHttpClientFactory
             AutomaticDecompression = DecompressionMethods.All,
             ConnectTimeout = TimeSpan.FromSeconds(20),
             PooledConnectionLifetime = TimeSpan.FromMinutes(2),
-            ConnectCallback = (context, token) => ConnectAsync(networkSettings, context, token)
+            ConnectCallback = (context, token) => ConnectAsync(networkSettings, addressCursors, context, token)
         };
 
         var client = new HttpClient(handler, disposeHandler: true)
@@ -44,6 +46,7 @@ public static class GitHubDirectHttpClientFactory
 
     private static async ValueTask<Stream> ConnectAsync(
         NetworkSettingsGroup networkSettings,
+        ConcurrentDictionary<string, AddressCursor> addressCursors,
         SocketsHttpConnectionContext context,
         CancellationToken token)
     {
@@ -51,7 +54,17 @@ public static class GitHubDirectHttpClientFactory
         if (networkSettings.EnableGitHubDomainFronting &&
             GitHubHttpOptions.TryGetConfiguredAddresses(networkSettings, endpoint.Host, out var addresses))
         {
-            return await ConnectToAddressesAsync(endpoint.Host, endpoint.Port, addresses, token).ConfigureAwait(false);
+            var distinctAddresses = addresses.Distinct().ToArray();
+            var startIndex = addressCursors
+                .GetOrAdd(endpoint.Host, static _ => new())
+                .Next(distinctAddresses.Length);
+            return await ConnectToAddressesAsync(
+                    endpoint.Host,
+                    endpoint.Port,
+                    distinctAddresses,
+                    startIndex,
+                    token)
+                .ConfigureAwait(false);
         }
 
         return await ConnectToDnsEndPointAsync(endpoint, token).ConfigureAwait(false);
@@ -80,13 +93,15 @@ public static class GitHubDirectHttpClientFactory
         string host,
         int port,
         IReadOnlyList<IPAddress> addresses,
+        int startIndex,
         CancellationToken token)
     {
         var failures = new List<Exception>();
 
-        foreach (var address in addresses.Distinct())
+        for (var offset = 0; offset < addresses.Count; offset++)
         {
             token.ThrowIfCancellationRequested();
+            var address = addresses[(startIndex + offset) % addresses.Count];
 
             using var timeout = CancellationTokenSource.CreateLinkedTokenSource(token);
             timeout.CancelAfter(_ConnectAttemptTimeout);
@@ -116,5 +131,16 @@ public static class GitHubDirectHttpClientFactory
         throw new IOException(
             $"Could not connect to {host}:{port}. Tried: {string.Join(", ", addresses.Select(static address => address.ToString()))}.",
             new AggregateException(failures));
+    }
+
+    private sealed class AddressCursor
+    {
+        private int _nextIndex;
+
+        public int Next(int count)
+        {
+            var nextIndex = Interlocked.Increment(ref _nextIndex) - 1;
+            return (int) ((uint) nextIndex % (uint) count);
+        }
     }
 }

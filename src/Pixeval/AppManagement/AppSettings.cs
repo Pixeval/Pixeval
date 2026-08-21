@@ -23,6 +23,17 @@ public record AppSettings
 
     public void Initialize()
     {
+        if (NetworkSettings.GitHubAssetsNameResolver is
+            [
+                "185.199.108.154",
+                "185.199.109.154",
+                "185.199.110.154",
+                "185.199.111.154"
+            ])
+        {
+            NetworkSettings.GitHubAssetsNameResolver = new NetworkSettingsGroup().GitHubAssetsNameResolver;
+        }
+
         if (LastOpenedVersion != AppInfo.AppVersion.CurrentVersionShortText)
         {
             IsNewVersion = true;
