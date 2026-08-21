@@ -42,7 +42,7 @@ For more information, go to the [Project Homepage](https://pixeval.github.io/)
 
 [![brew test-bot](https://github.com/Pixeval/homebrew-tap/actions/workflows/tests.yml/badge.svg)](https://github.com/Pixeval/homebrew-tap/actions/workflows/tests.yml)
 
-Pixeval offers a self-hosted [Homebrew Tap](https://github.com/Pixeval/homebrew-tap) for installing Pixeval on Mac and Linux. For installation and uninstallation instructions, see [Homebrew](https://github.com/Pixeval/homebrew-tap#install).
+Pixeval offers a self-hosted [Homebrew Tap](https://github.com/Pixeval/homebrew-tap) for installing Pixeval on Mac. For installation and uninstallation instructions, see [Tap Repository](https://github.com/Pixeval/homebrew-tap#install).
 
 ## In case that you are having problems... (Ordered by recommend priority)
 
