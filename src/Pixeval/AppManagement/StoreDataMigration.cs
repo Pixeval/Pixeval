@@ -26,7 +26,14 @@ public static class StoreDataMigration
     {
         get
         {
-            if (!OperatingSystem.IsWindows() || !VelopackLocator.IsCurrentSet)
+            if (!OperatingSystem.IsWindows()
+                && !OperatingSystem.IsMacOS()
+                && !OperatingSystem.IsLinux())
+            {
+                return false;
+            }
+
+            if (!VelopackLocator.IsCurrentSet)
                 return false;
 
             try
@@ -42,7 +49,7 @@ public static class StoreDataMigration
 
     public static void TryMigrateFromMicrosoftStore()
     {
-        if (!IsVelopackInstallation)
+        if (!OperatingSystem.IsWindows() || !IsVelopackInstallation)
             return;
 
         var sourceRoot = GetStoreApplicationFolderPath();

@@ -93,12 +93,15 @@ public class Versioning
         {
             await CheckVelopackForUpdateAsync().ConfigureAwait(false);
         }
-        catch
+        catch (Exception exception)
         {
             AppReleaseModels = null;
             _velopackUpdateInfo = null;
             _velopackUpdateReleaseModel = null;
             UpdateState = UpdateState.Unknown;
+            App.AppViewModel.AppServiceProvider.GetService<FileLogger>()?.LogError(
+                nameof(CheckForUpdateAsync),
+                exception);
         }
         finally
         {
