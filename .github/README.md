@@ -41,7 +41,7 @@
 
 [![brew test-bot](https://github.com/Pixeval/homebrew-tap/actions/workflows/tests.yml/badge.svg)](https://github.com/Pixeval/homebrew-tap/actions/workflows/tests.yml)
 
-Pixeval 提供自托管的 [Homebrew Tap](https://github.com/Pixeval/homebrew-tap) 在 Mac 和 Linux 上安装 Pixeval，安装和卸载方法参见 [homebrew](https://github.com/Pixeval/homebrew-tap#install)。
+Pixeval 提供自托管的 [Homebrew Tap](https://github.com/Pixeval/homebrew-tap) 在 Mac 上安装 Pixeval，安装和卸载方法参见 [tap 仓库](https://github.com/Pixeval/homebrew-tap#install)。
 
 ## 反馈问题（按照推荐程度优先级排序）
 
