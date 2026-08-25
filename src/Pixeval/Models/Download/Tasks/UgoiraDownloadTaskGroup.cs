@@ -168,6 +168,17 @@ public class UgoiraDownloadTaskGroup : DownloadTaskGroup
 
     public override string OpenLocalDestination => DestinationUgoiraFormat.BuiltInFormat is UgoiraDownloadFormat.Original ? FolderPath : DestinationFile;
 
+    protected override void BeforeReset()
+    {
+        if (DestinationUgoiraFormat.BuiltInFormat is UgoiraDownloadFormat.Original)
+        {
+            if (File.Exists(CsvFile))
+                File.Delete(CsvFile);
+        }
+        else if (File.Exists(DestinationFile))
+            File.Delete(DestinationFile);
+    }
+
     public override void Delete()
     {
         foreach (var task in TasksSet)

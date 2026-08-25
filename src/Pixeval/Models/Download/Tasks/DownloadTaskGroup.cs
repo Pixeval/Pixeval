@@ -117,6 +117,10 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntryBase entry) 
 
     protected abstract Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender, CancellationToken token = default);
 
+    protected virtual void BeforeReset()
+    {
+    }
+
     /// <inheritdoc cref="DownloadHistoryEntry.Destination"/>
     public string TokenizedDestination => DatabaseEntry.Destination;
 
@@ -144,6 +148,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntryBase entry) 
         _errorMessage = null;
         DatabaseEntry.ErrorMessage = null;
         OnPropertyChanged(nameof(ErrorMessage));
+        BeforeReset();
         (CurrentState is DownloadState.Error
                 ? TasksSet.Where(t => t.CurrentState is DownloadState.Error)
                 : TasksSet)

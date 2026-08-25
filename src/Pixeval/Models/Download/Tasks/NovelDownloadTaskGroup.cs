@@ -227,6 +227,12 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
 
     public override string OpenLocalDestination => NovelFile;
 
+    protected override void BeforeReset()
+    {
+        if (File.Exists(NovelFile))
+            File.Delete(NovelFile);
+    }
+
     public override void Delete()
     {
         foreach (var task in TasksSet)

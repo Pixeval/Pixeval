@@ -3,6 +3,8 @@ using System.IO;
 using Mako;
 using Mako.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Pixeval.Download;
+using Pixeval.Models.Database;
 using Pixeval.Models.Download;
 using Pixeval.Models.Download.Tasks;
 using Pixeval.Models.Options;
@@ -43,6 +45,58 @@ public sealed class NovelDownloadTaskGroupTest
         var expectedFile = Path.Combine("downloads", "work.pdf");
         Assert.AreEqual(expectedFile, paths.NovelFile);
         Assert.AreEqual(expectedFile + IoHelper.PixevalTempExtension, paths.ImageFolderPath);
+    }
+
+    [TestMethod]
+    public void BeforeResetShouldRemoveExistingNovelFile()
+    {
+        var directory = Directory.CreateTempSubdirectory().FullName;
+        try
+        {
+            var tokenizedDestination = Path.Combine(directory, "work.<ext>");
+            var format = NovelDownloadFormatToken.BuiltIn(NovelDownloadFormat.OriginalTxt);
+            var entry = DownloadHistoryEntryBase.Create(tokenizedDestination, CreateNovel());
+            entry.FormatToken = format.Value;
+            var novelFile = NovelDownloadTaskGroup.GetOutputPaths(tokenizedDestination, format).NovelFile;
+            Directory.CreateDirectory(Path.GetDirectoryName(novelFile)!);
+            File.WriteAllText(novelFile, "old");
+
+            using var task = new TestNovelDownloadTaskGroup(entry);
+            task.InvokeBeforeReset();
+
+            Assert.IsFalse(File.Exists(novelFile));
+        }
+        finally
+        {
+            if (Directory.Exists(directory))
+                Directory.Delete(directory, true);
+        }
+    }
+
+    [TestMethod]
+    public void BeforeResetShouldRemoveExistingUgoiraIntervalsFile()
+    {
+        var directory = Directory.CreateTempSubdirectory().FullName;
+        try
+        {
+            var tokenizedDestination = Path.Combine(directory, "work.<ext>");
+            var entry = DownloadHistoryEntryBase.Create(tokenizedDestination, CreateUgoira());
+            entry.FormatToken = UgoiraDownloadFormatToken.DefaultToken;
+            var folder = IoHelper.RemoveTokenExtension(tokenizedDestination);
+            var intervalsFile = Path.Combine(folder, "intervals in milliseconds.csv");
+            Directory.CreateDirectory(folder);
+            File.WriteAllText(intervalsFile, "old");
+
+            using var task = new TestUgoiraDownloadTaskGroup(entry);
+            task.InvokeBeforeReset();
+
+            Assert.IsFalse(File.Exists(intervalsFile));
+        }
+        finally
+        {
+            if (Directory.Exists(directory))
+                Directory.Delete(directory, true);
+        }
     }
 
     [TestMethod]
@@ -187,4 +241,81 @@ public sealed class NovelDownloadTaskGroupTest
         EventBanners = null,
         Language = ""
     };
+
+    private static Novel CreateNovel() => new()
+    {
+        Id = 1,
+        Title = "Novel",
+        Description = "",
+        IsPrivate = false,
+        XRestrict = default,
+        Tags = [],
+        User = new()
+        {
+            Id = 1,
+            Name = "User",
+            Account = "user",
+            ProfileImageUrls = new() { Medium = "" }
+        },
+        CreateDate = DateTimeOffset.UnixEpoch,
+        ThumbnailUrls = new() { SquareMedium = "", Medium = "", Large = "" },
+        IsFavorite = false,
+        TotalFavorite = 0,
+        TotalView = 0,
+        Visible = true,
+        IsMuted = false,
+        Series = null,
+        IsOriginal = true,
+        PageCount = 0,
+        TextLength = 0,
+        IsMypixivOnly = false,
+        IsXRestricted = false,
+        TotalComments = 0,
+        AiType = default
+    };
+
+    private static Illustration CreateUgoira() => new()
+    {
+        Id = 2,
+        Title = "Ugoira",
+        Description = "",
+        IsPrivate = false,
+        XRestrict = default,
+        Tags = [],
+        User = new()
+        {
+            Id = 1,
+            Name = "User",
+            Account = "user",
+            ProfileImageUrls = new() { Medium = "" }
+        },
+        CreateDate = DateTimeOffset.UnixEpoch,
+        ThumbnailUrls = new() { SquareMedium = "", Medium = "", Large = "" },
+        IsFavorite = false,
+        TotalFavorite = 0,
+        TotalView = 0,
+        Visible = true,
+        IsMuted = false,
+        Series = null,
+        Type = IllustrationType.Ugoira,
+        Tools = [],
+        PageCount = 1,
+        Width = 1,
+        Height = 1,
+        SanityLevel = 2,
+        MetaSinglePage = new() { OriginalImageUrl = "https://example.com/ugoira.zip" },
+        MetaPages = [],
+        AiType = default,
+        IllustrationBookStyle = 0
+    };
+
+    private sealed class TestNovelDownloadTaskGroup(DownloadHistoryEntryBase entry) : NovelDownloadTaskGroup(entry)
+    {
+        public void InvokeBeforeReset() => BeforeReset();
+    }
+
+    private sealed class TestUgoiraDownloadTaskGroup(DownloadHistoryEntryBase entry) : UgoiraDownloadTaskGroup(entry)
+    {
+        public void InvokeBeforeReset() => BeforeReset();
+    }
 }
