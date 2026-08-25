@@ -145,51 +145,32 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
                 return;
             }
 
-            if (Uri.IsFile)
+            if (Uri.Scheme is "http" or "https")
             {
-                FileHelper.Copy(Uri.LocalPath, DownloadTempDestination);
-                await CommitDownloadedFileAsync(overwrite);
-                return;
-            }
-
-            if (CacheHelper.TryGetStream(Uri.OriginalString) is { } stream)
-            {
-                await using (var fs = FileHelper.OpenAsyncWriteCreateParent(DownloadTempDestination))
-                    await stream.CopyToAsync(fs, CancellationTokenSource.Token);
-                await CommitDownloadedFileAsync(overwrite);
-                return;
-            }
-
-            if (GetExtensionService().ActiveDownloaders.FirstOrDefault() is { } downloader)
-            {
-                var notifier = new ProgressNotifier(this);
-                FileHelper.CreateParentDirectory(DownloadTempDestination);
-                downloader.Download(notifier, Uri.OriginalString, DownloadTempDestination);
-                while (!notifier.Finished)
-                    await Task.Delay(1000, CancellationTokenSource.Token);
-                if (notifier.Exception is null)
+                if (CacheHelper.TryGetStream(Uri.OriginalString) is { } stream)
+                {
+                    await using (var fs = FileHelper.OpenAsyncWriteCreateParent(DownloadTempDestination))
+                        await stream.CopyToAsync(fs, CancellationTokenSource.Token);
                     await CommitDownloadedFileAsync(overwrite);
-                else
-                    await SetErrorAsync(notifier.Exception);
-            }
-            else
-            {
-                Exception? ex;
-                await using (var fileStream = FileHelper.OpenAsyncWriteCreateParent(DownloadTempDestination))
-                {
-                    ex = await httpClient.DownloadStreamAsync(fileStream, Uri, this, fileStream.Length,
-                        token: CancellationTokenSource.Token);
+                    return;
                 }
 
-                switch (ex)
+                if (GetExtensionService().ActiveDownloaders.FirstOrDefault() is { } downloader)
                 {
-                    case null:
+                    var notifier = new ProgressNotifier(this);
+                    FileHelper.CreateParentDirectory(DownloadTempDestination);
+                    downloader.Download(notifier, Uri.OriginalString, DownloadTempDestination);
+                    while (!notifier.Finished)
+                        await Task.Delay(1000, CancellationTokenSource.Token);
+                    if (notifier.Exception is null)
                         await CommitDownloadedFileAsync(overwrite);
-                        break;
-                    case TaskCanceledException: break;
-                    default: await SetErrorAsync(ex); break;
+                    else
+                        await SetErrorAsync(notifier.Exception);
+                    return;
                 }
             }
+
+            await DownloadDirectlyAsync(httpClient, overwrite);
         }
         catch (TaskCanceledException)
         {
@@ -202,6 +183,25 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
         finally
         {
             await SetRunningAsync(false);
+        }
+    }
+
+    private async Task DownloadDirectlyAsync(HttpClient httpClient, bool overwrite)
+    {
+        Exception? ex;
+        await using (var fileStream = FileHelper.OpenAsyncWriteCreateParent(DownloadTempDestination))
+        {
+            ex = await httpClient.DownloadStreamAsync(fileStream, Uri, this, fileStream.Length,
+                token: CancellationTokenSource.Token);
+        }
+
+        switch (ex)
+        {
+            case null:
+                await CommitDownloadedFileAsync(overwrite);
+                break;
+            case TaskCanceledException: break;
+            default: await SetErrorAsync(ex); break;
         }
     }
 

@@ -76,8 +76,7 @@ public static class CacheHelper
             try
             {
                 ArgumentNullException.ThrowIfNull(frame.ZipImageDelays);
-                await frame.ZipImageDelays.TryPreloadListAsync(platform);
-                token.ThrowIfCancellationRequested();
+                await frame.ZipImageDelays.TryPreloadListAsync(platform, token: token);
                 zip = await Streams.ReadZipAsync(sourceStream, true);
                 sourceStream = null;
                 token.ThrowIfCancellationRequested();
@@ -87,10 +86,11 @@ public static class CacheHelper
             }
             finally
             {
-                sourceStream?.Dispose();
+                if (sourceStream is not null)
+                    await sourceStream.DisposeAsync();
                 if (zip is not null)
                     foreach (var stream in zip)
-                        stream.Dispose();
+                        await stream.DisposeAsync();
             }
         }
 
@@ -162,8 +162,7 @@ public static class CacheHelper
         if (frame.PreferredAnimatedImageType is not SingleAnimatedImageType.MultiFiles)
             throw new InvalidOperationException(
                 $"{nameof(IAnimatedImageFrame.PreferredAnimatedImageType)} should be {nameof(SingleAnimatedImageType.MultiFiles)}");
-        await frame.MultiImageUris!.TryPreloadListAsync(platform);
-        token.ThrowIfCancellationRequested();
+        await frame.MultiImageUris!.TryPreloadListAsync(platform, token: token);
         var client = App.AppViewModel.AppServiceProvider.GetRequiredKeyedService<IDownloadHttpClientService>(platform)
             .GetImageDownloadClient();
         var count = frame.MultiImageUris!.Count;

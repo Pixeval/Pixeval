@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Mako;
 using Mako.Model;
 using Pixeval.AppManagement;
 
@@ -16,16 +17,26 @@ public sealed class NovelContext(NovelContent novelContent) : INovelContext<Stre
 {
     private bool _isDisposed;
 
-    public int TotalImagesCount { get; } = novelContent.Images.Count + novelContent.Illustrations.Count;
+    public Uri CoverUri { get; } = GetCoverUri(novelContent.CoverUrl);
+
+    public string CoverFileName => GetCoverFileName(CoverUri);
+
+    public int TotalImagesCount => AllUrls.Length;
 
     /// <summary>
     /// 所有图片的URL
     /// </summary>
     /// <returns>小说图片是内嵌的，没必要用原图</returns>
-    public string[] AllUrls { get; } = [.. novelContent.Images.Select(x => x.OriginalUrl), .. novelContent.Illustrations.Select(x => x.ThumbnailUrl)];
+    public string[] AllUrls { get; } =
+    [
+        GetCoverUri(novelContent.CoverUrl).OriginalString,
+        .. novelContent.Images.Select(x => x.OriginalUrl),
+        .. novelContent.Illustrations.Select(x => x.ThumbnailUrl)
+    ];
 
     public string[] AllFileNames { get; } =
     [
+        GetCoverFileName(GetCoverUri(novelContent.CoverUrl)),
         .. novelContent.Images.Select(GetLocalImageFileName),
         .. novelContent.Illustrations.Select(GetLocalImageFileName)
     ];
@@ -36,6 +47,23 @@ public sealed class NovelContext(NovelContent novelContent) : INovelContext<Stre
     internal static string GetLocalImageFileName(NovelIllustration illustration) =>
         GetLocalImageFileName($"{illustration.Id}-{illustration.Page}", illustration.ThumbnailUrl);
 
+    internal static string GetCoverFileName(Uri uri)
+    {
+        var extension = Path.GetExtension(uri.AbsolutePath);
+        return string.IsNullOrEmpty(extension) ? "cover.png" : $"cover{extension}";
+    }
+
+    private static Uri GetCoverUri(string? url)
+    {
+        if (Uri.TryCreate(url, UriKind.Absolute, out var coverUri)
+            && coverUri.Scheme is "http" or "https"
+            && !string.IsNullOrWhiteSpace(coverUri.Host)
+            && !string.IsNullOrEmpty(Path.GetExtension(coverUri.AbsolutePath)))
+            return coverUri;
+
+        return new(DefaultImageUrls.ImageNotAvailable);
+    }
+
     private static string GetLocalImageFileName(string stem, string url) =>
         stem + Path.GetExtension(new Uri(url).AbsolutePath);
 
@@ -45,6 +73,9 @@ public sealed class NovelContext(NovelContent novelContent) : INovelContext<Stre
         var length = NovelContent.Text.Length;
 
         var sb = new StringBuilder();
+        if (CoverFileName is { } coverFileName)
+            _ = sb.AppendLine($"![cover]({coverFileName})").AppendLine();
+
         for (var i = 0; index < length; ++i)
         {
             var parser = new PixivNovelMdParser<Stream>(sb, i);
@@ -62,6 +93,9 @@ public sealed class NovelContext(NovelContent novelContent) : INovelContext<Stre
         var length = NovelContent.Text.Length;
 
         var sb = new StringBuilder();
+        if (CoverFileName is { } coverFileName)
+            _ = sb.AppendLine($"<img src=\"{coverFileName}\" alt=\"cover\" />").AppendLine();
+
         for (var i = 0; index < length; ++i)
         {
             var parser = new PixivNovelHtmlParser<Stream>(sb, i);
@@ -75,6 +109,10 @@ public sealed class NovelContext(NovelContent novelContent) : INovelContext<Stre
 
     public Stream? TryGetStream(int index)
     {
+        if (index is 0)
+            return CoverImage;
+        --index;
+
         if (index < NovelContent.Images.Count)
             return UploadedImages.GetValueOrDefault(NovelContent.Images[index].NovelImageId);
         var illustration = NovelContent.Illustrations[index - NovelContent.Images.Count];
@@ -83,6 +121,13 @@ public sealed class NovelContext(NovelContent novelContent) : INovelContext<Stre
 
     public void SetStream(int index, Stream? stream)
     {
+        if (index is 0)
+        {
+            CoverImage = stream ?? AppInfo.GetImageNotAvailableStream();
+            return;
+        }
+        --index;
+
         if (index < NovelContent.Images.Count)
         {
             UploadedImages[NovelContent.Images[index].NovelImageId] = stream ?? AppInfo.GetImageNotAvailableStream();
@@ -102,6 +147,7 @@ public sealed class NovelContext(NovelContent novelContent) : INovelContext<Stre
         _isDisposed = true;
         LoadingCts.Cancel();
         LoadingCts.Dispose();
+        CoverImage?.Dispose();
         foreach (var (_, value) in IllustrationImages)
             value.Dispose();
         IllustrationImages.Clear();
@@ -121,6 +167,8 @@ public sealed class NovelContext(NovelContent novelContent) : INovelContext<Stre
     public Dictionary<long, NovelImage> ImageLookup { get; } = [];
 
     public Dictionary<long, Stream> UploadedImages { get; } = [];
+
+    private Stream? CoverImage { get; set; }
 
     public CancellationTokenSource LoadingCts { get; } = new();
 }

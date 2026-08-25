@@ -192,7 +192,7 @@ public class NovelDownloadTaskGroup : DownloadTaskGroup
             for (var i = 0; i < TasksSet.Count; i++)
             {
                 var imageDownloadTask = TasksSet[i];
-                var imageStream = File.OpenRead(imageDownloadTask.Destination);
+                var imageStream = File.OpenAsyncRead(imageDownloadTask.Destination);
                 streams.Add(Path.GetFileName(imageDownloadTask.Destination), imageStream);
                 DocumentViewModel.SetStream(i, imageStream);
             }

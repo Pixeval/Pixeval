@@ -97,7 +97,6 @@ public partial class Supporter : ViewModelBase
     {
         try
         {
-
             _ = Directory.CreateDirectory(BasePath);
 
             var httpClient = App.AppViewModel.GetRequiredGitHubHttpClient();

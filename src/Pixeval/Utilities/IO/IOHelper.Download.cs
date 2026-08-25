@@ -16,6 +16,150 @@ namespace Pixeval.Utilities.IO;
 
 public static partial class IoHelper
 {
+    private static Uri ResolveAssetUri(Uri uri) =>
+        uri.Scheme is "pixivassets"
+            ? new Uri(uri.OriginalString.Replace("pixivassets://", AppInfo.AssetsPathPrefix))
+            : uri;
+
+    private static async Task<Exception?> DownloadStreamCoreAsync(
+        HttpClient httpClient,
+        Stream destination,
+        Uri uri,
+        IProgress<double>? progress = null,
+        long startPosition = 0,
+        int bufferSize = 1 << 15,
+        CancellationToken token = default)
+    {
+        try
+        {
+            if (0 > startPosition)
+                return new ArgumentOutOfRangeException(nameof(startPosition), "Too small");
+
+            using var request = new HttpRequestMessage(HttpMethod.Get, uri);
+
+            if (startPosition is not 0)
+                request.Headers.Range = new(startPosition, null);
+
+            using var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, token);
+
+            var responseLength = null as long?;
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    destination.Position = 0;
+                    responseLength = response.Content.Headers.ContentLength;
+                    break;
+                case HttpStatusCode.PartialContent:
+                    destination.Position = response.Content.Headers.ContentRange?.From ?? startPosition;
+                    responseLength = response.Content.Headers.ContentRange?.Length ?? response.Content.Headers.ContentLength + destination.Position;
+                    break;
+                case HttpStatusCode.RequestedRangeNotSatisfiable:
+                    if (response.Content.Headers.ContentRange?.Length is { } length && length != startPosition)
+                        return new ArgumentOutOfRangeException(nameof(startPosition), $"416: {nameof(HttpStatusCode.RequestedRangeNotSatisfiable)}");
+                    if (progress is not null)
+                        Dispatcher.UIThread.Invoke(() => progress.Report(100));
+                    return null;
+            }
+
+            _ = response.EnsureSuccessStatusCode();
+
+            await using var contentStream = await response.Content.ReadAsStreamAsync(token);
+
+            var buffer = ArrayPool<byte>.Shared.Rent(bufferSize);
+            try
+            {
+                var bytesRead = 0;
+                var totalRead = destination.Position;
+                var lastReported = DateTime.MinValue;
+                while ((bytesRead = await contentStream.ReadAsync(new(buffer), token).ConfigureAwait(false)) is not 0)
+                {
+                    await destination.WriteAsync(new(buffer, 0, bytesRead), token).ConfigureAwait(false);
+                    totalRead += bytesRead;
+                    // reduce the frequency of the invocation of the callback, otherwise it will draw a severe performance impact
+
+                    var now = DateTime.UtcNow;
+                    if (now - lastReported > TimeSpan.FromSeconds(0.5) && progress is not null && responseLength is not null)
+                    {
+                        lastReported = now;
+                        var percentage = totalRead / (double) responseLength * 100;
+                        Dispatcher.UIThread.Invoke(() => progress.Report(percentage)); // percentage, 100 as base
+                    }
+                }
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(buffer);
+            }
+
+            if (progress is not null)
+                Dispatcher.UIThread.Invoke(() => progress.Report(100));
+            return null;
+        }
+        catch (Exception e)
+        {
+            return e;
+        }
+    }
+
+    private static async Task<Result<Stream>> DownloadMemoryStreamCoreAsync(
+        HttpClient httpClient,
+        Uri uri,
+        IProgress<double>? progress = null,
+        long startPosition = 0,
+        int bufferSize = 4096,
+        CancellationToken token = default)
+    {
+        Stream? streamToDispose = null;
+        try
+        {
+            if (uri.IsFile)
+            {
+                progress?.Report(100);
+                return Result<Stream>.AsSuccess(File.OpenAsyncRead(uri.LocalPath));
+            }
+
+            uri = ResolveAssetUri(uri);
+            if (uri.Scheme is "avares")
+            {
+                progress?.Report(100);
+                return Result<Stream>.AsSuccess(AssetLoader.Open(uri));
+            }
+
+            var stream = Streams.RentStream();
+            streamToDispose = stream;
+            var result = await DownloadStreamCoreAsync(
+                httpClient,
+                stream,
+                uri,
+                progress,
+                startPosition,
+                bufferSize,
+                token);
+            if (result is not null)
+                return Result<Stream>.AsFailure(result);
+
+            stream.Position = 0;
+            streamToDispose = null;
+            return Result<Stream>.AsSuccess(stream);
+        }
+        catch (Exception e)
+        {
+            return Result<Stream>.AsFailure(e);
+        }
+        finally
+        {
+            if (streamToDispose is not null)
+                try
+                {
+                    await streamToDispose.DisposeAsync();
+                }
+                catch
+                {
+                    // Disposal must not replace the original download failure.
+                }
+        }
+    }
+
     extension(HttpClient httpClient)
     {
         /// <summary>
@@ -53,67 +197,20 @@ public static partial class IoHelper
         }
 
         /// <inheritdoc cref="DownloadStreamAsync"/>
-        public async Task<Result<Stream>> DownloadMemoryStreamAsync(Uri uri,
+        public Task<Result<Stream>> DownloadMemoryStreamAsync(
+            Uri uri,
             IProgress<double>? progress = null,
             long startPosition = 0,
             int bufferSize = 4096,
             CancellationToken token = default)
-        {
-            Stream? streamToDispose = null;
-            try
-            {
-                if (uri.IsFile)
-                {
-                    progress?.Report(100);
-                    return Result<Stream>.AsSuccess(File.OpenAsyncRead(uri.LocalPath));
-                }
-
-                if (uri.Scheme is "pixivassets")
-                {
-                    uri = new Uri(uri.OriginalString.Replace("pixivassets://", AppInfo.AssetsPathPrefix));
-                }
-
-                if (uri.Scheme is "avares")
-                {
-                    progress?.Report(100);
-                    return Result<Stream>.AsSuccess(AssetLoader.Open(uri));
-                }
-
-                var stream = Streams.RentStream();
-                streamToDispose = stream;
-                var result = await httpClient.DownloadStreamAsync(
-                    stream, uri, progress, startPosition, bufferSize, token);
-                if (result is not null)
-                    return Result<Stream>.AsFailure(result);
-
-                stream.Position = 0;
-                streamToDispose = null;
-                return Result<Stream>.AsSuccess(stream);
-            }
-            catch (Exception e)
-            {
-                return Result<Stream>.AsFailure(e);
-            }
-            finally
-            {
-                if (streamToDispose is not null)
-                    try
-                    {
-                        await streamToDispose.DisposeAsync();
-                    }
-                    catch
-                    {
-                        // Disposal must not replace the original download failure.
-                    }
-            }
-        }
+            => DownloadMemoryStreamCoreAsync(httpClient, uri, progress, startPosition, bufferSize, token);
 
         /// <summary>
-        /// 一定是从网络下载<br/>
-        /// Attempts to download the content that are located by the <paramref name="uri" /> to a
-        /// <see cref="Stream" /> with progress supported
+        /// Downloads or copies the content located by <paramref name="uri" /> to a
+        /// <see cref="Stream" /> with progress support.
         /// </summary>
-        public async Task<Exception?> DownloadStreamAsync(Stream destination,
+        internal async Task<Exception?> DownloadStreamAsync(
+            Stream destination,
             Uri uri,
             IProgress<double>? progress = null,
             long startPosition = 0,
@@ -122,67 +219,15 @@ public static partial class IoHelper
         {
             try
             {
-                if (0 > startPosition)
-                    return new ArgumentOutOfRangeException(nameof(startPosition), "Too small");
-
-                using var request = new HttpRequestMessage(HttpMethod.Get, uri);
-
-                if (startPosition is not 0)
-                    request.Headers.Range = new(startPosition, null);
-
-                using var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, token);
-
-                var responseLength = null as long?;
-                switch (response.StatusCode)
-                {
-                    case HttpStatusCode.OK:
-                        destination.Position = 0;
-                        responseLength = response.Content.Headers.ContentLength;
-                        break;
-                    case HttpStatusCode.PartialContent:
-                        destination.Position = response.Content.Headers.ContentRange?.From ?? startPosition;
-                        responseLength = response.Content.Headers.ContentRange?.Length ?? response.Content.Headers.ContentLength + destination.Position;
-                        break;
-                    case HttpStatusCode.RequestedRangeNotSatisfiable:
-                        if (response.Content.Headers.ContentRange?.Length is { } length && length != startPosition)
-                            return new ArgumentOutOfRangeException(nameof(startPosition), $"416: {nameof(HttpStatusCode.RequestedRangeNotSatisfiable)}");
-                        if (progress is not null)
-                            Dispatcher.UIThread.Invoke(() => progress.Report(100));
-                        return null;
-                }
-
-                _ = response.EnsureSuccessStatusCode();
-
-                await using var contentStream = await response.Content.ReadAsStreamAsync(token);
-
-                var buffer = ArrayPool<byte>.Shared.Rent(bufferSize);
-                try
-                {
-                    var bytesRead = 0;
-                    var totalRead = destination.Position;
-                    var lastReported = DateTime.MinValue;
-                    while ((bytesRead = await contentStream.ReadAsync(new(buffer), token).ConfigureAwait(false)) is not 0)
-                    {
-                        await destination.WriteAsync(new(buffer, 0, bytesRead), token).ConfigureAwait(false);
-                        totalRead += bytesRead;
-                        // reduce the frequency of the invocation of the callback, otherwise it will draw a severe performance impact
-
-                        var now = DateTime.UtcNow;
-                        if (now - lastReported > TimeSpan.FromSeconds(0.5) && progress is not null && responseLength is not null)
-                        {
-                            lastReported = now;
-                            var percentage = totalRead / (double) responseLength * 100;
-                            Dispatcher.UIThread.Invoke(() => progress.Report(percentage)); // percentage, 100 as base
-                        }
-                    }
-                }
-                finally
-                {
-                    ArrayPool<byte>.Shared.Return(buffer);
-                }
-
-                if (progress is not null)
-                    Dispatcher.UIThread.Invoke(() => progress.Report(100));
+                await using var source = (await DownloadMemoryStreamCoreAsync(
+                    httpClient,
+                    uri,
+                    progress,
+                    startPosition,
+                    bufferSize,
+                    token)).UnwrapOrThrow();
+                await source.CopyToAsync(destination, token);
+                progress?.Report(100);
                 return null;
             }
             catch (Exception e)

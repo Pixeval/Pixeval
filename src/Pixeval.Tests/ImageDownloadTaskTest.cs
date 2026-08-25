@@ -3,6 +3,8 @@ using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia;
+using Mako;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pixeval.Download;
 using Pixeval.Models.Download.Tasks;
@@ -107,6 +109,33 @@ public sealed class ImageDownloadTaskTest
                 File.Delete(temporaryFile);
             if (Directory.Exists(destinationDirectory))
                 Directory.Delete(destinationDirectory);
+            DeleteTestDirectory(directory);
+        }
+    }
+
+    [TestMethod]
+    public async Task PixivAssetsUriShouldCopyPackagedAsset()
+    {
+        var directory = Directory.CreateTempSubdirectory().FullName;
+        try
+        {
+            AppBuilder.Configure<Application>()
+                .UseStandardRuntimePlatformSubsystem()
+                .UseWindowingSubsystem(static () => { })
+                .UseRenderingSubsystem(static () => { })
+                .UseTextShapingSubsystem(static () => { })
+                .SetupWithoutStarting();
+            var destination = Path.Combine(directory, "cover.png");
+            using var task = new TestImageDownloadTask(new(DefaultImageUrls.ImageNotAvailable), destination, false);
+            using var httpClient = new HttpClient();
+            await task.StartAsync(httpClient);
+
+            Assert.AreEqual(DownloadState.Completed, task.CurrentState, task.ErrorMessage);
+            Assert.IsTrue(new FileInfo(destination).Length > 0);
+            Assert.IsFalse(File.Exists(destination + IoHelper.PixevalTempExtension));
+        }
+        finally
+        {
             DeleteTestDirectory(directory);
         }
     }

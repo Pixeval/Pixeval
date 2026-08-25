@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Mako;
 using Mako.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pixeval.Models.Download;
@@ -51,16 +52,63 @@ public sealed class NovelDownloadTaskGroupTest
         ((INovelContext<Stream>) context).InitImages();
         context.SetStream(0, new MemoryStream());
         context.SetStream(1, new MemoryStream());
+        context.SetStream(2, new MemoryStream());
 
-        Assert.AreSequenceEqual((string[]) ["101.png", "202-2.webp"], context.AllFileNames);
+        Assert.AreSequenceEqual((string[]) ["cover.png", "101.png", "202-2.webp"], context.AllFileNames);
 
         var html = context.LoadHtmlContent().ToString();
-        StringAssert.Contains(html, "src=\"101.png\"");
-        StringAssert.Contains(html, "src=\"202-2.webp\"");
+        Assert.Contains("src=\"101.png\"", html);
+        Assert.Contains("src=\"202-2.webp\"", html);
 
         var markdown = context.LoadMdContent().ToString();
-        StringAssert.Contains(markdown, "![101](101.png)");
-        StringAssert.Contains(markdown, "![202-2](202-2.webp)");
+        Assert.Contains("![101](101.png)", markdown);
+        Assert.Contains("![202-2](202-2.webp)", markdown);
+    }
+
+    [TestMethod]
+    public void BuiltInDocumentsShouldReferenceDownloadedCover()
+    {
+        var content = CreateNovelContent();
+        content.CoverUrl = "https://i.pximg.net/img-original/novel/1.jpg?token=cover";
+        using var context = new NovelContext(content);
+        ((INovelContext<Stream>) context).InitImages();
+        var coverStream = new MemoryStream();
+        var uploadedImageStream = new MemoryStream();
+        var illustrationStream = new MemoryStream();
+        context.SetStream(0, coverStream);
+        context.SetStream(1, uploadedImageStream);
+        context.SetStream(2, illustrationStream);
+
+        Assert.AreEqual("cover.jpg", context.CoverFileName);
+        Assert.AreEqual(3, context.TotalImagesCount);
+        Assert.AreSequenceEqual((string[]) ["cover.jpg", "101.png", "202-2.webp"], context.AllFileNames);
+        Assert.AreSame(coverStream, context.TryGetStream(0));
+        Assert.AreSame(uploadedImageStream, context.TryGetStream(1));
+        Assert.AreSame(illustrationStream, context.TryGetStream(2));
+
+        var html = context.LoadHtmlContent().ToString();
+        Assert.Contains("<img src=\"cover.jpg\" alt=\"cover\" />", html);
+        Assert.IsLessThan(html.IndexOf("101.png", StringComparison.Ordinal), html.IndexOf("cover.jpg", StringComparison.Ordinal));
+
+        var markdown = context.LoadMdContent().ToString();
+        Assert.Contains("![cover](cover.jpg)", markdown);
+        Assert.IsLessThan(markdown.IndexOf("101.png", StringComparison.Ordinal), markdown.IndexOf("cover.jpg", StringComparison.Ordinal));
+    }
+
+    [TestMethod]
+    [DataRow("")]
+    [DataRow("not a uri")]
+    [DataRow("file:///cover.jpg")]
+    public void InvalidCoverUrlShouldUseDefaultImage(string coverUrl)
+    {
+        var content = CreateNovelContent();
+        content.CoverUrl = coverUrl;
+        using var context = new NovelContext(content);
+
+        Assert.AreEqual(DefaultImageUrls.ImageNotAvailable, context.CoverUri.OriginalString);
+        Assert.AreEqual("cover.png", context.CoverFileName);
+        Assert.AreEqual(DefaultImageUrls.ImageNotAvailable, context.AllUrls[0]);
+        Assert.AreEqual("cover.png", context.AllFileNames[0]);
     }
 
     private static NovelContent CreateNovelContent() => new()
