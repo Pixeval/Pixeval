@@ -4,6 +4,7 @@
 using System;
 using System.Threading.Tasks;
 using Pixeval.Models.Database;
+using Pixeval.Models.Options;
 
 namespace Pixeval.Models.Subscriptions;
 
@@ -16,6 +17,11 @@ public interface IWorkSubscriptionService
     event EventHandler<WorkSubscriptionEntry>? SubscriptionUpdated;
 
     event EventHandler<int>? SubscriptionRemoved;
+
+    WorkSubscriptionEntry? TryGetSubscription(
+        long targetId,
+        WorkSubscriptionType subscriptionType,
+        WorkSubscriptionWorkKind workKind);
 
     Task<WorkSubscriptionEntry?> TryRemoveAsync(int historyEntryId);
 }

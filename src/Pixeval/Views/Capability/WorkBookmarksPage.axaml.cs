@@ -4,16 +4,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Mako.Global.Enum;
 using Mako.Model;
+using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Controls;
-using Pixeval.I18N;
 using Pixeval.Models.Options;
 using Pixeval.Models.Subscriptions;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
+using Pixeval.Views.Work;
 
 namespace Pixeval.Views.Capability;
 
@@ -24,6 +26,9 @@ public partial class WorkBookmarksPage : IconContentPage
     private bool _suppressChangeSource;
 
     public static IReadOnlyList<BookmarkTag> DefaultTags { get; } = [AllBookmarkTag.Instance, UncategorizedBookmarkTag.Instance];
+
+    private static IWorkSubscriptionService SubscriptionService =>
+        App.AppViewModel.AppServiceProvider.GetRequiredService<IWorkSubscriptionService>();
 
     public WorkBookmarksPage() : this(PixevalSettings.Me)
     {
@@ -42,7 +47,10 @@ public partial class WorkBookmarksPage : IconContentPage
 
         FetchTags();
         if (viewModel is not null)
+        {
             WorkContainer.SetViewModel(viewModel);
+            UpdateSubscriptionButtons();
+        }
         else
             ChangeSource();
     }
@@ -92,20 +100,48 @@ public partial class WorkBookmarksPage : IconContentPage
         App.AppViewModel.QueueWorkSubscriptionSyncCurrentSource(
             _user.Id,
             WorkSubscriptionType.Bookmarks,
-            workType is SimpleWorkType.Novel
-                ? WorkSubscriptionWorkKind.Novel
-                : WorkSubscriptionWorkKind.Illustration,
+            GetSubscriptionWorkKind(),
             engine);
+        UpdateSubscriptionButtons();
     }
 
-    private void AddSubscriptionButton_OnClicked(object? sender, RoutedEventArgs e)
+    private async void AddSubscriptionButton_OnClicked(object? sender, RoutedEventArgs e)
     {
-        var workKind = SimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>() is SimpleWorkType.Novel
+        var workKind = GetSubscriptionWorkKind();
+
+        _ = await WorkSubscriptionButtonHelper.RunAsync(
+            AddSubscriptionButton,
+            RemoveSubscriptionButton,
+            () => Task.FromResult(WorkSubscriptionHelper.TryAddOrUpdateUser(_user, WorkSubscriptionType.Bookmarks, workKind)),
+            UpdateSubscriptionButtons);
+    }
+
+    private async void RemoveSubscriptionButton_OnClicked(object? sender, RoutedEventArgs e)
+    {
+        _ = await WorkSubscriptionButtonHelper.RunAsync(
+            AddSubscriptionButton,
+            RemoveSubscriptionButton,
+            RemoveCurrentSubscriptionAsync,
+            UpdateSubscriptionButtons);
+    }
+
+    private void UpdateSubscriptionButtons() =>
+        WorkSubscriptionButtonHelper.UpdateVisibility(
+            AddSubscriptionButton,
+            RemoveSubscriptionButton,
+            SubscriptionService.TryGetSubscription(_user.Id, WorkSubscriptionType.Bookmarks, GetSubscriptionWorkKind()) is not null);
+
+    private async Task<bool> RemoveCurrentSubscriptionAsync()
+    {
+        if (SubscriptionService.TryGetSubscription(_user.Id, WorkSubscriptionType.Bookmarks, GetSubscriptionWorkKind()) is not { HistoryEntryId: var historyEntryId })
+            return false;
+
+        _ = await SubscriptionService.TryRemoveAsync(historyEntryId);
+        return true;
+    }
+
+    private WorkSubscriptionWorkKind GetSubscriptionWorkKind() =>
+        SimpleWorkTypeComboBox.GetSelectedValue<SimpleWorkType>() is SimpleWorkType.Novel
             ? WorkSubscriptionWorkKind.Novel
             : WorkSubscriptionWorkKind.Illustration;
-
-        if (WorkSubscriptionHelper.TryAddOrUpdateUser(_user, WorkSubscriptionType.Bookmarks, workKind))
-            TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(
-                I18NManager.GetResource(WorkSubscriptionsSettingsExpanderResources.SubscriptionAdded));
-    }
 }

@@ -5,7 +5,6 @@
   "SyncAllSubscriptionsButton": {
     "Label": "Синхронизировать все подписки"
   },
-  "SubscriptionAdded": "Подписка добавлена",
   "TargetIdTextBox": {
     "PlaceholderText": "ID пользователя или серии"
   },

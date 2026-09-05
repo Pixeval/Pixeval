@@ -18,6 +18,13 @@
                 Click="AddSubscriptionButton_OnClicked"
                 Icon="{markup:SymbolIcon Alert}"
                 Label="{I18N {x:Static pixeval:WorkSubscriptionsSettingsExpanderResources+AddSubscriptionButton.Label}}" />
+            <CommandBarButton
+                x:Name="RemoveSubscriptionButton"
+                VerticalAlignment="Stretch"
+                Click="RemoveSubscriptionButton_OnClicked"
+                Icon="{markup:SymbolIcon AlertOff}"
+                IsVisible="False"
+                Label="{I18N {x:Static pixeval:WorkSubscriptionsSettingsExpanderResources+RemoveSubscriptionButton.Label}}" />
         </work:WorkContainer.CommandBarSubElements>
     </work:WorkContainer>
 </UserControl>

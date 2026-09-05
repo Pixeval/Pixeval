@@ -52,6 +52,11 @@
                                         Icon="{markup:SymbolIcon ArrowSync}"
                                         Tag="{Binding}"
                                         Click="SyncSubscription_OnClicked" />
+                                    <MenuItem
+                                        Header="{I18N {x:Static pixeval:WorkSubscriptionsSettingsExpanderResources+RemoveSubscriptionButton.Label}}"
+                                        Icon="{markup:SymbolIcon AlertOff}"
+                                        Tag="{Binding}"
+                                        Click="RemoveSubscription_OnClicked" />
                                 </ContextMenu>
                             </local:DownloadFolder.ContextMenu>
                         </local:DownloadFolder>

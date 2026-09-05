@@ -7,6 +7,8 @@ using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Microsoft.Extensions.DependencyInjection;
+using Pixeval.Models.Subscriptions;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
 
@@ -84,6 +86,16 @@ public partial class DownloadFolderListView : ContentPage, IDisposable
             return;
 
         App.AppViewModel.QueueWorkSubscriptionSync(subscription);
+    }
+
+    private static async void RemoveSubscription_OnClicked(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not MenuItem { Tag: DownloadFolderViewModel { Subscription: var subscription } })
+            return;
+
+        _ = await App.AppViewModel.AppServiceProvider
+            .GetRequiredService<IWorkSubscriptionService>()
+            .TryRemoveAsync(subscription.HistoryEntryId);
     }
 
     private static void ExecuteForFolder(object? sender, Action<DownloadItemViewModel> action)

@@ -2,10 +2,12 @@
   "AddSubscriptionButton": {
     "Label": "添加订阅"
   },
+  "RemoveSubscriptionButton": {
+    "Label": "取消订阅"
+  },
   "SyncAllSubscriptionsButton": {
     "Label": "立即同步所有订阅"
   },
-  "SubscriptionAdded": "已添加订阅",
   "RateLimitNotification": {
     "Title": "Pixiv API 请求已暂停",
     "Content": "检测到请求频率限制，订阅获取将在冷却后自动重试。请暂时减少浏览等 API 操作，图片下载不受影响。"

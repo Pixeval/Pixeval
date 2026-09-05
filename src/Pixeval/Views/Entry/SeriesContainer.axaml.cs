@@ -1,16 +1,18 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Mako.Engine;
 using Mako.Global.Enum;
 using Mako.Model;
-using Pixeval.I18N;
+using Microsoft.Extensions.DependencyInjection;
 using Pixeval.Models.Options;
 using Pixeval.Models.Subscriptions;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
+using Pixeval.Views.Work;
 
 namespace Pixeval.Views.Entry;
 
@@ -20,6 +22,9 @@ public partial class SeriesContainer : UserControl
     private readonly long _seriesId;
     private readonly SeriesDetailBase? _seriesDetail;
     private readonly IWorkEntry? _firstWork;
+
+    private static IWorkSubscriptionService SubscriptionService =>
+        App.AppViewModel.AppServiceProvider.GetRequiredService<IWorkSubscriptionService>();
 
     public SeriesContainer()
     {
@@ -42,6 +47,7 @@ public partial class SeriesContainer : UserControl
     {
         WorkContainer.IsRefreshEnabled = false;
         WorkContainer.SetViewModel(viewModel);
+        UpdateSubscriptionButtons();
     }
 
     public SeriesContainer(
@@ -81,17 +87,41 @@ public partial class SeriesContainer : UserControl
             WorkSubscriptionType.Series,
             GetSubscriptionWorkKind(),
             engine);
+        UpdateSubscriptionButtons();
     }
 
-    private void AddSubscriptionButton_OnClicked(object? sender, RoutedEventArgs e)
+    private async void AddSubscriptionButton_OnClicked(object? sender, RoutedEventArgs e)
     {
-        if (WorkSubscriptionHelper.TryAddOrUpdateSeries(
-                _seriesId,
-                GetSubscriptionWorkKind(),
-                _seriesDetail,
-                _firstWork))
-            TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(
-                I18NManager.GetResource(WorkSubscriptionsSettingsExpanderResources.SubscriptionAdded));
+        var workKind = GetSubscriptionWorkKind();
+        _ = await WorkSubscriptionButtonHelper.RunAsync(
+            AddSubscriptionButton,
+            RemoveSubscriptionButton,
+            () => Task.FromResult(WorkSubscriptionHelper.TryAddOrUpdateSeries(_seriesId, workKind, _seriesDetail, _firstWork)),
+            UpdateSubscriptionButtons);
+    }
+
+    private async void RemoveSubscriptionButton_OnClicked(object? sender, RoutedEventArgs e)
+    {
+        _ = await WorkSubscriptionButtonHelper.RunAsync(
+            AddSubscriptionButton,
+            RemoveSubscriptionButton,
+            RemoveCurrentSubscriptionAsync,
+            UpdateSubscriptionButtons);
+    }
+
+    private void UpdateSubscriptionButtons() =>
+        WorkSubscriptionButtonHelper.UpdateVisibility(
+            AddSubscriptionButton,
+            RemoveSubscriptionButton,
+            SubscriptionService.TryGetSubscription(_seriesId, WorkSubscriptionType.Series, GetSubscriptionWorkKind()) is not null);
+
+    private async Task<bool> RemoveCurrentSubscriptionAsync()
+    {
+        if (SubscriptionService.TryGetSubscription(_seriesId, WorkSubscriptionType.Series, GetSubscriptionWorkKind()) is not { HistoryEntryId: var historyEntryId })
+            return false;
+
+        _ = await SubscriptionService.TryRemoveAsync(historyEntryId);
+        return true;
     }
 
     private WorkSubscriptionWorkKind GetSubscriptionWorkKind() =>

@@ -314,6 +314,11 @@ public sealed class DownloadManagerTest
 
         public event EventHandler<int>? SubscriptionRemoved;
 
+        public WorkSubscriptionEntry? TryGetSubscription(
+            long targetId,
+            WorkSubscriptionType subscriptionType,
+            WorkSubscriptionWorkKind workKind) => null;
+
         public Task<WorkSubscriptionEntry?> TryRemoveAsync(int historyEntryId) =>
             Task.FromResult<WorkSubscriptionEntry?>(null);
 
