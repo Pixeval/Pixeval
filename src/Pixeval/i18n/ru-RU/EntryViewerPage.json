@@ -46,9 +46,6 @@
   "ZoomToOriginal": "Оригинальный размер",
   "ZoomToFit": "По размеру экрана",
   "LoadFailed": "Ошибка загрузки",
-  "LoadingNovelTextBlock": {
-    "Text": "Загрузка новеллы..."
-  },
   "Copy": "Скопировать текущее изображение",
   "SaveAs": "Сохранить текущее изображение",
   "OtherImageTransformerExtensions": "Другие расширения обработки изображений"

@@ -87,6 +87,12 @@ public static partial class PixevalConverters
 
     public static readonly FuncValueConverter<string, FontFamily?> FontFamilyConverter = new(static font => FontFamilyHelper.Create(font));
 
+    public static readonly FuncValueConverter<uint, IBrush?> OptionalColorToBrush = new(static value =>
+    {
+        var color = Color.FromUInt32(value);
+        return color.A is 0 ? null : new SolidColorBrush(color);
+    });
+
     [GeneratedRegex("<br\\s*/?>", RegexOptions.IgnoreCase)]
     private static partial Regex LineBreakRegex { get; }
 

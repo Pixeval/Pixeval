@@ -1,0 +1,34 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:pixeval="using:Pixeval">
+    <ControlTheme x:Key="{x:Type controls:ViewerStateOverlay}" TargetType="{x:Type controls:ViewerStateOverlay}">
+        <Setter Property="Background" Value="{DynamicResource LayerFillColorDefaultBrush}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="{x:Type controls:ViewerStateOverlay}">
+                <Panel>
+                    <Border Background="{TemplateBinding Background}" IsVisible="{TemplateBinding IsLoading}">
+                        <StackPanel
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Spacing="10">
+                            <ProgressBar Width="160" IsIndeterminate="{TemplateBinding IsLoading}" />
+                            <TextBlock Text="{I18N {x:Static pixeval:EntryViewerPageResources+LoadingTextBlock.Text}}" />
+                        </StackPanel>
+                    </Border>
+                    <Border Background="{TemplateBinding Background}" IsVisible="{TemplateBinding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                        <TextBlock
+                            MaxWidth="480"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Text="{TemplateBinding ErrorMessage}"
+                            TextWrapping="Wrap" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

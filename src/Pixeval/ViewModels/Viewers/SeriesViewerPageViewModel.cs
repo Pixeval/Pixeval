@@ -18,9 +18,11 @@ public sealed partial class SeriesViewerPageViewModel : ViewModelBase, IDisposab
 {
     private readonly CancellationTokenSource _loadingCts = new();
 
-    [ObservableProperty] public partial bool IsLoading { get; private set; }
+    [ObservableProperty]
+    public partial bool IsLoading { get; private set; }
 
-    [ObservableProperty] public partial string? LoadErrorMessage { get; private set; }
+    [ObservableProperty]
+    public partial string? LoadErrorMessage { get; private set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Header))]
@@ -35,9 +37,11 @@ public sealed partial class SeriesViewerPageViewModel : ViewModelBase, IDisposab
     [NotifyPropertyChangedFor(nameof(CoverUrl))]
     public partial IWorkEntry? FirstWork { get; private set; }
 
-    [ObservableProperty] public partial IFetchEngine<IWorkEntry>? WorksEngine { get; private set; }
+    [ObservableProperty]
+    public partial IFetchEngine<IWorkEntry>? WorksEngine { get; private set; }
 
-    [ObservableProperty] public partial bool IsWatchlistAdded { get; private set; }
+    [ObservableProperty]
+    public partial bool IsWatchlistAdded { get; private set; }
 
     private IWorkViewViewModel? _worksViewModel;
 
@@ -108,8 +112,7 @@ public sealed partial class SeriesViewerPageViewModel : ViewModelBase, IDisposab
         LoadErrorMessage = null;
         try
         {
-            var (detail, first, engine) = await App.AppViewModel.MakoClient.GetWorkSeriesAsync(WorkType, Id);
-            token.ThrowIfCancellationRequested();
+            var (detail, first, engine) = await App.AppViewModel.MakoClient.GetWorkSeriesAsync(WorkType, Id, token);
 
             if (_disposed)
             {

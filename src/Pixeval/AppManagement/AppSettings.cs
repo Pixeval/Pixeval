@@ -16,11 +16,6 @@ namespace Pixeval.AppManagement;
 
 public record AppSettings
 {
-    public AppSettings()
-    {
-        NovelSettings.ActualThemeProvider = () => ActualTheme;
-    }
-
     public void Initialize()
     {
         if (NetworkSettings.GitHubAssetsNameResolver is

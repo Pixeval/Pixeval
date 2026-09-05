@@ -4,31 +4,22 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Text.Json.Serialization;
 using AutoSettingsPage;
 using Avalonia.Media;
 using FluentIcons.Common;
-using Pixeval.Models.Options;
 using SharpYaml.Serialization;
 
 namespace Pixeval.AppManagement;
 
 public record NovelSettingsGroup
 {
-    [JsonIgnore]
-    public Func<ApplicationTheme> ActualThemeProvider { get; set; } = static () => ApplicationTheme.Default;
+    [YamlConverter(typeof(YamlColorConverter))]
+    [SettingsEntry(Symbol.TextColor, AppSettingsResources.NovelSettingsFontColorEntry.Header, AppSettingsResources.NovelSettingsFontColorEntry.Description)]
+    public uint NovelFontColor { get; set; }
 
     [YamlConverter(typeof(YamlColorConverter))]
-    public uint NovelFontColorInDarkMode { get; set; } = 0xFFFFFFFF;
-
-    [YamlConverter(typeof(YamlColorConverter))]
-    public uint NovelFontColorInLightMode { get; set; } = 0xFF000000;
-
-    [YamlConverter(typeof(YamlColorConverter))]
-    public uint NovelBackgroundInDarkMode { get; set; }
-
-    [YamlConverter(typeof(YamlColorConverter))]
-    public uint NovelBackgroundInLightMode { get; set; }
+    [SettingsEntry(Symbol.ColorBackground, AppSettingsResources.NovelSettingsBackgroundEntry.Header, AppSettingsResources.NovelSettingsBackgroundEntry.Description)]
+    public uint NovelBackground { get; set; }
 
     [SettingsEntry(Symbol.LineThickness, AppSettingsResources.NovelSettingsFontWeightEntry.Header, AppSettingsResources.NovelSettingsFontWeightEntry.Description, AppSettingsResources.NovelSettingsFontWeightEntry.Placeholder)]
     public FontWeight NovelFontWeight { get; set; } = FontWeight.Normal;
@@ -44,36 +35,6 @@ public record NovelSettingsGroup
 
     [SettingsEntry(Symbol.AutoFitWidth, AppSettingsResources.NovelSettingsMaxWidthEntry.Header, AppSettingsResources.NovelSettingsMaxWidthEntry.Description)]
     public int NovelMaxWidth { get; set; } = 1000;
-
-    [JsonIgnore]
-    [SettingsEntry(Symbol.ColorBackground, AppSettingsResources.NovelSettingsBackgroundEntry.Header, AppSettingsResources.NovelSettingsBackgroundEntry.Description)]
-    public uint NovelBackground
-    {
-        get => ActualTheme is ApplicationTheme.Light ? NovelBackgroundInLightMode : NovelBackgroundInDarkMode;
-        set
-        {
-            if (ActualTheme is ApplicationTheme.Light)
-                NovelBackgroundInLightMode = value;
-            else
-                NovelBackgroundInDarkMode = value;
-        }
-    }
-
-    [JsonIgnore]
-    [SettingsEntry(Symbol.TextColor, AppSettingsResources.NovelSettingsFontColorEntry.Header, AppSettingsResources.NovelSettingsFontColorEntry.Description)]
-    public uint NovelFontColor
-    {
-        get => ActualTheme is ApplicationTheme.Light ? NovelFontColorInLightMode : NovelFontColorInDarkMode;
-        set
-        {
-            if (ActualTheme is ApplicationTheme.Light)
-                NovelFontColorInLightMode = value;
-            else
-                NovelFontColorInDarkMode = value;
-        }
-    }
-
-    private ApplicationTheme ActualTheme => ActualThemeProvider();
 }
 
 public class YamlColorConverter : YamlConverter<uint>

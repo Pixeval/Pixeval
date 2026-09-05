@@ -46,9 +46,6 @@
   "ZoomToOriginal": "Zoom to Original Size",
   "ZoomToFit": "Zoom to Fit Screen",
   "LoadFailed": "Load Failed",
-  "LoadingNovelTextBlock": {
-    "Text": "Loading novel"
-  },
   "Copy": "Copy Displayed Image",
   "SaveAs": "Save Displayed Image",
   "ViewOriginal": "View Original",

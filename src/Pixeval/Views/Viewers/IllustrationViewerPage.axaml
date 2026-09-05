@@ -170,25 +170,7 @@
                         CurrentWorkIndex="{Binding #Root.((viewers:IllustrationViewerPageViewModel)DataContext)?.CurrentWorkIndex}"
                         DataContext="{Binding CurrentImage}" />
 
-                    <Grid Background="#7F000000" IsVisible="{Binding IsLoading}">
-                        <StackPanel
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Spacing="10">
-                            <ProgressBar Width="160" IsIndeterminate="{Binding IsLoading}" />
-                            <TextBlock Foreground="White" Text="{I18N {x:Static pixeval:HomePageResources+CardPreview+LoadingTextBlock.Text}}" />
-                        </StackPanel>
-                    </Grid>
-
-                    <Grid Background="#7F000000" IsVisible="{Binding LoadErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
-                        <TextBlock
-                            MaxWidth="480"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Foreground="White"
-                            Text="{Binding LoadErrorMessage}"
-                            TextWrapping="Wrap" />
-                    </Grid>
+                    <controls:ViewerStateOverlay ErrorMessage="{Binding LoadErrorMessage}" IsLoading="{Binding IsLoading}" />
 
                     <!--  左翻页按钮  -->
                     <controls:PageButton

@@ -35,11 +35,14 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
 
     private readonly ISourceView<NovelItemViewModel>? _sourceView;
 
-    [ObservableProperty] public partial bool IsLoading { get; private set; }
+    [ObservableProperty]
+    public partial bool IsLoading { get; private set; }
 
-    [ObservableProperty] public partial string? LoadErrorMessage { get; private set; }
+    [ObservableProperty]
+    public partial string? LoadErrorMessage { get; private set; }
 
-    [ObservableProperty] public partial WorkSeriesInfoViewModel? SeriesInfo { get; private set; }
+    [ObservableProperty]
+    public partial WorkSeriesInfoViewModel? SeriesInfo { get; private set; }
 
     public IReadOnlyList<Page> PanePages => CurrentNovel is not { } currentNovel
         ? []
@@ -162,8 +165,8 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
             return new SettingsSubView(
                 SettingsBuilder.CreateGroupList(App.AppViewModel.AppSettings)
                     .NewGroup(t => t.NovelSettings, group => group
-                        .Color(t => t.NovelBackground, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelBackgroundBrush)))
-                        .Color(t => t.NovelFontColor, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelForegroundBrush)))
+                        .Color(t => t.NovelBackground, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelBackground)))
+                        .Color(t => t.NovelFontColor, t => t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelFontColor)))
                         .Font(t => t.NovelFontFamily, t =>
                         {
                             t.PropertyChanged += (_, _) => OnPropertyChanged(nameof(NovelFontFamilyObject));
@@ -180,9 +183,9 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
 
     private static AppSettings Settings => App.AppViewModel.AppSettings;
 
-    public IBrush NovelBackgroundBrush => new SolidColorBrush(Color.FromUInt32(Settings.NovelSettings.NovelBackground));
+    public uint NovelBackground => Settings.NovelSettings.NovelBackground;
 
-    public IBrush NovelForegroundBrush => new SolidColorBrush(Color.FromUInt32(Settings.NovelSettings.NovelFontColor));
+    public uint NovelFontColor => Settings.NovelSettings.NovelFontColor;
 
     public FontFamily? NovelFontFamilyObject => FontFamilyHelper.Create(Settings.NovelSettings.NovelFontFamily);
 

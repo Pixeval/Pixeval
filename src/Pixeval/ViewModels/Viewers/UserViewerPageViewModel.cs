@@ -20,11 +20,14 @@ public sealed partial class UserViewerPageViewModel : ViewModelBase, IDisposable
 {
     private readonly CancellationTokenSource _loadingCts = new();
 
-    [ObservableProperty] public partial bool IsFollowed { get; set; }
+    [ObservableProperty]
+    public partial bool IsFollowed { get; set; }
 
-    [ObservableProperty] public partial bool IsLoading { get; private set; }
+    [ObservableProperty]
+    public partial bool IsLoading { get; private set; }
 
-    [ObservableProperty] public partial string? LoadErrorMessage { get; private set; }
+    [ObservableProperty]
+    public partial string? LoadErrorMessage { get; private set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Id))]
