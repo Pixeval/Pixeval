@@ -90,7 +90,6 @@
                                 IsEnabled="{Binding IsLoggedIn, Source={x:Static views:PixevalSettings.Instance}}"
                                 Tag="{Binding Url}" />
                             <Separator />
-                            <!--  该项不显示  -->
                             <MenuItem
                                 Command="{Binding ToggleRestrictedModeCommand, Mode=OneTime}"
                                 Header="{I18N {x:Static pixeval:MainPageResources+RestrictedModeItem.Text}}"
@@ -122,13 +121,12 @@
                 </Button>
             </tabView:TabsView.RightHeaderContent>
             <tabView:TabsView.LeftContent>
-                <DockPanel
-                    Margin="5"
-                    HorizontalAlignment="Stretch"
-                    VerticalSpacing="5">
+                <DockPanel x:Name="LeftContentDockPanel" Margin="5" HorizontalAlignment="Stretch" VerticalSpacing="5">
                     <DockPanel.DataTemplates>
                         <DataTemplate x:DataType="{x:Type navigation:NavigationPageItem}">
                             <Button
+                                x:Name="NavButton"
+                                Height="50"
                                 HorizontalAlignment="Stretch"
                                 Background="Transparent"
                                 Command="{x:Static local:TabViewContainer.OpenNavigationItemCommand}"
@@ -152,9 +150,12 @@
                                 </Grid>
                             </Button>
                         </DataTemplate>
-
                         <DataTemplate x:DataType="{x:Type navigation:NavigationFolderItem}">
-                            <Button HorizontalAlignment="Stretch" Background="Transparent">
+                            <Button
+                                x:Name="NavFolderButton"
+                                Height="50"
+                                HorizontalAlignment="Stretch"
+                                Background="Transparent">
                                 <Button.IsEnabled>
                                     <MultiBinding Converter="{x:Static BoolConverters.Or}">
                                         <Binding Path="!NeedLogin" />
@@ -175,9 +176,8 @@
                                 <Button.Flyout>
                                     <MenuFlyout ItemsSource="{Binding Children}" Placement="Right">
                                         <MenuFlyout.ItemContainerTheme>
-                                            <!--  ItemContainerTheme好像会自动向下传递，不需要此处递归指定（也没法递归指定）  -->
                                             <ControlTheme
-                                                x:DataType="{x:Type navigation:NavigationMenuItem}"
+                                                x:DataType="navigation:NavigationMenuItem"
                                                 BasedOn="{StaticResource {x:Type MenuItem}}"
                                                 TargetType="{x:Type MenuItem}">
                                                 <Setter Property="Command" Value="{x:Static local:TabViewContainer.OpenNavigationItemCommand}" />
@@ -202,10 +202,30 @@
                     </DockPanel.DataTemplates>
 
                     <ItemsControl
+                        x:Name="HeaderItemsControl"
+                        DockPanel.Dock="Top"
                         HorizontalAlignment="Stretch"
-                        DockPanel.Dock="Bottom"
+                        ItemsSource="{Binding #Root.HeaderNavigationItems}" />
+                    <ItemsControl
+                        x:Name="FooterItemsControl"
+                        DockPanel.Dock="Top"
+                        HorizontalAlignment="Stretch"
                         ItemsSource="{Binding #Root.FooterNavigationItems}" />
-                    <ItemsControl HorizontalAlignment="Stretch" ItemsSource="{Binding #Root.HeaderNavigationItems}" />
+
+                    <Border x:Name="MoreButtonHost"
+                            DockPanel.Dock="Bottom"
+                            Height="30"
+                            Margin="5,0,5,5"
+                            IsVisible="False">
+                        <Button x:Name="MoreButton"
+                                HorizontalAlignment="Stretch"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                FontWeight="Bold"
+                                FontSize="16">
+                            <TextBlock Text="…" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Button>
+                    </Border>
                 </DockPanel>
             </tabView:TabsView.LeftContent>
         </tabView:TabsView>
