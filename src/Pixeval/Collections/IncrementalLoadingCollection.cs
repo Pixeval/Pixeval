@@ -45,6 +45,8 @@ public class IncrementalLoadingCollection<IType> : ObservableCollection<IType>, 
     /// </summary>
     protected IIncrementalSource<IType> Source { get; }
 
+    public bool IsInterrupted => !IsLoading && Source.IsInterrupted;
+
     /// <summary>
     /// Gets a value indicating how many items that must be retrieved for each incremental call.
     /// </summary>

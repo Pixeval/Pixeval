@@ -38,7 +38,6 @@ public class App : Application
 
     private bool _allowExitWithActiveSubscriptionSync;
     private bool _isExitConfirmationOpen;
-    private DateTimeOffset _rateLimitNotificationUntil = DateTimeOffset.MinValue;
 
     public override void Initialize()
     {
@@ -191,26 +190,18 @@ public class App : Application
     private void MakoClient_OnRateLimitEncountered(MakoClient sender, RateLimitEventArgs args) =>
         Dispatcher.UIThread.Post(() =>
         {
-            var now = DateTimeOffset.UtcNow;
-            if (now < _rateLimitNotificationUntil)
-                return;
-
-            _rateLimitNotificationUntil = args.RetryAt > now
-                ? args.RetryAt
-                : now.AddSeconds(30);
-            var viewContainer = ApplicationLifetime switch
+            var viewContainers = ApplicationLifetime switch
             {
                 IClassicDesktopStyleApplicationLifetime desktop => desktop.Windows
-                    .OrderByDescending(static window => window.IsActive)
                     .Select(static window => window.Content)
-                    .OfType<ViewContainerBase>()
-                    .FirstOrDefault(),
-                ISingleViewApplicationLifetime singleView => singleView.MainView as ViewContainerBase,
-                _ => null
+                    .OfType<ViewContainerBase>(),
+                ISingleViewApplicationLifetime { MainView: ViewContainerBase container } => [container],
+                _ => []
             };
-            viewContainer?.ShowWarning(
-                I18NManager.GetResource(WorkSubscriptionsSettingsExpanderResources.RateLimitNotification.Title),
-                I18NManager.GetResource(WorkSubscriptionsSettingsExpanderResources.RateLimitNotification.Content));
+            foreach (var viewContainer in viewContainers)
+                viewContainer.ShowWarning(
+                    I18NManager.GetResource(MiscResources.RateLimitNotification.Title),
+                    I18NManager.GetResource(MiscResources.RateLimitNotification.ContentFormatted, args.RetryAt.ToLocalTime()));
         });
 
     private void RegisterUnhandledExceptionHandler()

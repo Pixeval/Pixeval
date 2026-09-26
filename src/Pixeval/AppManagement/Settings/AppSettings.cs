@@ -104,7 +104,7 @@ public record AppSettings
             NetworkSettings.WebCookie,
             NetworkSettings.MirrorHost,
             BrowsingExperienceSettings.TargetFilter,
-            700,
+            NetworkSettings.ApiRequestCooldown,
             CultureInfo.CurrentCulture);
     }
 }

@@ -7,9 +7,11 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Mako;
 using Mako.Engine;
 using Mako.Global.Enum;
 using Mako.Model;
+using Mako.Utilities;
 using Misaki;
 using Pixeval.Models.Database;
 using Pixeval.Models.Database.Managers;
@@ -306,7 +308,7 @@ public sealed class WorkSubscriptionDownloadService(
                 await SyncSubscriptionAsync(subscription, CreateEngines(subscription), false, false, token)
                     .ConfigureAwait(false);
             }
-            catch (OperationCanceledException) when 
+            catch (OperationCanceledException) when
                 (!token.IsCancellationRequested
                  && IsSubscriptionRemoved(subscription.HistoryEntryId))
             {
@@ -330,6 +332,8 @@ public sealed class WorkSubscriptionDownloadService(
         var knownKeys = new HashSet<SubscriptionDownloadKey>();
         var fetchedCount = 0;
         IWorkEntry? subscriptionMetadataSource = null;
+        var client = App.AppViewModel.MakoClient;
+        client.RateLimitEncountered += OnRateLimit;
         SetFetchState(subscription.HistoryEntryId, true, fetchedCount);
         try
         {
@@ -394,10 +398,17 @@ public sealed class WorkSubscriptionDownloadService(
         }
         finally
         {
+            client.RateLimitEncountered -= OnRateLimit;
             SetFetchState(subscription.HistoryEntryId, false, fetchedCount);
             foreach (var stagedTask in stagedTasks)
                 stagedTask.Dispose();
             EndSubscriptionSync(subscription.HistoryEntryId, subscriptionCancellationTokenSource);
+        }
+
+        void OnRateLimit(MakoClient sender, RateLimitEventArgs args)
+        {
+            if (!token.IsCancellationRequested && sender.AppApiRetryAt > DateTimeOffset.UtcNow)
+                SetFetchState(subscription.HistoryEntryId, true, fetchedCount);
         }
     }
 
@@ -424,7 +435,7 @@ public sealed class WorkSubscriptionDownloadService(
             reportEntryFetched();
             firstEntry ??= entry;
 
-            var task = await CreateDownloadTaskAsync(entry, subscription).ConfigureAwait(false);
+            var task = await CreateDownloadTaskAsync(entry, subscription, token).ConfigureAwait(false);
             if (token.IsCancellationRequested || engine.EngineHandle.IsCancelled)
             {
                 task.Dispose();
@@ -473,7 +484,9 @@ public sealed class WorkSubscriptionDownloadService(
 
     private void SetFetchState(int workSubscriptionId, bool isFetching, int fetchedCount)
     {
-        var state = new WorkSubscriptionFetchState(workSubscriptionId, isFetching, fetchedCount);
+        var retryAt = App.AppViewModel.MakoClient.AppApiRetryAt;
+        var state = new WorkSubscriptionFetchState(workSubscriptionId, isFetching, fetchedCount,
+            isFetching && retryAt > DateTimeOffset.UtcNow ? retryAt : null);
         lock (_syncGate)
             _currentFetchState = isFetching ? state : null;
         try
@@ -638,8 +651,15 @@ public sealed class WorkSubscriptionDownloadService(
         }
     }
 
-    private async Task<IDownloadTaskGroup> CreateDownloadTaskAsync(IArtworkInfo entry, WorkSubscriptionEntry subscription)
+    private async Task<IDownloadTaskGroup> CreateDownloadTaskAsync(
+        IArtworkInfo entry, WorkSubscriptionEntry subscription, CancellationToken token)
     {
+        // Subscription reads retry in place. Ordinary viewers decide independently whether to retry.
+        if (entry is Illustration { IsPicGif: true } illustration)
+            _ = await FetchEngineRetryHelper.ExecuteAsync(
+                t => illustration.LoadUgoiraMetadataAsync(App.AppViewModel.MakoClient, t),
+                token: token).ConfigureAwait(false);
+
         var parserContext = new ParserContext(
             entry,
             subscription);

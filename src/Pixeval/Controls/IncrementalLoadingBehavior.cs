@@ -11,6 +11,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
+using Avalonia.Input;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Pixeval.Collections;
@@ -67,6 +68,10 @@ public static class IncrementalLoadingBehavior
         AvaloniaProperty.RegisterAttached<ItemsControl, bool>(
             "HasPendingLoadCheck",
             typeof(IncrementalLoadingBehavior));
+
+    private static readonly AttachedProperty<bool> ResumeInterruptedProperty =
+        AvaloniaProperty.RegisterAttached<ItemsControl, bool>(
+            "ResumeInterrupted", typeof(IncrementalLoadingBehavior));
 
     private static readonly AttachedProperty<WeakEventListener<ItemsControl, object?, NotifyCollectionChangedEventArgs>?> ItemsListenerProperty =
         AvaloniaProperty.RegisterAttached<ItemsControl, WeakEventListener<ItemsControl, object?, NotifyCollectionChangedEventArgs>?>(
@@ -132,10 +137,17 @@ public static class IncrementalLoadingBehavior
             set => itemsControl.SetValue(AttachedAdaptiveGridProperty, value);
         }
 
-        private void RequestLoadCheck()
+        private void RequestLoadCheck(bool resumeInterrupted = false)
         {
             if (!itemsControl.IncrementalLoadingIsEnabled)
                 return;
+
+            if (itemsControl.ItemsSource is IIncrementalLoading { IsInterrupted: true })
+            {
+                if (!resumeInterrupted)
+                    return;
+                itemsControl.SetValue(ResumeInterruptedProperty, true);
+            }
 
             if (itemsControl.IsLoadingMore)
             {
@@ -172,8 +184,13 @@ public static class IncrementalLoadingBehavior
                 return;
             }
 
+            var resumeInterrupted = itemsControl.GetValue(ResumeInterruptedProperty);
+            itemsControl.SetValue(ResumeInterruptedProperty, false);
             if (itemsControl.ItemsSource is not IIncrementalLoading { HasMoreItems: true } source
                 || !itemsControl.ShouldLoadMore())
+                return;
+
+            if (source.IsInterrupted && !resumeInterrupted)
                 return;
 
             var loadedCount = 0;
@@ -241,6 +258,7 @@ public static class IncrementalLoadingBehavior
 
         private void DetachSources()
         {
+            itemsControl.SetValue(ResumeInterruptedProperty, false);
             itemsControl.DetachScrollViewer();
             itemsControl.DetachItemsSource();
             itemsControl.DetachAdaptiveGrid();
@@ -363,6 +381,8 @@ public static class IncrementalLoadingBehavior
             itemsControl.Unloaded += OnItemsControlUnloaded;
             itemsControl.PropertyChanged += OnItemsControlPropertyChanged;
             itemsControl.SizeChanged += OnItemsControlSizeChanged;
+            itemsControl.AddHandler(InputElement.PointerWheelChangedEvent, OnPointerWheelChanged,
+                RoutingStrategies.Bubble, handledEventsToo: true);
 
             if (itemsControl.IsLoaded)
             {
@@ -377,6 +397,7 @@ public static class IncrementalLoadingBehavior
             itemsControl.Unloaded -= OnItemsControlUnloaded;
             itemsControl.PropertyChanged -= OnItemsControlPropertyChanged;
             itemsControl.SizeChanged -= OnItemsControlSizeChanged;
+            itemsControl.RemoveHandler(InputElement.PointerWheelChangedEvent, OnPointerWheelChanged);
             itemsControl.DetachSources();
         }
     }
@@ -412,6 +433,7 @@ public static class IncrementalLoadingBehavior
 
         if (e.Property == ItemsControl.ItemsSourceProperty)
         {
+            itemsControl.SetValue(ResumeInterruptedProperty, false);
             itemsControl.AttachItemsSource();
             itemsControl.RequestLoadCheck();
         }
@@ -433,7 +455,16 @@ public static class IncrementalLoadingBehavior
     {
         if (sender is ScrollViewer scrollViewer
             && scrollViewer.GetValue(ScrollViewerOwnerProperty) is { } itemsControl)
-            itemsControl.RequestLoadCheck();
+            itemsControl.RequestLoadCheck(resumeInterrupted:
+                (e.OffsetDelta.Y > 0 || e.OffsetDelta.X > 0)
+                && e.ExtentDelta == default && e.ViewportDelta == default);
+    }
+
+    private static void OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
+    {
+        // A wheel gesture at the bottom may not change the offset, but still means "continue loading".
+        if (sender is ItemsControl itemsControl && (e.Delta.Y < 0 || e.Delta.X < 0))
+            itemsControl.RequestLoadCheck(resumeInterrupted: true);
     }
 
     private static void OnScrollViewerSizeChanged(object? sender, SizeChangedEventArgs e)

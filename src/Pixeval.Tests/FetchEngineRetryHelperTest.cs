@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 using Mako;
 using Mako.Engine;
 using Mako.Global.Exception;
+using Mako.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Pixeval.Utilities;
 
 namespace Pixeval.Tests;
 

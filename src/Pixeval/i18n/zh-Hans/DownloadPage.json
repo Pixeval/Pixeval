@@ -3,6 +3,7 @@
   "CancelSelectionButtonFormatted": "取消选择（{0}）",
   "DeleteDownloadHistoryRecordsFormatted": "删除 {0} 条历史记录",
   "FetchingFolderSubtitleFormatted": "正在获取中，已获取 {0} 个作品",
+  "RateLimitedFolderSubtitleFormatted": "正在限流，已获取 {0} 个作品；下次重试时间：{1:yyyy-MM-dd HH:mm:ss}（本地时间）",
   "FolderSubtitleFormatted": "{0} 个下载任务",
   "OrdinaryDownloadsButton": {
     "Label": "普通下载"

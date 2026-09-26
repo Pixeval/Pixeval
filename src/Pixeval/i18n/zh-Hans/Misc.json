@@ -1,4 +1,8 @@
 {
+  "RateLimitNotification": {
+    "Title": "429 Rate Limit 触发限流",
+    "ContentFormatted": "建议等待几分钟后继续。下次可尝试时间：{0:yyyy-MM-dd HH:mm:ss}（本地时间）。"
+  },
   "AddedToWatchLater": "已添加到稍后再看",
   "AddedToBookmark": "已添加收藏",
   "RemovedFromWatchLater": "已从稍后再看移除",

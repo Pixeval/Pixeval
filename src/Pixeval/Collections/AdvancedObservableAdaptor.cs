@@ -130,6 +130,8 @@ public class AdvancedObservableAdaptor<TIn, TOut>
 
     public bool HasMoreItems => (Source as IIncrementalLoading)?.HasMoreItems ?? false;
 
+    public bool IsInterrupted => (Source as IIncrementalLoading)?.IsInterrupted ?? false;
+
     public Range Range
     {
         get => _inner.Range;

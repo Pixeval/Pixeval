@@ -18,4 +18,7 @@ public interface IIncrementalLoading
     /// <summary>Gets a sentinel value that supports incremental loading implementations.</summary>
     /// <returns>true if additional unloaded items remain in the view; otherwise, false.</returns>
     bool HasMoreItems { get; }
+
+    /// <summary>Whether loading stopped temporarily and can be resumed explicitly.</summary>
+    bool IsInterrupted => false;
 }

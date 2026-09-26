@@ -39,6 +39,8 @@ public class IncrementalSource<T, TViewModel> : IIncrementalSource<TViewModel>, 
 
     public bool HasMoreItems { get; private set; } = true;
 
+    public bool IsInterrupted { get; private set; }
+
     public IncrementalSource(IAsyncEnumerable<T?> asyncEnumerable, Func<T, int, TViewModel> factory, int limit = -1)
     {
         ArgumentNullException.ThrowIfNull(asyncEnumerable);
@@ -46,10 +48,8 @@ public class IncrementalSource<T, TViewModel> : IIncrementalSource<TViewModel>, 
         _asyncEnumerable = asyncEnumerable;
         _factory = factory;
         _limit = limit;
-        _asyncEnumerator = asyncEnumerable is IFetchEngine<T> engine
-            ? FetchEngineRetryHelper.StreamAsync(engine, token: _lifetimeCts.Token)
-                .GetAsyncEnumerator(_lifetimeCts.Token)
-            : _asyncEnumerable.GetAsyncEnumerator(_lifetimeCts.Token);
+        // Keep the engine enumerator itself: an interrupted page can be resumed explicitly without automatic retries.
+        _asyncEnumerator = _asyncEnumerable.GetAsyncEnumerator(_lifetimeCts.Token);
     }
 
     public virtual async Task<IReadOnlyCollection<TViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken token = default)
@@ -57,6 +57,11 @@ public class IncrementalSource<T, TViewModel> : IIncrementalSource<TViewModel>, 
         BeginRequest();
         try
         {
+            if (IsInterrupted && _asyncEnumerable is IFetchEngine<T> engine
+                && engine.MakoClient.AppApiRetryAt > DateTimeOffset.UtcNow)
+                return [];
+            IsInterrupted = false;
+            HasMoreItems = true;
             var result = new List<TViewModel>(pageSize);
             var i = 0;
             while (i < pageSize)
@@ -86,7 +91,11 @@ public class IncrementalSource<T, TViewModel> : IIncrementalSource<TViewModel>, 
                 }
                 else
                 {
-                    HasMoreItems = false;
+                    IsInterrupted = _asyncEnumerable is IEngineHandleSource
+                    {
+                        EngineHandle: { IsCompleted: false, IsCancelled: false }
+                    };
+                    HasMoreItems = IsInterrupted;
                     return result;
                 }
             }

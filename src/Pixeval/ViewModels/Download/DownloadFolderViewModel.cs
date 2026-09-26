@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Pixeval.Controls;
 using Pixeval.Download;
@@ -20,6 +21,7 @@ public sealed partial class DownloadFolderViewModel(WorkSubscriptionEntry subscr
     : ViewModelBase, IDownloadListEntryViewModel, IDisposable
 {
     private bool _isDisposed;
+    private DispatcherTimer? _rateLimitTimer;
 
     public WorkSubscriptionEntry Subscription { get; } = subscription;
 
@@ -31,6 +33,8 @@ public sealed partial class DownloadFolderViewModel(WorkSubscriptionEntry subscr
 
     [ObservableProperty] public partial int FetchedCount { get; private set; }
 
+    [ObservableProperty] public partial DateTimeOffset? RetryAt { get; private set; }
+
     public string Title => GetDisplayName(Subscription);
 
     public static string GetDisplayName(WorkSubscriptionEntry subscription) =>
@@ -39,7 +43,9 @@ public sealed partial class DownloadFolderViewModel(WorkSubscriptionEntry subscr
         $"{SymbolComboBoxItem.GetResource(subscription.WorkKind)}";
 
     public string Subtitle => IsFetching
-        ? I18NManager.GetResource(DownloadPageResources.FetchingFolderSubtitleFormatted, FetchedCount)
+        ? RetryAt is { } retryAt && retryAt > DateTimeOffset.UtcNow
+            ? I18NManager.GetResource(DownloadPageResources.RateLimitedFolderSubtitleFormatted, FetchedCount, retryAt.ToLocalTime())
+            : I18NManager.GetResource(DownloadPageResources.FetchingFolderSubtitleFormatted, FetchedCount)
         : I18NManager.GetResource(DownloadPageResources.FolderSubtitleFormatted, Items.Count);
 
     public bool HasItems => Items.Count is not 0;
@@ -95,6 +101,21 @@ public sealed partial class DownloadFolderViewModel(WorkSubscriptionEntry subscr
 
     partial void OnFetchedCountChanged(int value) => OnPropertyChanged(nameof(Subtitle));
 
+    partial void OnRetryAtChanged(DateTimeOffset? value)
+    {
+        _rateLimitTimer?.Stop();
+        if (value > DateTimeOffset.UtcNow)
+        {
+            _rateLimitTimer ??= new DispatcherTimer(TimeSpan.FromSeconds(1), DispatcherPriority.Background, (_, _) =>
+            {
+                if (RetryAt <= DateTimeOffset.UtcNow)
+                    RetryAt = null;
+            });
+            _rateLimitTimer.Start();
+        }
+        OnPropertyChanged(nameof(Subtitle));
+    }
+
     internal void UpdateFetchState(WorkSubscriptionFetchState? state)
     {
         if (state is not
@@ -105,10 +126,12 @@ public sealed partial class DownloadFolderViewModel(WorkSubscriptionEntry subscr
         {
             IsFetching = false;
             FetchedCount = 0;
+            RetryAt = null;
             return;
         }
 
         FetchedCount = state.FetchedCount;
+        RetryAt = state.RetryAt;
         IsFetching = true;
     }
 
@@ -177,6 +200,7 @@ public sealed partial class DownloadFolderViewModel(WorkSubscriptionEntry subscr
             return;
 
         _isDisposed = true;
+        _rateLimitTimer?.Stop();
         foreach (var item in Items)
             item.DownloadTask.PropertyChanged -= DownloadTaskOnPropertyChanged;
         Items.Clear();

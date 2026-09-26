@@ -22,6 +22,9 @@ public interface IIncrementalSource<TSource>
     /// </summary>
     bool HasMoreItems { get; }
 
+    /// <summary>Whether loading stopped temporarily and can be resumed explicitly.</summary>
+    bool IsInterrupted => false;
+
     /// <summary>
     /// This method is invoked every time the view need to show more items. Retrieves items based on <paramref name="pageIndex"/> and <paramref name="pageSize"/> arguments.
     /// </summary>

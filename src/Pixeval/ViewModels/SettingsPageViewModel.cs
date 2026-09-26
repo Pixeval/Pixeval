@@ -72,6 +72,8 @@ public class SettingsPageViewModel : ViewModelBase
                 .Bool(t => t.HideHomePageToolbar)
                 .Bool(t => t.HideHomePageCardTitle))
             .NewGroup(t => t.NetworkSettings, group => group
+                .Int(t => t.ApiRequestCooldown, 0, 5000, 100,
+                    entry => entry.ValueChanged += value => App.AppViewModel.MakoClient.Configuration.ApiRequestCooldown = value)
                 .DomainFronting(t => t.PixivDomainFronting, t => t.EnablePixivDomainFronting, entry =>
                         entry.Enum(t => t.PixivDomainFrontingType,
                                 e => e.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.DomainFrontingType = (DomainFrontingType) t)

@@ -8,6 +8,9 @@ namespace Pixeval.AppManagement.Settings;
 
 public record NetworkSettingsGroup
 {
+    [SettingsEntry(Symbol.Timer, AppSettingsResources.ApiRequestCooldownEntry.Header, AppSettingsResources.ApiRequestCooldownEntry.Description)]
+    public int ApiRequestCooldown { get; set; } = 700;
+
     [SettingsEntry(Symbol.Router, AppSettingsResources.ProxyTypeEntry.Header, AppSettingsResources.ProxyTypeEntry.Description)]
     public ProxySettings ProxySettings { get; set; } = new();
 
