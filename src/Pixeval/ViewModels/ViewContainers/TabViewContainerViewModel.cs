@@ -65,6 +65,15 @@ public partial class TabViewContainerViewModel : ViewModelBase, IDisposable
         Avatar = avatar;
         if (!ReferenceEquals(previousAvatar, avatar))
             previousAvatar?.Dispose();
+        if (user is null)
+        {
+            RestrictedCache = false;
+            RestrictedModeIdle = true;
+            AiShowCache = false;
+            AiShowIdle = true;
+            return;
+        }
+
         // await ToggleRestrictedModeAsync(true);
         await RefreshAiShowAsync(cancellationTokenSource);
     }
@@ -96,14 +105,15 @@ public partial class TabViewContainerViewModel : ViewModelBase, IDisposable
 
     public Uri? Url => User?.WebsiteUri;
 
-    [ObservableProperty] public partial bool RestrictedModeIdle { get; private set; } = true;
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ToggleRestrictedModeCommand))]
+    public partial bool RestrictedModeIdle { get; private set; } = true;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ToggleAiShowCommand))]
     public partial bool AiShowIdle { get; private set; } = true;
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(ToggleRestrictedModeCommand))]
     public partial bool RestrictedCache { get; private set; }
 
     [ObservableProperty] public partial bool AiShowCache { get; private set; }
