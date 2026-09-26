@@ -28,6 +28,7 @@ public static partial class IoHelper
         IProgress<double>? progress = null,
         long startPosition = 0,
         int bufferSize = 1 << 15,
+        Func<Stream, CancellationToken, Task>? onDataAvailable = null,
         CancellationToken token = default)
     {
         try
@@ -75,6 +76,19 @@ public static partial class IoHelper
                 {
                     await destination.WriteAsync(new(buffer, 0, bytesRead), token).ConfigureAwait(false);
                     totalRead += bytesRead;
+                    if (onDataAvailable is not null)
+                    {
+                        // The reader borrows the buffer exclusively; never copy the growing download.
+                        var position = destination.Position;
+                        try
+                        {
+                            await onDataAvailable(destination, token).ConfigureAwait(false);
+                        }
+                        finally
+                        {
+                            destination.Position = position;
+                        }
+                    }
                     // reduce the frequency of the invocation of the callback, otherwise it will draw a severe performance impact
 
                     var now = DateTime.UtcNow;
@@ -107,6 +121,7 @@ public static partial class IoHelper
         IProgress<double>? progress = null,
         long startPosition = 0,
         int bufferSize = 4096,
+        Func<Stream, CancellationToken, Task>? onDataAvailable = null,
         CancellationToken token = default)
     {
         Stream? streamToDispose = null;
@@ -134,6 +149,7 @@ public static partial class IoHelper
                 progress,
                 startPosition,
                 bufferSize,
+                onDataAvailable,
                 token);
             if (result is not null)
                 return Result<Stream>.AsFailure(result);
@@ -188,7 +204,7 @@ public static partial class IoHelper
             try
             {
                 return await httpClient.DownloadMemoryStreamAsync(
-                    new Uri(url), progress, startPosition, bufferSize, token);
+                    new Uri(url), progress, startPosition, bufferSize, token: token);
             }
             catch (Exception e)
             {
@@ -202,8 +218,9 @@ public static partial class IoHelper
             IProgress<double>? progress = null,
             long startPosition = 0,
             int bufferSize = 4096,
+            Func<Stream, CancellationToken, Task>? onDataAvailable = null,
             CancellationToken token = default)
-            => DownloadMemoryStreamCoreAsync(httpClient, uri, progress, startPosition, bufferSize, token);
+            => DownloadMemoryStreamCoreAsync(httpClient, uri, progress, startPosition, bufferSize, onDataAvailable, token);
 
         /// <summary>
         /// Downloads or copies the content located by <paramref name="uri" /> to a
@@ -225,7 +242,7 @@ public static partial class IoHelper
                     progress,
                     startPosition,
                     bufferSize,
-                    token)).UnwrapOrThrow();
+                    token: token)).UnwrapOrThrow();
                 await source.CopyToAsync(destination, token);
                 progress?.Report(100);
                 return null;

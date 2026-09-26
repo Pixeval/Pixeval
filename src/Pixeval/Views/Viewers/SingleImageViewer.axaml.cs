@@ -23,6 +23,21 @@ public partial class SingleImageViewer : UserControl
     private const string ScrollableImageTemplateKey = "ScrollableImageTemplate";
     private const string PlainImageTemplateKey = "PlainImageTemplate";
 
+    public static readonly DirectProperty<SingleImageViewer, bool> IsImageReadyProperty =
+        AvaloniaProperty.RegisterDirect<SingleImageViewer, bool>(nameof(IsImageReady), viewer => viewer.IsImageReady);
+
+    public bool IsImageReady
+    {
+        get;
+        private set
+        {
+            SetAndRaise(IsImageReadyProperty, ref field, value);
+            ImagePresenter.Opacity = value ? 1 : 0;
+            if (value)
+                _fitViewModel?.ReleaseLoadingPreview();
+        }
+    }
+
     public static readonly StyledProperty<bool> UseScrollViewProperty =
         AvaloniaProperty.Register<SingleImageViewer, bool>(
             nameof(UseScrollView),
@@ -33,6 +48,7 @@ public partial class SingleImageViewer : UserControl
     private IAnimatedBitmap? _fitSource;
     private bool _initialFitApplied;
     private bool _initialFitQueued;
+    private double? _pendingFitFactor;
     internal AnimatedImage? ImageViewer;
     internal ScrollView? ViewerScrollView;
 
@@ -84,6 +100,7 @@ public partial class SingleImageViewer : UserControl
             return;
 
         _subscribedViewModel = viewModel;
+        _subscribedViewModel.AttachPreview();
         _subscribedViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         QueueInitialZoomToFit();
     }
@@ -91,6 +108,7 @@ public partial class SingleImageViewer : UserControl
     private void UnsubscribeFromViewModel()
     {
         _subscribedViewModel?.PropertyChanged -= ViewModelOnPropertyChanged;
+        _subscribedViewModel?.DetachPreview();
 
         _subscribedViewModel = null;
     }
@@ -155,7 +173,9 @@ public partial class SingleImageViewer : UserControl
 
         // Hold the stateful viewer as direct content so a logical-tree reattach cannot rebuild its data template.
         ImagePresenter.Content = template.Build(DataContext);
+        IsImageReady = false;
         _initialFitApplied = false;
+        _pendingFitFactor = null;
         QueueInitialZoomToFit();
     }
 
@@ -167,8 +187,10 @@ public partial class SingleImageViewer : UserControl
 
         _fitViewModel = viewModel;
         _fitSource = source;
+        IsImageReady = false;
         _initialFitApplied = false;
         _initialFitQueued = false;
+        _pendingFitFactor = null;
     }
 
     private void SetViewerControls(AnimatedImage? imageViewer, ScrollView? scrollView)
@@ -203,11 +225,18 @@ public partial class SingleImageViewer : UserControl
         var zoomFactor = e.GetNewValue<double>();
         if (DataContext is SingleViewerViewModel viewModel && viewModel.ZoomFactor != zoomFactor)
             viewModel.ZoomFactor = zoomFactor;
+        if (_pendingFitFactor is { } expected && Math.Abs(zoomFactor - expected) < 0.000001)
+        {
+            _pendingFitFactor = null;
+            _initialFitApplied = true;
+            QueueInitialZoomToFit();
+        }
     }
 
     private bool TryZoomToFit(bool animation)
     {
-        if (ImageViewer is not Control { Bounds.Size: { Width: not 0, Height: not 0 } imageSize }
+        if (ImageViewer is not { Bounds: { Width: > 0, Height: > 0 } }
+            || _fitSource is not { IsInitialized: true, Size: { Width: > 0, Height: > 0 } imageSize }
             || ViewerScrollView is not { } scrollView)
             return false;
 
@@ -221,17 +250,25 @@ public partial class SingleImageViewer : UserControl
         var fitFactor = double.Min(ratio.X, ratio.Y);
         scrollView.MinZoomFactor = double.Min(scrollView.MinZoomFactor, fitFactor);
         scrollView.MaxZoomFactor = double.Max(scrollView.MaxZoomFactor, fitFactor);
+        if (!animation && !IsImageReady)
+            _pendingFitFactor = fitFactor;
         scrollView.ZoomTo(fitFactor, animation);
-        return true;
+        return animation || Math.Abs(scrollView.ZoomFactor - fitFactor) < 0.000001;
     }
 
     private void QueueInitialZoomToFit()
     {
-        if (!UseScrollView
-            || _initialFitApplied
-            || _initialFitQueued
+        // Keep the final control laid out but transparent until it has its initial zoom.
+        if (_initialFitQueued
             || _fitViewModel is not { LoadSuccessfully: true } viewModel)
             return;
+
+        if (!UseScrollView || (_initialFitApplied && _pendingFitFactor is null) || TryZoomToFit(false))
+        {
+            _initialFitApplied = true;
+            IsImageReady = true;
+            return;
+        }
 
         var source = _fitSource;
         _initialFitQueued = true;
@@ -244,11 +281,14 @@ public partial class SingleImageViewer : UserControl
             _initialFitQueued = false;
             if (VisualRoot is null
                 || !ReferenceEquals(DataContext, viewModel)
-                || _initialFitApplied)
+                || IsImageReady)
                 return;
 
             if (TryZoomToFit(false))
+            {
                 _initialFitApplied = true;
+                IsImageReady = true;
+            }
         }, DispatcherPriority.Loaded);
     }
 

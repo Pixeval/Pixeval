@@ -58,6 +58,7 @@ public static class CacheHelper
         string platform,
         IAnimatedImageFrame frame,
         IProgress<double>? progress = null,
+        Func<Stream, CancellationToken, Task>? onDataAvailable = null,
         CancellationToken token = default)
     {
         var key = frame.SingleImageUri;
@@ -69,7 +70,7 @@ public static class CacheHelper
 
         if (frame.PreferredAnimatedImageType is SingleAnimatedImageType.SingleZipFile)
         {
-            var sourceStream = await GetStreamAsync(platform, key.OriginalString, progress, token);
+            var sourceStream = await GetStreamAsync(platform, key.OriginalString, progress, onDataAvailable, token);
             if (sourceStream is null)
                 return AnimatedImageNotAvailable.Value;
 
@@ -96,7 +97,7 @@ public static class CacheHelper
         }
 
         // SingleAnimatedImageType.SingleFile
-        if (await GetSingleImageAsync(platform, key, progress, token) is { } bitmap)
+        if (await GetSingleImageAsync(platform, key, progress, onDataAvailable, token) is { } bitmap)
             return bitmap;
 
         return AnimatedImageNotAvailable.Value;
@@ -109,13 +110,15 @@ public static class CacheHelper
         string platform,
         IImageFrame frame,
         IProgress<double>? progress = null,
+        Func<Stream, CancellationToken, Task>? onDataAvailable = null,
         CancellationToken token = default)
-        => GetSingleImageAsync(platform, frame.ImageUri, progress, token);
+        => GetSingleImageAsync(platform, frame.ImageUri, progress, onDataAvailable, token);
 
     private static async ValueTask<IAnimatedBitmap> GetSingleImageAsync(
         string platform,
         Uri frameUri,
         IProgress<double>? progress = null,
+        Func<Stream, CancellationToken, Task>? onDataAvailable = null,
         CancellationToken token = default)
     {
         try
@@ -127,7 +130,7 @@ public static class CacheHelper
 
             var client = App.AppViewModel.GetRequiredPlatformService<IDownloadHttpClientService>(platform)
                 .GetImageDownloadClient();
-            if (await client.DownloadMemoryStreamAsync(frameUri, progress, token: token) is
+            if (await client.DownloadMemoryStreamAsync(frameUri, progress, token: token, onDataAvailable: onDataAvailable) is
                 Result<Stream>.Success(var s))
             {
                 if (useFileCache)
@@ -139,6 +142,7 @@ public static class CacheHelper
                 return IAnimatedBitmap.Load(s, true);
             }
 
+            token.ThrowIfCancellationRequested();
             return AnimatedImageNotAvailable.Value;
         }
         catch (OperationCanceledException) when (token.IsCancellationRequested)
@@ -158,6 +162,7 @@ public static class CacheHelper
         string platform,
         IAnimatedImageFrame frame,
         IProgress<double>? progress = null,
+        Func<Stream, CancellationToken, Task>? onDataAvailable = null,
         CancellationToken token = default)
     {
         if (frame.PreferredAnimatedImageType is not SingleAnimatedImageType.MultiFiles)
@@ -189,7 +194,7 @@ public static class CacheHelper
                         if (await client.DownloadMemoryStreamAsync(
                                 uri,
                                 progress?.Let(t => new Progress<double>(d => t.Report(sp + (ratio * d)))),
-                                token: token) is Result<Stream>.Success(var s2))
+                                token: token, onDataAvailable: onDataAvailable) is Result<Stream>.Success(var s2))
                         {
                             if (useFileCache)
                             {
@@ -241,7 +246,7 @@ public static class CacheHelper
     {
         try
         {
-            return await GetStreamAsync(platform, key, progress, token);
+            return await GetStreamAsync(platform, key, progress, token: token);
         }
         catch (OperationCanceledException) when (token.IsCancellationRequested)
         {
@@ -290,7 +295,7 @@ public static class CacheHelper
     {
         try
         {
-            return await GetStreamAsync(platform, key, progress, token) is { } stream
+            return await GetStreamAsync(platform, key, progress, token: token) is { } stream
                 ? await stream.DecodeBitmapImageAsync(true, desiredWidth)
                 : WrappedImageNotAvailable.Value;
         }
@@ -315,6 +320,7 @@ public static class CacheHelper
         string platform,
         string key,
         IProgress<double>? progress = null,
+        Func<Stream, CancellationToken, Task>? onDataAvailable = null,
         CancellationToken token = default)
     {
         if (TryGetStream(key) is { } stream)
@@ -323,7 +329,7 @@ public static class CacheHelper
 
         if (await App.AppViewModel.AppServiceProvider.GetRequiredKeyedService<IDownloadHttpClientService>(platform)
                 .GetImageDownloadClient()
-                .DownloadMemoryStreamAsync(key, progress, token: token) is Result<Stream>.Success(var s))
+                .DownloadMemoryStreamAsync(new Uri(key), progress, token: token, onDataAvailable: onDataAvailable) is Result<Stream>.Success(var s))
         {
             if (useFileCache)
             {
@@ -334,6 +340,7 @@ public static class CacheHelper
             return s;
         }
 
+        token.ThrowIfCancellationRequested();
         return null;
     }
 

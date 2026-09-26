@@ -1,4 +1,4 @@
-<UserControl
+﻿<UserControl
     x:Class="Pixeval.Views.Viewers.SingleImageViewer"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -137,9 +137,16 @@
         </ContextMenu>
     </UserControl.ContextMenu>
     <Panel>
+        <!--  The download preview is independent of zoom/layout of the final full-resolution image.  -->
+        <Panel IsHitTestVisible="False" IsVisible="{Binding !#Root.IsImageReady}">
+            <!--  Keep the cached preview behind transparent, not-yet-decoded pixels.  -->
+            <Image Source="{Binding CachedPreviewSource}" Stretch="Uniform" />
+            <Image Source="{Binding LoadingPreview}" Stretch="Uniform" />
+        </Panel>
         <ContentPresenter
             x:Name="ImagePresenter"
-            IsVisible="{Binding LoadSuccessfully}"
+            IsHitTestVisible="{Binding #Root.IsImageReady}"
+            Opacity="0"
             PropertyChanged="ImagePresenter_OnPropertyChanged" />
 
         <!--  加载中遮罩  -->
@@ -149,7 +156,7 @@
             VerticalAlignment="Center"
             Background="Gray"
             CornerRadius="{StaticResource ControlCornerRadius}"
-            IsVisible="{Binding LoadSuccessfully, Converter={x:Static BoolConverters.Not}}">
+            IsVisible="{Binding !#Root.IsImageReady}">
             <StackPanel Spacing="10">
                 <ProgressBar
                     Width="200"
