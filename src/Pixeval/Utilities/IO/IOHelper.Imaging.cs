@@ -48,7 +48,7 @@ public static partial class IoHelper
 
     public static UgoiraDownloadFormatToken GetAvailableUgoiraDownloadFormatToken(string? ugoiraDownloadFormat = null)
     {
-        ugoiraDownloadFormat ??= App.AppViewModel.AppSettings.DownloadSettings.UgoiraDownloadFormat;
+        ugoiraDownloadFormat ??= App.AppViewModel.AppSettings.DownloadSettings.DownloadFormats.UgoiraDownloadFormat;
         var token = new UgoiraDownloadFormatToken(ugoiraDownloadFormat);
         if (token.BuiltInFormat is UgoiraDownloadFormat.Original)
             return token;
@@ -62,7 +62,7 @@ public static partial class IoHelper
 
     public static IllustrationDownloadFormatToken GetAvailableIllustrationDownloadFormatToken(string? illustrationDownloadFormat = null)
     {
-        illustrationDownloadFormat ??= App.AppViewModel.AppSettings.DownloadSettings.IllustrationDownloadFormat;
+        illustrationDownloadFormat ??= App.AppViewModel.AppSettings.DownloadSettings.DownloadFormats.IllustrationDownloadFormat;
         var token = new IllustrationDownloadFormatToken(illustrationDownloadFormat);
         if (token.BuiltInFormat is IllustrationDownloadFormat.Original)
             return token;
@@ -76,7 +76,7 @@ public static partial class IoHelper
 
     public static NovelDownloadFormatToken GetAvailableNovelDownloadFormatToken(string? novelDownloadFormat = null)
     {
-        novelDownloadFormat ??= App.AppViewModel.AppSettings.DownloadSettings.NovelDownloadFormat;
+        novelDownloadFormat ??= App.AppViewModel.AppSettings.DownloadSettings.DownloadFormats.NovelDownloadFormat;
         var token = new NovelDownloadFormatToken(novelDownloadFormat);
         if (token.BuiltInFormat is not null)
             return token;
@@ -207,7 +207,7 @@ public static partial class IoHelper
         }
         catch
         {
-            foreach (var stream in streams.Keys) 
+            foreach (var stream in streams.Keys)
                 await stream.DisposeAsync();
             throw;
         }

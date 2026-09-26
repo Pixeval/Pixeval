@@ -4,7 +4,7 @@
 using AutoSettingsPage;
 using FluentIcons.Common;
 
-namespace Pixeval.AppManagement;
+namespace Pixeval.AppManagement.Settings;
 
 public record McpSettingsGroup
 {

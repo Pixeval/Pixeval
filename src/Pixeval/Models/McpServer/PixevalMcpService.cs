@@ -13,6 +13,7 @@ using Mako.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
 using Pixeval.AppManagement;
+using Pixeval.AppManagement.Settings;
 using Pixeval.Download;
 using Pixeval.Mcp;
 using Pixeval.Mcp.Dtos;

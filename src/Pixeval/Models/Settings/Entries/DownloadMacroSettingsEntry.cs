@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using AutoSettingsPage.Models;
-using Pixeval.AppManagement;
+using Pixeval.AppManagement.Settings;
 using Pixeval.Controls;
 using Pixeval.Download.MacroParser;
 using Pixeval.Models.Download;

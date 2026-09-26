@@ -1,7 +1,7 @@
 // Copyright (c) Pixeval.
 // Licensed under the GPL-3.0 License.
 
-using Pixeval.AppManagement;
+using Pixeval.AppManagement.Settings;
 using Pixeval.Mcp.Dtos;
 
 namespace Pixeval.Models.McpServer;
@@ -29,8 +29,8 @@ internal static class PixevalSettingsSummaryDtoExtensions
                 settings.Theme.ToString(),
                 actualTheme,
                 settings.UseFileCache,
-                settings.LimitFileCacheSize,
-                settings.FileCacheSizeLimitInMegabytes,
+                settings.FileCache.LimitFileCacheSize,
+                settings.FileCache.FileCacheSizeLimitInMegabytes,
                 settings.AppFontFamily.Count);
     }
 
@@ -38,11 +38,11 @@ internal static class PixevalSettingsSummaryDtoExtensions
     {
         public PixevalNetworkSettingsSummaryDto ToMcpDto() =>
             new(
-                settings.EnablePixivDomainFronting,
-                settings.PixivDomainFrontingType.ToString(),
-                settings.ProxyType.ToString(),
-                !string.IsNullOrWhiteSpace(settings.Proxy),
-                settings.EnableGitHubDomainFronting,
+                settings.PixivDomainFronting.EnablePixivDomainFronting,
+                settings.PixivDomainFronting.PixivDomainFrontingType.ToString(),
+                settings.ProxySettings.ProxyType.ToString(),
+                !string.IsNullOrWhiteSpace(settings.ProxySettings.Proxy),
+                settings.GitHubDomainFronting.EnableGitHubDomainFronting,
                 !string.IsNullOrWhiteSpace(settings.MirrorHost),
                 !string.IsNullOrWhiteSpace(settings.WebCookie),
                 ToPixivNameResolverMcpDto(settings),
@@ -53,7 +53,7 @@ internal static class PixevalSettingsSummaryDtoExtensions
     {
         public PixevalBrowsingExperienceSettingsSummaryDto ToMcpDto() =>
             new(
-                settings.ThumbnailLayoutType.ToString(),
+                settings.ThumbnailLayout.ThumbnailLayoutType.ToString(),
                 settings.BrowseMode.ToString(),
                 settings.BrowseDirection.ToString(),
                 settings.IllustrationViewerAutoPlayInterval,
@@ -71,8 +71,8 @@ internal static class PixevalSettingsSummaryDtoExtensions
             new(
                 !string.IsNullOrWhiteSpace(settings.SauceNaoApiKey),
                 settings.DefaultSimpleWorkType.ToString(),
-                settings.IllustrationRankOption.ToString(),
-                settings.NovelRankOption.ToString());
+                settings.RankOptions.IllustrationRankOption.ToString(),
+                settings.RankOptions.NovelRankOption.ToString());
     }
 
     extension(DownloadSettingsGroup settings)
@@ -82,9 +82,9 @@ internal static class PixevalSettingsSummaryDtoExtensions
                 settings.OverwriteDownloadedFile,
                 settings.MaxDownloadTaskConcurrencyLevel,
                 settings.DownloadPathMacro,
-                settings.IllustrationDownloadFormat,
-                settings.UgoiraDownloadFormat,
-                settings.NovelDownloadFormat);
+                settings.DownloadFormats.IllustrationDownloadFormat,
+                settings.DownloadFormats.UgoiraDownloadFormat,
+                settings.DownloadFormats.NovelDownloadFormat);
     }
 
     extension(McpSettingsGroup settings)
@@ -110,19 +110,19 @@ internal static class PixevalSettingsSummaryDtoExtensions
 
     private static PixevalPixivNameResolverSummaryDto ToPixivNameResolverMcpDto(NetworkSettingsGroup settings) =>
         new(
-            settings.PixivAppApiNameResolver.Count,
-            settings.PixivWebApiNameResolver.Count,
-            settings.PixivAccountNameResolver.Count,
-            settings.PixivOAuthNameResolver.Count,
-            settings.PixivImageNameResolver.Count,
-            settings.PixivImageNameResolver2.Count);
+            settings.PixivDomainFronting.PixivAppApiNameResolver.Count,
+            settings.PixivDomainFronting.PixivWebApiNameResolver.Count,
+            settings.PixivDomainFronting.PixivAccountNameResolver.Count,
+            settings.PixivDomainFronting.PixivOAuthNameResolver.Count,
+            settings.PixivDomainFronting.PixivImageNameResolver.Count,
+            settings.PixivDomainFronting.PixivImageNameResolver2.Count);
 
     private static PixevalGitHubNameResolverSummaryDto ToGitHubNameResolverMcpDto(NetworkSettingsGroup settings) =>
         new(
-            settings.GitHubNameResolver.Count,
-            settings.GitHubApiNameResolver.Count,
-            settings.GitHubAvatarNameResolver.Count,
-            settings.GitHubUserContentNameResolver.Count,
-            settings.GitHubAssetsNameResolver.Count,
-            settings.GitHubCodeloadNameResolver.Count);
+            settings.GitHubDomainFronting.GitHubNameResolver.Count,
+            settings.GitHubDomainFronting.GitHubApiNameResolver.Count,
+            settings.GitHubDomainFronting.GitHubAvatarNameResolver.Count,
+            settings.GitHubDomainFronting.GitHubUserContentNameResolver.Count,
+            settings.GitHubDomainFronting.GitHubAssetsNameResolver.Count,
+            settings.GitHubDomainFronting.GitHubCodeloadNameResolver.Count);
 }

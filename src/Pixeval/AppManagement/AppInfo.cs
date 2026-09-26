@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform;
+using Pixeval.AppManagement.Settings;
 using Pixeval.Models.Home;
 using Pixeval.Utilities;
 using SharpYaml;
@@ -128,7 +129,12 @@ public static class AppInfo
         if (!File.Exists(AppSettingsPath))
             return null;
 
-        return TryLoad(() => YamlSerializer.DeserializeFile(AppSettingsPath, SettingsSerializerContext.Default.AppSettings), logger);
+        return TryLoad(() =>
+        {
+            // TODO: 5.0.12 到 5.0.13 迁移设置使用，在 5.0.13 之后可以删除
+            using var stream = File.OpenRead(AppSettingsPath);
+            return LegacyAppSettingsMigration.Deserialize(stream);
+        }, logger);
     }
 
     public static LoginContext? LoadLoginContext(FileLogger logger)

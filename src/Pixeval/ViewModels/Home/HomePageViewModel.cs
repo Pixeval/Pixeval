@@ -9,7 +9,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mako;
 using Mako.Global.Enum;
-using Pixeval.AppManagement;
+using Pixeval.AppManagement.Settings;
 using Pixeval.Controls;
 using Pixeval.I18N;
 using Pixeval.Models.Home;
@@ -257,8 +257,8 @@ public partial class HomePageViewModel : ViewModelBase
     {
         var simpleWorkType = _sourceSimpleWorkTypeEditor.GetValue<SimpleWorkType>();
         var rankOption = simpleWorkType is SimpleWorkType.Illustration
-            ? Settings.SearchSettings.IllustrationRankOption
-            : Settings.SearchSettings.NovelRankOption;
+            ? Settings.SearchSettings.RankOptions.IllustrationRankOption
+            : Settings.SearchSettings.RankOptions.NovelRankOption;
         _sourceRankOptionEditor.Reset(SymbolComboBoxItem.GetValues<RankOption>(simpleWorkType), rankOption);
     }
 

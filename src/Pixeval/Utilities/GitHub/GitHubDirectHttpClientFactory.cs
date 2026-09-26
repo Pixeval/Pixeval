@@ -13,6 +13,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using Pixeval.AppManagement;
+using Pixeval.AppManagement.Settings;
 
 namespace Pixeval.Utilities.GitHub;
 
@@ -51,7 +52,7 @@ public static class GitHubDirectHttpClientFactory
         CancellationToken token)
     {
         var endpoint = context.DnsEndPoint;
-        if (networkSettings.EnableGitHubDomainFronting &&
+        if (networkSettings.GitHubDomainFronting.EnableGitHubDomainFronting &&
             GitHubHttpOptions.TryGetConfiguredAddresses(networkSettings, endpoint.Host, out var addresses))
         {
             var distinctAddresses = addresses.Distinct().ToArray();

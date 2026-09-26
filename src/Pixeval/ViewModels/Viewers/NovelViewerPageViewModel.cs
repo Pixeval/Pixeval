@@ -16,7 +16,7 @@ using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Mako.Global.Enum;
 using Mako.Model;
-using Pixeval.AppManagement;
+using Pixeval.AppManagement.Settings;
 using Pixeval.I18N;
 using Pixeval.Models.Blocking;
 using Pixeval.Models.Settings;

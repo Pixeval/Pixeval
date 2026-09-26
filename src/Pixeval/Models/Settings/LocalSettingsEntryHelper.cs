@@ -15,7 +15,7 @@ using Avalonia.Media;
 using FluentIcons.Common;
 using Mako;
 using Mako.Global.Enum;
-using Pixeval.AppManagement;
+using Pixeval.AppManagement.Settings;
 using Pixeval.Controls;
 using Pixeval.Extensions.Common.Settings;
 using Pixeval.I18N;
@@ -60,7 +60,7 @@ public static class LocalSettingsEntryHelper
             .AddPredefined()
             .AddOpenGeneric<ISingleValueSettingsEntry<ObservableCollection<string>>, StringCollectionSettingsExpander>(typeof(CollectionSettingsEntry<,>))
             .AddOpenGeneric<ISingleValueSettingsEntry<ObservableCollection<string>>, StringCollectionSettingsExpander>(typeof(FontSettingsEntry<>))
-            .AddOpenGeneric<IMultiValuesWithMainValueSettingsEntry<ISingleValueSettingsEntry<bool>>, DomainFrontingSettingsExpander>(typeof(DomainFrontingSettingsEntry<>))
+            .AddOpenGeneric<IMultiValuesWithMainValueSettingsEntry<ISingleValueSettingsEntry<bool>>, DomainFrontingSettingsExpander>(typeof(DomainFrontingSettingsEntry<,>))
             .Add<DownloadMacroSettingsEntry, DownloadMacroSettingsExpander>()
             .Add<WorkSubscriptionsSettingsEntry, WorkSubscriptionsSettingsExpander>()
             .Add<BlockedUsersSettingsEntry, BlockedUsersSettingsExpander>()
@@ -250,6 +250,27 @@ public static class LocalSettingsEntryHelper
             if (entry is ISettingsValueReset<NovelSettingsGroup> novel)
                 novel.ValueReset(resetAppSettings.NovelSettings);
 
+            if (entry is ISettingsValueReset<FileCacheSettings> fileCache)
+                fileCache.ValueReset(resetAppSettings.ApplicationSettings.FileCache);
+
+            if (entry is ISettingsValueReset<ThumbnailLayoutSettings> thumbnailLayout)
+                thumbnailLayout.ValueReset(resetAppSettings.BrowsingExperienceSettings.ThumbnailLayout);
+
+            if (entry is ISettingsValueReset<RankOptionsSettings> rankOptions)
+                rankOptions.ValueReset(resetAppSettings.SearchSettings.RankOptions);
+
+            if (entry is ISettingsValueReset<DownloadFormatsSettings> downloadFormats)
+                downloadFormats.ValueReset(resetAppSettings.DownloadSettings.DownloadFormats);
+
+            if (entry is ISettingsValueReset<PixivDomainFrontingSettings> pixivDomainFronting)
+                pixivDomainFronting.ValueReset(resetAppSettings.NetworkSettings.PixivDomainFronting);
+
+            if (entry is ISettingsValueReset<GitHubDomainFrontingSettings> gitHubDomainFronting)
+                gitHubDomainFronting.ValueReset(resetAppSettings.NetworkSettings.GitHubDomainFronting);
+
+            if (entry is ISettingsValueReset<ProxySettings> proxySettings)
+                proxySettings.ValueReset(resetAppSettings.NetworkSettings.ProxySettings);
+
             if (entry is IMultiValuesWithMainValueSettingsEntry multiValuesWithMainValue)
                 multiValuesWithMainValue.MainValue.LocalValueReset(resetAppSettings);
 
@@ -319,18 +340,15 @@ public static class LocalSettingsEntryHelper
             });
         }
 
-        public ISettingsGroupBuilder<TSettings> MultiValuesWithMainValue<TEnum>(
-            Expression<Func<TSettings, TEnum>> property,
-            Action<ISettingsGroupBuilder<TSettings>>? configValues = null,
-            Action<MultiValuesWithMainValueEntry<TSettings, EnumSettingsEntry<TSettings, object>>>? config = null)
-            where TEnum : struct, Enum
-        {
-            var mainValue = new EnumSettingsEntry<TSettings, object>(
-                builder.Settings,
-                Transform(property),
-                SymbolComboBoxItem.GetValues<TEnum>());
-            return builder.MultiValuesWithMainValue(mainValue, configValues, config);
-        }
+        public ISettingsGroupBuilder<TSettings> MultiValuesWithMainValue<TSubSettings, TEnum>(
+            Expression<Func<TSettings, TSubSettings>> subSettingsProperty,
+            Expression<Func<TSubSettings, TEnum>> mainValueProperty,
+            Action<ISettingsGroupBuilder<TSubSettings>>? configValues = null,
+            Action<MultiValuesWithMainValueEntry<TSettings, TSubSettings, EnumSettingsEntry<TSubSettings, object>>>? config = null)
+            where TEnum : struct, Enum =>
+            builder.MultiValuesWithMainValue(subSettingsProperty, mainValueProperty,
+                static (settings, property) => new EnumSettingsEntry<TSubSettings, object>(
+                    settings, Transform(property), SymbolComboBoxItem.GetValues<TEnum>()), configValues, config);
 
         public ISettingsGroupBuilder<TSettings> Language(
             Expression<Func<TSettings, string>> property,
@@ -342,14 +360,17 @@ public static class LocalSettingsEntryHelper
             Action<IPSetSettingsEntry<TSettings>>? config = null) =>
             builder.Add(new(builder.Settings, property), config);
 
-        public ISettingsGroupBuilder<TSettings> DomainFronting(
-            Expression<Func<TSettings, bool>> property,
-            Action<ISettingsGroupBuilder<TSettings>>? configValues,
-            Action<DomainFrontingSettingsEntry<TSettings>>? config = null)
+        public ISettingsGroupBuilder<TSettings> DomainFronting<TSubSettings>(
+            Expression<Func<TSettings, TSubSettings>> subSettingsProperty,
+            Expression<Func<TSubSettings, bool>> mainValueProperty,
+            Action<ISettingsGroupBuilder<TSubSettings>>? configValues,
+            Action<DomainFrontingSettingsEntry<TSettings, TSubSettings>>? config = null)
         {
-            var simpleAddSettingsEntry = SettingsBuilder.CreateGroup(builder.Settings);
-            configValues?.Invoke(simpleAddSettingsEntry);
-            return builder.Add(new(builder.Settings, property, simpleAddSettingsEntry.Build()), config);
+            var subSettings = subSettingsProperty.Compile(preferInterpretation: true)(builder.Settings)
+                ?? throw new InvalidOperationException("The sub-settings property returned null.");
+            var entries = SettingsBuilder.CreateGroup(subSettings);
+            configValues?.Invoke(entries);
+            return builder.Add(new(subSettings, subSettingsProperty, mainValueProperty, entries.Build()), config);
         }
 
         public ISettingsGroupBuilder<TSettings> Font(
@@ -372,22 +393,26 @@ public static class LocalSettingsEntryHelper
             Action<DownloadMacroSettingsEntry>? config = null) =>
             builder.Add(new(builder.Settings, expression), config);
 
-        public ISettingsGroupBuilder<DownloadSettingsGroup> IllustrationDownloadFormat(
-            Action<IllustrationDownloadFormatSettingsEntry>? config = null) =>
-            builder.Add(new IllustrationDownloadFormatSettingsEntry(builder.Settings), config);
-
-        public ISettingsGroupBuilder<DownloadSettingsGroup> UgoiraDownloadFormat(
-            Action<UgoiraDownloadFormatSettingsEntry>? config = null) =>
-            builder.Add(new UgoiraDownloadFormatSettingsEntry(builder.Settings), config);
-
-        public ISettingsGroupBuilder<DownloadSettingsGroup> NovelDownloadFormat(
-            Action<NovelDownloadFormatSettingsEntry>? config = null) =>
-            builder.Add(new NovelDownloadFormatSettingsEntry(builder.Settings), config);
-
         public ISettingsGroupBuilder<DownloadSettingsGroup> WorkSubscriptions(
             Expression<Func<DownloadSettingsGroup, byte>> expression,
             Action<WorkSubscriptionsSettingsEntry>? config = null) =>
             builder.Add(new(expression), config);
+    }
+
+    extension(ISettingsGroupBuilder<DownloadFormatsSettings> builder)
+    {
+        public ISettingsGroupBuilder<DownloadFormatsSettings> IllustrationDownloadFormat(
+            Action<IllustrationDownloadFormatSettingsEntry>? config = null) =>
+            builder.Add(new IllustrationDownloadFormatSettingsEntry(builder.Settings), config);
+
+        public ISettingsGroupBuilder<DownloadFormatsSettings> UgoiraDownloadFormat(
+            Action<UgoiraDownloadFormatSettingsEntry>? config = null) =>
+            builder.Add(new UgoiraDownloadFormatSettingsEntry(builder.Settings), config);
+
+        public ISettingsGroupBuilder<DownloadFormatsSettings> NovelDownloadFormat(
+            Action<NovelDownloadFormatSettingsEntry>? config = null) =>
+            builder.Add(new NovelDownloadFormatSettingsEntry(builder.Settings), config);
+
     }
 
     extension(ISettingsGroupBuilder<BrowsingExperienceSettingsGroup> builder)

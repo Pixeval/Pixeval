@@ -12,13 +12,13 @@ using Mako;
 using Pixeval.Models.Options;
 using Pixeval.Utilities;
 
-namespace Pixeval.AppManagement;
+namespace Pixeval.AppManagement.Settings;
 
 public record AppSettings
 {
     public void Initialize()
     {
-        if (NetworkSettings.GitHubAssetsNameResolver is
+        if (NetworkSettings.GitHubDomainFronting.GitHubAssetsNameResolver is
             [
                 "185.199.108.154",
                 "185.199.109.154",
@@ -26,7 +26,7 @@ public record AppSettings
                 "185.199.111.154"
             ])
         {
-            NetworkSettings.GitHubAssetsNameResolver = new NetworkSettingsGroup().GitHubAssetsNameResolver;
+            NetworkSettings.GitHubDomainFronting.GitHubAssetsNameResolver = new NetworkSettingsGroup().GitHubDomainFronting.GitHubAssetsNameResolver;
         }
 
         if (LastOpenedVersion != AppInfo.AppVersion.CurrentVersionShortText)
@@ -36,19 +36,19 @@ public record AppSettings
 
             // 更新时若域前置IP改变，则在此手动更新域名
             //var network = new NetworkSettingsGroup();
-            //NetworkSettings.PixivAppApiNameResolver = network.PixivAppApiNameResolver;
-            //NetworkSettings.PixivWebApiNameResolver = network.PixivWebApiNameResolver;
-            //NetworkSettings.PixivAccountNameResolver = network.PixivAccountNameResolver;
-            //NetworkSettings.PixivOAuthNameResolver = network.PixivOAuthNameResolver;
-            //NetworkSettings.PixivImageNameResolver = network.PixivImageNameResolver;
-            //NetworkSettings.PixivImageNameResolver2 = network.PixivImageNameResolver2;
+            //NetworkSettings.PixivDomainFronting.PixivAppApiNameResolver = network.PixivDomainFronting.PixivAppApiNameResolver;
+            //NetworkSettings.PixivDomainFronting.PixivWebApiNameResolver = network.PixivDomainFronting.PixivWebApiNameResolver;
+            //NetworkSettings.PixivDomainFronting.PixivAccountNameResolver = network.PixivDomainFronting.PixivAccountNameResolver;
+            //NetworkSettings.PixivDomainFronting.PixivOAuthNameResolver = network.PixivDomainFronting.PixivOAuthNameResolver;
+            //NetworkSettings.PixivDomainFronting.PixivImageNameResolver = network.PixivDomainFronting.PixivImageNameResolver;
+            //NetworkSettings.PixivDomainFronting.PixivImageNameResolver2 = network.PixivDomainFronting.PixivImageNameResolver2;
 
-            //NetworkSettings.GitHubNameResolver = network.GitHubNameResolver;
-            //NetworkSettings.GitHubApiNameResolver = network.GitHubApiNameResolver;
-            //NetworkSettings.GitHubAvatarNameResolver = network.GitHubAvatarNameResolver;
-            //NetworkSettings.GitHubUserContentNameResolver = network.GitHubUserContentNameResolver;
-            //NetworkSettings.GitHubAssetsNameResolver = network.GitHubAssetsNameResolver;
-            //NetworkSettings.GitHubCodeloadNameResolver = network.GitHubCodeloadNameResolver;
+            //NetworkSettings.GitHubDomainFronting.GitHubNameResolver = network.GitHubDomainFronting.GitHubNameResolver;
+            //NetworkSettings.GitHubDomainFronting.GitHubApiNameResolver = network.GitHubDomainFronting.GitHubApiNameResolver;
+            //NetworkSettings.GitHubDomainFronting.GitHubAvatarNameResolver = network.GitHubDomainFronting.GitHubAvatarNameResolver;
+            //NetworkSettings.GitHubDomainFronting.GitHubUserContentNameResolver = network.GitHubDomainFronting.GitHubUserContentNameResolver;
+            //NetworkSettings.GitHubDomainFronting.GitHubAssetsNameResolver = network.GitHubDomainFronting.GitHubAssetsNameResolver;
+            //NetworkSettings.GitHubDomainFronting.GitHubCodeloadNameResolver = network.GitHubDomainFronting.GitHubCodeloadNameResolver;
         }
     }
 
@@ -98,9 +98,9 @@ public record AppSettings
     public MakoConfiguration ToMakoConfiguration()
     {
         return new MakoConfiguration(
-            NetworkSettings.EnablePixivDomainFronting,
-            NetworkSettings.PixivDomainFrontingType,
-            MakoHelper.ToMakoProxy(NetworkSettings.ProxyType, NetworkSettings.Proxy),
+            NetworkSettings.PixivDomainFronting.EnablePixivDomainFronting,
+            NetworkSettings.PixivDomainFronting.PixivDomainFrontingType,
+            MakoHelper.ToMakoProxy(NetworkSettings.ProxySettings.ProxyType, NetworkSettings.ProxySettings.Proxy),
             NetworkSettings.WebCookie,
             NetworkSettings.MirrorHost,
             BrowsingExperienceSettings.TargetFilter,

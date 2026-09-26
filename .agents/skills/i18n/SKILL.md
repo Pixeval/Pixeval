@@ -1,6 +1,6 @@
 ---
 name: i18n
-description: Pixeval 国际化资源维护规范，涵盖用户可见字符串、JSON/Markdown 资源、XAML/C# 引用、BlockedContent 共享文案、非默认语言增删规则以及 Language.tt 生成验证。Use when adding, moving, removing, or changing localized text in Pixeval.
+description: Pixeval 国际化资源维护规范，涵盖用户可见字符串、JSON/Markdown 资源、XAML/C# 引用、非默认语言增删规则以及 Language.tt 生成验证。Use when adding, moving, removing, or changing localized text in Pixeval.
 ---
 
 # Pixeval i18n

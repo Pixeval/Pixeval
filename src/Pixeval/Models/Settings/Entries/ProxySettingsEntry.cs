@@ -3,31 +3,31 @@
 
 using System;
 using AutoSettingsPage.Models;
-using Pixeval.AppManagement;
+using Pixeval.AppManagement.Settings;
 using Pixeval.Controls;
 using Pixeval.Models.Options;
 using Pixeval.Utilities;
 
 namespace Pixeval.Models.Settings.Entries;
 
-public class ProxySettingsEntry : MultiValuesWithMainValueEntry<NetworkSettingsGroup, EnumSettingsEntry<NetworkSettingsGroup, object>>
+public class ProxySettingsEntry : MultiValuesWithMainValueEntry<NetworkSettingsGroup, ProxySettings, EnumSettingsEntry<ProxySettings, object>>
 {
     public ProxySettingsEntry(NetworkSettingsGroup settings)
         : this(
-            settings,
-            new EnumSettingsEntry<NetworkSettingsGroup, object>(
-                settings,
+            settings.ProxySettings,
+            new EnumSettingsEntry<ProxySettings, object>(
+                settings.ProxySettings,
                 t => (object) t.ProxyType,
                 SymbolComboBoxItem.GetValues<ProxyType>()),
-            new StringSettingsEntry<NetworkSettingsGroup>(settings, t => t.Proxy))
+            new StringSettingsEntry<ProxySettings>(settings.ProxySettings, t => t.Proxy))
     {
     }
 
     private ProxySettingsEntry(
-        NetworkSettingsGroup settings,
-        EnumSettingsEntry<NetworkSettingsGroup, object> mainValue,
-        StringSettingsEntry<NetworkSettingsGroup> proxyEntry)
-        : base(settings, mainValue, [proxyEntry])
+        ProxySettings settings,
+        EnumSettingsEntry<ProxySettings, object> mainValue,
+        StringSettingsEntry<ProxySettings> proxyEntry)
+        : base(settings, t => t.ProxySettings, mainValue, [proxyEntry])
     {
         MainValue.ValueChanged += _ => OnProxyChanged();
         proxyEntry.ValueChanged += _ => OnProxyChanged();

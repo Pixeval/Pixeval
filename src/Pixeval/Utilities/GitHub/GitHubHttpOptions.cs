@@ -4,7 +4,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Net;
-using Pixeval.AppManagement;
+using Pixeval.AppManagement.Settings;
 
 namespace Pixeval.Utilities.GitHub;
 
@@ -45,12 +45,12 @@ public static class GitHubHttpOptions
         var resolver = GetResolver(host);
         return resolver switch
         {
-            GitHubResolver.Host => settings.GitHubNameResolver,
-            GitHubResolver.Api => settings.GitHubApiNameResolver,
-            GitHubResolver.Avatar => settings.GitHubAvatarNameResolver,
-            GitHubResolver.UserContent => settings.GitHubUserContentNameResolver,
-            GitHubResolver.Assets => settings.GitHubAssetsNameResolver,
-            GitHubResolver.Codeload => settings.GitHubCodeloadNameResolver,
+            GitHubResolver.Host => settings.GitHubDomainFronting.GitHubNameResolver,
+            GitHubResolver.Api => settings.GitHubDomainFronting.GitHubApiNameResolver,
+            GitHubResolver.Avatar => settings.GitHubDomainFronting.GitHubAvatarNameResolver,
+            GitHubResolver.UserContent => settings.GitHubDomainFronting.GitHubUserContentNameResolver,
+            GitHubResolver.Assets => settings.GitHubDomainFronting.GitHubAssetsNameResolver,
+            GitHubResolver.Codeload => settings.GitHubDomainFronting.GitHubCodeloadNameResolver,
             _ => null
         };
     }

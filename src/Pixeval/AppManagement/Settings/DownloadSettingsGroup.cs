@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 using AutoSettingsPage;
 using FluentIcons.Common;
 
-namespace Pixeval.AppManagement;
+namespace Pixeval.AppManagement.Settings;
 
 public record DownloadSettingsGroup
 {
@@ -20,11 +20,7 @@ public record DownloadSettingsGroup
     );
 
     [SettingsEntry(Symbol.TextPeriodAsterisk, AppSettingsResources.WorkDownloadFormatEntry.Header, AppSettingsResources.WorkDownloadFormatEntry.Description)]
-    public string IllustrationDownloadFormat { get; set; } = Models.Download.IllustrationDownloadFormatToken.DefaultToken;
-
-    public string UgoiraDownloadFormat { get; set; } = Models.Download.UgoiraDownloadFormatToken.DefaultToken;
-
-    public string NovelDownloadFormat { get; set; } = Models.Download.NovelDownloadFormatToken.DefaultToken;
+    public DownloadFormatsSettings DownloadFormats { get; set; } = new();
 
     [SettingsEntry(Symbol.ImageSplit, AppSettingsResources.OverwriteDownloadedFileEntry.Header, AppSettingsResources.OverwriteDownloadedFileEntry.Description)]
     public bool OverwriteDownloadedFile { get; set; }

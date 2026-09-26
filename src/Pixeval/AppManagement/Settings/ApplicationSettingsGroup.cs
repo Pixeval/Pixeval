@@ -7,7 +7,7 @@ using AutoSettingsPage;
 using FluentIcons.Common;
 using Pixeval.Models.Options;
 
-namespace Pixeval.AppManagement;
+namespace Pixeval.AppManagement.Settings;
 
 public record ApplicationSettingsGroup
 {
@@ -39,11 +39,7 @@ public record ApplicationSettingsGroup
     public bool UseFileCache { get; set; } = true;
 
     [SettingsEntry(Symbol.DatabaseLightning, AppSettingsResources.LimitFileCacheSizeEntry.Header, AppSettingsResources.LimitFileCacheSizeEntry.Description)]
-    public bool LimitFileCacheSize { get; set; }
-
-    [SettingsEntry(Symbol.HardDrive, AppSettingsResources.FileCacheSizeLimitInMegabytesEntry.Header,
-        AppSettingsResources.FileCacheSizeLimitInMegabytesEntry.Description)]
-    public int FileCacheSizeLimitInMegabytes { get; set; } = 2048;
+    public FileCacheSettings FileCache { get; set; } = new();
 
     [SettingsEntry(Symbol.TextFont, AppSettingsResources.AppFontFamilyEntry.Header, AppSettingsResources.AppFontFamilyEntry.Description, AppSettingsResources.AppFontFamilyEntry.Placeholder)]
     public ObservableCollection<string> AppFontFamily { get; set; } = [];

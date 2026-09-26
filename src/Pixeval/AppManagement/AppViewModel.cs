@@ -13,6 +13,7 @@ using Mako.Model;
 using Mako.Net;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
+using Pixeval.AppManagement.Settings;
 using Pixeval.Models.Database;
 using Pixeval.Models.Database.Managers;
 using Pixeval.Models.Download;
@@ -162,19 +163,19 @@ public sealed class AppViewModel(App app, FileLogger logger) : IAsyncDisposable
     public void SetNameResolvers()
     {
         var networkSettings = AppSettings.NetworkSettings;
-        SetNameResolver(MakoHttpOptions.AppApiHost, networkSettings.PixivAppApiNameResolver);
-        SetNameResolver(MakoHttpOptions.ImageHost, networkSettings.PixivImageNameResolver);
-        SetNameResolver(MakoHttpOptions.ImageHost2, networkSettings.PixivImageNameResolver2);
-        SetNameResolver(MakoHttpOptions.OAuthHost, networkSettings.PixivOAuthNameResolver);
-        SetNameResolver(MakoHttpOptions.AccountHost, networkSettings.PixivAccountNameResolver);
-        SetNameResolver(MakoHttpOptions.WebApiHost, networkSettings.PixivWebApiNameResolver);
+        SetNameResolver(MakoHttpOptions.AppApiHost, networkSettings.PixivDomainFronting.PixivAppApiNameResolver);
+        SetNameResolver(MakoHttpOptions.ImageHost, networkSettings.PixivDomainFronting.PixivImageNameResolver);
+        SetNameResolver(MakoHttpOptions.ImageHost2, networkSettings.PixivDomainFronting.PixivImageNameResolver2);
+        SetNameResolver(MakoHttpOptions.OAuthHost, networkSettings.PixivDomainFronting.PixivOAuthNameResolver);
+        SetNameResolver(MakoHttpOptions.AccountHost, networkSettings.PixivDomainFronting.PixivAccountNameResolver);
+        SetNameResolver(MakoHttpOptions.WebApiHost, networkSettings.PixivDomainFronting.PixivWebApiNameResolver);
 
-        SetNameResolver(GitHubHttpOptions.Host, networkSettings.GitHubNameResolver);
-        SetNameResolver(GitHubHttpOptions.ApiHost, networkSettings.GitHubApiNameResolver);
-        SetNameResolver(GitHubHttpOptions.AvatarHost, networkSettings.GitHubAvatarNameResolver);
-        SetNameResolver(GitHubHttpOptions.UserContentHost, networkSettings.GitHubUserContentNameResolver);
-        SetNameResolver(GitHubHttpOptions.AssetsHost, networkSettings.GitHubAssetsNameResolver);
-        SetNameResolver(GitHubHttpOptions.CodeloadHost, networkSettings.GitHubCodeloadNameResolver);
+        SetNameResolver(GitHubHttpOptions.Host, networkSettings.GitHubDomainFronting.GitHubNameResolver);
+        SetNameResolver(GitHubHttpOptions.ApiHost, networkSettings.GitHubDomainFronting.GitHubApiNameResolver);
+        SetNameResolver(GitHubHttpOptions.AvatarHost, networkSettings.GitHubDomainFronting.GitHubAvatarNameResolver);
+        SetNameResolver(GitHubHttpOptions.UserContentHost, networkSettings.GitHubDomainFronting.GitHubUserContentNameResolver);
+        SetNameResolver(GitHubHttpOptions.AssetsHost, networkSettings.GitHubDomainFronting.GitHubAssetsNameResolver);
+        SetNameResolver(GitHubHttpOptions.CodeloadHost, networkSettings.GitHubDomainFronting.GitHubCodeloadNameResolver);
         return;
 
         static void SetNameResolver(string host, ObservableCollection<string> ips)

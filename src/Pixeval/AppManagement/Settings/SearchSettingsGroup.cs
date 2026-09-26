@@ -6,10 +6,13 @@ using AutoSettingsPage;
 using FluentIcons.Common;
 using Mako.Global.Enum;
 
-namespace Pixeval.AppManagement;
+namespace Pixeval.AppManagement.Settings;
 
 public record SearchSettingsGroup
 {
+    [SettingsEntry(Symbol.ArrowTrending, AppSettingsResources.RankOptionEntry.Header, AppSettingsResources.RankOptionEntry.Description)]
+    public RankOptionsSettings RankOptions { get; set; } = new();
+
     [SettingsEntry(
         Symbol.Key,
         AppSettingsResources.SauceNaoApiKeyEntry.Header,
@@ -20,11 +23,6 @@ public record SearchSettingsGroup
 
     [SettingsEntry(Symbol.Grid, AppSettingsResources.SimpleWorkTypeEntry.Header, AppSettingsResources.SimpleWorkTypeEntry.Description)]
     public SimpleWorkType DefaultSimpleWorkType { get; set; }
-
-    [SettingsEntry(Symbol.ArrowTrending, AppSettingsResources.RankOptionEntry.Header, AppSettingsResources.RankOptionEntry.Description)]
-    public RankOption IllustrationRankOption { get; set; }
-
-    public RankOption NovelRankOption { get; set; }
 
     [JsonIgnore]
     public WorkType WorkType => DefaultSimpleWorkType is SimpleWorkType.Illustration

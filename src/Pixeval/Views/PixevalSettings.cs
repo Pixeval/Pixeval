@@ -4,6 +4,7 @@
 using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.AppManagement;
+using Pixeval.AppManagement.Settings;
 using Pixeval.Models.Options;
 using Pixeval.ViewModels;
 
@@ -17,15 +18,15 @@ public class PixevalSettings : ViewModelBase
 
     public static SimpleWorkType SimpleWorkType => Settings.SearchSettings.DefaultSimpleWorkType;
 
-    public static ThumbnailLayoutType LayoutType => Settings.BrowsingExperienceSettings.ThumbnailLayoutType;
+    public static ThumbnailLayoutType LayoutType => Settings.BrowsingExperienceSettings.ThumbnailLayout.ThumbnailLayoutType;
 
-    public static double IllustrationLinedFlowItemHeight => Settings.BrowsingExperienceSettings.IllustrationLinedFlowItemHeight;
+    public static double IllustrationLinedFlowItemHeight => Settings.BrowsingExperienceSettings.ThumbnailLayout.IllustrationLinedFlowItemHeight;
 
-    public static double IllustrationGridItemSize => Settings.BrowsingExperienceSettings.IllustrationGridItemSize;
+    public static double IllustrationGridItemSize => Settings.BrowsingExperienceSettings.ThumbnailLayout.IllustrationGridItemSize;
 
-    public static double IllustrationGridLineSize => Settings.BrowsingExperienceSettings.IllustrationGridLineSize;
+    public static double IllustrationGridLineSize => Settings.BrowsingExperienceSettings.ThumbnailLayout.IllustrationGridLineSize;
 
-    public static double IllustrationMasonryColumnWidth => Settings.BrowsingExperienceSettings.IllustrationMasonryColumnWidth;
+    public static double IllustrationMasonryColumnWidth => Settings.BrowsingExperienceSettings.ThumbnailLayout.IllustrationMasonryColumnWidth;
 
     public static TokenUser Me => App.AppViewModel.MakoClient.Me!;
 

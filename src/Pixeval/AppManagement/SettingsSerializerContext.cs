@@ -2,6 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System.Collections.ObjectModel;
+using Pixeval.AppManagement.Settings;
 using Pixeval.Models.Home;
 using SharpYaml.Serialization;
 

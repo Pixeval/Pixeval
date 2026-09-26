@@ -13,6 +13,7 @@ using Mako;
 using Mako.Global.Enum;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
+using Pixeval.AppManagement.Settings;
 using Pixeval.Models.Extensions;
 using Pixeval.Models.Options;
 using Pixeval.Models.Settings;
@@ -58,7 +59,7 @@ public class SettingsPageViewModel : ViewModelBase
                     })
                 .Font(t => t.AppFontFamily, entry => entry.ValueChanged += App.ApplyAppFontFamily)
                 .Bool(t => t.UseFileCache)
-                .MultiValuesWithSwitch(t => t.LimitFileCacheSize,
+                .MultiValuesWithSwitch(t => t.FileCache, t => t.LimitFileCacheSize,
                     entry => entry.Int(t => t.FileCacheSizeLimitInMegabytes, 1, 0x100000, 0x80,
                         t => t.ValueChanged += _value => _ = CacheHelper.EnforceCacheSizeLimitAsync()),
                     t => t.MainValue.ValueChanged += enabled =>
@@ -71,7 +72,7 @@ public class SettingsPageViewModel : ViewModelBase
                 .Bool(t => t.HideHomePageToolbar)
                 .Bool(t => t.HideHomePageCardTitle))
             .NewGroup(t => t.NetworkSettings, group => group
-                .DomainFronting(t => t.EnablePixivDomainFronting, entry =>
+                .DomainFronting(t => t.PixivDomainFronting, t => t.EnablePixivDomainFronting, entry =>
                         entry.Enum(t => t.PixivDomainFrontingType,
                                 e => e.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.DomainFrontingType = (DomainFrontingType) t)
                             .IPSet(t => t.PixivAppApiNameResolver)
@@ -81,7 +82,7 @@ public class SettingsPageViewModel : ViewModelBase
                             .IPSet(t => t.PixivAccountNameResolver)
                             .IPSet(t => t.PixivWebApiNameResolver),
                     entry => entry.MainValue.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.DomainFronting = t)
-                .DomainFronting(t => t.EnableGitHubDomainFronting, entry => entry
+                .DomainFronting(t => t.GitHubDomainFronting, t => t.EnableGitHubDomainFronting, entry => entry
                     .IPSet(t => t.GitHubNameResolver)
                     .IPSet(t => t.GitHubApiNameResolver)
                     .IPSet(t => t.GitHubAvatarNameResolver)
@@ -94,7 +95,7 @@ public class SettingsPageViewModel : ViewModelBase
                 .String(t => t.WebCookie,
                     entry => entry.ValueChanged += t => App.AppViewModel.MakoClient.Configuration.Cookie = t))
             .NewGroup(t => t.BrowsingExperienceSettings, group => group
-                .MultiValuesWithMainValue(t => t.ThumbnailLayoutType, entries => entries
+                .MultiValuesWithMainValue(t => t.ThumbnailLayout, t => t.ThumbnailLayoutType, entries => entries
                     .Int(t => t.IllustrationLinedFlowItemHeight, 50, 1000, 10)
                     .Int(t => t.IllustrationGridItemSize, 50, 1000, 10)
                     .Int(t => t.IllustrationGridLineSize, 50, 1000, 10)
@@ -113,7 +114,7 @@ public class SettingsPageViewModel : ViewModelBase
             .NewGroup(t => t.SearchSettings, group => group
                 .String(t => t.SauceNaoApiKey)
                 .Enum(t => t.DefaultSimpleWorkType)
-                .MultiValues(t => t.IllustrationRankOption, entry =>
+                .MultiValues(t => t.RankOptions, entry =>
                     entry.Enum(
                             WorkTypeEnum.Illustration,
                             t => t.IllustrationRankOption,
@@ -127,7 +128,7 @@ public class SettingsPageViewModel : ViewModelBase
                 .Int(t => t.MaxDownloadTaskConcurrencyLevel, 1, Environment.ProcessorCount, 1,
                     entry => entry.ValueChanged += t => App.AppViewModel.HistoryPersistHelper.DownloadManager.ConcurrencyDegree = t)
                 .DownloadMacro(t => t.DownloadPathMacro)
-                .MultiValues(t => t.IllustrationDownloadFormat, entry =>
+                .MultiValues(t => t.DownloadFormats, entry =>
                     entry.IllustrationDownloadFormat()
                         .UgoiraDownloadFormat()
                         .NovelDownloadFormat())

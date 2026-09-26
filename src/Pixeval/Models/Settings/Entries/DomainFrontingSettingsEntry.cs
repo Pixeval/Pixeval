@@ -8,11 +8,13 @@ using AutoSettingsPage.Models;
 
 namespace Pixeval.Models.Settings.Entries;
 
-public class DomainFrontingSettingsEntry<TSettings>(
-    TSettings settings,
-    Expression<Func<TSettings, bool>> property,
+public class DomainFrontingSettingsEntry<TSettings, TSubSettings>(
+    TSubSettings settings,
+    Expression<Func<TSettings, TSubSettings>> subSettingsProperty,
+    Expression<Func<TSubSettings, bool>> mainValueProperty,
     IReadOnlyList<ISettingsEntry> entries)
-    : MultiValuesWithMainValueEntry<TSettings, BoolSettingsEntry<TSettings>>(
+    : MultiValuesWithMainValueEntry<TSettings, TSubSettings, BoolSettingsEntry<TSubSettings>>(
         settings,
-        new BoolSettingsEntry<TSettings>(settings, property),
+        subSettingsProperty,
+        new BoolSettingsEntry<TSubSettings>(settings, mainValueProperty),
         entries);

@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Threading;
 using Mako.Net;
 using Misaki;
-using Pixeval.AppManagement;
+using Pixeval.AppManagement.Settings;
 using Pixeval.Models.Options;
 
 namespace Pixeval.Utilities.GitHub;
@@ -53,13 +53,13 @@ public sealed class GitHubHttpClientProvider(NetworkSettingsGroup networkSetting
 
     private string GetCacheKey()
     {
-        var domainFronting = networkSettings.EnableGitHubDomainFronting ? "domain-fronting" : "direct";
-        var proxy = networkSettings.ProxyType switch
+        var domainFronting = networkSettings.GitHubDomainFronting.EnableGitHubDomainFronting ? "domain-fronting" : "direct";
+        var proxy = networkSettings.ProxySettings.ProxyType switch
         {
             ProxyType.None => "proxy:disabled",
-            ProxyType.Custom => $"proxy:explicit:{MakoHelper.NormalizeProxyUri(networkSettings.Proxy) ?? ""}",
+            ProxyType.Custom => $"proxy:explicit:{MakoHelper.NormalizeProxyUri(networkSettings.ProxySettings.Proxy) ?? ""}",
             ProxyType.System => $"proxy:system:{string.Join("|", _ProxyProbeUris.Select(GetSystemProxyCacheKeyPart))}",
-            _ => throw new ArgumentOutOfRangeException(nameof(networkSettings.ProxyType))
+            _ => throw new ArgumentOutOfRangeException(nameof(networkSettings.ProxySettings.ProxyType))
         };
         return $"{domainFronting};{proxy}";
     }

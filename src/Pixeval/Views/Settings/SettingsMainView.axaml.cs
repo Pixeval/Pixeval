@@ -7,6 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Pixeval.AppManagement;
+using Pixeval.AppManagement.Settings;
 using Pixeval.Controls;
 using Pixeval.I18N;
 using Pixeval.Models.Navigation;
@@ -178,8 +179,8 @@ public partial class SettingsMainView : ContentPage
         try
         {
             if (await provider.SaveFilePickerAsync(new()
-                {
-                    FileTypeChoices =
+            {
+                FileTypeChoices =
                     [
                         new("YAML")
                         {
@@ -187,9 +188,9 @@ public partial class SettingsMainView : ContentPage
                             MimeTypes = ["text/yaml", "application/x-yaml"]
                         }
                     ],
-                    DefaultExtension = "yaml",
-                    SuggestedFileName = "settings"
-                }) is not { } file)
+                DefaultExtension = "yaml",
+                SuggestedFileName = "settings"
+            }) is not { } file)
                 return;
             await using var stream = await file.OpenWriteAsync();
             YamlSerializer.Serialize(stream, vm.AppSettings, SettingsSerializerContext.Default.AppSettings);
@@ -210,15 +211,15 @@ public partial class SettingsMainView : ContentPage
         try
         {
             if (await provider.OpenFilePickerAsync(new()
-                {
-                    FileTypeFilter = [new("YAML") { Patterns = ["*.yaml"] }],
-                    AllowMultiple = false
-                }) is not [{ } file])
+            {
+                FileTypeFilter = [new("YAML") { Patterns = ["*.yaml"] }],
+                AllowMultiple = false
+            }) is not [{ } file])
                 return;
 
             await using var stream = await file.OpenReadAsync();
 
-            if (YamlSerializer.Deserialize(stream, SettingsSerializerContext.Default.AppSettings) is { } appSettings)
+            if (LegacyAppSettingsMigration.Deserialize(stream) is { } appSettings)
             {
                 foreach (var localGroup in vm.LocalGroups)
                     foreach (var settingsEntry in localGroup)

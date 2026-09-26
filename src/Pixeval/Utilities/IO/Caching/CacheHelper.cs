@@ -11,6 +11,7 @@ using Avalonia.Media.Imaging;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
 using Pixeval.AppManagement;
+using Pixeval.AppManagement.Settings;
 
 namespace Pixeval.Utilities.IO.Caching;
 
@@ -37,7 +38,7 @@ public static class CacheHelper
     public static Task EnforceCacheSizeLimitAsync(CancellationToken token = default)
     {
         var settings = App.AppViewModel.AppSettings.ApplicationSettings;
-        if (!settings.LimitFileCacheSize)
+        if (!settings.FileCache.LimitFileCacheSize)
             return Task.CompletedTask;
 
         return _FileCache.EnforceSizeLimitAsync(GetCacheSizeLimitInBytes(), token);
@@ -46,7 +47,7 @@ public static class CacheHelper
     private static long GetCacheSizeLimitInBytes()
     {
         var sizeInMegabytes =
-            Math.Max(1, App.AppViewModel.AppSettings.ApplicationSettings.FileCacheSizeLimitInMegabytes);
+            Math.Max(1, App.AppViewModel.AppSettings.ApplicationSettings.FileCache.FileCacheSizeLimitInMegabytes);
         return sizeInMegabytes * 1024L * 1024L;
     }
 
@@ -365,7 +366,7 @@ public static class CacheHelper
             throw new InvalidOperationException(
                 $"Check {nameof(App.AppViewModel.AppSettings.ApplicationSettings.UseFileCache)} before {nameof(TryCacheStream)}");
 
-        var sizeLimitBytes = App.AppViewModel.AppSettings.ApplicationSettings.LimitFileCacheSize
+        var sizeLimitBytes = App.AppViewModel.AppSettings.ApplicationSettings.FileCache.LimitFileCacheSize
             ? GetCacheSizeLimitInBytes()
             : (long?) null;
 

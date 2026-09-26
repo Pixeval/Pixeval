@@ -4,7 +4,7 @@
 using System;
 using System.Net;
 using Mako.Net;
-using Pixeval.AppManagement;
+using Pixeval.AppManagement.Settings;
 using Pixeval.Models.Options;
 
 namespace Pixeval.Utilities.GitHub;
@@ -20,7 +20,7 @@ internal sealed class GitHubDirectProxy(NetworkSettingsGroup settings) : IWebPro
         if (IsBypassed(destination))
             return destination;
 
-        return settings.ProxyType switch
+        return settings.ProxySettings.ProxyType switch
         {
             ProxyType.System => SystemProxyProvider.GetCurrent().GetProxy(destination) ?? destination,
             ProxyType.Custom => CreateExplicitProxy()?.GetProxy(destination) ?? destination,
@@ -30,13 +30,13 @@ internal sealed class GitHubDirectProxy(NetworkSettingsGroup settings) : IWebPro
 
     public bool IsBypassed(Uri host)
     {
-        if (settings.EnableGitHubDomainFronting &&
+        if (settings.GitHubDomainFronting.EnableGitHubDomainFronting &&
             GitHubHttpOptions.HasConfiguredResolver(settings, host.Host))
         {
             return true;
         }
 
-        return settings.ProxyType switch
+        return settings.ProxySettings.ProxyType switch
         {
             ProxyType.None => true,
             ProxyType.System => SystemProxyProvider.GetCurrent().IsBypassed(host),
@@ -47,11 +47,11 @@ internal sealed class GitHubDirectProxy(NetworkSettingsGroup settings) : IWebPro
 
     private WebProxy? CreateExplicitProxy()
     {
-        if (MakoHelper.NormalizeProxyUri(settings.Proxy) is not { } proxyUri ||
+        if (MakoHelper.NormalizeProxyUri(settings.ProxySettings.Proxy) is not { } proxyUri ||
             !Uri.TryCreate(proxyUri, UriKind.Absolute, out var uri))
             return null;
 
-        if (settings.ProxyType is not ProxyType.Custom)
+        if (settings.ProxySettings.ProxyType is not ProxyType.Custom)
             return null;
 
         var proxy = new WebProxy(uri)

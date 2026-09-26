@@ -4,7 +4,7 @@
 using System;
 using System.Linq.Expressions;
 using AutoSettingsPage.Models;
-using Pixeval.AppManagement;
+using Pixeval.AppManagement.Settings;
 
 namespace Pixeval.Models.Settings.Entries;
 

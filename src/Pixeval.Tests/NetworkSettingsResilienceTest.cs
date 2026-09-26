@@ -1,6 +1,6 @@
 using System.Net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Pixeval.AppManagement;
+using Pixeval.AppManagement.Settings;
 using Pixeval.Utilities.GitHub;
 
 namespace Pixeval.Tests;
@@ -11,7 +11,7 @@ public sealed class NetworkSettingsResilienceTest
     [TestMethod]
     public void InvalidConfiguredAddressesShouldBeIgnored()
     {
-        var settings = new NetworkSettingsGroup { GitHubNameResolver = ["not-an-ip-address", IPAddress.Loopback.ToString()] };
+        var settings = new NetworkSettingsGroup { GitHubDomainFronting = new() { GitHubNameResolver = ["not-an-ip-address", IPAddress.Loopback.ToString()] } };
 
         var configured = GitHubHttpOptions.TryGetConfiguredAddresses(
             settings,

@@ -9,7 +9,7 @@ using Avalonia.Media;
 using FluentIcons.Common;
 using SharpYaml.Serialization;
 
-namespace Pixeval.AppManagement;
+namespace Pixeval.AppManagement.Settings;
 
 public record NovelSettingsGroup
 {

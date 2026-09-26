@@ -7,7 +7,7 @@ using AutoSettingsPage;
 using AutoSettingsPage.Models;
 using FluentIcons.Common;
 using Microsoft.Extensions.DependencyInjection;
-using Pixeval.AppManagement;
+using Pixeval.AppManagement.Settings;
 using Pixeval.Controls;
 using Pixeval.Extensions.Common;
 using Pixeval.Extensions.Common.FormatProviders;
@@ -18,10 +18,10 @@ using Pixeval.Models.Options;
 
 namespace Pixeval.Models.Settings.Entries;
 
-public class IllustrationDownloadFormatSettingsEntry(DownloadSettingsGroup settings)
-    : SingleValueSettingsEntry<DownloadSettingsGroup, object>(
+public class IllustrationDownloadFormatSettingsEntry(DownloadFormatsSettings settings)
+    : SingleValueSettingsEntry<DownloadFormatsSettings, object>(
         settings,
-        nameof(DownloadSettingsGroup.IllustrationDownloadFormat),
+        nameof(DownloadFormatsSettings.IllustrationDownloadFormat),
         I18NManager.GetResource(EnumResources.WorkTypeEnum.Illustration),
         "",
         Symbol.Image,
