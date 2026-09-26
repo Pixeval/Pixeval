@@ -66,7 +66,7 @@ public partial class LoginPage : IconContentPage
                     new(PixivAuth.GenerateWebPageUrl(verifier)),
                     new("pixiv://account/login"))
                 {
-                    PreferNativeWebDialog = true,
+                    Mode = WebAuthenticatorMode.NativeWebDialog,
                     NonPersistent = true
                 });
 

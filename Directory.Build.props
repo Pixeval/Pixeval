@@ -1,7 +1,7 @@
 <Project>
 	<PropertyGroup>
-		<AvaloniaVersion>12.1.1</AvaloniaVersion>
-		<FluentIconsVersion>2.1.335</FluentIconsVersion>
+		<AvaloniaVersion>12.1.3</AvaloniaVersion>
+		<FluentIconsVersion>2.1.341</FluentIconsVersion>
 	</PropertyGroup>
 
 	<!-- NativeAOT is an executable publish setting and must not reach library or analyzer projects. -->

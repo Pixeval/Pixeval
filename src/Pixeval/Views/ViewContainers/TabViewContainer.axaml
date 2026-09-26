@@ -44,6 +44,7 @@
             x:Name="TabsControl"
             AddTabButtonClick="TabsView_OnAddTabButtonClick"
             Background="Transparent"
+            IsKeyboardNavigationEnabled="False"
             LeftHeaderContentDraggable="True"
             TabClosing="TabsView_OnTabClosing">
             <tabView:TabsView.ShowDefaultAddButton>
