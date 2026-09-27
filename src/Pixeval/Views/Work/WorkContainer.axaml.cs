@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
+using Avalonia.Controls.Selection;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -116,6 +117,19 @@ public partial class WorkContainer : UserControl
     private void SelectAllToggleButton_OnClicked(object? sender, RoutedEventArgs e)
     {
         WorkView.WorkListBox.SelectAll();
+    }
+
+    private void InvertSelectionButton_OnClicked(object? sender, RoutedEventArgs e)
+    {
+        var listBox = WorkView.WorkListBox;
+        using var operation = listBox.Selection.BatchUpdate();
+        for (var i = 0; i < listBox.Items.Count; i++)
+        {
+            if (listBox.Selection.IsSelected(i))
+                listBox.Selection.Deselect(i);
+            else
+                listBox.Selection.Select(i);
+        }
     }
 
     private void SortOptionComboBox_OnSelectionChanged(SymbolComboBox sender, EventArgs e) => SetSortOption();

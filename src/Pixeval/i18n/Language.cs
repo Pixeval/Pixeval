@@ -1372,6 +1372,7 @@ namespace Pixeval
         public const string DownloadItemOpenFailed = "Misc.DownloadItemOpenFailed";
         public const string ExceptionEncountered = "Misc.ExceptionEncountered";
         public const string GoToPageFormatted = "Misc.GoToPageFormatted";
+        public const string InvertSelection = "Misc.InvertSelection";
         public const string OpenBottomList = "Misc.OpenBottomList";
         public const string Pause = "Misc.Pause";
         public const string Play = "Misc.Play";

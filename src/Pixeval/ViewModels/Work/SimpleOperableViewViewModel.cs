@@ -4,13 +4,14 @@
 using System;
 using System.Collections.Generic;
 using Avalonia.Collections;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Misaki;
 using Pixeval.Collections;
 using Pixeval.Utilities;
 
 namespace Pixeval.ViewModels;
 
-public sealed class SimpleOperableViewViewModel<TViewModel> : ViewModelBase, IOperableViewViewModel, IDisposable
+public sealed partial class SimpleOperableViewViewModel<TViewModel> : ViewModelBase, IOperableViewViewModel, IDisposable
     where TViewModel : class, IWorkViewModel
 {
     private bool _isDisposed;
@@ -29,7 +30,8 @@ public sealed class SimpleOperableViewViewModel<TViewModel> : ViewModelBase, IOp
     private static IFilter<IWorkViewModel> TypeFilter { get; } = IFilter<IWorkViewModel>.Create(entry => entry is TViewModel, false);
 
     /// <inheritdoc />
-    public bool IsSelecting { get; set; }
+    [ObservableProperty]
+    public partial bool IsSelecting { get; set; }
 
     /// <inheritdoc />
     public AvaloniaList<IWorkViewModel> SelectedEntries { get; } = [];

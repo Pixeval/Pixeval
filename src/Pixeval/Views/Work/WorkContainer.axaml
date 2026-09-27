@@ -17,7 +17,10 @@
     d:DesignHeight="450"
     d:DesignWidth="800">
     <DockPanel>
-        <DockPanel DockPanel.Dock="Top" IsVisible="{Binding !$parent[work:WorkContainer].IsCommandBarCollapsed, Mode=OneWay}">
+        <DockPanel
+            DockPanel.Dock="Top"
+            IsVisible="{Binding !$parent[work:WorkContainer].IsCommandBarCollapsed, Mode=OneWay}"
+            LastChildFill="False">
             <!--  Non-selection toolbar (right side)  -->
             <CommandBar
                 x:Name="RightToolBar"
@@ -26,70 +29,77 @@
                 IsDynamicOverflowEnabled="True">
                 <CommandBarToggleButton
                     x:Name="SelectionToggleButton"
-                    Icon="{markup:SymbolIcon Symbol=Multiselect}"
+                    Icon="{markup:SymbolIcon Multiselect}"
                     IsChecked="{Binding IsSelecting, Mode=OneWayToSource}"
                     ToolTip.Tip="{I18N {x:Static local:WorkContainerResources+SelectionButton.Label}}" />
                 <CommandBar.SecondaryCommands>
                     <CommandBarButton
                         x:Name="RefreshButton"
                         Click="RefreshButton_OnClick"
-                        Icon="{markup:SymbolIcon Symbol=ArrowClockwise}"
+                        Icon="{markup:SymbolIcon ArrowClockwise}"
                         IsEnabled="{Binding $parent[work:WorkContainer].IsRefreshEnabled}"
                         IsVisible="{Binding $parent[work:WorkContainer].IsRefreshEnabled}"
                         Label="{I18N {x:Static local:WorkContainerResources+RefreshButton.Label}}" />
                 </CommandBar.SecondaryCommands>
             </CommandBar>
 
-            <StackPanel
-                x:Name="ExtraCommandsBar"
-                VerticalAlignment="Center"
-                DockPanel.Dock="Left"
-                Orientation="Horizontal"
-                Spacing="5">
-                <controls:SymbolComboBox
-                    x:Name="SortOptionComboBox"
-                    ItemsSource="{markup1:EnumResources x:TypeArguments=options:LocalSortOption}"
-                    SelectionChanged="SortOptionComboBox_OnSelectionChanged" />
-                <work:WorkFilterAutoSuggestBox
-                    x:Name="WorkFilterAutoSuggestBox"
-                    Width="250"
-                    Analyze="AnalyzeFilter"
-                    SearchRequested="WorkFilterAutoSuggestBox_OnSearchRequested" />
-            </StackPanel>
+            <Panel DockPanel.Dock="Left">
+                <!--  Other toolbar (invisible when selecting)  -->
+                <StackPanel
+                    x:Name="ExtraCommandsBar"
+                    VerticalAlignment="Center"
+                    IsVisible="{Binding !IsSelecting}"
+                    Orientation="Horizontal"
+                    Spacing="5">
+                    <controls:SymbolComboBox
+                        x:Name="SortOptionComboBox"
+                        ItemsSource="{markup1:EnumResources x:TypeArguments=options:LocalSortOption}"
+                        SelectionChanged="SortOptionComboBox_OnSelectionChanged" />
+                    <work:WorkFilterAutoSuggestBox
+                        x:Name="WorkFilterAutoSuggestBox"
+                        Width="250"
+                        Analyze="AnalyzeFilter"
+                        SearchRequested="WorkFilterAutoSuggestBox_OnSearchRequested" />
+                </StackPanel>
 
-            <!--  Selection toolbar (visible when selecting)  -->
-            <CommandBar
-                x:Name="SelectionToolBar"
-                DefaultLabelPosition="Right"
-                IsDynamicOverflowEnabled="True"
-                IsVisible="{Binding IsSelecting}">
-                <CommandBarButton
-                    Click="CancelSelectionButton_OnClicked"
-                    Icon="{markup:SymbolIcon SelectAllOff}"
-                    IsEnabled="{Binding !!SelectedEntries.Count}"
-                    Label="{Binding SelectedEntries.Count, Converter={x:Static work:WorkContainer.CancelSelectionButtonConverter}}" />
-                <CommandBarButton
-                    Click="SelectAllToggleButton_OnClicked"
-                    Icon="{markup:SymbolIcon SelectAllOn}"
-                    Label="{I18N {x:Static local:WorkContainerResources+SelectAllButton.Label}}" />
-                <CommandBarButton
-                    x:Name="AddAllToBookmarkButton"
-                    Click="AddAllToBookmarkButton_OnClicked"
-                    ContextRequested="AddAllToBookmarkButton_OnRightClicked"
-                    Icon="{markup:SymbolIcon Heart}"
-                    IsEnabled="{Binding !!SelectedEntries.Count}"
-                    Label="{I18N {x:Static local:EntryItemResources.AddToBookmark}}" />
-                <CommandBarButton
-                    Click="SaveAllButton_OnClicked"
-                    Icon="{markup:SymbolIcon Save}"
-                    IsEnabled="{Binding !!SelectedEntries.Count}"
-                    Label="{I18N {x:Static local:EntryItemResources.Save}}" />
-                <CommandBarButton
-                    Click="OpenAllInBrowserButton_OnClicked"
-                    Icon="{markup:SymbolIcon GlobeArrowUp}"
-                    IsEnabled="{Binding !!SelectedEntries.Count}"
-                    Label="{I18N {x:Static local:EntryItemResources.OpenInWebBrowser}}" />
-            </CommandBar>
+                <!--  Selection toolbar (visible when selecting)  -->
+                <CommandBar
+                    x:Name="SelectionToolBar"
+                    DefaultLabelPosition="Right"
+                    IsDynamicOverflowEnabled="True"
+                    IsVisible="{Binding IsSelecting}">
+                    <CommandBarButton
+                        Click="SelectAllToggleButton_OnClicked"
+                        Icon="{markup:SymbolIcon SelectAllOn}"
+                        Label="{I18N {x:Static local:WorkContainerResources+SelectAllButton.Label}}" />
+                    <CommandBarButton
+                        Click="InvertSelectionButton_OnClicked"
+                        Icon="{markup:SymbolIcon CheckboxCheckedSync}"
+                        Label="{I18N {x:Static local:MiscResources.InvertSelection}}" />
+                    <CommandBarButton
+                        Click="CancelSelectionButton_OnClicked"
+                        Icon="{markup:SymbolIcon SelectAllOff}"
+                        IsEnabled="{Binding !!SelectedEntries.Count}"
+                        Label="{Binding SelectedEntries.Count, Converter={x:Static work:WorkContainer.CancelSelectionButtonConverter}}" />
+                    <CommandBarButton
+                        x:Name="AddAllToBookmarkButton"
+                        Click="AddAllToBookmarkButton_OnClicked"
+                        ContextRequested="AddAllToBookmarkButton_OnRightClicked"
+                        Icon="{markup:SymbolIcon Heart}"
+                        IsEnabled="{Binding !!SelectedEntries.Count}"
+                        Label="{I18N {x:Static local:EntryItemResources.AddToBookmark}}" />
+                    <CommandBarButton
+                        Click="SaveAllButton_OnClicked"
+                        Icon="{markup:SymbolIcon Save}"
+                        IsEnabled="{Binding !!SelectedEntries.Count}"
+                        Label="{I18N {x:Static local:EntryItemResources.Save}}" />
+                    <CommandBarButton
+                        Click="OpenAllInBrowserButton_OnClicked"
+                        Icon="{markup:SymbolIcon GlobeArrowUp}"
+                        IsEnabled="{Binding !!SelectedEntries.Count}"
+                        Label="{I18N {x:Static local:EntryItemResources.OpenInWebBrowser}}" />
+                </CommandBar>
+            </Panel>
         </DockPanel>
 
         <work:WorkView

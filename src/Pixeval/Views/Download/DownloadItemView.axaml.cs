@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Selection;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -178,6 +179,27 @@ public partial class DownloadItemView : ContentPage, IDisposable
     }
 
     private void SelectAllButton_OnClicked(object? sender, RoutedEventArgs e) => SelectAll();
+
+    private void InvertSelectionButton_OnClicked(object? sender, RoutedEventArgs e)
+    {
+        var autoScroll = ListBox.AutoScrollToSelectedItem;
+        ListBox.AutoScrollToSelectedItem = false;
+        try
+        {
+            using var operation = ListBox.Selection.BatchUpdate();
+            for (var i = 0; i < ListBox.Items.Count; i++)
+            {
+                if (ListBox.Selection.IsSelected(i))
+                    ListBox.Selection.Deselect(i);
+                else
+                    ListBox.Selection.Select(i);
+            }
+        }
+        finally
+        {
+            ListBox.AutoScrollToSelectedItem = autoScroll;
+        }
+    }
 
     private void CancelSelectButton_OnClicked(object? sender, RoutedEventArgs e) => UnselectAll();
 

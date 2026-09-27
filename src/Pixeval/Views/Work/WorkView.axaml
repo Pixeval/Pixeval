@@ -22,6 +22,7 @@
             x:Name="WorkListBox"
             controls:IncrementalLoadingBehavior.IsEnabled="True"
             controls:IncrementalLoadingBehavior.Threshold="200"
+            AutoScrollToSelectedItem="False"
             ContainerClearing="ListBox_OnContainerClearing"
             ContainerPrepared="ListBox_OnContainerPrepared"
             ItemsSource="{Binding View}"
