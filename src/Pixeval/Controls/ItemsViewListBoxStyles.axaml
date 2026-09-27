@@ -38,6 +38,12 @@
                                 VerticalAlignment="Stretch"
                                 Background="{TemplateBinding Background}"
                                 Content="{TemplateBinding Content}" />
+                            <!--  Tint above the content so opaque cards also show the selection.  -->
+                            <Border
+                                Name="StateMask"
+                                CornerRadius="{StaticResource ControlCornerRadius}"
+                                IsHitTestVisible="False"
+                                IsVisible="False" />
                             <controls:ListBoxItemCheckBox
                                 Name="SelectionCheckBox"
                                 Margin="1"
@@ -60,11 +66,6 @@
                                 </controls:ListBoxItemCheckBox.Resources>
                             </controls:ListBoxItemCheckBox>
                             <Border
-                                Name="HoverMask"
-                                Background="{DynamicResource SubtleFillColorSecondaryBrush}"
-                                IsHitTestVisible="False"
-                                IsVisible="False" />
-                            <Border
                                 Name="SelectionBorder"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
@@ -76,7 +77,8 @@
                 </Setter.Value>
             </Setter>
 
-            <Style Selector="^:pointerover /template/ Border#HoverMask">
+            <Style Selector="^:pointerover /template/ Border#StateMask">
+                <Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
                 <Setter Property="IsVisible" Value="True" />
             </Style>
         </ControlTheme>
@@ -92,6 +94,15 @@
 
     <Style Selector="ListBox[SelectionMode=Multiple] ListBoxItem:selected">
         <Setter Property="BorderBrush" Value="{DynamicResource SystemFillColorAttentionBrush}" />
-        <Setter Property="Background" Value="{DynamicResource SystemFillColorAttentionBackgroundBrush}" />
+    </Style>
+
+    <Style Selector="ListBox[SelectionMode=Multiple] ListBoxItem:selected /template/ Border#StateMask">
+        <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+        <Setter Property="IsVisible" Value="True" />
+        <Setter Property="Opacity" Value="0.16" />
+    </Style>
+
+    <Style Selector="ListBox[SelectionMode=Multiple] ListBoxItem:selected:pointerover /template/ Border#StateMask">
+        <Setter Property="Opacity" Value="0.22" />
     </Style>
 </Styles>
