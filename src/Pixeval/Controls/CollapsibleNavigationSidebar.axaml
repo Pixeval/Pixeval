@@ -1,0 +1,29 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:Pixeval.Controls">
+    <ControlTheme x:Key="{x:Type controls:CollapsibleNavigationSidebar}"
+                  TargetType="{x:Type controls:CollapsibleNavigationSidebar}">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <DockPanel>
+                    <Border x:Name="PART_MoreButtonHost"
+                            DockPanel.Dock="Bottom"
+                            Height="40"
+                            Margin="5,0,5,5"
+                            IsVisible="False">
+                        <Button x:Name="PART_MoreButton"
+                                HorizontalAlignment="Stretch"
+                                Background="Transparent"
+                                BorderThickness="0">
+                            <Grid>
+                                <TextBlock Text="更多" />
+                            </Grid>
+                        </Button>
+                    </Border>
+                    <ItemsPresenter x:Name="PART_ItemsPresenter" />
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>
+
