@@ -46,16 +46,8 @@
         </PathGeometry.Figures>
     </PathGeometry>
 
-    <PathGeometry x:Key="WaveGeometry">
-        <PathGeometry.Figures>
-            <PathFigure StartPoint="0,1">
-                <PolyBezierSegment Points="0.5,1 0.5,0 1,0" />
-                <PolyBezierSegment Points="1.5,0 1.5,1 2,1" />
-                <PolyBezierSegment Points="2.5,1 2.5,0 3,0" />
-                <PolyLineSegment Points="3,0 3,10 0,10 0,1" />
-            </PathFigure>
-        </PathGeometry.Figures>
-    </PathGeometry>
+    <!--  Stretch clones this geometry; StreamGeometry preserves the static wave when cloned.  -->
+    <StreamGeometry x:Key="WaveGeometry">M0,1 C0.5,1 0.5,0 1,0 C1.5,0 1.5,1 2,1 C2.5,1 2.5,0 3,0 L3,10 0,10 0,1 Z</StreamGeometry>
 
     <ControlTheme x:Key="{x:Type local:WaveProgressHeart}" TargetType="{x:Type local:WaveProgressHeart}">
         <Setter Property="Fill" Value="Crimson" />
