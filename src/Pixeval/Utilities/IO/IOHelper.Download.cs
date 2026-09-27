@@ -92,7 +92,7 @@ public static partial class IoHelper
                     // reduce the frequency of the invocation of the callback, otherwise it will draw a severe performance impact
 
                     var now = DateTime.UtcNow;
-                    if (now - lastReported > TimeSpan.FromSeconds(0.5) && progress is not null && responseLength is not null)
+                    if (now - lastReported > TimeSpan.FromMilliseconds(100) && progress is not null && responseLength is > 0)
                     {
                         lastReported = now;
                         var percentage = totalRead / (double) responseLength * 100;

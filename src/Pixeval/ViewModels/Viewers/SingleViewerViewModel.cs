@@ -40,12 +40,15 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
     private int _previewConsumers;
 
     [ObservableProperty]
-    public partial double LoadingProgress { get; private set; }
+    [NotifyPropertyChangedFor(nameof(IsLoadingIndeterminate))]
+    public partial double? LoadingProgress { get; private set; }
+
+    public bool IsLoadingIndeterminate => LoadingProgress is null;
+
+    public bool IsLoading => !LoadSuccessfully || IsProcessingImage;
 
     [ObservableProperty]
-    public partial string? LoadingText { get; private set; }
-
-    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsLoading))]
     [NotifyCanExecuteChangedFor(nameof(TransformExtensionCommand))]
     [NotifyCanExecuteChangedFor(nameof(ViewOriginalCommand))]
     [NotifyCanExecuteChangedFor(nameof(PlayPauseCommand))]
@@ -58,6 +61,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
     public partial bool LoadSuccessfully { get; private set; }
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsLoading))]
     [NotifyCanExecuteChangedFor(nameof(TransformExtensionCommand))]
     [NotifyCanExecuteChangedFor(nameof(ViewOriginalCommand))]
     public partial bool IsProcessingImage { get; private set; }
@@ -242,7 +246,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
         if (LoadSuccessfully || _disposed)
             return;
 
-        AdvancePhase(LoadingPhase.LoadingImage);
+        LoadingProgress = null;
 
         using var preview = new ProgressiveImagePreview(PublishLoadingPreviewAsync,
             () => Volatile.Read(ref _previewConsumers) > 0);
@@ -330,22 +334,12 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
         }
     }
 
-    private void AdvancePhase(LoadingPhase phase, double progress = 0)
+    private void UpdateLoadingProgress(double progress)
     {
         if (_disposed)
             return;
 
         LoadingProgress = progress;
-        LoadingText = phase is LoadingPhase.DownloadingImage
-            ? I18NManager.GetResource(ImageViewerPageResources.DownloadingImageFormatted, (int) progress)
-            : I18NManager.GetResource(phase switch
-            {
-                LoadingPhase.CheckingCache => ImageViewerPageResources.CheckingCache,
-                LoadingPhase.LoadingFromCache => ImageViewerPageResources.LoadingFromCache,
-                LoadingPhase.MergingUgoiraFrames => ImageViewerPageResources.MergingUgoiraFrames,
-                LoadingPhase.LoadingImage => ImageViewerPageResources.LoadingImage,
-                _ => throw new ArgumentOutOfRangeException(nameof(phase), phase, null)
-            });
     }
 
     private async Task<Bitmap?> LoadThumbnailImageOverrideAsync(CancellationToken token, int maximumDimension = 100)
@@ -389,7 +383,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
                 return await CacheHelper.GetSingleImageAsync(
                     _platform,
                     f,
-                    new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, d)),
+                    new Progress<double>(UpdateLoadingProgress),
                     preview is null ? null : preview.UpdateAsync, token);
             }
             case ISingleAnimatedImage { ImageType: ImageType.SingleAnimatedImage } singleAnimatedImage:
@@ -408,7 +402,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
                         return await CacheHelper.GetAnimatedImageSeparatedAsync(
                             _platform,
                             f,
-                            new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, d)),
+                            new Progress<double>(UpdateLoadingProgress),
                             preview is null ? null : preview.UpdateAsync, token);
                     }
                     case SingleAnimatedImageType.SingleZipFile or SingleAnimatedImageType.SingleFile:
@@ -416,7 +410,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
                         return await CacheHelper.GetSingleAnimatedImageAsync(
                             _platform,
                             f,
-                            new Progress<double>(d => AdvancePhase(LoadingPhase.DownloadingImage, d)),
+                            new Progress<double>(UpdateLoadingProgress),
                             preview is null ? null : f.PreferredAnimatedImageType is SingleAnimatedImageType.SingleZipFile
                                 ? preview.UpdateZipAsync : preview.UpdateAsync, token);
                     }
@@ -443,7 +437,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
         try
         {
             viewContainer?.ShowInformation(I18NManager.GetResource(ImageViewerPageResources.LoadingOriginalImage));
-            AdvancePhase(LoadingPhase.LoadingImage);
+            LoadingProgress = null;
             var source = await LoadImageAsync(true, token: _lifetimeCancellationTokenSource.Token);
             if (source is null)
             {
@@ -602,15 +596,6 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
     }
 
     private static ExtensionService ExtensionService => App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
-}
-
-public enum LoadingPhase
-{
-    CheckingCache,
-    LoadingFromCache,
-    MergingUgoiraFrames,
-    DownloadingImage,
-    LoadingImage,
 }
 
 public sealed class ImageTransformerExtensionCommandItem

@@ -160,6 +160,11 @@
                 </Border>
             </controls:FloatingPaneView.Pane>
             <DockPanel>
+                <ProgressBar
+                    DockPanel.Dock="Top"
+                    IsIndeterminate="{Binding CurrentImage.CurrentPage.IsLoadingIndeterminate, FallbackValue=True, TargetNullValue=True}"
+                    IsVisible="{Binding CurrentImage.CurrentPage.IsLoading, FallbackValue=False, TargetNullValue=False}"
+                    Value="{Binding CurrentImage.CurrentPage.LoadingProgress, FallbackValue=0, TargetNullValue=0}" />
                 <Panel Background="Transparent">
                     <!--  图片查看器  -->
 

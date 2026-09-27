@@ -1206,12 +1206,7 @@ namespace Pixeval
     public static class ImageViewerPageResources
     {
         public const string ApplyingTransformerExtensions = "ImageViewerPage.ApplyingTransformerExtensions";
-        public const string CheckingCache = "ImageViewerPage.CheckingCache";
-        public const string DownloadingImageFormatted = "ImageViewerPage.DownloadingImageFormatted";
-        public const string LoadingFromCache = "ImageViewerPage.LoadingFromCache";
-        public const string LoadingImage = "ImageViewerPage.LoadingImage";
         public const string LoadingOriginalImage = "ImageViewerPage.LoadingOriginalImage";
-        public const string MergingUgoiraFrames = "ImageViewerPage.MergingUgoiraFrames";
         public const string OriginalImageLoadFailed = "ImageViewerPage.OriginalImageLoadFailed";
         public const string OriginalImageLoadedSuccessfully = "ImageViewerPage.OriginalImageLoadedSuccessfully";
         public const string TransformerExtensionFailed = "ImageViewerPage.TransformerExtensionFailed";
