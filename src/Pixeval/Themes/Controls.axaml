@@ -114,7 +114,7 @@
         <Setter Property="Template">
             <ControlTemplate TargetType="{x:Type NavigationPage}">
                 <Panel ClipToBounds="True">
-                    <DockPanel VerticalAlignment="Top">
+                    <DockPanel>
                         <Border
                             Name="PART_NavBarSpacer"
                             Height="{TemplateBinding BarHeight}"
