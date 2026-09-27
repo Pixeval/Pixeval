@@ -20,6 +20,19 @@ public static class LegacyAppSettingsMigration
         var yaml = YamlStream.Load(reader, new YamlNodeTracker());
         if (yaml.Count is 1 && yaml[0].Contents is YamlMapping root)
         {
+            MoveProperties(root, nameof(AppSettings.ApplicationSettings), nameof(ApplicationSettingsGroup.HomePage),
+                [
+                    nameof(HomePageSettings.HomePageRows),
+                    nameof(HomePageSettings.HomePageColumns),
+                    nameof(HomePageSettings.HideHomePageToolbar),
+                    nameof(HomePageSettings.HideHomePageCardTitle)
+                ]);
+            MoveProperties(root, nameof(AppSettings.BrowsingExperienceSettings), nameof(BrowsingExperienceSettingsGroup.AutoPlay),
+                [
+                    nameof(AutoPlaySettings.IllustrationViewerAutoPlayInterval),
+                    nameof(AutoPlaySettings.IllustrationViewerAutoPlayMode),
+                    nameof(AutoPlaySettings.IllustrationViewerAutoPlayScope)
+                ]);
             MoveProperties(root, nameof(AppSettings.ApplicationSettings), nameof(ApplicationSettingsGroup.FileCache),
                 [
                     nameof(FileCacheSettings.LimitFileCacheSize),

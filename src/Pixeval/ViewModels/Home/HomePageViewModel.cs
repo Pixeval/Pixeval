@@ -99,9 +99,9 @@ public partial class HomePageViewModel : ViewModelBase
 
     [ObservableProperty] public partial bool IsEditMode { get; set; }
 
-    public int RowCount => decimal.ToInt32(decimal.Clamp(Settings.ApplicationSettings.HomePageRows, HomePage.MinimumGridSize, HomePage.MaximumGridSize));
+    public int RowCount => decimal.ToInt32(decimal.Clamp(Settings.ApplicationSettings.HomePage.HomePageRows, HomePage.MinimumGridSize, HomePage.MaximumGridSize));
 
-    public int ColumnCount => decimal.ToInt32(decimal.Clamp(Settings.ApplicationSettings.HomePageColumns, HomePage.MinimumGridSize, HomePage.MaximumGridSize));
+    public int ColumnCount => decimal.ToInt32(decimal.Clamp(Settings.ApplicationSettings.HomePage.HomePageColumns, HomePage.MinimumGridSize, HomePage.MaximumGridSize));
 
     [ObservableProperty] public partial decimal GridColumnsValue { get; set; }
 

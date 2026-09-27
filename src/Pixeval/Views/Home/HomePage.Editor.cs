@@ -65,7 +65,7 @@ public sealed partial class HomePage
     {
         var rows = DecimalToPositiveInt(decimal.Clamp(ViewModel.GridRowsValue, MinimumGridSize, MaximumGridSize));
         var columns = DecimalToPositiveInt(decimal.Clamp(ViewModel.GridColumnsValue, MinimumGridSize, MaximumGridSize));
-        var settings = App.AppViewModel.AppSettings.ApplicationSettings;
+        var settings = App.AppViewModel.AppSettings.ApplicationSettings.HomePage;
         if (settings.HomePageRows == rows && settings.HomePageColumns == columns)
             return;
 

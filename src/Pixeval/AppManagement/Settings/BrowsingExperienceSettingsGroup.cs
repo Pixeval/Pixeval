@@ -22,15 +22,6 @@ public record BrowsingExperienceSettingsGroup
     [SettingsEntry(Symbol.ArrowBetweenDown, AppSettingsResources.BrowseDirection.Header, AppSettingsResources.BrowseDirection.Description)]
     public Orientation BrowseDirection { get; set; } = Orientation.Horizontal;
 
-    [SettingsEntry(Symbol.SlideMultipleArrowRight, AppSettingsResources.IllustrationViewerAutoPlayIntervalEntry.Header, AppSettingsResources.IllustrationViewerAutoPlayIntervalEntry.Description)]
-    public int IllustrationViewerAutoPlayInterval { get; set; } = 5;
-
-    [SettingsEntry(Symbol.ArrowShuffle, AppSettingsResources.IllustrationViewerAutoPlayModeEntry.Header, AppSettingsResources.IllustrationViewerAutoPlayModeEntry.Description)]
-    public IllustrationViewerAutoPlayMode IllustrationViewerAutoPlayMode { get; set; }
-
-    [SettingsEntry(Symbol.ImageMultiple, AppSettingsResources.IllustrationViewerAutoPlayScopeEntry.Header, AppSettingsResources.IllustrationViewerAutoPlayScopeEntry.Description)]
-    public IllustrationViewerAutoPlayScope IllustrationViewerAutoPlayScope { get; set; }
-
     /// <summary>
     /// The target filter that indicates the type of the client
     /// </summary>
@@ -52,4 +43,7 @@ public record BrowsingExperienceSettingsGroup
 
     [SettingsEntry(Symbol.PersonInfo, AppSettingsResources.OpenUserInfoByDefaultEntry.Header, AppSettingsResources.OpenUserInfoByDefaultEntry.Description)]
     public bool OpenUserInfoByDefault { get; set; } = true;
+
+    [SettingsEntry(Symbol.SlidePlay, AppSettingsResources.AutoPlayEntry.Header, AppSettingsResources.AutoPlayEntry.Description)]
+    public AutoPlaySettings AutoPlay { get; set; } = new();
 }

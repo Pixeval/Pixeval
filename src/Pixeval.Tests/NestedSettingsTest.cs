@@ -150,6 +150,8 @@ public sealed class NestedSettingsTest
     public void NestedSettingsShouldRoundTripThroughGeneratedYamlSerializer()
     {
         var settings = new AppSettings();
+        settings.ApplicationSettings.HomePage.HomePageRows = 10;
+        settings.BrowsingExperienceSettings.AutoPlay.IllustrationViewerAutoPlayInterval = 17;
         settings.ApplicationSettings.FileCache.LimitFileCacheSize = true;
         settings.ApplicationSettings.FileCache.FileCacheSizeLimitInMegabytes = 1234;
         settings.BrowsingExperienceSettings.ThumbnailLayout.IllustrationGridItemSize = 321;
@@ -166,12 +168,57 @@ public sealed class NestedSettingsTest
         var restored = YamlSerializer.Deserialize(stream, SettingsSerializerContext.Default.AppSettings)!;
 
         Assert.AreEqual(settings.ApplicationSettings.FileCache, restored.ApplicationSettings.FileCache);
+        Assert.AreEqual(settings.ApplicationSettings.HomePage, restored.ApplicationSettings.HomePage);
+        Assert.AreEqual(settings.BrowsingExperienceSettings.AutoPlay, restored.BrowsingExperienceSettings.AutoPlay);
         Assert.AreEqual(settings.BrowsingExperienceSettings.ThumbnailLayout, restored.BrowsingExperienceSettings.ThumbnailLayout);
         Assert.AreEqual(settings.SearchSettings.RankOptions, restored.SearchSettings.RankOptions);
         Assert.AreEqual(settings.DownloadSettings.DownloadFormats, restored.DownloadSettings.DownloadFormats);
         Assert.AreEqual(settings.NetworkSettings.ProxySettings, restored.NetworkSettings.ProxySettings);
         Assert.IsFalse(restored.NetworkSettings.PixivDomainFronting.EnablePixivDomainFronting);
         CollectionAssert.AreEqual(new[] { "127.0.0.1" }, restored.NetworkSettings.GitHubDomainFronting.GitHubNameResolver);
+    }
+
+    [TestMethod]
+    public void HomePageAndAutoPlayExpandersShouldImportAndResetTheirChildren()
+    {
+        var settings = new AppSettings();
+        var home = SettingsBuilder.CreateGroup(settings.ApplicationSettings)
+            .MultiValues(t => t.HomePage, entries => entries
+                .Int(t => t.HomePageRows, 1, 12, 1)
+                .Int(t => t.HomePageColumns, 1, 12, 1)
+                .Bool(t => t.HideHomePageToolbar)
+                .Bool(t => t.HideHomePageCardTitle))
+            .Build()[0];
+        var autoPlay = SettingsBuilder.CreateGroup(settings.BrowsingExperienceSettings)
+            .MultiValues(t => t.AutoPlay, entries => entries
+                .Int(t => t.IllustrationViewerAutoPlayInterval, 1, 60, 1)
+                .Enum(t => t.IllustrationViewerAutoPlayMode)
+                .Enum(t => t.IllustrationViewerAutoPlayScope))
+            .Build()[0];
+        var imported = new AppSettings();
+        imported.ApplicationSettings.HomePage = new()
+        {
+            HomePageRows = 9,
+            HomePageColumns = 3,
+            HideHomePageToolbar = true,
+            HideHomePageCardTitle = true
+        };
+        imported.BrowsingExperienceSettings.AutoPlay = new()
+        {
+            IllustrationViewerAutoPlayInterval = 13,
+            IllustrationViewerAutoPlayMode = IllustrationViewerAutoPlayMode.Loop,
+            IllustrationViewerAutoPlayScope = IllustrationViewerAutoPlayScope.AllWorks
+        };
+
+        home.LocalValueReset(imported);
+        autoPlay.LocalValueReset(imported);
+        Assert.AreEqual(imported.ApplicationSettings.HomePage, settings.ApplicationSettings.HomePage);
+        Assert.AreEqual(imported.BrowsingExperienceSettings.AutoPlay, settings.BrowsingExperienceSettings.AutoPlay);
+
+        home.LocalValueReset(new AppSettings());
+        autoPlay.LocalValueReset(new AppSettings());
+        Assert.AreEqual(new HomePageSettings(), settings.ApplicationSettings.HomePage);
+        Assert.AreEqual(new AutoPlaySettings(), settings.BrowsingExperienceSettings.AutoPlay);
     }
 
     private sealed class TestSettings

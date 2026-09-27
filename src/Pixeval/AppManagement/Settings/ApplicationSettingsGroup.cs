@@ -44,15 +44,6 @@ public record ApplicationSettingsGroup
     [SettingsEntry(Symbol.TextFont, AppSettingsResources.AppFontFamilyEntry.Header, AppSettingsResources.AppFontFamilyEntry.Description, AppSettingsResources.AppFontFamilyEntry.Placeholder)]
     public ObservableCollection<string> AppFontFamily { get; set; } = [];
 
-    [SettingsEntry(Symbol.Table, AppSettingsResources.HomePageRowsEntry.Header, AppSettingsResources.HomePageRowsEntry.Description)]
-    public int HomePageRows { get; set; } = 7;
-
-    [SettingsEntry(Symbol.Table, AppSettingsResources.HomePageColumnsEntry.Header, AppSettingsResources.HomePageColumnsEntry.Description)]
-    public int HomePageColumns { get; set; } = 1;
-
-    [SettingsEntry(Symbol.WindowHeaderHorizontal, AppSettingsResources.HideHomePageToolbarEntry.Header, AppSettingsResources.HideHomePageToolbarEntry.Description)]
-    public bool HideHomePageToolbar { get; set; }
-
-    [SettingsEntry(Symbol.AppTitle, AppSettingsResources.HideHomePageCardTitleEntry.Header, AppSettingsResources.HideHomePageCardTitleEntry.Description)]
-    public bool HideHomePageCardTitle { get; set; }
+    [SettingsEntry(Symbol.Home, AppSettingsResources.HomePageEntry.Header, AppSettingsResources.HomePageEntry.Description)]
+    public HomePageSettings HomePage { get; set; } = new();
 }

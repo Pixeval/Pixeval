@@ -67,10 +67,11 @@ public class SettingsPageViewModel : ViewModelBase
                         if (enabled)
                             _ = CacheHelper.EnforceCacheSizeLimitAsync();
                     })
-                .Int(t => t.HomePageRows, 1, 12, 1)
-                .Int(t => t.HomePageColumns, 1, 12, 1)
-                .Bool(t => t.HideHomePageToolbar)
-                .Bool(t => t.HideHomePageCardTitle))
+                .MultiValues(t => t.HomePage, entries => entries
+                    .Int(t => t.HomePageRows, 1, 12, 1)
+                    .Int(t => t.HomePageColumns, 1, 12, 1)
+                    .Bool(t => t.HideHomePageToolbar)
+                    .Bool(t => t.HideHomePageCardTitle)))
             .NewGroup(t => t.NetworkSettings, group => group
                 .Int(t => t.ApiRequestCooldown, 0, 5000, 100,
                     entry => entry.ValueChanged += value => App.AppViewModel.MakoClient.Configuration.ApiRequestCooldown = value)
@@ -104,9 +105,10 @@ public class SettingsPageViewModel : ViewModelBase
                     .Int(t => t.IllustrationMasonryColumnWidth, 50, 1000, 10))
                 .Enum(t => t.BrowseMode)
                 .Enum(t => t.BrowseDirection)
-                .Int(t => t.IllustrationViewerAutoPlayInterval, 1, 60, 1)
-                .Enum(t => t.IllustrationViewerAutoPlayMode)
-                .Enum(t => t.IllustrationViewerAutoPlayScope)
+                .MultiValues(t => t.AutoPlay, entries => entries
+                    .Int(t => t.IllustrationViewerAutoPlayInterval, 1, 60, 1)
+                    .Enum(t => t.IllustrationViewerAutoPlayMode)
+                    .Enum(t => t.IllustrationViewerAutoPlayScope))
                 .Enum(t => t.TargetFilter)
                 .Collection(t => t.BlockedTags)
                 .Collection(t => t.PinnedTags)

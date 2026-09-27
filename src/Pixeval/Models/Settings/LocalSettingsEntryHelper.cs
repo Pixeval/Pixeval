@@ -250,6 +250,12 @@ public static class LocalSettingsEntryHelper
             if (entry is ISettingsValueReset<NovelSettingsGroup> novel)
                 novel.ValueReset(resetAppSettings.NovelSettings);
 
+            if (entry is ISettingsValueReset<HomePageSettings> homePage)
+                homePage.ValueReset(resetAppSettings.ApplicationSettings.HomePage);
+
+            if (entry is ISettingsValueReset<AutoPlaySettings> autoPlay)
+                autoPlay.ValueReset(resetAppSettings.BrowsingExperienceSettings.AutoPlay);
+
             if (entry is ISettingsValueReset<FileCacheSettings> fileCache)
                 fileCache.ValueReset(resetAppSettings.ApplicationSettings.FileCache);
 

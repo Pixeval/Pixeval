@@ -21,7 +21,13 @@ public sealed class LegacyAppSettingsMigrationTest
               LimitFileCacheSize: true
               FileCacheSizeLimitInMegabytes: 123
               HomePageRows: 9
+              HomePageColumns: 3
+              HideHomePageToolbar: true
+              HideHomePageCardTitle: true
             BrowsingExperienceSettings:
+              IllustrationViewerAutoPlayInterval: 12
+              IllustrationViewerAutoPlayMode: Loop
+              IllustrationViewerAutoPlayScope: AllWorks
               ThumbnailLayoutType: Grid
               IllustrationLinedFlowItemHeight: 111
               IllustrationGridItemSize: 222
@@ -56,7 +62,13 @@ public sealed class LegacyAppSettingsMigrationTest
 
         Assert.IsTrue(settings.ApplicationSettings.FileCache.LimitFileCacheSize);
         Assert.AreEqual(123, settings.ApplicationSettings.FileCache.FileCacheSizeLimitInMegabytes);
-        Assert.AreEqual(9, settings.ApplicationSettings.HomePageRows);
+        Assert.AreEqual(9, settings.ApplicationSettings.HomePage.HomePageRows);
+        Assert.AreEqual(3, settings.ApplicationSettings.HomePage.HomePageColumns);
+        Assert.IsTrue(settings.ApplicationSettings.HomePage.HideHomePageToolbar);
+        Assert.IsTrue(settings.ApplicationSettings.HomePage.HideHomePageCardTitle);
+        Assert.AreEqual(12, settings.BrowsingExperienceSettings.AutoPlay.IllustrationViewerAutoPlayInterval);
+        Assert.AreEqual(IllustrationViewerAutoPlayMode.Loop, settings.BrowsingExperienceSettings.AutoPlay.IllustrationViewerAutoPlayMode);
+        Assert.AreEqual(IllustrationViewerAutoPlayScope.AllWorks, settings.BrowsingExperienceSettings.AutoPlay.IllustrationViewerAutoPlayScope);
         Assert.AreEqual(ThumbnailLayoutType.Grid, settings.BrowsingExperienceSettings.ThumbnailLayout.ThumbnailLayoutType);
         Assert.AreEqual(111, settings.BrowsingExperienceSettings.ThumbnailLayout.IllustrationLinedFlowItemHeight);
         Assert.AreEqual(222, settings.BrowsingExperienceSettings.ThumbnailLayout.IllustrationGridItemSize);

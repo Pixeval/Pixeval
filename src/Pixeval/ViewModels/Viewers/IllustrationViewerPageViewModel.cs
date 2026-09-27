@@ -388,14 +388,14 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
 
     public int AutoPlayInterval
     {
-        get => App.AppViewModel.AppSettings.BrowsingExperienceSettings.IllustrationViewerAutoPlayInterval;
+        get => App.AppViewModel.AppSettings.BrowsingExperienceSettings.AutoPlay.IllustrationViewerAutoPlayInterval;
         set
         {
             value = int.Clamp(value, 1, 60);
-            if (App.AppViewModel.AppSettings.BrowsingExperienceSettings.IllustrationViewerAutoPlayInterval == value)
+            if (App.AppViewModel.AppSettings.BrowsingExperienceSettings.AutoPlay.IllustrationViewerAutoPlayInterval == value)
                 return;
 
-            App.AppViewModel.AppSettings.BrowsingExperienceSettings.IllustrationViewerAutoPlayInterval = value;
+            App.AppViewModel.AppSettings.BrowsingExperienceSettings.AutoPlay.IllustrationViewerAutoPlayInterval = value;
             SaveAutoPlaySettings();
             OnPropertyChanged();
             UpdateAutoPlayTimerInterval();
@@ -404,13 +404,13 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
 
     public IllustrationViewerAutoPlayMode AutoPlayMode
     {
-        get => App.AppViewModel.AppSettings.BrowsingExperienceSettings.IllustrationViewerAutoPlayMode;
+        get => App.AppViewModel.AppSettings.BrowsingExperienceSettings.AutoPlay.IllustrationViewerAutoPlayMode;
         set
         {
-            if (App.AppViewModel.AppSettings.BrowsingExperienceSettings.IllustrationViewerAutoPlayMode == value)
+            if (App.AppViewModel.AppSettings.BrowsingExperienceSettings.AutoPlay.IllustrationViewerAutoPlayMode == value)
                 return;
 
-            App.AppViewModel.AppSettings.BrowsingExperienceSettings.IllustrationViewerAutoPlayMode = value;
+            App.AppViewModel.AppSettings.BrowsingExperienceSettings.AutoPlay.IllustrationViewerAutoPlayMode = value;
             SaveAutoPlaySettings();
             OnPropertyChanged();
         }
@@ -418,13 +418,13 @@ public sealed partial class IllustrationViewerPageViewModel : PagedViewerViewMod
 
     public IllustrationViewerAutoPlayScope AutoPlayScope
     {
-        get => App.AppViewModel.AppSettings.BrowsingExperienceSettings.IllustrationViewerAutoPlayScope;
+        get => App.AppViewModel.AppSettings.BrowsingExperienceSettings.AutoPlay.IllustrationViewerAutoPlayScope;
         set
         {
-            if (App.AppViewModel.AppSettings.BrowsingExperienceSettings.IllustrationViewerAutoPlayScope == value)
+            if (App.AppViewModel.AppSettings.BrowsingExperienceSettings.AutoPlay.IllustrationViewerAutoPlayScope == value)
                 return;
 
-            App.AppViewModel.AppSettings.BrowsingExperienceSettings.IllustrationViewerAutoPlayScope = value;
+            App.AppViewModel.AppSettings.BrowsingExperienceSettings.AutoPlay.IllustrationViewerAutoPlayScope = value;
             SaveAutoPlaySettings();
             OnPropertyChanged();
         }

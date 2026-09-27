@@ -62,8 +62,8 @@ public class PixevalSettings : ViewModelBase
 
     public bool HideHomePageCardTitle
     {
-        get => Settings.ApplicationSettings.HideHomePageCardTitle;
-        set => SetProperty(Settings.ApplicationSettings.HideHomePageCardTitle, value, Settings.ApplicationSettings, (setting, v) =>
+        get => Settings.ApplicationSettings.HomePage.HideHomePageCardTitle;
+        set => SetProperty(Settings.ApplicationSettings.HomePage.HideHomePageCardTitle, value, Settings.ApplicationSettings.HomePage, (setting, v) =>
         {
             setting.HideHomePageCardTitle = v;
             AppInfo.SaveAppSettings(Settings);
@@ -72,8 +72,8 @@ public class PixevalSettings : ViewModelBase
 
     public bool HideHomePageToolbar
     {
-        get => Settings.ApplicationSettings.HideHomePageToolbar;
-        set => SetProperty(Settings.ApplicationSettings.HideHomePageToolbar, value, Settings.ApplicationSettings, (setting, v) =>
+        get => Settings.ApplicationSettings.HomePage.HideHomePageToolbar;
+        set => SetProperty(Settings.ApplicationSettings.HomePage.HideHomePageToolbar, value, Settings.ApplicationSettings.HomePage, (setting, v) =>
         {
             setting.HideHomePageToolbar = v;
             AppInfo.SaveAppSettings(Settings);

@@ -46,6 +46,11 @@ namespace Pixeval
             public const string Header = "AppSettings.AppLanguageEntry.Header";
             public const string Placeholder = "AppSettings.AppLanguageEntry.Placeholder";
         }
+        public static class AutoPlayEntry
+        {
+            public const string Description = "AppSettings.AutoPlayEntry.Description";
+            public const string Header = "AppSettings.AutoPlayEntry.Header";
+        }
         public static class BlockedTagsEntry
         {
             public const string Description = "AppSettings.BlockedTagsEntry.Description";
@@ -121,6 +126,11 @@ namespace Pixeval
         {
             public const string Description = "AppSettings.HomePageColumnsEntry.Description";
             public const string Header = "AppSettings.HomePageColumnsEntry.Header";
+        }
+        public static class HomePageEntry
+        {
+            public const string Description = "AppSettings.HomePageEntry.Description";
+            public const string Header = "AppSettings.HomePageEntry.Header";
         }
         public static class HomePageRowsEntry
         {
