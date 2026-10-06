@@ -239,14 +239,14 @@ public static class IncrementalLoadingBehavior
                 })
                 return false;
 
-            return canLoadVertically
-                   && scrollViewer.Viewport.Height > 0
-                   && scrollViewer.Extent.Height > 0
-                   && scrollViewer.Offset.Y + scrollViewer.Viewport.Height >= scrollViewer.Extent.Height - itemsControl.Threshold
-                   || canLoadHorizontally
-                   && scrollViewer.Viewport.Width > 0
-                   && scrollViewer.Extent.Width > 0
-                   && scrollViewer.Offset.X + scrollViewer.Viewport.Width >= scrollViewer.Extent.Width - itemsControl.Threshold;
+            return (canLoadVertically
+                    && scrollViewer.Viewport.Height > 0
+                    && scrollViewer.Extent.Height > 0
+                    && scrollViewer.Offset.Y + scrollViewer.Viewport.Height >= scrollViewer.Extent.Height - itemsControl.Threshold)
+                   || (canLoadHorizontally
+                       && scrollViewer.Viewport.Width > 0
+                       && scrollViewer.Extent.Width > 0
+                       && scrollViewer.Offset.X + scrollViewer.Viewport.Width >= scrollViewer.Extent.Width - itemsControl.Threshold);
         }
 
         private void AttachSources()
@@ -478,10 +478,10 @@ public static class IncrementalLoadingBehavior
     {
         if (sender is not IAdaptiveGridLayoutInfo adaptiveGrid
             || sender is not Control control
-            || e.Property != AdaptiveGrid.LinesProperty
-            && e.Property != AdaptiveGrid.ItemsPerLineProperty
-            && e.Property != VirtualizingAdaptiveGrid.LinesProperty
-            && e.Property != VirtualizingAdaptiveGrid.ItemsPerLineProperty)
+            || (e.Property != AdaptiveGrid.LinesProperty
+                && e.Property != AdaptiveGrid.ItemsPerLineProperty
+                && e.Property != VirtualizingAdaptiveGrid.LinesProperty
+                && e.Property != VirtualizingAdaptiveGrid.ItemsPerLineProperty))
             return;
 
         if (control.GetValue(AdaptiveGridOwnerProperty) is { } itemsControl)

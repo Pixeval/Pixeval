@@ -237,10 +237,10 @@ public class FloatingDockHost : Panel
             var margin = double.Max(0, FloatingPaneMargin);
             var width = double.Min(
                 CoerceLength(FloatingPaneWidth),
-                double.Max(0, finalSize.Width - margin * 2));
+                double.Max(0, finalSize.Width - (margin * 2)));
             var height = double.Min(
                 pane.DesiredSize.Height > 0 ? pane.DesiredSize.Height : pane.Bounds.Height,
-                double.Max(0, finalSize.Height - margin * 2));
+                double.Max(0, finalSize.Height - (margin * 2)));
 
             var x = FloatingPaneHorizontalAlignment switch
             {

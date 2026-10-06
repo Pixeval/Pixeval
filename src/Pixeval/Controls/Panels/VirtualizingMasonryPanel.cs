@@ -255,7 +255,7 @@ public class VirtualizingMasonryPanel : CachedVirtualizingPanel, IOrientationBas
             var y = _columnHeights[column];
             if (_columnItems[column].Count > 0)
                 y += RowSpacing;
-            var x = horizontalOffset + column * (layout.ColumnWidth + ColumnSpacing);
+            var x = horizontalOffset + (column * (layout.ColumnWidth + ColumnSpacing));
             _itemRects.Add(new Rect(x, y, layout.ColumnWidth, height));
             _columnItems[column].Add(i);
             _columnHeights[column] = y + height;
@@ -278,7 +278,7 @@ public class VirtualizingMasonryPanel : CachedVirtualizingPanel, IOrientationBas
             viewportLength = _itemRects[0].Height;
         var cache = viewportLength * CacheLength;
         var start = double.Max(0, double.IsFinite(_viewport.Y) ? _viewport.Y - cache : 0);
-        var end = double.Min(_panelSize.Height, start + viewportLength + cache * 2);
+        var end = double.Min(_panelSize.Height, start + viewportLength + (cache * 2));
 
         foreach (var column in _columnItems)
         {
@@ -304,7 +304,7 @@ public class VirtualizingMasonryPanel : CachedVirtualizingPanel, IOrientationBas
         var result = column.Count;
         while (left <= right)
         {
-            var mid = left + (right - left) / 2;
+            var mid = left + ((right - left) / 2);
             if (_itemRects[column[mid]].Bottom >= start)
             {
                 result = mid;
@@ -363,7 +363,7 @@ public class VirtualizingMasonryPanel : CachedVirtualizingPanel, IOrientationBas
     }
 
     private double GetTotalWidth(double columnWidth, int columnCount) =>
-        columnWidth + (columnCount - 1) * (columnWidth + ColumnSpacing);
+        columnWidth + ((columnCount - 1) * (columnWidth + ColumnSpacing));
 
     private static int GetShortestColumn(IReadOnlyList<double> columnHeights)
     {

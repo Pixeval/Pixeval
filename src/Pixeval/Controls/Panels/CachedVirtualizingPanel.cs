@@ -59,7 +59,7 @@ public abstract class CachedVirtualizingPanel : VirtualizingPanel
         };
 
         if (wrap)
-            index = (index % count + count) % count;
+            index = ((index % count) + count) % count;
 
         return index >= 0 && index < count ? ScrollIntoView(index) : null;
     }

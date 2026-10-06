@@ -464,8 +464,8 @@ public class VirtualizingAdaptiveGrid : VirtualizingPanel, INavigableContainer, 
     {
         var line = index / layout.ItemsPerLine;
         var item = index % layout.ItemsPerLine;
-        var minor = layout.MinorStart + item * (layout.SlotMinor + layout.ItemSpacing);
-        var major = layout.MajorStart + line * (layout.LineMajor + layout.LineSpacing);
+        var minor = layout.MinorStart + (item * (layout.SlotMinor + layout.ItemSpacing));
+        var major = layout.MajorStart + (line * (layout.LineMajor + layout.LineSpacing));
         return this.MinorMajorRect(minor, major, layout.SlotMinor, layout.LineMajor);
     }
 

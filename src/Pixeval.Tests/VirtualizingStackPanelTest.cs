@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using Avalonia;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pixeval.Controls;
@@ -7,6 +9,20 @@ namespace Pixeval.Tests;
 [TestClass]
 public sealed class VirtualizingStackPanelTest
 {
+    [TestMethod]
+    public void RemovalThenInsertionBeforeMeasureDoesNotAccessAnEmptyCache()
+    {
+        var panel = new TestPanel();
+        var items = new List<object?> { "first", "removed", "last" };
+        panel.NotifyItemsChanged(items, new(NotifyCollectionChangedAction.Reset));
+        items.RemoveAt(1);
+        panel.NotifyItemsChanged(items, new(NotifyCollectionChangedAction.Remove, "removed", 1));
+        items.Insert(1, "inserted");
+        panel.NotifyItemsChanged(items, new(NotifyCollectionChangedAction.Add, "inserted", 1));
+        items.Insert(2, "second insertion");
+        panel.NotifyItemsChanged(items, new(NotifyCollectionChangedAction.Add, "second insertion", 2));
+    }
+
     [TestMethod]
     [DataRow(2, 200, 100, 400, 300)]
     [DataRow(0.5, 800, 400, 1600, 1200)]
@@ -44,5 +60,10 @@ public sealed class VirtualizingStackPanelTest
             2);
 
         Assert.AreEqual(new Rect(200, 100, 400, 300), viewport);
+    }
+
+    private sealed class TestPanel : VirtualizingStackPanel
+    {
+        public void NotifyItemsChanged(IReadOnlyList<object?> items, NotifyCollectionChangedEventArgs e) => OnItemsChanged(items, e);
     }
 }

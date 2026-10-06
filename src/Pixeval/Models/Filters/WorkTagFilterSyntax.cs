@@ -29,5 +29,5 @@ internal sealed class WorkTagFilterSyntax : FilterTextSyntax<IArtworkInfo>
     public override bool Match(IArtworkInfo context, FilterTextValue value) =>
         context.Tags.Any(tags => tags.Any(tag =>
             value.Matches(tag.Name)
-            || tag.TranslatedName is { } translatedName && value.Matches(translatedName)));
+            || (tag.TranslatedName is { } translatedName && value.Matches(translatedName))));
 }

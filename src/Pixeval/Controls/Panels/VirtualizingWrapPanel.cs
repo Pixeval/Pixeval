@@ -354,15 +354,15 @@ public class VirtualizingWrapPanel : CachedVirtualizingPanel, IOrientationBasedM
                 case WrapPanelItemsAlignment.Justify:
                     if (count > 1)
                     {
-                        var totalItemMinor = usedMinor - ItemSpacing * (count - 1);
+                        var totalItemMinor = usedMinor - (ItemSpacing * (count - 1));
                         spacing = (availableMinor - totalItemMinor) / (count - 1);
                     }
 
                     break;
                 case WrapPanelItemsAlignment.Stretch:
-                    var stretchableMinor = usedMinor - ItemSpacing * (count - 1);
+                    var stretchableMinor = usedMinor - (ItemSpacing * (count - 1));
                     if (stretchableMinor > 0)
-                        stretch = (availableMinor - ItemSpacing * (count - 1)) / stretchableMinor;
+                        stretch = (availableMinor - (ItemSpacing * (count - 1))) / stretchableMinor;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(ItemsAlignment), ItemsAlignment, null);
@@ -407,7 +407,7 @@ public class VirtualizingWrapPanel : CachedVirtualizingPanel, IOrientationBasedM
         var result = right;
         while (left <= right)
         {
-            var mid = left + (right - left) / 2;
+            var mid = left + ((right - left) / 2);
             var line = _lines[mid];
             if (line.MajorStart + line.MajorSize >= start)
             {
@@ -430,7 +430,7 @@ public class VirtualizingWrapPanel : CachedVirtualizingPanel, IOrientationBasedM
         var result = 0;
         while (left <= right)
         {
-            var mid = left + (right - left) / 2;
+            var mid = left + ((right - left) / 2);
             if (_lines[mid].MajorStart <= end)
             {
                 result = mid;

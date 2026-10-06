@@ -337,6 +337,8 @@ public class VirtualizingStackPanel : VirtualizingPanel, IScrollSnapPointsInfo
         {
             var index = e.NewStartingIndex;
             var count = e.NewItems.Count;
+            // Remove/reset clears the cache; another collection event may arrive before MeasureOverride rebuilds it.
+            EnsureCacheShape(items.Count - count);
             _measuredSizes.InsertRange(index, Enumerable.Repeat<Size?>(null, count));
             _unmeasuredCount += count;
             ShiftRealizedIndices(index, count);

@@ -54,7 +54,7 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntryBase entry) 
             OnPropertyChanged(nameof(CompletedCount));
             OnPropertyChanged(nameof(ErrorCount));
             if (g.CurrentState is DownloadState.Running or DownloadState.Pending
-                || g.TasksSet.Count is not 0 && g is { IsAllCompleted: true, IsAfterAllDownloadCompleted: false })
+                || (g.TasksSet.Count is not 0 && g is { IsAllCompleted: true, IsAfterAllDownloadCompleted: false }))
                 return;
             g.DatabaseEntry.State = g.CurrentState;
             g.DatabaseEntry.ErrorMessage = g.DatabaseEntry.State is DownloadState.Error
