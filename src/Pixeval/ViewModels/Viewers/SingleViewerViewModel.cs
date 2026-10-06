@@ -52,12 +52,6 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
     [NotifyCanExecuteChangedFor(nameof(TransformExtensionCommand))]
     [NotifyCanExecuteChangedFor(nameof(ViewOriginalCommand))]
     [NotifyCanExecuteChangedFor(nameof(PlayPauseCommand))]
-    [NotifyCanExecuteChangedFor(nameof(MirrorCommand))]
-    [NotifyCanExecuteChangedFor(nameof(RotateClockwiseCommand))]
-    [NotifyCanExecuteChangedFor(nameof(RotateCounterclockwiseCommand))]
-    [NotifyCanExecuteChangedFor(nameof(ZoomInCommand))]
-    [NotifyCanExecuteChangedFor(nameof(ZoomOutCommand))]
-    [NotifyCanExecuteChangedFor(nameof(ZoomToOriginalCommand))]
     public partial bool LoadSuccessfully { get; private set; }
 
     [ObservableProperty]
@@ -69,17 +63,45 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
     /// <summary>
     /// 显示用图源
     /// </summary>
-    public IAnimatedBitmap? DisplaySource => TransformedSource ?? OriginalSource;
+    // Completed sources remain owned by this model so image transformers can reuse the original.
+    public UpdatableAnimatedBitmap DisplaySource { get; } = new(disposeSources: false);
+
+    public bool HasDisplayImage => DisplaySource.Size is { Width: > 0, Height: > 0 };
+
+    private void NotifyDisplayImageChanged()
+    {
+        OnPropertyChanged(nameof(HasDisplayImage));
+        MirrorCommand.NotifyCanExecuteChanged();
+        RotateClockwiseCommand.NotifyCanExecuteChanged();
+        RotateCounterclockwiseCommand.NotifyCanExecuteChanged();
+        ZoomInCommand.NotifyCanExecuteChanged();
+        ZoomOutCommand.NotifyCanExecuteChanged();
+        ZoomToOriginalCommand.NotifyCanExecuteChanged();
+    }
+
+    partial void OnCachedPreviewSourceChanged(IAnimatedBitmap? value) => DisplaySource.SetFallback(value);
+
+    private void DisplaySourceOnChanged(object? sender, EventArgs e)
+    {
+        if (_disposed)
+            return;
+        if (Dispatcher.UIThread.CheckAccess())
+            NotifyDisplayImageChanged();
+        else
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (!_disposed)
+                    NotifyDisplayImageChanged();
+            });
+    }
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(DisplaySource))]
     public partial IAnimatedBitmap? TransformedSource { get; private set; }
 
     /// <summary>
     /// 原图源（处理前的图片）
     /// </summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(DisplaySource))]
     [NotifyCanExecuteChangedFor(nameof(TransformExtensionCommand))]
     public partial IAnimatedBitmap? OriginalSource { get; private set; }
 
@@ -87,16 +109,15 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
     public partial Bitmap? ThumbnailSource { get; private set; }
 
     [ObservableProperty]
-    public partial Bitmap? CachedPreviewSource { get; private set; }
+    public partial IAnimatedBitmap? CachedPreviewSource { get; private set; }
 
     private bool _cachedPreviewLoading;
 
-    [ObservableProperty]
-    public partial Bitmap? LoadingPreview { get; private set; }
-
     internal void AttachPreview()
     {
-        if (Interlocked.Increment(ref _previewConsumers) is 1 && !LoadSuccessfully)
+        if (Interlocked.Increment(ref _previewConsumers) is not 1)
+            return;
+        if (!LoadSuccessfully)
             _ = LoadCachedPreviewAsync();
     }
 
@@ -112,7 +133,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
             if (_disposed || LoadSuccessfully || _previewConsumers is 0)
                 bitmap?.Dispose();
             else
-                CachedPreviewSource = bitmap;
+                CachedPreviewSource = CreatePreviewSource(bitmap);
         }
         catch (OperationCanceledException) when (_lifetimeCancellationTokenSource.IsCancellationRequested)
         {
@@ -181,6 +202,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
         _entry = entry;
         _saveImageAsync = saveImageAsync;
         Index = index;
+        DisplaySource.Changed += DisplaySourceOnChanged;
         TransformerExtensionItems = [.. TransformerExtensions.Select(extension => new ImageTransformerExtensionCommandItem(this, extension))];
         _ = LoadThumbnailImageAsync();
     }
@@ -193,11 +215,14 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
         _disposed = true;
         _lifetimeCancellationTokenSource.Cancel();
         _lifetimeCancellationTokenSource.Dispose();
+        DisplaySource.Changed -= DisplaySourceOnChanged;
+        DisplaySource.Dispose();
         TransformedSource = null;
         OriginalSource?.Dispose();
-        ThumbnailSource?.Dispose();
+        var thumbnail = ThumbnailSource;
         OriginalSource = null;
         ThumbnailSource = null;
+        thumbnail?.Dispose();
         ReleaseLoadingPreview();
     }
 
@@ -248,12 +273,15 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
 
         LoadingProgress = null;
 
-        using var preview = new ProgressiveImagePreview(PublishLoadingPreviewAsync,
-            () => Volatile.Read(ref _previewConsumers) > 0);
         IAnimatedBitmap? source;
         try
         {
-            source = await LoadImageAsync(false, preview, _lifetimeCancellationTokenSource.Token);
+            source = await DisplaySource.UpdateAsync(
+                token => LoadWithPreviewAsync(false, token), _lifetimeCancellationTokenSource.Token);
+            if (source is null && !_disposed)
+                source = await DisplaySource.UpdateAsync(
+                    _ => Task.FromResult<IAnimatedBitmap?>(CacheHelper.AnimatedImageNotAvailable.Value),
+                    _lifetimeCancellationTokenSource.Token);
         }
         catch (OperationCanceledException) when (_lifetimeCancellationTokenSource.IsCancellationRequested)
         {
@@ -262,55 +290,48 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
 
         if (source is null)
             return;
-
         if (_disposed)
         {
             source.Dispose();
             return;
         }
 
-        preview.Dispose();
         OriginalSource?.Dispose();
         OriginalSource = source;
-        // Keep the preview and progress visible while the full-resolution frames decode off-thread.
-        await Task.Run(source.Init);
-        if (_disposed)
-            return;
-        if (source.IsFailed)
-        {
-            source.Dispose();
-            source = CacheHelper.AnimatedImageNotAvailable.Value;
-            await Task.Run(source.Init);
-            if (_disposed)
-                return;
-            OriginalSource = source;
-        }
+        ReleaseLoadingPreview();
         LoadSuccessfully = source.IsInitialized;
     }
+
+    // The single-frame source owns its bitmap; dispose the source rather than the frame separately.
+    private static IAnimatedBitmap? CreatePreviewSource(Bitmap? bitmap) =>
+        bitmap is null ? null : IAnimatedBitmap.Load([bitmap], [0]);
 
     internal void ReleaseLoadingPreview()
     {
         var cached = CachedPreviewSource;
         CachedPreviewSource = null;
         cached?.Dispose();
-        var preview = LoadingPreview;
-        LoadingPreview = null;
-        preview?.Dispose();
+        DisplaySource.UpdatePreview(null);
     }
 
-    private async Task PublishLoadingPreviewAsync(Bitmap bitmap)
+    private async Task<IAnimatedBitmap?> LoadWithPreviewAsync(bool original, CancellationToken token)
+    {
+        using var preview = new ProgressiveImagePreview(bitmap => PublishLoadingPreviewAsync(bitmap, token),
+            () => Volatile.Read(ref _previewConsumers) > 0);
+        return await LoadImageAsync(original, preview, token);
+    }
+
+    private async Task PublishLoadingPreviewAsync(Bitmap bitmap, CancellationToken token)
     {
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            if (_disposed || LoadSuccessfully || _previewConsumers is 0)
+            if (_disposed || _previewConsumers is 0)
             {
                 bitmap.Dispose();
                 return;
             }
 
-            var previous = LoadingPreview;
-            LoadingPreview = bitmap;
-            previous?.Dispose();
+            DisplaySource.UpdatePreview(bitmap, token);
         });
     }
 
@@ -438,7 +459,8 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
         {
             viewContainer?.ShowInformation(I18NManager.GetResource(ImageViewerPageResources.LoadingOriginalImage));
             LoadingProgress = null;
-            var source = await LoadImageAsync(true, token: _lifetimeCancellationTokenSource.Token);
+            var source = await DisplaySource.UpdateAsync(
+                token => LoadWithPreviewAsync(true, token), _lifetimeCancellationTokenSource.Token);
             if (source is null)
             {
                 viewContainer?.ShowError(I18NManager.GetResource(ImageViewerPageResources.OriginalImageLoadFailed));
@@ -463,6 +485,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
         }
         finally
         {
+            ReleaseLoadingPreview();
             IsProcessingImage = false;
         }
     }
@@ -505,10 +528,12 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
                 await extension.TransformAsync(source, destination);
                 destination.Position = 0;
                 var transformedSource = IAnimatedBitmap.Load(destination, true);
+                var updatedSource = await DisplaySource.UpdateAsync(
+                    _ => Task.FromResult<IAnimatedBitmap?>(transformedSource), _lifetimeCancellationTokenSource.Token);
                 if (_disposed)
-                    transformedSource.Dispose();
-                else
-                    TransformedSource = transformedSource;
+                    updatedSource?.Dispose();
+                else if (updatedSource is not null)
+                    TransformedSource = updatedSource;
             }
             catch
             {
@@ -522,25 +547,25 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
         }
     }
 
-    [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
+    [RelayCommand(CanExecute = nameof(HasDisplayImage))]
     private void ZoomIn() => ZoomFactor *= 1.2;
 
-    [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
+    [RelayCommand(CanExecute = nameof(HasDisplayImage))]
     private void ZoomOut() => ZoomFactor /= 1.2;
 
-    [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
+    [RelayCommand(CanExecute = nameof(HasDisplayImage))]
     private void ZoomToOriginal() => ZoomFactor = 1;
 
-    [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
+    [RelayCommand(CanExecute = nameof(HasDisplayImage))]
     private void Mirror()
     {
         // 仅做IsEnabled绑定，实际逻辑修改IsMirrored属性
     }
 
-    [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
+    [RelayCommand(CanExecute = nameof(HasDisplayImage))]
     private void RotateClockwise() => RotationDegree = (RotationDegree + 90) % 360;
 
-    [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
+    [RelayCommand(CanExecute = nameof(HasDisplayImage))]
     private void RotateCounterclockwise() => RotationDegree = (RotationDegree - 90 + 360) % 360;
 
     [RelayCommand(CanExecute = nameof(IsGifLoadSuccessfully))]
@@ -552,7 +577,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
     [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
     private async Task CopyAsync(Control control)
     {
-        if (DisplaySource?.Frames is not [var singleFrame])
+        if (DisplaySource.Frames is not [var singleFrame])
             return;
         if (TopLevel.GetTopLevel(control) is not
             { ViewContainer: { } viewContainer, Clipboard: { } clipboard })
@@ -568,7 +593,7 @@ public sealed partial class SingleViewerViewModel : ViewModelBase, IDisposable
     [RelayCommand(CanExecute = nameof(LoadSuccessfully))]
     private async Task SaveAsAsync(Control control)
     {
-        if (DisplaySource?.Frames is not [var singleFrame])
+        if (DisplaySource.Frames is not [var singleFrame])
             return;
         if (TopLevel.GetTopLevel(control) is not
             { ViewContainer: { } viewContainer, StorageProvider: { } storageProvider })

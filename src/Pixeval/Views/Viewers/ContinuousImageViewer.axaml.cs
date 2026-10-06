@@ -8,6 +8,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using Pixeval.ViewModels.Viewers;
 using SmoothScroll.Avalonia.Controls;
 using PixevalVirtualizingStackPanel = Pixeval.Controls.VirtualizingStackPanel;
@@ -24,18 +25,19 @@ public partial class ContinuousImageViewer : ImageViewerBase
     /// <inheritdoc />
     public override double ZoomFactor
     {
-        get => ViewerScrollView?.ZoomFactor ?? 1;
+        get => CanvasZoomFactor * CurrentPixelScale;
         set
         {
             if (ZoomFactor == value)
                 return;
-            ViewerScrollView?.ZoomTo(value);
+            ViewerScrollView?.ZoomTo(value / CurrentPixelScale);
             QueueViewportUpdate();
         }
     }
 
     public SingleViewerViewModel? CurrentPage { get; private set; }
 
+    private double _reportedZoomFactor = 1;
     private ImageViewerViewModel? _subscribedViewModel;
     private bool _isSelectingFromScroll;
     private bool _viewportUpdateQueued;
@@ -166,6 +168,7 @@ public partial class ContinuousImageViewer : ImageViewerBase
         SetCurrentPageViewModel(page);
 
         RaisePropertyChanged(CurrentPageProperty, old, page);
+        NotifyZoomFactorChanged();
         if (raiseSelectionChanged)
             RaiseSelectionChanged(ViewModel?.SelectedPageIndex ?? -1, CurrentPage);
     }
@@ -218,7 +221,7 @@ public partial class ContinuousImageViewer : ImageViewerBase
             return false;
 
         var offset = double.Clamp(
-            itemOffset * ZoomFactor,
+            itemOffset * CanvasZoomFactor,
             0,
             IsHorizontal ? ViewerScrollView.ScrollBarMaximum.X : ViewerScrollView.ScrollBarMaximum.Y);
         ViewerScrollView.ScrollTo(
@@ -339,13 +342,31 @@ public partial class ContinuousImageViewer : ImageViewerBase
             return null;
 
         return new Rect(
-            (origin * ZoomFactor) - ViewerScrollView.Offset,
-            container.Bounds.Size * ZoomFactor);
+            (origin * CanvasZoomFactor) - ViewerScrollView.Offset,
+            container.Bounds.Size * CanvasZoomFactor);
     }
 
     private Point? GetPageOriginInContent(Control container) => container.TranslatePoint(default, ImageItemsControl);
 
-    private double GetScrollOffset(Point origin) => (IsHorizontal ? origin.X : origin.Y) * ZoomFactor;
+    private double GetScrollOffset(Point origin) => (IsHorizontal ? origin.X : origin.Y) * CanvasZoomFactor;
+
+    private double CanvasZoomFactor => ViewerScrollView?.ZoomFactor ?? 1;
+
+    private double CurrentPixelScale => CurrentPage is not { } page ? 1
+        : ImageItemsControl.ContainerFromIndex(page.Index)?.FindDescendantOfType<SingleImageViewer>() is { } viewer
+            ? viewer.ImageViewer?.SourceScale.X ?? 1
+            : 1;
+
+    private void NotifyZoomFactorChanged()
+    {
+        var pixelScale = CurrentPixelScale;
+        var factor = CanvasZoomFactor * pixelScale;
+        var old = _reportedZoomFactor;
+        if (Math.Abs(old - factor) < 0.000001)
+            return;
+        _reportedZoomFactor = factor;
+        RaisePropertyChanged(ZoomFactorProperty, old, factor);
+    }
 
     private double ViewportLength => IsHorizontal ? ViewerScrollView.Viewport.Width : ViewerScrollView.Viewport.Height;
 
@@ -369,7 +390,7 @@ public partial class ContinuousImageViewer : ImageViewerBase
     {
         if (e.Property == ScrollView.ZoomFactorProperty)
         {
-            RaisePropertyChanged(ZoomFactorProperty, e.GetOldValue<double>(), e.GetNewValue<double>());
+            NotifyZoomFactorChanged();
             QueueViewportUpdate();
         }
     }
@@ -387,6 +408,7 @@ public partial class ContinuousImageViewer : ImageViewerBase
 
     private void ImageItemsControl_OnLayoutUpdated(object? sender, EventArgs e)
     {
+        NotifyZoomFactorChanged();
         if (_pendingScrollToSelectedPageIndex >= 0)
             QueuePendingScrollToSelectedPage();
     }

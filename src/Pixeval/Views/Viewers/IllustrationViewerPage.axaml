@@ -159,12 +159,7 @@
                     <local:IllustrationViewerInfoPane IsDocked="{Binding #EntryViewerFloatingPaneView.IsDocked, Mode=TwoWay}" IsLocked="{Binding #EntryViewerFloatingPaneView.IsLocked, Mode=TwoWay}" />
                 </Border>
             </controls:FloatingPaneView.Pane>
-            <DockPanel>
-                <ProgressBar
-                    DockPanel.Dock="Top"
-                    IsIndeterminate="{Binding CurrentImage.CurrentPage.IsLoadingIndeterminate, FallbackValue=True, TargetNullValue=True}"
-                    IsVisible="{Binding CurrentImage.CurrentPage.IsLoading, FallbackValue=False, TargetNullValue=False}"
-                    Value="{Binding CurrentImage.CurrentPage.LoadingProgress, FallbackValue=0, TargetNullValue=0}" />
+            <Panel>
                 <Panel Background="Transparent">
                     <!--  图片查看器  -->
 
@@ -428,7 +423,13 @@
                         </StackPanel>
                     </Border>
                 </Panel>
-            </DockPanel>
+                <ProgressBar
+                    VerticalAlignment="Top"
+                    IsHitTestVisible="False"
+                    IsIndeterminate="{Binding CurrentImage.CurrentPage.IsLoadingIndeterminate, FallbackValue=True, TargetNullValue=True}"
+                    IsVisible="{Binding CurrentImage.CurrentPage.IsLoading, FallbackValue=False, TargetNullValue=False}"
+                    Value="{Binding CurrentImage.CurrentPage.LoadingProgress, FallbackValue=0, TargetNullValue=0}" />
+            </Panel>
         </controls:FloatingPaneView>
     </Grid>
 </ContentPage>

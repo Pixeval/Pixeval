@@ -50,7 +50,9 @@ public abstract partial class ImageViewerBase : UserControl
 
     protected SingleViewerViewModel? CurrentPageViewModel { get; private set; }
 
-    protected bool CanManipulateCurrentImage => CurrentPageViewModel?.LoadSuccessfully is true;
+    protected bool CanManipulateCurrentImage => CurrentPageViewModel?.HasDisplayImage is true;
+
+    private bool CanCopyCurrentImage => CurrentPageViewModel?.LoadSuccessfully is true;
 
     protected void SetCurrentPageViewModel(SingleViewerViewModel? currentPage)
     {
@@ -85,7 +87,8 @@ public abstract partial class ImageViewerBase : UserControl
     {
         if (e.PropertyName is nameof(SingleViewerViewModel.LoadSuccessfully)
             or nameof(SingleViewerViewModel.OriginalSource)
-            or nameof(SingleViewerViewModel.DisplaySource))
+            or nameof(SingleViewerViewModel.DisplaySource)
+            or nameof(SingleViewerViewModel.HasDisplayImage))
             NotifyCommandCanExecuteChanged();
     }
 
@@ -98,13 +101,13 @@ public abstract partial class ImageViewerBase : UserControl
     [RelayCommand(CanExecute = nameof(CanManipulateCurrentImage))]
     private void ZoomToOriginal() => ZoomFactor = 1;
 
-    [RelayCommand(CanExecute = nameof(CanManipulateCurrentImage))]
+    [RelayCommand(CanExecute = nameof(CanCopyCurrentImage))]
     private async Task CopyAsync() => await CopyCurrentImageToClipboardAsync();
 
-    [RelayCommand(CanExecute = nameof(CanManipulateCurrentImage))]
+    [RelayCommand(CanExecute = nameof(CanCopyCurrentImage))]
     private async Task SaveAsync() => await CopyCurrentImageToClipboardAsync();
 
-    [RelayCommand(CanExecute = nameof(CanManipulateCurrentImage))]
+    [RelayCommand(CanExecute = nameof(CanCopyCurrentImage))]
     private async Task SaveAsAsync() => await CopyCurrentImageToClipboardAsync();
 
     private async Task CopyCurrentImageToClipboardAsync()

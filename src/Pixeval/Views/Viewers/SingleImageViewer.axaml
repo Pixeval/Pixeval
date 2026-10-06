@@ -17,6 +17,8 @@
             <!--  图片查看器（缩放/平移）  -->
             <scroll:ScrollView
                 x:Name="ViewerScrollView"
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Stretch"
                 IsHorizontalMeasureInfinite="True"
                 IsVerticalMeasureInfinite="True"
                 Theme="{StaticResource ViewerScrollViewTheme}">
@@ -25,7 +27,8 @@
                     VerticalAlignment="Center"
                     IsPlaying="{Binding IsPlaying}"
                     RenderTransformOrigin="50%,50%"
-                    Source="{Binding DisplaySource}">
+                    Source="{Binding DisplaySource}"
+                    Stretch="Uniform">
                     <ai:AnimatedImage.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform ScaleX="{Binding MirrorScaleX}" />
@@ -38,8 +41,8 @@
 
         <DataTemplate x:Key="PlainImageTemplate" DataType="{x:Type vm:SingleViewerViewModel}">
             <ai:AnimatedImage
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
                 IsPlaying="{Binding IsPlaying}"
                 RenderTransformOrigin="50%,50%"
                 Source="{Binding DisplaySource}"
@@ -136,18 +139,8 @@
                 ToggleType="CheckBox" />
         </ContextMenu>
     </UserControl.ContextMenu>
-    <Panel>
-        <!--  The download preview is independent of zoom/layout of the final full-resolution image.  -->
-        <Panel IsHitTestVisible="False" IsVisible="{Binding !#Root.IsImageReady}">
-            <!--  Keep the cached preview behind transparent, not-yet-decoded pixels.  -->
-            <Image Source="{Binding CachedPreviewSource}" Stretch="Uniform" />
-            <Image Source="{Binding LoadingPreview}" Stretch="Uniform" />
-        </Panel>
-        <ContentPresenter
-            x:Name="ImagePresenter"
-            IsHitTestVisible="{Binding #Root.IsImageReady}"
-            Opacity="0"
-            PropertyChanged="ImagePresenter_OnPropertyChanged" />
-
-    </Panel>
+    <ContentPresenter
+        x:Name="ImagePresenter"
+        IsHitTestVisible="{Binding HasDisplayImage}"
+        PropertyChanged="ImagePresenter_OnPropertyChanged" />
 </UserControl>
