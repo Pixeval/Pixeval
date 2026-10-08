@@ -17,6 +17,13 @@ public partial class NovelItem : WorkItem
 {
     public NovelItem() => InitializeComponent();
 
+    internal override void Recycle()
+    {
+        base.Recycle();
+        DescriptionBlock.Opacity = 0;
+        CoverImage.Opacity = 1;
+    }
+
     private void TagButton_OnClicked(object? sender, RoutedEventArgs e)
     {
         if (sender is not Control { DataContext: Tag tag })

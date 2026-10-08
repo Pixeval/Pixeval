@@ -6,6 +6,7 @@ using Avalonia.Animation.Easings;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using Avalonia.Rendering.Composition;
 using Mako.Global.Enum;
 using Mako.Model;
@@ -18,6 +19,21 @@ namespace Pixeval.Views.Work;
 
 public class WorkItem : EntryItem, IWorkAnimatable
 {
+    internal virtual void Recycle()
+    {
+        foreach (var descendant in this.GetLogicalDescendants())
+            if (descendant is Control { ContextMenu: { } menu })
+                menu.Close();
+
+        if (ElementComposition.GetElementVisual(this) is { } visual)
+        {
+            visual.StopAnimation(nameof(CompositionVisual.Opacity));
+            visual.Opacity = 1;
+        }
+
+        DataContext = null;
+    }
+
     public event EventHandler<Control, IWorkViewModel>? RequestOpenUserInfoPage;
 
     public event EventHandler<Control, IWorkViewModel>? RequestAddToBookmark;

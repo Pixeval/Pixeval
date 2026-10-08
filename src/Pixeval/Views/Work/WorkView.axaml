@@ -18,7 +18,7 @@
         x:Name="EntryView"
         HasNoItem="{Binding !View.Count}"
         IsLoadingMore="{Binding #WorkListBox.(controls:IncrementalLoadingBehavior.IsLoadingMore)}">
-        <ListBox
+        <local:WorkListBox
             x:Name="WorkListBox"
             controls:IncrementalLoadingBehavior.IsEnabled="True"
             controls:IncrementalLoadingBehavior.Threshold="200"
@@ -40,7 +40,7 @@
                     <local:IllustrationItem RequestAddToBookmark="WorkItem_OnRequestAddToBookmark" RequestOpenUserInfoPage="WorkItem_OnRequestOpenUserInfoPage" />
                 </DataTemplate>
             </ListBox.DataTemplates>
-        </ListBox>
+        </local:WorkListBox>
     </entry:EntryView>
     <UserControl.Styles>
         <Style Selector="local|WorkView:linedFlow ListBox">
