@@ -15,7 +15,7 @@ public partial class HeartButton : Button
     public HeartButton() => InitializeComponent();
 
     public static readonly StyledProperty<HeartButtonState> StateProperty =
-        AvaloniaProperty.Register<WaveProgressHeart, HeartButtonState>(nameof(State));
+        AvaloniaProperty.Register<HeartButton, HeartButtonState>(nameof(State));
 
     public HeartButtonState State
     {
@@ -43,6 +43,13 @@ public partial class HeartButton : Button
     {
         base.OnPointerExited(e);
         Back.Value = 0;
+    }
+
+    protected override void OnDataContextChanged(EventArgs e)
+    {
+        base.OnDataContextChanged(e);
+        if (Back is not null)
+            Back.Value = 0;
     }
 
     private void Button_OnClick(object? sender, RoutedEventArgs e) => e.Handled = true;

@@ -58,12 +58,16 @@
                 <ControlTemplate TargetType="{x:Type local:WaveProgressHeart}">
                     <Viewbox>
                         <Panel
+                            Background="Transparent"
                             Width="50"
                             Height="50"
                             Margin="0,-1.5,-1.5,0">
+                            <Path
+                                Data="{StaticResource HeartGeometry}"
+                                Fill="{TemplateBinding Background}"
+                                IsHitTestVisible="False" />
                             <Border
                                 Name="PART_BorderClip"
-                                Background="{TemplateBinding Background}"
                                 Clip="{StaticResource HeartGeometry}">
                                 <Path
                                     Name="PART_PathWave"
@@ -82,6 +86,7 @@
                                     UseLayoutRounding="False" />
                             </Border>
                             <Path
+                                Name="PART_Heart"
                                 Data="{StaticResource HeartGeometry}"
                                 Fill="Transparent"
                                 IsHitTestVisible="False"
@@ -92,5 +97,14 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Style Selector="^:empty /template/ Border#PART_BorderClip">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:full /template/ Border#PART_BorderClip">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:full /template/ Path#PART_Heart">
+            <Setter Property="Fill" Value="{TemplateBinding Fill}" />
+        </Style>
     </ControlTheme>
 </ResourceDictionary>
