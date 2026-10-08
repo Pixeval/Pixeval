@@ -25,9 +25,9 @@ sealed class Program
             .UsePlatformDetect()
             .With(new SkiaOptions
             {
-                // 提高到128M对于2K分辨率基本够用了，在瀑布流这种有巨量图片同时渲染的场景，应该能大幅提升性能
+                // 提高到256M对于4K分辨率勉强够用，在瀑布流这种有巨量图片同时渲染的场景，应该能大幅提升性能
                 // 再往上拉还能有提升，不过必要性不高（？）
-                MaxGpuResourceSizeBytes = 128 * 1024 * 1024
+                MaxGpuResourceSizeBytes = 256 * 1024 * 1024
             })
             .WithPixevalFonts()
             .LogToTrace();
