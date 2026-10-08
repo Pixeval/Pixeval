@@ -118,7 +118,12 @@
                 VerticalAlignment="Top"
                 Command="{Binding BookmarkCommand}"
                 CommandParameter="{Binding $self, Mode=OneTime}"
-                State="{Binding IsBookmarkedDisplay}" />
+                State="{Binding IsBookmarkedDisplay}">
+                
+                <controls:HeartButton.CacheMode>
+                    <BitmapCache SnapsToDevicePixels="False" RenderAtScale="1"/>
+                </controls:HeartButton.CacheMode>
+            </controls:HeartButton>
 
             <DockPanel
                 Grid.Column="1"

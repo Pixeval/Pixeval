@@ -96,7 +96,12 @@
                     Command="{Binding BookmarkCommand}"
                     CommandParameter="{Binding $self, Mode=OneTime}"
                     IsVisible="{Binding IsBookmarkSupported}"
-                    State="{Binding IsBookmarkedDisplay}" />
+                    State="{Binding IsBookmarkedDisplay}">
+                    
+                    <controls:HeartButton.CacheMode>
+                        <BitmapCache SnapsToDevicePixels="False" RenderAtScale="1"/>
+                    </controls:HeartButton.CacheMode>
+                </controls:HeartButton>
                 <Border
                     Margin="5"
                     Padding="5"
