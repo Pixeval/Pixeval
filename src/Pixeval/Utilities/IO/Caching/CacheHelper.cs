@@ -291,15 +291,16 @@ public static class CacheHelper
         string key,
         IProgress<double>? progress = null,
         int? desiredWidth = null,
+        CancellationToken decodeToken = default,
         CancellationToken token = default)
     {
         try
         {
-            return await GetStreamAsync(platform, key, progress, token: token) is { } stream
-                ? await stream.DecodeBitmapImageAsync(true, desiredWidth)
+            return await GetStreamAsync(platform, key, progress, token: token).ConfigureAwait(false) is { } stream
+                ? await stream.DecodeBitmapImageAsync(true, desiredWidth, decodeToken).ConfigureAwait(false)
                 : WrappedImageNotAvailable.Value;
         }
-        catch (OperationCanceledException) when (token.IsCancellationRequested)
+        catch (OperationCanceledException) when (token.IsCancellationRequested || decodeToken.IsCancellationRequested)
         {
             throw;
         }

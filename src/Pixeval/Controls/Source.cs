@@ -171,7 +171,12 @@ public static class Source
         var lifetime = BeginLoad(element, CacheLoadLifetimeProperty);
         try
         {
-            var bitmap = await CacheHelper.GetBitmapAsync(GetPlatform(element), value, token: lifetime.Token);
+            var bitmap = await CacheHelper.GetBitmapAsync(
+                GetPlatform(element),
+                value,
+                decodeToken: lifetime.DecodeToken,
+                token: lifetime.Token);
+
             if (!lifetime.TrySetSource(bitmap))
                 return;
             if (GetCache(element) != value)
@@ -183,8 +188,9 @@ public static class Source
             element.Source = bitmap;
             SetLoaded(element, true);
         }
-        catch (OperationCanceledException) when (lifetime.Token.IsCancellationRequested)
+        catch (OperationCanceledException) when (lifetime.Token.IsCancellationRequested || lifetime.DecodeToken.IsCancellationRequested)
         {
+            lifetime.Dispose();
         }
     }
 
@@ -231,7 +237,12 @@ public static class Source
         var lifetime = BeginLoad(element, BackgroundCacheLoadLifetimeProperty);
         try
         {
-            var bitmap = await CacheHelper.GetBitmapAsync(GetPlatform(element), value, token: lifetime.Token);
+            var bitmap = await CacheHelper.GetBitmapAsync(
+                GetPlatform(element),
+                value,
+                decodeToken: lifetime.DecodeToken,
+                token: lifetime.Token);
+
             if (!lifetime.TrySetSource(bitmap))
                 return;
             if (GetBackgroundCache(element) != value)
@@ -253,8 +264,9 @@ public static class Source
             _ = element.SetValue(backgroundProperty, brush);
             SetLoaded(element, true);
         }
-        catch (OperationCanceledException) when (lifetime.Token.IsCancellationRequested)
+        catch (OperationCanceledException) when (lifetime.Token.IsCancellationRequested || lifetime.DecodeToken.IsCancellationRequested)
         {
+            lifetime.Dispose();
         }
     }
 
@@ -403,6 +415,7 @@ internal sealed class SourceLoadOperation : IDisposable
     private readonly Action<SourceLoadOperation> _onDisposed;
     private readonly Lock _gate = new();
     private readonly CancellationTokenSource _cancellationTokenSource = new();
+    private readonly CancellationTokenSource _decodeCancellationTokenSource = new();
     private IDisposable? _source;
     private bool _isAbandoned;
     private bool _isDisposed;
@@ -411,9 +424,12 @@ internal sealed class SourceLoadOperation : IDisposable
     {
         _onDisposed = onDisposed;
         Token = _cancellationTokenSource.Token;
+        DecodeToken = _decodeCancellationTokenSource.Token;
     }
 
     public CancellationToken Token { get; }
+
+    public CancellationToken DecodeToken { get; }
 
     public bool TrySetSource(IDisposable source)
     {
@@ -448,6 +464,7 @@ internal sealed class SourceLoadOperation : IDisposable
                 return;
 
             _isAbandoned = true;
+            _decodeCancellationTokenSource.Cancel();
             source = _source;
             _source = null;
             if (source is null)
@@ -479,6 +496,9 @@ internal sealed class SourceLoadOperation : IDisposable
 
     private void Complete(bool cancel)
     {
+        _decodeCancellationTokenSource.Cancel();
+        _decodeCancellationTokenSource.Dispose();
+
         if (cancel)
             _cancellationTokenSource.Cancel();
         _cancellationTokenSource.Dispose();

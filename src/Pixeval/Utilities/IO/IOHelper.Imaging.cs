@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,12 +38,34 @@ public static partial class IoHelper
             await stream.CopyToAsync(fileStream);
         }
 
-        public async Task<Bitmap> DecodeBitmapImageAsync(bool disposeOfImageStream, int? desiredWidth = null)
+        public async Task<Bitmap> DecodeBitmapImageAsync(
+            bool disposeOfImageStream,
+            int? desiredWidth = null,
+            CancellationToken token = default
+        )
         {
-            var bitmapImage = await Task.Run(() => desiredWidth is { } w ? Bitmap.DecodeToWidth(stream, w) : new(stream));
-            if (disposeOfImageStream)
-                await stream.DisposeAsync();
-            return bitmapImage;
+            try
+            {
+                token.ThrowIfCancellationRequested();
+
+                return await Task.Run(() =>
+                {
+                    token.ThrowIfCancellationRequested();
+
+                    // Synchronous decoding cannot be interrupted. The caller owns any
+                    // result that becomes obsolete after this check.
+                    var bitmap = desiredWidth is { } w
+                        ? Bitmap.DecodeToWidth(stream, w)
+                        : new(stream);
+
+                    return bitmap;
+                }).ConfigureAwait(false);
+            }
+            finally
+            {
+                if (disposeOfImageStream)
+                    await stream.DisposeAsync().ConfigureAwait(false);
+            }
         }
     }
 
