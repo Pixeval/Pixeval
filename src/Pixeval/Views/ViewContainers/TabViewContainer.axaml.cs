@@ -13,6 +13,8 @@ using Avalonia.Controls.Notifications;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
+using Avalonia.Media;
+using Avalonia.Layout;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
@@ -24,6 +26,8 @@ using Pixeval.Views.Login;
 using Pixeval.Views.Settings;
 using Pixeval.Views.Viewers;
 using TabView.Avalonia;
+using FluentIcons.Avalonia;
+using FluentIcons.Common;
 
 namespace Pixeval.Views.ViewContainers;
 
@@ -36,6 +40,9 @@ public partial class TabViewContainer : ViewContainerBase
 
     private NavigationConfiguration _navigationConfiguration = null!;
     private bool _automaticUpdateStarted;
+    private bool _isUpdatingVisibility;
+    private Border? _moreButtonHost;
+    private Button? _moreButton;
 
     public ObservableCollection<NavigationMenuItem> HeaderNavigationItems { get; } = [];
 
@@ -63,6 +70,15 @@ public partial class TabViewContainer : ViewContainerBase
     {
         InitializeComponent();
 
+        _moreButtonHost = this.FindControl<Border>("MoreButtonHost");
+        _moreButton = this.FindControl<Button>("MoreButton");
+
+        if (_moreButton is not null)
+            _moreButton.Click += OnMoreButtonClick;
+
+        if (_moreButtonHost is not null)
+            LeftContentDockPanel.SizeChanged += OnDockPanelSizeChanged;
+
         RebuildNavigation();
 
         AddHandler(
@@ -85,7 +101,6 @@ public partial class TabViewContainer : ViewContainerBase
         TabsControl.InterTabController = set ? new InterTabController { InterTabClient = new PixevalInterTabClient() } : null;
     }
 
-    /// <inheritdoc />
     protected override async void OnLoaded(RoutedEventArgs e)
     {
         base.OnLoaded(e);
@@ -96,6 +111,9 @@ public partial class TabViewContainer : ViewContainerBase
         };
         FlushPendingNotifications();
         RegisterContentDialogHost(TopLevel.GetTopLevel(this));
+
+        await Task.Delay(50);
+        UpdateVisibility();
 
         if (AppInfo.AppVersion.UsesVelopack)
         {
@@ -123,6 +141,168 @@ public partial class TabViewContainer : ViewContainerBase
                 SettingsPage.CreateReleaseNotes(release)));
 
         await Task.WhenAll(dialogTasks);
+    }
+
+    protected override void OnUnloaded(RoutedEventArgs e)
+    {
+        base.OnUnloaded(e);
+        if (LeftContentDockPanel is not null)
+            LeftContentDockPanel.SizeChanged -= OnDockPanelSizeChanged;
+        if (_moreButton is not null)
+            _moreButton.Click -= OnMoreButtonClick;
+    }
+
+    private void OnDockPanelSizeChanged(object? sender, SizeChangedEventArgs e)
+    {
+        UpdateVisibility();
+    }
+
+    private void OnMoreButtonClick(object? sender, RoutedEventArgs e)
+    {
+        if (_moreButton is null) return;
+
+        var flyout = new MenuFlyout { Placement = PlacementMode.TopEdgeAlignedLeft };
+
+        var hiddenItems = GetHiddenItems();
+        if (hiddenItems.Count == 0)
+        {
+            flyout.ItemsSource = null;
+            flyout.ShowAt(_moreButton);
+            return;
+        }
+
+        var menuItems = new List<MenuItem>();
+        foreach (var item in hiddenItems)
+        {
+            var menuItem = CreateMenuItem(item);
+            if (menuItem is not null)
+                menuItems.Add(menuItem);
+        }
+
+        flyout.ItemsSource = menuItems;
+        flyout.ShowAt(_moreButton);
+    }
+
+    private List<object> GetHiddenItems()
+    {
+        var hidden = new List<object>();
+        var allContainers = GetAllContainers();
+        int visibleCount = CalculateVisibleCount(allContainers);
+        if (visibleCount < allContainers.Count)
+            hidden.AddRange(allContainers.Skip(visibleCount).Select(c => c.DataContext));
+        return hidden;
+    }
+
+    private MenuItem? CreateMenuItem(object dataContext)
+    {
+        switch (dataContext)
+        {
+            case NavigationPageItem pageItem:
+                var menuItem = new MenuItem
+                {
+                    Header = pageItem.Header,
+                    Icon = new SymbolIcon { Symbol = pageItem.Icon, IconVariant = IconVariant.Color, FontSize = 16 },
+                    DataContext = pageItem,
+                    IsEnabled = !pageItem.NeedLogin || PixevalSettings.Instance.IsLoggedIn
+                };
+                menuItem.Command = OpenNavigationItemCommand;
+                menuItem.CommandParameter = menuItem;
+                return menuItem;
+
+            case NavigationFolderItem folderItem:
+                var folderMenuItem = new MenuItem
+                {
+                    Header = folderItem.Header,
+                    Icon = new SymbolIcon { Symbol = folderItem.Icon, IconVariant = IconVariant.Color, FontSize = 16 },
+                    DataContext = folderItem,
+                    IsEnabled = !folderItem.NeedLogin || PixevalSettings.Instance.IsLoggedIn
+                };
+                foreach (var child in folderItem.Children)
+                {
+                    var childMenuItem = CreateMenuItem(child);
+                    if (childMenuItem is not null)
+                        folderMenuItem.Items.Add(childMenuItem);
+                }
+                return folderMenuItem;
+
+            default:
+                return null;
+        }
+    }
+
+    private void UpdateVisibility()
+    {
+        if (_isUpdatingVisibility) return;
+        _isUpdatingVisibility = true;
+
+        try
+        {
+            if (_moreButtonHost is null) return;
+            var allContainers = GetAllContainers();
+            if (allContainers.Count == 0 || LeftContentDockPanel.Bounds.Height <= 0)
+            {
+                _moreButtonHost.IsVisible = false;
+                return;
+            }
+
+            int visibleCount = CalculateVisibleCount(allContainers);
+
+            for (int i = 0; i < allContainers.Count; i++)
+                allContainers[i].IsVisible = i < visibleCount;
+
+            _moreButtonHost.IsVisible = visibleCount < allContainers.Count;
+        }
+        finally
+        {
+            _isUpdatingVisibility = false;
+        }
+    }
+
+    private int CalculateVisibleCount(List<Control> allContainers)
+    {
+        double reservedHeight = 40;
+        double available = LeftContentDockPanel.Bounds.Height - reservedHeight;
+        double total = 0;
+        int visibleCount = 0;
+
+        foreach (var c in allContainers)
+        {
+            if (c.DesiredSize.Height <= 0)
+                c.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+        }
+
+        for (int i = 0; i < allContainers.Count; i++)
+        {
+            double h = allContainers[i].DesiredSize.Height > 0 ? allContainers[i].DesiredSize.Height : 40;
+            if (total + h <= available)
+            {
+                total += h;
+                visibleCount++;
+            }
+            else break;
+        }
+
+        return visibleCount;
+    }
+
+    private List<Control> GetAllContainers()
+    {
+        var list = new List<Control>();
+        list.AddRange(GetContainers(HeaderItemsControl));
+        list.AddRange(GetContainers(FooterItemsControl));
+        return list;
+    }
+
+    private List<Control> GetContainers(ItemsControl itemsControl)
+    {
+        var list = new List<Control>();
+        if (itemsControl == null) return list;
+        for (int i = 0; i < itemsControl.Items.Count; i++)
+        {
+            if (itemsControl.ContainerFromIndex(i) is Control c)
+                list.Add(c);
+        }
+        return list;
     }
 
     private void StartAutomaticUpdate()
@@ -162,7 +342,6 @@ public partial class TabViewContainer : ViewContainerBase
         }
     }
 
-    /// <inheritdoc />
     public override void NavigateTo(
         Page page,
         bool removeCurrentPage = false)
@@ -315,11 +494,9 @@ public partial class TabViewContainer : ViewContainerBase
             return;
 
         TabsControl.SelectedIndex = pages.IndexOf(contextPage);
-        // 先固定关闭目标，避免移除页面时索引变化导致关闭范围漂移。
         var targets = TabClosePlanner.GetTargets([.. pages], contextPage, scope);
         foreach (var target in targets)
         {
-            // 复用单标签关闭的释放事件，让页面有机会处理自己的 ViewModel 生命周期。
             var args = new RoutedEventArgs(ViewModelDisposal.RequestDisposeEvent, target);
             target.RaiseEvent(args);
             if (!args.Handled)
@@ -349,12 +526,10 @@ public partial class TabViewContainer : ViewContainerBase
         if (e.Item is not Control control
             || sender.Pages is not IReadOnlyCollection<Page> pages)
             return;
-        // 关闭前手动切换标签页，以便触发标签页的 OnUnloaded 事件并保证其 Parent(TabsView) 存在，以便找 TopLevel(Window) 显示 InfoBar 之类的
         if (sender.SelectedIndex < pages.Count - 1)
             sender.SelectedIndex++;
         else if (sender.SelectedIndex > 0)
             sender.SelectedIndex--;
-        // 否则关闭最后一个标签页，相当于关闭当前窗口，找到 TopLevel(Window) 也没意义
 
         var args = new RoutedEventArgs(ViewModelDisposal.RequestDisposeEvent, control);
         control.RaiseEvent(args);
@@ -390,10 +565,6 @@ public partial class TabViewContainer : ViewContainerBase
         ViewModelDisposal.Dispose(tabItem);
     }
 
-    /// <summary>
-    /// Custom <see cref="IInterTabClient"/> that creates new <see cref="Window"/>
-    /// instances with a fresh <see cref="TabViewContainer"/> for tab tear-off.
-    /// </summary>
     private sealed class PixevalInterTabClient : IInterTabClient
     {
         public TabsHost GetNewHost(InterTabController controller, TabsHost host)
