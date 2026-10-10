@@ -82,7 +82,20 @@ public sealed class Skeleton : TemplatedControl
 
     private void StopShimmerAnimation()
     {
-        if (_shimmer is not null && ElementComposition.GetElementVisual(_shimmer) is { } visual)
-            visual.StopAnimation(nameof(CompositionVisual.Offset));
+        if (_shimmer is null || ElementComposition.GetElementVisual(_shimmer) is not { } visual)
+            return;
+
+        var shimmerWidth = double.Max(MinShimmerWidth, Bounds.Width * ShimmerWidthRatio);
+        var parked = new Vector3D(-shimmerWidth, 0, 0);
+        var animation = visual.Compositor.CreateVector3DKeyFrameAnimation();
+        animation.InsertKeyFrame(0f, parked);
+        animation.InsertKeyFrame(1f, parked);
+        animation.Duration = TimeSpan.FromMilliseconds(1);
+        animation.IterationBehavior = AnimationIterationBehavior.Count;
+        animation.IterationCount = 1;
+
+        // Replace the shimmer through a composition batch; StopAnimation bypasses that path.
+        // The finite animation parks the shimmer offscreen and then leaves the animation clock.
+        visual.StartAnimation(nameof(CompositionVisual.Offset), animation);
     }
 }
