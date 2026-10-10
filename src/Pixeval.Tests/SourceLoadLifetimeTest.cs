@@ -10,6 +10,24 @@ namespace Pixeval.Tests;
 public sealed class SourceLoadLifetimeTest
 {
     [TestMethod]
+    public void ReplacementKeepsDisplayedSourceUntilSwapAndDisposalReleasesBoth()
+    {
+        using var lifetime = new SourceLoadLifetime();
+        var displayed = lifetime.BeginLoad();
+        var oldSource = new DisposableSource();
+        Assert.IsTrue(displayed.TrySetSource(oldSource));
+        var replacement = lifetime.BeginLoad(preserveCurrentSource: true);
+        Assert.IsFalse(oldSource.IsDisposed);
+        var newSource = new DisposableSource();
+        Assert.IsTrue(replacement.TrySetSource(newSource));
+        displayed.Abandon();
+        Assert.IsTrue(oldSource.IsDisposed);
+        Assert.IsFalse(newSource.IsDisposed);
+        lifetime.Dispose();
+        Assert.IsTrue(newSource.IsDisposed);
+    }
+
+    [TestMethod]
     public void BeginLoad_CancelsPreviousDecodeWithoutCancelingDownload()
     {
         using var lifetime = new SourceLoadLifetime();

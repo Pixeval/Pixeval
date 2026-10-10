@@ -81,10 +81,14 @@
         </ContentControl.ContextMenu>
         <Border HorizontalAlignment="Stretch">
             <Panel>
-                <controls:ConstrainedBox AspectRatio="{Binding AspectRatio, Converter={x:Static converters:PixevalConverters.ToAspectRatio}}" RestrictArrange="False">
+                <controls:ConstrainedBox
+                    x:Name="ThumbnailBounds"
+                    AspectRatio="{Binding AspectRatio, Converter={x:Static converters:PixevalConverters.ToAspectRatio}}"
+                    RestrictArrange="False">
                     <Image
                         x:Name="ThumbnailImage"
                         controls:Source.Cache="{Binding ThumbnailUrl}"
+                        controls:Source.DecodeTarget="{Binding #ThumbnailBounds}"
                         Stretch="UniformToFill" />
                 </controls:ConstrainedBox>
                 <controls:Skeleton IsVisible="{Binding !#ThumbnailImage.(controls:Source.Loaded)}" />

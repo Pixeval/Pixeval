@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using AnimatedControls.Avalonia;
+using Avalonia;
 using Avalonia.Media.Imaging;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
@@ -291,13 +292,14 @@ public static class CacheHelper
         string key,
         IProgress<double>? progress = null,
         int? desiredWidth = null,
+        PixelSize? desiredSize = null,
         CancellationToken decodeToken = default,
         CancellationToken token = default)
     {
         try
         {
             return await GetStreamAsync(platform, key, progress, token: token).ConfigureAwait(false) is { } stream
-                ? await stream.DecodeBitmapImageAsync(true, desiredWidth, decodeToken).ConfigureAwait(false)
+                ? await stream.DecodeBitmapImageAsync(true, desiredWidth, desiredSize, decodeToken).ConfigureAwait(false)
                 : WrappedImageNotAvailable.Value;
         }
         catch (OperationCanceledException) when (token.IsCancellationRequested || decodeToken.IsCancellationRequested)

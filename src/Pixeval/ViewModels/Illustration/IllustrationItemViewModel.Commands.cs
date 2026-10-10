@@ -8,10 +8,12 @@ using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
+using Pixeval.Controls;
 using Pixeval.I18N;
 using Pixeval.Models.Blocking;
 using Pixeval.Models.Download;
 using Pixeval.Utilities;
+using Pixeval.Utilities.IO.Caching;
 using Pixeval.Views.ViewContainers;
 
 namespace Pixeval.ViewModels;
@@ -21,11 +23,14 @@ public partial class IllustrationItemViewModel
     [RelayCommand]
     private static async Task CopyAsync(Image? parameter)
     {
-        if (parameter is not { Source: Bitmap bitmap })
+        if (parameter is not { Source: Bitmap })
             return;
         if (TopLevel.GetTopLevel(parameter) is not
             { ViewContainer: { } viewContainer, Clipboard: { } clipboard })
             return;
+        if (Source.GetCache(parameter) is not { } key)
+            return;
+        using var bitmap = await CacheHelper.GetBitmapAsync(Source.GetPlatform(parameter), key);
         await clipboard.SetBitmapAsync(bitmap);
         await clipboard.FlushAsync();
         viewContainer?.ShowSuccess(I18NManager.GetResource(MiscResources.Copied));

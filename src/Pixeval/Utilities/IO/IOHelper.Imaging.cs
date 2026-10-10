@@ -7,6 +7,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Media.Imaging;
 using Microsoft.Extensions.DependencyInjection;
 using Misaki;
@@ -41,6 +42,7 @@ public static partial class IoHelper
         public async Task<Bitmap> DecodeBitmapImageAsync(
             bool disposeOfImageStream,
             int? desiredWidth = null,
+            PixelSize? desiredSize = null,
             CancellationToken token = default
         )
         {
@@ -51,6 +53,21 @@ public static partial class IoHelper
                 return await Task.Run(() =>
                 {
                     token.ThrowIfCancellationRequested();
+
+                    if (desiredSize is { } size)
+                    {
+                        var position = stream.Position;
+                        using (var codec = SKCodec.Create(new SKManagedStream(stream, false)))
+                        {
+                            if (codec is null)
+                                throw new ArgumentException("Unable to read image dimensions.", nameof(stream));
+                            var info = codec.Info;
+                            var scale = Math.Min(1, Math.Max((double) size.Width / info.Width, (double) size.Height / info.Height));
+                            desiredWidth = Math.Clamp((int) Math.Ceiling(info.Width * scale), 1, info.Width);
+                        }
+                        stream.Position = position;
+                        token.ThrowIfCancellationRequested();
+                    }
 
                     // Synchronous decoding cannot be interrupted. The caller owns any
                     // result that becomes obsolete after this check.

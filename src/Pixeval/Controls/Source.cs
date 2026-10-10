@@ -12,6 +12,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Threading;
 using Misaki;
 using Pixeval.Utilities;
 using Pixeval.Utilities.IO.Caching;
@@ -38,6 +39,12 @@ public static class Source
             typeof(Source),
             defaultValue: false);
 
+    public static readonly AttachedProperty<Control?> DecodeTargetProperty =
+        AvaloniaProperty.RegisterAttached<Image, Control?>("DecodeTarget", typeof(Source));
+
+    private static readonly AttachedProperty<SizedImageLoader?> SizedImageLoaderProperty =
+        AvaloniaProperty.RegisterAttached<Image, SizedImageLoader?>("SizedImageLoader", typeof(Source));
+
     private static readonly AttachedProperty<SourceLoadLifetime?> CacheLoadLifetimeProperty =
         AvaloniaProperty.RegisterAttached<Control, SourceLoadLifetime?>(
             "CacheLoadLifetime",
@@ -62,6 +69,8 @@ public static class Source
         _ = CacheProperty.Changed.AddClassHandler<AnimatedImage>(OnAnimatedImageChanged);
         _ = CacheProperty.Changed.AddClassHandler<AvatarImage>(OnAvatarImageChanged);
         _ = CacheProperty.Changed.AddClassHandler<Image>(OnImageChanged);
+        _ = DecodeTargetProperty.Changed.AddClassHandler<Image>(OnDecodeTargetChanged);
+        _ = PlatformProperty.Changed.AddClassHandler<Image>((image, _) => image.GetValue(SizedImageLoaderProperty)?.UpdateRequest());
 
         _ = BackgroundCacheProperty.Changed.AddClassHandler<Border>(OnBorderBackgroundCacheChanged);
         _ = BackgroundCacheProperty.Changed.AddClassHandler<Panel>(OnPanelBackgroundCacheChanged);
@@ -91,6 +100,23 @@ public static class Source
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static void SetPlatform(Control element, string value) => element.SetValue(PlatformProperty, value);
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Control? GetDecodeTarget(Image element) => element.GetValue(DecodeTargetProperty);
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static void SetDecodeTarget(Image element, Control? value) => element.SetValue(DecodeTargetProperty, value);
+
+    private static void OnDecodeTargetChanged(Image element, AvaloniaPropertyChangedEventArgs e)
+    {
+        element.Source = null;
+        AbandonLoad(element, CacheLoadLifetimeProperty);
+        element.GetValue(SizedImageLoaderProperty)?.Dispose();
+        element.ClearValue(SizedImageLoaderProperty);
+        if (GetDecodeTarget(element) is { } target)
+            element.SetValue(SizedImageLoaderProperty, new SizedImageLoader(element, target));
+        OnImageChanged(element, e);
+    }
 
     private static async void OnAnimatedImageChanged(AnimatedImage element, AvaloniaPropertyChangedEventArgs e)
     {
@@ -156,18 +182,34 @@ public static class Source
         }
     }
 
-    private static async void OnImageChanged(Image element, AvaloniaPropertyChangedEventArgs e)
+    private static void OnImageChanged(Image element, AvaloniaPropertyChangedEventArgs e)
     {
-        if (e.GetNewValue<string>() is not { } value)
+        if (element.GetValue(SizedImageLoaderProperty) is { } loader)
         {
-            element.Source = null;
-            AbandonLoad(element, CacheLoadLifetimeProperty);
-            SetLoaded(element, false);
+            loader.UpdateRequest();
             return;
         }
 
         element.Source = null;
+        AbandonLoad(element, CacheLoadLifetimeProperty);
         SetLoaded(element, false);
+        if (GetCache(element) is not { } value)
+            return;
+
+        // Let all template bindings settle, including the optional decode target.
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (GetCache(element) != value)
+                return;
+            if (element.GetValue(SizedImageLoaderProperty) is { } imageLoader)
+                imageLoader.UpdateRequest();
+            else
+                _ = LoadImageAsync(element, value);
+        }, DispatcherPriority.Loaded);
+    }
+
+    private static async Task LoadImageAsync(Image element, string value)
+    {
         var lifetime = BeginLoad(element, CacheLoadLifetimeProperty);
         try
         {
@@ -340,7 +382,7 @@ internal sealed class SourceLoadLifetime : IDisposable
 
     public void MarkRegistered() => IsRegistered = true;
 
-    public SourceLoadOperation BeginLoad()
+    public SourceLoadOperation BeginLoad(bool preserveCurrentSource = false)
     {
         var operation = new SourceLoadOperation(OnOperationDisposed);
         SourceLoadOperation? previous = null;
@@ -365,7 +407,8 @@ internal sealed class SourceLoadLifetime : IDisposable
 
         // Recycling a container only makes its old result obsolete. Let the cache fill finish so
         // virtualized scrolling doesn't turn every binding change into a canceled HTTP request.
-        previous?.Abandon();
+        if (!preserveCurrentSource)
+            previous?.Abandon();
         return operation;
     }
 
