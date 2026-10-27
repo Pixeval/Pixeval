@@ -20,6 +20,15 @@ public partial class LoginPageViewModel : ViewModelBase
     private readonly LoginUserPersistentManager _manager;
     private bool _areUsersLoaded;
 
+    private readonly CancellationTokenSource _loadBannerImageTokenSource = new();
+
+    private BannerImagePicker _bannerImagePicker;
+
+    private Task<Bitmap?> BannerImage => _bannerImagePicker.LoadRandomImageAsync();
+
+    private Task<bool> LoadBannerImageSuccessfully => BannerImage.ContinueWith(task => task.Result is not null);
+
+    
     public LoginPageViewModel() : this(
         App.AppViewModel.AppServiceProvider.GetRequiredService<LoginUserPersistentManager>(),
         App.AppViewModel.LoginContext.CurrentKey)
