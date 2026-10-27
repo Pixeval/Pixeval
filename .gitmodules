@@ -17,3 +17,6 @@
 [submodule "src/lib/SmoothScroll.Avalonia"]
 	path = src/lib/SmoothScroll.Avalonia
 	url = https://github.com/Poker-sang/SmoothScroll.Avalonia.git
+[submodule "src/lib/Ardelle"]
+	path = src/lib/Ardelle
+	url = https://github.com/Pixeval/new-ardelle.git
