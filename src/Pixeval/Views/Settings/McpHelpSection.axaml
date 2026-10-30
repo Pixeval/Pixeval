@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.Avalonia.Controls"
     xmlns:local="using:Pixeval.Controls"
+    xmlns:m3="https://github.com/Shirasagi0012/Material3Expressive.Avalonia"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mcpServer="using:Pixeval.Models.McpServer"
@@ -21,18 +22,11 @@
             <controls:SettingsExpander.HeaderIcon>
                 <PathIcon Data="{markup1:SvgPath {x:Static pixeval:SvgResources.MCP}}" />
             </controls:SettingsExpander.HeaderIcon>
-            <Button
+            <m3:IconButton
                 x:Name="RefreshMcpToolsButton"
-                Width="40"
-                Height="35"
-                HorizontalContentAlignment="Center"
-                VerticalContentAlignment="Center"
-                Background="Transparent"
-                BorderThickness="0"
+                AutomationProperties.Name="{Binding (ToolTip.Tip), RelativeSource={RelativeSource Self}}"
                 Click="RefreshMcpToolsButton_OnClicked"
-                Content="{markup:SymbolIcon ArrowSync,
-                                            FontSize=14}"
-                Theme="{StaticResource MaterialTextButtonTheme}"
+                Symbol="Sync"
                 ToolTip.Tip="{I18N {x:Static pixeval:HelpPageResources+McpToolsRefreshButton.ToolTip}}" />
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Vertical">
