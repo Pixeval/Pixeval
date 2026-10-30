@@ -1,7 +1,9 @@
 <ResourceDictionary
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Pixeval.Controls">
+    xmlns:local="using:Pixeval.Controls"
+    xmlns:m3="https://github.com/Shirasagi0012/Material3Expressive.Avalonia"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup">
 
     <Design.PreviewWith>
         <StackPanel
@@ -15,28 +17,26 @@
         </StackPanel>
     </Design.PreviewWith>
 
-    <x:Double x:Key="TokenizingBoxHeight">30</x:Double>
+    <x:Double x:Key="TokenizingBoxHeight">32</x:Double>
     <x:Double x:Key="TokenizingBoxMinInputWidth">96</x:Double>
 
     <DataTemplate x:DataType="{x:Type local:TokenizingBoxToken}" x:Key="TokenizingBoxTokenTemplate">
         <Border
-            Padding="6,1,1,1"
+            Padding="8,0,4,0"
             VerticalAlignment="Stretch"
-            Background="{DynamicResource TextControlBackground}"
-            BorderBrush="{DynamicResource TextControlBorderBrush}"
-            BorderThickness="1"
+            Background="{m3:Token {x:Static m3:MaterialTokens+Sys+Color.SecondaryContainer}}"
             Classes="tokenizing-token"
-            CornerRadius="4"
+            CornerRadius="8"
             Focusable="True">
             <StackPanel Orientation="Horizontal" Spacing="4">
                 <ContentControl
                     VerticalAlignment="Center"
                     Content="{Binding Item}"
                     ContentTemplate="{Binding $parent[local:TokenizingBox].ItemTemplate}"
-                    Foreground="{Binding $parent[local:TokenizingBox].Foreground}" />
+                    Foreground="{m3:Token {x:Static m3:MaterialTokens+Sys+Color.OnSecondaryContainer}}" />
                 <Button
-                    Width="18"
-                    Height="18"
+                    Width="24"
+                    Height="24"
                     MinWidth="0"
                     MinHeight="0"
                     Padding="0"
@@ -48,25 +48,26 @@
                     BorderThickness="0"
                     Classes="tokenizing-token-remove"
                     Command="{Binding RemoveCommand}"
-                    Content="&#x00D7;"
-                    CornerRadius="9"
+                    Content="{markup:SymbolIcon Dismiss,
+                                                FontSize=16}"
+                    CornerRadius="12"
                     Focusable="False"
-                    FontSize="12"
-                    FontWeight="SemiBold"
-                    Foreground="{Binding $parent[local:TokenizingBox].Foreground}"
-                    IsTabStop="False" />
+                    Foreground="{m3:Token {x:Static m3:MaterialTokens+Sys+Color.OnSecondaryContainer}}"
+                    IsTabStop="False"
+                    Theme="{StaticResource TransparentButtonStyle}" />
             </StackPanel>
         </Border>
     </DataTemplate>
 
     <ControlTheme x:Key="{x:Type local:TokenizingBox}" TargetType="{x:Type local:TokenizingBox}">
-        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
-        <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
-        <Setter Property="PlaceholderForeground" Value="{DynamicResource TextControlPlaceholderForeground}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}" />
-        <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThickness}" />
-        <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
-        <Setter Property="Padding" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+        <Setter Property="PlaceholderForeground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="10" />
+        <Setter Property="m3:MaterialText.Style" Value="{m3:Typography BodyMedium}" />
         <Setter Property="MaxDropDownHeight" Value="{DynamicResource AutoCompleteListMaxHeight}" />
 
         <Setter Property="Template">
@@ -93,16 +94,17 @@
 
                             <local:TokenizingBoxPanel
                                 Name="PART_ItemsHost"
-                                VerticalAlignment="Top"
+                                VerticalAlignment="Center"
+                                ItemSpacing="6"
                                 ItemsSource="{TemplateBinding TokenItems}"
                                 LineHeight="{StaticResource TokenizingBoxHeight}"
+                                LineSpacing="6"
                                 MinInputWidth="{StaticResource TokenizingBoxMinInputWidth}"
                                 TokenTemplate="{StaticResource TokenizingBoxTokenTemplate}">
                                 <local:TokenizingBoxPanel.InputElement>
                                     <AutoCompleteBox
                                         Name="PART_AutoCompleteBox"
                                         MinWidth="{StaticResource TokenizingBoxMinInputWidth}"
-                                        Margin="4"
                                         Padding="0"
                                         VerticalAlignment="Center"
                                         AsyncPopulator="{TemplateBinding AsyncPopulator}"
@@ -129,8 +131,11 @@
                                         ValueMemberBinding="{TemplateBinding ValueMemberBinding}">
                                         <AutoCompleteBox.Styles>
                                             <Style Selector="TextBox#PART_TextBox">
+                                                <Setter Property="Theme" Value="{StaticResource PixevalFluentTextBoxTheme}" />
                                                 <Setter Property="MinHeight" Value="0" />
                                                 <Setter Property="FocusAdorner" Value="{x:Null}" />
+                                                <Setter Property="VerticalContentAlignment" Value="Center" />
+                                                <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
                                             </Style>
                                             <Style Selector="TextBox#PART_TextBox /template/ Border#PART_BorderElement">
                                                 <Setter Property="Background" Value="Transparent" />
@@ -167,19 +172,19 @@
         </Setter>
 
         <Style Selector="^:pointerover /template/ Border#PART_Root">
-            <Setter Property="Background" Value="{DynamicResource TextControlBackgroundPointerOver}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushPointerOver}" />
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource TextFillColorSecondaryBrush}" />
         </Style>
 
         <Style Selector="^:focus-within /template/ Border#PART_Root">
-            <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}" />
-            <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThickness}" />
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
         </Style>
 
         <Style Selector="^:disabled /template/ Border#PART_Root">
-            <Setter Property="Background" Value="{DynamicResource TextControlBackgroundDisabled}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushDisabled}" />
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
             <Setter Property="Opacity" Value="0.6" />
         </Style>
 
