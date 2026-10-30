@@ -9,6 +9,7 @@
     xmlns:edit="using:AvaloniaEdit"
     xmlns:entries="using:Pixeval.Models.Settings.Entries"
     xmlns:fluent="using:FluentIcons.Avalonia"
+    xmlns:m3="https://github.com/Shirasagi0012/Material3Expressive.Avalonia"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
     xmlns:utilities="using:Pixeval.Utilities"
@@ -31,7 +32,7 @@
                 </StackPanel.Resources>
                 <StackPanel.DataTemplates>
                     <DataTemplate x:DataType="{x:Type controls2:SymbolComboBoxItem}">
-                        <Button
+                        <m3:AssistChip
                             Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
                             Content="{Binding Value}"
                             Tag="{Binding Value}"
