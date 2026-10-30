@@ -119,9 +119,9 @@
                 Command="{Binding BookmarkCommand}"
                 CommandParameter="{Binding $self, Mode=OneTime}"
                 State="{Binding IsBookmarkedDisplay}">
-                
+
                 <controls:HeartButton.CacheMode>
-                    <BitmapCache SnapsToDevicePixels="False" RenderAtScale="1"/>
+                    <BitmapCache RenderAtScale="1" SnapsToDevicePixels="False" />
                 </controls:HeartButton.CacheMode>
             </controls:HeartButton>
 
@@ -145,7 +145,10 @@
                         Text="{Binding Entry.CreateDate, Converter={x:Static converters:PixevalConverters.DateTimeShortDate}}"
                         TextTrimming="CharacterEllipsis"
                         Theme="{StaticResource BodyTextBlockStyle}" />
-                    <Button Padding="2" Click="AuthorButton_OnClick">
+                    <Button
+                        Padding="2"
+                        Click="AuthorButton_OnClick"
+                        Theme="{StaticResource TransparentButtonStyle}">
                         <TextBlock
                             x:Name="AuthorTextBlock"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -181,8 +184,7 @@
                         DockPanel.Dock="Left"
                         IsVisible="{Binding Entry.IsAiGenerated}"
                         Mode="Ai" />
-                    <controls:PixevalBadge DockPanel.Dock="Left"
-                                           Mode="{Binding Entry.XRestrict, Converter={x:Static converters:PixevalConverters.RestrictBadgeModeConverter}}" />
+                    <controls:PixevalBadge DockPanel.Dock="Left" Mode="{Binding Entry.XRestrict, Converter={x:Static converters:PixevalConverters.RestrictBadgeModeConverter}}" />
                 </DockPanel>
                 <ItemsControl
                     x:Name="TagsList"
@@ -198,7 +200,8 @@
                             <Button
                                 Padding="2"
                                 Click="TagButton_OnClicked"
-                                CornerRadius="{StaticResource ControlCornerRadius}">
+                                CornerRadius="{StaticResource ControlCornerRadius}"
+                                Theme="{StaticResource TransparentButtonStyle}">
                                 <TextBlock
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Text="{Binding ToolTip, Mode=OneTime}"
