@@ -142,7 +142,8 @@
                                                 <Setter Property="BorderBrush" Value="Transparent" />
                                                 <Setter Property="BorderThickness" Value="0" />
                                             </Style>
-                                            <Style Selector="TextBox#PART_TextBox:focus /template/ Border#PART_BorderElement">
+                                            <!--  The outer token field owns the surface in every editor state.  -->
+                                            <Style Selector="TextBox#PART_TextBox:pointerover /template/ Border#PART_BorderElement, TextBox#PART_TextBox:focus /template/ Border#PART_BorderElement, TextBox#PART_TextBox:disabled /template/ Border#PART_BorderElement">
                                                 <Setter Property="Background" Value="Transparent" />
                                                 <Setter Property="BorderBrush" Value="Transparent" />
                                                 <Setter Property="BorderThickness" Value="0" />

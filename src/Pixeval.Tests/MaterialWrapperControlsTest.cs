@@ -186,6 +186,14 @@ public sealed class MaterialWrapperControlsTest
                 Assert.IsTrue(tokens.Bounds.Height <= 56, $"Token input grew to {tokens.Bounds.Height}.");
                 var input = tokens.GetVisualDescendants().OfType<TextBox>().Single();
                 Assert.IsTrue(input.Bounds.Height < 40);
+                var inputBorder = input.GetVisualDescendants().OfType<Border>().Single(border => border.Name is "PART_BorderElement");
+                Assert.AreEqual(0, ColorOf(inputBorder.Background).A);
+                var inputPoint = input.TranslatePoint(new Rect(input.Bounds.Size).Center, window)
+                    ?? throw new AssertFailedException("The token editor is detached from its window.");
+                window.MouseMove(inputPoint);
+                Render(window);
+                Assert.IsTrue(input.IsPointerOver);
+                Assert.AreEqual(0, ColorOf(inputBorder.Background).A, "Hover must not paint a separate input surface over the token field.");
                 var remove = tokens.GetVisualDescendants().OfType<Button>().First(button => button.Classes.Contains("tokenizing-token-remove"));
                 Assert.AreEqual(24, remove.Bounds.Width);
                 var editorScroll = input.GetVisualDescendants().OfType<ScrollViewer>().Single();
