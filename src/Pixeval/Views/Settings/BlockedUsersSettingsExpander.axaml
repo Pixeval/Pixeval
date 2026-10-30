@@ -9,6 +9,7 @@
     xmlns:entries="using:Pixeval.Models.Settings.Entries"
     xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:local="using:Pixeval.Views.Settings"
+    xmlns:m3="https://github.com/Shirasagi0012/Material3Expressive.Avalonia"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -25,9 +26,10 @@
         <fluent:SymbolIcon Symbol="{Binding Icon}" />
     </controls:SettingsExpander.HeaderIcon>
     <controls:SettingsExpander.Content>
-        <Button
+        <m3:IconButton
+            AutomationProperties.Name="{Binding (ToolTip.Tip), RelativeSource={RelativeSource Self}}"
             Click="RefreshAllButton_OnClicked"
-            Content="{markup:SymbolIcon ArrowSync}"
+            Symbol="Sync"
             ToolTip.Tip="{I18N {x:Static pixeval:BlockedUsersSettingsExpanderResources+RefreshAllButton.Label}}" />
     </controls:SettingsExpander.Content>
     <controls:SettingsExpander.Items>
@@ -38,10 +40,12 @@
                 RowDefinitions="Auto,Auto"
                 RowSpacing="8">
                 <TextBox x:Name="TargetIdTextBox" PlaceholderText="{I18N {x:Static pixeval:BlockedUsersSettingsExpanderResources+TargetIdTextBox.PlaceholderText}}" />
-                <Button
+                <m3:IconButton
                     Grid.Column="1"
+                    AutomationProperties.Name="{Binding (ToolTip.Tip), RelativeSource={RelativeSource Self}}"
                     Click="AddButton_OnClicked"
-                    Content="{markup:SymbolIcon Add}"
+                    Symbol="Add"
+                    Theme="{StaticResource MaterialTonalIconButtonTheme}"
                     ToolTip.Tip="{I18N {x:Static pixeval:BlockedUsersSettingsExpanderResources+AddUserButton.Label}}" />
                 <controls1:InfoBar
                     x:Name="ErrorTextBlock"
@@ -52,7 +56,10 @@
                     Mode="Error" />
             </Grid>
         </controls:SettingsCard>
-        <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
+        <controls:SettingsCard
+            HorizontalContentAlignment="Stretch"
+            ContentAlignment="Left"
+            IsVisible="{Binding !!$parent[local:BlockedUsersSettingsExpander].Users.Count}">
             <ItemsControl ItemsSource="{Binding $parent[local:BlockedUsersSettingsExpander].Users}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="{x:Type settings:BlockedUserItemViewModel}">
@@ -66,18 +73,20 @@
                                 VerticalAlignment="Center"
                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                 Text="{Binding Entry.Id}" />
-                            <Button
+                            <m3:IconButton
                                 Grid.Column="2"
                                 VerticalAlignment="Center"
+                                AutomationProperties.Name="{Binding (ToolTip.Tip), RelativeSource={RelativeSource Self}}"
                                 Click="RefreshButton_OnClicked"
-                                Content="{markup:SymbolIcon ArrowSync}"
+                                Symbol="Sync"
                                 Tag="{Binding}"
                                 ToolTip.Tip="{I18N {x:Static pixeval:BlockedUsersSettingsExpanderResources+RefreshUserButton.Label}}" />
-                            <Button
+                            <m3:IconButton
                                 Grid.Column="3"
                                 VerticalAlignment="Center"
+                                AutomationProperties.Name="{Binding (ToolTip.Tip), RelativeSource={RelativeSource Self}}"
                                 Click="DeleteButton_OnClicked"
-                                Content="{markup:SymbolIcon Delete}"
+                                Symbol="Delete"
                                 Tag="{Binding}"
                                 ToolTip.Tip="{I18N {x:Static pixeval:BlockedUsersSettingsExpanderResources+DeleteUserButton.Label}}" />
                         </Grid>
