@@ -289,6 +289,17 @@
     </ControlTheme>
 
     <ControlTheme
+        x:Key="ContentCardTheme"
+        BasedOn="{StaticResource MaterialCardTheme}"
+        TargetType="{x:Type m3:Card}">
+        <Setter Property="IsClickable" Value="True" />
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="m3:MaterialText.Style" Value="{m3:Typography BodyMedium}" />
+    </ControlTheme>
+
+    <ControlTheme
         x:Key="TransparentButtonStyle"
         BasedOn="{StaticResource RoundedButtonStyle}"
         TargetType="{x:Type Button}">
@@ -316,6 +327,15 @@
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="Opacity" Value="0.5" />
         </Style>
+    </ControlTheme>
+
+    <ControlTheme
+        x:Key="InlineHyperlinkTheme"
+        BasedOn="{StaticResource TransparentButtonStyle}"
+        TargetType="{x:Type HyperlinkButton}">
+        <Setter Property="Foreground" Value="{DynamicResource AccentTextFillColorPrimaryBrush}" />
+        <Setter Property="m3:MaterialText.Style" Value="{m3:Typography BodyMedium}" />
+        <Setter Property="TextBlock.TextDecorations" Value="Underline" />
     </ControlTheme>
 
     <ControlTheme
