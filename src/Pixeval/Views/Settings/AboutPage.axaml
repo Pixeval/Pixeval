@@ -5,6 +5,7 @@
     xmlns:controls="using:CommunityToolkit.Avalonia.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Pixeval.Controls"
+    xmlns:m3="https://github.com/Shirasagi0012/Material3Expressive.Avalonia"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
@@ -83,18 +84,11 @@
                                 Description="{Binding Author}"
                                 Header="{Binding Name}"
                                 HeaderIcon="{markup:SymbolIcon Box}">
-                                <Button
-                                    Width="40"
-                                    Height="35"
-                                    HorizontalContentAlignment="Center"
-                                    VerticalContentAlignment="Center"
-                                    Background="Transparent"
-                                    BorderThickness="0"
+                                <m3:IconButton
+                                    AutomationProperties.Name="{Binding Url}"
                                     Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
-                                    Content="{markup:SymbolIcon Open,
-                                                                FontSize=14}"
-                                    Tag="{Binding Url}"
-                                    Theme="{StaticResource MaterialTextButtonTheme}" />
+                                    Symbol="OpenInNew"
+                                    Tag="{Binding Url}" />
                                 <controls:SettingsExpander.Items>
                                     <controls:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Vertical">
                                         <local:MarkdownBox Markdown="{Binding License}" />
