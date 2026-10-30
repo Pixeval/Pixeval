@@ -32,7 +32,8 @@
                 DockPanel.Dock="Top"
                 ExpandDirection="Up"
                 IsExpanded="{Binding OpenUserInfo, Source={x:Static views:PixevalSettings.Instance}, Mode=TwoWay}"
-                PropertyChanged="UserInfoExpander_OnPropertyChanged">
+                PropertyChanged="UserInfoExpander_OnPropertyChanged"
+                Theme="{StaticResource UserInfoExpanderTheme}">
                 <Expander.Header>
                     <DockPanel>
                         <CommandBar
@@ -99,7 +100,7 @@
                                 <TextBlock
                                     MaxLines="1"
                                     Text="{Binding UserDetail.UserEntity.Name, FallbackValue={x:Null}}"
-                                    TextWrapping="Wrap"
+                                    TextTrimming="CharacterEllipsis"
                                     Theme="{StaticResource CaptionStrongTextBlockStyle}" />
                                 <TextBlock
                                     FontSize="13"
@@ -131,11 +132,11 @@
                 </Expander.Header>
                 <Border MinHeight="210" Background="{DynamicResource PixevalTranslucentBackground}">
                     <!--  用户信息  -->
-                    <StackPanel
+                    <Grid
                         Margin="40,20"
                         VerticalAlignment="Stretch"
-                        Orientation="Horizontal"
-                        Spacing="30">
+                        ColumnDefinitions="80,*"
+                        ColumnSpacing="30">
                         <!--  头像  -->
                         <controls:AvatarImage
                             Width="80"
@@ -145,13 +146,21 @@
 
                         <!--  用户名、ID、简介  -->
                         <StackPanel
+                            Grid.Column="1"
                             MaxWidth="400"
+                            HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             Spacing="6">
-                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                <TextBlock Text="{Binding UserDetail.UserEntity.Name, FallbackValue={x:Null}}" Theme="{StaticResource TitleTextBlockStyle}" />
-                                <controls:PixevalBadge IsVisible="{Binding UserDetail.UserProfile.IsPremium, FallbackValue={x:Null}}" Mode="Premium" />
-                            </StackPanel>
+                            <DockPanel HorizontalSpacing="8">
+                                <controls:PixevalBadge
+                                    DockPanel.Dock="Right"
+                                    IsVisible="{Binding UserDetail.UserProfile.IsPremium, FallbackValue={x:Null}}"
+                                    Mode="Premium" />
+                                <TextBlock
+                                    Text="{Binding UserDetail.UserEntity.Name, FallbackValue={x:Null}}"
+                                    TextTrimming="CharacterEllipsis"
+                                    Theme="{StaticResource TitleTextBlockStyle}" />
+                            </DockPanel>
                             <TextBlock
                                 FontSize="13"
                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -163,7 +172,7 @@
                                 Text="{Binding UserDetail.UserEntity.Description, FallbackValue={x:Null}}"
                                 TextWrapping="Wrap" />
                         </StackPanel>
-                    </StackPanel>
+                    </Grid>
                 </Border>
             </Expander>
             <TabbedPage Pages="{Binding TabPages}" />
