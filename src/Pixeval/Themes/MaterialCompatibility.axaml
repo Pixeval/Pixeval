@@ -1,0 +1,24 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:m3="https://github.com/Shirasagi0012/Material3Expressive.Avalonia">
+    <!--
+        Upstream compatibility adjustments for Material3Expressive e8323bce.
+        Keep Pixeval-specific design choices in Controls.axaml or the owning control.
+    -->
+
+    <!--
+        Material's TopLevel BodyLarge baseline fixes inherited LineHeight at 24.
+        Fluent and third-party controls often change only FontSize, causing cramped text.
+        Keep automatic line height at the fallback boundary; Material components still
+        provide their own complete typography. Revisit when upstream supports mixed themes.
+    -->
+    <Style Selector=":is(TopLevel):not(:is(PopupRoot))">
+        <Setter Property="m3:MaterialText.Style" Value="{m3:TextStyle BasedOn={m3:Typography BodyLarge}, LineHeight=NaN}" />
+    </Style>
+
+    <!--
+        Material supplies TabStrip but no TabStripItem theme. Its Fluent fallback needs
+        matching label size and line height. Remove when upstream supplies item typography.
+    -->
+    <Style Selector="TabStripItem">
+        <Setter Property="m3:MaterialText.Style" Value="{m3:Typography LabelLarge}" />
+    </Style>
+</Styles>
