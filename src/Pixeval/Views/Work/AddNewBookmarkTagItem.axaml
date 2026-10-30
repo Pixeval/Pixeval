@@ -1,6 +1,7 @@
 <ResourceDictionary
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:m3="https://github.com/Shirasagi0012/Material3Expressive.Avalonia"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:work="using:Pixeval.Views.Work">
     <Design.PreviewWith>
@@ -16,20 +17,24 @@
         <Setter Property="Template">
             <ControlTemplate>
                 <Panel>
-                    <Button
+                    <m3:IconButton
                         Name="PART_AddButton"
                         VerticalAlignment="Center"
-                        Content="{markup:SymbolIcon Add}"
                         IsVisible="{TemplateBinding IsExpanded,
-                                                    Converter={x:Static BoolConverters.Not}}" />
+                                                    Converter={x:Static BoolConverters.Not}}"
+                        Symbol="Add"
+                        Theme="{StaticResource MaterialTonalIconButtonTheme}" />
                     <StackPanel
                         VerticalAlignment="Center"
                         IsVisible="{TemplateBinding IsExpanded}"
                         Orientation="Horizontal"
                         Spacing="4">
                         <TextBox Name="PART_TextBox" MinWidth="120" />
-                        <Button Name="PART_ConfirmButton" Content="{markup:SymbolIcon Checkmark}" />
-                        <Button Name="PART_CancelButton" Content="{markup:SymbolIcon Dismiss}" />
+                        <m3:IconButton
+                            Name="PART_ConfirmButton"
+                            Symbol="Check"
+                            Theme="{StaticResource MaterialTonalIconButtonTheme}" />
+                        <m3:IconButton Name="PART_CancelButton" Symbol="Close" />
                     </StackPanel>
                 </Panel>
             </ControlTemplate>

@@ -2,6 +2,7 @@
     x:Class="Pixeval.Views.Work.TagSelector"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:m3="https://github.com/Shirasagi0012/Material3Expressive.Avalonia"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:pixeval="using:Pixeval"
     xmlns:utilities="using:Pixeval.Utilities"
@@ -49,14 +50,15 @@
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
         </ListBox>
-        <Button
+        <m3:IconButton
             x:Name="ConfirmButton"
             Grid.Row="0"
             Grid.Column="1"
             HorizontalAlignment="Right"
             Click="OnConfirmClick"
-            Content="{markup:SymbolIcon Checkmark}"
-            IsEnabled="{Binding #Root.IsLoading, Converter={x:Static BoolConverters.Not}}" />
+            IsEnabled="{Binding #Root.IsLoading, Converter={x:Static BoolConverters.Not}}"
+            Symbol="Check"
+            Theme="{StaticResource MaterialTonalIconButtonTheme}" />
         <CheckBox
             Grid.Row="0"
             Grid.Column="0"
