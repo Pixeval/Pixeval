@@ -1,4 +1,4 @@
-﻿<ResourceDictionary
+<ResourceDictionary
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:fluent="using:FluentIcons.Avalonia"
@@ -20,17 +20,19 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:IconText}">
-                    <StackPanel Orientation="Horizontal" Spacing="5">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="5">
                         <fluent:SymbolIcon
                             VerticalAlignment="Center"
                             FontSize="{TemplateBinding IconSize}"
                             Symbol="{TemplateBinding Symbol}" />
                         <TextBlock
+                            Grid.Column="1"
                             VerticalAlignment="Center"
                             FontSize="{TemplateBinding FontSize}"
                             Text="{TemplateBinding Text}"
+                            TextTrimming="CharacterEllipsis"
                             Theme="{TemplateBinding TextTheme}" />
-                    </StackPanel>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
