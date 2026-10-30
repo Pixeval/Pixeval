@@ -94,7 +94,6 @@ public class SymbolComboBox : TemplatedControl
         AvaloniaProperty.Register<SymbolComboBox, IDataTemplate?>(nameof(TextItemTemplate));
 
     private ComboBox? _innerComboBox;
-    private ContentControl? _selectionBoxPresenter;
     private bool _isSynchronizingSelection;
     private bool _preferSelectedValue;
 
@@ -174,24 +173,16 @@ public class SymbolComboBox : TemplatedControl
         if (_innerComboBox is not null)
         {
             _innerComboBox.SelectionChanged -= OnInnerSelectionChanged;
-            _innerComboBox.TemplateApplied -= OnInnerComboBoxTemplateApplied;
         }
 
         _innerComboBox = e.NameScope.Find<ComboBox>("PART_ComboBox");
         if (_innerComboBox is not null)
         {
             _innerComboBox.SelectionChanged += OnInnerSelectionChanged;
-            _innerComboBox.TemplateApplied += OnInnerComboBoxTemplateApplied;
             _innerComboBox.Classes.Set("text", !IconMode);
         }
 
         SyncSelection();
-    }
-
-    private void OnInnerComboBoxTemplateApplied(object? sender, TemplateAppliedEventArgs e)
-    {
-        _selectionBoxPresenter = e.NameScope.Find<ContentControl>("ContentPresenter");
-        UpdateSelectionBoxTemplate();
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -210,9 +201,10 @@ public class SymbolComboBox : TemplatedControl
 
         if (change.Property == SelectedIndexProperty)
         {
-            if (_isSynchronizingSelection || _preferSelectedValue)
+            if (_isSynchronizingSelection)
                 return;
 
+            _preferSelectedValue = false;
             SyncSelectionFromIndex();
             return;
         }
@@ -229,12 +221,6 @@ public class SymbolComboBox : TemplatedControl
         {
             PseudoClasses.Set(":text", !IconMode);
             _innerComboBox?.Classes.Set("text", !IconMode);
-            UpdateSelectionBoxTemplate();
-        }
-
-        if (change.Property == IconSelectionBoxTemplateProperty || change.Property == TextItemTemplateProperty)
-        {
-            UpdateSelectionBoxTemplate();
         }
     }
 
@@ -245,29 +231,15 @@ public class SymbolComboBox : TemplatedControl
 
         SyncSelectionFromInnerComboBox();
 
-        // ComboBox 选中项变化时会以 LocalValue 优先级重设 ContentTemplate 为 ItemTemplate，
-        // 需要在之后重新设置为我们期望的模板
-        UpdateSelectionBoxTemplate();
-
         if (IsLoaded)
             SelectionChanged?.Invoke(this, EventArgs.Empty);
-    }
-
-    /// <summary>
-    /// 将内部 ComboBox 的选择框 ContentPresenter 的 ContentTemplate
-    /// 设为当前模式对应的模板（Icon 模式用 IconSelectionBoxTemplate，Text 模式用 TextItemTemplate）。
-    /// 必须以 LocalValue 优先级设置，因为 ComboBox 内部也是用 LocalValue 赋值的。
-    /// </summary>
-    private void UpdateSelectionBoxTemplate()
-    {
-        _selectionBoxPresenter?.ContentTemplate = IconMode ? IconSelectionBoxTemplate : TextItemTemplate;
     }
 
     private void SyncSelection()
     {
         if (_preferSelectedValue)
             SyncSelectionFromValue();
-        else 
+        else
             SyncSelectionFromIndex();
     }
 
