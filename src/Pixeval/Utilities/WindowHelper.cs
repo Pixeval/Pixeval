@@ -21,6 +21,7 @@ public static class WindowHelper
 
         public Window Init(string? title, WindowIcon? icon, double width = 0, double height = 0, double minWidth = 0, double minHeight = 0, bool isMaximized = false)
         {
+            MaterialAnimation.Initialize(window);
             window.ExtendClientAreaToDecorationsHint = true;
             window.WindowDecorations = WindowDecorations.Full;
             window.Icon = icon;

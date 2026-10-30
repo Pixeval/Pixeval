@@ -12,6 +12,17 @@
     <Project Path="src/lib/SmoothScroll.Avalonia/src/SmoothScroll.Avalonia.Controls/SmoothScroll.Avalonia.Controls.csproj" />
     <Project Path="src/lib/SmoothScroll.Avalonia/src/SmoothScroll.Avalonia.Interaction/SmoothScroll.Avalonia.Interaction.csproj" />
   </Folder>
+  <Folder Name="/Lib/Material/">
+    <Project Path="src/lib/Material3Expressive.Avalonia/modules/ComposeAnimation/ComposeAnimation.Avalonia/ComposeAnimation.Avalonia.csproj" />
+    <Project Path="src/lib/Material3Expressive.Avalonia/modules/ComposeAnimation/ComposeAnimation.Runtime/ComposeAnimation.Runtime.csproj" />
+    <Project Path="src/lib/Material3Expressive.Avalonia/modules/MaterialShapes/MaterialShapes/MaterialShapes.csproj" />
+    <Project Path="src/lib/Material3Expressive.Avalonia/modules/MaterialSkiaShadow/MaterialSkiaShadow.csproj" />
+    <Project Path="src/lib/Material3Expressive.Avalonia/src/Material3Expressive/Material3Expressive.csproj" />
+    <Project Path="src/lib/MaterialColorUtilities/MaterialColorUtilities/MaterialColorUtilities.csproj" />
+    <Project Path="src/lib/MaterialSymbols/MaterialSymbols.Avalonia.Rounded/MaterialSymbols.Avalonia.Rounded.csproj" />
+    <Project Path="src/lib/MaterialSymbols/MaterialSymbols.Avalonia/MaterialSymbols.Avalonia.csproj" />
+    <Project Path="src/lib/MaterialSymbols/MaterialSymbols.Generator/MaterialSymbols.Generator.csproj" />
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path=".github/CONTRIBUTING.md" />
@@ -20,6 +31,7 @@
     <File Path=".gitignore" />
     <File Path=".gitmodules" />
     <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
     <File Path="global.json" />
     <File Path="LICENSE" />
     <File Path="Settings.XamlStyler" />
