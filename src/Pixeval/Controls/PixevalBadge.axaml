@@ -108,6 +108,7 @@
                             FontSize="9"
                             FontWeight="Bold"
                             Foreground="{TemplateBinding Foreground}"
+                            LineHeight="NaN"
                             Text="{TemplateBinding Text}" />
                     </Border>
                 </ControlTemplate>
