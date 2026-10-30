@@ -167,7 +167,7 @@
                                                                          x:TypeArguments=common:Symbol}}"
             IsChecked="{Binding #InfoPaneRoot.IsLocked, Mode=TwoWay}"
             IsVisible="{Binding #InfoPaneRoot.IsDocked, Converter={x:Static BoolConverters.Not}}"
-            Theme="{StaticResource TransparentButtonStyle}"
+            Theme="{StaticResource TransparentToggleButtonStyle}"
             ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.Pin}}" />
         <Button
             Width="32"

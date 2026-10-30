@@ -69,7 +69,8 @@
                     MaxHeight="32"
                     Padding="1"
                     Background="Transparent"
-                    CornerRadius="100">
+                    CornerRadius="100"
+                    Theme="{StaticResource TransparentButtonStyle}">
                     <controls:AvatarImage Source="{Binding Avatar}" />
                     <Button.Flyout>
                         <MenuFlyout>
@@ -133,7 +134,8 @@
                                 HorizontalAlignment="Stretch"
                                 Background="Transparent"
                                 Command="{x:Static local:TabViewContainer.OpenNavigationItemCommand}"
-                                CommandParameter="{Binding $self}">
+                                CommandParameter="{Binding $self}"
+                                Theme="{StaticResource MaterialTextButtonTheme}">
                                 <Button.IsEnabled>
                                     <MultiBinding Converter="{x:Static BoolConverters.Or}">
                                         <Binding Path="!NeedLogin" />
@@ -155,7 +157,10 @@
                         </DataTemplate>
 
                         <DataTemplate x:DataType="{x:Type navigation:NavigationFolderItem}">
-                            <Button HorizontalAlignment="Stretch" Background="Transparent">
+                            <Button
+                                HorizontalAlignment="Stretch"
+                                Background="Transparent"
+                                Theme="{StaticResource MaterialTextButtonTheme}">
                                 <Button.IsEnabled>
                                     <MultiBinding Converter="{x:Static BoolConverters.Or}">
                                         <Binding Path="!NeedLogin" />

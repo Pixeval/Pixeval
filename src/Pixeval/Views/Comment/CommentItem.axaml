@@ -45,7 +45,8 @@
                 BorderThickness="0"
                 Click="DeleteReplyButton_OnClicked"
                 Content="{markup:SymbolIcon Delete}"
-                IsVisible="{Binding IsMe}" />
+                IsVisible="{Binding IsMe}"
+                Theme="{StaticResource TransparentButtonStyle}" />
             <Button
                 Padding="6"
                 Background="Transparent"
@@ -56,7 +57,8 @@
                                                                    IconVariant=Color},
                                                 {markup:SymbolIcon ChatAdd},
                                                 x:TypeArguments=fluent:SymbolIcon}"
-                IsVisible="{Binding IsTopComment}" />
+                IsVisible="{Binding IsTopComment}"
+                Theme="{StaticResource TransparentButtonStyle}" />
         </StackPanel>
 
         <!--  Poster info  -->
@@ -65,7 +67,8 @@
             HorizontalContentAlignment="Left"
             Background="Transparent"
             BorderThickness="0"
-            Click="PosterButton_OnClicked">
+            Click="PosterButton_OnClicked"
+            Theme="{StaticResource TransparentButtonStyle}">
             <DockPanel HorizontalSpacing="10" LastChildFill="False">
                 <controls:AvatarImage
                     Width="35"

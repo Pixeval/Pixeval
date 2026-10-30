@@ -25,6 +25,7 @@
                 HorizontalContentAlignment="Stretch"
                 Background="Transparent"
                 Click="OpenSeriesButton_OnClick"
+                Theme="{StaticResource MaterialTextButtonTheme}"
                 ToolTip.Tip="{I18N {x:Static pixeval:EntryItemResources.OpenSeries}}">
                 <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
                     <fluent:SymbolIcon VerticalAlignment="Center" Symbol="SquareMultiple" />
@@ -57,6 +58,7 @@
                     Click="NavigationButton_OnClick"
                     IsVisible="{Binding Previous, Converter={x:Static ObjectConverters.IsNotNull}}"
                     Tag="{Binding Previous}"
+                    Theme="{StaticResource MaterialTextButtonTheme}"
                     ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.PreviousSeriesWork}}">
                     <DockPanel HorizontalSpacing="6" LastChildFill="True">
                         <fluent:SymbolIcon
@@ -79,6 +81,7 @@
                     Click="NavigationButton_OnClick"
                     IsVisible="{Binding Next, Converter={x:Static ObjectConverters.IsNotNull}}"
                     Tag="{Binding Next}"
+                    Theme="{StaticResource MaterialTextButtonTheme}"
                     ToolTip.Tip="{I18N {x:Static pixeval:EntryViewerPageResources.NextSeriesWork}}">
                     <DockPanel HorizontalSpacing="6" LastChildFill="True">
                         <fluent:SymbolIcon

@@ -32,6 +32,7 @@
                 Click="RefreshMcpToolsButton_OnClicked"
                 Content="{markup:SymbolIcon ArrowSync,
                                             FontSize=14}"
+                Theme="{StaticResource MaterialTextButtonTheme}"
                 ToolTip.Tip="{I18N {x:Static pixeval:HelpPageResources+McpToolsRefreshButton.ToolTip}}" />
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Vertical">
