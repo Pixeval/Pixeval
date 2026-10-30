@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:Pixeval.Views.Converters"
+    xmlns:m3="https://github.com/Shirasagi0012/Material3Expressive.Avalonia"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:misaki="using:Misaki"
     xmlns:pixeval="using:Pixeval"
@@ -200,14 +201,14 @@
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate x:DataType="{x:Type misaki:ITag}">
-                                                    <Button Command="{Binding $parent[viewers:WorkInfoPane].OpenTagCommand}" CommandParameter="{Binding}">
+                                                    <m3:SuggestionChip Command="{Binding $parent[viewers:WorkInfoPane].OpenTagCommand}" CommandParameter="{Binding}">
                                                         <TextBlock
                                                             controls:TranslatableTextBlockBehavior.IsEnabled="True"
                                                             controls:TranslatableTextBlockBehavior.PretranslatedText="{Binding TranslatedName}"
                                                             controls:TranslatableTextBlockBehavior.TextType="WorkTag"
                                                             Text="{Binding Name}"
                                                             TextWrapping="NoWrap" />
-                                                        <Button.ContextMenu>
+                                                        <m3:SuggestionChip.ContextMenu>
                                                             <ContextMenu>
                                                                 <MenuItem
                                                                     Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
@@ -226,8 +227,8 @@
                                                                     Header="{I18N {x:Static pixeval:BlockedContentResources.BlockTag}}"
                                                                     Icon="{markup:SymbolIcon TagDismiss}" />
                                                             </ContextMenu>
-                                                        </Button.ContextMenu>
-                                                    </Button>
+                                                        </m3:SuggestionChip.ContextMenu>
+                                                    </m3:SuggestionChip>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
