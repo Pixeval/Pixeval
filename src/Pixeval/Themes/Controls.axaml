@@ -37,6 +37,16 @@
     <x:Double x:Key="SettingStackPanelSpacing">8</x:Double>
 
     <ControlTheme
+        x:Key="UserInfoExpanderTheme"
+        BasedOn="{StaticResource {x:Type Expander}}"
+        TargetType="{x:Type Expander}">
+        <!--  Keep the profile header readable independently of the cover image.  -->
+        <Style Selector="^ /template/ ToggleButton#ExpanderHeader">
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme
         x:Key="{x:Type CommandBar}"
         BasedOn="{StaticResource {x:Type CommandBar}}"
         TargetType="{x:Type CommandBar}">
