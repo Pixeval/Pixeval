@@ -27,7 +27,8 @@
                     <HyperlinkButton
                         Padding="0"
                         Click="ReleaseNotesHyperlink_OnClicked"
-                        Content="{Binding CurrentVersion, Mode=OneTime}" />
+                        Content="{Binding CurrentVersion, Mode=OneTime}"
+                        Theme="{StaticResource InlineHyperlinkTheme}" />
                 </controls:SettingsExpander.Header>
                 <controls:SettingsExpander.Description>
                     <StackPanel Spacing="3">
