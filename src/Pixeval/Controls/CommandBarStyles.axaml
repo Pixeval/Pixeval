@@ -8,12 +8,12 @@
         <Setter Property="ToolTip.Tip" Value="{Binding $self.Label}" />
     </Style>
 
-    <Style Selector="CommandBarButton[IsInOverflow=True] /template/ ContentPresenter#PART_IconPresenter">
+    <Style Selector="CommandBarButton[IsInOverflow=True] /template/ ContentPresenter#PART_Icon">
         <Setter Property="Width" Value="20" />
         <Setter Property="Height" Value="20" />
     </Style>
 
-    <Style Selector="CommandBarToggleButton[IsInOverflow=True] /template/ ContentPresenter#PART_IconPresenter">
+    <Style Selector="CommandBarToggleButton[IsInOverflow=True] /template/ ContentPresenter#PART_Icon">
         <Setter Property="Width" Value="20" />
         <Setter Property="Height" Value="20" />
     </Style>
