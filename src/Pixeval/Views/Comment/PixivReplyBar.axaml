@@ -20,7 +20,8 @@
             VerticalAlignment="Center"
             Background="Transparent"
             BorderThickness="0"
-            DockPanel.Dock="Left">
+            DockPanel.Dock="Left"
+            Theme="{StaticResource TransparentButtonStyle}">
             <markup:SymbolIcon FontSize="16" Symbol="Emoji" />
             <Button.Flyout>
                 <Flyout Placement="TopEdgeAlignedLeft">
@@ -98,6 +99,7 @@
             Content="{markup:SymbolIcon Send,
                                         FontSize=16}"
             DockPanel.Dock="Right"
+            Theme="{StaticResource TransparentButtonStyle}"
             ToolTip.Tip="{I18N {x:Static pixeval:PixivReplyBarResources+SendButton.ToolTip}}" />
         <TextBox
             x:Name="ReplyContentTextBox"

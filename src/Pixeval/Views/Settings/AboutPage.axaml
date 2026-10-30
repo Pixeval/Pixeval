@@ -93,7 +93,8 @@
                                     Click="{x:Static utilities:AvaloniaHelper.LaunchUriTagInWebBrowser}"
                                     Content="{markup:SymbolIcon Open,
                                                                 FontSize=14}"
-                                    Tag="{Binding Url}" />
+                                    Tag="{Binding Url}"
+                                    Theme="{StaticResource MaterialTextButtonTheme}" />
                                 <controls:SettingsExpander.Items>
                                     <controls:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Vertical">
                                         <local:MarkdownBox Markdown="{Binding License}" />

@@ -310,7 +310,8 @@
                                     HorizontalAlignment="Stretch"
                                     Background="Transparent"
                                     Command="{Binding $parent[home:HomePage].ViewModel.SelectTemplateCommand}"
-                                    CommandParameter="{Binding}">
+                                    CommandParameter="{Binding}"
+                                    Theme="{StaticResource TransparentButtonStyle}">
                                     <Border
                                         Padding="12"
                                         Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
