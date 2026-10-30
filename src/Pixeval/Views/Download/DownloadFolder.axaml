@@ -5,6 +5,7 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="using:FluentIcons.Avalonia"
+    xmlns:m3="https://github.com/Shirasagi0012/Material3Expressive.Avalonia"
     xmlns:markup="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:Pixeval.ViewModels"
@@ -13,14 +14,15 @@
     mc:Ignorable="d"
     d:DesignHeight="90"
     d:DesignWidth="800">
-    <Button
+    <m3:Card
         Margin="8"
         Padding="12"
         HorizontalAlignment="Stretch"
         HorizontalContentAlignment="Stretch"
         Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
         Click="Button_OnClicked"
-        CornerRadius="8">
+        CornerRadius="8"
+        Theme="{StaticResource ContentCardTheme}">
         <Grid
             HorizontalAlignment="Stretch"
             ColumnDefinitions="Auto,*,Auto"
@@ -30,7 +32,7 @@
                 Width="48"
                 Height="48"
                 VerticalAlignment="Center"
-                controls:Source.Cache="{Binding Subscription.AvatarUrl}"/>
+                controls:Source.Cache="{Binding Subscription.AvatarUrl}" />
             <fluent:SymbolIcon
                 Grid.Column="2"
                 VerticalAlignment="Center"
@@ -73,5 +75,5 @@
                 </Grid>
             </StackPanel>
         </Grid>
-    </Button>
+    </m3:Card>
 </UserControl>
