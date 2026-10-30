@@ -71,7 +71,10 @@
                     Text="{Binding Entry.LastPublishedContentDatetime, Converter={x:Static converters:PixevalConverters.DateTimeShortDate}}"
                     TextTrimming="CharacterEllipsis"
                     Theme="{StaticResource CaptionTextBlockStyle}" />
-                <Button Padding="2" Click="AuthorButton_OnClick">
+                <Button
+                    Padding="2"
+                    Click="AuthorButton_OnClick"
+                    Theme="{StaticResource TransparentButtonStyle}">
                     <TextBlock
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                         MaxLines="2"
