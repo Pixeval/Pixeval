@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using AutoSettingsPage.Avalonia;
 using AutoSettingsPage.Models;
 using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Interactivity;
 
 namespace Pixeval.Views.Settings;
@@ -32,7 +31,7 @@ public partial class IPListInput : StackPanel, IEntryControl<ISingleValueSetting
         entry.Value.Add(value);
     }
 
-    private void RemoveTapped(object? sender, TappedEventArgs e)
+    private void RemoveButton_OnClick(object? sender, RoutedEventArgs e)
     {
         if (DataContext is ISingleValueSettingsEntry<ObservableCollection<string>> entry
             && sender is Control { DataContext: string s })
