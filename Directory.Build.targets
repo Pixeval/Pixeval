@@ -1,4 +1,10 @@
 <Project>
+  <!-- Restore source projects with the host's sources and mappings as one graph.
+       Submodule configs use different source names and private package feeds. -->
+  <PropertyGroup>
+    <RestoreConfigFile>$(MSBuildThisFileDirectory)nuget.config</RestoreConfigFile>
+  </PropertyGroup>
+
   <!-- Consume unpublished Material dependencies from pinned submodules without
        modifying their upstream project files or requiring GitHub Packages credentials. -->
   <ItemGroup Condition="'$(MSBuildProjectName)' == 'Material3Expressive'">
