@@ -9,6 +9,7 @@
     xmlns:entries="using:Pixeval.Models.Settings.Entries"
     xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:local="using:Pixeval.Views.Settings"
+    xmlns:m3="https://github.com/Shirasagi0012/Material3Expressive.Avalonia"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -26,9 +27,10 @@
         <fluent:SymbolIcon Symbol="{Binding Icon}" />
     </controls:SettingsExpander.HeaderIcon>
     <controls:SettingsExpander.Content>
-        <Button
+        <m3:IconButton
+            AutomationProperties.Name="{Binding (ToolTip.Tip), RelativeSource={RelativeSource Self}}"
             Click="SyncAllButton_OnClicked"
-            Content="{markup:SymbolIcon ArrowSync}"
+            Symbol="Sync"
             ToolTip.Tip="{I18N {x:Static pixeval:WorkSubscriptionsSettingsExpanderResources+SyncAllSubscriptionsButton.Label}}" />
     </controls:SettingsExpander.Content>
     <controls:SettingsExpander.Items>
@@ -53,11 +55,12 @@
                     Grid.Column="2"
                     IconMode="False"
                     SelectedIndex="0" />
-                <Button
+                <m3:IconButton
                     Grid.Row="0"
                     Grid.Column="3"
                     Click="AddButton_OnClicked"
-                    Content="{markup:SymbolIcon Add}" />
+                    Symbol="Add"
+                    Theme="{StaticResource MaterialTonalIconButtonTheme}" />
                 <controls1:InfoBar
                     x:Name="ErrorTextBlock"
                     Grid.Row="1"
@@ -67,7 +70,10 @@
                     Mode="Error" />
             </Grid>
         </controls:SettingsCard>
-        <controls:SettingsCard HorizontalContentAlignment="Stretch" ContentAlignment="Left">
+        <controls:SettingsCard
+            HorizontalContentAlignment="Stretch"
+            ContentAlignment="Left"
+            IsVisible="{Binding !!$parent[local:WorkSubscriptionsSettingsExpander].Subscriptions.Count}">
             <ItemsControl x:Name="SubscriptionItemsControl" ItemsSource="{Binding $parent[local:WorkSubscriptionsSettingsExpander].Subscriptions}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="{x:Type settings:WorkSubscriptionItemViewModel}">
@@ -83,18 +89,19 @@
                                 <Run Text="{Binding SubscriptionTypeText}" /><LineBreak />
                                 <Run Text="{Binding WorkKindText}" />
                             </TextBlock>
-                            <Button
+                            <m3:IconButton
                                 Grid.Column="3"
                                 VerticalAlignment="Center"
+                                AutomationProperties.Name="{Binding (ToolTip.Tip), RelativeSource={RelativeSource Self}}"
                                 Click="SyncSubscriptionButton_OnClicked"
-                                Content="{markup:SymbolIcon ArrowSync}"
+                                Symbol="Sync"
                                 Tag="{Binding}"
                                 ToolTip.Tip="{I18N {x:Static pixeval:DownloadPageResources+SyncSubscriptionButton.Label}}" />
-                            <Button
+                            <m3:IconButton
                                 Grid.Column="4"
                                 VerticalAlignment="Center"
                                 Click="DeleteButton_OnClicked"
-                                Content="{markup:SymbolIcon Delete}"
+                                Symbol="Delete"
                                 Tag="{Binding}" />
                         </Grid>
                     </DataTemplate>
