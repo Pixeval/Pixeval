@@ -23,6 +23,37 @@ git clone --recurse-submodules https://github.com/Pixeval/Pixeval.git
 3. 其设置为启动项目
 4. 构建并运行
 
+### Material 3 主题依赖
+
+Material3Expressive.Avalonia 当前通过 `src/lib` 下固定提交的子模块接入，
+ComposeAnimation、MaterialShapes 和 MaterialSkiaShadow 随其源码提供。
+MaterialColorUtilities、MaterialSymbols 也使用源码子模块；`Directory.Build.targets`
+将主库的三个 `Shirasagi0012.*` 包引用替换为项目引用，并统一 Avalonia/SkiaSharp 版本。
+因此构建 Pixeval 不需要 GitHub Packages 凭证，也不需要修改依赖仓库的项目文件。
+
+现有克隆更新依赖后运行：
+
+```sh
+git submodule sync --recursive
+git submodule update --init --recursive
+dotnet build src/Pixeval.Desktop/Pixeval.Desktop.csproj -c Debug
+dotnet test --project src/Pixeval.Tests/Pixeval.Tests.csproj
+```
+
+SmoothScroll 使用 Shirasagi0012 的分支，提供 Material 主库编译所需的滚动参与者接口。
+普通 ScrollViewer 使用 Material 主题自带的平滑滚动模板，图片查看器继续使用 ScrollView。
+不要同时添加 SmoothScroll NuGet 包或再次加载 `ScrollViewerSmoothTheme`。
+升级子模块时需验证滚动、缩放和控件卸载，不能只依据编译通过判断手势行为。
+
+主题入口为 `Themes/PixevalTheme.axaml`。Fluent 为尚未实现的控件提供模板，
+基础控件采用 Material；Pixeval 的标签窗口、导航、ContentDialog 和图片手势保留现有实现。
+标签输入框内部的编辑器局部保留 Fluent 以维持紧凑布局。
+Roboto 为可选模块，当前沿用 Pixeval 字体设置和中文字体回退；Material Symbols 仅用于库内置图标。
+
+Material 模板仍包含上游的反射绑定，NativeAOT 发布会报告 IL2026/IL3050。
+不要直接屏蔽告警或保留整个程序集来掩盖问题；发布成功和 headless 测试通过不等同于
+原生界面交互验收，尤其需检查文本剪贴板菜单、弹出菜单及目标平台的输入行为。
+
 ## 项目结构
 
 ### src目录

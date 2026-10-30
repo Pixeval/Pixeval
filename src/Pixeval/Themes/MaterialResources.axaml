@@ -1,0 +1,175 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:baseline="using:Material3Expressive.Baseline"
+    xmlns:material="using:Material3Expressive.Tokens"
+    xmlns:tokens="using:Material3Expressive.Foundation.Tokens">
+
+    <!--
+        Existing Pixeval controls share the Material palette while retaining their
+        navigation, dialog, image-viewer and gesture implementations.
+    -->
+    <FontFamily x:Key="{x:Static material:MaterialTokens+Ref+Typeface.Brand}">$Default</FontFamily>
+    <FontFamily x:Key="{x:Static material:MaterialTokens+Ref+Typeface.Plain}">$Default</FontFamily>
+
+    <ResourceDictionary.MergedDictionaries>
+        <tokens:MaterialResource>
+            <baseline:ColorScheme Seed="{DynamicResource SystemAccentColor}" />
+        </tokens:MaterialResource>
+    </ResourceDictionary.MergedDictionaries>
+
+    <!--
+        Keep brushes in theme dictionaries so local dark scopes (for example InfoBar)
+        resolve their own palette instead of sharing the application's current colors.
+    -->
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+            <SolidColorBrush x:Key="TextFillColorPrimaryBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnSurface}}" />
+            <SolidColorBrush x:Key="TextFillColorSecondaryBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnSurfaceVariant}}" />
+            <SolidColorBrush
+                x:Key="TextFillColorTertiaryBrush"
+                Opacity="0.6"
+                Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnSurface}}" />
+            <SolidColorBrush
+                x:Key="TextFillColorDisabledBrush"
+                Opacity="0.38"
+                Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnSurface}}" />
+            <SolidColorBrush x:Key="AccentTextFillColorPrimaryBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.Primary}}" />
+            <SolidColorBrush x:Key="AccentFillColorDefaultBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.Primary}}" />
+            <SolidColorBrush x:Key="TextOnAccentFillColorPrimaryBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnPrimary}}" />
+            <SolidColorBrush x:Key="ControlFillColorDefaultBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.SurfaceContainer}}" />
+            <SolidColorBrush x:Key="ControlFillColorSecondaryBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.SurfaceContainerHigh}}" />
+            <SolidColorBrush x:Key="ControlFillColorTertiaryBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.SurfaceContainerHighest}}" />
+            <SolidColorBrush x:Key="ControlSolidFillColorDefaultBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.SurfaceContainer}}" />
+            <SolidColorBrush x:Key="ControlStrokeColorDefaultBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OutlineVariant}}" />
+            <SolidColorBrush x:Key="DividerStrokeColorDefaultBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OutlineVariant}}" />
+            <SolidColorBrush x:Key="CardStrokeColorDefaultBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OutlineVariant}}" />
+            <SolidColorBrush x:Key="CardBackgroundFillColorDefaultBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.SurfaceContainerLow}}" />
+            <SolidColorBrush x:Key="CardBackgroundFillColorSecondaryBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.SurfaceContainer}}" />
+            <SolidColorBrush x:Key="SolidBackgroundFillColorBaseBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.Surface}}" />
+            <SolidColorBrush x:Key="SolidBackgroundFillColorSecondaryBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.SurfaceContainerLow}}" />
+            <SolidColorBrush x:Key="SolidBackgroundFillColorTertiaryBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.SurfaceContainer}}" />
+            <SolidColorBrush x:Key="SolidBackgroundFillColorQuarternaryBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.SurfaceContainerHigh}}" />
+            <SolidColorBrush x:Key="LayerFillColorDefaultBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.SurfaceContainerLow}}" />
+            <SolidColorBrush x:Key="LayerFillColorAltBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.Surface}}" />
+            <SolidColorBrush
+                x:Key="AccentTextFillColorSecondaryBrush"
+                Opacity="0.8"
+                Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.Primary}}" />
+            <SolidColorBrush
+                x:Key="AccentTextFillColorTertiaryBrush"
+                Opacity="0.6"
+                Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.Primary}}" />
+            <SolidColorBrush
+                x:Key="AccentFillColorSecondaryBrush"
+                Opacity="0.9"
+                Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.Primary}}" />
+            <SolidColorBrush
+                x:Key="AccentFillColorTertiaryBrush"
+                Opacity="0.8"
+                Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.Primary}}" />
+            <SolidColorBrush
+                x:Key="TextOnAccentFillColorSecondaryBrush"
+                Opacity="0.8"
+                Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnPrimary}}" />
+            <SolidColorBrush x:Key="ControlStrongStrokeColorDefaultBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.Outline}}" />
+            <SolidColorBrush
+                x:Key="ControlStrongStrokeColorDisabledBrush"
+                Opacity="0.12"
+                Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnSurface}}" />
+            <SolidColorBrush x:Key="ControlStrongFillColorDefaultBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnSurfaceVariant}}" />
+            <SolidColorBrush
+                x:Key="ControlStrongFillColorDisabledBrush"
+                Opacity="0.38"
+                Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnSurface}}" />
+            <SolidColorBrush
+                x:Key="SubtleFillColorSecondaryBrush"
+                Opacity="0.08"
+                Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnSurface}}" />
+            <SolidColorBrush
+                x:Key="SubtleFillColorTertiaryBrush"
+                Opacity="0.12"
+                Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnSurface}}" />
+            <SolidColorBrush x:Key="SystemFillColorAttentionBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.Primary}}" />
+            <SolidColorBrush x:Key="SystemFillColorAttentionBackgroundBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.SecondaryContainer}}" />
+            <SolidColorBrush x:Key="SystemFillColorCriticalBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.Error}}" />
+            <SolidColorBrush x:Key="SystemFillColorCriticalBackgroundBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.ErrorContainer}}" />
+            <SolidColorBrush x:Key="SystemControlForegroundBaseMediumBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnSurfaceVariant}}" />
+            <SolidColorBrush x:Key="SystemControlForegroundBaseLowBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OutlineVariant}}" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+            <SolidColorBrush x:Key="TextFillColorPrimaryBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnSurface}}" />
+            <SolidColorBrush x:Key="TextFillColorSecondaryBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnSurfaceVariant}}" />
+            <SolidColorBrush
+                x:Key="TextFillColorTertiaryBrush"
+                Opacity="0.6"
+                Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnSurface}}" />
+            <SolidColorBrush
+                x:Key="TextFillColorDisabledBrush"
+                Opacity="0.38"
+                Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnSurface}}" />
+            <SolidColorBrush x:Key="AccentTextFillColorPrimaryBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.Primary}}" />
+            <SolidColorBrush x:Key="AccentFillColorDefaultBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.Primary}}" />
+            <SolidColorBrush x:Key="TextOnAccentFillColorPrimaryBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnPrimary}}" />
+            <SolidColorBrush x:Key="ControlFillColorDefaultBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.SurfaceContainer}}" />
+            <SolidColorBrush x:Key="ControlFillColorSecondaryBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.SurfaceContainerHigh}}" />
+            <SolidColorBrush x:Key="ControlFillColorTertiaryBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.SurfaceContainerHighest}}" />
+            <SolidColorBrush x:Key="ControlSolidFillColorDefaultBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.SurfaceContainer}}" />
+            <SolidColorBrush x:Key="ControlStrokeColorDefaultBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OutlineVariant}}" />
+            <SolidColorBrush x:Key="DividerStrokeColorDefaultBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OutlineVariant}}" />
+            <SolidColorBrush x:Key="CardStrokeColorDefaultBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OutlineVariant}}" />
+            <SolidColorBrush x:Key="CardBackgroundFillColorDefaultBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.SurfaceContainerLow}}" />
+            <SolidColorBrush x:Key="CardBackgroundFillColorSecondaryBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.SurfaceContainer}}" />
+            <SolidColorBrush x:Key="SolidBackgroundFillColorBaseBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.Surface}}" />
+            <SolidColorBrush x:Key="SolidBackgroundFillColorSecondaryBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.SurfaceContainerLow}}" />
+            <SolidColorBrush x:Key="SolidBackgroundFillColorTertiaryBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.SurfaceContainer}}" />
+            <SolidColorBrush x:Key="SolidBackgroundFillColorQuarternaryBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.SurfaceContainerHigh}}" />
+            <SolidColorBrush x:Key="LayerFillColorDefaultBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.SurfaceContainerLow}}" />
+            <SolidColorBrush x:Key="LayerFillColorAltBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.Surface}}" />
+            <SolidColorBrush
+                x:Key="AccentTextFillColorSecondaryBrush"
+                Opacity="0.8"
+                Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.Primary}}" />
+            <SolidColorBrush
+                x:Key="AccentTextFillColorTertiaryBrush"
+                Opacity="0.6"
+                Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.Primary}}" />
+            <SolidColorBrush
+                x:Key="AccentFillColorSecondaryBrush"
+                Opacity="0.9"
+                Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.Primary}}" />
+            <SolidColorBrush
+                x:Key="AccentFillColorTertiaryBrush"
+                Opacity="0.8"
+                Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.Primary}}" />
+            <SolidColorBrush
+                x:Key="TextOnAccentFillColorSecondaryBrush"
+                Opacity="0.8"
+                Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnPrimary}}" />
+            <SolidColorBrush x:Key="ControlStrongStrokeColorDefaultBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.Outline}}" />
+            <SolidColorBrush
+                x:Key="ControlStrongStrokeColorDisabledBrush"
+                Opacity="0.12"
+                Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnSurface}}" />
+            <SolidColorBrush x:Key="ControlStrongFillColorDefaultBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnSurfaceVariant}}" />
+            <SolidColorBrush
+                x:Key="ControlStrongFillColorDisabledBrush"
+                Opacity="0.38"
+                Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnSurface}}" />
+            <SolidColorBrush
+                x:Key="SubtleFillColorSecondaryBrush"
+                Opacity="0.08"
+                Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnSurface}}" />
+            <SolidColorBrush
+                x:Key="SubtleFillColorTertiaryBrush"
+                Opacity="0.12"
+                Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnSurface}}" />
+            <SolidColorBrush x:Key="SystemFillColorAttentionBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.Primary}}" />
+            <SolidColorBrush x:Key="SystemFillColorAttentionBackgroundBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.SecondaryContainer}}" />
+            <SolidColorBrush x:Key="SystemFillColorCriticalBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.Error}}" />
+            <SolidColorBrush x:Key="SystemFillColorCriticalBackgroundBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.ErrorContainer}}" />
+            <SolidColorBrush x:Key="SystemControlForegroundBaseMediumBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OnSurfaceVariant}}" />
+            <SolidColorBrush x:Key="SystemControlForegroundBaseLowBrush" Color="{tokens:Token {x:Static material:MaterialTokens+Sys+Color.OutlineVariant}}" />
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+</ResourceDictionary>

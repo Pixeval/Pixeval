@@ -1,0 +1,20 @@
+<Project>
+  <!-- Consume unpublished Material dependencies from pinned submodules without
+       modifying their upstream project files or requiring GitHub Packages credentials. -->
+  <ItemGroup Condition="'$(MSBuildProjectName)' == 'Material3Expressive'">
+    <PackageReference Remove="Shirasagi0012.MaterialColorUtilities;Shirasagi0012.MaterialSymbols.Avalonia.Rounded;Shirasagi0012.SmoothScroll.Avalonia" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)src/lib/MaterialColorUtilities/MaterialColorUtilities/MaterialColorUtilities.csproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)src/lib/MaterialSymbols/MaterialSymbols.Avalonia.Rounded/MaterialSymbols.Avalonia.Rounded.csproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)src/lib/SmoothScroll.Avalonia/src/SmoothScroll.Avalonia.Controls/SmoothScroll.Avalonia.Controls.csproj" />
+  </ItemGroup>
+
+  <!-- Build centrally managed submodules against Pixeval's rendering stack. -->
+  <ItemGroup Condition="'$(ManagePackageVersionsCentrally)' == 'true'">
+    <PackageVersion Update="Avalonia;Avalonia.Desktop;Avalonia.Skia;Avalonia.Themes.Fluent;Avalonia.Fonts.Inter;Avalonia.Headless;Avalonia.Headless.XUnit" Version="12.1.3" />
+    <PackageVersion Update="SkiaSharp;SkiaSharp.NativeAssets.Win32;SkiaSharp.NativeAssets.macOS;SkiaSharp.NativeAssets.Linux;SkiaSharp.NativeAssets.WebAssembly" Version="4.152.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(MSBuildProjectName)' == 'ComposeAnimation.Runtime' Or '$(MSBuildProjectName)' == 'ComposeAnimation.Avalonia'">
+    <PackageReference Update="Avalonia" Version="12.1.3" />
+  </ItemGroup>
+</Project>

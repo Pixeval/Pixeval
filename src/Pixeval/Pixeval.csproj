@@ -43,7 +43,6 @@
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
 		<PackageReference Include="Markdown.Avalonia" Version="12.0.0-a3" />
 		<PackageReference Include="SharpYaml" Version="3.14.0" />
-		<!--<PackageReference Include="SmoothScroll.Avalonia" Version="12.0.0.12" />-->
 		<PackageReference Include="sqlite-net-pcl" Version="1.11.285" />
 		<PackageReference Include="Svg.Controls.Skia.Avalonia" Version="12.0.0.17" />
 		<PackageReference Include="TabView.Avalonia" Version="1.0.0" />
@@ -61,6 +60,7 @@
 		<ProjectReference Include="..\lib\FluentAvalonia\FluentAvalonia.csproj" />
 		<ProjectReference Include="..\lib\Imouto\Imouto.BooruParser\Imouto.BooruParser.csproj" />
 		<ProjectReference Include="..\lib\Mako\Mako\Mako.csproj" />
+		<ProjectReference Include="..\lib\Material3Expressive.Avalonia\src\Material3Expressive\Material3Expressive.csproj" />
 		<ProjectReference Include="..\lib\SmoothScroll.Avalonia\src\SmoothScroll.Avalonia.Controls\SmoothScroll.Avalonia.Controls.csproj" />
 		<ProjectReference Include="..\Pixeval.Mcp\Pixeval.Mcp.csproj" Condition="'$(EnableMcp)' == 'true'" />
 		<ProjectReference Include="..\Pixeval.I18N\Pixeval.I18N.csproj" />
