@@ -1,4 +1,4 @@
-﻿<Styles
+<Styles
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:autoSettingsPage="using:AutoSettingsPage.Avalonia"
@@ -20,6 +20,7 @@
     <smoothScroll:ScrollViewDefaultTheme />
     <!--  Material already supplies the smooth presenter for native ScrollViewer.  -->
     <material:MaterialTheme />
+    <StyleInclude Source="/Themes/MaterialCompatibility.axaml" />
 
     <Style Selector=":is(TopLevel):not(:is(PopupRoot))">
         <Setter Property="utilities:MaterialAnimation.InitializeScope" Value="True" />
