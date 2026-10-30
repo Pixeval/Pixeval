@@ -2,7 +2,6 @@
     x:Class="Pixeval.Views.Settings.IPListInput"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:avalonia="using:FluentIcons.Avalonia"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
@@ -12,16 +11,22 @@
     xmlns:sco="using:System.Collections.ObjectModel"
     x:DataType="{x:Type models:ISingleValueSettingsEntry,
                         x:TypeArguments=sco:ObservableCollection(x:String)}"
-    Spacing="5"
+    Spacing="8"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
     <TextBlock Text="{Binding Placeholder}" />
-    <DockPanel HorizontalSpacing="5">
+    <DockPanel HorizontalSpacing="8">
         <Button
+            Width="48"
+            Height="48"
+            MinWidth="0"
+            Padding="0"
+            VerticalAlignment="Center"
             Click="AddButton_OnClick"
             Content="{markup:SymbolIcon Add}"
-            DockPanel.Dock="Right" />
+            DockPanel.Dock="Right"
+            Theme="{StaticResource MaterialTonalButtonTheme}" />
         <controls:IPBox x:Name="IPBox" MinWidth="160" />
     </DockPanel>
     <controls:InfoBar
@@ -35,17 +40,37 @@
         Mode="Error"
         Text="{I18N {x:Static pixeval:IPListInputResources.DuplicatesWithExistingIP}}" />
     <ItemsControl ItemsSource="{Binding Value, Mode=OneWay}">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <StackPanel Spacing="4" />
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
         <ItemsControl.ItemTemplate>
             <DataTemplate x:DataType="{x:Type x:String}">
-                <Button HorizontalAlignment="Stretch" DoubleTapped="RemoveTapped">
-                    <DockPanel>
-                        <avalonia:SymbolIcon DockPanel.Dock="Right" Symbol="Dismiss" />
+                <Border
+                    Padding="12,4"
+                    Background="{DynamicResource ControlFillColorDefaultBrush}"
+                    CornerRadius="8">
+                    <DockPanel HorizontalSpacing="12">
+                        <Button
+                            Width="32"
+                            Height="32"
+                            MinWidth="0"
+                            MinHeight="0"
+                            Padding="0"
+                            Click="RemoveButton_OnClick"
+                            Content="{markup:SymbolIcon Dismiss,
+                                                        FontSize=16}"
+                            DockPanel.Dock="Right"
+                            Theme="{StaticResource TransparentButtonStyle}" />
                         <TextBlock
                             VerticalAlignment="Center"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                             Text="{Binding}"
-                            TextAlignment="Left" />
+                            TextTrimming="CharacterEllipsis"
+                            Theme="{StaticResource BodyTextBlockStyle}" />
                     </DockPanel>
-                </Button>
+                </Border>
             </DataTemplate>
         </ItemsControl.ItemTemplate>
     </ItemsControl>
