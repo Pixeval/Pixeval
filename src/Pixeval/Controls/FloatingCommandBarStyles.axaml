@@ -133,7 +133,7 @@
             </Style>
 
             <Style Selector="^:checked">
-                <Setter Property="Foreground" Value="{DynamicResource SystemAccentColor}" />
+                <Setter Property="Foreground" Value="{DynamicResource AccentFillColorDefaultBrush}" />
             </Style>
 
             <Style Selector="^:checked:pointerover /template/ ContentPresenter#PART_ContentPresenter">
@@ -146,7 +146,7 @@
             <Setter Property="Height" Value="20" />
             <Setter Property="MinHeight" Value="20" />
             <Setter Property="Margin" Value="0" />
-            <Setter Property="Background" Value="{DynamicResource SystemBaseMediumHighColor}" />
+            <Setter Property="Background" Value="{DynamicResource DividerStrokeColorDefaultBrush}" />
             <Setter Property="Template">
                 <ControlTemplate>
                     <Border
