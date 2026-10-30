@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Pixeval.Views.Home.HomePageCardControl"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,6 +7,7 @@
     xmlns:fluent="using:FluentIcons.Avalonia"
     xmlns:homeViewModels="using:Pixeval.ViewModels.Home"
     xmlns:local="using:Pixeval.Views.Home"
+    xmlns:m3="https://github.com/Shirasagi0012/Material3Expressive.Avalonia"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
@@ -184,11 +185,11 @@
                                     <DockPanel VerticalSpacing="6">
                                         <TextBlock
                                             DockPanel.Dock="Bottom"
-                                            FontSize="12"
                                             MaxLines="1"
                                             Text="{Binding Entry.Title}"
                                             TextTrimming="CharacterEllipsis"
-                                            TextWrapping="Wrap" />
+                                            TextWrapping="Wrap"
+                                            Theme="{StaticResource CaptionTextBlockStyle}" />
                                         <Border ClipToBounds="True" CornerRadius="{StaticResource ControlCornerRadius}">
                                             <Image controls:Source.Cache="{Binding ThumbnailUrl}" Stretch="UniformToFill" />
                                         </Border>
@@ -213,11 +214,11 @@
                                     <DockPanel VerticalSpacing="6">
                                         <TextBlock
                                             DockPanel.Dock="Bottom"
-                                            FontSize="12"
                                             MaxLines="1"
                                             Text="{Binding Entry.PureTitle}"
                                             TextTrimming="CharacterEllipsis"
-                                            TextWrapping="Wrap" />
+                                            TextWrapping="Wrap"
+                                            Theme="{StaticResource CaptionTextBlockStyle}" />
                                         <Border ClipToBounds="True" CornerRadius="{StaticResource ControlCornerRadius}">
                                             <Image controls:Source.Cache="{Binding ThumbnailUrl}" Stretch="UniformToFill" />
                                         </Border>
@@ -265,15 +266,14 @@
             <Border Classes="vertical left" Tag="{x:Static local:HomeCardEditAction.ResizeLeft}" />
         </Panel>
 
-        <Button
+        <m3:IconButton
             x:Name="QuickDeleteButton"
-            Padding="10"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Background="{DynamicResource ControlOnImageFillColorDefault}"
             Click="QuickDeleteButton_OnClick"
-            Content="{markup:SymbolIcon Delete}"
             IsVisible="{Binding #Root.IsEditing}"
+            Symbol="Delete"
             ToolTip.Tip="{I18N {x:Static pixeval:HomePageResources+DeleteSelectedCardButton.Content}}" />
     </Panel>
 </UserControl>
