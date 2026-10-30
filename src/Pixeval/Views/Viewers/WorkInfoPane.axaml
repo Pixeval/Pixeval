@@ -21,7 +21,8 @@
             Background="Transparent"
             BorderThickness="0"
             Command="{Binding $parent[viewers:WorkInfoPane].OpenAuthorCommand}"
-            CommandParameter="{Binding}">
+            CommandParameter="{Binding}"
+            Theme="{StaticResource TransparentButtonStyle}">
             <DockPanel HorizontalSpacing="12" LastChildFill="False">
                 <controls:AvatarImage
                     Width="50"
@@ -43,7 +44,8 @@
                             Background="Transparent"
                             BorderThickness="0"
                             Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
-                            Tag="{Binding Id}">
+                            Tag="{Binding Id}"
+                            Theme="{StaticResource TransparentButtonStyle}">
                             <markup:SymbolIcon FontSize="12" Symbol="Copy" />
                         </Button>
                     </StackPanel>
@@ -69,7 +71,8 @@
             Background="Transparent"
             BorderThickness="0"
             Command="{Binding $parent[viewers:WorkInfoPane].OpenAuthorCommand}"
-            CommandParameter="{Binding}">
+            CommandParameter="{Binding}"
+            Theme="{StaticResource TransparentButtonStyle}">
             <StackPanel Orientation="Horizontal" Spacing="12">
                 <controls:AvatarImage
                     Width="28"
@@ -150,7 +153,8 @@
                                 Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
                                 Content="{markup:SymbolIcon Copy,
                                                             FontSize=12}"
-                                Tag="{Binding Id}" />
+                                Tag="{Binding Id}"
+                                Theme="{StaticResource TransparentButtonStyle}" />
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Spacing="20">
