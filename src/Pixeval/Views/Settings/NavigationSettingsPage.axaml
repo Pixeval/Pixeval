@@ -8,6 +8,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:edit="using:AvaloniaEdit"
     xmlns:fluent="using:FluentIcons.Avalonia"
+    xmlns:m3="https://github.com/Shirasagi0012/Material3Expressive.Avalonia"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:navigation="using:Pixeval.Models.Navigation"
@@ -82,23 +83,27 @@
                             <ItemsControl ItemsSource="{x:Static utilities:NavigationPageRegistry.Pages}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate x:DataType="{x:Type navigation:NavigationPageDefinition}">
-                                        <Button
+                                        <m3:Card
                                             HorizontalAlignment="Stretch"
                                             Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
-                                            Tag="{Binding StringFormat={}{0}}">
-                                            <Grid ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="8">
+                                            Tag="{Binding StringFormat={}{0}}"
+                                            Theme="{StaticResource ContentCardTheme}">
+                                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
                                                 <fluent:SymbolIcon
                                                     Grid.Column="0"
                                                     FontSize="16"
                                                     IconVariant="Color"
                                                     Symbol="{Binding Icon}" />
-                                                <TextBlock Grid.Column="1" Text="{Binding Header}" />
                                                 <TextBlock
-                                                    Grid.Column="3"
+                                                    Grid.Column="1"
+                                                    Text="{Binding Header}"
+                                                    TextTrimming="CharacterEllipsis" />
+                                                <TextBlock
+                                                    Grid.Column="2"
                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                     Text="{Binding Key}" />
                                             </Grid>
-                                        </Button>
+                                        </m3:Card>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
@@ -115,6 +120,7 @@
                                             Padding="2"
                                             Click="{x:Static utilities:AvaloniaHelper.CopyTagToClipboard}"
                                             Tag="{Binding StringFormat={}{0}}"
+                                            Theme="{StaticResource TransparentButtonStyle}"
                                             ToolTip.Tip="{Binding}">
                                             <fluent:SymbolIcon IconVariant="Color" Symbol="{Binding}" />
                                         </Button>
