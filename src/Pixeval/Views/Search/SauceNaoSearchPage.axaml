@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:m3="https://github.com/Shirasagi0012/Material3Expressive.Avalonia"
     xmlns:markup="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pixeval="using:Pixeval"
@@ -19,48 +20,47 @@
     <DockPanel
         Margin="12"
         IsEnabled="{Binding IsApiKeyExisted}"
-        VerticalSpacing="5">
+        VerticalSpacing="12">
         <controls:InfoBar
             DockPanel.Dock="Top"
             IsVisible="{Binding !IsApiKeyExisted}"
             Mode="Warning"
             Text="{I18N {x:Static pixeval:SearchResources+SauceNAO.ProvideApiKey}}" />
-        <Button
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Center"
-            Click="SearchButton_OnClick"
-            Content="{I18N {x:Static pixeval:SearchResources+SauceNAO.Search}}"
-            DockPanel.Dock="Top"
-            IsEnabled="{Binding FileSelected}" />
-        <Button
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Center"
-            Command="{Binding PasteCommand}"
-            CommandParameter="{Binding $self}"
-            DockPanel.Dock="Bottom">
-            <Button.Content>
-                <controls:IconText Symbol="ClipboardPaste" Text="{I18N {x:Static pixeval:SearchResources+SauceNAO.PasteFromClipboard}}" />
-            </Button.Content>
-        </Button>
-        <Button
-            MaxHeight="600"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            Click="OpenFileButton_OnClick">
-            <Panel Margin="20">
-                <StackPanel VerticalAlignment="Center" Spacing="20">
-                    <PathIcon
-                        Width="100"
-                        Height="100"
-                        Data="{markup:SvgPath {x:Static pixeval:SvgResources.SauceNAO}}" />
-                    <TextBlock FontSize="20" TextAlignment="Center">
-                        <Run Text="{I18N {x:Static pixeval:SearchResources+SauceNAO.ProvideImage}}" />
-                        <LineBreak />
-                        <Run Text="{I18N {x:Static pixeval:SearchResources+SauceNAO.Or}}" />
-                    </TextBlock>
-                </StackPanel>
-                <Image Source="{Binding Image}" />
-            </Panel>
-        </Button>
+        <Grid RowDefinitions="Auto,*,Auto" RowSpacing="{m3:Token {x:Static m3:MaterialTokens+Comp+ButtonGroup.Spacing}}">
+            <Button
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                Click="SearchButton_OnClick"
+                Content="{I18N {x:Static pixeval:SearchResources+SauceNAO.Search}}"
+                IsEnabled="{Binding FileSelected}" />
+            <m3:Card
+                Grid.Row="1"
+                MaxHeight="600"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Click="OpenFileButton_OnClick"
+                Theme="{StaticResource ContentCardTheme}">
+                <Panel Margin="20">
+                    <StackPanel VerticalAlignment="Center" Spacing="20">
+                        <PathIcon
+                            Width="100"
+                            Height="100"
+                            Data="{markup:SvgPath {x:Static pixeval:SvgResources.SauceNAO}}" />
+                        <TextBlock
+                            m3:MaterialText.Style="{m3:Typography TitleLarge}"
+                            Text="{I18N {x:Static pixeval:SearchResources+SauceNAO.ProvideImage}}"
+                            TextAlignment="Center" />
+                    </StackPanel>
+                    <Image Source="{Binding Image}" />
+                </Panel>
+            </m3:Card>
+            <Button
+                Grid.Row="2"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                Command="{Binding PasteCommand}"
+                CommandParameter="{Binding $self}"
+                Content="{I18N {x:Static pixeval:SearchResources+SauceNAO.PasteFromClipboard}}" />
+        </Grid>
     </DockPanel>
 </ContentPage>
