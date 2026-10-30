@@ -1,7 +1,8 @@
 <ResourceDictionary
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Pixeval.Controls">
+    xmlns:local="using:Pixeval.Controls"
+    xmlns:m3="https://github.com/Shirasagi0012/Material3Expressive.Avalonia">
 
     <Design.PreviewWith>
         <StackPanel
@@ -14,22 +15,21 @@
     </Design.PreviewWith>
 
     <ControlTheme x:Key="{x:Type local:IPBox}" TargetType="{x:Type local:IPBox}">
-        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
-        <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
-        <Setter Property="PlaceholderForeground" Value="{DynamicResource TextControlPlaceholderForeground}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}" />
-        <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThickness}" />
-        <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
-        <Setter Property="Padding" Value="{DynamicResource TextControlThemePadding}" />
+        <Setter Property="Foreground" Value="{m3:Token {x:Static m3:MaterialTokens+Comp+FilledTextField.UnfocusedInputColor}}" />
+        <Setter Property="Background" Value="{m3:Token {x:Static m3:MaterialTokens+Comp+FilledTextField.UnfocusedContainerColor}}" />
+        <Setter Property="PlaceholderForeground" Value="{m3:Token {x:Static m3:MaterialTokens+Comp+FilledTextField.UnfocusedPlaceholderColor}}" />
+        <Setter Property="BorderBrush" Value="{m3:Token {x:Static m3:MaterialTokens+Comp+FilledTextField.UnfocusedIndicatorColor}}" />
+        <Setter Property="CornerRadius" Value="{m3:Token {x:Static m3:MaterialTokens+Comp+FilledTextField.ContainerShape}}" />
+        <Setter Property="Padding" Value="{m3:Token {x:Static m3:MaterialTokens+Comp+TextField.ContentPadding}}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:IPBox}">
                     <TextBox
                         Name="PART_TextBox"
                         Padding="{TemplateBinding Padding}"
+                        m3:MaterialTextField.IsError="{Binding !$parent[local:IPBox].IsValid}"
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="{TemplateBinding CornerRadius}"
                         FontFamily="{TemplateBinding FontFamily}"
                         FontSize="{TemplateBinding FontSize}"
@@ -46,8 +46,17 @@
             </Setter.Value>
         </Setter>
 
-        <Style Selector="^:invalid /template/ TextBox#PART_TextBox">
-            <Setter Property="BorderBrush" Value="{DynamicResource SystemFillColorCriticalBrush}" />
+        <Style Selector="^:focus-within">
+            <Setter Property="BorderBrush" Value="{m3:Token {x:Static m3:MaterialTokens+Comp+FilledTextField.FocusedIndicatorColor}}" />
+        </Style>
+        <Style Selector="^:invalid">
+            <Setter Property="BorderBrush" Value="{m3:Token {x:Static m3:MaterialTokens+Comp+FilledTextField.ErrorIndicatorColor}}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Foreground" Value="{m3:Token {x:Static m3:MaterialTokens+Comp+FilledTextField.DisabledInputColor}}" />
+            <Setter Property="Background" Value="{m3:Token {x:Static m3:MaterialTokens+Comp+FilledTextField.DisabledContainerColor}}" />
+            <Setter Property="BorderBrush" Value="{m3:Token {x:Static m3:MaterialTokens+Comp+FilledTextField.DisabledIndicatorColor}}" />
+            <Setter Property="PlaceholderForeground" Value="{m3:Token {x:Static m3:MaterialTokens+Comp+FilledTextField.DisabledPlaceholderColor}}" />
         </Style>
     </ControlTheme>
 </ResourceDictionary>
