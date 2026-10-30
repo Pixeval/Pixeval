@@ -10,6 +10,17 @@
     <Project Path="src/lib/Mako/Mako/Mako.csproj" />
     <Project Path="src/lib/Mako/Pixeval.Network.Maho/Pixeval.Network.Maho/Pixeval.Network.Maho.csproj" />
   </Folder>
+  <Folder Name="/Lib/Material/">
+    <Project Path="src/lib/Material3Expressive.Avalonia/modules/ComposeAnimation/ComposeAnimation.Avalonia/ComposeAnimation.Avalonia.csproj" />
+    <Project Path="src/lib/Material3Expressive.Avalonia/modules/ComposeAnimation/ComposeAnimation.Runtime/ComposeAnimation.Runtime.csproj" />
+    <Project Path="src/lib/Material3Expressive.Avalonia/modules/MaterialShapes/MaterialShapes/MaterialShapes.csproj" />
+    <Project Path="src/lib/Material3Expressive.Avalonia/modules/MaterialSkiaShadow/MaterialSkiaShadow.csproj" />
+    <Project Path="src/lib/Material3Expressive.Avalonia/src/Material3Expressive/Material3Expressive.csproj" />
+    <Project Path="src/lib/MaterialColorUtilities/MaterialColorUtilities/MaterialColorUtilities.csproj" />
+    <Project Path="src/lib/MaterialSymbols/MaterialSymbols.Avalonia.Rounded/MaterialSymbols.Avalonia.Rounded.csproj" />
+    <Project Path="src/lib/MaterialSymbols/MaterialSymbols.Avalonia/MaterialSymbols.Avalonia.csproj" />
+    <Project Path="src/lib/MaterialSymbols/MaterialSymbols.Generator/MaterialSymbols.Generator.csproj" />
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path=".github/CONTRIBUTING.md" />

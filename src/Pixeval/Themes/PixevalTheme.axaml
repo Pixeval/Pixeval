@@ -1,0 +1,50 @@
+﻿<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:autoSettingsPage="using:AutoSettingsPage.Avalonia"
+    xmlns:edit="using:AvaloniaEdit"
+    xmlns:local="using:Pixeval.Themes"
+    xmlns:material="using:Material3Expressive.Styles"
+    xmlns:smoothScroll="using:SmoothScroll.Avalonia.Controls"
+    xmlns:tabView="using:TabView.Avalonia"
+    xmlns:ui="using:FluentAvalonia.UI.Themes"
+    xmlns:utilities="using:Pixeval.Utilities">
+
+    <!--  Fluent supplies controls that Material has not implemented yet.  -->
+    <local:PixevalFluentTheme />
+    <tabView:TabsViewTheme />
+    <ui:FluentAvaloniaTheme />
+    <autoSettingsPage:AutoSettingsPageTheme />
+    <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />
+    <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
+    <smoothScroll:ScrollViewDefaultTheme />
+    <!--  Material already supplies the smooth presenter for native ScrollViewer.  -->
+    <material:MaterialTheme />
+
+    <Style Selector=":is(TopLevel):not(:is(PopupRoot))">
+        <Setter Property="utilities:MaterialAnimation.InitializeScope" Value="True" />
+    </Style>
+    <Style Selector="Control">
+        <Setter Property="TextElement.FontFamily" Value="{DynamicResource ContentControlThemeFontFamily}" />
+    </Style>
+    <Style Selector="edit|TextEditor">
+        <Setter Property="FontFamily" Value="{DynamicResource PixevalMonospaceFontFamily}" />
+    </Style>
+    <StyleInclude Source="/Controls/FloatingCommandBarStyles.axaml" />
+    <StyleInclude Source="/Controls/CommandBarStyles.axaml" />
+
+    <Styles.Resources>
+        <ResourceDictionary>
+            <x:Double x:Key="SmallIconFontSize">16</x:Double>
+            <FontFamily x:Key="ContentControlThemeFontFamily">$Default</FontFamily>
+            <FontFamily x:Key="PixevalMonospaceFontFamily">Cascadia Code,Cascadia Mono,SF Mono,Menlo,Monaco,Consolas,Liberation Mono,DejaVu Sans Mono,monospace</FontFamily>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="/Themes/Colors.axaml" />
+                <ResourceInclude Source="/Themes/Brushes.axaml" />
+                <ResourceInclude Source="/Themes/MaterialResources.axaml" />
+                <MergeResourceInclude Source="/Themes/Controls.axaml" />
+                <MergeResourceInclude Source="/Themes/WindowDrawnDecorations.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Styles.Resources>
+</Styles>

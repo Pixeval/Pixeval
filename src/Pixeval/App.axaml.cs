@@ -14,7 +14,9 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
+using ComposeAnimation;
 using Mako;
+using Material3Expressive.Tokens;
 using Microsoft.Extensions.DependencyInjection;
 using Pixeval.AppManagement;
 using Pixeval.I18N;
@@ -69,7 +71,16 @@ public class App : Application
     public static void ApplyAppFontFamily(IEnumerable<string> fontFamilies)
     {
         var resources = Current!.Resources;
-        resources["ContentControlThemeFontFamily"] = FontFamilyHelper.Create(fontFamilies) ?? FontFamily.Default;
+        var fontFamily = FontFamilyHelper.Create(fontFamilies) ?? FontFamily.Default;
+        resources["ContentControlThemeFontFamily"] = fontFamily;
+        resources[MaterialTokens.Ref.Typeface.Brand] = fontFamily;
+        resources[MaterialTokens.Ref.Typeface.Plain] = fontFamily;
+    }
+
+    internal void LogAnimationFailure(AnimationFailureEventArgs args)
+    {
+        if (args.Exception is not OperationCanceledException)
+            Logger.LogError(args.OperationLabel ?? nameof(AnimationScope.AnimationFailed), args.Exception);
     }
 
     internal void RegisterWindow(Window window)

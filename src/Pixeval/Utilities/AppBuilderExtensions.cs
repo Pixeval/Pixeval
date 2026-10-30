@@ -5,6 +5,7 @@ using System;
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Fonts;
+using MaterialSymbols.Avalonia;
 
 namespace Pixeval.Utilities;
 
@@ -27,6 +28,7 @@ public static class AppBuilderExtensions
                 ]
             })
             .WithInterFont()
+            .UseRoundedSymbols()
             .ConfigureFonts(static fontManager =>
                 fontManager.AddFontCollection(new EmbeddedFontCollection(_CjkFontCollectionKey, _CjkFontAssets)));
     }

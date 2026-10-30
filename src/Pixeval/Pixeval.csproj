@@ -61,6 +61,7 @@
 		<ProjectReference Include="..\lib\FluentAvalonia\FluentAvalonia.csproj" />
 		<ProjectReference Include="..\lib\Imouto\Imouto.BooruParser\Imouto.BooruParser.csproj" />
 		<ProjectReference Include="..\lib\Mako\Mako\Mako.csproj" />
+		<ProjectReference Include="..\lib\Material3Expressive.Avalonia\src\Material3Expressive\Material3Expressive.csproj" />
 		<ProjectReference Include="..\Pixeval.Mcp\Pixeval.Mcp.csproj" Condition="'$(EnableMcp)' == 'true'" />
 		<ProjectReference Include="..\Pixeval.I18N\Pixeval.I18N.csproj" />
 		<!--<ProjectReference Include="..\Pixeval.Caching\Pixeval.Caching.csproj" />-->
