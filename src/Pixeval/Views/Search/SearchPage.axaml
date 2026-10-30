@@ -7,6 +7,7 @@
     xmlns:database="using:Pixeval.Models.Database"
     xmlns:enum="using:Mako.Global.Enum"
     xmlns:fluent="using:FluentIcons.Avalonia"
+    xmlns:m3="https://github.com/Shirasagi0012/Material3Expressive.Avalonia"
     xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:markup1="using:Pixeval.Views.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -25,10 +26,10 @@
             <StackPanel Margin="12,6" Spacing="1">
                 <TextBlock FontWeight="SemiBold" Text="{Binding Text}" />
                 <TextBlock
-                    FontSize="11"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     Text="{Binding Description}"
-                    TextTrimming="CharacterEllipsis" />
+                    TextTrimming="CharacterEllipsis"
+                    Theme="{StaticResource CaptionTextBlockStyle}" />
             </StackPanel>
         </DataTemplate>
     </views:IconContentPage.Resources>
@@ -57,7 +58,10 @@
                         Text="{Binding SearchText, Mode=TwoWay}"
                         TextChanged="SearchAutoCompleteBox_OnTextChanged">
                         <AutoCompleteBox.InnerRightContent>
-                            <Button Click="SearchButton_OnClick" Content="{markup:SymbolIcon Search, FontSize=16}" />
+                            <m3:IconButton
+                                AutomationProperties.Name="{I18N {x:Static pixeval:SearchResources+SauceNAO.Search}}"
+                                Click="SearchButton_OnClick"
+                                Symbol="Search" />
                         </AutoCompleteBox.InnerRightContent>
                     </AutoCompleteBox>
                 </Expander.Header>
@@ -79,14 +83,11 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type x:String}">
-                            <Button Click="PinnedTagButton_OnClick">
-                                <Button.Content>
-                                    <StackPanel Orientation="Horizontal" Spacing="5">
-                                        <TextBlock Text="{Binding}" />
-                                        <fluent:SymbolIcon Symbol="Pin" />
-                                    </StackPanel>
-                                </Button.Content>
-                                <Button.ContextMenu>
+                            <m3:SuggestionChip
+                                Click="PinnedTagButton_OnClick"
+                                Content="{Binding}"
+                                LeadingIcon="{markup:SymbolIcon Pin}">
+                                <m3:SuggestionChip.ContextMenu>
                                     <ContextMenu>
                                         <MenuItem
                                             Click="CopyButton_OnClick"
@@ -97,14 +98,14 @@
                                             Header="{I18N {x:Static pixeval:SearchResources+SearchHistory.Unpin}}"
                                             Icon="{markup:SymbolIcon PinOff}" />
                                     </ContextMenu>
-                                </Button.ContextMenu>
-                            </Button>
+                                </m3:SuggestionChip.ContextMenu>
+                            </m3:SuggestionChip>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                     <ItemsControl.DataTemplates>
                         <DataTemplate DataType="{x:Type database:SearchHistoryEntry}">
-                            <Button Click="SearchHistoryButton_OnClick">
-                                <Button.Content>
+                            <m3:SuggestionChip Click="SearchHistoryButton_OnClick">
+                                <m3:SuggestionChip.Content>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <TextBlock Text="{Binding Value}" />
                                         <TextBlock
@@ -112,8 +113,8 @@
                                             IsVisible="{Binding TranslatedName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                                             Text="{Binding TranslatedName}" />
                                     </StackPanel>
-                                </Button.Content>
-                                <Button.ContextMenu>
+                                </m3:SuggestionChip.Content>
+                                <m3:SuggestionChip.ContextMenu>
                                     <ContextMenu>
                                         <MenuItem
                                             Click="CopyButton_OnClick"
@@ -128,8 +129,8 @@
                                             Header="{I18N {x:Static pixeval:SearchResources+SearchHistory.Delete}}"
                                             Icon="{markup:SymbolIcon Delete}" />
                                     </ContextMenu>
-                                </Button.ContextMenu>
-                            </Button>
+                                </m3:SuggestionChip.ContextMenu>
+                            </m3:SuggestionChip>
                         </DataTemplate>
                     </ItemsControl.DataTemplates>
                 </ItemsControl>
@@ -163,31 +164,35 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type model:TrendingTag}">
-                            <Button
+                            <m3:Card
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
-                                Click="TrendingTagButton_OnClick">
-                                <Button.Content>
+                                Click="TrendingTagButton_OnClick"
+                                Theme="{StaticResource ContentCardTheme}">
+                                <m3:Card.Content>
                                     <DockPanel VerticalSpacing="5">
                                         <TextBlock
                                             HorizontalAlignment="Center"
                                             DockPanel.Dock="Top"
                                             MaxLines="2"
                                             Text="{Binding Tag}"
-                                            TextWrapping="WrapWithOverflow" />
+                                            TextTrimming="CharacterEllipsis"
+                                            TextWrapping="Wrap" />
                                         <TextBlock
                                             HorizontalAlignment="Center"
                                             DockPanel.Dock="Top"
                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                            IsVisible="{Binding TranslatedName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                                             MaxLines="2"
                                             Text="{Binding TranslatedName}"
-                                            TextWrapping="WrapWithOverflow" />
+                                            TextTrimming="CharacterEllipsis"
+                                            TextWrapping="Wrap" />
                                         <Border ClipToBounds="True" CornerRadius="{StaticResource ControlCornerRadius}">
                                             <Image controls:Source.Cache="{Binding Illustration.ThumbnailUrls.Medium}" Stretch="UniformToFill" />
                                         </Border>
                                     </DockPanel>
-                                </Button.Content>
-                            </Button>
+                                </m3:Card.Content>
+                            </m3:Card>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
