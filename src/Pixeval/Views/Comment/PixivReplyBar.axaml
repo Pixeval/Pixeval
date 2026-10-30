@@ -39,7 +39,10 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate x:DataType="{x:Type x:Int32}">
-                                            <Button Padding="0" Click="EmojiImage_OnClick">
+                                            <Button
+                                                Padding="0"
+                                                Click="EmojiImage_OnClick"
+                                                Theme="{StaticResource TransparentButtonStyle}">
                                                 <Image
                                                     Width="35"
                                                     Height="35"
@@ -69,7 +72,10 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate x:DataType="{x:Type x:Int32}">
-                                            <Button Padding="0" Click="StickerImage_OnClick">
+                                            <Button
+                                                Padding="0"
+                                                Click="StickerImage_OnClick"
+                                                Theme="{StaticResource TransparentButtonStyle}">
                                                 <Image
                                                     Width="83"
                                                     Height="83"
