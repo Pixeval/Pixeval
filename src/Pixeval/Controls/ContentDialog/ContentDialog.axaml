@@ -126,12 +126,11 @@
         </Setter>
 
         <Style Selector="^ /template/ Button.default">
-            <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}" />
-            <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource AccentControlElevationBorderBrush}" />
+            <Setter Property="Theme" Value="{StaticResource MaterialFilledButtonTheme}" />
         </Style>
 
         <Style Selector="^ /template/ Button">
+            <Setter Property="Theme" Value="{StaticResource MaterialTextButtonTheme}" />
             <Setter Property="FocusAdorner" Value="{x:Null}" />
         </Style>
 
