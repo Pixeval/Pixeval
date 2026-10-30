@@ -2,7 +2,8 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:SmoothScroll.Avalonia.Controls"
-    xmlns:fluent="using:FluentIcons.Avalonia">
+    xmlns:fluent="using:FluentIcons.Avalonia"
+    xmlns:m3="https://github.com/Shirasagi0012/Material3Expressive.Avalonia">
 
     <ResourceDictionary.MergedDictionaries>
         <MergeResourceInclude Source="/Controls/AvatarImage.axaml" />
@@ -141,7 +142,7 @@
                         MinHeight="{TemplateBinding EffectiveBarHeight}"
                         VerticalAlignment="Top"
                         Background="{TemplateBinding Background}"
-                        BorderBrush="{DynamicResource ControlStrokeColorDefault}"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                         BorderThickness="0,0,0,1">
 
                         <!--  导航栏内部布局  -->
@@ -157,7 +158,8 @@
                                 VerticalAlignment="Stretch"
                                 Background="Transparent"
                                 BorderThickness="0"
-                                IsVisible="{TemplateBinding IsBackButtonEffectivelyVisible}">
+                                IsVisible="{TemplateBinding IsBackButtonEffectivelyVisible}"
+                                Theme="{StaticResource MaterialTextButtonTheme}">
                                 <Panel Background="Transparent">
                                     <fluent:SymbolIcon
                                         FontSize="16"
@@ -176,10 +178,10 @@
                                 Grid.Column="1"
                                 Margin="12,0"
                                 VerticalAlignment="Center"
+                                m3:MaterialText.Style="{m3:Typography TitleLarge}"
                                 Content="{Binding CurrentPage?.Header, RelativeSource={RelativeSource TemplatedParent}}"
                                 ContentTemplate="{Binding CurrentPage?.HeaderTemplate, RelativeSource={RelativeSource TemplatedParent}}"
-                                FontSize="25"
-                                FontWeight="SemiBold" />
+                                TextBlock.TextTrimming="CharacterEllipsis" />
 
                             <!--  右侧：自定义命令栏  -->
                             <ContentPresenter
@@ -218,6 +220,32 @@
         </Setter>
     </ControlTheme>
 
+    <!--  Pair font size with its Material line height instead of inheriting BodyLarge's line height.  -->
+    <ControlTheme x:Key="BaseTextBlockStyle" TargetType="{x:Type TextBlock}">
+        <Setter Property="m3:MaterialText.Style" Value="{m3:Typography BodyMedium}" />
+    </ControlTheme>
+    <ControlTheme
+        x:Key="BodyTextBlockStyle"
+        BasedOn="{StaticResource BaseTextBlockStyle}"
+        TargetType="{x:Type TextBlock}" />
+    <ControlTheme
+        x:Key="BodyStrongTextBlockStyle"
+        BasedOn="{StaticResource BodyTextBlockStyle}"
+        TargetType="{x:Type TextBlock}">
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </ControlTheme>
+    <ControlTheme x:Key="BodyLargeStrongTextBlockStyle" TargetType="{x:Type TextBlock}">
+        <Setter Property="m3:MaterialText.Style" Value="{m3:Typography TitleMedium}" />
+    </ControlTheme>
+    <ControlTheme x:Key="TitleTextBlockStyle" TargetType="{x:Type TextBlock}">
+        <Setter Property="m3:MaterialText.Style" Value="{m3:Typography TitleLarge}" />
+    </ControlTheme>
+    <ControlTheme x:Key="SubtitleTextBlockStyle" TargetType="{x:Type TextBlock}">
+        <Setter Property="m3:MaterialText.Style" Value="{m3:Typography TitleMedium}" />
+    </ControlTheme>
+    <ControlTheme x:Key="CaptionTextBlockStyle" TargetType="{x:Type TextBlock}">
+        <Setter Property="m3:MaterialText.Style" Value="{m3:Typography BodySmall}" />
+    </ControlTheme>
     <ControlTheme
         x:Key="CaptionStrongTextBlockStyle"
         BasedOn="{StaticResource CaptionTextBlockStyle}"
@@ -250,10 +278,14 @@
         </Setter>
     </ControlTheme>
 
-    <ControlTheme x:Key="TransparentButtonStyle" TargetType="{x:Type Button}">
+    <ControlTheme
+        x:Key="TransparentButtonStyle"
+        BasedOn="{StaticResource RoundedButtonStyle}"
+        TargetType="{x:Type Button}">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
         <Setter Property="Padding" Value="0" />
 
         <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
@@ -282,7 +314,7 @@
         TargetType="{x:Type ToggleButton}">
         <Style Selector="^:checked /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="{DynamicResource SystemAccentColor}" />
+            <Setter Property="Foreground" Value="{DynamicResource AccentFillColorDefaultBrush}" />
         </Style>
         <Style Selector="^:checked:pointerover /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background" Value="Transparent" />
