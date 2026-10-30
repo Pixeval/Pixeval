@@ -2,7 +2,8 @@
     x:Class="Pixeval.Controls.ItemsViewListBoxStyles"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:Pixeval.Controls">
+    xmlns:controls="using:Pixeval.Controls"
+    xmlns:m3="https://github.com/Shirasagi0012/Material3Expressive.Avalonia">
 
     <Design.PreviewWith>
         <ListBox Background="{DynamicResource SystemRegionBrush}" SelectionMode="Multiple">
@@ -56,10 +57,10 @@
                                     <ResourceDictionary>
                                         <ResourceDictionary.ThemeDictionaries>
                                             <ResourceDictionary x:Key="Light">
-                                                <StaticResource x:Key="CheckBoxCheckBackgroundFillUnchecked" ResourceKey="ControlOnImageFillColorDefaultBrush" />
+                                                <StaticResource x:Key="{x:Static m3:MaterialTokens+Comp+CheckBox.UncheckedBoxColor}" ResourceKey="ControlOnImageFillColorDefault" />
                                             </ResourceDictionary>
                                             <ResourceDictionary x:Key="Dark">
-                                                <StaticResource x:Key="CheckBoxCheckBackgroundFillUnchecked" ResourceKey="ControlOnImageFillColorDefaultBrush" />
+                                                <StaticResource x:Key="{x:Static m3:MaterialTokens+Comp+CheckBox.UncheckedBoxColor}" ResourceKey="ControlOnImageFillColorDefault" />
                                             </ResourceDictionary>
                                         </ResourceDictionary.ThemeDictionaries>
                                     </ResourceDictionary>
