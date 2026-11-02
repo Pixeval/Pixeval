@@ -313,6 +313,10 @@ public sealed class WorkSubscriptionDownloadService(
                  && IsSubscriptionRemoved(subscription.HistoryEntryId))
             {
             }
+            catch (Exception exception) when (exception is not OperationCanceledException && !token.IsCancellationRequested)
+            {
+                logger.LogError($"Subscription {subscription.HistoryEntryId} failed.", exception);
+            }
         }
     }
 
@@ -435,7 +439,17 @@ public sealed class WorkSubscriptionDownloadService(
             reportEntryFetched();
             firstEntry ??= entry;
 
-            var task = await CreateDownloadTaskAsync(entry, subscription, token).ConfigureAwait(false);
+            var task = await WorkSubscriptionSyncHelper.TryPrepareWorkAsync(
+                () => CreateDownloadTaskAsync(entry, subscription, token),
+                exception => logger.LogWarning(
+                    $"Skipping inaccessible work {entry.Id} in subscription {subscription.HistoryEntryId}.", exception),
+                token).ConfigureAwait(false);
+            if (task is null)
+            {
+                // An inaccessible work is not evidence that we reached already downloaded history.
+                duplicateCount = 0;
+                continue;
+            }
             if (token.IsCancellationRequested || engine.EngineHandle.IsCancelled)
             {
                 task.Dispose();
@@ -677,7 +691,7 @@ public sealed class WorkSubscriptionDownloadService(
                     MultiImageUris: not null
                 } animatedImage)
             {
-                await animatedImage.MultiImageUris.TryPreloadListAsync(animatedImage);
+                await animatedImage.MultiImageUris.TryPreloadListAsync(animatedImage, token).ConfigureAwait(false);
             }
 
             return illustrationDownloadTaskFactory.Create(
