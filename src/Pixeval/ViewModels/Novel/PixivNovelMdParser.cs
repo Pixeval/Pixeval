@@ -18,10 +18,17 @@ public class PixivNovelMdParser<TImage>(StringBuilder sb, int pageIndex) : Pixiv
         _ = currentText.Append(lastSpan.ReplaceLineEndings(Environment.NewLine + Environment.NewLine));
     }
 
-    protected override void AddRuby(StringBuilder currentText, string kanji, string ruby)
+    protected override void AddRuby(StringBuilder currentText, string kanji, string ruby, bool below = false)
     {
-        _ = currentText.Append($"<ruby>{WebUtility.HtmlEncode(kanji)}<rp>（</rp><rt>{WebUtility.HtmlEncode(ruby)}</rt><rp>）</rp></ruby>");
+        var style = below ? " style=\"ruby-position: under\"" : "";
+        _ = currentText.Append($"<ruby{style}>{WebUtility.HtmlEncode(kanji)}<rp>（</rp><rt>{WebUtility.HtmlEncode(ruby)}</rt><rp>）</rp></ruby>");
     }
+
+    protected override void AddBold(StringBuilder currentText, string text) =>
+        currentText.Append($"**{text}**");
+
+    protected override void AddItalic(StringBuilder currentText, string text) =>
+        currentText.Append($"*{text}*");
 
     protected override void AddHyperlink(StringBuilder currentText, string content, Uri uri)
     {
@@ -74,12 +81,6 @@ public class PixivNovelMdDisplayParser(StringBuilder sb, int pageIndex) : PixivN
 {
     protected override void NewPage(StringBuilder currentText)
     {
-    }
-
-    protected override void AddRuby(StringBuilder currentText, string kanji, string ruby)
-    {
-        // TODO?
-        base.AddRuby(currentText, kanji, ruby);
     }
 
     protected override void AddUploadedImage(StringBuilder currentText, INovelContext<Bitmap> viewModel, long imageId)

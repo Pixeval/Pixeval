@@ -2,6 +2,7 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.Globalization;
 
 namespace Pixeval.ViewModels;
 
@@ -11,7 +12,11 @@ public abstract class PixivNovelParser<TText, TImage, TViewModel> where TViewMod
 
     protected abstract void AddLastSpan(TText result, string lastSpan);
 
-    protected abstract void AddRuby(TText result, string kanji, string ruby);
+    protected abstract void AddRuby(TText result, string kanji, string ruby, bool below = false);
+
+    protected abstract void AddBold(TText result, string text);
+
+    protected abstract void AddItalic(TText result, string text);
 
     protected abstract void AddHyperlink(TText result, string content, Uri page);
 
@@ -65,7 +70,12 @@ public abstract class PixivNovelParser<TText, TImage, TViewModel> where TViewMod
                     NewPage(result);
                     return result;
                 case PixivToken.Ruby:
-                    ParseRuby(tokenSpan, tokenLength);
+                case PixivToken.EmphasisMark:
+                    ParseRuby(tokenSpan, tokenLength, token is PixivToken.EmphasisMark);
+                    break;
+                case PixivToken.Bold:
+                case PixivToken.Italic:
+                    ParseFormatting(tokenSpan, tokenLength, token);
                     break;
                 case PixivToken.JumpUri:
                     ParseJumpUri(tokenSpan, tokenLength);
@@ -92,7 +102,7 @@ public abstract class PixivNovelParser<TText, TImage, TViewModel> where TViewMod
         Finish(result);
         return result;
 
-        void ParseRuby(ReadOnlySpan<char> tokenSpan, int tokenLength)
+        void ParseRuby(ReadOnlySpan<char> tokenSpan, int tokenLength, bool emphasis)
         {
             var separatorIndex = tokenSpan.IndexOf(PixivTokens.SeparatorToken);
             if (separatorIndex is -1)
@@ -102,7 +112,7 @@ public abstract class PixivNovelParser<TText, TImage, TViewModel> where TViewMod
             }
 
             var endIndex = tokenSpan.IndexOf(PixivTokens.EndDoubleToken);
-            if (endIndex is -1)
+            if (endIndex is -1 || separatorIndex >= endIndex)
             {
                 position += tokenLength;
                 return;
@@ -110,10 +120,50 @@ public abstract class PixivNovelParser<TText, TImage, TViewModel> where TViewMod
 
             var kanji = tokenSpan[tokenLength..separatorIndex].Trim();
             var ruby = tokenSpan[(separatorIndex + 1)..endIndex].Trim();
-            AddRuby(result, kanji.ToString(), ruby.ToString());
+            if (kanji.IsEmpty || ruby.IsEmpty)
+            {
+                position += tokenLength;
+                return;
+            }
+
+            if (emphasis)
+            {
+                // 按字素添加下方标记，保留换行位置，也不拆开代理对或组合字符。
+                var elements = StringInfo.GetTextElementEnumerator(kanji.ToString());
+                var mark = ruby.ToString();
+                while (elements.MoveNext())
+                {
+                    var element = elements.GetTextElement();
+                    if (string.IsNullOrWhiteSpace(element))
+                        AddLastSpan(result, element);
+                    else
+                        AddRuby(result, element, mark, true);
+                }
+            }
+            else
+                AddRuby(result, kanji.ToString(), ruby.ToString());
 
             var end = endIndex + PixivTokens.EndDoubleToken.Length;
             position += end;
+            runStart = position;
+        }
+
+        void ParseFormatting(ReadOnlySpan<char> tokenSpan, int tokenLength, PixivToken token)
+        {
+            var endIndex = tokenSpan.IndexOf(PixivTokens.EndSingleToken);
+            if (endIndex is -1)
+            {
+                position += tokenLength;
+                return;
+            }
+
+            var content = tokenSpan[tokenLength..endIndex].ToString();
+            if (token is PixivToken.Bold)
+                AddBold(result, content);
+            else
+                AddItalic(result, content);
+
+            position += endIndex + 1;
             runStart = position;
         }
 
@@ -269,6 +319,9 @@ file enum PixivToken
     Jump,
     JumpUri,
     Ruby,
+    EmphasisMark,
+    Bold,
+    Italic,
     NewPage
 }
 
@@ -280,6 +333,9 @@ file static class PixivTokens
     public const string JumpToken = "[jump:";
     public const string JumpUriToken = "[[jumpuri:";
     public const string RubyToken = "[[rb:";
+    public const string EmphasisMarkToken = "[[emphasismark:";
+    public const string BoldToken = "[b:";
+    public const string ItalicToken = "[i:";
     public const string NewPageToken = "[newpage]";
     public const char SeparatorToken = '>';
     public const char EndSingleToken = ']';
@@ -296,12 +352,16 @@ file static class PixivTokens
                 return PixivToken.JumpUri;
             if (text.StartsWith(RubyToken, StringComparison.Ordinal))
                 return PixivToken.Ruby;
+            if (text.StartsWith(EmphasisMarkToken, StringComparison.Ordinal))
+                return PixivToken.EmphasisMark;
 
             return PixivToken.None;
         }
 
         return text[1] switch
         {
+            'b' when text.StartsWith(BoldToken, StringComparison.Ordinal) => PixivToken.Bold,
+            'i' when text.StartsWith(ItalicToken, StringComparison.Ordinal) => PixivToken.Italic,
             'p' when text.StartsWith(PixivImageToken, StringComparison.Ordinal) => PixivToken.PixivImage,
             'u' when text.StartsWith(UploadedImageToken, StringComparison.Ordinal) => PixivToken.UploadedImage,
             'c' when text.StartsWith(ChapterToken, StringComparison.Ordinal) => PixivToken.Chapter,
@@ -320,6 +380,9 @@ file static class PixivTokens
             PixivToken.Jump => JumpToken.Length,
             PixivToken.JumpUri => JumpUriToken.Length,
             PixivToken.Ruby => RubyToken.Length,
+            PixivToken.EmphasisMark => EmphasisMarkToken.Length,
+            PixivToken.Bold => BoldToken.Length,
+            PixivToken.Italic => ItalicToken.Length,
             PixivToken.NewPage => NewPageToken.Length,
             _ => 0
         };

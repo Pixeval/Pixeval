@@ -13,7 +13,7 @@ using ColorTextBlock.Avalonia.Geometries;
 
 namespace Pixeval.Controls;
 
-internal sealed class RubyInline(string body, string annotation) : CInline
+internal sealed class RubyInline(string body, string annotation, bool below = false) : CInline
 {
     private const double AnnotationScale = 0.55;
     private const double GapScale = 0.08;
@@ -21,6 +21,8 @@ internal sealed class RubyInline(string body, string annotation) : CInline
     public string Body { get; } = body;
 
     public string Annotation { get; } = annotation;
+
+    public bool Below { get; } = below;
 
     protected override IEnumerable<CGeometry> MeasureOverride(double entireWidth, double remainWidth)
     {
@@ -64,7 +66,7 @@ internal sealed class RubyInline(string body, string annotation) : CInline
                 context.FillRectangle(owner.Background, new Rect(Left, Top, Width, Height));
 
             var foreground = owner.ResolveForeground();
-            layout.Annotation.Draw(context, owner.Typeface, layout.AnnotationFontSize, foreground, Left, Top, Width);
+            layout.Annotation.Draw(context, owner.Typeface, layout.AnnotationFontSize, foreground, Left, Top + layout.AnnotationTop, Width);
             layout.Body.Draw(context, owner.Typeface, owner.FontSize, foreground, Left, Top + layout.BodyTop, Width);
 
             var baseline = Top + BaseHeight;
@@ -127,15 +129,17 @@ internal sealed class RubyInline(string body, string annotation) : CInline
 
     private sealed class RubyLayout
     {
-        private RubyLayout(MeasuredText body, MeasuredText annotation, double annotationFontSize, double gap)
+        private RubyLayout(MeasuredText body, MeasuredText annotation, double annotationFontSize, double gap, bool below)
         {
             Body = body;
             Annotation = annotation;
             AnnotationFontSize = annotationFontSize;
-            Width = Math.Ceiling(Math.Max(body.Width, annotation.Width));
-            BodyTop = annotation.Height + gap;
+            // 下方着重号不改变正文的字宽和基线，仅增加下降部分的高度。
+            Width = below ? body.Width : Math.Ceiling(Math.Max(body.Width, annotation.Width));
+            BodyTop = below ? 0 : annotation.Height + gap;
+            AnnotationTop = below ? body.Height + gap : 0;
             BaseHeight = BodyTop + body.Baseline;
-            Height = BodyTop + body.Height;
+            Height = body.Height + annotation.Height + gap;
         }
 
         public MeasuredText Body { get; }
@@ -152,6 +156,8 @@ internal sealed class RubyInline(string body, string annotation) : CInline
 
         public double BodyTop { get; }
 
+        public double AnnotationTop { get; }
+
         public static RubyLayout Create(RubyInline owner)
         {
             var annotationFontSize = Math.Max(1, owner.FontSize * AnnotationScale);
@@ -161,7 +167,8 @@ internal sealed class RubyInline(string body, string annotation) : CInline
                 MeasuredText.Create(owner.Body, owner.Typeface, owner.FontSize, owner.Foreground),
                 MeasuredText.Create(owner.Annotation, owner.Typeface, annotationFontSize, owner.Foreground),
                 annotationFontSize,
-                gap);
+                gap,
+                owner.Below);
         }
     }
 

@@ -36,9 +36,11 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
     private readonly ISourceView<NovelItemViewModel>? _sourceView;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ToggleTranslationCommand))]
     public partial bool IsLoading { get; private set; }
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ToggleTranslationCommand))]
     public partial string? LoadErrorMessage { get; private set; }
 
     [ObservableProperty]
@@ -151,7 +153,8 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
 
     public bool IsMultiPage => PageCount > 1;
 
-    public string CurrentMarkdown => PageCount is 0 ? "" : _pageMarkdowns[CurrentPageIndex];
+    public string CurrentMarkdown => PageCount is 0 ? "" :
+        (IsTranslationShown ? _translatedPageMarkdowns! : _pageMarkdowns)[CurrentPageIndex];
 
     #region Settings
 
@@ -231,6 +234,9 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
         var token = ResetLoadingToken();
 
         IsLoading = true;
+        _translatedPageMarkdowns = null;
+        IsTranslationShown = false;
+        OnPropertyChanged(nameof(TranslationButtonText));
         LoadErrorMessage = null;
         SeriesInfo = null;
         try
@@ -391,6 +397,7 @@ public sealed partial class NovelViewerPageViewModel : PagedViewerViewModel, IDi
 
         _disposed = true;
         IsLoading = false;
+        ToggleTranslationCommand.NotifyCanExecuteChanged();
         _loadingCts.Cancel();
         _loadingCts.Dispose();
         if (_subscribedNovelFontFamily is { } novelFontFamily)

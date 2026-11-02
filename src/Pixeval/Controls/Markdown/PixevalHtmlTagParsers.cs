@@ -220,7 +220,12 @@ internal sealed class RubyTagParser : IInlineTagParser, IHasPriority
             return false;
         }
 
-        generated = [new RubyInline(body, annotation)];
+        var below = node.GetAttributeValue("style", "")
+            .Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Any(declaration => declaration.Split(':', 2, StringSplitOptions.TrimEntries) is [var name, var value]
+                && name.Equals("ruby-position", StringComparison.OrdinalIgnoreCase)
+                && value.Equals("under", StringComparison.OrdinalIgnoreCase));
+        generated = [new RubyInline(body, annotation, below)];
         return true;
     }
 

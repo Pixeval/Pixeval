@@ -17,10 +17,17 @@ public class PixivNovelHtmlParser<TImage>(StringBuilder sb, int pageIndex) : Pix
         _ = currentText.Append($"<span>{lastSpan.ReplaceLineEndings(Environment.NewLine + "<br/>" + Environment.NewLine)}</span>");
     }
 
-    protected override void AddRuby(StringBuilder currentText, string kanji, string ruby)
+    protected override void AddRuby(StringBuilder currentText, string kanji, string ruby, bool below = false)
     {
-        _ = currentText.Append($"<ruby>{WebUtility.HtmlEncode(kanji)}<rp>（</rp><rt>{WebUtility.HtmlEncode(ruby)}</rt><rp>）</rp></ruby>");
+        var style = below ? " style=\"ruby-position: under\"" : "";
+        _ = currentText.Append($"<ruby{style}>{WebUtility.HtmlEncode(kanji)}<rp>（</rp><rt>{WebUtility.HtmlEncode(ruby)}</rt><rp>）</rp></ruby>");
     }
+
+    protected override void AddBold(StringBuilder currentText, string text) =>
+        currentText.Append($"<b>{WebUtility.HtmlEncode(text)}</b>");
+
+    protected override void AddItalic(StringBuilder currentText, string text) =>
+        currentText.Append($"<i>{WebUtility.HtmlEncode(text)}</i>");
 
     protected override void AddHyperlink(StringBuilder currentText, string content, Uri uri)
     {

@@ -2,6 +2,7 @@
     x:Class="Pixeval.Views.Viewers.NovelViewerPage"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:common="using:FluentIcons.Common"
     xmlns:controls="using:Pixeval.Controls"
     xmlns:converters="using:Pixeval.Views.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -56,6 +57,34 @@
                         Label="{I18N {x:Static pixeval:EntryItemResources.Save}}" />
                     <CommandBarSeparator />
                     <CommandBarButton
+                        Command="{Binding ToggleTranslationCommand}"
+                        CommandParameter="{Binding $self, Mode=OneTime}"
+                        Icon="{markup1:SymbolIconEx Symbol={markup1:EitherBinding {Binding IsTranslationShown},
+                                                                                  TranslateOff,
+                                                                                  TranslateAuto,
+                                                                                  x:TypeArguments=common:Symbol}}"
+                        IsVisible="{Binding HasTranslator}"
+                        Label="{Binding TranslationButtonText}">
+                        <CommandBarButton.ContextMenu>
+                            <ContextMenu ItemsSource="{Binding TransformerExtensionItems}">
+                                <ContextMenu.ItemContainerTheme>
+                                    <ControlTheme
+                                        x:DataType="{x:Type viewers:TextTransformerExtensionCommandItem}"
+                                        BasedOn="{StaticResource {x:Type MenuItem}}"
+                                        TargetType="{x:Type MenuItem}">
+                                        <Setter Property="Command" Value="{Binding Command}" />
+                                        <Setter Property="CommandParameter" Value="{Binding $self}" />
+                                        <Setter Property="Tag" Value="{Binding Extension}" />
+                                        <Setter Property="Header" Value="{Binding Label}" />
+                                        <Setter Property="Icon" Value="{Binding Symbol, Converter={x:Static converters:PixevalConverters.SymbolIconConverter}}" />
+                                        <Setter Property="ToolTip.Tip" Value="{Binding Description}" />
+                                    </ControlTheme>
+                                </ContextMenu.ItemContainerTheme>
+                            </ContextMenu>
+                        </CommandBarButton.ContextMenu>
+                    </CommandBarButton>
+                    <CommandBarSeparator IsVisible="{Binding HasTranslator}" />
+                    <CommandBarButton
                         Command="{Binding CurrentNovel.AddToWatchLaterCommand, FallbackValue={x:Null}}"
                         CommandParameter="{Binding $self, Mode=OneTime}"
                         Icon="{markup1:SymbolIconEx Clock,
@@ -81,7 +110,7 @@
 
                 <Border Background="{Binding NovelBackground, Converter={x:Static converters:PixevalConverters.OptionalColorToBrush}}">
                     <Panel>
-                        <controls:MarkdownBox
+                        <controls:NovelMarkdownBox
                             MaxWidth="{Binding NovelMaxWidth}"
                             Margin="30,20"
                             HyperlinkClicked="MarkdownBox_OnHyperlinkClicked"
@@ -110,6 +139,11 @@
                             IsVisible="{Binding NextButtonText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                             Symbol="ChevronRight"
                             ToolTipText="{Binding NextButtonText}" />
+                        <ProgressBar
+                            VerticalAlignment="Top"
+                            IsHitTestVisible="False"
+                            IsIndeterminate="True"
+                            IsVisible="{Binding ToggleTranslationCommand.IsRunning}" />
                     </Panel>
                 </Border>
             </DockPanel>

@@ -1459,8 +1459,11 @@ namespace Pixeval
     public static class NovelViewerPageResources
     {
         public const string ApplyingTransformerExtensions = "NovelViewerPage.ApplyingTransformerExtensions";
+        public const string ShowOriginal = "NovelViewerPage.ShowOriginal";
+        public const string ShowTranslation = "NovelViewerPage.ShowTranslation";
         public const string TransformerExtensionFailed = "NovelViewerPage.TransformerExtensionFailed";
         public const string TransformerExtensionFinishedSuccessfully = "NovelViewerPage.TransformerExtensionFinishedSuccessfully";
+        public const string TranslateFullText = "NovelViewerPage.TranslateFullText";
     }
     public static class PixivReplyBarResources
     {
