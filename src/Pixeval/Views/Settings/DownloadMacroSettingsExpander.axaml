@@ -55,7 +55,7 @@
                     BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
                     BorderThickness="1"
                     FontSize="14"
-                    HorizontalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Hidden"
                     ShowLineNumbers="False"
                     TextChanged="DownloadPathMacroTextBox_OnTextChanged"
                     VerticalScrollBarVisibility="Auto" />
