@@ -38,6 +38,8 @@ public class WorkItem : EntryItem, IWorkAnimatable
 
     public event EventHandler<Control, IWorkViewModel>? RequestAddToBookmark;
 
+    public event EventHandler<Control, IWorkViewModel>? RequestBlockAuthor;
+
     protected void AddToBookmark_OnRightClick(object sender, ContextRequestedEventArgs e)
     {
         RequestAddToBookmark?.Invoke(this, (IWorkViewModel) DataContext!);
@@ -46,6 +48,11 @@ public class WorkItem : EntryItem, IWorkAnimatable
     protected void OpenUserInfoPage_OnClicked(object sender, RoutedEventArgs e)
     {
         RequestOpenUserInfoPage?.Invoke(this, (IWorkViewModel) DataContext!);
+    }
+
+    protected void BlockAuthor_OnClicked(object sender, RoutedEventArgs e)
+    {
+        RequestBlockAuthor?.Invoke(this, (IWorkViewModel) DataContext!);
     }
 
     protected void OpenSeriesPage_OnClicked(object? sender, RoutedEventArgs e)

@@ -27,6 +27,19 @@ public sealed class SimpleOperableSourceView<TViewModel>(IReadOnlyCollection<IAr
     public ISourceView<TViewModel> CloneSourceView()
         => new SnapshotSourceView<TViewModel>(View.OfType<TViewModel>().Select(CloneItem));
 
+    public void ReplaceBlockedEntries()
+    {
+        var snapshot = BlockedContentHelper.CaptureSnapshot();
+        var source = View.Source;
+        for (var i = 0; i < source.Count; ++i)
+        {
+            var entry = source[i];
+            if (BlockedContentHelper.IsBlockedPlaceholder(entry) || !BlockedContentHelper.IsBlocked(entry, snapshot))
+                continue;
+            source[i] = BlockedContentHelper.ReplaceEntry(entry, snapshot);
+        }
+    }
+
     public void Dispose()
     {
         if (_isDisposed)

@@ -12,6 +12,8 @@ using Avalonia.Interactivity;
 using Mako.Global.Enum;
 using Mako.Model;
 using Misaki;
+using Pixeval.I18N;
+using Pixeval.Models.Blocking;
 using Pixeval.Models.Options;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
@@ -175,6 +177,20 @@ public sealed partial class WorkView : UserControl, IDisposable
             if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer)
                 viewContainer.CreateUserPage(id);
         }
+    }
+
+    private void WorkItem_OnRequestBlockAuthor(Control sender, IWorkViewModel e)
+    {
+        if (e is not { Entry: WorkBase { User: { } user } } || BlockedContentHelper.IsBlockedPlaceholder(e.Entry))
+            return;
+
+        // 即使已在黑名单中（如在其他页面屏蔽后尚未刷新），也刷新当前列表
+        var added = BlockedContentHelper.TryAddOrUpdateBlockedUser(user);
+        (DataContext as IOperableViewViewModel)?.ReplaceBlockedEntries();
+
+        if (added)
+            TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(
+                I18NManager.GetResource(BlockedContentResources.AuthorBlockedFormatted, user.Name));
     }
 
     private void ListBox_OnContainerPrepared(object? sender, ContainerPreparedEventArgs e)

@@ -45,6 +45,11 @@
                     Header="{I18N {x:Static pixeval:EntryItemResources.OpenUserInfoPage}}"
                     Icon="{markup:SymbolIcon Person}" />
                 <MenuItem
+                    Click="BlockAuthor_OnClicked"
+                    Header="{I18N {x:Static pixeval:BlockedContentResources.BlockAuthor}}"
+                    Icon="{markup:SymbolIcon PersonProhibited}"
+                    IsVisible="{Binding CanBlockAuthor}" />
+                <MenuItem
                     Click="OpenSeriesPage_OnClicked"
                     Header="{I18N {x:Static pixeval:EntryItemResources.OpenSeries}}"
                     Icon="{markup:SymbolIcon SquareMultiple}"

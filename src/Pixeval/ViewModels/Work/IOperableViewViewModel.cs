@@ -27,6 +27,11 @@ public interface IOperableViewViewModel : ISimpleViewViewModel
 
     bool RequireAdaptiveGrid { get; }
 
+    /// <summary>
+    /// 按当前屏蔽列表，将已加载但新近被屏蔽的作品替换为占位项
+    /// </summary>
+    void ReplaceBlockedEntries();
+
     new IReadOnlyCollection<IWorkViewModel> View { get; }
 
     new IReadOnlyCollection<IWorkViewModel> Source { get; }

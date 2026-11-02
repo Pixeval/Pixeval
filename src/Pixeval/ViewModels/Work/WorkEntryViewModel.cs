@@ -25,6 +25,8 @@ public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>
 
     public bool IsBookmarkSupported => !IsBlocked && Entry.Platform is IPlatformInfo.Pixiv;
 
+    public bool CanBlockAuthor => !IsBlocked && Entry is WorkBase;
+
     public SimpleSeries? Series => Entry is WorkBase work ? work.Series : null;
 
     public bool HasSeries => Series is not null;

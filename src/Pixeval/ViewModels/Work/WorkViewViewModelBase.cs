@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Misaki;
 using Pixeval.Collections;
 using Pixeval.Controls;
+using Pixeval.Models.Blocking;
 using Pixeval.Utilities;
 
 namespace Pixeval.ViewModels;
@@ -60,6 +61,19 @@ public abstract partial class WorkViewViewModelBase<T, TViewModel>(FrozenSet<str
     IReadOnlyCollection<IWorkViewModel> IOperableViewViewModel.Source => Source;
 
     public abstract bool RequireAdaptiveGrid { get; }
+
+    public void ReplaceBlockedEntries()
+    {
+        var snapshot = BlockedContentHelper.CaptureSnapshot();
+        var source = Source;
+        for (var i = 0; i < source.Count; ++i)
+        {
+            var entry = source[i].Entry;
+            if (BlockedContentHelper.IsBlockedPlaceholder(entry) || !BlockedContentHelper.IsBlocked(entry, snapshot))
+                continue;
+            source[i] = TViewModel.CreateInstance(BlockedContentHelper.ReplaceEntry(entry, snapshot));
+        }
+    }
 
     public void ResetEngine(IAsyncEnumerable<IArtworkInfo>? newEngine, int itemsPerPage = 20, int itemLimit = -1)
     {

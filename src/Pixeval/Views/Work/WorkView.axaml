@@ -34,10 +34,16 @@
             </ListBox.Styles>
             <ListBox.DataTemplates>
                 <DataTemplate x:DataType="{x:Type vm:NovelItemViewModel}">
-                    <local:NovelItem RequestAddToBookmark="WorkItem_OnRequestAddToBookmark" RequestOpenUserInfoPage="WorkItem_OnRequestOpenUserInfoPage" />
+                    <local:NovelItem
+                        RequestAddToBookmark="WorkItem_OnRequestAddToBookmark"
+                        RequestBlockAuthor="WorkItem_OnRequestBlockAuthor"
+                        RequestOpenUserInfoPage="WorkItem_OnRequestOpenUserInfoPage" />
                 </DataTemplate>
                 <DataTemplate x:DataType="{x:Type vm:IllustrationItemViewModel}">
-                    <local:IllustrationItem RequestAddToBookmark="WorkItem_OnRequestAddToBookmark" RequestOpenUserInfoPage="WorkItem_OnRequestOpenUserInfoPage" />
+                    <local:IllustrationItem
+                        RequestAddToBookmark="WorkItem_OnRequestAddToBookmark"
+                        RequestBlockAuthor="WorkItem_OnRequestBlockAuthor"
+                        RequestOpenUserInfoPage="WorkItem_OnRequestOpenUserInfoPage" />
                 </DataTemplate>
             </ListBox.DataTemplates>
         </local:WorkListBox>

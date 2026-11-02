@@ -78,6 +78,9 @@ public sealed partial class SimpleOperableViewViewModel<TViewModel> : ViewModelB
     /// <inheritdoc />
     public bool RequireAdaptiveGrid => typeof(TViewModel) == typeof(NovelItemViewModel);
 
+    /// <inheritdoc />
+    public void ReplaceBlockedEntries() => SourceView.ReplaceBlockedEntries();
+
     public void Dispose()
     {
         if (_isDisposed)

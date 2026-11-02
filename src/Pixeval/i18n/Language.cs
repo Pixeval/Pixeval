@@ -360,6 +360,8 @@ namespace Pixeval
     }
     public static class BlockedContentResources
     {
+        public const string AuthorBlockedFormatted = "BlockedContent.AuthorBlockedFormatted";
+        public const string BlockAuthor = "BlockedContent.BlockAuthor";
         public const string BlockTag = "BlockedContent.BlockTag";
         public const string BlockUser = "BlockedContent.BlockUser";
         public const string Comment = "BlockedContent.Comment";
