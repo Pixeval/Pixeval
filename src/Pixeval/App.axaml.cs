@@ -157,30 +157,28 @@ public class App : Application
 
     private static async Task LoginAsync(ViewContainerBase viewContainer)
     {
+        Exception? loginError = null;
         try
         {
             if (AppViewModel.GetCurrentLoginUser() is { RefreshToken: { } refreshToken }
                 && !string.IsNullOrWhiteSpace(refreshToken))
             {
                 await AppViewModel.MakoClient.SetTokenAsync(refreshToken);
-                if (await AppViewModel.MakoClient.IdentifyTokenAsync())
-                {
-                    viewContainer.NavigateTo(new HomePage());
-                    AppViewModel.QueueWorkSubscriptionSyncAll();
-                    return;
-                }
-
-                viewContainer.ShowError(I18NManager.GetResource(MainPageResources.LoggingIn.Failed));
+                await AppViewModel.MakoClient.ValidateTokenAsync();
+                viewContainer.NavigateTo(new HomePage());
+                AppViewModel.QueueWorkSubscriptionSyncAll();
+                return;
             }
         }
         catch (Exception e)
         {
-            AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
-                .LogError(nameof(LoginAsync), e);
-            viewContainer.ShowError(I18NManager.GetResource(MainPageResources.LoggingIn.Failed));
+            loginError = e;
         }
 
-        viewContainer.NavigateTo(new LoginPage());
+        var loginPage = new LoginPage();
+        viewContainer.NavigateTo(loginPage);
+        if (loginError is not null)
+            loginPage.ShowLoginError(loginError);
     }
 
     private bool IsLastVisibleWindow(Window window) =>

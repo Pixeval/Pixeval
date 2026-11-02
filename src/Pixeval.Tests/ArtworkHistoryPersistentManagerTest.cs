@@ -10,7 +10,6 @@ using Misaki;
 using Pixeval.Models.Database;
 using Pixeval.Models.Database.Managers;
 using Pixeval.Utilities;
-using Pixeval.ViewModels;
 using SQLite;
 
 namespace Pixeval.Tests;
@@ -407,26 +406,6 @@ public sealed class ArtworkHistoryPersistentManagerTest
         CollectionAssert.DoesNotContain(ordinaryColumns, nameof(SubscriptionDownloadHistoryEntry.ArtworkId));
         Assert.Contains(nameof(SubscriptionDownloadHistoryEntry.WorkSubscriptionId), subscriptionColumns);
         Assert.Contains(nameof(SubscriptionDownloadHistoryEntry.ArtworkId), subscriptionColumns);
-    }
-
-    [TestMethod]
-    public async Task LoginUsers_LoadRestoresCurrentSelection()
-    {
-        using var db = new SQLiteConnection(":memory:");
-        var manager = new LoginUserPersistentManager(db);
-        var user = new LoginUserEntry
-        {
-            RefreshToken = "refresh-token",
-            UserId = 1,
-            Name = "user"
-        };
-        manager.Insert(user);
-        var viewModel = new LoginPageViewModel(manager, user.HistoryEntryId);
-
-        await viewModel.LoadUsersAsync();
-
-        Assert.AreEqual(user.HistoryEntryId, viewModel.SelectedUser?.HistoryEntryId);
-        Assert.AreEqual(user.RefreshToken, viewModel.RefreshToken);
     }
 
     [TestMethod]

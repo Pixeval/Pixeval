@@ -16,20 +16,10 @@ namespace Pixeval.ViewModels;
 public partial class LoginPageViewModel : ViewModelBase
 {
     private readonly SemaphoreSlim _loadUsersLock = new(1, 1);
-    private readonly int _currentUserKey;
-    private readonly LoginUserPersistentManager _manager;
     private bool _areUsersLoaded;
 
-    public LoginPageViewModel() : this(
-        App.AppViewModel.AppServiceProvider.GetRequiredService<LoginUserPersistentManager>(),
-        App.AppViewModel.LoginContext.CurrentKey)
+    public LoginPageViewModel()
     {
-    }
-
-    internal LoginPageViewModel(LoginUserPersistentManager manager, int currentUserKey)
-    {
-        _manager = manager;
-        _currentUserKey = currentUserKey;
         Users = [];
         RefreshToken = "";
     }
@@ -56,11 +46,15 @@ public partial class LoginPageViewModel : ViewModelBase
             if (_areUsersLoaded)
                 return;
 
+            // Opening the login page must not depend on the database being available.
+            var appViewModel = App.AppViewModel;
+            var manager = appViewModel.AppServiceProvider.GetRequiredService<LoginUserPersistentManager>();
+            var currentUserKey = appViewModel.LoginContext.CurrentKey;
             Users.Clear();
-            await foreach (var user in _manager.StreamEntriesAsync(token: token))
+            await foreach (var user in manager.StreamEntriesAsync(token: token))
                 Users.Add(user);
             _areUsersLoaded = true;
-            SelectedUser = Users.FirstOrDefault(user => user.HistoryEntryId == _currentUserKey);
+            SelectedUser = Users.FirstOrDefault(user => user.HistoryEntryId == currentUserKey);
         }
         finally
         {

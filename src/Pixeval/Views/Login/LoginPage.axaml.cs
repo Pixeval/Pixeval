@@ -13,6 +13,7 @@ using Pixeval.I18N;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
 using Pixeval.Views.Home;
+using Pixeval.Views.ViewContainers;
 
 namespace Pixeval.Views.Login;
 
@@ -20,10 +21,7 @@ public partial class LoginPage : IconContentPage
 {
     private CancellationTokenSource? _loadUsersCancellationTokenSource;
 
-    public LoginPage()
-    {
-        InitializeComponent();
-    }
+    public LoginPage() => InitializeComponent();
 
     private async void LoginButton_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -40,8 +38,12 @@ public partial class LoginPage : IconContentPage
                 return;
 
             await App.AppViewModel.MakoClient.SetTokenAsync(token);
-            if (await App.AppViewModel.MakoClient.IdentifyTokenAsync())
-                LoginNavigate();
+            await App.AppViewModel.MakoClient.ValidateTokenAsync();
+            LoginNavigate();
+        }
+        catch (Exception exception)
+        {
+            ShowLoginError(exception);
         }
         finally
         {
@@ -60,38 +62,36 @@ public partial class LoginPage : IconContentPage
             if (TopLevel.GetTopLevel(this) is not { ViewContainer: { } viewContainer } topLevel)
                 return;
 
-            var result = await WebAuthenticationBroker.AuthenticateAsync(
-                topLevel,
-                new(
-                    new(PixivAuth.GenerateWebPageUrl(verifier)),
-                    new("pixiv://account/login"))
-                {
-                    Mode = WebAuthenticatorMode.NativeWebDialog,
-                    NonPersistent = true
-                });
-
-            if (result.CallbackUri is not { } callbackUri)
+            Uri? callbackUri;
+            try
+            {
+                var result = await WebAuthenticationBroker.AuthenticateAsync(
+                    topLevel,
+                    new(
+                        new(PixivAuth.GenerateWebPageUrl(verifier)),
+                        new("pixiv://account/login"))
+                    {
+                        Mode = WebAuthenticatorMode.NativeWebDialog,
+                        NonPersistent = true
+                    });
+                callbackUri = result.CallbackUri;
+            }
+            catch (TaskCanceledException)
+            {
+                // Closing the authentication dialog is not a login failure.
                 return;
+            }
+
             var code = HttpUtility.ParseQueryString(callbackUri.Query)["code"];
             if (string.IsNullOrWhiteSpace(code))
                 return;
             await App.AppViewModel.MakoClient.SetCodeAsync(code, verifier);
-            if (await App.AppViewModel.MakoClient.IdentifyTokenAsync())
-                LoginNavigate();
-        }
-        catch (TaskCanceledException)
-        {
-            // ignored
+            await App.AppViewModel.MakoClient.ValidateTokenAsync();
+            LoginNavigate();
         }
         catch (Exception exception)
         {
-            if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer)
-            {
-                viewContainer.ShowError(exception.GetType().ToString(), exception.Message);
-                _ = await viewContainer.CreateAcknowledgementAsync(
-                    I18NManager.GetResource(LoginPageResources.FetchingSessionFailed.Title),
-                    I18NManager.GetResource(LoginPageResources.FetchingSessionFailed.Content));
-            }
+            ShowLoginError(exception);
         }
         finally
         {
@@ -120,12 +120,23 @@ public partial class LoginPage : IconContentPage
         }
         catch (OperationCanceledException) when (cancellationTokenSource.IsCancellationRequested)
         {
+            return;
         }
         catch (Exception exception)
         {
-            App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
-                .LogError(nameof(LoginPageViewModel.LoadUsersAsync), exception);
+            if (!cancellationTokenSource.IsCancellationRequested)
+                ShowLoginError(exception);
         }
+    }
+
+    public void ShowLoginError(Exception exception)
+    {
+        App.AppViewModel.AppServiceProvider.GetRequiredService<FileLogger>()
+            .LogError(nameof(LoginPage), exception);
+        if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer)
+            viewContainer.ShowError(
+                I18NManager.GetResource(MainPageResources.LoggingIn.Failed),
+                LoginErrorHelper.GetMessage(exception));
     }
 
     protected override void OnUnloaded(RoutedEventArgs e)
