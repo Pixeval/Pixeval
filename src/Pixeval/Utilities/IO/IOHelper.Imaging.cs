@@ -54,7 +54,7 @@ public static partial class IoHelper
                 {
                     token.ThrowIfCancellationRequested();
 
-                    if (desiredSize is { } size)
+                    if (desiredSize is not null || (desiredWidth is not null && stream.CanSeek))
                     {
                         var position = stream.Position;
                         using (var codec = SKCodec.Create(new SKManagedStream(stream, false)))
@@ -62,8 +62,16 @@ public static partial class IoHelper
                             if (codec is null)
                                 throw new ArgumentException("Unable to read image dimensions.", nameof(stream));
                             var info = codec.Info;
-                            var scale = Math.Min(1, Math.Max((double) size.Width / info.Width, (double) size.Height / info.Height));
-                            desiredWidth = Math.Clamp((int) Math.Ceiling(info.Width * scale), 1, info.Width);
+                            if (desiredSize is { } size)
+                            {
+                                var scale = Math.Min(1, Math.Max((double) size.Width / info.Width, (double) size.Height / info.Height));
+                                desiredWidth = (int) Math.Ceiling(info.Width * scale);
+                            }
+
+                            // 宽度过小会使缩放后的高度变为0，Avalonia解码时会抛出NullReferenceException
+                            // （如屏蔽占位作品的元数据尺寸为1x1，而实际占位图为400x250）
+                            var minWidth = Math.Min(info.Width, (int) Math.Ceiling((double) info.Width / info.Height));
+                            desiredWidth = Math.Clamp(desiredWidth!.Value, Math.Max(1, minWidth), info.Width);
                         }
                         stream.Position = position;
                         token.ThrowIfCancellationRequested();
@@ -76,7 +84,7 @@ public static partial class IoHelper
                         : new(stream);
 
                     return bitmap;
-                }).ConfigureAwait(false);
+                }, token).ConfigureAwait(false);
             }
             finally
             {

@@ -49,6 +49,24 @@ public sealed class SizedImageDecodeTest
     }
 
     [TestMethod]
+    [DataRow(400, 250, 1, null, null)]
+    [DataRow(400, 250, null, 0, 0)]
+    [DataRow(400, 250, null, 1, 1)]
+    [DataRow(250, 400, 1, null, null)]
+    public async Task DecodeNeverCollapsesAnAxis(int width, int height, int? desiredWidth, int? targetWidth, int? targetHeight)
+    {
+        await using var session = HeadlessUnitTestSession.StartNew(typeof(ImageViewerRenderingTest.ViewerTestApplication));
+        _ = await session.Dispatch<bool>(async () =>
+        {
+            using var stream = new MemoryStream(CreateImage(width, height));
+            PixelSize? desiredSize = targetWidth is { } w && targetHeight is { } h ? new PixelSize(w, h) : null;
+            using var bitmap = await stream.DecodeBitmapImageAsync(false, desiredWidth, desiredSize);
+            Assert.IsTrue(bitmap.PixelSize is { Width: >= 1, Height: >= 1 });
+            return true;
+        }, CancellationToken.None);
+    }
+
+    [TestMethod]
     public async Task LayoutAndDpiDriveDecodeAndResizeRetainsDisplayedBitmap()
     {
         await RunAsync(async (window, image, target, handler) =>
