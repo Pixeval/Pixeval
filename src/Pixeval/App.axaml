@@ -9,11 +9,11 @@
     xmlns:ui="using:FluentAvalonia.UI.Themes">
 
     <Application.Styles>
-        <FluentTheme />
-        <tabView:TabsViewTheme />
+        <Fluent2Theme />
+        <tabView:TabsViewFluent2Theme />
         <ui:FluentAvaloniaTheme />
         <autoSettingsPage:AutoSettingsPageTheme />
-        <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />
+        <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent2.axaml" />
         <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
         <Style Selector="Control">
             <Setter Property="TextElement.FontFamily" Value="{DynamicResource ContentControlThemeFontFamily}" />

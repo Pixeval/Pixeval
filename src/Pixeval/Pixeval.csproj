@@ -32,6 +32,7 @@
 		<PackageReference Include="Avalonia.AvaloniaEdit" Version="12.0.0" />
 		<PackageReference Include="Avalonia.Controls.WebView" Version="12.1.0" />
 		<PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
+		<PackageReference Include="Avalonia.Themes.Fluent2" Version="$(AvaloniaVersion)" />
 		<PackageReference Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />
 		<PackageReference Include="Avalonia.Controls.ColorPicker" Version="$(AvaloniaVersion)" />
 		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
@@ -46,7 +47,7 @@
 		<PackageReference Include="Shirasagi0012.SmoothScroll.Avalonia" Version="12.0.0.1" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.11.285" />
 		<PackageReference Include="Svg.Controls.Skia.Avalonia" Version="12.0.0.17" />
-		<PackageReference Include="TabView.Avalonia" Version="1.0.0" />
+		<PackageReference Include="TabView.Avalonia" Version="2.0.0-preview.1" />
 		<PackageReference Include="Velopack" Version="1.2.158" />
         
         <PackageReference Include="SkiaSharp" Version="4.152.1" />

@@ -7,7 +7,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<AvaloniaVersion>12.1.6</AvaloniaVersion>
+		<AvaloniaVersion>12.2.999-cibuild0101188-alpha</AvaloniaVersion>
 		<FluentIconsVersion>2.1.341</FluentIconsVersion>
 	</PropertyGroup>
 
