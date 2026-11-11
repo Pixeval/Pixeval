@@ -1,12 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Sdk Name="PublishWithSatoriGC" />
+
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<!--If you are willing to use Windows/MacOS native APIs you will need to create 3 projects.
 			One for Windows with net8.0-windows TFM, one for MacOS with net8.0-macos and one with net8.0 TFM for Linux.-->
-		<TargetFramework>net10.0</TargetFramework>
+		<TargetFramework>net11.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<EnableMcp>true</EnableMcp>
         <PublishAot Condition="'$(Configuration)' != 'Debug'">true</PublishAot>
+		<!-- Satori replaces the bundled runtime; framework-dependent apps need an app-relative Satori installation. -->
+		<SelfContained Condition="'$(UseSatoriGC)' == 'true' and '$(RuntimeIdentifier)' != '' and '$(AppHostRelativeDotNet)' == ''">true</SelfContained>
 	</PropertyGroup>
 
 	<PropertyGroup>

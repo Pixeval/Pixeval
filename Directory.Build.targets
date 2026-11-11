@@ -1,0 +1,13 @@
+<Project>
+    <!-- Runtime Async requires .NET 11 and a CoreCLR or NativeAOT host. -->
+    <PropertyGroup Condition="'$(TargetFramework)' != '' and $([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net11.0')) and '$(EnableRuntimeAsync)' != 'false'">
+        <Features>$(Features);runtime-async=on</Features>
+    </PropertyGroup>
+
+    <!-- SDK-created transitive references must use the same host settings as direct references. -->
+    <ItemDefinitionGroup Condition="'$(EnableRuntimeAsync)' == 'false'">
+        <ProjectReference>
+            <AdditionalProperties>EnableMcp=$(EnableMcp);EnableRuntimeAsync=$(EnableRuntimeAsync)</AdditionalProperties>
+        </ProjectReference>
+    </ItemDefinitionGroup>
+</Project>

@@ -18,6 +18,7 @@
     <File Path=".gitignore" />
     <File Path=".gitmodules" />
     <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
     <File Path="global.json" />
     <File Path="LICENSE" />
     <File Path="Settings.XamlStyler" />

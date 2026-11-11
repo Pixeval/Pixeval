@@ -1,6 +1,13 @@
 <Project>
+	<PropertyGroup Condition="'$(EnableRuntimeAsync)' == 'false'">
+		<!-- Keep Mono dependencies separate from assemblies compiled with Runtime Async. -->
+		<BaseIntermediateOutputPath>obj\compiler-async\</BaseIntermediateOutputPath>
+		<BaseOutputPath>bin\compiler-async\</BaseOutputPath>
+		<DefaultItemExcludes>$(DefaultItemExcludes);obj\**;bin\**</DefaultItemExcludes>
+	</PropertyGroup>
+
 	<PropertyGroup>
-		<AvaloniaVersion>12.1.3</AvaloniaVersion>
+		<AvaloniaVersion>12.1.6</AvaloniaVersion>
 		<FluentIconsVersion>2.1.341</FluentIconsVersion>
 	</PropertyGroup>
 
