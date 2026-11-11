@@ -1,10 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WebAssembly">
 	<PropertyGroup>
-		<TargetFramework>net10.0-browser</TargetFramework>
+		<TargetFramework>net11.0-browser</TargetFramework>
 		<OutputType>Exe</OutputType>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<Nullable>enable</Nullable>
 		<EnableMcp>false</EnableMcp>
+		<EnableRuntimeAsync>false</EnableRuntimeAsync>
+		<!-- Restore must honor the host settings on project references. -->
+		<RestoreUseStaticGraphEvaluation>true</RestoreUseStaticGraphEvaluation>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -12,6 +15,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Pixeval\Pixeval.csproj" AdditionalProperties="EnableMcp=$(EnableMcp)" />
+		<ProjectReference Include="..\Pixeval\Pixeval.csproj" AdditionalProperties="EnableMcp=$(EnableMcp);EnableRuntimeAsync=$(EnableRuntimeAsync)" />
 	</ItemGroup>
 </Project>

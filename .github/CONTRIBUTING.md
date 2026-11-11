@@ -10,7 +10,11 @@
 
 * 拥有[Git](https://git-scm.com)环境
 * 1. 安装[Visual Studio 2026](https://visualstudio.microsoft.com/vs)或更高，并在**工具-获取工具与功能**的**工作负载**中选择 **.NET 桌面开发**
-  1. 或最新版[JetBrains Rider](https://www.jetbrains.com/rider/)，并安装[.NET10 SDK](https://dotnet.microsoft.com/zh-cn/download/dotnet/10.0)。
+  1. 或最新版[JetBrains Rider](https://www.jetbrains.com/rider/)，并安装[.NET 11 SDK](https://dotnet.microsoft.com/zh-cn/download/dotnet/11.0)。
+
+应用内部项目使用 .NET 11，`src/lib` 中的通用库保留原有目标框架并增加 `net11.0`。Runtime Async 仅对 .NET 11 目标启用；浏览器和 iOS 默认使用 Mono，通过 `EnableRuntimeAsync=false` 同时关闭入口和引用库的 Runtime Async，并使用独立的构建目录。桌面（含 NativeAOT）和使用 CoreCLR 的 Android 启用 Runtime Async。源生成器继续使用 `netstandard2.0`。
+
+桌面和使用 CoreCLR 的 Android 入口通过 [PublishWithSatoriGC SDK](https://github.com/hez2010/Satori/blob/build_net11.0/eng/satori/README.md) 使用实验性的 Satori GC，版本统一锁定在 `global.json`。指定 RID 的桌面发布默认自包含，SDK 会为 CoreCLR、ReadyToRun 或 NativeAOT 自动还原对应的运行时及宿主工具包；还原与发布必须使用相同的 RID、`Configuration` 和 `PublishAot` 设置。请运行发布目录中的可执行文件；普通的无 RID 构建使用本机标准运行时。32 位目标由 SDK 自动使用标准运行时；浏览器和当前使用 Mono 的 iOS 不接入 Satori。发布时添加 `-p:UseSatoriGC=false` 可使用标准运行时。Satori 已直接替换 GC，无需额外设置 `ServerGarbageCollection`。
 
 ## 运行项目
 

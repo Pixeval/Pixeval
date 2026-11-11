@@ -388,8 +388,9 @@ jobs:
         with:
           global-json-file: global.json
 
-      - name: Restore Android workload
-        run: dotnet workload restore src/Pixeval.Android/Pixeval.Android.csproj
+      - name: Install Android workload
+        # Project-based discovery loads Satori before its runtime packs can be restored.
+        run: dotnet workload install android
 
       - name: Restore signing keystore
         id: keystore

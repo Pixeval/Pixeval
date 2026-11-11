@@ -4,7 +4,7 @@
 
 # Pixeval
 
-基于.NET 10 和 Avalonia 的强大、快速、漂亮的Pixiv第三方应用程序
+基于.NET 11 和 Avalonia 的强大、快速、漂亮的Pixiv第三方应用程序
 
 [<img src="https://get.microsoft.com/images/zh-cn%20dark.svg" width="200"/>](https://apps.microsoft.com/detail/Pixeval/9p1rzl9z8454?launch=true&mode=mini)
 
@@ -13,7 +13,7 @@
 [![](https://img.shields.io/static/v1?label=chatting&message=qq&color=blue&style=for-the-badge&logo=qq&logoColor=white)](https://jq.qq.com/?_wv=1027&k=5hGmJbQ)
 [![](https://img.shields.io/github/license/Pixeval/Pixeval?style=for-the-badge&logo=gnu&logoColor=white)](https://github.com/Pixeval/Pixeval/blob/main/LICENSE)
 [![](https://img.shields.io/static/v1?label=feedback&message=issues&color=pink&style=for-the-badge&logo=Github&logoColor=white)](https://github.com/Pixeval/Pixeval/issues/new/choose)
-[![](https://img.shields.io/static/v1?label=runtime&message=.NET%2010.0&color=yellow&style=for-the-badge&logo=.NET&logoColor=white)](https://dotnet.microsoft.com/download/dotnet/8.0)
+[![](https://img.shields.io/static/v1?label=runtime&message=.NET%2011.0&color=yellow&style=for-the-badge&logo=.NET&logoColor=white)](https://dotnet.microsoft.com/download/dotnet/11.0)
 ![](https://img.shields.io/badge/Framework-avalonia-512BD4?&style=for-the-badge&logo=avaloniaui)
 
 </div>

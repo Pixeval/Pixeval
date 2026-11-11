@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Layout;
 using Avalonia.Media;
+using ColorDocument.Avalonia;
+using ColorDocument.Avalonia.DocumentElements;
 using ColorTextBlock.Avalonia;
 using HtmlAgilityPack;
 using Markdown.Avalonia.Html.Core;
@@ -42,19 +42,7 @@ internal sealed class AnchorDivParser : IBlockTagParser, IInlineTagParser, IHasP
 
     public IEnumerable<string> SupportTag => ["div"];
 
-    bool ITagParser.TryReplace(HtmlNode node, ReplaceManager manager, out IEnumerable<StyledElement> generated)
-    {
-        if (TryReplace(node, manager, out IEnumerable<Control> controls))
-        {
-            generated = controls;
-            return true;
-        }
-
-        generated = [];
-        return false;
-    }
-
-    public bool TryReplace(HtmlNode node, ReplaceManager manager, out IEnumerable<Control> generated)
+    public bool TryReplace(HtmlNode node, ReplaceManager manager, out IEnumerable<DocumentElement> generated)
     {
         if (GetAnchorId(node) is not { Length: > 0 } id)
         {
@@ -62,8 +50,8 @@ internal sealed class AnchorDivParser : IBlockTagParser, IInlineTagParser, IHasP
             return false;
         }
 
-        var anchor = MarkdownAnchor.Create(id);
-        var children = manager.ParseChildrenAndGroup(node).ToArray();
+        var anchor = new UnBlockElement(MarkdownAnchor.Create(id));
+        var children = manager.ParseChildNodes(node).ToArray();
 
         if (children.Length is 0)
         {
@@ -71,13 +59,7 @@ internal sealed class AnchorDivParser : IBlockTagParser, IInlineTagParser, IHasP
             return true;
         }
 
-        var panel = new StackPanel
-        {
-            Orientation = Orientation.Vertical
-        };
-        panel.Children.Add(anchor);
-        panel.Children.AddRange(children);
-        generated = [panel];
+        generated = [new DocumentGroupElement([anchor, .. children])];
         return true;
     }
 
@@ -103,28 +85,9 @@ internal sealed class ColorTagParser : IInlineTagParser, IHasPriority
 
     public IEnumerable<string> SupportTag => ["color"];
 
-    bool ITagParser.TryReplace(HtmlNode node, ReplaceManager manager, out IEnumerable<StyledElement> generated)
-    {
-        if (TryReplace(node, manager, out var inlines))
-        {
-            generated = inlines;
-            return true;
-        }
-
-        generated = [];
-        return false;
-    }
-
     public bool TryReplace(HtmlNode node, ReplaceManager manager, out IEnumerable<CInline> generated)
     {
-        var parsed = manager.ParseChildrenJagging(node).ToArray();
-        if (parsed.Any(element => element is not CInline))
-        {
-            generated = [];
-            return false;
-        }
-
-        var span = new CSpan(parsed.Cast<CInline>());
+        var span = new CSpan(manager.ParseChildInlinesOnly(node));
 
         if (TryGetBrush(GetColorValue(node, "value", "color", "foreground", "fg"), out var foreground))
             span.Foreground = foreground;
@@ -186,18 +149,6 @@ internal sealed class RubyTagParser : IInlineTagParser, IHasPriority
     public int Priority => 0;
 
     public IEnumerable<string> SupportTag => ["ruby"];
-
-    bool ITagParser.TryReplace(HtmlNode node, ReplaceManager manager, out IEnumerable<StyledElement> generated)
-    {
-        if (TryReplace(node, manager, out var inlines))
-        {
-            generated = inlines;
-            return true;
-        }
-
-        generated = [];
-        return false;
-    }
 
     public bool TryReplace(HtmlNode node, ReplaceManager manager, out IEnumerable<CInline> generated)
     {

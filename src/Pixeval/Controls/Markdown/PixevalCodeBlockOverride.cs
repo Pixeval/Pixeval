@@ -189,7 +189,7 @@ internal sealed class PixevalCodeBlockElement : DocumentElement
         {
             Orientation = Orientation.Horizontal,
             Spacing = 6,
-            HorizontalAlignment = HorizontalAlignment.Right,
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right,
             VerticalAlignment = VerticalAlignment.Top
         };
         toolbar.SetValue(Panel.ZIndexProperty, 1);

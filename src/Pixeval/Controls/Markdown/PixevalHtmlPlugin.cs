@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Avalonia.Controls;
+using ColorDocument.Avalonia;
 using ColorTextBlock.Avalonia;
 using Markdown.Avalonia;
 using Markdown.Avalonia.Html.Core;
@@ -32,43 +32,41 @@ internal sealed partial class PixevalHtmlPlugin : IMdAvPluginRequestAnother
             throw new InvalidOperationException("SyntaxHighlight required.");
 
         info.EnableNoteBlock = false;
-        info.RegisterTop(new PixevalHtmlBlockParser(CreateReplaceManager(info)));
-        info.Register(new PixevalHtmlInlineParser(CreateReplaceManager(info)));
+        info.RegisterTop(new PixevalHtmlBlockParser(CreateSyntax(info, false)));
+        info.Register(new PixevalHtmlInlineParser(CreateSyntax(info, true)));
     }
 
-    private ReplaceManager CreateReplaceManager(SetupInfo info)
+    private ReplaceManagerSyntax CreateSyntax(SetupInfo info, bool inlineMode)
     {
-        var manager = new ReplaceManager(_syntaxHighlight!, info);
-        manager.Register(new AnchorDivParser());
-        manager.Register(new ColorTagParser());
-        manager.Register(new RubyTagParser());
-        return manager;
+        var syntax = new ReplaceManagerSyntax(_syntaxHighlight!, info, inlineMode);
+        syntax.Register(new AnchorDivParser());
+        syntax.Register(new ColorTagParser());
+        syntax.Register(new RubyTagParser());
+        return syntax;
     }
 
-    private sealed partial class PixevalHtmlBlockParser(ReplaceManager replaceManager)
-        : BlockParser(HeadTagPattern, nameof(PixevalHtmlBlockParser))
+    private sealed partial class PixevalHtmlBlockParser(ReplaceManagerSyntax syntax)
+        : BlockParser2(HeadTagPattern, nameof(PixevalHtmlBlockParser))
     {
         [GeneratedRegex(@"^<[\t ]*(?'tagname'[a-z][a-z0-9]*)(?'attributes'[ \t][^>]*|/)?>", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace, "zh-CN")]
         private static partial Regex HeadTagPattern { get; }
 
-        public override IEnumerable<Control> Convert(
+        public override IEnumerable<DocumentElement> Convert2(
             string text,
             Match firstMatch,
             ParseStatus status,
-            IMarkdownEngine engine,
+            IMarkdownEngine2 engine,
             out int parseTextBegin,
             out int parseTextEnd)
         {
             parseTextBegin = firstMatch.Index;
             parseTextEnd = PixevalHtmlUtils.SearchTagRangeContinuous(text, firstMatch);
-            replaceManager.Engine = engine;
-
-            return replaceManager.Parse(text[parseTextBegin..parseTextEnd]);
+            return syntax.Create(engine).Parse(text[parseTextBegin..parseTextEnd]);
         }
     }
 
-    private sealed class PixevalHtmlInlineParser(ReplaceManager replaceManager) : InlineParser(
-        PixevalHtmlUtils.CreateTagstartPattern(replaceManager.InlineTags), nameof(PixevalHtmlInlineParser))
+    private sealed class PixevalHtmlInlineParser(ReplaceManagerSyntax syntax) : InlineParser(
+        PixevalHtmlUtils.CreateTagstartPattern(syntax.InlineTags), nameof(PixevalHtmlInlineParser))
     {
         public override IEnumerable<CInline> Convert(
             string text,
@@ -79,9 +77,7 @@ internal sealed partial class PixevalHtmlPlugin : IMdAvPluginRequestAnother
         {
             parseTextBegin = firstMatch.Index;
             parseTextEnd = PixevalHtmlUtils.SearchTagRange(text, firstMatch);
-            replaceManager.Engine = engine;
-
-            return replaceManager.ParseInline(text[parseTextBegin..parseTextEnd]);
+            return syntax.Create(engine.Upgrade()).ParseInline(text[parseTextBegin..parseTextEnd]);
         }
     }
 }

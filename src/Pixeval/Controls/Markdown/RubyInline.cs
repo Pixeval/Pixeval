@@ -79,7 +79,7 @@ internal sealed class RubyInline(string body, string annotation, bool below = fa
                 context.DrawLine(pen, new Point(Left, Top + layout.BodyTop + (layout.Body.Height * 0.55)), new Point(Left + Width, Top + layout.BodyTop + (layout.Body.Height * 0.55)));
         }
 
-        public override TextPointer CalcuatePointerFrom(double x, double y)
+        public override PhysicalTextPointer CalcuatePointerFrom(double x, double y)
         {
             var ratio = Width <= 0
                 ? 0
@@ -89,7 +89,7 @@ internal sealed class RubyInline(string body, string annotation, bool below = fa
             return CreatePointer(index, GetDistance(index));
         }
 
-        public override TextPointer CalcuatePointerFrom(int index)
+        public override PhysicalTextPointer CalcuatePointerFrom(int index)
         {
             if (index < 0 || index > owner.Body.Length)
                 throw new ArgumentOutOfRangeException(nameof(index));
@@ -97,11 +97,11 @@ internal sealed class RubyInline(string body, string annotation, bool below = fa
             return CreatePointer(index, GetDistance(index));
         }
 
-        public override TextPointer GetBegin() => CreatePointer(0, 0);
+        public override PhysicalTextPointer GetBegin() => CreatePointer(0, 0);
 
-        public override TextPointer GetEnd() => CreatePointer(owner.Body.Length, Width);
+        public override PhysicalTextPointer GetEnd() => CreatePointer(owner.Body.Length, Width);
 
-        private TextPointer CreatePointer(int index, double distance) =>
+        private PhysicalTextPointer CreatePointer(int index, double distance) =>
             TextPointerFactory.Create(this, index, distance);
 
         private double GetDistance(int index) =>
@@ -117,14 +117,14 @@ internal sealed class RubyInline(string body, string annotation, bool below = fa
         {
         }
 
-        public override TextPointer CalcuatePointerFrom(double x, double y) => GetBegin();
+        public override PhysicalTextPointer CalcuatePointerFrom(double x, double y) => GetBegin();
 
-        public override TextPointer CalcuatePointerFrom(int index) =>
+        public override PhysicalTextPointer CalcuatePointerFrom(int index) =>
             index is 0 ? GetBegin() : throw new ArgumentOutOfRangeException(nameof(index));
 
-        public override TextPointer GetBegin() => TextPointerFactory.Create(this, 0, 0);
+        public override PhysicalTextPointer GetBegin() => TextPointerFactory.Create(this, 0, 0);
 
-        public override TextPointer GetEnd() => TextPointerFactory.Create(this, 0, 0);
+        public override PhysicalTextPointer GetEnd() => TextPointerFactory.Create(this, 0, 0);
     }
 
     private sealed class RubyLayout
@@ -272,6 +272,6 @@ internal sealed class RubyInline(string body, string annotation, bool below = fa
     private static class TextPointerFactory
     {
         [UnsafeAccessor(UnsafeAccessorKind.Constructor)]
-        public static extern TextPointer Create(CGeometry geometry, int index, double distance);
+        public static extern PhysicalTextPointer Create(CGeometry geometry, int index, double distance);
     }
 }
