@@ -14,6 +14,81 @@ namespace Pixeval.Tests;
 public sealed class IoHelperDownloadTest
 {
     [TestMethod]
+    public async Task StalledBodyTimesOutAfterWritingReceivedBytesToDestination()
+    {
+        using var source = new ControlledDownloadStream();
+        source.Send([1, 2, 3, 4]);
+        using var client = new HttpClient(new DownloadStreamHandler(source));
+        using var destination = new MemoryStream();
+        var error = await client.DownloadStreamAsync(destination, new Uri("https://example.test/stalled"),
+            readTimeout: TimeSpan.FromMilliseconds(100));
+
+        Assert.IsInstanceOfType<TimeoutException>(error);
+        CollectionAssert.AreEqual(new byte[] { 1, 2, 3, 4 }, destination.ToArray());
+    }
+
+    [TestMethod]
+    public async Task CancellingStalledBodyPreservesCancellationInsteadOfReportingTimeout()
+    {
+        using var source = new ControlledDownloadStream();
+        using var client = new HttpClient(new DownloadStreamHandler(source));
+        using var destination = new MemoryStream();
+        using var cancellation = new CancellationTokenSource();
+        var downloading = client.DownloadStreamAsync(destination, new Uri("https://example.test/cancelled"),
+            readTimeout: TimeSpan.FromSeconds(5), token: cancellation.Token);
+        await source.WaitForReadAsync();
+        await cancellation.CancelAsync();
+        var error = await downloading.WaitAsync(TimeSpan.FromSeconds(5));
+
+        Assert.IsInstanceOfType<OperationCanceledException>(error);
+        Assert.IsNotInstanceOfType<TimeoutException>(error);
+    }
+
+    [TestMethod]
+    public async Task ActiveSlowBodyCanOutliveBothHttpAndReadTimeouts()
+    {
+        using var source = new ControlledDownloadStream();
+        using var client = new HttpClient(new DownloadStreamHandler(source));
+        client.Timeout = TimeSpan.FromMilliseconds(100);
+        using var destination = new MemoryStream();
+        using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+        var downloading = client.DownloadStreamAsync(destination, new Uri("https://example.test/slow"),
+            readTimeout: TimeSpan.FromSeconds(1), token: cancellation.Token);
+        for (var i = 0; i < 6; i++)
+        {
+            await source.WaitForReadAsync();
+            await Task.Delay(250);
+            source.Send([(byte) i]);
+        }
+        source.Complete();
+        var error = await downloading.WaitAsync(TimeSpan.FromSeconds(5));
+
+        Assert.IsNull(error);
+        CollectionAssert.AreEqual(new byte[] { 0, 1, 2, 3, 4, 5 }, destination.ToArray());
+    }
+
+    [TestMethod]
+    public async Task NetworkDataReachesDestinationBeforeResponseCompletes()
+    {
+        using var source = new ControlledDownloadStream();
+        source.Send([1, 2, 3]);
+        using var client = new HttpClient(new DownloadStreamHandler(source));
+        using var destination = new MemoryStream();
+        using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        var downloading = client.DownloadStreamAsync(destination, new Uri("https://example.test/streaming"),
+            token: cancellation.Token);
+        await source.WaitForReadAsync();
+        await source.WaitForReadAsync();
+
+        Assert.IsFalse(downloading.IsCompleted);
+        CollectionAssert.AreEqual(new byte[] { 1, 2, 3 }, destination.ToArray());
+        source.Send([4, 5]);
+        source.Complete();
+        Assert.IsNull(await downloading);
+        CollectionAssert.AreEqual(new byte[] { 1, 2, 3, 4, 5 }, destination.ToArray());
+    }
+
+    [TestMethod]
     public async Task PreviewCanReadGrowingBufferWithoutCorruptingDownload()
     {
         var expected = new byte[16384];

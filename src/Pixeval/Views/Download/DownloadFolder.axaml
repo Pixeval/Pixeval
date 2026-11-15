@@ -30,7 +30,7 @@
                 Width="48"
                 Height="48"
                 VerticalAlignment="Center"
-                controls:Source.Cache="{Binding Subscription.AvatarUrl}"/>
+                controls:Source.Cache="{Binding Subscription.AvatarUrl}" />
             <fluent:SymbolIcon
                 Grid.Column="2"
                 VerticalAlignment="Center"

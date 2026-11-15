@@ -9,7 +9,7 @@ public interface IDownloadTaskBase
     /// 只有<see cref="CurrentState"/>是<see cref="DownloadState.Running"/>或<see cref="DownloadState.Paused"/>值有效
     /// </summary>
     double ProgressPercentage { get; }
-    
+
     /// <summary>
     /// 当前下载任务的状态
     /// </summary>

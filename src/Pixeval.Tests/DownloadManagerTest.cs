@@ -79,7 +79,7 @@ public sealed class DownloadManagerTest
     }
 
     [TestMethod]
-    public void ViewModel_ProjectsOrdinaryAndSubscriptionSources()
+    public async Task ViewModel_ProjectsOrdinaryAndSubscriptionSources()
     {
         using var httpClient = new HttpClient();
         using var manager = new DownloadManager(httpClient, 1);
@@ -96,6 +96,7 @@ public sealed class DownloadManagerTest
             manager.QueuedTasks,
             subscriptionManager,
             new TestWorkSubscriptionService());
+        await viewModel.SubscriptionFoldersLoadTask;
         var ordinary = new TestDownloadTaskGroup("ordinary", "ordinary");
         var subscriptionTask = new TestDownloadTaskGroup(
             "subscription",

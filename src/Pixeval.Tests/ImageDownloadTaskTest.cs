@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -13,6 +14,63 @@ namespace Pixeval.Tests;
 [TestClass]
 public sealed class ImageDownloadTaskTest
 {
+    [TestMethod]
+    public async Task HttpTimeoutMarksTaskAsFailedAndAllowsRetry()
+    {
+        var directory = Directory.CreateTempSubdirectory().FullName;
+        try
+        {
+            using var task = new TestImageDownloadTask(new("test://download/timeout"), Path.Combine(directory, "image.bin"), false);
+            using var client = new HttpClient(new HeaderTimeoutHandler());
+            client.Timeout = TimeSpan.FromMilliseconds(100);
+            await task.StartAsync(client).WaitAsync(TimeSpan.FromSeconds(5));
+
+            Assert.AreEqual(DownloadState.Error, task.CurrentState);
+            Assert.IsNotNull(task.ErrorMessage);
+            Assert.IsFalse(File.Exists(task.Destination + IoHelper.PixevalTempExtension));
+
+            task.Reset();
+            using var successClient = new HttpClient(new DownloadStreamHandler(new MemoryStream([1, 2, 3])));
+            await task.StartAsync(successClient);
+            Assert.AreEqual(DownloadState.Completed, task.CurrentState);
+            Assert.IsNull(task.ErrorMessage);
+            CollectionAssert.AreEqual(new byte[] { 1, 2, 3 }, await File.ReadAllBytesAsync(task.Destination));
+        }
+        finally
+        {
+            DeleteTestDirectory(directory);
+        }
+    }
+
+    [TestMethod]
+    [DataRow(true)]
+    [DataRow(false)]
+    public async Task UserCancellationDoesNotBecomeDownloadError(bool pause)
+    {
+        var directory = Directory.CreateTempSubdirectory().FullName;
+        try
+        {
+            using var task = new TestImageDownloadTask(new("test://download/cancel"), Path.Combine(directory, "image.bin"), false);
+            using var source = new ControlledDownloadStream();
+            using var client = new HttpClient(new DownloadStreamHandler(source));
+            var downloading = task.StartAsync(client);
+            await source.WaitForReadAsync();
+            if (pause)
+                task.Pause();
+            else
+                task.Cancel();
+            await downloading.WaitAsync(TimeSpan.FromSeconds(5));
+
+            Assert.AreEqual(pause ? DownloadState.Paused : DownloadState.Cancelled, task.CurrentState);
+            Assert.IsNull(task.ErrorMessage);
+            Assert.IsFalse(File.Exists(task.Destination));
+        }
+        finally
+        {
+            DeleteTestDirectory(directory);
+        }
+    }
+
     [TestMethod]
     [DataRow(false, "old", true, 0)]
     [DataRow(true, "new", false, 1)]
@@ -131,6 +189,15 @@ public sealed class ImageDownloadTaskTest
         {
             ++PostProcessCount;
             return Task.CompletedTask;
+        }
+    }
+
+    private sealed class HeaderTimeoutHandler : HttpMessageHandler
+    {
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken token)
+        {
+            await Task.Delay(Timeout.Infinite, token);
+            return new(HttpStatusCode.OK);
         }
     }
 }

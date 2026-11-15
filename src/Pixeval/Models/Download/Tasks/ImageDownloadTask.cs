@@ -172,7 +172,7 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
 
             await DownloadDirectlyAsync(httpClient, overwrite);
         }
-        catch (TaskCanceledException)
+        catch (OperationCanceledException) when (CancellationTokenSource.IsCancellationRequested)
         {
             // ignored
         }
@@ -200,7 +200,7 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
             case null:
                 await CommitDownloadedFileAsync(overwrite);
                 break;
-            case TaskCanceledException: break;
+            case OperationCanceledException when CancellationTokenSource.IsCancellationRequested: break;
             default: await SetErrorAsync(ex); break;
         }
     }
@@ -301,7 +301,11 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
     private static ExtensionService GetExtensionService() =>
         App.AppViewModel.AppServiceProvider.GetRequiredService<ExtensionService>();
 
-    void IProgress<double>.Report(double value) => ProgressPercentage = value;
+    void IProgress<double>.Report(double value)
+    {
+        if (CurrentState is DownloadState.Running)
+            ProgressPercentage = value;
+    }
 
     public void Dispose()
     {

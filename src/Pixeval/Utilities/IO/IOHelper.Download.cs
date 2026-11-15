@@ -3,6 +3,7 @@
 
 using System;
 using System.Buffers;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -16,6 +17,8 @@ namespace Pixeval.Utilities.IO;
 
 public static partial class IoHelper
 {
+    private static readonly TimeSpan _DownloadReadTimeout = TimeSpan.FromSeconds(30);
+
     private static Uri ResolveAssetUri(Uri uri) =>
         uri.Scheme is "pixivassets"
             ? new Uri(uri.OriginalString.Replace("pixivassets://", AppInfo.AssetsPathPrefix))
@@ -29,6 +32,7 @@ public static partial class IoHelper
         long startPosition = 0,
         int bufferSize = 1 << 15,
         Func<Stream, CancellationToken, Task>? onDataAvailable = null,
+        TimeSpan? readTimeout = null,
         CancellationToken token = default)
     {
         try
@@ -58,22 +62,41 @@ public static partial class IoHelper
                     if (response.Content.Headers.ContentRange?.Length is { } length && length != startPosition)
                         return new ArgumentOutOfRangeException(nameof(startPosition), $"416: {nameof(HttpStatusCode.RequestedRangeNotSatisfiable)}");
                     if (progress is not null)
-                        Dispatcher.UIThread.Invoke(() => progress.Report(100));
+                        Dispatcher.UIThread.Post(() => progress.Report(100));
                     return null;
             }
 
             _ = response.EnsureSuccessStatusCode();
 
             await using var contentStream = await response.Content.ReadAsStreamAsync(token);
+            using var readCancellation = CancellationTokenSource.CreateLinkedTokenSource(token);
 
             var buffer = ArrayPool<byte>.Shared.Rent(bufferSize);
             try
             {
-                var bytesRead = 0;
                 var totalRead = destination.Position;
-                var lastReported = DateTime.MinValue;
-                while ((bytesRead = await contentStream.ReadAsync(new(buffer), token).ConfigureAwait(false)) is not 0)
+                var lastReported = Stopwatch.GetTimestamp();
+                while (true)
                 {
+                    // Limit each network read, rather than the total duration of a slow download.
+                    readCancellation.CancelAfter(readTimeout ?? _DownloadReadTimeout);
+                    int bytesRead;
+                    try
+                    {
+                        bytesRead = await contentStream.ReadAsync(new(buffer), readCancellation.Token).ConfigureAwait(false);
+                    }
+                    catch (OperationCanceledException ex) when (!token.IsCancellationRequested && readCancellation.IsCancellationRequested)
+                    {
+                        return new TimeoutException(null, ex);
+                    }
+                    finally
+                    {
+                        readCancellation.CancelAfter(Timeout.InfiniteTimeSpan);
+                    }
+
+                    if (bytesRead is 0)
+                        break;
+
                     await destination.WriteAsync(new(buffer, 0, bytesRead), token).ConfigureAwait(false);
                     totalRead += bytesRead;
                     if (onDataAvailable is not null)
@@ -91,12 +114,12 @@ public static partial class IoHelper
                     }
                     // reduce the frequency of the invocation of the callback, otherwise it will draw a severe performance impact
 
-                    var now = DateTime.UtcNow;
-                    if (now - lastReported > TimeSpan.FromMilliseconds(100) && progress is not null && responseLength is > 0)
+                    var now = Stopwatch.GetTimestamp();
+                    if (Stopwatch.GetElapsedTime(lastReported, now) >= TimeSpan.FromMilliseconds(500) && progress is not null && responseLength is > 0)
                     {
                         lastReported = now;
                         var percentage = totalRead / (double) responseLength * 100;
-                        Dispatcher.UIThread.Invoke(() => progress.Report(percentage)); // percentage, 100 as base
+                        Dispatcher.UIThread.Post(() => progress.Report(percentage)); // percentage, 100 as base
                     }
                 }
             }
@@ -106,7 +129,7 @@ public static partial class IoHelper
             }
 
             if (progress is not null)
-                Dispatcher.UIThread.Invoke(() => progress.Report(100));
+                Dispatcher.UIThread.Post(() => progress.Report(100));
             return null;
         }
         catch (Exception e)
@@ -150,7 +173,7 @@ public static partial class IoHelper
                 startPosition,
                 bufferSize,
                 onDataAvailable,
-                token);
+                token: token);
             if (result is not null)
                 return Result<Stream>.AsFailure(result);
 
@@ -232,10 +255,16 @@ public static partial class IoHelper
             IProgress<double>? progress = null,
             long startPosition = 0,
             int bufferSize = 1 << 15,
+            TimeSpan? readTimeout = null,
             CancellationToken token = default)
         {
             try
             {
+                uri = ResolveAssetUri(uri);
+                if (!uri.IsFile && uri.Scheme is not "avares")
+                    return await DownloadStreamCoreAsync(httpClient, destination, uri, progress, startPosition,
+                        bufferSize, readTimeout: readTimeout, token: token).ConfigureAwait(false);
+
                 await using var source = (await DownloadMemoryStreamCoreAsync(
                     httpClient,
                     uri,
