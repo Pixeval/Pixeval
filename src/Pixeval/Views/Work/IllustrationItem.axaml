@@ -84,18 +84,17 @@
                     Tag="{Binding AppUri}" />
             </ContextMenu>
         </ContentControl.ContextMenu>
-        <Border HorizontalAlignment="Stretch">
+        <!--  Size the whole card by the artwork ratio so overlays cannot enlarge it.  -->
+        <controls:ConstrainedBox
+            x:Name="ThumbnailBounds"
+            AspectRatio="{Binding AspectRatio, Converter={x:Static converters:PixevalConverters.ToAspectRatio}}"
+            RestrictArrange="False">
             <Panel>
-                <controls:ConstrainedBox
-                    x:Name="ThumbnailBounds"
-                    AspectRatio="{Binding AspectRatio, Converter={x:Static converters:PixevalConverters.ToAspectRatio}}"
-                    RestrictArrange="False">
-                    <Image
-                        x:Name="ThumbnailImage"
-                        controls:Source.Cache="{Binding ThumbnailUrl}"
-                        controls:Source.DecodeTarget="{Binding #ThumbnailBounds}"
-                        Stretch="UniformToFill" />
-                </controls:ConstrainedBox>
+                <Image
+                    x:Name="ThumbnailImage"
+                    controls:Source.Cache="{Binding ThumbnailUrl}"
+                    controls:Source.DecodeTarget="{Binding #ThumbnailBounds}"
+                    Stretch="UniformToFill" />
                 <controls:Skeleton IsVisible="{Binding !#ThumbnailImage.(controls:Source.Loaded)}" />
                 <controls:HeartButton
                     Width="30"
@@ -106,9 +105,9 @@
                     CommandParameter="{Binding $self, Mode=OneTime}"
                     IsVisible="{Binding IsBookmarkSupported}"
                     State="{Binding IsBookmarkedDisplay}">
-                    
+
                     <controls:HeartButton.CacheMode>
-                        <BitmapCache SnapsToDevicePixels="False" RenderAtScale="1"/>
+                        <BitmapCache RenderAtScale="1" SnapsToDevicePixels="False" />
                     </controls:HeartButton.CacheMode>
                 </controls:HeartButton>
                 <Border
@@ -156,6 +155,6 @@
                     </Panel>
                 </Border>
             </Panel>
-        </Border>
+        </controls:ConstrainedBox>
     </ContentControl>
 </work:WorkItem>
