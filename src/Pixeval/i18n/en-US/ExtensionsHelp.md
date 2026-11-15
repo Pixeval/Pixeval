@@ -10,4 +10,4 @@ The purpose of priority is that, in certain special cases (such as translation e
 
 ### Uninstallation
 
-Although Pixeval provides an uninstall function, due to [.NET limitations](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/libraries), .NET extensions cannot be fully unloaded while the program is running. Therefore, after closing Pixeval, you need to manually go to the extensions folder and delete the specified extension.Therefore, after closing Pixeval, you need to manually go to the extensions folder and delete the specified extension.
+Although Pixeval provides an uninstall function, due to [.NET limitations](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/libraries), .NET extensions cannot be fully unloaded while the program is running. Therefore, after closing Pixeval, you need to manually go to the extensions folder and delete the specified extension. Therefore, after closing Pixeval, you need to manually go to the extensions folder and delete the specified extension.
