@@ -37,7 +37,8 @@
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 Background="{TemplateBinding Background}"
-                                Content="{TemplateBinding Content}" />
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}" />
                             <!--  Tint above the content so opaque cards also show the selection.  -->
                             <Border
                                 Name="StateMask"

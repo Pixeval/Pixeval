@@ -19,6 +19,7 @@
             x:Name="ListBox"
             controls:IncrementalLoadingBehavior.IsEnabled="True"
             controls:IncrementalLoadingBehavior.Threshold="200"
+            ItemContainerTheme="{StaticResource PlainListBoxItemTheme}"
             ItemsSource="{Binding View}">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>

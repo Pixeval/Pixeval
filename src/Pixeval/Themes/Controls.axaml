@@ -5,6 +5,7 @@
     xmlns:fluent="using:FluentIcons.Avalonia">
 
     <ResourceDictionary.MergedDictionaries>
+        <MergeResourceInclude Source="/Themes/PlainListBoxItemTheme.axaml" />
         <MergeResourceInclude Source="/Controls/AvatarImage.axaml" />
         <MergeResourceInclude Source="/Controls/Skeleton.axaml" />
         <MergeResourceInclude Source="/Controls/UserBasicInfoPresenter.axaml" />
