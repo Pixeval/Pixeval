@@ -24,6 +24,12 @@
             controls:IncrementalLoadingBehavior.Threshold="200"
             ContainerPrepared="ListBox_OnContainerPrepared"
             ItemsSource="{Binding View}">
+            <ListBox.Styles>
+                <controls:ItemsViewListBoxStyles />
+                <Style Selector="ListBoxItem">
+                    <Setter Property="Padding" Value="0" />
+                </Style>
+            </ListBox.Styles>
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <controls:AdaptiveGrid

@@ -12,7 +12,7 @@ using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Media.Imaging;
 using Avalonia.Styling;
-using Avalonia.Themes.Fluent;
+using Avalonia.Themes.Fluent2;
 using Avalonia.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pixeval.Controls;
@@ -21,7 +21,6 @@ using Pixeval.Utilities;
 using Pixeval.Views.Converters;
 using Pixeval.Views.Work;
 using VirtualizingWrapPanel = Pixeval.Controls.VirtualizingWrapPanel;
-using WrapPanelItemsAlignment = Pixeval.Controls.WrapPanelItemsAlignment;
 
 namespace Pixeval.Tests;
 
@@ -178,7 +177,7 @@ public sealed class IllustrationItemLayoutTest
         public override void Initialize()
         {
             I18NManager.Register(new JsonMarkdownLangPlugin(), LanguageHelper.DefaultLanguage);
-            Styles.Add(new FluentTheme());
+            Styles.Add(new Fluent2Theme());
             Resources["RoundedButtonStyle"] = new ControlTheme(typeof(Button))
             {
                 BasedOn = (ControlTheme) this.FindResource(typeof(Button))!,

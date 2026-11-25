@@ -13,9 +13,12 @@
     mc:Ignorable="d"
     d:DesignHeight="800"
     d:DesignWidth="600">
+    <views:IconContentPage.Resources>
+        <x:Double x:Key="ToggleSwitchThemeMinWidth">0</x:Double>
+    </views:IconContentPage.Resources>
     <DockPanel>
         <StackPanel
-            Margin="20"
+            Margin="20,20,20,4"
             DockPanel.Dock="Top"
             Orientation="Horizontal"
             Spacing="20">
@@ -26,9 +29,11 @@
             </TextBlock>
         </StackPanel>
         <CommandBar
+            Margin="20,0"
+            Padding="0"
+            Classes="wrapping"
             DefaultLabelPosition="Right"
-            DockPanel.Dock="Top"
-            IsDynamicOverflowEnabled="True">
+            DockPanel.Dock="Top">
             <CommandBarButton
                 Click="AddExtensionsOnClick"
                 Icon="{markup:SymbolIcon PlugConnectedAdd}"
@@ -46,11 +51,14 @@
                 Icon="{markup:SymbolIcon Alert}"
                 Label="{I18N {x:Static pixeval:ExtensionsPageResources+UninstallOutdatedExtensionsButton.Label}}" />
         </CommandBar>
-        <ScrollViewer Margin="20,10,20,20">
+        <ScrollViewer Margin="20,4,20,20">
             <ItemsControl ItemsSource="{Binding $parent[views:ExtensionsPage].Models}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="{x:Type extensions:ExtensionsHostModel}">
-                        <controls:SettingsCard Description="{Binding Description}" HeaderIcon="{Binding Icon}">
+                        <controls:SettingsCard
+                            Padding="16,8"
+                            Description="{Binding Description}"
+                            HeaderIcon="{Binding Icon}">
                             <controls:SettingsCard.Header>
                                 <Grid ColumnDefinitions="200,Auto" ColumnSpacing="10">
                                     <HyperlinkButton
@@ -66,9 +74,12 @@
                                         Text="{Binding Author}" />
                                 </Grid>
                             </controls:SettingsCard.Header>
-                            <StackPanel Orientation="Horizontal" Spacing="10">
+                            <StackPanel
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal"
+                                Spacing="4">
                                 <ToggleSwitch IsChecked="{Binding IsActive, Mode=TwoWay}" />
-                                <CommandBar DefaultLabelPosition="Collapsed">
+                                <CommandBar Padding="0" DefaultLabelPosition="Collapsed">
                                     <CommandBarButton
                                         Click="ExtensionsPriorityUpOnClick"
                                         Icon="{markup:SymbolIcon ChevronUp}"

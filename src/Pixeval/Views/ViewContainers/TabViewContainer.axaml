@@ -20,6 +20,44 @@
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
+    <local:ViewContainerBase.Resources>
+        <DataTemplate x:DataType="{x:Type navigation:NavigationMenuItem}" x:Key="NavigationButtonContent">
+            <StackPanel Spacing="2">
+                <fluent:SymbolIcon
+                    HorizontalAlignment="Center"
+                    FontSize="20"
+                    IconVariant="Color"
+                    Symbol="{Binding Icon}" />
+                <TextBlock
+                    FontSize="11"
+                    Text="{Binding Header}"
+                    TextAlignment="Center"
+                    TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+        </DataTemplate>
+
+        <ControlTheme
+            x:Key="NavigationButtonTheme"
+            BasedOn="{StaticResource DefaultButtonTheme}"
+            TargetType="{x:Type Button}">
+            <Setter Property="MinHeight" Value="48" />
+            <Setter Property="Padding" Value="4" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="ContentTemplate" Value="{StaticResource NavigationButtonContent}" />
+            <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter, ^:flyout-open /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
+            </Style>
+            <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="{DynamicResource SubtleFillColorTertiaryBrush}" />
+            </Style>
+            <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
+        </ControlTheme>
+    </local:ViewContainerBase.Resources>
     <local:ViewContainerBase.DataContext>
         <viewModels:TabViewContainerViewModel />
     </local:ViewContainerBase.DataContext>
@@ -124,55 +162,39 @@
             </tabView:TabsView.RightHeaderContent>
             <tabView:TabsView.LeftContent>
                 <DockPanel
-                    Margin="5"
-                    HorizontalAlignment="Stretch"
+                    Width="64"
+                    Margin="4"
                     VerticalSpacing="5">
                     <DockPanel.DataTemplates>
                         <DataTemplate x:DataType="{x:Type navigation:NavigationPageItem}">
                             <Button
-                                HorizontalAlignment="Stretch"
-                                Background="Transparent"
+                                AutomationProperties.Name="{Binding Header}"
                                 Command="{x:Static local:TabViewContainer.OpenNavigationItemCommand}"
-                                CommandParameter="{Binding $self}">
+                                CommandParameter="{Binding $self}"
+                                Content="{Binding}"
+                                Theme="{StaticResource NavigationButtonTheme}"
+                                ToolTip.Tip="{Binding Header}">
                                 <Button.IsEnabled>
                                     <MultiBinding Converter="{x:Static BoolConverters.Or}">
                                         <Binding Path="!NeedLogin" />
                                         <Binding Path="IsLoggedIn" Source="{x:Static views:PixevalSettings.Instance}" />
                                     </MultiBinding>
                                 </Button.IsEnabled>
-                                <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
-                                    <fluent:SymbolIcon
-                                        HorizontalAlignment="Center"
-                                        IconVariant="Color"
-                                        Symbol="{Binding Icon}" />
-                                    <TextBlock
-                                        Grid.Row="1"
-                                        HorizontalAlignment="Center"
-                                        FontSize="10"
-                                        Text="{Binding Header}" />
-                                </Grid>
                             </Button>
                         </DataTemplate>
 
                         <DataTemplate x:DataType="{x:Type navigation:NavigationFolderItem}">
-                            <Button HorizontalAlignment="Stretch" Background="Transparent">
+                            <Button
+                                AutomationProperties.Name="{Binding Header}"
+                                Content="{Binding}"
+                                Theme="{StaticResource NavigationButtonTheme}"
+                                ToolTip.Tip="{Binding Header}">
                                 <Button.IsEnabled>
                                     <MultiBinding Converter="{x:Static BoolConverters.Or}">
                                         <Binding Path="!NeedLogin" />
                                         <Binding Path="IsLoggedIn" Source="{x:Static views:PixevalSettings.Instance}" />
                                     </MultiBinding>
                                 </Button.IsEnabled>
-                                <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
-                                    <fluent:SymbolIcon
-                                        HorizontalAlignment="Center"
-                                        IconVariant="Color"
-                                        Symbol="{Binding Icon}" />
-                                    <TextBlock
-                                        Grid.Row="1"
-                                        HorizontalAlignment="Center"
-                                        FontSize="10"
-                                        Text="{Binding Header}" />
-                                </Grid>
                                 <Button.Flyout>
                                     <MenuFlyout ItemsSource="{Binding Children}" Placement="Right">
                                         <MenuFlyout.ItemContainerTheme>

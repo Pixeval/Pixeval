@@ -28,7 +28,6 @@
         <MergeResourceInclude Source="/Views/Viewers/WorkInfoPane.axaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <CornerRadius x:Key="ControlCornerRadius">4</CornerRadius>
     <CornerRadius x:Key="ControlTopCornerRadius">4,4,0,0</CornerRadius>
     <CornerRadius x:Key="ControlBottomCornerRadius">0,0,4,4</CornerRadius>
     <CornerRadius x:Key="ControlLeftCornerRadius">4,0,0,4</CornerRadius>

@@ -4,7 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Input;
-using Avalonia.Themes.Fluent;
+using Avalonia.Themes.Fluent2;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -65,7 +65,7 @@ public sealed class MarkdownScrollChainingTest
     {
         public override void Initialize()
         {
-            Styles.Add(new FluentTheme());
+            Styles.Add(new Fluent2Theme());
             Styles.Add(new ScrollViewerSmoothTheme());
         }
 

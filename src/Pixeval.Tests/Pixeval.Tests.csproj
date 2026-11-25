@@ -8,6 +8,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Avalonia.Headless" Version="$(AvaloniaVersion)" />
+		<PackageReference Include="Avalonia.Skia" Version="$(AvaloniaVersion)" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.12.0" />
 		<ProjectReference Include="..\Pixeval\Pixeval.csproj" />
 		<ProjectReference Include="..\Pixeval.SourceGen\Pixeval.SourceGen.csproj" />

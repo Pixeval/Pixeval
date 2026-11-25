@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pixeval.Controls;
-using GridItemsAlignment = Pixeval.Controls.WrapPanelItemsAlignment;
+using GridItemsAlignment = Avalonia.Controls.WrapPanelItemsAlignment;
 
 namespace Pixeval.Tests;
 

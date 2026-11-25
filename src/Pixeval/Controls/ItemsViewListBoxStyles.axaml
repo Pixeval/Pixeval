@@ -45,9 +45,11 @@
                                 CornerRadius="{StaticResource ControlCornerRadius}"
                                 IsHitTestVisible="False"
                                 IsVisible="False" />
+                            <!--  Fluent2 centers the 20 DIP glyph vertically in a 32 DIP control.  -->
                             <controls:ListBoxItemCheckBox
                                 Name="SelectionCheckBox"
-                                Margin="1"
+                                Margin="0,2,8,0"
+                                Padding="0"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 IsChecked="{TemplateBinding IsSelected,

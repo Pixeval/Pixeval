@@ -1,4 +1,7 @@
-<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:Pixeval.Views.Converters">
 
     <Style Selector="CommandBarButton[IsCompact=True]">
         <Setter Property="ToolTip.Tip" Value="{Binding $self.Label}" />
@@ -6,6 +9,46 @@
 
     <Style Selector="CommandBarToggleButton[IsCompact=True]">
         <Setter Property="ToolTip.Tip" Value="{Binding $self.Label}" />
+    </Style>
+
+    <!--  TODO: Remove the sizing overrides when Fluent2 honors compact height and sizes right-side labels to content.  -->
+    <Style Selector="CommandBarButton[IsCompact=True][IsInOverflow=False], CommandBarToggleButton[IsCompact=True][IsInOverflow=False]">
+        <Setter Property="Width" Value="42" />
+        <Setter Property="Margin" Value="0" />
+        <Style Selector="^ /template/ Grid#LayoutGrid">
+            <Setter Property="MinHeight" Value="{DynamicResource CommandBarThemeCompactHeight}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Border">
+            <Setter Property="Margin" Value="{DynamicResource CommandBarInnerBorderMargin}" />
+        </Style>
+    </Style>
+
+    <Style Selector="CommandBarButton[LabelPosition=Right][IsInOverflow=False]">
+        <Setter Property="Width" Value="{Binding $self.Label, Converter={x:Static converters:PixevalConverters.CommandBarButtonWidth}}" />
+    </Style>
+
+    <Style Selector="CommandBarToggleButton[LabelPosition=Right][IsInOverflow=False]">
+        <Setter Property="Width" Value="{Binding $self.Label, Converter={x:Static converters:PixevalConverters.CommandBarButtonWidth}}" />
+    </Style>
+
+    <Style Selector="CommandBarButton[LabelPosition=Right][IsInOverflow=False], CommandBarToggleButton[LabelPosition=Right][IsInOverflow=False]">
+        <Setter Property="Margin" Value="0" />
+        <Style Selector="^ /template/ StackPanel#PART_LayoutRoot">
+            <Setter Property="Margin" Value="10,0" />
+            <Setter Property="Spacing" Value="6" />
+        </Style>
+    </Style>
+
+    <!--  TODO: Restore dynamic overflow on the extensions toolbar when Avalonia measures each command's width.  -->
+    <Style Selector="CommandBar.wrapping">
+        <Setter Property="IsDynamicOverflowEnabled" Value="False" />
+        <Style Selector="^ /template/ ItemsControl#PART_PrimaryCommands">
+            <Setter Property="ItemsPanel">
+                <ItemsPanelTemplate>
+                    <WrapPanel ItemsAlignment="End" />
+                </ItemsPanelTemplate>
+            </Setter>
+        </Style>
     </Style>
 
     <Style Selector="CommandBarButton[IsInOverflow=True] /template/ ContentPresenter#PART_IconPresenter">

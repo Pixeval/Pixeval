@@ -9,6 +9,9 @@
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
+    <ContentPage.Resources>
+        <x:Double x:Key="ToggleSwitchThemeMinWidth">0</x:Double>
+    </ContentPage.Resources>
     <ScrollViewer>
         <ItemsControl x:Name="ItemsControl" Margin="20">
             <ItemsControl.ItemsPanel>

@@ -58,8 +58,8 @@ public sealed class ItemsViewListBoxStylesTest
                 var container = (ListBoxItem) list.ContainerFromIndex(0)!;
                 var foreground = text.Foreground;
 
-                var start = text.TranslatePoint(new(1, text.Bounds.Height / 2), window)!.Value;
-                var end = text.TranslatePoint(new(80, text.Bounds.Height / 2), window)!.Value;
+                var start = text.TranslatePoint(text.TextLayout.HitTestTextPosition(0).Center, window)!.Value;
+                var end = text.TranslatePoint(text.TextLayout.HitTestTextPosition(10).Center, window)!.Value;
                 Assert.AreSame(text, window.InputHitTest(start), $"Window={window.Bounds}, Text={text.Bounds}, Start={start}, Visible={text.IsEffectivelyVisible}");
                 window.MouseMove(start);
                 Assert.IsTrue(container.IsPointerOver);
