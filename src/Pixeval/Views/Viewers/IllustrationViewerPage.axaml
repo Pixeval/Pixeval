@@ -33,11 +33,9 @@
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Light">
                     <SolidColorBrush x:Key="FloatingPaneBackgroundBrush">#DDFFFFFF</SolidColorBrush>
-                    <SolidColorBrush x:Key="FloatingPaneDockedBackgroundBrush">#EEFFFFFF</SolidColorBrush>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
                     <SolidColorBrush x:Key="FloatingPaneBackgroundBrush">#DD1E1E1E</SolidColorBrush>
-                    <SolidColorBrush x:Key="FloatingPaneDockedBackgroundBrush">#EE1E1E1E</SolidColorBrush>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
@@ -70,7 +68,7 @@
                 <Setter Property="PaneVerticalAlignment" Value="Top" />
 
                 <Style Selector="^ Border#FloatingPaneBorder">
-                    <Setter Property="Background" Value="{DynamicResource FloatingPaneDockedBackgroundBrush}" />
+                    <Setter Property="Background" Value="{DynamicResource ViewerDockedPaneBackgroundBrush}" />
                     <Setter Property="CornerRadius" Value="0" />
                 </Style>
             </Style>

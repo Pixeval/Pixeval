@@ -32,39 +32,33 @@
         </Style>
 
         <Style Selector="Panel#ResizeHandlesLayer &gt; Border">
-            <Setter Property="CornerRadius" Value="5" />
+            <Setter Property="CornerRadius" Value="{StaticResource ControlCornerRadius}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Background" Value="{DynamicResource ControlOnImageFillColorDefaultBrush}" />
+            <Setter Property="Background" Value="{DynamicResource SolidBackgroundFillColorBaseBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
-            <Setter Property="BoxShadow" Value="0 2 8 0 #40000000" />
-            <Setter Property="Opacity" Value="0.86" />
             <Setter Property="RenderTransformOrigin" Value="50%,50%" />
             <Setter Property="Transitions">
                 <Transitions>
-                    <DoubleTransition Property="Opacity" Duration="0:0:0.12" />
                     <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.12" />
-                    <BoxShadowsTransition Property="BoxShadow" Duration="0:0:0.12" />
                 </Transitions>
             </Setter>
         </Style>
 
         <Style Selector="Panel#ResizeHandlesLayer &gt; Border.corner">
-            <Setter Property="Width" Value="14" />
-            <Setter Property="Height" Value="14" />
+            <Setter Property="Width" Value="10" />
+            <Setter Property="Height" Value="10" />
         </Style>
 
         <Style Selector="Panel#ResizeHandlesLayer &gt; Border.horizontal">
-            <Setter Property="Height" Value="10" />
-            <Setter Property="MinWidth" Value="10" />
-            <Setter Property="Margin" Value="28,0" />
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Width" Value="24" />
+            <Setter Property="Height" Value="8" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
         </Style>
 
         <Style Selector="Panel#ResizeHandlesLayer &gt; Border.vertical">
-            <Setter Property="Width" Value="10" />
-            <Setter Property="MinHeight" Value="10" />
-            <Setter Property="Margin" Value="0,28" />
-            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="Width" Value="8" />
+            <Setter Property="Height" Value="24" />
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
         <Style Selector="Panel#ResizeHandlesLayer &gt; Border.top">
@@ -85,21 +79,33 @@
 
         <Style Selector="Panel#ResizeHandlesLayer &gt; Border:pointerover">
             <Setter Property="Background" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
-            <Setter Property="BoxShadow" Value="0 3 12 0 #66000000" />
-            <Setter Property="Opacity" Value="1" />
-            <Setter Property="RenderTransform" Value="scale(1.05)" />
         </Style>
 
         <Style Selector="Panel#ResizeHandlesLayer &gt; Border.pressed">
             <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
-            <Setter Property="BoxShadow" Value="0 1 5 0 #73000000" />
-            <Setter Property="Opacity" Value="1" />
             <Setter Property="RenderTransform" Value="scale(0.95)" />
+        </Style>
+
+        <Style Selector="Border#CardBorder">
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
         </Style>
 
         <Style Selector="local|HomePageCardControl.editing.selected Border#CardBorder">
             <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+        </Style>
+
+        <Style Selector="Panel#ResizeHandlesLayer, Button#QuickDeleteButton">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <Style Selector="local|HomePageCardControl.editing.selected Panel#ResizeHandlesLayer, local|HomePageCardControl.editing:pointerover Panel#ResizeHandlesLayer">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="local|HomePageCardControl.editing.selected Button#QuickDeleteButton">
+            <Setter Property="IsVisible" Value="True" />
         </Style>
     </UserControl.Styles>
 
@@ -112,35 +118,40 @@
         PointerReleased="Card_OnPointerReleased">
         <Border
             x:Name="CardBorder"
-            Padding="16"
-            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-            BorderThickness="2"
+            Padding="12"
+            BorderThickness="1"
             ClipToBounds="True"
-            CornerRadius="16">
-            <DockPanel VerticalSpacing="16">
-                <Border DockPanel.Dock="Bottom" IsVisible="{Binding !HideHomePageCardTitle, Source={x:Static views:PixevalSettings.Instance}}">
-                    <DockPanel>
-                        <Button
-                            Width="28"
-                            Height="28"
-                            Padding="0"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center"
-                            Command="{Binding $parent[local:HomePageCardControl].OpenCardPageCommand}"
-                            Content="{markup:SymbolIcon Open}"
-                            DockPanel.Dock="Right"
-                            Theme="{StaticResource TransparentButtonStyle}"
-                            ToolTip.Tip="{I18N {x:Static pixeval:HomePageResources+OpenCardPageButton.ToolTip}}" />
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            FontSize="16"
-                            FontWeight="SemiBold"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                            MaxLines="1"
-                            Text="{Binding #Root.CardTitle}"
-                            TextTrimming="CharacterEllipsis" />
-                    </DockPanel>
-                </Border>
+            CornerRadius="{StaticResource OverlayCornerRadius}">
+            <DockPanel VerticalSpacing="8">
+                <Grid
+                    MinHeight="32"
+                    ColumnDefinitions="Auto,*,32"
+                    ColumnSpacing="8"
+                    DockPanel.Dock="Top"
+                    IsVisible="{Binding !HideHomePageCardTitle, Source={x:Static views:PixevalSettings.Instance}}">
+                    <fluent:SymbolIcon
+                        VerticalAlignment="Center"
+                        FontSize="18"
+                        IconVariant="Color"
+                        Symbol="{Binding #Root.CardSymbol}" />
+                    <Button
+                        Grid.Column="2"
+                        Width="32"
+                        Height="32"
+                        Padding="0"
+                        Command="{Binding $parent[local:HomePageCardControl].OpenCardPageCommand}"
+                        Content="{markup:SymbolIcon Open}"
+                        IsVisible="{Binding !#Root.IsEditing}"
+                        Theme="{StaticResource TransparentButtonStyle}"
+                        ToolTip.Tip="{I18N {x:Static pixeval:HomePageResources+OpenCardPageButton.ToolTip}}" />
+                    <TextBlock
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        MaxLines="1"
+                        Text="{Binding #Root.CardTitle}"
+                        TextTrimming="CharacterEllipsis"
+                        Theme="{StaticResource BodyLargeStrongTextBlockStyle}" />
+                </Grid>
 
                 <Panel>
                     <ItemsControl
@@ -154,10 +165,10 @@
                             <ItemsPanelTemplate>
                                 <controls:VirtualizingUniformGrid
                                     ItemSize="150"
-                                    ItemSpacing="5"
+                                    ItemSpacing="8"
                                     ItemsAlignment="Stretch"
                                     LineSize="100"
-                                    LineSpacing="5"
+                                    LineSpacing="8"
                                     MaxItemsInLine="{Binding Items.Count}"
                                     MaxLines="{Binding Items.Count}"
                                     MinItemsInLine="1"
@@ -251,10 +262,7 @@
             </DockPanel>
         </Border>
 
-        <Panel
-            x:Name="ResizeHandlesLayer"
-            IsVisible="{Binding #Root.IsEditing}"
-            PointerPressed="ResizeHandle_OnPointerPressed">
+        <Panel x:Name="ResizeHandlesLayer" PointerPressed="ResizeHandle_OnPointerPressed">
             <Border Classes="corner top left" Tag="{x:Static local:HomeCardEditAction.ResizeTopLeft}" />
             <Border Classes="horizontal top" Tag="{x:Static local:HomeCardEditAction.ResizeTop}" />
             <Border Classes="corner top right" Tag="{x:Static local:HomeCardEditAction.ResizeTopRight}" />
@@ -267,13 +275,15 @@
 
         <Button
             x:Name="QuickDeleteButton"
-            Padding="10"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Background="{DynamicResource ControlOnImageFillColorDefault}"
+            Width="32"
+            Height="32"
+            Margin="13"
+            Padding="0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Background="{DynamicResource ControlOnImageFillColorDefaultBrush}"
             Click="QuickDeleteButton_OnClick"
             Content="{markup:SymbolIcon Delete}"
-            IsVisible="{Binding #Root.IsEditing}"
             ToolTip.Tip="{I18N {x:Static pixeval:HomePageResources+DeleteSelectedCardButton.Content}}" />
     </Panel>
 </UserControl>

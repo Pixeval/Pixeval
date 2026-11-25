@@ -14,33 +14,36 @@
     xmlns:viewModels="using:Pixeval.ViewModels.Home"
     xmlns:views="using:Pixeval.Views"
     x:DataType="{x:Type viewModels:HomePageViewModel}"
-    DrawerIcon="{markup:SymbolIcon Edit}"
+    Background="Transparent"
+    BorderThickness="0"
     DrawerLayoutBehavior="Split"
     DrawerPlacement="Right"
     Header="{I18N {x:Static pixeval:MainPageResources+Tab.Home}}"
     Icon="{markup:SymbolIcon Home,
                              FontSize=16,
                              IconVariant=Color}"
-    IsOpen="{Binding IsEditMode}"
+    IsOpen="{Binding IsEditMode, Mode=TwoWay}"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
     <DrawerPage.Styles>
-        <Style Selector="DrawerPage /template/ Border#PART_TopBar">
+        <!--  The home toolbar controls the editor in place of the template toggles.  -->
+        <Style Selector="DrawerPage /template/ Border#PART_TopBar, DrawerPage /template/ ToggleButton#PART_CompactPaneToggle">
             <Setter Property="IsVisible" Value="False" />
         </Style>
 
         <Style Selector="Border.editor-section">
             <Setter Property="Padding" Value="12" />
             <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
-            <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
         </Style>
 
         <Style Selector="Border.home-grid-guide-cell">
-            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="4" />
-            <Setter Property="Opacity" Value="0.65" />
+            <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
         </Style>
 
         <Style Selector="TextBlock.editor-label">
@@ -61,13 +64,18 @@
     </DrawerPage.Styles>
     <DockPanel x:DataType="{x:Type viewModels:HomePageViewModel}" DataContext="{Binding $parent[home:HomePage].DataContext}">
         <DockPanel
+            Margin="16,4"
             DockPanel.Dock="Top"
-            HorizontalSpacing="10"
-            IsVisible="{Binding !#HideHomePageToolbarButton.IsChecked}">
+            HorizontalSpacing="8">
+            <DockPanel.IsVisible>
+                <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                    <Binding Path="IsEditMode" />
+                    <Binding Path="!HideHomePageToolbar" Source="{x:Static views:PixevalSettings.Instance}" />
+                </MultiBinding>
+            </DockPanel.IsVisible>
             <Border
-                Width="30"
-                Height="30"
-                Margin="10,0,0,0"
+                Width="28"
+                Height="28"
                 Background="{SvgResource avares://Pixeval/Assets/logo.svg}"
                 CornerRadius="{StaticResource ControlCornerRadius}"
                 DockPanel.Dock="Left" />
@@ -85,51 +93,49 @@
                     IsChecked="{Binding HideHomePageCardTitle, Source={x:Static views:PixevalSettings.Instance}, Mode=TwoWay}"
                     Label="{I18N {x:Static pixeval:HomePageResources+HideCardTitleButton.Label}}" />
                 <CommandBarToggleButton
-                    x:Name="HideHomePageToolbarButton"
                     Icon="{markup:SymbolIcon WindowHeaderHorizontal}"
                     IsChecked="{Binding HideHomePageToolbar, Source={x:Static views:PixevalSettings.Instance}, Mode=TwoWay}"
                     Label="{I18N {x:Static pixeval:HomePageResources+HideToolbarButton.Label}}" />
                 <CommandBarToggleButton
+                    x:Name="EditButton"
                     Icon="{markup:SymbolIcon Edit}"
                     IsChecked="{Binding IsEditMode, Mode=TwoWay}"
                     Label="{I18N {x:Static pixeval:HomePageResources+EditButton.Label}}" />
             </CommandBar>
         </DockPanel>
 
-        <Border
-            Background="{DynamicResource SolidBackgroundFillColorBaseBrush}"
-            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-            BorderThickness="1"
-            ClipToBounds="True"
-            CornerRadius="{DynamicResource ControlCornerRadius}">
-            <Grid>
-                <Grid
-                    x:Name="GuideGrid"
-                    Margin="12"
-                    ColumnSpacing="12"
-                    IsHitTestVisible="False"
-                    IsVisible="{Binding IsEditMode}"
-                    RowSpacing="12" />
-                <Grid
-                    x:Name="HomeGrid"
-                    Margin="12"
-                    ColumnSpacing="12"
-                    RowSpacing="12" />
-            </Grid>
-        </Border>
+        <Grid Margin="16" ClipToBounds="True">
+            <Grid
+                x:Name="GuideGrid"
+                ColumnSpacing="12"
+                IsHitTestVisible="False"
+                IsVisible="{Binding IsEditMode}"
+                RowSpacing="12" />
+            <Grid
+                x:Name="HomeGrid"
+                ColumnSpacing="12"
+                RowSpacing="12" />
+        </Grid>
     </DockPanel>
+
+    <DrawerPage.DrawerHeader>
+        <Border
+            Padding="16,12"
+            BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
+            BorderThickness="0,0,0,1">
+            <StackPanel Spacing="4">
+                <TextBlock Text="{I18N {x:Static pixeval:HomePageResources+EditPaneTitleTextBlock.Text}}" Theme="{StaticResource SubtitleTextBlockStyle}" />
+                <TextBlock
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    Text="{I18N {x:Static pixeval:HomePageResources+EditPaneDescriptionTextBlock.Text}}"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+        </Border>
+    </DrawerPage.DrawerHeader>
 
     <DrawerPage.Drawer>
         <ScrollViewer>
             <StackPanel Margin="16" Spacing="16">
-                <StackPanel Spacing="4">
-                    <TextBlock Text="{I18N {x:Static pixeval:HomePageResources+EditPaneTitleTextBlock.Text}}" Theme="{StaticResource BodyLargeStrongTextBlockStyle}" />
-                    <TextBlock
-                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="{I18N {x:Static pixeval:HomePageResources+EditPaneDescriptionTextBlock.Text}}"
-                        TextWrapping="Wrap" />
-                </StackPanel>
-
                 <Border Classes="editor-section">
                     <StackPanel Spacing="10">
                         <TextBlock FontWeight="SemiBold" Text="{I18N {x:Static pixeval:HomePageResources+GridSizeTitleTextBlock.Text}}" />
@@ -286,6 +292,7 @@
 
                         <Button
                             HorizontalAlignment="Stretch"
+                            Classes="accent"
                             Command="{Binding $parent[home:HomePage].AddConfiguredCardCommand}"
                             IsEnabled="{Binding CanAddConfiguredCard}">
                             <StackPanel
@@ -302,46 +309,45 @@
                 <StackPanel Spacing="8">
                     <TextBlock FontWeight="SemiBold" Text="{I18N {x:Static pixeval:HomePageResources+CardLibraryTitleTextBlock.Text}}" />
                     <ItemsControl ItemsSource="{Binding CardTemplates}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Spacing="8" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="{x:Type home:HomeCardDefinition}">
                                 <Button
-                                    Margin="0,0,0,8"
-                                    Padding="0"
+                                    Padding="12"
                                     HorizontalAlignment="Stretch"
-                                    Background="Transparent"
+                                    HorizontalContentAlignment="Stretch"
+                                    Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                                     Command="{Binding $parent[home:HomePage].ViewModel.SelectTemplateCommand}"
-                                    CommandParameter="{Binding}">
-                                    <Border
-                                        Padding="12"
-                                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                                        CornerRadius="{DynamicResource ControlCornerRadius}">
-                                        <Grid ColumnDefinitions="44,*" ColumnSpacing="12">
-                                            <Border
-                                                Width="44"
-                                                Height="44"
-                                                Background="{DynamicResource ControlFillColorDefaultBrush}"
-                                                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                                                BorderThickness="1"
-                                                CornerRadius="{DynamicResource ControlCornerRadius}">
-                                                <fluent:SymbolIcon
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    FontSize="20"
-                                                    IconVariant="Color"
-                                                    Symbol="{Binding Symbol}" />
-                                            </Border>
-                                            <StackPanel Grid.Column="1" Spacing="3">
-                                                <TextBlock
-                                                    FontWeight="SemiBold"
-                                                    Text="{Binding Title}"
-                                                    TextTrimming="CharacterEllipsis" />
-                                                <TextBlock
-                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                    Text="{Binding Description}"
-                                                    TextWrapping="Wrap" />
-                                            </StackPanel>
-                                        </Grid>
-                                    </Border>
+                                    CommandParameter="{Binding}"
+                                    CornerRadius="{StaticResource OverlayCornerRadius}">
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                        <fluent:SymbolIcon
+                                            VerticalAlignment="Center"
+                                            FontSize="20"
+                                            IconVariant="Color"
+                                            Symbol="{Binding Symbol}" />
+                                        <StackPanel Grid.Column="1" Spacing="2">
+                                            <TextBlock
+                                                FontWeight="SemiBold"
+                                                Text="{Binding Title}"
+                                                TextTrimming="CharacterEllipsis" />
+                                            <TextBlock
+                                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                Text="{Binding Description}"
+                                                TextWrapping="Wrap" />
+                                        </StackPanel>
+                                        <fluent:SymbolIcon
+                                            Grid.Column="2"
+                                            VerticalAlignment="Center"
+                                            FontSize="12"
+                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                            Symbol="ChevronRight" />
+                                    </Grid>
                                 </Button>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>

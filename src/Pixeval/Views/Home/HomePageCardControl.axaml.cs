@@ -98,7 +98,10 @@ public sealed partial class HomePageCardControl : UserControl, IDisposable
 
     public void UpdateBackground()
     {
-        CardBorder.Background = new SolidColorBrush(Color.FromUInt32(Card.BackgroundColor));
+        if (Card.BackgroundColor is 0)
+            CardBorder.ClearValue(BackgroundProperty);
+        else
+            CardBorder.Background = new SolidColorBrush(Color.FromUInt32(Card.BackgroundColor));
     }
 
     protected override async void OnLoaded(RoutedEventArgs e)
