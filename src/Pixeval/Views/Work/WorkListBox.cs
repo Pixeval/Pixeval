@@ -15,6 +15,8 @@ public sealed class WorkListBox : ListBox
 
     protected override Type StyleKeyOverride => typeof(ListBox);
 
+    internal bool HasMultipleSelection => SelectionMode.HasFlag(SelectionMode.Multiple) && Selection.Count > 1;
+
     protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey)
     {
         var needsContainer = base.NeedsContainerOverride(item, index, out recycleKey);

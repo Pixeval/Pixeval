@@ -12,8 +12,6 @@ using Avalonia.Interactivity;
 using Mako.Global.Enum;
 using Mako.Model;
 using Misaki;
-using Pixeval.I18N;
-using Pixeval.Models.Blocking;
 using Pixeval.Models.Options;
 using Pixeval.Utilities;
 using Pixeval.ViewModels;
@@ -24,8 +22,6 @@ namespace Pixeval.Views.Work;
 public sealed partial class WorkView : UserControl, IDisposable
 {
     private bool _isDisposed;
-
-    public event EventHandler<Control, IWorkViewModel>? RequestAddToBookmark;
 
     public ThumbnailLayoutType LayoutType
     {
@@ -42,7 +38,11 @@ public sealed partial class WorkView : UserControl, IDisposable
 
     private void StyledElement_OnDataContextChanged(object? sender, EventArgs e) => UpdateLayoutPseudoClasses();
 
-    public WorkView() => InitializeComponent();
+    public WorkView()
+    {
+        SelectionMenu = new SelectionMenuModel(this);
+        InitializeComponent();
+    }
 
     private void UpdateLayoutPseudoClasses()
     {
@@ -58,6 +58,14 @@ public sealed partial class WorkView : UserControl, IDisposable
     {
         if (sender is not ListBoxItem { DataContext: IWorkViewModel vm } lbi)
             return;
+
+        if (DataContext is IOperableViewViewModel { IsSelecting: false } viewModel
+            && (tappedEventArgs.KeyModifiers & (KeyModifiers.Control | KeyModifiers.Shift)) is not KeyModifiers.None)
+        {
+            viewModel.IsSelecting = true;
+            WorkListBox.SelectedIndex = WorkListBox.IndexFromContainer(lbi);
+            return;
+        }
 
         if (WorkListBox.SelectionMode.HasFlag(SelectionMode.Multiple))
         {
@@ -168,7 +176,11 @@ public sealed partial class WorkView : UserControl, IDisposable
         oldViewModel?.Dispose();
     }
 
-    private void WorkItem_OnRequestAddToBookmark(Control sender, IWorkViewModel e) => RequestAddToBookmark?.Invoke(sender, e);
+    private async void WorkItem_OnRequestAddToBookmark(Control sender, IWorkViewModel work)
+    {
+        var id = long.TryParse(work.Entry.Id, out var parsedId) ? parsedId : 0;
+        await ShowBookmarkTagSelectorAsync(sender, [work], id);
+    }
 
     public void WorkItem_OnRequestOpenUserInfoPage(Control sender, IWorkViewModel e)
     {
@@ -181,16 +193,8 @@ public sealed partial class WorkView : UserControl, IDisposable
 
     private void WorkItem_OnRequestBlockAuthor(Control sender, IWorkViewModel e)
     {
-        if (e is not { Entry: WorkBase { User: { } user } } || BlockedContentHelper.IsBlockedPlaceholder(e.Entry))
-            return;
-
-        // 即使已在黑名单中（如在其他页面屏蔽后尚未刷新），也刷新当前列表
-        var added = BlockedContentHelper.TryAddOrUpdateBlockedUser(user);
-        (DataContext as IOperableViewViewModel)?.ReplaceBlockedEntries();
-
-        if (added)
-            TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(
-                I18NManager.GetResource(BlockedContentResources.AuthorBlockedFormatted, user.Name));
+        if (GetWorkAuthor(e) is { } author)
+            BlockAuthors([author]);
     }
 
     private void ListBox_OnContainerPrepared(object? sender, ContainerPreparedEventArgs e)
@@ -226,8 +230,8 @@ public sealed partial class WorkView : UserControl, IDisposable
             return;
 
         _isDisposed = true;
+        WorkListBox.ContextMenu?.Close();
         WorkListBox.ItemsSource = null;
-        RequestAddToBookmark = null;
         var d = DataContext;
         DataContext = null!;
         if (d is IDisposable viewModel)

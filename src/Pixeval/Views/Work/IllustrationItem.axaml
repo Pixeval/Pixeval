@@ -14,6 +14,7 @@
     xmlns:viewModels="using:Pixeval.ViewModels"
     xmlns:work="using:Pixeval.Views.Work"
     x:DataType="{x:Type viewModels:IllustrationItemViewModel}"
+    x:Name="WorkItemRoot"
     Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
     Design.DataContext="{x:Static utilities:DesignHelper.DesignIllustrationViewModel}"
     RenderTransformOrigin="50%,50%"
@@ -23,7 +24,7 @@
     d:DesignWidth="300">
     <ContentControl ClipToBounds="True">
         <ContentControl.ContextMenu>
-            <ContextMenu>
+            <ContextMenu Opening="WorkMenu_OnOpening">
                 <MenuItem
                     Command="{Binding BookmarkCommand}"
                     CommandParameter="{Binding $self, Mode=OneTime}"
@@ -44,6 +45,14 @@
                     Click="OpenUserInfoPage_OnClicked"
                     Header="{I18N {x:Static pixeval:EntryItemResources.OpenUserInfoPage}}"
                     Icon="{markup:SymbolIcon Person}" />
+                <MenuItem
+                    Command="{Binding FollowAuthorCommand}"
+                    CommandParameter="{Binding #WorkItemRoot, Mode=OneTime}"
+                    Header="{I18N {x:Static pixeval:EntryItemResources.FollowAuthor}}"
+                    Icon="{markup1:SymbolIconEx PersonAdd,
+                                                IconVariant={Binding IsAuthorFollowed,
+                                                                     Converter={x:Static converters:PixevalConverters.BoolToIconVariant}}}"
+                    IsVisible="{Binding CanBlockAuthor}" />
                 <MenuItem
                     Click="BlockAuthor_OnClicked"
                     Header="{I18N {x:Static pixeval:BlockedContentResources.BlockAuthor}}"

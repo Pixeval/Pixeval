@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
@@ -157,99 +156,9 @@ public partial class WorkContainer : UserControl
             scrollView.Offset = new(0, 0);
     }
 
-    private async void AddAllToBookmarkButton_OnClicked(object? sender, RoutedEventArgs e)
-    {
-        await AddToBookmarkAsync(null, (false, null)).ConfigureAwait(false);
-    }
-
     private async void AddAllToBookmarkButton_OnRightClicked(object? sender, ContextRequestedEventArgs e)
     {
-        await ShowBookmarkTagSelectorAsync(AddAllToBookmarkButton, null).ConfigureAwait(false);
-    }
-
-    private async void WorkView_OnRequestAddToBookmark(Control sender, IWorkViewModel e)
-    {
-        await ShowBookmarkTagSelectorAsync(sender, e).ConfigureAwait(false);
-    }
-
-    private async Task ShowBookmarkTagSelectorAsync(Control placementTarget, IWorkViewModel? target)
-    {
-        if (target is null && DataContext is not IOperableViewViewModel { SelectedEntries.Count: > 0 })
-            return;
-
-        var id = target is { Entry.Id: { } idStr } && long.TryParse(idStr, out var idLong) ? idLong : 0;
-        var type = target is NovelItemViewModel || DataContext is NovelViewViewModel or SimpleOperableViewViewModel<NovelItemViewModel>
-            ? SimpleWorkType.Novel
-            : SimpleWorkType.Illustration;
-
-        await BookmarkTagSelectorFlyoutHelper.ShowAsync(
-            placementTarget,
-            type,
-            id,
-            async e => await AddToBookmarkAsync(target, e),
-            PlacementMode.Bottom);
-    }
-
-    private async Task AddToBookmarkAsync(IWorkViewModel? target, (bool IsPrivate, IReadOnlyList<string>? Tags) e)
-    {
-        if (target is not null)
-        {
-            await target.AddToBookmarkCommand.ExecuteAsync((e.Tags, e.IsPrivate, this));
-            TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(I18NManager.GetResource(MiscResources.AddedToBookmark));
-            return;
-        }
-
-        if (DataContext is not IOperableViewViewModel viewModel)
-            return;
-
-        if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer
-            && viewModel.SelectedEntries.Count >= 20
-            && await viewContainer.CreateOkCancelAsync(
-                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItems.ForBookmarkTitle),
-                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItems.Content)) is not ContentDialogResult.Primary)
-            return;
-
-        foreach (var i in viewModel.SelectedEntries)
-            await i.AddToBookmarkCommand.ExecuteAsync((e.Tags, e.IsPrivate, this));
-        if (viewModel.SelectedEntries.Count is var c and > 0)
-            TopLevel.GetTopLevel(this)?.ViewContainer?.ShowSuccess(I18NManager.GetResource(WorkContainerResources.AddedAllToBookmarkContentFormatted, c));
-    }
-
-    private async void SaveAllButton_OnClicked(object? sender, RoutedEventArgs e)
-    {
-        if (DataContext is not IOperableViewViewModel viewModel)
-            return;
-
-        if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer
-            && viewModel.SelectedEntries.Count >= 20
-            && await viewContainer.CreateOkCancelAsync(
-                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItems.ForSaveTitle),
-                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItems.Content)) is not ContentDialogResult.Primary)
-            return;
-
-        foreach (var i in viewModel.SelectedEntries)
-            i.SaveCommand.Execute(null);
-
-        TopLevel.GetTopLevel(this)?.ViewContainer?.ShowInformation(
-            I18NManager.GetResource(WorkContainerResources.DownloadItemsQueuedFormatted, viewModel.SelectedEntries.Count));
-    }
-
-    private async void OpenAllInBrowserButton_OnClicked(object? sender, RoutedEventArgs e)
-    {
-        if (DataContext is not IOperableViewViewModel viewModel)
-            return;
-
-        if (TopLevel.GetTopLevel(this)?.ViewContainer is { } viewContainer
-            && viewModel.SelectedEntries.Count > 15
-            && await viewContainer.CreateOkCancelAsync(
-                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItems.ForOpenInBrowser.Title),
-                I18NManager.GetResource(WorkContainerResources.SelectedTooManyItems.ForOpenInBrowser.Content)) is not ContentDialogResult.Primary)
-            return;
-
-        foreach (var selectedEntry in viewModel.SelectedEntries)
-        {
-            _ = await TopLevel.GetTopLevel(this)!.Launcher.LaunchUriAsync(selectedEntry.Entry.WebsiteUri);
-        }
+        await WorkView.ShowBookmarkTagSelectorAsync(AddAllToBookmarkButton, WorkView.GetSelectedWorks());
     }
 
     private void RefreshButton_OnClick(object? sender, RoutedEventArgs e) => RefreshRequested?.Invoke(sender, e);

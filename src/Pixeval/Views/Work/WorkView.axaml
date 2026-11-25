@@ -6,10 +6,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:entry="using:Pixeval.Views.Entry"
     xmlns:local="using:Pixeval.Views.Work"
+    xmlns:markup="using:FluentIcons.Avalonia.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pixeval="using:Pixeval"
     xmlns:views="using:Pixeval.Views"
     xmlns:vm="using:Pixeval.ViewModels"
     x:DataType="{x:Type vm:IOperableViewViewModel}"
+    x:Name="WorkViewRoot"
     DataContextChanged="StyledElement_OnDataContextChanged"
     mc:Ignorable="d"
     d:DesignHeight="450"
@@ -29,6 +32,53 @@
             SelectedItems="{Binding SelectedEntries}"
             SelectionMode="{Binding IsSelecting, Converter={x:Static local:WorkView.SelectionModeConverter}}"
             UseLayoutRounding="False">
+            <ListBox.ContextMenu>
+                <ContextMenu
+                    x:DataType="{x:Type local:WorkView+SelectionMenuModel}"
+                    DataContext="{Binding #WorkViewRoot.SelectionMenu, Mode=OneTime}"
+                    Opening="SelectionMenu_OnOpening">
+                    <MenuItem
+                        Command="{Binding BookmarkCommand}"
+                        ContextRequested="SelectionBookmark_OnContextRequested"
+                        Header="{Binding BookmarkCount, StringFormat={I18N {x:Static pixeval:WorkContainerResources+SelectionMenu.BookmarkWorksFormatted}}}"
+                        Icon="{markup:SymbolIcon Heart}"
+                        IsEnabled="{Binding !!BookmarkCount}" />
+                    <MenuItem
+                        Command="{Binding RemoveBookmarkCommand}"
+                        Header="{Binding RemoveBookmarkCount, StringFormat={I18N {x:Static pixeval:WorkContainerResources+SelectionMenu.RemoveBookmarksFormatted}}}"
+                        Icon="{markup:SymbolIcon HeartBroken}"
+                        IsEnabled="{Binding !!RemoveBookmarkCount}" />
+                    <MenuItem
+                        Command="{Binding AddToWatchLaterCommand}"
+                        Header="{I18N {x:Static pixeval:WorkContainerResources+SelectionMenu.AddSelectedToWatchLater}}"
+                        Icon="{markup:SymbolIcon Clock}" />
+                    <MenuItem
+                        Command="{Binding SaveCommand}"
+                        Header="{I18N {x:Static pixeval:WorkContainerResources+SelectionMenu.SaveSelectedWorks}}"
+                        Icon="{markup:SymbolIcon Save}"
+                        IsVisible="{Binding CanSave}" />
+                    <MenuItem
+                        Command="{Binding OpenInBrowserCommand}"
+                        Header="{I18N {x:Static pixeval:WorkContainerResources+SelectionMenu.OpenSelectedWorksInBrowser}}"
+                        Icon="{markup:SymbolIcon GlobeArrowUp}" />
+                    <Separator />
+                    <MenuItem
+                        Command="{Binding FollowCommand}"
+                        Header="{Binding FollowCount, StringFormat={I18N {x:Static pixeval:WorkContainerResources+SelectionMenu.FollowAuthorsFormatted}}}"
+                        Icon="{markup:SymbolIcon PersonAdd}"
+                        IsEnabled="{Binding !!FollowCount}" />
+                    <MenuItem
+                        Command="{Binding UnfollowCommand}"
+                        Header="{Binding UnfollowCount, StringFormat={I18N {x:Static pixeval:WorkContainerResources+SelectionMenu.UnfollowAuthorsFormatted}}}"
+                        Icon="{markup:SymbolIcon PersonSubtract}"
+                        IsEnabled="{Binding !!UnfollowCount}" />
+                    <MenuItem
+                        Command="{Binding BlockAuthorsCommand}"
+                        Header="{I18N {x:Static pixeval:WorkContainerResources+SelectionMenu.BlockSelectedAuthors}}"
+                        Icon="{markup:SymbolIcon PersonProhibited}"
+                        IsEnabled="{Binding CanBlockAuthors}" />
+                </ContextMenu>
+            </ListBox.ContextMenu>
             <ListBox.Styles>
                 <controls:ItemsViewListBoxStyles />
             </ListBox.Styles>

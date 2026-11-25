@@ -30,7 +30,7 @@
                 <CommandBarToggleButton
                     x:Name="SelectionToggleButton"
                     Icon="{markup:SymbolIcon Multiselect}"
-                    IsChecked="{Binding IsSelecting, Mode=OneWayToSource}"
+                    IsChecked="{Binding IsSelecting, Mode=TwoWay}"
                     ToolTip.Tip="{I18N {x:Static local:WorkContainerResources+SelectionButton.Label}}" />
                 <CommandBar.SecondaryCommands>
                     <CommandBarButton
@@ -83,18 +83,18 @@
                         Label="{Binding SelectedEntries.Count, Converter={x:Static work:WorkContainer.CancelSelectionButtonConverter}}" />
                     <CommandBarButton
                         x:Name="AddAllToBookmarkButton"
-                        Click="AddAllToBookmarkButton_OnClicked"
+                        Command="{Binding #WorkView.SelectionMenu.BookmarkAllCommand}"
                         ContextRequested="AddAllToBookmarkButton_OnRightClicked"
                         Icon="{markup:SymbolIcon Heart}"
                         IsEnabled="{Binding !!SelectedEntries.Count}"
                         Label="{I18N {x:Static local:EntryItemResources.AddToBookmark}}" />
                     <CommandBarButton
-                        Click="SaveAllButton_OnClicked"
+                        Command="{Binding #WorkView.SelectionMenu.SaveCommand}"
                         Icon="{markup:SymbolIcon Save}"
                         IsEnabled="{Binding !!SelectedEntries.Count}"
                         Label="{I18N {x:Static local:EntryItemResources.Save}}" />
                     <CommandBarButton
-                        Click="OpenAllInBrowserButton_OnClicked"
+                        Command="{Binding #WorkView.SelectionMenu.OpenInBrowserCommand}"
                         Icon="{markup:SymbolIcon GlobeArrowUp}"
                         IsEnabled="{Binding !!SelectedEntries.Count}"
                         Label="{I18N {x:Static local:EntryItemResources.OpenInWebBrowser}}" />
@@ -105,7 +105,6 @@
         <work:WorkView
             x:Name="WorkView"
             DataContextChanged="WorkView_OnDataContextChanged"
-            LayoutType="{x:Static views:PixevalSettings.LayoutType}"
-            RequestAddToBookmark="WorkView_OnRequestAddToBookmark" />
+            LayoutType="{x:Static views:PixevalSettings.LayoutType}" />
     </DockPanel>
 </UserControl>

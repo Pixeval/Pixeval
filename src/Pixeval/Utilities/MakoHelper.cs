@@ -51,14 +51,14 @@ public static class MakoHelper
         yield return ISortDescription<IWorkViewModel>.Create(t => t.Entry.Id);
     }
 
-    public static async Task<bool> SetFollowAsync(User id, bool isFollowed, bool privately = false, CancellationToken token = default)
+    public static async Task<bool> SetFollowAsync(UserInfo user, bool isFollowed, bool privately = false, CancellationToken token = default)
     {
         var result = await (isFollowed
-            ? App.AppViewModel.MakoClient.PostFollowUserAsync(id.Id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public, token)
-            : App.AppViewModel.MakoClient.RemoveFollowUserAsync(id.Id, token));
+            ? App.AppViewModel.MakoClient.PostFollowUserAsync(user.Id, privately ? PrivacyPolicy.Private : PrivacyPolicy.Public, token)
+            : App.AppViewModel.MakoClient.RemoveFollowUserAsync(user.Id, token)).ConfigureAwait(false);
         if (result)
-            id.UserInfo.IsFollowed = isFollowed;
-        return id.UserInfo.IsFollowed;
+            user.IsFollowed = isFollowed;
+        return user.IsFollowed;
     }
 
     public static async Task<bool> SetWorkBookmarkAsync(WorkBase entry, bool favorite, bool privately = false, IReadOnlyCollection<string>? tags = null, CancellationToken token = default)

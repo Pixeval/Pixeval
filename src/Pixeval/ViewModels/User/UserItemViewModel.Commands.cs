@@ -18,7 +18,7 @@ public partial class UserItemViewModel
         if ((IsFollowedDisplay & HeartButtonState.Pending) is not 0)
             return;
         IsFollowedDisplay |= HeartButtonState.Pending; // pre-update
-        var result = await MakoHelper.SetFollowAsync(Entry, !IsFollowed);
+        var result = await MakoHelper.SetFollowAsync(Entry.UserInfo, !IsFollowed);
         IsFollowedDisplay = result ? HeartButtonState.Checked : HeartButtonState.Unchecked;
     }
 

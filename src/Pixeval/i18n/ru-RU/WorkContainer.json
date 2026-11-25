@@ -1,6 +1,5 @@
 {
   "CancelSelectionButtonFormatted": "Снять выделение ({0})",
-  "AddedAllToBookmarkContentFormatted": "Добавлено изображений в закладки: {0}",
   "SelectAllButton": {
     "Label": "Выбрать все"
   },

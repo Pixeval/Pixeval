@@ -27,6 +27,17 @@ public abstract partial class WorkEntryViewModel<T> : ThumbnailEntryViewModel<T>
 
     public bool CanBlockAuthor => !IsBlocked && Entry is WorkBase;
 
+    public bool IsAuthorFollowed => Entry is WorkBase { User.IsFollowed: true };
+
+    void IWorkViewModel.SetAuthorFollowed(bool isFollowed)
+    {
+        if (Entry is not WorkBase { User: { } author })
+            return;
+
+        author.IsFollowed = isFollowed;
+        OnPropertyChanged(nameof(IsAuthorFollowed));
+    }
+
     public SimpleSeries? Series => Entry is WorkBase work ? work.Series : null;
 
     public bool HasSeries => Series is not null;

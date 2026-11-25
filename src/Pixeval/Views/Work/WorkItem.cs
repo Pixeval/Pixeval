@@ -2,12 +2,14 @@
 // Licensed under the GPL-3.0 License.
 
 using System;
+using System.ComponentModel;
 using Avalonia.Animation.Easings;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Rendering.Composition;
+using Avalonia.VisualTree;
 using Mako.Global.Enum;
 using Mako.Model;
 using Pixeval.Utilities;
@@ -39,6 +41,14 @@ public class WorkItem : EntryItem, IWorkAnimatable
     public event EventHandler<Control, IWorkViewModel>? RequestAddToBookmark;
 
     public event EventHandler<Control, IWorkViewModel>? RequestBlockAuthor;
+
+    protected void WorkMenu_OnOpening(object? sender, CancelEventArgs e)
+    {
+        // Let the same context request bubble to the list's selection menu.
+        e.Cancel = this.FindAncestorOfType<WorkListBox>()?.HasMultipleSelection is true;
+        if (!e.Cancel && DataContext is IWorkViewModel work)
+            work.FollowAuthorCommand.NotifyCanExecuteChanged();
+    }
 
     protected void AddToBookmark_OnRightClick(object sender, ContextRequestedEventArgs e)
     {

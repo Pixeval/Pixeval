@@ -19,11 +19,19 @@ public interface IWorkViewModel : INotifyPropertyChanged
     /// <inheritdoc cref="WorkEntryViewModel{T}.AddToBookmarkCommand"/>
     IAsyncRelayCommand<(IReadOnlyList<string>? Tags, bool IsPrivate, Control? Control)> AddToBookmarkCommand { get; }
 
+    IAsyncRelayCommand RemoveFromBookmarkCommand { get; }
+
     /// <inheritdoc cref="WorkEntryViewModel{T}.BookmarkCommand"/>
     IAsyncRelayCommand<Control?> BookmarkCommand { get; }
 
+    IAsyncRelayCommand<Control?> FollowAuthorCommand { get; }
+
     /// <inheritdoc cref="WorkEntryViewModel{T}.SaveCommand"/>
     IAsyncRelayCommand<Control?> SaveCommand { get; }
+
+    bool TryAddToWatchLater();
+
+    void SetAuthorFollowed(bool isFollowed);
 
     bool Filter(FilterNode node) => node.Match(Entry);
 }
