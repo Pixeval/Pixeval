@@ -17,7 +17,6 @@
                         <Panel x:Name="PART_UnderlayWrapper">
                             <Border
                                 x:Name="PART_WindowBorder"
-                                Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
                                 BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
                                 BorderThickness="{TemplateBinding FrameThickness}"
                                 IsHitTestVisible="False" />
@@ -26,7 +25,6 @@
                                 x:Name="PART_TitleBar"
                                 Height="{TemplateBinding TitleBarHeight}"
                                 VerticalAlignment="Top"
-                                Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
                                 IsVisible="False"
                                 WindowDecorationProperties.ElementRole="TitleBar" />
 
@@ -120,6 +118,10 @@
             </WindowDrawnDecorationsTemplate>
         </Setter>
 
+        <Style Selector="^ /template/ Border#PART_WindowBorder, ^ /template/ Panel#PART_TitleBar">
+            <Setter Property="Border.Background" Value="{DynamicResource SystemControlBackgroundAltHighBrush}" />
+        </Style>
+
         <!--  Shadow: inset border and add drop shadow  -->
         <Style Selector="^:has-shadow /template/ Panel#PART_UnderlayWrapper">
             <Setter Property="Margin" Value="{TemplateBinding ShadowThickness}" />
@@ -175,6 +177,15 @@
         </Style>
         <Style Selector="^:fullscreen /template/ Panel#PART_TitleBar">
             <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme
+        x:Key="MicaWindowDrawnDecorationsTheme"
+        BasedOn="{StaticResource {x:Type WindowDrawnDecorations}}"
+        TargetType="WindowDrawnDecorations">
+        <Style Selector="^ /template/ Border#PART_WindowBorder, ^ /template/ Panel#PART_TitleBar">
+            <Setter Property="Border.Background" Value="Transparent" />
         </Style>
     </ControlTheme>
 </ResourceDictionary>

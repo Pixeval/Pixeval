@@ -23,6 +23,9 @@ public static class WindowHelper
         {
             window.ExtendClientAreaToDecorationsHint = true;
             window.WindowDecorations = WindowDecorations.Full;
+            if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000))
+                window.Classes.Add("mica");
+
             window.Icon = icon;
             window.Title = title;
             window.WindowState = isMaximized ? WindowState.Maximized : WindowState.Normal;

@@ -21,6 +21,13 @@
         <Style Selector="edit|TextEditor">
             <Setter Property="FontFamily" Value="{DynamicResource PixevalMonospaceFontFamily}" />
         </Style>
+        <Style Selector="Window.mica">
+            <Setter Property="TransparencyLevelHint" Value="Mica,None" />
+        </Style>
+        <Style Selector="Window.mica[ActualTransparencyLevel=Mica]">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="WindowDecorationsTheme" Value="{DynamicResource MicaWindowDrawnDecorationsTheme}" />
+        </Style>
         <StyleInclude Source="/Controls/FloatingCommandBarStyles.axaml" />
         <StyleInclude Source="/Controls/CommandBarStyles.axaml" />
         <smoothScroll:ScrollViewDefaultTheme />
