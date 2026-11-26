@@ -69,11 +69,12 @@ public sealed class WorkViewContextMenuTest
             using var services = new ServiceCollection()
                 .AddSingleton(new BlockedUserPersistentManager(db))
                 .AddKeyedSingleton<IGetArtworkService>(IPlatformInfo.Pixiv, client)
+                .AddKeyedSingleton<IDownloadHttpClientService>(IPlatformInfo.Pixiv, client)
                 .BuildServiceProvider();
             var appModel = (AppViewModel) RuntimeHelpers.GetUninitializedObject(typeof(AppViewModel));
             typeof(AppViewModel).GetProperty(nameof(AppViewModel.AppServiceProvider))!.SetValue(appModel, services);
             typeof(AppViewModel).GetField("<AppSettings>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)!
-                .SetValue(appModel, new AppSettings());
+                .SetValue(appModel, new AppSettings { ApplicationSettings = new() { UseFileCache = false } });
             var appProperty = typeof(App).GetProperty(nameof(App.AppViewModel))!;
             var previousApp = App.AppViewModel;
             var illustration = DesignHelper.DesignIllustration;
