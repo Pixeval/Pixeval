@@ -61,6 +61,11 @@
     <local:ViewContainerBase.DataContext>
         <viewModels:TabViewContainerViewModel />
     </local:ViewContainerBase.DataContext>
+    <local:ViewContainerBase.Styles>
+        <Style Selector="tabView|DragTabControl /template/ Panel#PART_ContentRoot">
+            <Setter Property="Clip" Value="{Binding $self.Bounds, Converter={x:Static converters:PixevalConverters.TopLeftCornerClip}}" />
+        </Style>
+    </local:ViewContainerBase.Styles>
     <Panel>
         <StackPanel
             HorizontalAlignment="Center"
@@ -85,6 +90,9 @@
             IsKeyboardNavigationEnabled="False"
             LeftHeaderContentDraggable="True"
             TabClosing="TabsView_OnTabClosing">
+            <tabView:TabsView.Resources>
+                <SolidColorBrush x:Key="TabsViewFluent2ContentBackground" Color="{DynamicResource LayerFillColorDefault}" />
+            </tabView:TabsView.Resources>
             <tabView:TabsView.ShowDefaultAddButton>
                 <MultiBinding Converter="{x:Static BoolConverters.And}">
                     <Binding Path="IsLoggedIn" Source="{x:Static views:PixevalSettings.Instance}" />
@@ -92,14 +100,17 @@
                 </MultiBinding>
             </tabView:TabsView.ShowDefaultAddButton>
             <tabView:TabsView.LeftHeaderContent>
-                <Border
-                    Width="25"
-                    Height="25"
-                    Margin="16,0"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Background="{SvgResource avares://Pixeval/Assets/logo.svg}"
-                    CornerRadius="{StaticResource ControlCornerRadius}" />
+                <!--  Start the first tab at 72 DIP (navigation rail) + 8 DIP (page corner) + 4 DIP (tab foot).  -->
+                <Grid MinWidth="{OnPlatform Default=80, macOS=0}">
+                    <Border
+                        Width="25"
+                        Height="25"
+                        Margin="16,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Background="{SvgResource avares://Pixeval/Assets/logo.svg}"
+                        CornerRadius="{StaticResource ControlCornerRadius}" />
+                </Grid>
             </tabView:TabsView.LeftHeaderContent>
             <tabView:TabsView.RightHeaderContent>
                 <Button

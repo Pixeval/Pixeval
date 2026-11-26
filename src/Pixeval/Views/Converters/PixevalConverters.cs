@@ -7,6 +7,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using AutoSettingsPage.Avalonia;
 using AutoSettingsPage.Models;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data.Converters;
 using Avalonia.Media;
@@ -37,6 +38,13 @@ public static partial class PixevalConverters
 
     public static readonly FuncValueConverter<string?, double> CommandBarButtonWidth = new(static label =>
         string.IsNullOrWhiteSpace(label) ? 42 : double.NaN);
+
+    public static readonly FuncValueConverter<Rect, Geometry> TopLeftCornerClip = new(static bounds =>
+    {
+        var radius = double.Min(8, double.Min(bounds.Width, bounds.Height));
+        // ClipToBounds trims the other rounded corners off the extended rectangle.
+        return new RectangleGeometry(new Rect(0, 0, bounds.Width + radius, bounds.Height + radius), radius, radius);
+    });
 
     public static readonly FuncValueConverter<bool, IconVariant> BoolToIconVariant = new(value => value ? IconVariant.Color : IconVariant.Regular);
 

@@ -5,13 +5,11 @@
     xmlns:autoSettingsPage="using:AutoSettingsPage.Avalonia"
     xmlns:edit="using:AvaloniaEdit"
     xmlns:smoothScroll="using:SmoothScroll.Avalonia.Controls"
-    xmlns:tabView="using:TabView.Avalonia"
-    xmlns:ui="using:FluentAvalonia.UI.Themes">
+    xmlns:tabView="using:TabView.Avalonia">
 
     <Application.Styles>
         <Fluent2Theme />
         <tabView:TabsViewFluent2Theme />
-        <ui:FluentAvaloniaTheme />
         <autoSettingsPage:AutoSettingsPageTheme />
         <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent2.axaml" />
         <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
@@ -40,6 +38,7 @@
             <FontFamily x:Key="PixevalMonospaceFontFamily">Cascadia Code,Cascadia Mono,SF Mono,Menlo,Monaco,Consolas,Liberation Mono,DejaVu Sans Mono,monospace</FontFamily>
             <ResourceDictionary.MergedDictionaries>
                 <MergeResourceInclude Source="Themes/Brushes.axaml" />
+                <MergeResourceInclude Source="Themes/TextBlockStyles.axaml" />
                 <MergeResourceInclude Source="Themes/Controls.axaml" />
                 <MergeResourceInclude Source="Themes/WindowDrawnDecorations.axaml" />
             </ResourceDictionary.MergedDictionaries>

@@ -41,12 +41,13 @@
 		</PackageReference>
 		
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+		<PackageReference Include="FluentIcons.Avalonia" Version="$(FluentIconsVersion)" />
 		<PackageReference Include="Markdown.Avalonia" Version="12.0.2" />
 		<PackageReference Include="SharpYaml" Version="3.17.0" />
 		<PackageReference Include="Shirasagi0012.SmoothScroll.Avalonia" Version="12.0.0.1" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.11.285" />
 		<PackageReference Include="Svg.Controls.Skia.Avalonia" Version="12.0.0.17" />
-		<PackageReference Include="TabView.Avalonia" Version="2.0.0" />
+		<PackageReference Include="TabView.Avalonia" Version="2.0.1" />
 		<PackageReference Include="Velopack" Version="1.2.161" />
         
         <PackageReference Include="SkiaSharp" Version="4.156.1" />
@@ -58,7 +59,6 @@
 		<ProjectReference Include="..\lib\AutoSettingsPage\AutoSettingsPage.Avalonia\AutoSettingsPage.Avalonia.csproj" />
 		<ProjectReference Include="..\lib\AutoSettingsPage\AutoSettingsPage\AutoSettingsPage.csproj" />
 		<ProjectReference Include="..\lib\AnimatedControls.Avalonia\AnimatedControls.Avalonia\AnimatedControls.Avalonia.csproj" />
-		<ProjectReference Include="..\lib\FluentAvalonia\FluentAvalonia.csproj" />
 		<ProjectReference Include="..\lib\Imouto\Imouto.BooruParser\Imouto.BooruParser.csproj" />
 		<ProjectReference Include="..\lib\Mako\Mako\Mako.csproj" />
 		<ProjectReference Include="..\Pixeval.Mcp\Pixeval.Mcp.csproj" Condition="'$(EnableMcp)' == 'true'" />

@@ -4,7 +4,7 @@
     xmlns:controls="using:Pixeval.Controls"
     xmlns:pixeval="using:Pixeval">
     <ControlTheme x:Key="{x:Type controls:ViewerStateOverlay}" TargetType="{x:Type controls:ViewerStateOverlay}">
-        <Setter Property="Background" Value="{DynamicResource TabsViewFluent2ContentBackground}" />
+        <Setter Property="Background" Value="Transparent" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="Template">
