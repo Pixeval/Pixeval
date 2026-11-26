@@ -10,6 +10,16 @@
     <Application.Styles>
         <Fluent2Theme />
         <tabView:TabsViewFluent2Theme />
+        <!--  Register text themes before loading styles that reference them through StaticResource.  -->
+        <Styles>
+            <Styles.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <MergeResourceInclude Source="Themes/TextBlockStyles.axaml" />
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+            </Styles.Resources>
+        </Styles>
         <autoSettingsPage:AutoSettingsPageTheme />
         <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent2.axaml" />
         <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
@@ -38,7 +48,6 @@
             <FontFamily x:Key="PixevalMonospaceFontFamily">Cascadia Code,Cascadia Mono,SF Mono,Menlo,Monaco,Consolas,Liberation Mono,DejaVu Sans Mono,monospace</FontFamily>
             <ResourceDictionary.MergedDictionaries>
                 <MergeResourceInclude Source="Themes/Brushes.axaml" />
-                <MergeResourceInclude Source="Themes/TextBlockStyles.axaml" />
                 <MergeResourceInclude Source="Themes/Controls.axaml" />
                 <MergeResourceInclude Source="Themes/WindowDrawnDecorations.axaml" />
             </ResourceDictionary.MergedDictionaries>
