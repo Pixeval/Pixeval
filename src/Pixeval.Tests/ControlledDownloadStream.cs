@@ -16,7 +16,7 @@ internal sealed class ControlledDownloadStream : Stream
 
     public void Send(byte[] bytes) => _chunks.Writer.TryWrite(bytes);
 
-    public void Complete() => _chunks.Writer.TryComplete();
+    public void Complete(Exception? error = null) => _chunks.Writer.TryComplete(error);
 
     public Task WaitForReadAsync() => _reads.Reader.ReadAsync().AsTask().WaitAsync(TimeSpan.FromSeconds(5));
 

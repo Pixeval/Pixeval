@@ -25,6 +25,22 @@ namespace Pixeval.Tests;
 public sealed class DownloadManagerTest
 {
     [TestMethod]
+    [DataRow(DownloadState.Running, DownloadState.Running)]
+    [DataRow(DownloadState.Queued, DownloadState.Queued)]
+    [DataRow(DownloadState.Pending, DownloadState.Pending)]
+    [DataRow(DownloadState.Paused, DownloadState.Paused)]
+    [DataRow(DownloadState.Cancelled, DownloadState.Cancelled)]
+    [DataRow(DownloadState.Completed, DownloadState.Error)]
+    public void TaskGroupReportsFailedFileWithoutHidingTheOtherFileState(DownloadState otherState, DownloadState expectedState)
+    {
+        var entry = DownloadHistoryEntryBase.Create("group", CreatePost("group"));
+        using var group = new MultiFileDownloadTaskGroup(entry, otherState);
+
+        Assert.AreEqual(expectedState, group.CurrentState);
+        Assert.AreEqual(1, group.ErrorCount);
+    }
+
+    [TestMethod]
     public void QueueTask_ReplacesViewModelAndStaleRemovalRemovesReplacement()
     {
         using var httpClient = new HttpClient();
@@ -334,6 +350,25 @@ public sealed class DownloadManagerTest
 
         public void UpdateSubscription(WorkSubscriptionEntry subscription) =>
             SubscriptionUpdated?.Invoke(this, subscription);
+    }
+
+    private sealed class MultiFileDownloadTaskGroup : DownloadTaskGroup
+    {
+        public MultiFileDownloadTaskGroup(DownloadHistoryEntryBase entry, DownloadState otherState) : base(entry)
+        {
+            AddToTasksSet(new(new("test://download/failed"), "failed.jpg", DownloadState.Error));
+            AddToTasksSet(new(new("test://download/other"), "other.jpg", otherState));
+            SetNotCreateFromEntry();
+        }
+
+        public override string OpenLocalDestination => TokenizedDestination;
+
+        public override ValueTask InitializeTaskGroupAsync() => ValueTask.CompletedTask;
+
+        public override void Delete() { }
+
+        protected override Task AfterAllDownloadAsyncOverride(DownloadTaskGroup sender, CancellationToken token = default) =>
+            Task.CompletedTask;
     }
 
     private sealed class TestDownloadTaskGroup(

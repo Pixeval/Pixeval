@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices.Marshalling;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,6 +26,10 @@ namespace Pixeval.Models.Download.Tasks;
 /// </summary>
 public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase, IProgress<double>, IDisposable
 {
+    private const int MaxTimeoutRetries = 2;
+
+    private readonly SemaphoreSlim _downloadLock = new(1, 1);
+
     public ImageDownloadTask(Uri uri, string destination, DownloadState initState = DownloadState.Queued)
     {
         Uri = uri;
@@ -98,22 +103,23 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
             await DownloadStartedAsync.Invoke(this);
     }
 
-    private async Task PendingCompleteAsync()
+    private async Task PendingCompleteAsync(CancellationToken token)
     {
         ProgressPercentage = 100;
         // CurrentState = DownloadState.Pending;
         CurrentState = DownloadState.Completed;
-        await Task.Run(async () => await AfterDownloadAsync.Invoke(this, CancellationTokenSource.Token), CancellationTokenSource.Token);
+        await Task.Run(() => AfterDownloadAsync.Invoke(this, token), token);
     }
 
-    private async Task CommitDownloadedFileAsync(bool overwrite)
+    private async Task CommitDownloadedFileAsync(bool overwrite, CancellationToken token)
     {
+        token.ThrowIfCancellationRequested();
         _hasCommittedDestination = DownloadTaskFileHelper.CommitDownloadedFile(
             DownloadTempDestination,
             Destination,
             overwrite);
         WasDownloadSkipped = !_hasCommittedDestination;
-        await PendingCompleteAsync();
+        await PendingCompleteAsync(token);
     }
 
     private async Task SetErrorAsync(Exception ex)
@@ -125,12 +131,39 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
 
     public virtual async Task StartAsync(HttpClient httpClient)
     {
-        if (CurrentState is not DownloadState.Queued)
+        if (_isDisposed || CurrentState is not DownloadState.Queued)
             return;
+
+        var token = CancellationTokenSource.Token;
+        try
+        {
+            // A resumed run must wait for the cancelled run to close its temporary file.
+            await _downloadLock.WaitAsync(token);
+        }
+        catch (OperationCanceledException) when (token.IsCancellationRequested)
+        {
+            return;
+        }
+
+        try
+        {
+            if (CurrentState is DownloadState.Queued && !token.IsCancellationRequested)
+                await RunAsync(httpClient, token);
+        }
+        finally
+        {
+            _ = _downloadLock.Release();
+        }
+    }
+
+    private async Task RunAsync(HttpClient httpClient, CancellationToken token)
+    {
         try
         {
             CurrentState = DownloadState.Running;
             await SetRunningAsync(true);
+            token.ThrowIfCancellationRequested();
+            ProgressPercentage = 0;
             WasDownloadSkipped = false;
             _hasCommittedDestination = false;
             var overwrite = OverwriteDownloadedFile;
@@ -141,7 +174,7 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
             if (DownloadTaskFileHelper.ShouldSkipExistingFile(Destination, overwrite))
             {
                 WasDownloadSkipped = true;
-                await PendingCompleteAsync();
+                await PendingCompleteAsync(token);
                 return;
             }
 
@@ -150,8 +183,8 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
                 if (CacheHelper.TryGetStream(Uri.OriginalString) is { } stream)
                 {
                     await using (var fs = FileHelper.OpenAsyncWriteCreateParent(DownloadTempDestination))
-                        await stream.CopyToAsync(fs, CancellationTokenSource.Token);
-                    await CommitDownloadedFileAsync(overwrite);
+                        await stream.CopyToAsync(fs, token);
+                    await CommitDownloadedFileAsync(overwrite, token);
                     return;
                 }
 
@@ -161,24 +194,26 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
                     FileHelper.CreateParentDirectory(DownloadTempDestination);
                     downloader.Download(notifier, Uri.OriginalString, DownloadTempDestination);
                     while (!notifier.Finished)
-                        await Task.Delay(1000, CancellationTokenSource.Token);
+                        await Task.Delay(1000, token);
+                    token.ThrowIfCancellationRequested();
                     if (notifier.Exception is null)
-                        await CommitDownloadedFileAsync(overwrite);
+                        await CommitDownloadedFileAsync(overwrite, token);
                     else
                         await SetErrorAsync(notifier.Exception);
                     return;
                 }
             }
 
-            await DownloadDirectlyAsync(httpClient, overwrite);
+            await DownloadDirectlyAsync(httpClient, overwrite, token);
         }
-        catch (OperationCanceledException) when (CancellationTokenSource.IsCancellationRequested)
+        catch (OperationCanceledException) when (token.IsCancellationRequested)
         {
             // ignored
         }
         catch (Exception ex)
         {
-            await SetErrorAsync(ex);
+            if (!token.IsCancellationRequested)
+                await SetErrorAsync(ex);
         }
         finally
         {
@@ -186,22 +221,28 @@ public partial class ImageDownloadTask : ViewModelBase, ISingleDownloadTaskBase,
         }
     }
 
-    private async Task DownloadDirectlyAsync(HttpClient httpClient, bool overwrite)
+    private async Task DownloadDirectlyAsync(HttpClient httpClient, bool overwrite, CancellationToken token)
     {
-        Exception? ex;
-        await using (var fileStream = FileHelper.OpenAsyncWriteCreateParent(DownloadTempDestination))
+        for (var retries = 0; ; retries++)
         {
-            ex = await httpClient.DownloadStreamAsync(fileStream, Uri, this, fileStream.Length,
-                token: CancellationTokenSource.Token);
-        }
+            token.ThrowIfCancellationRequested();
+            Exception? error;
+            // Opening with FileMode.Create discards the partial response before retrying.
+            await using (var fileStream = FileHelper.OpenAsyncWriteCreateParent(DownloadTempDestination))
+                error = await httpClient.DownloadStreamAsync(fileStream, Uri, this, token: token);
 
-        switch (ex)
-        {
-            case null:
-                await CommitDownloadedFileAsync(overwrite);
-                break;
-            case OperationCanceledException when CancellationTokenSource.IsCancellationRequested: break;
-            default: await SetErrorAsync(ex); break;
+            token.ThrowIfCancellationRequested();
+            if (error is null)
+            {
+                await CommitDownloadedFileAsync(overwrite, token);
+                return;
+            }
+
+            if (retries >= MaxTimeoutRetries || error is not (TimeoutException or OperationCanceledException { InnerException: TimeoutException }))
+                ExceptionDispatchInfo.Throw(error);
+
+            ProgressPercentage = 0;
+            await Task.Delay(TimeSpan.FromSeconds(retries + 1), token);
         }
     }
 

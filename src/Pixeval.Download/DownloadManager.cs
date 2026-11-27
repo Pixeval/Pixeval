@@ -132,6 +132,9 @@ public sealed class DownloadManager : IDisposable
 
                     foreach (var subTask in taskGroup)
                     {
+                        if (taskToken.Token.IsCancellationRequested)
+                            break;
+
                         // 需要判断是否处于Queued状态才能运行
                         if (subTask.CurrentState is DownloadState.Queued)
                         {

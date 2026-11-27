@@ -254,13 +254,9 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntryBase entry) 
                         isRunning = true;
                         break;
                     case DownloadState.Paused:
-                        // if (isCancelled)
-                        //     throw new ArgumentOutOfRangeException(nameof(task.CurrentState), task.CurrentState, "Invalid state transition.");
                         isPaused = true;
                         break;
                     case DownloadState.Cancelled:
-                        // if (isPaused)
-                        //     throw new ArgumentOutOfRangeException(nameof(task.CurrentState), task.CurrentState, "Invalid state transition.");
                         isCancelled = true;
                         break;
                     case DownloadState.Error:
@@ -272,12 +268,13 @@ public abstract partial class DownloadTaskGroup(DownloadHistoryEntryBase entry) 
                 }
             }
 
-            return isError ? DownloadState.Error :
-                isCancelled ? DownloadState.Cancelled :
-                isPaused ? DownloadState.Paused :
-                isRunning ? DownloadState.Running :
+            // Keep the controls for unfinished downloads available after a child fails.
+            return isRunning ? DownloadState.Running :
                 isQueued ? DownloadState.Queued :
                 isPending || IsPending ? DownloadState.Pending :
+                isPaused ? DownloadState.Paused :
+                isCancelled ? DownloadState.Cancelled :
+                isError ? DownloadState.Error :
                 DownloadState.Completed;
         }
     }
